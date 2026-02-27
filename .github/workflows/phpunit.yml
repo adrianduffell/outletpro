@@ -29,7 +29,7 @@ jobs:
       run: composer install
 
     - name: Install wp-env
-      run: npm install -g @wordpress/wp-env
+      run: npm install -g @wordpress/env
 
     - name: Start WordPress environment
       run: wp-env start
