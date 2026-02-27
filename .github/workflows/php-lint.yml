@@ -24,7 +24,7 @@ jobs:
         node-version: '20'
 
     - name: Install Composer dependencies
-      run: composer install
+      run: composer install --no-scripts --no-interaction --prefer-dist
 
     - name: Run PHP lint
       run: npm run lint:php
