@@ -24,26 +24,26 @@ jobs:
         php-version: '8.2' # A recent version for composer and other tools
 
     - name: Set up Node.js
-      - uses: actions/checkout@v3
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
 
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-version }}
+    - name: Install Composer dependencies
+      run: composer install
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
+    - name: Run post-install script
+      run: composer run-script post-install-cmd --no-interaction
 
-      - name: Install Composer dependencies
-        run: composer install
 
-      - name: Install wp-env
-        run: npm install -g @wordpress/env
+    - name: Install wp-env
+      run: npm install -g @wordpress/env
 
-      - name: Start WordPress environment
-        run: wp-env start
+    - name: Start WordPress environment
+      run: wp-env start
 
-      - name: Run tests
-        run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
+    - name: Docker container debug information
+      run: |
+        wp-env run tests-cli php -- --version
+        wp-env run tests-cli wp core version
+    - name: Run tests
+      run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
