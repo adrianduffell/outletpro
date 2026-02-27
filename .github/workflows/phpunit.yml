@@ -28,6 +28,10 @@ jobs:
     - name: Install Composer dependencies
       run: composer install
 
+    - name: Run post-install script
+      run: composer run-script post-install-cmd --no-interaction
+
+
     - name: Install wp-env
       run: npm install -g @wordpress/env
 
