@@ -7,6 +7,7 @@
  * Author URI: https://adrianduffell.com
  * Text Domain: wc-clearance
  * License: GPL-3.0+
+ * Requires Plugins: woocommerce
  */
 
 defined( 'ABSPATH' ) || exit;
