@@ -1,0 +1,38 @@
+name: Run PHPUnit Tests
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: [ '7.4', '8.5' ]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install Composer dependencies
+      run: composer install
+
+    - name: Install wp-env
+      run: npm install -g @wordpress/wp-env
+
+    - name: Start WordPress environment
+      run: wp-env start
+
+    - name: Run tests
+      run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
