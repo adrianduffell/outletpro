@@ -12,6 +12,10 @@
 	"require": {
 		"php": ">=7.4"
 	},
+	"require-dev": {
+		"yoast/phpunit-polyfills": "^2.0",
+		"phpunit/phpunit": "^9.6"
+	},
 	"config": {
 		"optimize-autoloader": true
 	}
