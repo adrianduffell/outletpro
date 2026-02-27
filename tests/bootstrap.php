@@ -44,4 +44,4 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 require "{$_tests_dir}/includes/bootstrap.php";
 
 // WooCommerce test helpers.
-require_once dirname( dirname( __FILE__ ) ) . '/vendor/class-wc-helper-product.php';
+require_once dirname( __DIR__ ) . '/vendor/class-wc-helper-product.php';
