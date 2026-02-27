@@ -34,3 +34,6 @@ composer.lock
 # Temporary files
 *.tmp
 *.temp
+
+# PHPUnit
+.phpunit.result.cache
