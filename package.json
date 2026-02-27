@@ -1,5 +1,9 @@
 {
 	"name": "wc-clearance",
 	"version": "1.0.0",
-	"private": true
+	"private": true,
+	"scripts": {
+		"lint:php": "vendor/bin/phpcs",
+		"lint:php:fix": "vendor/bin/phpcbf"
+	}
 }
