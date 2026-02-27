@@ -12,13 +12,16 @@ jobs:
       matrix:
         php-version: [ '7.4', '8.5' ]
 
+    env:
+      WP_ENV_PHP_VERSION: ${{ matrix.php-version }}
+
     steps:
     - uses: actions/checkout@v3
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php-version }}
+        php-version: '8.2' # A recent version for composer and other tools
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
