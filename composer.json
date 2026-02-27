@@ -12,14 +12,6 @@
 	"require": {
 		"php": ">=7.4"
 	},
-	"require-dev": {
-	},
-	"autoload": {
-		"files": [
-		],
-		"classmap": [
-		]
-	},
 	"config": {
 		"optimize-autoloader": true
 	}
