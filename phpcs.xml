@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<ruleset name="WC Clearance">
+	<description>PHP CodeSniffer ruleset for WC Clearance plugin.</description>
+
+	<!-- Files to check -->
+	<file>.</file>
+
+	<!-- Exclude directories -->
+	<exclude-pattern>vendor/</exclude-pattern>
+	<exclude-pattern>/node_modules/</exclude-pattern>
+
+	<!-- Use WordPress Coding Standards -->
+	<rule ref="WordPress" />
+
+	<!-- Set minimum supported WordPress version for deprecation checks -->
+	<config name="minimum_supported_wp_version" value="6.9" />
+
+	<!-- Set text domain -->
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="wc-clearance" />
+			</property>
+		</properties>
+	</rule>
+</ruleset>
