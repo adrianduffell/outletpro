@@ -31,8 +31,8 @@ require_once "{$_tests_dir}/includes/functions.php";
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-    // Load WooCommerce plugin dependency.
-    require_once WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
+	// Load WooCommerce plugin dependency.
+	require_once WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
 
 	// Load composer dependencies.
 	require_once __DIR__ . '/../vendor/autoload.php';
