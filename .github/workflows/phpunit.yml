@@ -41,5 +41,9 @@ jobs:
     - name: Start WordPress environment
       run: wp-env start
 
+    - name: Docker container debug information
+              run: |
+                  wp-env run tests-cli php -- --version
+                  wp-env run tests-cli wp core version
     - name: Run tests
       run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
