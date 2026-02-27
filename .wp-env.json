@@ -1,0 +1,19 @@
+{
+	"phpVersion": "8.2",
+	"core": "WordPress/WordPress#6.9.1",
+	"plugins": [
+		"https://downloads.wordpress.org/plugin/woocommerce.zip",
+		"."
+	],
+	"themes": [
+		"WordPress/twentytwentyfive"
+	],
+	"port": 1111,
+	"testsPort": 1112,
+	"config": {
+		"WP_DEBUG": true,
+		"WP_DEBUG_LOG": true,
+		"WP_DEBUG_DISPLAY": true,
+		"ALTERNATE_WP_CRON": true
+	}
+}
