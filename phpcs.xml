@@ -5,8 +5,9 @@
 	<!-- Files to check -->
 	<file>.</file>
 
-	<!-- Exclude vendor directory -->
+	<!-- Exclude directories -->
 	<exclude-pattern>vendor/</exclude-pattern>
+	<exclude-pattern>/node_modules/</exclude-pattern>
 
 	<!-- Use WordPress Coding Standards -->
 	<rule ref="WordPress" />
