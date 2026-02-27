@@ -2,7 +2,7 @@
 	"name": "adrianduffell/wc-clearance",
 	"description": "Move old stock easily by adding a dedicated clearance section to WooCommerce.",
 	"type": "wordpress-plugin",
-	"license": "GPL-3.0",
+	"license": "GPL-3.0-only",
 	"authors": [
 		{
 			"name": "Adrian Duffell",
