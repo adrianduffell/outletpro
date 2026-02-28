@@ -6,7 +6,7 @@
 	<file>.</file>
 
 	<!-- Only scan PHP files -->
-	<arg name="extensions" value="php"/>
+	<arg name="extensions" value="php" />
 
 	<!-- Exclude directories -->
 	<exclude-pattern>vendor/</exclude-pattern>
