@@ -38,3 +38,7 @@ composer.lock
 
 # PHPUnit
 .phpunit.result.cache
+
+# wp-env test artifacts
+artifacts/
+.last-run.json
