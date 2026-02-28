@@ -13,10 +13,14 @@
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
-		"test:e2e": "wp-scripts test-e2e",
-		"test:unit": "wp-scripts test-unit-js"
+		"test:e2e": "wp-scripts test-playwright",
+		"test:unit": "wp-scripts test-unit-js",
+		"wp-env": "wp-env"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.58.2",
+		"@wordpress/e2e-test-utils-playwright": "^1.40.0",
+		"@wordpress/env": "^10.39.0",
 		"@wordpress/scripts": "^31.5.0"
 	}
 }
