@@ -27,7 +27,7 @@ jobs:
 
     - name: Install Node.js dependencies
       if: steps.cache-node-modules.outputs.cache-hit != 'true'
-      run: npm install
+      run: npm ci
 
   lint-css:
     needs: setup
