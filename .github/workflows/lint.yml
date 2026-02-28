@@ -1,11 +1,105 @@
-name: PHP Lint
+name: Lint
 
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
-  php-lint:
+  setup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Cache node modules
+      id: cache-node-modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Install Node.js dependencies
+      if: steps.cache-node-modules.outputs.cache-hit != 'true'
+      run: npm install
+
+  lint-css:
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Restore node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Run CSS lint
+      run: npm run lint:css
+
+  lint-js:
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Restore node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Run JS lint
+      run: npm run lint:js
+
+  lint-md-docs:
+    needs: setup
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Restore node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('package-lock.json') }}
+
+    - name: Run Markdown docs lint
+      run: npm run lint:md:docs
+
+  lint-php:
+    needs: setup
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -22,6 +116,12 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '20'
+
+    - name: Restore node modules
+      uses: actions/cache@v3
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('package-lock.json') }}
 
     - name: Install Composer dependencies
       run: composer install --no-scripts --no-interaction --prefer-dist
