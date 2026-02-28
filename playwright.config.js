@@ -1,9 +1,15 @@
-const { defineConfig } = require( '@playwright/test' );
+/**
+ * External dependencies
+ */
+import { defineConfig } from '@playwright/test';
 
-module.exports = defineConfig( {
-	use: {
-		// Port 1112 matches the wp-env "port" setting in .wp-env.json.
-		baseURL: process.env.WP_BASE_URL || 'http://localhost:1112',
-	},
+/**
+ * WordPress dependencies
+ */
+import baseConfig from '@wordpress/scripts/config/playwright.config.js';
+
+const config = defineConfig( {
+	...baseConfig,
 	testDir: './tests/e2e',
 } );
+export default config;
