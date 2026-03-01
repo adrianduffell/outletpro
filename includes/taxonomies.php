@@ -21,7 +21,6 @@ function init_taxonomies(): void {
 /**
  * Register the clearance status taxonomy.
  *
- * @throws \RuntimeException If the taxonomy registration fails.
  */
 function register_clearance_status_taxonomy(): void {
 	$args = array(
