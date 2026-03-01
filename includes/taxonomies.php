@@ -9,6 +9,12 @@ namespace WC_Clearance;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Non-public taxonomy used to represent the clearance status of products.
+ *
+ * Used with a canonical term for internal flagging of products belonging
+ * in the clearance section.
+ */
 const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
 
 /**
