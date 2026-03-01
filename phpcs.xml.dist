@@ -13,7 +13,10 @@
 	<exclude-pattern>/node_modules/</exclude-pattern>
 
 	<!-- Use WordPress Coding Standards -->
-	<rule ref="WordPress" />
+	<rule ref="WordPress">
+		<!-- Exceptions do not need to be escaped. See https://github.com/WordPress/WordPress-Coding-Standards/issues/2374 -->
+		<exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped" />
+	</rule>
 
 	<!-- Set minimum supported WordPress version for deprecation checks -->
 	<config name="minimum_supported_wp_version" value="6.9" />
