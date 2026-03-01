@@ -26,4 +26,21 @@
 			</property>
 		</properties>
 	</rule>
+
+	<!-- Slevomat Coding Standard rules -->
+
+	<!-- Require trailing commas in multi-line arrays -->
+	<rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma" />
+
+	<!-- Require short type hints (bool not boolean, int not integer, etc.) -->
+	<rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints" />
+
+	<!-- Normalize type casts (e.g. (bool) not (boolean)) -->
+	<rule ref="SlevomatCodingStandard.PHP.TypeCast" />
+
+	<!-- Require null coalesce operator (??) where applicable -->
+	<rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
+
+	<!-- Detect useless if conditions with return -->
+	<rule ref="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn" />
 </ruleset>
