@@ -9,10 +9,23 @@ namespace WC_Clearance;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Non-public taxonomy used to represent the clearance status of products.
+ *
+ * Used with a canonical term for internal flagging of products belonging
+ * in the clearance section.
+ */
 const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
 
 /**
+ * Canonical term for products belonging in the clearance section.
+ */
+const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
+
+/**
  * Helper to initialize taxonomies.
+ *
+ * @since 1.0.0
  */
 function init_taxonomies(): void {
 	register_clearance_status_taxonomy();
@@ -20,6 +33,8 @@ function init_taxonomies(): void {
 
 /**
  * Register the clearance status taxonomy.
+ *
+ * @since 1.0.0
  */
 function register_clearance_status_taxonomy(): void {
 	$args = array(
@@ -40,4 +55,27 @@ function register_clearance_status_taxonomy(): void {
 	);
 
 	register_taxonomy( CLEARANCE_STATUS_TAXONOMY, 'product', $args );
+}
+
+/**
+ * Seed the clearance status taxonomy with the canonical term.
+ *
+ * @throws \RuntimeException If the term seeding fails.
+ * @since 1.0.0
+ */
+function seed_clearance_status_taxonomy(): void {
+	if ( term_exists( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY ) ) {
+		return;
+	}
+
+	$result = wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException(
+			sprintf(
+				'Failed to seed clearance status taxonomy. %s',
+				$result->get_error_message()
+			)
+		);
+	}
 }
