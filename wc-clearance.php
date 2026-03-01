@@ -28,6 +28,20 @@ function init(): void {
 	init_taxonomies();
 }
 
+/**
+ * Plugin activation hook.
+ */
+function activate(): void {
+	\wc_get_logger()->info( 'Activating Clearance Section for WooCommerce plugin.' );
+
+	init_taxonomies(); // Needed since init hook does not run on activation.
+	try {
+		seed_clearance_status_taxonomy();
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( $e->getMessage() );
+	}
+}
 
 // Hook into WordPress.
 add_action( 'woocommerce_init', __NAMESPACE__ . '\init' );
+register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
