@@ -15,4 +15,19 @@
  * @package WC_Clearance
  */
 
+namespace WC_Clearance;
+
 defined( 'ABSPATH' ) || exit;
+
+require_once __DIR__ . '/includes/taxonomies.php';
+
+/**
+ * Initialize the plugin
+ */
+function init(): void {
+	init_taxonomies();
+}
+
+
+// Hook into WordPress.
+add_action( 'woocommerce_init', __NAMESPACE__ . '\init' );
