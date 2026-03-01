@@ -29,18 +29,24 @@
 
 	<!-- Slevomat Coding Standard rules -->
 
-	<!-- Require trailing commas in multi-line arrays -->
-	<rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma" />
+	<!-- Require return type hints -->
+	<rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint" />
 
-	<!-- Require short type hints (bool not boolean, int not integer, etc.) -->
-	<rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints" />
+	<!-- Require parameter type hints -->
+	<rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint" />
 
-	<!-- Normalize type casts (e.g. (bool) not (boolean)) -->
-	<rule ref="SlevomatCodingStandard.PHP.TypeCast" />
+	<!-- Require property type hints -->
+	<rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint" />
+
+	<!-- Detect unused use statements -->
+	<rule ref="SlevomatCodingStandard.Namespaces.UnusedUses" />
+
+	<!-- Require alphabetically sorted use statements -->
+	<rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses" />
 
 	<!-- Require null coalesce operator (??) where applicable -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
 
-	<!-- Detect useless if conditions with return -->
-	<rule ref="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn" />
+	<!-- Require short ternary operator (?:) where applicable -->
+	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
 </ruleset>
