@@ -20,7 +20,6 @@ function init_taxonomies(): void {
 
 /**
  * Register the clearance status taxonomy.
- *
  */
 function register_clearance_status_taxonomy(): void {
 	$args = array(
