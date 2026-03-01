@@ -38,6 +38,9 @@ composer.lock
 # PHPUnit
 .phpunit.result.cache
 
+# PHPCS local overrides
+phpcs.xml
+
 # wp-env test artifacts
 artifacts/
 .last-run.json
