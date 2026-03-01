@@ -18,6 +18,9 @@
 	<!-- Set minimum supported WordPress version for deprecation checks -->
 	<config name="minimum_supported_wp_version" value="6.9" />
 
+	<!-- Set minimum supported PHP version for compatibility checks -->
+	<config name="testVersion" value="7.4-" />
+
 	<!-- Set text domain -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
