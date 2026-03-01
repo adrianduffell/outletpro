@@ -17,7 +17,7 @@ class Test_Register_Taxonomy_For_Clearance_Status extends \WP_UnitTestCase {
 	 */
 	public function test_registers_taxonomy_successfully(): void {
 		// Arrange.
-		if ( taxonomy_exists( 'wc_clearance' ) ) {
+		if ( taxonomy_exists( 'wc_clearance_status' ) ) {
 			unregister_taxonomy( 'wc_clearance_status' );
 		}
 
