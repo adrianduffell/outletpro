@@ -36,6 +36,9 @@ function _manually_load_plugin(): void {
 
 	// Load composer dependencies.
 	require_once __DIR__ . '/../vendor/autoload.php';
+
+	// Load includes.
+	require_once __DIR__ . '/../includes/taxonomies.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
