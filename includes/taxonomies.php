@@ -24,6 +24,8 @@ const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
 
 /**
  * Helper to initialize taxonomies.
+ *
+ * @since 1.0.0
  */
 function init_taxonomies(): void {
 	register_taxonomy_for_clearance_status();
@@ -31,6 +33,8 @@ function init_taxonomies(): void {
 
 /**
  * Register the clearance status taxonomy.
+ *
+ * @since 1.0.0
  *
  * @throws \RuntimeException If the taxonomy registration fails.
  */
