@@ -15,7 +15,8 @@
 	"require-dev": {
 		"yoast/phpunit-polyfills": "^2.0",
 		"phpunit/phpunit": "^9.6",
-		"wp-coding-standards/wpcs": "^3.0"
+		"wp-coding-standards/wpcs": "^3.0",
+		"slevomat/coding-standard": "^8.22"
 	},
 	"config": {
 		"optimize-autoloader": true,
