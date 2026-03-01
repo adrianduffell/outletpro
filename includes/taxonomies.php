@@ -15,7 +15,7 @@ const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
  * Helper to initialize taxonomies.
  */
 function init_taxonomies(): void {
-	register_taxonomy_for_clearance_status();
+	register_clearance_status_taxonomy();
 }
 
 /**
@@ -23,7 +23,7 @@ function init_taxonomies(): void {
  *
  * @throws \RuntimeException If the taxonomy registration fails.
  */
-function register_taxonomy_for_clearance_status(): void {
+function register_clearance_status_taxonomy(): void {
 	$args = array(
 		'label'        => __( 'Clearance Status', 'wc-clearance' ),
 		'public'       => false,
