@@ -12,21 +12,18 @@ test( 'system status shows clearance section info', async ( {
 	).toBeVisible();
 
 	// Check taxonomy is registered.
-	const taxonomyRow = page.getByRole( 'row', {
-		name: /Clearance status taxonomy registered:/,
-	} );
-	await expect( taxonomyRow ).toContainText( 'yes' );
+	await expect(
+		page.getByTestId( 'clearance-taxonomy-registered' )
+	).toContainText( 'yes' );
 
 	// Check canonical term ID is shown (not a warning).
-	const termIdRow = page.getByRole( 'row', {
-		name: /Clearance status canonical term ID:/,
-	} );
-	await expect( termIdRow ).not.toContainText( 'Canonical term not found' );
-	await expect( termIdRow.getByRole( 'cell' ).last() ).toHaveText( /^\d+$/ );
+	await expect(
+		page.getByTestId( 'clearance-canonical-term-id' )
+	).not.toContainText( 'Canonical term not found' );
+	await expect(
+		page.getByTestId( 'clearance-canonical-term-id' )
+	).toHaveText( /^\d+$/ );
 
 	// Check total products count is shown.
-	const productsRow = page.getByRole( 'row', {
-		name: /Total products in clearance section:/,
-	} );
-	await expect( productsRow ).toBeVisible();
+	await expect( page.getByTestId( 'clearance-product-count' ) ).toBeVisible();
 } );
