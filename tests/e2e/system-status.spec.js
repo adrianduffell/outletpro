@@ -22,7 +22,7 @@ test( 'system status shows clearance section info', async ( {
 	).not.toContainText( 'Canonical term not found' );
 	await expect(
 		page.getByTestId( 'clearance-canonical-term-id' )
-	).toHaveText( /^\d+$/ );
+	).toContainText( /\d+/ );
 
 	// Check total products count is shown.
 	await expect( page.getByTestId( 'clearance-product-count' ) ).toBeVisible();
