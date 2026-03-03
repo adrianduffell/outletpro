@@ -79,3 +79,15 @@ function seed_clearance_status_taxonomy(): void {
 		);
 	}
 }
+/**
+ * Check if a product is in the clearance section.
+ *
+ * @param \WC_Product $product The product to check.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ */
+function is_clearance( \WC_Product $product ): bool {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+	return has_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY, $product->get_id() );
+}
