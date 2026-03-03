@@ -25,9 +25,7 @@ function add_system_status_section(): void {
 			array(
 				'post_type'              => 'product',
 				'post_status'            => 'publish',
-				'fields'                 => 'ids',
-				'posts_per_page'         => -1,
-				'no_found_rows'          => true,
+				'posts_per_page'         => 1,
 				'update_post_meta_cache' => false,
 				'update_post_term_cache' => false,
 				'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
@@ -39,7 +37,7 @@ function add_system_status_section(): void {
 				),
 			)
 		);
-		$clearance_product_count = count( $query->posts );
+		$clearance_product_count = $query->found_posts;
 	}
 	?>
 	<table class="wc_status_table widefat" cellspacing="0">
