@@ -16,39 +16,11 @@ use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
 	/**
-	 * Ensure the taxonomy is registered and clean before each test.
-	 */
-	public function setUp(): void {
-		parent::setUp();
-		register_taxonomy_for_clearance_status();
-
-		foreach (
-			get_terms(
-				array(
-					'taxonomy'   => CLEARANCE_STATUS_TAXONOMY,
-					'hide_empty' => false,
-				)
-			) as $term
-		) {
-			wp_delete_term( $term->term_id, CLEARANCE_STATUS_TAXONOMY );
-		}
-	}
-
-	/**
-	 * Re-register the taxonomy after any test that may have unregistered it.
-	 */
-	public function tearDown(): void {
-		if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-			register_taxonomy_for_clearance_status();
-		}
-		parent::tearDown();
-	}
-
-	/**
 	 * Test that "yes" is shown when the taxonomy is registered.
 	 */
 	public function test_shows_yes_when_taxonomy_is_registered(): void {
-		// Arrange: taxonomy is registered by setUp.
+		// Arrange.
+		register_taxonomy_for_clearance_status();
 
 		// Expect.
 		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*yes\s*</' );
@@ -62,6 +34,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 */
 	public function test_shows_no_when_taxonomy_is_not_registered(): void {
 		// Arrange.
+		register_taxonomy_for_clearance_status();
 		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 
 		// Expect.
@@ -76,6 +49,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 */
 	public function test_shows_term_id_when_canonical_term_exists(): void {
 		// Arrange.
+		register_taxonomy_for_clearance_status();
 		$result  = wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 		$term_id = $result['term_id'];
 
@@ -90,7 +64,8 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 * Test that a warning is shown when the canonical term does not exist.
 	 */
 	public function test_shows_warning_when_canonical_term_not_found(): void {
-		// Arrange: no terms seeded (setUp cleared them).
+		// Arrange.
+		register_taxonomy_for_clearance_status();
 
 		// Expect.
 		$this->expectOutputRegex( '/class="error"><span>Canonical term not found\./' );
@@ -104,6 +79,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 */
 	public function test_shows_zero_when_no_products_in_clearance(): void {
 		// Arrange.
+		register_taxonomy_for_clearance_status();
 		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 		// Expect.
@@ -118,6 +94,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 */
 	public function test_shows_correct_product_count(): void {
 		// Arrange.
+		register_taxonomy_for_clearance_status();
 		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 		$term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
@@ -139,6 +116,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 */
 	public function test_only_counts_published_products(): void {
 		// Arrange.
+		register_taxonomy_for_clearance_status();
 		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 		$term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
@@ -165,6 +143,9 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	 * Test that the output contains the section heading.
 	 */
 	public function test_output_contains_section_heading(): void {
+		// Arrange.
+		register_taxonomy_for_clearance_status();
+
 		// Expect.
 		$this->expectOutputRegex( '/Clearance Section/' );
 
