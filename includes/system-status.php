@@ -21,7 +21,7 @@ function add_system_status_section(): void {
 
 	$clearance_product_count = 0;
 	if ( $canonical_term ) {
-		$query               = new \WP_Query(
+		$query                   = new \WP_Query(
 			array(
 				'post_type'              => 'product',
 				'post_status'            => 'publish',

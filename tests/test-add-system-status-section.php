@@ -23,7 +23,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		register_taxonomy_for_clearance_status();
 
 		// Expect.
-		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*yes\s*</' );
+		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*Yes\s*</' );
 
 		// Act.
 		add_system_status_section();
@@ -38,7 +38,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 
 		// Expect.
-		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*no\s*</' );
+		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*No\s*</' );
 
 		// Act.
 		add_system_status_section();
