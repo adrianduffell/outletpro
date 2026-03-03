@@ -46,6 +46,6 @@ function activate(): void {
 // Hook into WordPress.
 add_action( 'woocommerce_init', __NAMESPACE__ . '\init' );
 if ( is_admin() ) {
-	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section' );
+	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section', 99 );
 }
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
