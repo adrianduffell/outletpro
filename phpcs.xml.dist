@@ -12,6 +12,13 @@
 	<exclude-pattern>vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
 
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<exclude-pattern>tests/</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.ClassComment">
+		<exclude-pattern>tests/</exclude-pattern>
+	</rule>
+
 	<!-- Use WordPress Coding Standards -->
 	<rule ref="WordPress">
 		<!-- Exceptions do not need to be escaped. See https://github.com/WordPress/WordPress-Coding-Standards/issues/2374 -->
