@@ -14,7 +14,7 @@ test( 'system status shows clearance section info', async ( {
 	// Check taxonomy is registered.
 	await expect(
 		page.getByTestId( 'clearance-taxonomy-registered' )
-	).toContainText( 'yes' );
+	).toContainText( 'Yes' );
 
 	// Check canonical term ID is shown (not a warning).
 	await expect(
