@@ -54,7 +54,7 @@ function add_system_status_section(): void {
 			<tr>
 				<td data-export-label="Clearance status taxonomy registered"><?php esc_html_e( 'Clearance status taxonomy registered:', 'wc-clearance' ); ?></td>
 				<td class="help"></td>
-				<td data-testid="clearance-taxonomy-registered"><?php echo $taxonomy_registered ? esc_html__( 'yes', 'wc-clearance' ) : esc_html__( 'no', 'wc-clearance' ); ?></td>
+				<td data-testid="clearance-taxonomy-registered"><?php echo $taxonomy_registered ? esc_html__( 'Yes', 'wc-clearance' ) : esc_html__( 'No', 'wc-clearance' ); ?></td>
 			</tr>
 			<tr>
 				<td data-export-label="Clearance status canonical term ID"><?php esc_html_e( 'Clearance status canonical term ID:', 'wc-clearance' ); ?></td>
