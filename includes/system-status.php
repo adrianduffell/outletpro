@@ -15,28 +15,31 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function add_system_status_section(): void {
-	global $wpdb;
-
 	$taxonomy_registered = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
 
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 	$clearance_product_count = 0;
 	if ( $canonical_term ) {
-		$clearance_product_count = (int) $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(DISTINCT p.ID)
-				FROM {$wpdb->posts} p
-				INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id
-				INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id
-				WHERE tt.term_id = %d
-				AND tt.taxonomy = %s
-				AND p.post_type = 'product'
-				AND p.post_status = 'publish'",
-				$canonical_term->term_id,
-				CLEARANCE_STATUS_TAXONOMY
+		$query = new \WP_Query(
+			array(
+				'post_type'              => 'product',
+				'post_status'            => 'publish',
+				'fields'                 => 'ids',
+				'posts_per_page'         => -1,
+				'no_found_rows'          => true,
+				'update_post_meta_cache' => false,
+				'update_post_term_cache' => false,
+				'tax_query'              => array(
+					array(
+						'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+						'field'    => 'term_id',
+						'terms'    => $canonical_term->term_id,
+					),
+				),
 			)
 		);
+		$clearance_product_count = count( $query->posts );
 	}
 	?>
 	<table class="wc_status_table widefat" cellspacing="0">
