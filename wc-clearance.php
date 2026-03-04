@@ -56,7 +56,11 @@ function activate(): void {
  * @param string $hook_suffix The hook suffix for the current admin page (e.g. 'woocommerce_page_wc-status').
  */
 function enqueue_admin_styles( string $hook_suffix ): void {
-	if ( 'woocommerce_page_wc-status' !== $hook_suffix ) {
+	$allowed_screens = array(
+		'woocommerce_page_wc-status', // WooCommerce system status page.
+		'woocommerce_page_wc-admin',  // WooCommerce block product editor.
+	);
+	if ( ! in_array( $hook_suffix, $allowed_screens, true ) ) {
 		return;
 	}
 	wp_enqueue_style(
