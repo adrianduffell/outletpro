@@ -1,3 +1,5 @@
+# Instructions for agents
+
 ## Code style
 
 * Use functions instead of classes, and as much as possible, pure functions with no side effects.
