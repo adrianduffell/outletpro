@@ -25,7 +25,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		}
 
-		// Assert.
+		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
