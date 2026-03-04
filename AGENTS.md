@@ -8,7 +8,7 @@
 
 ## Pull Requests
 
-* PRs should be under <500 lines in size.
+* PRs should be fewer than 500 lines in size.
 
 ## Tests
 
