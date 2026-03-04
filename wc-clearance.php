@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  */
-const VERSION = '1.0.1';
+const VERSION = '1.0.0';
 
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
