@@ -17,19 +17,12 @@ use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 class Test_Remove_From_Clearance extends WP_UnitTestCase {
 
 	/**
-	 * Set up each test.
-	 */
-	public function set_up(): void {
-		parent::set_up();
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-	}
-
-	/**
 	 * Test that a product is removed from the clearance section.
 	 */
 	public function test_removes_product_from_clearance(): void {
 		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
@@ -46,6 +39,8 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 	 */
 	public function test_removes_multiple_products_from_clearance(): void {
 		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
 		$product_one = \WC_Helper_Product::create_simple_product();
 		$product_two = \WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product_one->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
@@ -66,6 +61,8 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 	 */
 	public function test_does_not_error_when_product_not_in_clearance(): void {
 		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 
 		// Act & Assert (no exception should be thrown).
@@ -79,6 +76,8 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 	 */
 	public function test_throws_runtimeexception_when_taxonomy_does_not_exist(): void {
 		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 
