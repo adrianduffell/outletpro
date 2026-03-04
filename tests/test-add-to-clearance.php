@@ -68,4 +68,66 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 			$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 		}
 	}
+
+	/**
+	 * Test that a RuntimeException is thrown when wp_set_object_terms returns a WP_Error.
+	 */
+	public function test_throws_runtimeexception_when_wp_set_object_terms_returns_wp_error(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+
+		add_filter(
+			'wp_set_object_terms',
+			static function( $tt_ids, $object_id, $terms, $taxonomy, $append, $old_tt_ids ) {
+				return new \WP_Error( 'test_wp_error', 'Forced WP_Error for testing.' );
+			},
+			10,
+			6
+		);
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		try {
+			add_to_clearance( $product );
+		} finally {
+			remove_filter( 'wp_set_object_terms', '__return_null', 10 );
+			// Remove our anonymous filter by removing all filters for this hook at this priority.
+			remove_all_filters( 'wp_set_object_terms', 10 );
+		}
+	}
+
+	/**
+	 * Test that a RuntimeException is thrown when wp_set_object_terms returns false.
+	 */
+	public function test_throws_runtimeexception_when_wp_set_object_terms_returns_false(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+
+		add_filter(
+			'wp_set_object_terms',
+			static function( $tt_ids, $object_id, $terms, $taxonomy, $append, $old_tt_ids ) {
+				return false;
+			},
+			10,
+			6
+		);
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		try {
+			add_to_clearance( $product );
+		} finally {
+			remove_filter( 'wp_set_object_terms', '__return_null', 10 );
+			// Remove our anonymous filter by removing all filters for this hook at this priority.
+			remove_all_filters( 'wp_set_object_terms', 10 );
+		}
+	}
 }
