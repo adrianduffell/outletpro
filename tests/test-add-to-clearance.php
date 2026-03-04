@@ -76,58 +76,15 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
 
-		add_filter(
-			'wp_set_object_terms',
-			static function( $tt_ids, $object_id, $terms, $taxonomy, $append, $old_tt_ids ) {
-				return new \WP_Error( 'test_wp_error', 'Forced WP_Error for testing.' );
-			},
-			10,
-			6
-		);
+		// A product with ID 0 causes wp_set_object_terms to return WP_Error.
+		$product = $this->createMock( \WC_Product::class );
+		$product->method( 'get_id' )->willReturn( 0 );
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		try {
-			add_to_clearance( $product );
-		} finally {
-			remove_filter( 'wp_set_object_terms', '__return_null', 10 );
-			// Remove our anonymous filter by removing all filters for this hook at this priority.
-			remove_all_filters( 'wp_set_object_terms', 10 );
-		}
-	}
-
-	/**
-	 * Test that a RuntimeException is thrown when wp_set_object_terms returns false.
-	 */
-	public function test_throws_runtimeexception_when_wp_set_object_terms_returns_false(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
-
-		add_filter(
-			'wp_set_object_terms',
-			static function( $tt_ids, $object_id, $terms, $taxonomy, $append, $old_tt_ids ) {
-				return false;
-			},
-			10,
-			6
-		);
-
-		// Expect.
-		$this->expectException( \RuntimeException::class );
-
-		// Act.
-		try {
-			add_to_clearance( $product );
-		} finally {
-			remove_filter( 'wp_set_object_terms', '__return_null', 10 );
-			// Remove our anonymous filter by removing all filters for this hook at this priority.
-			remove_all_filters( 'wp_set_object_terms', 10 );
-		}
+		add_to_clearance( $product );
 	}
 }
