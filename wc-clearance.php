@@ -52,8 +52,13 @@ function activate(): void {
 
 /**
  * Enqueue admin-specific stylesheets.
+ *
+ * @param string $hook_suffix The hook suffix for the current admin page (e.g. 'woocommerce_page_wc-status').
  */
-function enqueue_admin_styles(): void {
+function enqueue_admin_styles( string $hook_suffix ): void {
+	if ( 'woocommerce_page_wc-status' !== $hook_suffix ) {
+		return;
+	}
 	wp_enqueue_style(
 		'wc-clearance-admin-styles',
 		plugin_dir_url( __FILE__ ) . 'assets/css/admin.css',
