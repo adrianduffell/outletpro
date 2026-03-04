@@ -79,3 +79,29 @@ function seed_clearance_status_taxonomy(): void {
 		);
 	}
 }
+
+/**
+ * Remove products from clearance section.
+ *
+ * @since 1.1.0
+ * @param \WC_Product ...$products Products to update.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
+ */
+function remove_from_clearance( \WC_Product ...$products ): void {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+	foreach ( $products as $product ) {
+		$result = wp_remove_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+		if ( is_wp_error( $result ) ) {
+			throw new \RuntimeException(
+				sprintf(
+					'Failed to remove product %d from clearance. %s',
+					$product->get_id(),
+					$result->get_error_message()
+				)
+			);
+		}
+	}
+}
