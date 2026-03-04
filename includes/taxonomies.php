@@ -28,17 +28,15 @@ const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
  * @since 1.0.0
  */
 function init_taxonomies(): void {
-	register_taxonomy_for_clearance_status();
+	register_clearance_status_taxonomy();
 }
 
 /**
  * Register the clearance status taxonomy.
  *
  * @since 1.0.0
- *
- * @throws \RuntimeException If the taxonomy registration fails.
  */
-function register_taxonomy_for_clearance_status(): void {
+function register_clearance_status_taxonomy(): void {
 	$args = array(
 		'label'        => __( 'Clearance Status', 'wc-clearance' ),
 		'public'       => false,

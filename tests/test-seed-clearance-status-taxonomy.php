@@ -5,7 +5,7 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\register_taxonomy_for_clearance_status;
+use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
@@ -20,7 +20,7 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 	 */
 	public function test_seeds_term_when_not_exists(): void {
 		// Arrange.
-		register_taxonomy_for_clearance_status();
+		register_clearance_status_taxonomy();
 		foreach ( get_terms(
 			array(
 				'taxonomy'   => CLEARANCE_STATUS_TAXONOMY,
@@ -49,7 +49,7 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 	 */
 	public function test_does_not_seed_term_when_already_exists(): void {
 		// Arrange.
-		register_taxonomy_for_clearance_status();
+		register_clearance_status_taxonomy();
 		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 		// Act.
@@ -71,7 +71,7 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 	 */
 	public function test_throws_runtimeexception_when_wp_insert_term_fails(): void {
 		// Arrange.
-		register_taxonomy_for_clearance_status();
+		register_clearance_status_taxonomy();
 
 		// Ensure the taxonomy has no existing terms, to mirror the happy-path setup.
 		foreach ( get_terms(

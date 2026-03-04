@@ -1,16 +1,16 @@
 <?php
 /**
- * Test the register_taxonomy_for_clearance_status function.
+ * Test the register_clearance_status_taxonomy function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\register_taxonomy_for_clearance_status;
+use function WC_Clearance\register_clearance_status_taxonomy;
 
 /**
- * Test class for register_taxonomy_for_clearance_status function.
+ * Test class for register_clearance_status_taxonomy function.
  */
-class Test_Register_Taxonomy_For_Clearance_Status extends \WP_UnitTestCase {
+class Test_Register_Clearance_Status_Taxonomy extends \WP_UnitTestCase {
 
 	/**
 	 * Test that the 'wc_clearance_status' is registered successfully.
@@ -22,7 +22,7 @@ class Test_Register_Taxonomy_For_Clearance_Status extends \WP_UnitTestCase {
 		}
 
 		// Act.
-		register_taxonomy_for_clearance_status();
+		register_clearance_status_taxonomy();
 
 		// Assert.
 		$this->assertTrue( taxonomy_exists( 'wc_clearance_status' ) );
@@ -36,8 +36,8 @@ class Test_Register_Taxonomy_For_Clearance_Status extends \WP_UnitTestCase {
 		// Arrange.
 
 		// Act.
-		register_taxonomy_for_clearance_status();
-		register_taxonomy_for_clearance_status();
+		register_clearance_status_taxonomy();
+		register_clearance_status_taxonomy();
 
 		// Assert.
 		$this->assertTrue( taxonomy_exists( 'wc_clearance_status' ) );
