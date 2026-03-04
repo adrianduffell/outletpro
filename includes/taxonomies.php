@@ -92,6 +92,25 @@ function remove_from_clearance( \WC_Product ...$products ): void {
 		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
 	}
 	foreach ( $products as $product ) {
-		wp_remove_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		$result = wp_remove_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+		if ( is_wp_error( $result ) ) {
+			throw new \RuntimeException(
+				sprintf(
+					'Failed to remove product %d from clearance. %s',
+					$product->get_id(),
+					$result->get_error_message()
+				)
+			);
+		}
+
+		if ( false === $result ) {
+			throw new \RuntimeException(
+				sprintf(
+					'Failed to remove product %d from clearance for an unknown reason.',
+					$product->get_id()
+				)
+			);
+		}
 	}
 }
