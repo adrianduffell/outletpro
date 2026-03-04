@@ -69,8 +69,5 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 			$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 		}
 
-		// Cleanup.
-		$product_a->delete( true );
-		$product_b->delete( true );
 	}
 }
