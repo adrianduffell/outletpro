@@ -43,6 +43,19 @@ function activate(): void {
 	}
 }
 
+/**
+ * Enqueue admin-specific stylesheets.
+ */
+function enqueue_admin_styles(): void {
+	wp_enqueue_style(
+		'wc-clearance-admin-styles',
+		plugin_dir_url( __FILE__ ) . 'assets/css/admin.css',
+		array(),
+		'1.0.0'
+	);
+}
+add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles' );
+
 // Hook into WordPress.
 add_action( 'woocommerce_init', __NAMESPACE__ . '\init' );
 if ( is_admin() ) {
