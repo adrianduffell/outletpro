@@ -58,7 +58,7 @@ function enqueue_admin_styles(): void {
 		'wc-clearance-admin-styles',
 		plugin_dir_url( __FILE__ ) . 'assets/css/admin.css',
 		array(),
-		'1.0.0'
+		VERSION
 	);
 }
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles' );
