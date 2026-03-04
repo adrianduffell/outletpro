@@ -12,5 +12,5 @@
 
 ## Tests
 
-* Each test is self-contained. Never use setUp or tearDown in phpunit.
-* Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `//Arrange.`, `//Act.` //Assert. )
+* Each test is self-contained. Never use setUp or tearDown in PHPUnit.
+* Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
