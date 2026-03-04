@@ -102,15 +102,6 @@ function add_to_clearance( \WC_Product ...$products ): void {
 				)
 			);
 		}
-
-		if ( false === $result ) {
-			throw new \RuntimeException(
-				sprintf(
-					'Failed to assign clearance status term: invalid product ID %d.',
-					$product->get_id()
-				)
-			);
-		}
 	}
 }
 
