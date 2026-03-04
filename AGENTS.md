@@ -3,7 +3,7 @@
 ## Code style
 
 * Use functions instead of classes, and as much as possible, pure functions with no side effects.
-* Ensure code passes lint checks, e.g with `npm run:lint:php` `npm run:lint.js`.
+* Ensure code passes lint checks, e.g with `npm run lint:css`, `npm run lint:js`, `npm run lint:md:docs`, `npm run lint:php`.
 * Write unit tests for new functions.
 
 ## Pull Requests
