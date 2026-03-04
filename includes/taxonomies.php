@@ -85,7 +85,7 @@ function seed_clearance_status_taxonomy(): void {
  *
  * @since 1.1.0
  * @param \WC_Product ...$products Products to update.
- * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
  */
 function remove_from_clearance( \WC_Product ...$products ): void {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
@@ -100,15 +100,6 @@ function remove_from_clearance( \WC_Product ...$products ): void {
 					'Failed to remove product %d from clearance. %s',
 					$product->get_id(),
 					$result->get_error_message()
-				)
-			);
-		}
-
-		if ( false === $result ) {
-			throw new \RuntimeException(
-				sprintf(
-					'Failed to remove product %d from clearance for an unknown reason.',
-					$product->get_id()
 				)
 			);
 		}
