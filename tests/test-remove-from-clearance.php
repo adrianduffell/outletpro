@@ -81,7 +81,7 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 
-		// Assert.
+		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
