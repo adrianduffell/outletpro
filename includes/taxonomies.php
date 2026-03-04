@@ -84,7 +84,7 @@ function seed_clearance_status_taxonomy(): void {
  * Add products to clearance section.
  *
  * @param \WC_Product ...$products Products to update.
- * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist or the term assignment fails.
  */
 function add_to_clearance( \WC_Product ...$products ): void {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
