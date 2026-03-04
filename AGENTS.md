@@ -12,5 +12,5 @@
 
 ## Tests
 
-* Each test is self-contained. Never use `setUp` / `set_up` or `tearDown` in PHPUnit.
+* Each test is self-contained. Never use `setUp` / `tearDown` or similar variants in PHPUnit.
 * Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
