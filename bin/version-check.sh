@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-HEADER_VERSION=$(awk '/^\s*\*\s*Version:/{gsub(/\r/, "", $NF); print $NF; exit}' wc-clearance.php)
+HEADER_VERSION=$(awk '/^[ \t]*\*[ \t]*Version:/{gsub(/\r/, "", $NF); print $NF; exit}' wc-clearance.php)
 CONST_VERSION=$(awk '/const VERSION =/{gsub(/['"'"'";]/, "", $NF); print $NF; exit}' wc-clearance.php)
 echo "Header version:   $HEADER_VERSION"
 echo "Constant version: $CONST_VERSION"
