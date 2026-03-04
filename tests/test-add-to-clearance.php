@@ -84,7 +84,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 				return new \WP_Error( 'test_wp_error', 'Forced WP_Error for testing.' );
 			},
 			10,
-			6
+			1
 		);
 
 		// Expect.
@@ -115,7 +115,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 				return false;
 			},
 			10,
-			6
+			1
 		);
 
 		// Expect.
