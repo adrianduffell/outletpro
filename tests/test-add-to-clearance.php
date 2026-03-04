@@ -80,7 +80,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 
 		add_filter(
 			'wp_set_object_terms',
-			static function( $tt_ids, $object_id, $terms, $taxonomy, $append, $old_tt_ids ) {
+			static function () {
 				return new \WP_Error( 'test_wp_error', 'Forced WP_Error for testing.' );
 			},
 			10,
@@ -111,7 +111,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 
 		add_filter(
 			'wp_set_object_terms',
-			static function( $tt_ids, $object_id, $terms, $taxonomy, $append, $old_tt_ids ) {
+			static function () {
 				return false;
 			},
 			10,
