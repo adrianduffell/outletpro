@@ -47,7 +47,6 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		// Assert.
 		$terms = wp_get_object_terms( $product->get_id(), CLEARANCE_STATUS_TAXONOMY, array( 'fields' => 'names' ) );
 		$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
-
 	}
 
 	/**
@@ -68,6 +67,5 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 			$terms = wp_get_object_terms( $product->get_id(), CLEARANCE_STATUS_TAXONOMY, array( 'fields' => 'names' ) );
 			$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 		}
-
 	}
 }
