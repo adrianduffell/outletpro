@@ -28,6 +28,7 @@ const VERSION = '1.0.0';
 
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/product-admin.php';
 
 /**
  * Initialize the plugin
@@ -67,5 +68,7 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles' );
 add_action( 'woocommerce_init', __NAMESPACE__ . '\init' );
 if ( is_admin() ) {
 	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section', 99 );
+	add_action( 'woocommerce_product_options_general_product_data', __NAMESPACE__ . '\render_clearance_checkbox' );
+	add_action( 'woocommerce_process_product_meta', __NAMESPACE__ . '\save_clearance_checkbox' );
 }
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
