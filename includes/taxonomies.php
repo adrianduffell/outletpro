@@ -85,6 +85,7 @@ function seed_clearance_status_taxonomy(): void {
  *
  * @param \WC_Product $product The product to check.
  * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @since 1.0.0
  */
 function is_clearance( \WC_Product $product ): bool {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
