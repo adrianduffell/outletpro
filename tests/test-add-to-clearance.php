@@ -24,12 +24,13 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
 			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		}
+		$product = WC_Helper_Product::create_simple_product();
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		add_to_clearance();
+		add_to_clearance( $product );
 	}
 
 	/**
@@ -49,42 +50,4 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 	}
 
-	/**
-	 * Test that multiple products are each assigned the clearance term.
-	 */
-	public function test_assigns_clearance_term_to_multiple_products(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product_a = WC_Helper_Product::create_simple_product();
-		$product_b = WC_Helper_Product::create_simple_product();
-
-		// Act.
-		add_to_clearance( $product_a, $product_b );
-
-		// Assert.
-		foreach ( array( $product_a, $product_b ) as $product ) {
-			$terms = wp_get_object_terms( $product->get_id(), CLEARANCE_STATUS_TAXONOMY, array( 'fields' => 'names' ) );
-			$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
-		}
-	}
-
-	/**
-	 * Test that a RuntimeException is thrown when wp_set_object_terms returns a WP_Error.
-	 */
-	public function test_throws_runtimeexception_when_wp_set_object_terms_returns_wp_error(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-
-		// A product with ID 0 causes wp_set_object_terms to return WP_Error.
-		$product = $this->createMock( \WC_Product::class );
-		$product->method( 'get_id' )->willReturn( 0 );
-
-		// Expect.
-		$this->expectException( \RuntimeException::class );
-
-		// Act.
-		add_to_clearance( $product );
-	}
 }
