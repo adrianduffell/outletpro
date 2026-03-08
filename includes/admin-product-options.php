@@ -47,9 +47,9 @@ function hook_add_product_checkbox(): void {
 	$settings_url = admin_url( 'admin.php' ); // todo: add link to settings page when it exists.
 	printf(
 		'<div class="wc-clearance-status-help">%1$s <a href="%2$s" style="text-decoration:none;">%3$s</a></div><!-- .wc-clearance-status-help -->',
-		esc_html__( 'Included products appear in the store’s clearance section and display a&nbsp;badge.', 'wc-clearance' ),
+		esc_html__( 'Included products appear in the store’s clearance section and display a badge.', 'wc-clearance' ),
 		esc_url( $settings_url ),
-		esc_html__( 'Edit&nbsp;settings', 'wc-clearance' )
+		esc_html__( 'Edit settings', 'wc-clearance' )
 	);
 	echo '</div><!-- .wc-clearance-status-panel -->';
 }
