@@ -62,4 +62,14 @@
 
 	<!-- Require short ternary operator (?:) where applicable -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
+
+	<!-- Complexity checks -->
+	<rule ref="SlevomatCodingStandard.Complexity.Cognitive" />
+	<rule ref="Generic.Metrics.CyclomaticComplexity" />
+	<rule ref="SlevomatCodingStandard.Functions.FunctionLength" />
+	<rule ref="Generic.Metrics.NestingLevel">
+		<properties>
+			<property name="absoluteNestingLevel" value="1" />
+		</properties>
+	</rule>
 </ruleset>
