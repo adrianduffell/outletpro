@@ -25,7 +25,12 @@ function init_admin_product_options(): void {
 function hook_add_product_checkbox(): void {
 	global $post;
 
-	$is_clearance = $post ? is_clearance( wc_get_product( $post->ID ) ) : false;
+	try {
+		$is_clearance = $post ? is_clearance( wc_get_product( $post->ID ) ) : false;
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Could not add clearance section checkbox: ' . $e->getMessage() );
+		return;
+	}
 
 	echo '<div class="wc-clearance-status-panel">';
 	woocommerce_wp_checkbox(
@@ -65,8 +70,16 @@ function hook_save_product_checkbox( \WC_Product $product ): void {
 	}
 
 	if ( $is_clearance ) {
-		add_to_clearance( $product );
+		try {
+			add_to_clearance( $product );
+		} catch ( \RuntimeException $e ) {
+			\wc_get_logger()->error( 'Could not add product to clearance section: ' . $e->getMessage() );
+		}
 	} else {
-		remove_from_clearance( $product );
+		try {
+			remove_from_clearance( $product );
+		} catch ( \RuntimeException $e ) {
+			\wc_get_logger()->error( 'Could not remove product from clearance section: ' . $e->getMessage() );
+		}
 	}
 }
