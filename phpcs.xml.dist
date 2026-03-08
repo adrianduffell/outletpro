@@ -62,7 +62,4 @@
 
 	<!-- Require short ternary operator (?:) where applicable -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
-
-	<!-- Cyclomatic complexity -->
-	<rule ref="Generic.Metrics.CyclomaticComplexity" />
 </ruleset>
