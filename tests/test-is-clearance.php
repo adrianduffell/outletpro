@@ -63,7 +63,7 @@ class Test_Is_Clearance extends WP_UnitTestCase {
 		$this->assertFalse( $result, 'Should return false after removing clearance status' );
 	}
 
-	public function test_works_with_different_product_types(): void {
+	public function test_variable_product_type(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		$variable_product = WC_Helper_Product::create_variation_product();
