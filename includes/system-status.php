@@ -19,26 +19,7 @@ function add_system_status_section(): void {
 
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
-	$clearance_product_count = 0;
-	if ( $canonical_term ) {
-		$query                   = new \WP_Query(
-			array(
-				'post_type'              => 'product',
-				'post_status'            => 'publish',
-				'posts_per_page'         => 1,
-				'update_post_meta_cache' => false,
-				'update_post_term_cache' => false,
-				'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-					array(
-						'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
-						'field'    => 'term_id',
-						'terms'    => $canonical_term->term_id,
-					),
-				),
-			)
-		);
-		$clearance_product_count = $query->found_posts;
-	}
+	$clearance_product_count = count_clearance();
 	?>
 	<table class="wc_status_table widefat" cellspacing="0">
 		<thead>

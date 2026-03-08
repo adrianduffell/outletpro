@@ -120,6 +120,38 @@ function add_to_clearance( \WC_Product $product ): void {
 }
 
 /**
+ * Count the number of published products in the clearance section.
+ *
+ * @since 1.0.0
+ */
+function count_clearance(): int {
+	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( ! $canonical_term ) {
+		return 0;
+	}
+
+	$query = new \WP_Query(
+		array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+					'field'    => 'term_id',
+					'terms'    => $canonical_term->term_id,
+				),
+			),
+		)
+	);
+
+	return $query->found_posts;
+}
+
+/**
  * Remove a product from the clearance section.
  *
  * @param \WC_Product $product Product to update.
