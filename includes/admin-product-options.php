@@ -27,7 +27,7 @@ function hook_add_product_checkbox(): void {
 
 	try {
 		$is_clearance = $post ? is_clearance( wc_get_product( $post->ID ) ) : false;
-	} catch ( \RuntimeException $e ) {
+	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'Could not add clearance section checkbox: ' . $e->getMessage() );
 		return;
 	}
@@ -72,13 +72,13 @@ function hook_save_product_checkbox( \WC_Product $product ): void {
 	if ( $is_clearance ) {
 		try {
 			add_to_clearance( $product );
-		} catch ( \RuntimeException $e ) {
+		} catch ( \Throwable $e ) {
 			\wc_get_logger()->error( 'Could not add product to clearance section: ' . $e->getMessage() );
 		}
 	} else {
 		try {
 			remove_from_clearance( $product );
-		} catch ( \RuntimeException $e ) {
+		} catch ( \Throwable $e ) {
 			\wc_get_logger()->error( 'Could not remove product from clearance section: ' . $e->getMessage() );
 		}
 	}
