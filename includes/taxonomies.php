@@ -120,27 +120,26 @@ function add_to_clearance( \WC_Product $product ): void {
 }
 
 /**
- * Remove products from clearance section.
+ * Remove a product from the clearance section.
  *
- * @since 1.1.0
- * @param \WC_Product ...$products Products to update.
+ * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
+ * @since 1.1.0
  */
-function remove_from_clearance( \WC_Product ...$products ): void {
+function remove_from_clearance( \WC_Product $product ): void {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
 		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
 	}
-	foreach ( $products as $product ) {
-		$result = wp_remove_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
-		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException(
-				sprintf(
-					'Failed to remove product %d from clearance. %s',
-					$product->get_id(),
-					$result->get_error_message()
-				)
-			);
-		}
+	$result = wp_remove_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException(
+			sprintf(
+				'Failed to remove product %d from clearance. %s',
+				$product->get_id(),
+				$result->get_error_message()
+			)
+		);
 	}
 }

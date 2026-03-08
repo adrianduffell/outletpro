@@ -28,12 +28,17 @@ const VERSION = '1.0.0';
 
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/admin-product-options.php';
 
 /**
  * Initialize the plugin
  */
 function init(): void {
 	init_taxonomies();
+
+	if ( is_admin() ) {
+		init_admin_product_options();
+	}
 }
 
 /**
