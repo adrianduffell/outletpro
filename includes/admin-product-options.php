@@ -55,8 +55,14 @@ function hook_add_product_checkbox(): void {
  * @param \WC_Product $product The product being saved.
  */
 function hook_save_product_checkbox( \WC_Product $product ): void {
+	$was_clearance = is_clearance( $product );
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_clearance = isset( $_POST['wc-clearance-status'] );
+
+	// No change, do nothing.
+	if ( $is_clearance === $was_clearance ) {
+		return;
+	}
 
 	if ( $is_clearance ) {
 		add_to_clearance( $product );
