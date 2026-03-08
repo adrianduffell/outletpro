@@ -6,7 +6,6 @@ on:
 
 jobs:
   lint-css:
-    if: false  # No CSS files yet; re-enable when CSS is added to the project
     runs-on: ubuntu-latest
     permissions:
       contents: read
