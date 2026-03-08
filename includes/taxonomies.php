@@ -81,7 +81,7 @@ function seed_clearance_status_taxonomy(): void {
 }
 
 /**
- * Add products to clearance section.
+ * Add a product to the clearance section.
  *
  * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the clearance status taxonomy does not exist or the term assignment fails.
