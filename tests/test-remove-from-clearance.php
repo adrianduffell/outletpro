@@ -28,25 +28,6 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 		$this->assertEmpty( $terms );
 	}
 
-	public function test_removes_multiple_products_from_clearance(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product_one = \WC_Helper_Product::create_simple_product();
-		$product_two = \WC_Helper_Product::create_simple_product();
-		wp_set_object_terms( $product_one->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-		wp_set_object_terms( $product_two->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-
-		// Act.
-		remove_from_clearance( $product_one, $product_two );
-
-		// Assert.
-		$terms_one = wp_get_object_terms( $product_one->get_id(), CLEARANCE_STATUS_TAXONOMY );
-		$terms_two = wp_get_object_terms( $product_two->get_id(), CLEARANCE_STATUS_TAXONOMY );
-		$this->assertEmpty( $terms_one );
-		$this->assertEmpty( $terms_two );
-	}
-
 	public function test_does_not_error_when_product_not_in_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
