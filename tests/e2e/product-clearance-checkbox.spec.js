@@ -36,7 +36,7 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 		page.getByRole( 'button', { name: 'Update' } )
 	).toBeVisible();
 
-	page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
