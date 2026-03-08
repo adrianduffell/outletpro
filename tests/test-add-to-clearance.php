@@ -50,4 +50,28 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 	}
 
+	public function test_throws_exception_on_insert_term_failure(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		foreach ( get_terms(
+			array(
+				'taxonomy'   => CLEARANCE_STATUS_TAXONOMY,
+				'hide_empty' => false,
+			)
+		) as $term ) {
+			wp_delete_term( $term->term_id, CLEARANCE_STATUS_TAXONOMY );
+		}
+		$product = WC_Helper_Product::create_simple_product();
+
+		add_filter(
+			'pre_insert_term',
+			fn() => new WP_Error( 'simulated_error' ),
+		);
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		add_to_clearance( $product );
+	}
 }
