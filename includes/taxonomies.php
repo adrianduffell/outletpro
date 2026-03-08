@@ -122,7 +122,7 @@ function add_to_clearance( \WC_Product $product ): void {
 /**
  * Remove products from clearance section.
  *
- * @since 1.1.0
+ * @since 1.0.0
  * @param \WC_Product ...$products Products to update.
  * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
  */
