@@ -1,23 +1,11 @@
 <?php
-/**
- * Test the seed_clearance_status_taxonomy function.
- *
- * @package WC_Clearance
- */
-
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
-/**
- * Test the seed_clearance_status_taxonomy function.
- */
 class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 
-	/**
-	 * Test the term is created when it doesn't exist.
-	 */
 	public function test_seeds_term_when_not_exists(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -44,9 +32,6 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 		$this->assertSame( CLEARANCE_STATUS_CANONICAL_TERM, $terms[0]->name );
 	}
 
-	/**
-	 * Test a duplicate term isn't created when it already exists.
-	 */
 	public function test_does_not_seed_term_when_already_exists(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -66,9 +51,6 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 		$this->assertSame( CLEARANCE_STATUS_CANONICAL_TERM, $terms[0]->name );
 	}
 
-	/**
-	 * Test that a RuntimeException is thrown when wp_insert_term returns a WP_Error.
-	 */
 	public function test_throws_runtimeexception_when_wp_insert_term_fails(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
