@@ -18,7 +18,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
 			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		}
-		$product = WC_Helper_Product::create_simple_product();
+		$product = \WC_Helper_Product::create_simple_product();
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
@@ -52,7 +52,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		) as $term ) {
 			wp_delete_term( $term->term_id, CLEARANCE_STATUS_TAXONOMY );
 		}
-		$product = WC_Helper_Product::create_simple_product();
+		$product = \WC_Helper_Product::create_simple_product();
 
 		add_filter(
 			'pre_insert_term',
