@@ -1,4 +1,10 @@
 <?php
+/**
+ * Test the seed_clearance_status_taxonomy function.
+ *
+ * @package WC_Clearance
+ */
+
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;

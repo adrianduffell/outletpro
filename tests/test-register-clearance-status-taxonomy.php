@@ -1,4 +1,10 @@
 <?php
+/**
+ * Test the register_clearance_status_taxonomy function.
+ *
+ * @package WC_Clearance
+ */
+
 use function WC_Clearance\register_clearance_status_taxonomy;
 
 class Test_Register_Clearance_Status_Taxonomy extends \WP_UnitTestCase {
