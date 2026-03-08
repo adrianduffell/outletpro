@@ -67,7 +67,7 @@ class Test_Is_Clearance extends WP_UnitTestCase {
 	public function test_variation_product_type(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
-		$variation_product = WC_Helper_Product::create_variation_product();
+		$variation_product = \WC_Helper_Product::create_variation_product();
 		add_to_clearance( $variation_product );
 
 		// Act.
