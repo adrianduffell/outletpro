@@ -11,14 +11,8 @@ use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
-/**
- * Test class for add_to_clearance function.
- */
 class Test_Add_To_Clearance extends WP_UnitTestCase {
 
-	/**
-	 * Test that a RuntimeException is thrown when the taxonomy is not registered.
-	 */
 	public function test_throws_exception_when_taxonomy_not_registered(): void {
 		// Arrange.
 		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
@@ -33,9 +27,6 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 		add_to_clearance( $product );
 	}
 
-	/**
-	 * Test that a single product is assigned the clearance term.
-	 */
 	public function test_assigns_clearance_term_to_single_product(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
