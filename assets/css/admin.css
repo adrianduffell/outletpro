@@ -4,3 +4,23 @@
  * @package WC_Clearance
  * @since 1.0.0
  */
+
+ .wc-clearance-status-panel .form-field {
+ 	margin-bottom: 0;
+
+ }
+
+ .wc-clearance-status-panel .wc-clearance-status-help {
+ 	margin: 0 0 0 162px;
+ 	max-width: 280px;
+ 	font-size: 12px;
+ 	line-height: 1.4;
+ 	color: var(--wc-subtext);
+ }
+
+ @media (max-width: 500px) {
+
+ 	.wc-clearance-status-panel .wc-clearance-status-help {
+ 		display: none;
+ 	}
+ }
