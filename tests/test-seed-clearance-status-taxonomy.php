@@ -57,7 +57,7 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 		$this->assertSame( CLEARANCE_STATUS_CANONICAL_TERM, $terms[0]->name );
 	}
 
-	public function test_throws_runtimeexception_when_wp_insert_term_fails(): void {
+	public function test_throws_exception_when_wp_insert_term_fails(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 
@@ -82,14 +82,10 @@ class Test_Seed_Clearance_Status_Taxonomy extends WP_UnitTestCase {
 
 		add_filter( 'pre_insert_term', $callback, 10, 2 );
 
-		// Assert.
+		// Expect.
 		$this->expectException( \RuntimeException::class );
 
-		try {
-			// Act.
-			seed_clearance_status_taxonomy();
-		} finally {
-			remove_filter( 'pre_insert_term', $callback, 10 );
-		}
+		// Act.
+		seed_clearance_status_taxonomy();
 	}
 }
