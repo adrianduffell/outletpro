@@ -9,12 +9,13 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\is_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\remove_from_clearance;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Is_Clearance extends WP_UnitTestCase {
 
 	public function test_throws_exception_when_taxonomy_does_not_exist(): void {
 		// Arrange.
-		unregister_taxonomy( 'wc_clearance_status' );
+		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		$product = WC_Helper_Product::create_simple_product();
 
 		// Expect.
