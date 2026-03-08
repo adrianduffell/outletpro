@@ -81,6 +81,45 @@ function seed_clearance_status_taxonomy(): void {
 }
 
 /**
+ * Check if a product is in the clearance section.
+ *
+ * @param \WC_Product $product The product to check.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @since 1.0.0
+ */
+function is_clearance( \WC_Product $product ): bool {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+	return has_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY, $product->get_id() );
+}
+
+/**
+ * Add a product to the clearance section.
+ *
+ * @param \WC_Product $product Product to update.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist or the term assignment fails.
+ * @since 1.0.0
+ */
+function add_to_clearance( \WC_Product $product ): void {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+
+	$result = wp_set_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException(
+			sprintf(
+				'Failed to assign clearance status term to product ID %d. %s',
+				$product->get_id(),
+				$result->get_error_message()
+			)
+		);
+	}
+}
+
+/**
  * Remove products from clearance section.
  *
  * @since 1.1.0
