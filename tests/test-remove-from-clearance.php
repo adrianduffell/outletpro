@@ -11,14 +11,8 @@ use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
-/**
- * Test the remove_from_clearance function.
- */
 class Test_Remove_From_Clearance extends WP_UnitTestCase {
 
-	/**
-	 * Test that a product is removed from the clearance section.
-	 */
 	public function test_removes_product_from_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -34,9 +28,6 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 		$this->assertEmpty( $terms );
 	}
 
-	/**
-	 * Test that multiple products are removed from the clearance section.
-	 */
 	public function test_removes_multiple_products_from_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -56,9 +47,6 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 		$this->assertEmpty( $terms_two );
 	}
 
-	/**
-	 * Test that no error occurs when the product is not in the clearance section.
-	 */
 	public function test_does_not_error_when_product_not_in_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -71,9 +59,6 @@ class Test_Remove_From_Clearance extends WP_UnitTestCase {
 		$this->assertEmpty( $terms );
 	}
 
-	/**
-	 * Test that a RuntimeException is thrown when the taxonomy does not exist.
-	 */
 	public function test_throws_runtimeexception_when_taxonomy_does_not_exist(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
