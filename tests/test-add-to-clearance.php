@@ -19,7 +19,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 	/**
 	 * Test that a RuntimeException is thrown when the taxonomy is not registered.
 	 */
-	public function test_throws_runtimeexception_when_taxonomy_not_registered(): void {
+	public function test_throws_exception_when_taxonomy_not_registered(): void {
 		// Arrange.
 		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
 			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
