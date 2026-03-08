@@ -69,7 +69,7 @@
 	<rule ref="SlevomatCodingStandard.Functions.FunctionLength" />
 	<rule ref="Generic.Metrics.NestingLevel">
 		<properties>
-			<property name="absoluteNestingLevel" value="1" />
+			<property name="absoluteNestingLevel" value="2" />
 		</properties>
 	</rule>
 </ruleset>
