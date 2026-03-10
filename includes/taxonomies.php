@@ -173,9 +173,9 @@ function set_clearance_status( \WC_Product $product, bool $new_value ): void {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int  $product_id     Product ID.
+	 * @param int  $product_id Product ID.
 	 * @param bool $old_value  Previous clearance section status.
-	 * @param bool $new_svalue  New clearance section status.
+	 * @param bool $new_value  New clearance section status.
 	 */
 	do_action(
 		'wc_clearance_status_changed',
