@@ -153,6 +153,7 @@ function remove_from_clearance( \WC_Product $product ): void {
  * @param \WC_Product $product The product to update.
  * @param bool        $new_value Whether to include the product in the clearance section.
  * @throws \RuntimeException If setting the status fails.
+ * @since 1.0.0
  */
 function set_clearance_status( \WC_Product $product, bool $new_value ): void {
 	// The currently stored state.
