@@ -147,8 +147,8 @@ function remove_from_clearance( \WC_Product $product ): void {
 /**
  * Sets the clearance section status for a product.
  *
- * For performance, this function checks the currently stored state to determine whether a
- * change in value needs to be persistsed.
+ * For performance, this function checks the currently stored state and only updates the
+ * clearance status when a change in value is required.
  *
  * @param \WC_Product $product The product to update.
  * @param bool        $new_value Whether to include the product in the clearance section.
