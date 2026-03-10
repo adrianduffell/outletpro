@@ -1,9 +1,16 @@
 <?php
 /**
- * Tests for taxonomy-related functions.
+ * Test the set_clearance_status function.
  *
  * @package WC_Clearance
  */
+
+use function WC_Clearance\add_to_clearance;
+use function WC_Clearance\is_clearance;
+use function WC_Clearance\register_clearance_status_taxonomy;
+use function WC_Clearance\seed_clearance_status_taxonomy;
+use function WC_Clearance\set_clearance_status;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 	public function test_adds_to_clearance_when_true(): void {
