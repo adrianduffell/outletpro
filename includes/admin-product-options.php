@@ -60,32 +60,11 @@ function hook_add_product_checkbox(): void {
  * @param \WC_Product $product The product being saved.
  */
 function hook_save_product_checkbox( \WC_Product $product ): void {
-	try {
-		$was_clearance = is_clearance( $product );
-	} catch ( \Throwable $e ) {
-		\wc_get_logger()->error( 'Could not update clearance section checkbox: ' . $e->getMessage() );
-		return;
-	}
-
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_clearance = isset( $_POST['wc-clearance-status'] );
-
-	// No change, do nothing.
-	if ( $is_clearance === $was_clearance ) {
-		return;
-	}
-
-	if ( $is_clearance ) {
-		try {
-			add_to_clearance( $product );
-		} catch ( \Throwable $e ) {
-			\wc_get_logger()->error( 'Could not add product to clearance section: ' . $e->getMessage() );
-		}
-	} else {
-		try {
-			remove_from_clearance( $product );
-		} catch ( \Throwable $e ) {
-			\wc_get_logger()->error( 'Could not remove product from clearance section: ' . $e->getMessage() );
-		}
+	try {
+		set_clearance_status( $product, $is_clearance );
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Could not save clearance status: ' . $e->getMessage() );
 	}
 }
