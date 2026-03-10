@@ -120,11 +120,48 @@ function add_to_clearance( \WC_Product $product ): void {
 }
 
 /**
+ * Count the number of published products in the clearance section.
+ *
+ * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @since 1.0.0
+ */
+function count_clearance(): int {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+
+	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( ! $canonical_term ) {
+		return 0;
+	}
+
+	$query = new \WP_Query(
+		array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+					'field'    => 'term_id',
+					'terms'    => $canonical_term->term_id,
+				),
+			),
+		)
+	);
+
+	return $query->found_posts;
+}
+
+/**
  * Remove a product from the clearance section.
  *
  * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
- * @since 1.1.0
+ * @since 1.0.0
  */
 function remove_from_clearance( \WC_Product $product ): void {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
@@ -142,4 +179,46 @@ function remove_from_clearance( \WC_Product $product ): void {
 			)
 		);
 	}
+}
+
+/**
+ * Sets the clearance section status for a product.
+ *
+ * For performance, this function checks the currently stored state and only updates the
+ * clearance status when a change in value is required.
+ *
+ * @param \WC_Product $product The product to update.
+ * @param bool        $new_value Whether to include the product in the clearance section.
+ * @throws \RuntimeException If setting the status fails.
+ * @since 1.0.0
+ */
+function set_clearance_status( \WC_Product $product, bool $new_value ): void {
+	// The currently stored state.
+	$old_value = is_clearance( $product );
+
+	if ( $old_value === $new_value ) {
+		return; // No change needed.
+	}
+
+	if ( $new_value ) {
+		add_to_clearance( $product );
+	} else {
+		remove_from_clearance( $product );
+	}
+
+	/**
+	 * Fires when a product's clearance section status changes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int  $product_id Product ID.
+	 * @param bool $old_value  Previous clearance section status.
+	 * @param bool $new_value  New clearance section status.
+	 */
+	do_action(
+		'wc_clearance_status_changed',
+		$product->get_id(),
+		$old_value,
+		$new_value
+	);
 }
