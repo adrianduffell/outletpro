@@ -143,3 +143,44 @@ function remove_from_clearance( \WC_Product $product ): void {
 		);
 	}
 }
+
+/**
+ * Sets the clearance section status for a product.
+ *
+ * For performance, this function checks the currently stored state to determine whether a
+ * change in value needs to be persistsed.
+ *
+ * @param \WC_Product $product The product to update.
+ * @param bool        $new_value Whether to include the product in the clearance section.
+ * @throws \RuntimeException If setting the status fails.
+ */
+function set_clearance_status( \WC_Product $product, bool $new_value ): void {
+	// The currently stored state.
+	$old_value = is_clearance( $product );
+
+	if ( $old_value === $new_value ) {
+		return; // No change needed.
+	}
+
+	if ( $new_value ) {
+		add_to_clearance( $product );
+	} else {
+		remove_from_clearance( $product );
+	}
+
+	/**
+	 * Fires when a product's clearance sectionstatus changes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int  $product_id     Product ID.
+	 * @param bool $old_value  Previous clearance section status.
+	 * @param bool $new_svalue  New clearance section status.
+	 */
+	do_action(
+		'wc_clearance_status_changed',
+		$product->get_id(),
+		$old_value,
+		$new_value
+	);
+}
