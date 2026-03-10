@@ -65,6 +65,14 @@ function hook_save_product_checkbox( \WC_Product $product ): void {
 	try {
 		set_clearance_status( $product, $is_clearance );
 	} catch ( \Throwable $e ) {
-		\wc_get_logger()->error( 'Could not save clearance status: ' . $e->getMessage() );
+		$product_id = $product instanceof \WC_Product ? $product->get_id() : null;
+		\wc_get_logger()->error(
+			'Could not save clearance status for product ID ' . $product_id .
+			' with desired status ' . ( $is_clearance ? 'true' : 'false' ) . ': ' . $e->getMessage(),
+			array(
+				'product_id'        => $product_id,
+				'desired_clearance' => $is_clearance,
+			)
+		);
 	}
 }
