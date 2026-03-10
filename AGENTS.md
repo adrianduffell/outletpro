@@ -12,6 +12,7 @@
 
 ## Tests
 
+* Tests should be in the global namespace. Deliberately add `use` statements to import the namespaced classes, functions, and constants used in the tests.
 * Each test is self-contained. Never use `setUp` / `tearDown` or similar variants in PHPUnit.
 * Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
 * The test's function name should describe the test. A docblock should not be added to the test as that would create redundancy.
