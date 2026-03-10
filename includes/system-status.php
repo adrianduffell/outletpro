@@ -19,7 +19,7 @@ function add_system_status_section(): void {
 
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
-	$clearance_product_count = count_clearance();
+	$clearance_product_count = $taxonomy_registered ? count_clearance() : 0;
 	?>
 	<table class="wc_status_table widefat" cellspacing="0">
 		<thead>
