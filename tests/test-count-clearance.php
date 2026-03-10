@@ -7,6 +7,7 @@
 
 use function WC_Clearance\count_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
+use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
@@ -26,7 +27,7 @@ class Test_Count_Clearance extends WP_UnitTestCase {
 	public function test_returns_zero_when_no_products_in_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
-		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		seed_clearance_status_taxonomy();
 
 		// Act.
 		$count = count_clearance();
@@ -38,7 +39,7 @@ class Test_Count_Clearance extends WP_UnitTestCase {
 	public function test_returns_correct_count_of_clearance_products(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
-		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		seed_clearance_status_taxonomy();
 		$term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 		$product_one = \WC_Helper_Product::create_simple_product();
@@ -56,7 +57,7 @@ class Test_Count_Clearance extends WP_UnitTestCase {
 	public function test_only_counts_published_products(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
-		wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		seed_clearance_status_taxonomy();
 		$term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 		$published_product = \WC_Helper_Product::create_simple_product();
