@@ -170,7 +170,7 @@ function set_clearance_status( \WC_Product $product, bool $new_value ): void {
 	}
 
 	/**
-	 * Fires when a product's clearance sectionstatus changes.
+	 * Fires when a product's clearance section status changes.
 	 *
 	 * @since 1.0.0
 	 *
