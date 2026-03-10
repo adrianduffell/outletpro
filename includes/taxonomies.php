@@ -122,9 +122,14 @@ function add_to_clearance( \WC_Product $product ): void {
 /**
  * Count the number of published products in the clearance section.
  *
+ * @throws \RuntimeException If the clearance status taxonomy does not exist.
  * @since 1.0.0
  */
 function count_clearance(): int {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 	if ( ! $canonical_term ) {

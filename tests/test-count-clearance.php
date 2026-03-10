@@ -9,8 +9,20 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\count_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Count_Clearance extends WP_UnitTestCase {
+
+	public function test_throws_exception_when_taxonomy_not_registered(): void {
+		// Arrange.
+		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		count_clearance();
+	}
 
 	public function test_returns_zero_when_canonical_term_does_not_exist(): void {
 		// Arrange.
