@@ -5,10 +5,7 @@
  * @package WC_Clearance
  */
 
-namespace WC_Clearance;
-
-class TaxonomiesTest extends \WP_UnitTestCase {
-
+class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 	public function test_adds_to_clearance_when_true(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
