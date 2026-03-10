@@ -64,6 +64,7 @@
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
 
 	<!-- Complexity checks -->
+	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
 	<rule ref="SlevomatCodingStandard.Complexity.Cognitive" />
 	<rule ref="Generic.Metrics.CyclomaticComplexity" />
 	<rule ref="SlevomatCodingStandard.Functions.FunctionLength" />
