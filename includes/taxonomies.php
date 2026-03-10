@@ -161,7 +161,7 @@ function count_clearance(): int {
  *
  * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
- * @since 1.1.0
+ * @since 1.0.0
  */
 function remove_from_clearance( \WC_Product $product ): void {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
