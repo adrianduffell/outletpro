@@ -35,10 +35,6 @@ require_once __DIR__ . '/includes/admin-product-options.php';
  */
 function init(): void {
 	init_taxonomies();
-
-	if ( is_admin() ) {
-		init_admin_product_options();
-	}
 }
 
 /**
