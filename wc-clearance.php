@@ -30,6 +30,7 @@ require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/shortcodes.php';
+require_once __DIR__ . '/includes/tools.php';
 
 /**
  * Initialize the plugin.
@@ -45,6 +46,7 @@ function init(): void {
 function admin_init(): void {
 	init_admin_product_options();
 	init_system_status();
+	init_tools();
 }
 
 /**

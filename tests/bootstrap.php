@@ -41,6 +41,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/system-status.php';
 	require_once __DIR__ . '/../includes/taxonomies.php';
 	require_once __DIR__ . '/../includes/shortcodes.php';
+	require_once __DIR__ . '/../includes/tools.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
