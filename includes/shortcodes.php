@@ -54,13 +54,13 @@ function filter_products_shortcode_query( array $query_args, array $attributes, 
 /**
  * Register the on_clearance attribute for the [products] shortcode.
  *
- * @param array $out   The output array of shortcode attributes.
- * @param array $pairs The supported attributes and their defaults.
- * @param array $atts  The user-defined shortcode attributes.
+ * @param array $out           The output array of shortcode attributes.
+ * @param array $unused_pairs  The supported attributes and their defaults (unused in this implementation).
+ * @param array $atts          The user-defined shortcode attributes.
  * @return array The modified output array of shortcode attributes.
  * @since 1.0.0
  */
-function add_products_shortcode_attribute( array $out, array $pairs, array $atts ): array {
+function add_products_shortcode_attribute( array $out, array $unused_pairs, array $atts ): array {
 
 	if ( isset( $atts['on_clearance'] ) ) {
 		$out['on_clearance'] = \wc_string_to_bool( $atts['on_clearance'] );
