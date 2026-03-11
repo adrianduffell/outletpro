@@ -22,13 +22,13 @@ function init_shortcodes(): void {
 /**
  * Filter the [products] shortcode query args to include only clearance products when is_clearance is set.
  *
- * @param array  $query_args The WP_Query arguments.
- * @param array  $attributes The shortcode attributes.
- * @param string $type       The shortcode type.
+ * @param array  $query_args   The WP_Query arguments.
+ * @param array  $attributes   The shortcode attributes.
+ * @param string $unused_type  The shortcode type (unused; this filter is specific to [products]).
  * @return array The modified WP_Query arguments.
  * @since 1.0.0
  */
-function hook_filter_products_shortcode_query( array $query_args, array $attributes, string $type ): array {
+function hook_filter_products_shortcode_query( array $query_args, array $attributes, string $unused_type ): array {
 
 	if ( empty( $attributes['is_clearance'] ) ) {
 		return $query_args;
