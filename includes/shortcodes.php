@@ -10,6 +10,16 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Helper to initialize shortcodes.
+ *
+ * @since 1.0.0
+ */
+function init_shortcodes(): void {
+	add_filter( 'woocommerce_shortcode_products_query', __NAMESPACE__ . '\filter_products_shortcode_query', 10, 3 );
+	add_filter( 'shortcode_atts_products', __NAMESPACE__ . '\add_products_shortcode_attribute', 10, 3 );
+}
+
+/**
  * Filter the [products] shortcode query args to include only clearance products when on_clearance is set.
  *
  * @param array  $query_args The WP_Query arguments.
@@ -40,7 +50,6 @@ function filter_products_shortcode_query( array $query_args, array $attributes, 
 
 	return $query_args;
 }
-add_filter( 'woocommerce_shortcode_products_query', __NAMESPACE__ . '\filter_products_shortcode_query', 10, 3 );
 
 /**
  * Register the on_clearance attribute for the [products] shortcode.
@@ -59,4 +68,3 @@ function add_products_shortcode_attribute( array $out, array $pairs, array $atts
 
 	return $out;
 }
-add_filter( 'shortcode_atts_products', __NAMESPACE__ . '\add_products_shortcode_attribute', 10, 3 );

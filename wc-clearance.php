@@ -36,6 +36,7 @@ require_once __DIR__ . '/includes/shortcodes.php';
  */
 function init(): void {
 	init_taxonomies();
+	init_shortcodes();
 }
 
 /**
