@@ -74,9 +74,8 @@ function run_create_clearance_page_tool(): string {
  *
  * @since 1.0.0
  * @throws \RuntimeException If the page could not be created.
- * @return int The created page ID.
  */
-function create_clearance_page(): int {
+function create_clearance_page(): void {
 	$page_id = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
@@ -93,6 +92,4 @@ function create_clearance_page(): int {
 	}
 
 	update_option( CLEARANCE_PAGE_OPTION, $page_id );
-
-	return $page_id;
 }
