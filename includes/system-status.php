@@ -10,6 +10,15 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Helper to initialize system status.
+ *
+ * @since 1.0.0
+ */
+function init_system_status(): void {
+	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section', 99 );
+}
+
+/**
  * Add clearance section info to the WooCommerce system status report.
  *
  * @since 1.0.0

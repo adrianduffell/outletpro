@@ -31,14 +31,18 @@ require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 
 /**
- * Initialize the plugin
+ * Initialize the plugin.
  */
 function init(): void {
 	init_taxonomies();
+}
 
-	if ( is_admin() ) {
-		init_admin_product_options();
-	}
+/**
+ * Initialize the plugin’s wp-admin dashboard features.
+ */
+function admin_init(): void {
+	init_admin_product_options();
+	init_system_status();
 }
 
 /**
@@ -69,8 +73,7 @@ function enqueue_admin_styles(): void {
 add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles' );
 
 // Hook into WordPress.
-add_action( 'woocommerce_init', __NAMESPACE__ . '\init' );
-if ( is_admin() ) {
-	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section', 99 );
-}
+add_action( 'init', __NAMESPACE__ . '\init' );
+add_action( 'admin_init', __NAMESPACE__ . '\admin_init' );
+
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
