@@ -44,6 +44,3 @@ phpcs.xml
 # wp-env test artifacts
 artifacts/
 .last-run.json
-
-# Build artifacts
-build/
