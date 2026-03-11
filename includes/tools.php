@@ -39,7 +39,6 @@ function register_create_clearance_page_tool( array $tools ): array {
 /**
  * Create the clearance section page.
  *
- * @throws \RuntimeException If the page creation fails.
  * @since 1.0.0
  */
 function create_clearance_page(): string {
@@ -55,12 +54,8 @@ function create_clearance_page(): string {
 	);
 
 	if ( is_wp_error( $page_id ) ) {
-		throw new \RuntimeException(
-			sprintf(
-				'Failed to create clearance page. %s',
-				$page_id->get_error_message()
-			)
-		);
+		\wc_get_logger()->error( 'Failed to create clearance page. ' . $page_id->get_error_message() );
+		return __( 'Failed to create clearance section page.', 'wc-clearance' );
 	}
 
 	return sprintf(
