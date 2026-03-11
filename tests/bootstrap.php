@@ -38,6 +38,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../vendor/autoload.php';
 
 	// Load includes.
+	require_once __DIR__ . '/../includes/product-collection.php';
 	require_once __DIR__ . '/../includes/system-status.php';
 	require_once __DIR__ . '/../includes/taxonomies.php';
 }
