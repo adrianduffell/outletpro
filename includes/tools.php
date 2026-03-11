@@ -63,5 +63,9 @@ function create_clearance_page(): string {
 		);
 	}
 
-	return __( 'Clearance section page created.', 'wc-clearance' );
+	return sprintf(
+		/* translators: %s: URL of the created clearance page */
+		__( 'Clearance section page created. <a href="%s">View page</a>.', 'wc-clearance' ),
+		esc_url( get_edit_post_link( $page_id ) )
+	);
 }
