@@ -33,7 +33,13 @@ function enqueue_product_collection_script(): void {
 		return;
 	}
 
-	$asset_file   = include plugin_dir_path( __FILE__ ) . '../build/index.asset.php';
+	$asset_file_path = plugin_dir_path( __FILE__ ) . '../build/index.asset.php';
+
+	if ( ! file_exists( $asset_file_path ) ) {
+		return;
+	}
+
+	$asset_file   = include $asset_file_path;
 	$dependencies = array_merge( $asset_file['dependencies'], array( 'wc-blocks-registry' ) );
 
 	wp_register_script(
