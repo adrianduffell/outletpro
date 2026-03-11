@@ -27,9 +27,9 @@ defined( 'ABSPATH' ) || exit;
 const VERSION = '1.0.0';
 
 require_once __DIR__ . '/includes/admin-product-options.php';
-require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 
 /**
