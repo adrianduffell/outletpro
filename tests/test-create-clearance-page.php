@@ -6,11 +6,13 @@
  */
 
 use function WC_Clearance\create_clearance_page;
+use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_title_clearance(): void {
 		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
 		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
 			wp_delete_post( $page->ID, true );
 		}
@@ -32,6 +34,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_slug_clearance(): void {
 		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
 		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
 			wp_delete_post( $page->ID, true );
 		}
@@ -53,6 +56,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_draft_status(): void {
 		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
 		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
 			wp_delete_post( $page->ID, true );
 		}
@@ -74,6 +78,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_clearance_shortcode(): void {
 		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
 		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
 			wp_delete_post( $page->ID, true );
 		}
@@ -95,6 +100,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_returns_success_message(): void {
 		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
 		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
 			wp_delete_post( $page->ID, true );
 		}
@@ -114,5 +120,42 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 		$this->assertStringContainsString( 'Clearance section page created.', $result );
 		$this->assertStringContainsString( $edit_url, $result );
+	}
+
+	public function test_saves_page_id_in_option(): void {
+		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
+		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
+			wp_delete_post( $page->ID, true );
+		}
+
+		// Act.
+		create_clearance_page();
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'clearance',
+			)
+		);
+		$this->assertNotEmpty( $pages );
+		$this->assertSame( $pages[0]->ID, (int) get_option( CLEARANCE_PAGE_OPTION ) );
+	}
+
+	public function test_returns_already_exists_message_when_page_already_exists(): void {
+		// Arrange.
+		delete_option( CLEARANCE_PAGE_OPTION );
+		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
+			wp_delete_post( $page->ID, true );
+		}
+		create_clearance_page();
+
+		// Act.
+		$result = create_clearance_page();
+
+		// Assert.
+		$this->assertStringContainsString( 'Clearance section page already exists.', $result );
 	}
 }

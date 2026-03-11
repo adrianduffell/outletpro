@@ -10,6 +10,13 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * WordPress option key used to store the clearance section page ID.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
+
+/**
  * Helper to initialize tools.
  *
  * @since 1.0.0
@@ -42,6 +49,17 @@ function register_create_clearance_page_tool( array $tools ): array {
  * @since 1.0.0
  */
 function create_clearance_page(): string {
+	$existing_id   = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
+
+	if ( $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type ) {
+		return sprintf(
+			/* translators: %s: URL to edit the existing clearance page */
+			__( 'Clearance section page already exists. View page: %s', 'wc-clearance' ),
+			get_edit_post_link( $existing_id, 'raw' )
+		);
+	}
+
 	$page_id = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
@@ -57,6 +75,8 @@ function create_clearance_page(): string {
 		\wc_get_logger()->error( 'Failed to create clearance page. ' . $page_id->get_error_message() );
 		return __( 'Failed to create clearance section page.', 'wc-clearance' );
 	}
+
+	update_option( CLEARANCE_PAGE_OPTION, $page_id );
 
 	return sprintf(
 		/* translators: %s: URL to edit the created clearance page */
