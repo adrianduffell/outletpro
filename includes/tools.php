@@ -63,8 +63,7 @@ function run_create_clearance_page_tool(): string {
 	try {
 		$page_id = create_clearance_page();
 	} catch ( \RuntimeException $e ) {
-		\wc_get_logger()->error( 'Failed to create clearance page. ' . $e->getMessage() );
-		return __( 'Failed to create clearance section page.', 'wc-clearance' );
+		return __( 'Clearance section page could not be created.', 'wc-clearance' );
 	}
 
 	return sprintf(

@@ -13,10 +13,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_title_clearance(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
@@ -35,10 +36,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_slug_clearance(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
@@ -57,10 +59,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_draft_status(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
@@ -79,10 +82,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_clearance_shortcode(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
@@ -101,10 +105,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_returns_success_message(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		$result = run_create_clearance_page_tool();
@@ -125,10 +130,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_saves_page_id_in_option(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
@@ -147,10 +153,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_returns_already_exists_message_when_page_already_exists(): void {
 		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
-			wp_delete_post( $page->ID, true );
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
 		}
+		delete_option( CLEARANCE_PAGE_OPTION );
 		run_create_clearance_page_tool();
 
 		// Act.
