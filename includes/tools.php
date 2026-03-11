@@ -53,11 +53,7 @@ function run_create_clearance_page_tool(): string {
 	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
 
 	if ( $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type ) {
-		return sprintf(
-			/* translators: %s: URL to edit the existing clearance page */
-			__( 'Clearance section page already exists. View page: %s', 'wc-clearance' ),
-			get_edit_post_link( $existing_id, 'raw' )
-		);
+		return __( 'Clearance section page already exists.', 'wc-clearance' );
 	}
 
 	try {

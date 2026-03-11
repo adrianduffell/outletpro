@@ -154,6 +154,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$result = run_create_clearance_page_tool();
 
 		// Assert.
-		$this->assertStringContainsString( 'Clearance section page already exists.', $result );
+		$this->assertSame( 'Clearance section page already exists.', $result );
 	}
 }
