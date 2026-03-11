@@ -61,16 +61,12 @@ function run_create_clearance_page_tool(): string {
 	}
 
 	try {
-		$page_id = create_clearance_page();
+		create_clearance_page();
 	} catch ( \RuntimeException $e ) {
 		return __( 'Clearance section page could not be created.', 'wc-clearance' );
 	}
 
-	return sprintf(
-		/* translators: %s: URL to edit the created clearance page */
-		__( 'Clearance section page created. View page: %s', 'wc-clearance' ),
-		get_edit_post_link( $page_id, 'raw' )
-	);
+	return __( 'Clearance section page created.', 'wc-clearance' );
 }
 
 /**

@@ -115,17 +115,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$result = run_create_clearance_page_tool();
 
 		// Assert.
-		$pages    = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'clearance',
-			)
-		);
-		$edit_url = get_edit_post_link( $pages[0]->ID, 'raw' );
-
-		$this->assertStringContainsString( 'Clearance section page created.', $result );
-		$this->assertStringContainsString( $edit_url, $result );
+		$this->assertSame( 'Clearance section page created.', $result );
 	}
 
 	public function test_saves_page_id_in_option(): void {
