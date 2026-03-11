@@ -29,6 +29,7 @@ const VERSION = '1.0.0';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
+require_once __DIR__ . '/includes/shortcode.php';
 
 /**
  * Initialize the plugin.
