@@ -37,18 +37,18 @@ function register_create_clearance_page_tool( array $tools ): array {
 		'name'     => __( 'Create clearance section page', 'wc-clearance' ),
 		'button'   => __( 'Create page', 'wc-clearance' ),
 		'desc'     => __( 'Creates a draft page with the clearance products shortcode.', 'wc-clearance' ),
-		'callback' => __NAMESPACE__ . '\create_clearance_page',
+		'callback' => __NAMESPACE__ . '\run_create_clearance_page_tool',
 	);
 
 	return $tools;
 }
 
 /**
- * Create the clearance section page.
+ * WooCommerce Status > Tools callback for the create clearance section page tool.
  *
  * @since 1.0.0
  */
-function create_clearance_page(): string {
+function run_create_clearance_page_tool(): string {
 	$existing_id   = (int) get_option( CLEARANCE_PAGE_OPTION );
 	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
 
@@ -60,6 +60,28 @@ function create_clearance_page(): string {
 		);
 	}
 
+	try {
+		$page_id = create_clearance_page();
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Failed to create clearance page. ' . $e->getMessage() );
+		return __( 'Failed to create clearance section page.', 'wc-clearance' );
+	}
+
+	return sprintf(
+		/* translators: %s: URL to edit the created clearance page */
+		__( 'Clearance section page created. View page: %s', 'wc-clearance' ),
+		get_edit_post_link( $page_id, 'raw' )
+	);
+}
+
+/**
+ * Create the clearance section page.
+ *
+ * @since 1.0.0
+ * @throws \RuntimeException If the page could not be created.
+ * @return int The created page ID.
+ */
+function create_clearance_page(): int {
 	$page_id = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
@@ -72,15 +94,10 @@ function create_clearance_page(): string {
 	);
 
 	if ( is_wp_error( $page_id ) ) {
-		\wc_get_logger()->error( 'Failed to create clearance page. ' . $page_id->get_error_message() );
-		return __( 'Failed to create clearance section page.', 'wc-clearance' );
+		throw new \RuntimeException( $page_id->get_error_message() );
 	}
 
 	update_option( CLEARANCE_PAGE_OPTION, $page_id );
 
-	return sprintf(
-		/* translators: %s: URL to edit the created clearance page */
-		__( 'Clearance section page created. View page: %s', 'wc-clearance' ),
-		get_edit_post_link( $page_id, 'raw' )
-	);
+	return $page_id;
 }

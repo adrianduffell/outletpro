@@ -6,6 +6,7 @@
  */
 
 use function WC_Clearance\create_clearance_page;
+use function WC_Clearance\run_create_clearance_page_tool;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Create_Clearance_Page extends WP_UnitTestCase {
@@ -106,7 +107,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		}
 
 		// Act.
-		$result = create_clearance_page();
+		$result = run_create_clearance_page_tool();
 
 		// Assert.
 		$pages    = get_posts(
@@ -150,10 +151,10 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'any', 'name' => 'clearance' ) ) as $page ) {
 			wp_delete_post( $page->ID, true );
 		}
-		create_clearance_page();
+		run_create_clearance_page_tool();
 
 		// Act.
-		$result = create_clearance_page();
+		$result = run_create_clearance_page_tool();
 
 		// Assert.
 		$this->assertStringContainsString( 'Clearance section page already exists.', $result );
