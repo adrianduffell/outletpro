@@ -15,12 +15,12 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_shortcodes(): void {
-	add_filter( 'woocommerce_shortcode_products_query', __NAMESPACE__ . '\filter_products_shortcode_query', 10, 3 );
-	add_filter( 'shortcode_atts_products', __NAMESPACE__ . '\add_products_shortcode_attribute', 10, 3 );
+	add_filter( 'woocommerce_shortcode_products_query', __NAMESPACE__ . '\hook_filter_products_shortcode_query', 10, 3 );
+	add_filter( 'shortcode_atts_products', __NAMESPACE__ . '\hook_add_products_shortcode_attribute', 10, 3 );
 }
 
 /**
- * Filter the [products] shortcode query args to include only clearance products when on_clearance is set.
+ * Filter the [products] shortcode query args to include only clearance products when is_clearance is set.
  *
  * @param array  $query_args The WP_Query arguments.
  * @param array  $attributes The shortcode attributes.
@@ -28,13 +28,13 @@ function init_shortcodes(): void {
  * @return array The modified WP_Query arguments.
  * @since 1.0.0
  */
-function filter_products_shortcode_query( array $query_args, array $attributes, string $type ): array {
+function hook_filter_products_shortcode_query( array $query_args, array $attributes, string $type ): array {
 
-	if ( empty( $attributes['on_clearance'] ) ) {
+	if ( empty( $attributes['is_clearance'] ) ) {
 		return $query_args;
 	}
 
-	if ( ! \wc_string_to_bool( $attributes['on_clearance'] ) ) {
+	if ( ! \wc_string_to_bool( $attributes['is_clearance'] ) ) {
 		return $query_args;
 	}
 
@@ -52,7 +52,7 @@ function filter_products_shortcode_query( array $query_args, array $attributes, 
 }
 
 /**
- * Register the on_clearance attribute for the [products] shortcode.
+ * Register the is_clearance attribute for the [products] shortcode.
  *
  * @param array $out           The output array of shortcode attributes.
  * @param array $unused_pairs  The supported attributes and their defaults (unused in this implementation).
@@ -60,10 +60,10 @@ function filter_products_shortcode_query( array $query_args, array $attributes, 
  * @return array The modified output array of shortcode attributes.
  * @since 1.0.0
  */
-function add_products_shortcode_attribute( array $out, array $unused_pairs, array $atts ): array {
+function hook_add_products_shortcode_attribute( array $out, array $unused_pairs, array $atts ): array {
 
-	if ( isset( $atts['on_clearance'] ) ) {
-		$out['on_clearance'] = \wc_string_to_bool( $atts['on_clearance'] );
+	if ( isset( $atts['is_clearance'] ) ) {
+		$out['is_clearance'] = \wc_string_to_bool( $atts['is_clearance'] );
 	}
 
 	return $out;
