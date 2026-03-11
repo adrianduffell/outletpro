@@ -22,13 +22,13 @@ function init_shortcodes(): void {
 /**
  * Filter the [products] shortcode query args to include only clearance products when is_clearance is set.
  *
- * @param array  $query_args   The WP_Query arguments.
- * @param array  $attributes   The shortcode attributes.
- * @param string $unused_type  The shortcode type (unused; this filter is specific to [products]).
- * @return array The modified WP_Query arguments.
+ * @param array<string, mixed> $query_args   The WP_Query arguments.
+ * @param array<string, mixed> $attributes   The shortcode attributes.
+ * @param string               $unused_type  The shortcode type (unused; this filter is specific to [products]).
+ * @return array<string, mixed> The modified WP_Query arguments.
  * @since 1.0.0
  */
-function hook_filter_products_shortcode_query( array $query_args, array $attributes, string $unused_type ): array {
+function hook_filter_products_shortcode_query( array $query_args, array $attributes, string $unused_type ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
 	if ( empty( $attributes['is_clearance'] ) ) {
 		return $query_args;
@@ -54,10 +54,10 @@ function hook_filter_products_shortcode_query( array $query_args, array $attribu
 /**
  * Register the is_clearance attribute for the [products] shortcode.
  *
- * @param array $out           The output array of shortcode attributes.
- * @param array $unused_pairs  The supported attributes and their defaults (unused in this implementation).
- * @param array $atts          The user-defined shortcode attributes.
- * @return array The modified output array of shortcode attributes.
+ * @param array<string, mixed> $out           The output array of shortcode attributes.
+ * @param array<string, mixed> $unused_pairs  The supported attributes and their defaults (unused in this implementation).
+ * @param array<string, mixed> $atts          The user-defined shortcode attributes.
+ * @return array<string, mixed> The modified output array of shortcode attributes.
  * @since 1.0.0
  */
 function hook_add_products_shortcode_attribute( array $out, array $unused_pairs, array $atts ): array {
