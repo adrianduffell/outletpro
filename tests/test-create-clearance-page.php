@@ -99,7 +99,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$edit_url = get_edit_post_link( $pages[0]->ID, 'raw' );
 
 		$this->assertStringContainsString( 'Clearance section page created.', $result );
-		$this->assertStringContainsString( '<a href="' . esc_url( $edit_url ) . '">View page</a>', $result );
+		$this->assertStringContainsString( $edit_url, $result );
 	}
 
 	public function test_register_create_clearance_page_tool_adds_tool(): void {

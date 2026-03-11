@@ -64,8 +64,8 @@ function create_clearance_page(): string {
 	}
 
 	return sprintf(
-		/* translators: %s: URL of the created clearance page */
-		__( 'Clearance section page created. <a href="%s">View page</a>.', 'wc-clearance' ),
-		esc_url( get_edit_post_link( $page_id ) )
+		/* translators: %s: URL to edit the created clearance page */
+		__( 'Clearance section page created. View page: %s', 'wc-clearance' ),
+		get_edit_post_link( $page_id, 'raw' )
 	);
 }
