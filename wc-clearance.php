@@ -30,6 +30,7 @@ require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/shortcodes.php';
 
 /**
  * Initialize the plugin.
@@ -37,6 +38,7 @@ require_once __DIR__ . '/includes/taxonomies.php';
 function init(): void {
 	init_taxonomies();
 	init_product_collection();
+	init_shortcodes();
 }
 
 /**
