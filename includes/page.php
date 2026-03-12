@@ -27,8 +27,8 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * If the option is missing, the clearance page is considered not registered
  * and the function returns false.
  *
- * Zero and non-digit values indicate a corrupted state and the page existance cannot
- * be deetermined. Exceptions are thrown in these cases.
+ * Zero and non-digit values indicate a corrupted state and the page existence cannot
+ * be determined. Exceptions are thrown in these cases.
  *
  * @since 1.0.0
  * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
