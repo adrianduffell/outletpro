@@ -180,29 +180,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertFalse( $result );
 	}
 
-	public function test_clearance_page_exists_returns_false_when_option_is_zero_string(): void {
-		// Arrange.
-		update_option( CLEARANCE_PAGE_OPTION, '0' );
-
-		// Act.
-		$result = clearance_page_exists();
-
-		// Assert.
-		$this->assertFalse( $result );
-	}
-
-	public function test_clearance_page_exists_returns_true_when_option_is_numeric_string(): void {
-		// Arrange.
-		$page_id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'publish', 'post_title' => 'Test Page' ) );
-		update_option( CLEARANCE_PAGE_OPTION, (string) $page_id );
-
-		// Act.
-		$result = clearance_page_exists();
-
-		// Assert.
-		$this->assertTrue( $result );
-	}
-
 	public function test_clearance_page_exists_returns_false_when_no_page_exists(): void {
 		// Arrange.
 		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );

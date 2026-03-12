@@ -20,7 +20,7 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * Check if the clearance section page exists.
  *
  * @since 1.0.0
- * @throws \UnexpectedValueException If the stored option value is not an integer or numeric string.
+ * @throws \UnexpectedValueException If the stored option value is not an integer.
  */
 function clearance_page_exists(): bool {
 	$existing_id = get_option( CLEARANCE_PAGE_OPTION, null );
@@ -29,9 +29,7 @@ function clearance_page_exists(): bool {
 		return false;
 	}
 
-	if ( is_string( $existing_id ) && ctype_digit( $existing_id ) ) {
-		$existing_id = (int) $existing_id;
-	} elseif ( ! is_int( $existing_id ) ) {
+	if ( ! is_int( $existing_id ) ) {
 		throw new \UnexpectedValueException( 'Clearance page option must be an integer.' );
 	}
 
