@@ -62,6 +62,11 @@ function activate(): void {
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
+	try {
+		create_clearance_page();
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( $e->getMessage() );
+	}
 }
 
 /**
