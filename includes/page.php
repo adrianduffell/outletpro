@@ -34,7 +34,8 @@ function clearance_page_exists(): bool {
 		throw new \UnexpectedValueException( 'Clearance page option is not a positive integer.' );
 	}
 
-	// Cast to int because caching layers may return options as strings.
+	// At this point the value can only be an integer >= 0.
+	// Cast to int because caching layers may have returned it as a string.
 	$page_id = (int) $page_id;
 
 	// Zero indicates a corrupted state.
