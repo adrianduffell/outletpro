@@ -22,7 +22,7 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 		clearance_page_exists();
 	}
 
-	public function test_clearance_page_exists_returns_false_when_option_is_zero(): void {
+	public function test_clearance_page_exists_throws_when_option_is_zero(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 0 );
 
@@ -30,10 +30,10 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 		$this->expectException( \UnexpectedValueException::class );
 
 		// Act.
-		$result = clearance_page_exists();
+		clearance_page_exists();
 	}
 
-	public function test_clearance_page_exists_returns_false_when_option_is_zero_string(): void {
+	public function test_clearance_page_exists_throws_when_option_is_zero_string(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, '0' );
 
@@ -41,7 +41,7 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 		$this->expectException( \UnexpectedValueException::class );
 
 		// Act.
-		$result = clearance_page_exists();
+		clearance_page_exists();
 	}
 
 	public function test_clearance_page_exists_returns_true_when_option_is_numeric_string(): void {
