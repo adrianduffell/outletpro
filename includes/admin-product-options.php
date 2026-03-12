@@ -20,7 +20,9 @@ function init_admin_product_options(): void {
 }
 
 /**
- * Add clearance checkbox to product edit page
+ * Add clearance checkbox to product edit page.
+ *
+ * @internal
  */
 function hook_add_product_checkbox(): void {
 	global $post;
@@ -55,9 +57,10 @@ function hook_add_product_checkbox(): void {
 }
 
 /**
- * Save clearance checkbox value
+ * Save clearance checkbox value.
  *
  * @param \WC_Product $product The product being saved.
+ * @internal
  */
 function hook_save_product_checkbox( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
