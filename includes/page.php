@@ -60,11 +60,6 @@ function clearance_page_exists(): bool {
 	$page = get_post( $page_id );
 
 	return $page instanceof \WP_Post && 'page' === $page->post_type;
-	// Handle unexpected WP_Error return value from get_post.
-	if ( is_wp_error( $page ) ) {
-		throw new \RuntimeException( 'Error retrieving clearance page: ' . $page->get_error_message() );
-	}
-
 	// Validate we have a post object before proceeding.
 	if ( ! $page instanceof \WP_Post ) {
 		throw new \RuntimeException( 'Unexpected value retrieving clearance page.' );
