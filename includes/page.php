@@ -19,12 +19,24 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 /**
  * Check if the clearance section page exists.
  *
+ * This performs heuristics on the {@see CLEARANCE_PAGE_OPTION} option value.
+ *
+ * It is considered to exist when the option exists and contains the page ID
+ * of a WordPress page.
+ *
+ * If the option is missing, the clearance page is considered not registered
+ * and the function returns false.
+ *
+ * Zero and non-digit values indicate a corrupted state and the page existance cannot
+ * be deetermined. Exceptions are thrown in these cases.
+ *
  * @since 1.0.0
- * @throws \UnexpectedValueException If the stored option value is not an integer.
+ * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
  */
 function clearance_page_exists(): bool {
 	$page_id = get_option( CLEARANCE_PAGE_OPTION, false );
 
+	// The option does not exist, therefore the page does not exist
 	if ( false === $page_id ) {
 		return false;
 	}
