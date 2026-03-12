@@ -36,7 +36,7 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 function clearance_page_exists(): bool {
 	$page_id = get_option( CLEARANCE_PAGE_OPTION, false );
 
-	// The option does not exist, therefore the page does not exist
+	// The option does not exist, therefore the page does not exist.
 	if ( false === $page_id ) {
 		return false;
 	}
