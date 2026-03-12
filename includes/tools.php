@@ -42,7 +42,10 @@ function register_create_clearance_page_tool( array $tools ): array {
  * @since 1.0.0
  */
 function run_create_clearance_page_tool(): string {
-	if ( clearance_page_exists() ) {
+	$existing_id   = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
+
+	if ( $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type ) {
 		return __( 'Clearance section page already exists.', 'wc-clearance' );
 	}
 
