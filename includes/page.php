@@ -20,10 +20,20 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * Check if the clearance section page exists.
  *
  * @since 1.0.0
+ * @throws \UnexpectedValueException If the stored option value is not an integer.
  */
 function clearance_page_exists(): bool {
-	$existing_id   = (int) get_option( CLEARANCE_PAGE_OPTION );
-	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
+	$existing_id = get_option( CLEARANCE_PAGE_OPTION, null );
+
+	if ( is_null( $existing_id ) ) {
+		return false;
+	}
+
+	if ( ! is_int( $existing_id ) ) {
+		throw new \UnexpectedValueException( 'Clearance page option must be an integer.' );
+	}
+
+	$existing_page = get_post( $existing_id );
 
 	return $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type;
 }

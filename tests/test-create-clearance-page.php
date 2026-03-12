@@ -158,6 +158,17 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertSame( 'Clearance section page already exists.', $result );
 	}
 
+	public function test_clearance_page_exists_throws_when_option_is_not_an_int(): void {
+		// Arrange.
+		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
+
+		// Expect.
+		$this->expectException( \UnexpectedValueException::class );
+
+		// Act.
+		clearance_page_exists();
+	}
+
 	public function test_clearance_page_exists_returns_false_when_no_page_exists(): void {
 		// Arrange.
 		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
