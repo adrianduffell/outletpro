@@ -33,6 +33,10 @@ function clearance_page_exists(): bool {
 		throw new \UnexpectedValueException( 'Clearance page option must be an integer.' );
 	}
 
+	if ( 0 === $existing_id ) {
+		return false;
+	}
+
 	$existing_page = get_post( $existing_id );
 
 	return $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type;
