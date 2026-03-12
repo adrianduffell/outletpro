@@ -173,22 +173,22 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 0 );
 
+		// Expect.
+		$this->expectException( \UnexpectedValueException::class );
+
 		// Act.
 		$result = clearance_page_exists();
-
-		// Assert.
-		$this->assertFalse( $result );
 	}
 
 	public function test_clearance_page_exists_returns_false_when_option_is_zero_string(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, '0' );
 
+		// Expect.
+		$this->expectException( \UnexpectedValueException::class );
+
 		// Act.
 		$result = clearance_page_exists();
-
-		// Assert.
-		$this->assertFalse( $result );
 	}
 
 	public function test_clearance_page_exists_returns_true_when_option_is_numeric_string(): void {
