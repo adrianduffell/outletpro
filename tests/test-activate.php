@@ -36,7 +36,6 @@ class Test_Activate extends WP_UnitTestCase {
 		activate();
 
 		// Assert.
-		remove_filter( 'wp_insert_post_empty_content', $callback );
 		$this->assertTrue( true );
 	}
 }
