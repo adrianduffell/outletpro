@@ -35,16 +35,24 @@ require_once __DIR__ . '/includes/tools.php';
 
 /**
  * Initialize the plugin.
+ *
+ * Fired by `init`.
+ *
+ * @internal WordPress action hook
  */
-function init(): void {
+function init_hook(): void {
 	init_taxonomies();
 	init_shortcodes();
 }
 
 /**
  * Initialize the plugin’s wp-admin dashboard features.
+ *
+ * Fired by `admin_init`.
+ *
+ * @internal WordPress action hook
  */
-function admin_init(): void {
+function admin_init_hook(): void {
 	init_admin_product_options();
 	init_system_status();
 	init_tools();
@@ -67,8 +75,12 @@ function activate(): void {
 
 /**
  * Enqueue admin-specific stylesheets.
+ *
+ * Fired by `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
  */
-function enqueue_admin_styles(): void {
+function enqueue_admin_styles_hook(): void {
 	wp_enqueue_style(
 		'wc-clearance-admin-styles',
 		plugin_dir_url( __FILE__ ) . 'assets/css/admin.css',
@@ -76,10 +88,10 @@ function enqueue_admin_styles(): void {
 		VERSION
 	);
 }
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles' );
+add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
 // Hook into WordPress.
-add_action( 'init', __NAMESPACE__ . '\init' );
-add_action( 'admin_init', __NAMESPACE__ . '\admin_init' );
+add_action( 'init', 'WC_Clearance\init_hook' );
+add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
