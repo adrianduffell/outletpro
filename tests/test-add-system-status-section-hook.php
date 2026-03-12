@@ -1,11 +1,11 @@
 <?php
 /**
- * Test the add_system_status_section function.
+ * Test the add_system_status_section_hook function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\add_system_status_section;
+use function WC_Clearance\add_system_status_section_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
@@ -20,7 +20,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*Yes\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_no_when_taxonomy_is_not_registered(): void {
@@ -32,7 +32,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*No\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_term_id_when_canonical_term_exists(): void {
@@ -45,7 +45,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-canonical-term-id"[^>]*>\s*' . preg_quote( (string) $term_id, '/' ) . '\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_warning_when_canonical_term_not_found(): void {
@@ -56,7 +56,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/class="error"><span>Canonical term not found\./' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_zero_when_no_products_in_clearance(): void {
@@ -68,7 +68,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-product-count"[^>]*>\s*0\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_correct_product_count(): void {
@@ -87,7 +87,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-product-count"[^>]*>\s*2\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_only_counts_published_products(): void {
@@ -112,7 +112,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-product-count"[^>]*>\s*1\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_output_contains_section_heading(): void {
@@ -123,6 +123,6 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/Clearance Section/' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 }
