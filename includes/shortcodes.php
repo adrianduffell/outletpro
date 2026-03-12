@@ -15,12 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_shortcodes(): void {
-	add_filter( 'woocommerce_shortcode_products_query', __NAMESPACE__ . '\filter_products_shortcode_query_hook', 10, 3 );
-	add_filter( 'shortcode_atts_products', __NAMESPACE__ . '\add_products_shortcode_attribute_hook', 10, 3 );
+	add_filter( 'woocommerce_shortcode_products_query', 'WC_Clearance\filter_products_shortcode_query_hook', 10, 3 );
+	add_filter( 'shortcode_atts_products', 'WC_Clearance\add_products_shortcode_attribute_hook', 10, 3 );
 }
 
 /**
  * Filter the [products] shortcode query args to include only clearance products when is_clearance is set.
+ *
+ * Fired by `woocommerce_shortcode_products_query`.
  *
  * @param array<string, mixed> $query_args   The WP_Query arguments.
  * @param array<string, mixed> $attributes   The shortcode attributes.
@@ -53,6 +55,8 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 
 /**
  * Register the is_clearance attribute for the [products] shortcode.
+ *
+ * Fired by `shortcode_atts_products`.
  *
  * @param array<string, mixed> $out           The output array of shortcode attributes.
  * @param array<string, mixed> $unused_pairs  The supported attributes and their defaults (unused in this implementation).

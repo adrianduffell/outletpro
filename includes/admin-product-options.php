@@ -15,12 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_admin_product_options(): void {
-	add_action( 'woocommerce_product_options_general_product_data', __NAMESPACE__ . '\add_product_checkbox_hook' );
-	add_action( 'woocommerce_admin_process_product_object', __NAMESPACE__ . '\save_product_checkbox_hook' );
+	add_action( 'woocommerce_product_options_general_product_data', 'WC_Clearance\add_product_checkbox_hook' );
+	add_action( 'woocommerce_admin_process_product_object', 'WC_Clearance\save_product_checkbox_hook' );
 }
 
 /**
  * Add clearance checkbox to product edit page.
+ *
+ * Fired by `woocommerce_product_options_general_product_data`.
  *
  * @internal WordPress action hook
  */
@@ -58,6 +60,8 @@ function add_product_checkbox_hook(): void {
 
 /**
  * Save clearance checkbox value.
+ *
+ * Fired by `woocommerce_admin_process_product_object`.
  *
  * @param \WC_Product $product The product being saved.
  * @internal WordPress action hook

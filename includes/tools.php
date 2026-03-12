@@ -15,11 +15,13 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_tools(): void {
-	add_filter( 'woocommerce_debug_tools', __NAMESPACE__ . '\register_create_clearance_page_tool_hook' );
+	add_filter( 'woocommerce_debug_tools', 'WC_Clearance\register_create_clearance_page_tool_hook' );
 }
 
 /**
  * Register the create clearance page tool in WooCommerce > Status > Tools.
+ *
+ * Fired by `woocommerce_debug_tools`.
  *
  * @param array<string, mixed> $tools Existing tools.
  * @return array<string, mixed> Modified tools.

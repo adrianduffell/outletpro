@@ -36,6 +36,8 @@ require_once __DIR__ . '/includes/tools.php';
 /**
  * Initialize the plugin.
  *
+ * Fired by `init`.
+ *
  * @internal WordPress action hook
  */
 function init_hook(): void {
@@ -45,6 +47,8 @@ function init_hook(): void {
 
 /**
  * Initialize the plugin’s wp-admin dashboard features.
+ *
+ * Fired by `admin_init`.
  *
  * @internal WordPress action hook
  */
@@ -71,6 +75,8 @@ function activate(): void {
 /**
  * Enqueue admin-specific stylesheets.
  *
+ * Fired by `admin_enqueue_scripts`.
+ *
  * @internal WordPress action hook
  */
 function enqueue_admin_styles_hook(): void {
@@ -81,10 +87,10 @@ function enqueue_admin_styles_hook(): void {
 		VERSION
 	);
 }
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles_hook' );
+add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
 // Hook into WordPress.
-add_action( 'init', __NAMESPACE__ . '\init_hook' );
-add_action( 'admin_init', __NAMESPACE__ . '\admin_init_hook' );
+add_action( 'init', 'WC_Clearance\init_hook' );
+add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );

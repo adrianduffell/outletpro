@@ -15,11 +15,13 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_system_status(): void {
-	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section_hook', 99 );
+	add_action( 'woocommerce_system_status_report', 'WC_Clearance\add_system_status_section_hook', 99 );
 }
 
 /**
  * Add clearance section info to the WooCommerce system status report.
+ *
+ * Fired by `woocommerce_system_status_report`.
  *
  * @internal WordPress action hook
  */
