@@ -9,7 +9,7 @@
 ## Pull Requests
 
 * PRs should be fewer than 500 lines in size.
-* Make changes to public functions in a dedicated PR. Do not combine public function changes with unrelated changes in the same PR.
+* Make changes to public functions in a dedicated PR. Do not mix changes to public functions and internal functions in the same PR. 
 
 ## Tests
 
