@@ -11,7 +11,7 @@ use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 
-	public function test_clearance_page_exists_throws_when_option_is_not_an_int(): void {
+	public function test_clearance_page_exists_throws_when_option_is_non_numeric_string(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
 
