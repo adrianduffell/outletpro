@@ -93,6 +93,24 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
+	public function test_clearance_page_exists_returns_false_after_page_is_trashed(): void {
+		// Arrange.
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		wp_trash_post( $page_id );
+
+		// Act.
+		$result = clearance_page_exists();
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
+
 	public function test_clearance_page_exists_returns_false_after_page_is_deleted(): void {
 		// Arrange.
 		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
