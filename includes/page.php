@@ -37,8 +37,9 @@ function clearance_page_exists(): bool {
 	// Cast to int because caching layers may return options as strings.
 	$page_id = (int) $page_id;
 
+	// Zero indicates a corrupted state.
 	if ( 0 === $page_id ) {
-		return false;
+		throw new \UnexpectedValueException( 'Clearance page option value is zero.' );
 	}
 
 	$page = get_post( $page_id );
