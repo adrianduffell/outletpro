@@ -17,6 +17,18 @@ defined( 'ABSPATH' ) || exit;
 const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 
 /**
+ * Check if the clearance section page exists.
+ *
+ * @since 1.0.0
+ */
+function clearance_page_exists(): bool {
+	$existing_id   = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
+
+	return $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type;
+}
+
+/**
  * Create the clearance section page.
  *
  * @since 1.0.0
