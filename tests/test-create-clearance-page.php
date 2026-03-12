@@ -141,6 +141,29 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertSame( $pages[0]->ID, (int) get_option( CLEARANCE_PAGE_OPTION ) );
 	}
 
+	public function test_does_not_create_duplicate_page_when_page_already_exists(): void {
+		// Arrange.
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+
+		// Act.
+		create_clearance_page();
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'clearance',
+			)
+		);
+		$this->assertCount( 1, $pages );
+	}
+
 	public function test_returns_already_exists_message_when_page_already_exists(): void {
 		// Arrange.
 		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );

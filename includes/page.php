@@ -72,6 +72,10 @@ function clearance_page_exists(): bool {
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
+	if ( clearance_page_exists() ) {
+		return;
+	}
+
 	$result = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
