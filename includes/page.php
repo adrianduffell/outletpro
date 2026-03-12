@@ -23,7 +23,7 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
-	$page_id = wp_insert_post(
+	$result = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
 			'post_name'    => 'clearance',
@@ -34,9 +34,9 @@ function create_clearance_page(): void {
 		true
 	);
 
-	if ( is_wp_error( $page_id ) ) {
-		throw new \RuntimeException( $page_id->get_error_message() );
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( $result->get_error_message() );
 	}
 
-	update_option( CLEARANCE_PAGE_OPTION, $page_id );
+	update_option( CLEARANCE_PAGE_OPTION, $result );
 }
