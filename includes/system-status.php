@@ -20,6 +20,8 @@ function init_system_status(): void {
 
 /**
  * Get the clearance section page, or null if not configured or not found.
+ *
+ * @internal
  */
 function get_clearance_section_page(): ?\WP_Post {
 	try {
