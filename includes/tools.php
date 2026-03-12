@@ -23,7 +23,7 @@ function init_tools(): void {
  *
  * @param array<string, mixed> $tools Existing tools.
  * @return array<string, mixed> Modified tools.
- * @internal
+ * @internal WordPress filter
  */
 function register_create_clearance_page_tool_hook( array $tools ): array {
 	$tools['create_clearance_page'] = array(

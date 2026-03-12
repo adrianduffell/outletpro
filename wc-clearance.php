@@ -36,7 +36,7 @@ require_once __DIR__ . '/includes/tools.php';
 /**
  * Initialize the plugin.
  *
- * @internal
+ * @internal WordPress action hook
  */
 function init_hook(): void {
 	init_taxonomies();
@@ -46,7 +46,7 @@ function init_hook(): void {
 /**
  * Initialize the plugin’s wp-admin dashboard features.
  *
- * @internal
+ * @internal WordPress action hook
  */
 function admin_init_hook(): void {
 	init_admin_product_options();
@@ -71,7 +71,7 @@ function activate(): void {
 /**
  * Enqueue admin-specific stylesheets.
  *
- * @internal
+ * @internal WordPress action hook
  */
 function enqueue_admin_styles_hook(): void {
 	wp_enqueue_style(

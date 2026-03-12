@@ -21,7 +21,7 @@ function init_system_status(): void {
 /**
  * Add clearance section info to the WooCommerce system status report.
  *
- * @internal
+ * @internal WordPress action hook
  */
 function add_system_status_section_hook(): void {
 	$taxonomy_registered = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
