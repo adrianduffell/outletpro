@@ -68,7 +68,8 @@ function clearance_page_exists(): bool {
 /**
  * Create the clearance section page.
  *
- * Does nothing if the page already exists, preventing duplicates.
+ * Does nothing if a clearance page is already registered via the
+ * {@see CLEARANCE_PAGE_OPTION} option, preventing duplicates.
  *
  * @since 1.0.0
  * @throws \RuntimeException If the page could not be created.
