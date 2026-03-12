@@ -19,6 +19,24 @@ function init_system_status(): void {
 }
 
 /**
+ * Get the clearance section page, or null if not configured or not found.
+ *
+ * @return \WP_Post|null
+ */
+function get_clearance_section_page(): ?\WP_Post {
+	try {
+		if ( ! clearance_page_exists() ) {
+			return null;
+		}
+	} catch ( \UnexpectedValueException $e ) {
+		// Corrupted option value: treat as not found.
+		return null;
+	}
+	$page = get_post( (int) get_option( CLEARANCE_PAGE_OPTION ) );
+	return $page instanceof \WP_Post ? $page : null;
+}
+
+/**
  * Add clearance section info to the WooCommerce system status report.
  *
  * Fired by `woocommerce_system_status_report`.
@@ -32,8 +50,7 @@ function add_system_status_section_hook(): void {
 
 	$clearance_product_count = $taxonomy_registered ? count_clearance() : 0;
 
-	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
-	$page    = $page_id > 0 ? get_post( $page_id ) : null;
+	$page = get_clearance_section_page();
 	?>
 	<table class="wc_status_table widefat" cellspacing="0">
 		<thead>
@@ -74,7 +91,7 @@ function add_system_status_section_hook(): void {
 				<td class="help"></td>
 				<td data-testid="clearance-section-page">
 					<?php
-					if ( $page && 'trash' !== $page->post_status ) {
+					if ( $page ) {
 						echo '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>';
 						echo ' (' . esc_html( $page->post_status ) . ')';
 					} else {
