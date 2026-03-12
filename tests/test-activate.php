@@ -25,7 +25,7 @@ class Test_Activate extends WP_UnitTestCase {
 		$this->assertGreaterThan( 0, (int) get_option( CLEARANCE_PAGE_OPTION ) );
 	}
 
-	public function test_does_not_throw_when_create_clearance_page_throws(): void {
+	public function test_does_not_throw_when_runtime_exception_is_raised(): void {
 		// Arrange.
 		$callback = static function () {
 			return true;
