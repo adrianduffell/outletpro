@@ -23,27 +23,27 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * @throws \UnexpectedValueException If the stored option value is not an integer.
  */
 function clearance_page_exists(): bool {
-	$existing_id = get_option( CLEARANCE_PAGE_OPTION, false );
+	$page_id = get_option( CLEARANCE_PAGE_OPTION, false );
 
-	if ( false === $existing_id ) {
+	if ( false === $page_id ) {
 		return false;
 	}
 
 	// Non-digit values are invalid and indicate a misconfiguration.
-	if ( ! ctype_digit( (string) $existing_id ) ) {
+	if ( ! ctype_digit( (string) $page_id ) ) {
 		throw new \UnexpectedValueException( 'Clearance page option is not a positive integer.' );
 	}
 
 	// Cast to int because caching layers may return options as strings.
-	$existing_id = (int) $existing_id;
+	$page_id = (int) $page_id;
 
-	if ( 0 === $existing_id ) {
+	if ( 0 === $page_id ) {
 		return false;
 	}
 
-	$existing_page = get_post( $existing_id );
+	$page = get_post( $page_id );
 
-	return $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type;
+	return $page instanceof \WP_Post && 'page' === $page->post_type;
 }
 
 /**
