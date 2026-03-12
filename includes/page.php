@@ -29,9 +29,13 @@ function clearance_page_exists(): bool {
 		return false;
 	}
 
-	if ( ! is_int( $existing_id ) ) {
-		throw new \UnexpectedValueException( 'Clearance page option must be an integer.' );
+	// Non-digit values are invalid and indicate a misconfiguration.
+	if ( ! ctype_digit( (string) $existing_id ) ) {
+		throw new \UnexpectedValueException( 'Clearance page option is not a positive integer.' );
 	}
+
+	// Cast to int because caching layers may return options as strings.
+	$existing_id = (int) $existing_id;
 
 	if ( 0 === $existing_id ) {
 		return false;
