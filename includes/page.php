@@ -30,6 +30,8 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * Zero and non-digit values indicate a corrupted state and the page existence cannot
  * be determined. Exceptions are thrown in these cases.
  *
+ * Trashed pages are considered as not existing.
+ *
  * @since 1.0.0
  * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
  */
@@ -58,6 +60,23 @@ function clearance_page_exists(): bool {
 	$page = get_post( $page_id );
 
 	return $page instanceof \WP_Post && 'page' === $page->post_type;
+	// Validate we have a post object before proceeding.
+	if ( ! $page instanceof \WP_Post ) {
+		throw new \RuntimeException( 'Unexpected value retrieving clearance page.' );
+	}
+
+	// Verify it's an actual page.
+	if ( 'page' !== $page->post_type ) {
+		return false;
+	}
+
+	// Ignore trashed pages.
+	if ( 'trash' === $page->post_status ) {
+		return false;
+	}
+
+	// We can now categorically say the page exists...
+	return true;
 }
 
 /**
