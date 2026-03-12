@@ -9,6 +9,13 @@
 ## Pull Requests
 
 * PRs should be fewer than 500 lines in size.
+* Make changes to public functions in a dedicated PR. Do not mix changes to public functions and internal functions in the same PR. 
+
+### Pull request titles
+
+PR titles should be succinct and thematic, not a complete summary of every change. Do not write titles as a comma-separated list of edits. Instead, choose a short title that reflects the main intent of the PR. The description should explain the detailed scope.
+
+For example, prefer `Standardize hooks` over `Rename WordPress hook callbacks with _hook suffix, add @internal and Fired by docblocks, hardcode namespace`.
 
 ## Tests
 

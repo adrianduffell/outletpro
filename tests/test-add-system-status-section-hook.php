@@ -1,11 +1,11 @@
 <?php
 /**
- * Test the add_system_status_section function.
+ * Test the add_system_status_section_hook function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\add_system_status_section;
+use function WC_Clearance\add_system_status_section_hook;
 use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
@@ -22,7 +22,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*Yes\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_no_when_taxonomy_is_not_registered(): void {
@@ -34,7 +34,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-taxonomy-registered"[^>]*>\s*No\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_term_id_when_canonical_term_exists(): void {
@@ -47,7 +47,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-canonical-term-id"[^>]*>\s*' . preg_quote( (string) $term_id, '/' ) . '\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_warning_when_canonical_term_not_found(): void {
@@ -58,7 +58,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/class="error"><span>Canonical term not found\./' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_zero_when_no_products_in_clearance(): void {
@@ -70,7 +70,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-product-count"[^>]*>\s*0\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_correct_product_count(): void {
@@ -89,7 +89,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-product-count"[^>]*>\s*2\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_only_counts_published_products(): void {
@@ -114,7 +114,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-product-count"[^>]*>\s*1\s*</' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_output_contains_section_heading(): void {
@@ -125,7 +125,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/Clearance Section/' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_page_link_when_page_exists(): void {
@@ -145,7 +145,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*<a\s[^>]*>' . preg_quote( $page->post_title, '/' ) . '<\/a>/s' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_page_status_when_page_exists(): void {
@@ -162,7 +162,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*\(draft\)/s' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_published_status_when_page_is_published(): void {
@@ -186,7 +186,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*\(publish\)/s' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 
 	public function test_shows_error_when_page_not_found(): void {
@@ -202,6 +202,6 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*class="error"><span>Clearance section page not found\./s' );
 
 		// Act.
-		add_system_status_section();
+		add_system_status_section_hook();
 	}
 }

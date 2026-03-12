@@ -15,15 +15,17 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_system_status(): void {
-	add_action( 'woocommerce_system_status_report', __NAMESPACE__ . '\add_system_status_section', 99 );
+	add_action( 'woocommerce_system_status_report', 'WC_Clearance\add_system_status_section_hook', 99 );
 }
 
 /**
  * Add clearance section info to the WooCommerce system status report.
  *
- * @since 1.0.0
+ * Fired by `woocommerce_system_status_report`.
+ *
+ * @internal WordPress action hook
  */
-function add_system_status_section(): void {
+function add_system_status_section_hook(): void {
 	$taxonomy_registered = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
 
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
