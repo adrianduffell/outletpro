@@ -20,8 +20,6 @@ function init_system_status(): void {
 
 /**
  * Get the clearance section page, or null if not configured or not found.
- *
- * @return \WP_Post|null
  */
 function get_clearance_section_page(): ?\WP_Post {
 	try {
@@ -34,6 +32,24 @@ function get_clearance_section_page(): ?\WP_Post {
 	}
 	$page = get_post( (int) get_option( CLEARANCE_PAGE_OPTION ) );
 	return $page instanceof \WP_Post ? $page : null;
+}
+
+/**
+ * Render the clearance section page cell content.
+ *
+ * @internal
+ *
+ * @param \WP_Post|null $page The clearance section page, or null if not found.
+ */
+function render_clearance_section_page_cell( ?\WP_Post $page ): void {
+	if ( $page ) {
+		echo '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>';
+		echo ' (' . esc_html( $page->post_status ) . ')';
+	} else {
+		?>
+		<mark class="error"><span><?php esc_html_e( 'Clearance section page not found.', 'wc-clearance' ); ?></span></mark>
+		<?php
+	}
 }
 
 /**
@@ -90,16 +106,7 @@ function add_system_status_section_hook(): void {
 				<td data-export-label="Clearance section page"><?php esc_html_e( 'Clearance section page:', 'wc-clearance' ); ?></td>
 				<td class="help"></td>
 				<td data-testid="clearance-section-page">
-					<?php
-					if ( $page ) {
-						echo '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>';
-						echo ' (' . esc_html( $page->post_status ) . ')';
-					} else {
-						?>
-						<mark class="error"><span><?php esc_html_e( 'Clearance section page not found.', 'wc-clearance' ); ?></span></mark>
-						<?php
-					}
-					?>
+					<?php render_clearance_section_page_cell( $page ); ?>
 				</td>
 			</tr>
 		</tbody>
