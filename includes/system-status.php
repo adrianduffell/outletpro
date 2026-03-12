@@ -74,6 +74,7 @@ function add_system_status_section(): void {
 					<?php
 					if ( $page && 'trash' !== $page->post_status ) {
 						echo '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>';
+						echo ' (' . esc_html( $page->post_status ) . ')';
 					} else {
 						?>
 						<mark class="error"><span><?php esc_html_e( 'Clearance section page not found.', 'wc-clearance' ); ?></span></mark>

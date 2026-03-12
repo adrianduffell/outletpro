@@ -148,6 +148,47 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section();
 	}
 
+	public function test_shows_page_status_when_page_exists(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+
+		// Expect.
+		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*\(draft\)/s' );
+
+		// Act.
+		add_system_status_section();
+	}
+
+	public function test_shows_published_status_when_page_is_published(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		wp_update_post(
+			array(
+				'ID'          => $page_id,
+				'post_status' => 'publish',
+			)
+		);
+
+		// Expect.
+		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*\(publish\)/s' );
+
+		// Act.
+		add_system_status_section();
+	}
+
 	public function test_shows_error_when_page_not_found(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
