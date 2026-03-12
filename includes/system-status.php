@@ -29,6 +29,9 @@ function add_system_status_section(): void {
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 	$clearance_product_count = $taxonomy_registered ? count_clearance() : 0;
+
+	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$page    = $page_id > 0 ? get_post( $page_id ) : null;
 	?>
 	<table class="wc_status_table widefat" cellspacing="0">
 		<thead>
@@ -63,6 +66,21 @@ function add_system_status_section(): void {
 				<td data-export-label="Total products in clearance section"><?php esc_html_e( 'Total products in clearance section:', 'wc-clearance' ); ?></td>
 				<td class="help"></td>
 				<td data-testid="clearance-product-count"><?php echo esc_html( $clearance_product_count ); ?></td>
+			</tr>
+			<tr>
+				<td data-export-label="Clearance section page"><?php esc_html_e( 'Clearance section page:', 'wc-clearance' ); ?></td>
+				<td class="help"></td>
+				<td data-testid="clearance-section-page">
+					<?php
+					if ( $page && 'trash' !== $page->post_status ) {
+						echo '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>';
+					} else {
+						?>
+						<mark class="error"><span><?php esc_html_e( 'Clearance section page not found.', 'wc-clearance' ); ?></span></mark>
+						<?php
+					}
+					?>
+				</td>
 			</tr>
 		</tbody>
 	</table>

@@ -6,7 +6,9 @@
  */
 
 use function WC_Clearance\add_system_status_section;
+use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\register_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
@@ -121,6 +123,42 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/Clearance Section/' );
+
+		// Act.
+		add_system_status_section();
+	}
+
+	public function test_shows_page_link_when_page_exists(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$page    = get_post( $page_id );
+		$this->assertNotNull( $page );
+
+		// Expect.
+		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*<a\s[^>]*>' . preg_quote( $page->post_title, '/' ) . '<\/a>/s' );
+
+		// Act.
+		add_system_status_section();
+	}
+
+	public function test_shows_error_when_page_not_found(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+
+		// Expect.
+		$this->expectOutputRegex( '/data-testid="clearance-section-page"[^>]*>.*class="error"><span>Clearance section page not found\./s' );
 
 		// Act.
 		add_system_status_section();
