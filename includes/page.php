@@ -23,9 +23,9 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * @throws \UnexpectedValueException If the stored option value is not an integer.
  */
 function clearance_page_exists(): bool {
-	$existing_id = get_option( CLEARANCE_PAGE_OPTION, null );
+	$existing_id = get_option( CLEARANCE_PAGE_OPTION, false );
 
-	if ( is_null( $existing_id ) ) {
+	if ( false === $existing_id ) {
 		return false;
 	}
 
