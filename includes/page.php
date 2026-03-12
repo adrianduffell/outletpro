@@ -59,7 +59,12 @@ function clearance_page_exists(): bool {
 
 	$page = get_post( $page_id );
 
-	return $page instanceof \WP_Post && 'page' === $page->post_type;
+	// A page does not exist with the stored ID.
+	// Likely to be caused by manual deletion of the page.
+	if ( is_null( $page ) ) {
+		return false;
+	}
+
 	// Handle unexpected WP_Error return value from get_post.
 	if ( is_wp_error( $page ) ) {
 		throw new \RuntimeException( 'Error retrieving clearance page: ' . $page->get_error_message() );
