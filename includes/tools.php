@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_tools(): void {
-	add_filter( 'woocommerce_debug_tools', __NAMESPACE__ . '\hook_register_create_clearance_page_tool' );
+	add_filter( 'woocommerce_debug_tools', __NAMESPACE__ . '\register_create_clearance_page_tool_hook' );
 }
 
 /**
@@ -25,7 +25,7 @@ function init_tools(): void {
  * @return array<string, mixed> Modified tools.
  * @internal
  */
-function hook_register_create_clearance_page_tool( array $tools ): array {
+function register_create_clearance_page_tool_hook( array $tools ): array {
 	$tools['create_clearance_page'] = array(
 		'name'     => __( 'Create clearance section page', 'wc-clearance' ),
 		'button'   => __( 'Create page', 'wc-clearance' ),
