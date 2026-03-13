@@ -75,7 +75,7 @@ function init_page(): void {
 }
 
 /**
- * Add a "Clearance Page" label to the clearance page in the admin listing table.
+ * Add a "Clearance Section Page" label to the clearance page in the admin listing table.
  *
  * Fired by `display_post_states`.
  *
