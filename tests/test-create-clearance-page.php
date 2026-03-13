@@ -141,6 +141,24 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertSame( $pages[0]->ID, (int) get_option( CLEARANCE_PAGE_OPTION ) );
 	}
 
+	public function test_does_not_create_duplicate_page_when_page_already_exists(): void {
+		// Arrange.
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$original_page_id = get_option( CLEARANCE_PAGE_OPTION );
+
+		// Act.
+		create_clearance_page();
+
+		// Assert.
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		$this->assertSame( $original_page_id, $page_id );
+	}
+
 	public function test_returns_already_exists_message_when_page_already_exists(): void {
 		// Arrange.
 		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
@@ -155,5 +173,16 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'Clearance section page already exists.', $result );
+	}
+
+	public function test_throws_runtime_exception_when_option_is_corrupted(): void {
+		// Arrange.
+		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		create_clearance_page();
 	}
 }

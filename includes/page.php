@@ -68,10 +68,29 @@ function clearance_page_exists(): bool {
 /**
  * Create the clearance section page.
  *
+ * Does nothing if a clearance page is already registered via the
+ * {@see CLEARANCE_PAGE_OPTION} option, preventing duplicates. If
+ * the option value is corrupted, an exception is thrown as page
+ * creation cannot be safely performed.
+ *
  * @since 1.0.0
+ * @throws \RuntimeException If it cannot be determined whether the clearance page already exists.
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
+	// Prevent duplicate pages from being created.
+	try {
+		if ( clearance_page_exists() ) {
+			return;
+		}
+	} catch ( \UnexpectedValueException $e ) {
+		throw new \RuntimeException(
+			'Could not determine whether the clearance page already exists.',
+			0,
+			$e
+		);
+	}
+
 	$result = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
