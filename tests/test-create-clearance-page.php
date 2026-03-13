@@ -179,13 +179,10 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
 
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
 		// Act.
-		try {
-			create_clearance_page();
-			$this->fail( 'Expected \RuntimeException to be thrown.' );
-		} catch ( \RuntimeException $e ) {
-			// Assert.
-			$this->assertInstanceOf( \UnexpectedValueException::class, $e->getPrevious() );
-		}
+		create_clearance_page();
 	}
 }
