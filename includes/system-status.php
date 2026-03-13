@@ -36,7 +36,9 @@ function add_system_status_section_hook(): void {
 		printf(
 			'<tr><td>%1$s</td><td data-testid="%3$s">%2$s</td></tr>',
 			esc_html( (string) $label ),
-			esc_html( (string) $value ),
+			// Special handling for the canonical term ID item to highlight the error state.
+			// todo: consider generalising this for other items.
+			( $value == 'Not found' && str_contains( $label, 'Canonical term ID' ) ? '<mark class="error"><span>Canonical term not found.</span></mark>' : esc_html( (string) $value ) ),
 			esc_attr( $id )
 		);
 	}
