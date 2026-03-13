@@ -179,4 +179,18 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'Clearance section page already exists.', $result );
 	}
+
+	public function test_throws_runtime_exception_when_option_is_corrupted(): void {
+		// Arrange.
+		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
+
+		// Act.
+		try {
+			create_clearance_page();
+			$this->fail( 'Expected \RuntimeException to be thrown.' );
+		} catch ( \RuntimeException $e ) {
+			// Assert.
+			$this->assertInstanceOf( \UnexpectedValueException::class, $e->getPrevious() );
+		}
+	}
 }
