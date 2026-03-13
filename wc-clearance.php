@@ -56,6 +56,7 @@ function admin_init_hook(): void {
 	init_admin_product_options();
 	init_system_status();
 	init_tools();
+	init_page();
 }
 
 /**

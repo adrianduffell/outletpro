@@ -66,6 +66,35 @@ function clearance_page_exists(): bool {
 }
 
 /**
+ * Helper to initialize page features.
+ *
+ * @since 1.0.0
+ */
+function init_page(): void {
+	add_filter( 'display_post_states', 'WC_Clearance\display_clearance_page_state_hook', 10, 2 );
+}
+
+/**
+ * Add a "Clearance Page" label to the clearance page in the admin listing table.
+ *
+ * Fired by `display_post_states`.
+ *
+ * @param string[] $post_states An array of post display states.
+ * @param \WP_Post $post        The current post object.
+ * @return string[] Modified post display states.
+ * @internal WordPress filter
+ */
+function display_clearance_page_state_hook( array $post_states, \WP_Post $post ): array {
+	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+
+	if ( $page_id > 0 && $post->ID === $page_id ) {
+		$post_states['wc_clearance_page'] = __( 'Clearance Page', 'wc-clearance' );
+	}
+
+	return $post_states;
+}
+
+/**
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
