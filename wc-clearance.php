@@ -64,9 +64,10 @@ function admin_init_hook(): void {
 function activate(): void {
 	\wc_get_logger()->info( 'Activating Clearance Section for WooCommerce plugin.' );
 
-	init_taxonomies(); // Needed since init hook does not run on activation.
 	try {
+		init_taxonomies(); // Needed since init hook does not run on activation.
 		seed_clearance_status_taxonomy();
+		create_clearance_page();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
