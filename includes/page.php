@@ -66,6 +66,23 @@ function clearance_page_exists(): bool {
 }
 
 /**
+ * Helper to report diagnostic info on the clearance section page.
+ *
+ * @internal
+ * @return array<string, array{0: string, 1: int|string}>
+ */
+function report_page(): array {
+	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION, 0 );
+
+	return array(
+		'clearance-page-id' => array(
+			__( 'Page ID', 'wc-clearance' ),
+			$page_id > 0 ? $page_id : __( 'Not found', 'wc-clearance' ),
+		),
+	);
+}
+
+/**
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
