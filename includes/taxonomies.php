@@ -35,7 +35,7 @@ function init_taxonomies(): void {
  * Helper to report diagnostic info on taxonomies.
  *
  * @internal
- * @return array<string, array{0: string, 1: string}>
+ * @return array<string, array{0: string, 1: int|string}>
  */
 function report_taxonomies(): array {
 	$taxonomy_exists         = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
@@ -49,13 +49,11 @@ function report_taxonomies(): array {
 		),
 		'clearance-canonical-term-id'   => array(
 			__( 'Canonical term ID', 'wc-clearance' ),
-			$canonical_term instanceof \WP_Term
-				? (string) $canonical_term->term_id
-				: '<mark class="error"><span>' . esc_html__( 'Canonical term not found.', 'wc-clearance' ) . '</span></mark>',
+			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-clearance' ),
 		),
 		'clearance-product-count'       => array(
 			__( 'Total products in clearance section', 'wc-clearance' ),
-			null !== $clearance_product_count ? (string) $clearance_product_count : __( 'Unknown', 'wc-clearance' ),
+			$clearance_product_count ?? __( 'Unknown', 'wc-clearance' ),
 		),
 	);
 }
