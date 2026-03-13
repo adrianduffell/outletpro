@@ -74,13 +74,21 @@ function clearance_page_exists(): bool {
  * creation cannot be safely performed.
  *
  * @since 1.0.0
- * @throws \UnexpectedValueException If the clearance page option value is corrupted.
+ * @throws \RuntimeException If it cannot be determined whether the clearance page already exists.
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
 	// Prevent duplicate pages from being created.
-	if ( clearance_page_exists() ) {
-		return;
+	try {
+		if ( clearance_page_exists() ) {
+			return;
+		}
+	} catch ( \UnexpectedValueException $e ) {
+		throw new \RuntimeException(
+			'Could not determine whether the clearance page already exists.',
+			0,
+			$e
+		);
 	}
 
 	$result = wp_insert_post(
