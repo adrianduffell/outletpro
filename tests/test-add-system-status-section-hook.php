@@ -142,7 +142,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/<table[^>]*>.*<thead>.*<\/thead>.*<tbody>.*<\/tbody>/s' );
+		$this->expectOutputRegex( '/<table[^>]*>.*?<thead>.*?<\/thead>.*?<tbody>.*?<\/tbody>.*?<\/table>/s' );
 
 		// Act.
 		add_system_status_section_hook();
