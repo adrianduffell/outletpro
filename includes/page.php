@@ -69,17 +69,21 @@ function clearance_page_exists(): bool {
  * Helper to report diagnostic info on the clearance section page.
  *
  * @internal
- * @return array<string, array{0: string, 1: int|string}>
+ * @return array<string, array{0: string, 1: string}>
  */
 function report_page(): array {
+	$label   = __( 'Page ID', 'wc-clearance' );
 	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION, 0 );
+	$page    = $page_id > 0 ? get_post( $page_id ) : null;
 
-	return array(
-		'clearance-page-id' => array(
-			__( 'Page ID', 'wc-clearance' ),
-			$page_id > 0 ? $page_id : __( 'Not found', 'wc-clearance' ),
-		),
-	);
+	if ( ! $page instanceof \WP_Post || 'page' !== $page->post_type ) {
+		return array( 'clearance-page-id' => array( $label, __( 'Not found', 'wc-clearance' ) ) );
+	}
+
+	$status_object = get_post_status_object( $page->post_status );
+	$status_label  = $status_object ? $status_object->label : $page->post_status;
+
+	return array( 'clearance-page-id' => array( $label, sprintf( '%d (%s)', $page_id, $status_label ) ) );
 }
 
 /**
