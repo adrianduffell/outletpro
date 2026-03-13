@@ -9,8 +9,8 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\report_taxonomies;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Report_Taxonomies extends WP_UnitTestCase {
 
