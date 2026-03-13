@@ -19,39 +19,18 @@ function init_system_status(): void {
 }
 
 /**
- * Get the clearance section page, or null if not configured or not found.
- *
- * @internal
- */
-function get_clearance_section_page(): ?\WP_Post {
-	try {
-		if ( ! clearance_page_exists() ) {
-			return null;
-		}
-	} catch ( \UnexpectedValueException $e ) {
-		// Corrupted option value: treat as not found.
-		return null;
-	}
-	$page = get_post( (int) get_option( CLEARANCE_PAGE_OPTION ) );
-	return $page instanceof \WP_Post ? $page : null;
-}
-
-/**
  * Render the clearance section page cell content.
  *
  * @internal
  *
  * @param \WP_Post|null $page The clearance section page, or null if not found.
  */
-function render_clearance_section_page_cell( ?\WP_Post $page ): void {
+function render_clearance_section_page_cell( ?\WP_Post $page ): string {
 	if ( $page ) {
-		echo '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>';
-		echo ' (' . esc_html( $page->post_status ) . ')';
-	} else {
-		?>
-		<mark class="error"><span><?php esc_html_e( 'Clearance section page not found.', 'wc-clearance' ); ?></span></mark>
-		<?php
+		return '<a href="' . esc_url( get_edit_post_link( $page->ID ) ) . '">' . esc_html( $page->post_title ) . '</a>'
+			. ' (' . esc_html( $page->post_status ) . ')';
 	}
+	return '<mark class="error"><span>' . esc_html__( 'Clearance section page not found.', 'wc-clearance' ) . '</span></mark>';
 }
 
 /**
@@ -75,6 +54,15 @@ function add_system_status_section_hook(): void {
 			// Special handling for the canonical term ID item to highlight the error state.
 			// todo: consider generalising this for other items.
 			( 'Not found' === $value && str_contains( $label, 'Canonical term ID' ) ? '<mark class="error"><span>Canonical term not found.</span></mark>' : esc_html( (string) $value ) ),
+			esc_attr( $id )
+		);
+	}
+
+	foreach ( report_page() as $id => $report_item ) {
+		printf(
+			'<tr><td>%1$s</td><td class="help"></td><td data-testid="%3$s">%2$s</td></tr>',
+			esc_html( (string) $report_item[0] ),
+			render_clearance_section_page_cell( $report_item[1] ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			esc_attr( $id )
 		);
 	}

@@ -163,6 +163,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_page_link_when_page_exists(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -183,6 +188,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_page_status_when_page_exists(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -200,6 +210,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_published_status_when_page_is_published(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -224,6 +239,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_error_when_page_not_found(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();

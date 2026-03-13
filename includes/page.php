@@ -66,6 +66,31 @@ function clearance_page_exists(): bool {
 }
 
 /**
+ * Helper to report diagnostic info on the clearance section page.
+ *
+ * @internal
+ * @return array<string, array{0: string, 1: \WP_Post|null}>
+ */
+function report_page(): array {
+	$page = null;
+	try {
+		if ( clearance_page_exists() ) {
+			$post = get_post( (int) get_option( CLEARANCE_PAGE_OPTION ) );
+			$page = $post instanceof \WP_Post ? $post : null;
+		}
+	} catch ( \UnexpectedValueException $e ) {
+		$page = null; // Corrupted option value: treat as not found.
+	}
+
+	return array(
+		'clearance-section-page' => array(
+			__( 'Clearance section page', 'wc-clearance' ),
+			$page,
+		),
+	);
+}
+
+/**
  * Create the clearance section page.
  *
  * @since 1.0.0
