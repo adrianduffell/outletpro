@@ -41,7 +41,7 @@ function mark_clearance_page_task_complete_hook( string $new_status, string $old
 		return;
 	}
 
-	if ( get_clearance_page_id() !== $post->ID ) {
+	if ( (int) get_option( CLEARANCE_PAGE_OPTION ) !== $post->ID ) {
 		return;
 	}
 

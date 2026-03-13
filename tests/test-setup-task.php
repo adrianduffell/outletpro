@@ -8,7 +8,6 @@
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use WC_Clearance\Publish_Clearance_Page_Task;
 use function WC_Clearance\create_clearance_page;
-use function WC_Clearance\get_clearance_page_id;
 use function WC_Clearance\mark_clearance_page_task_complete_hook;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
@@ -69,7 +68,7 @@ class Test_Setup_Task extends WP_UnitTestCase {
 		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
-		$page_id = get_clearance_page_id();
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
 		$post    = get_post( $page_id );
 
 		// Act.
@@ -102,7 +101,7 @@ class Test_Setup_Task extends WP_UnitTestCase {
 		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
-		$page_id = get_clearance_page_id();
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
 		$post    = get_post( $page_id );
 
 		// Act.

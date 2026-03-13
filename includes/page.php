@@ -66,16 +66,6 @@ function clearance_page_exists(): bool {
 }
 
 /**
- * Get the clearance section page ID.
- *
- * @since 1.0.0
- * @return int The page ID, or 0 if not registered.
- */
-function get_clearance_page_id(): int {
-	return (int) get_option( CLEARANCE_PAGE_OPTION, 0 );
-}
-
-/**
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
