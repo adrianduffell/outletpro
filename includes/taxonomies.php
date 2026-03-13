@@ -32,6 +32,33 @@ function init_taxonomies(): void {
 }
 
 /**
+ * Helper to report diagnostic info on taxonomies.
+ *
+ * @internal
+ * @return array<string, array{0: string, 1: int|string}>
+ */
+function report_taxonomies(): array {
+	$taxonomy_exists         = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
+	$canonical_term          = $taxonomy_exists ? get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY ) : null;
+	$clearance_product_count = $taxonomy_exists ? count_clearance() : null;
+
+	return array(
+		'clearance-taxonomy-registered' => array(
+			__( 'Clearance status taxonomy registered', 'wc-clearance' ),
+			$taxonomy_exists ? __( 'Yes', 'wc-clearance' ) : __( 'No', 'wc-clearance' ),
+		),
+		'clearance-canonical-term-id'   => array(
+			__( 'Canonical term ID', 'wc-clearance' ),
+			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-clearance' ),
+		),
+		'clearance-product-count'       => array(
+			__( 'Total products in clearance section', 'wc-clearance' ),
+			$clearance_product_count ?? __( 'Unknown', 'wc-clearance' ),
+		),
+	);
+}
+
+/**
  * Register the clearance status taxonomy.
  *
  * @since 1.0.0
