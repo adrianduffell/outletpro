@@ -34,6 +34,7 @@ function init_taxonomies(): void {
 /**
  * Helper to report diagnostic info on taxonomies.
  *
+ * @internal
  * @return array<string, array{0: string, 1: int|string}>
  */
 function report_taxonomies(): array {
