@@ -110,4 +110,21 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 2, $result['clearance-product-count'][1] );
 	}
+
+	public function test_product_count_ignores_draft_products(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+
+		$product = \WC_Helper_Product::create_simple_product();
+		$product->set_status( 'draft' );
+		$product->save();
+		add_to_clearance( $product );
+
+		// Act.
+		$result = report_taxonomies();
+
+		// Assert.
+		$this->assertSame( 0, $result['clearance-product-count'][1] );
+	}
 }
