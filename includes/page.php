@@ -76,8 +76,12 @@ function clearance_page_exists(): bool {
  */
 function create_clearance_page(): void {
 	// Prevent duplicate pages from being created.
-	if ( clearance_page_exists() ) {
-		return;
+	try {
+		if ( clearance_page_exists() ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
+		throw new \RuntimeException( 'Could not determine whether clearance page already exists: ' . $e->getMessage() );
 	}
 
 	$result = wp_insert_post(
