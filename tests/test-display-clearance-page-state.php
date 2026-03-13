@@ -21,7 +21,7 @@ class Test_Display_Clearance_Page_State extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayHasKey( 'wc_clearance_page', $result );
-		$this->assertSame( 'Clearance Page', $result['wc_clearance_page'] );
+		$this->assertSame( 'Clearance Section Page', $result['wc_clearance_page'] );
 	}
 
 	public function test_does_not_add_label_when_post_is_not_clearance_page(): void {
