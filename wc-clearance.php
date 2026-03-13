@@ -32,6 +32,7 @@ require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
+require_once __DIR__ . '/includes/editor-guide.php';
 
 /**
  * Initialize the plugin.
@@ -89,6 +90,7 @@ function enqueue_admin_styles_hook(): void {
 	);
 }
 add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
+add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_editor_guide_hook' );
 
 // Hook into WordPress.
 add_action( 'init', 'WC_Clearance\init_hook' );
