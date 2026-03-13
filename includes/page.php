@@ -69,10 +69,12 @@ function clearance_page_exists(): bool {
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
- * {@see CLEARANCE_PAGE_OPTION} option, preventing duplicates.
+ * {@see CLEARANCE_PAGE_OPTION} option, preventing duplicates. If
+ * the option value is corrupted, an exception is thrown as page
+ * creation cannot be safely performed.
  *
  * @since 1.0.0
- * @throws \UnexpectedValueException If the clearance page option value is invalid.
+ * @throws \UnexpectedValueException If the clearance page option value is corrupted.
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
