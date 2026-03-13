@@ -62,56 +62,22 @@ function render_clearance_section_page_cell( ?\WP_Post $page ): void {
  * @internal WordPress action hook
  */
 function add_system_status_section_hook(): void {
-	$taxonomy_registered = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
+	echo '<table class="wc_status_table widefat" cellspacing="0">';
+	echo '<thead><tr><th colspan="3" data-export-label="Clearance Section">	<h2>' . esc_html__( 'Clearance Section', 'wc-clearance' ) . '</h2></th></tr></thead><tbody>';
 
-	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	foreach ( report_taxonomies() as $id => $report_item ) {
+		$label = $report_item[0];
+		$value = $report_item[1];
 
-	$clearance_product_count = $taxonomy_registered ? count_clearance() : 0;
+		printf(
+			'<tr><td>%1$s</td><td class="help"></td><td data-testid="%3$s">%2$s</td></tr>',
+			esc_html( (string) $label ),
+			// Special handling for the canonical term ID item to highlight the error state.
+			// todo: consider generalising this for other items.
+			( 'Not found' === $value && str_contains( $label, 'Canonical term ID' ) ? '<mark class="error"><span>Canonical term not found.</span></mark>' : esc_html( (string) $value ) ),
+			esc_attr( $id )
+		);
+	}
 
-	$page = get_clearance_section_page();
-	?>
-	<table class="wc_status_table widefat" cellspacing="0">
-		<thead>
-			<tr>
-				<th colspan="3" data-export-label="Clearance Section">
-					<h2><?php esc_html_e( 'Clearance Section', 'wc-clearance' ); ?></h2>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td data-export-label="Clearance status taxonomy registered"><?php esc_html_e( 'Clearance status taxonomy registered:', 'wc-clearance' ); ?></td>
-				<td class="help"></td>
-				<td data-testid="clearance-taxonomy-registered"><?php echo $taxonomy_registered ? esc_html__( 'Yes', 'wc-clearance' ) : esc_html__( 'No', 'wc-clearance' ); ?></td>
-			</tr>
-			<tr>
-				<td data-export-label="Clearance status canonical term ID"><?php esc_html_e( 'Clearance status canonical term ID:', 'wc-clearance' ); ?></td>
-				<td class="help"></td>
-				<td data-testid="clearance-canonical-term-id">
-					<?php
-					if ( $canonical_term ) {
-						echo esc_html( $canonical_term->term_id );
-					} else {
-						?>
-						<mark class="error"><span><?php esc_html_e( 'Canonical term not found.', 'wc-clearance' ); ?></span></mark>
-						<?php
-					}
-					?>
-				</td>
-			</tr>
-			<tr>
-				<td data-export-label="Total products in clearance section"><?php esc_html_e( 'Total products in clearance section:', 'wc-clearance' ); ?></td>
-				<td class="help"></td>
-				<td data-testid="clearance-product-count"><?php echo esc_html( $clearance_product_count ); ?></td>
-			</tr>
-			<tr>
-				<td data-export-label="Clearance section page"><?php esc_html_e( 'Clearance section page:', 'wc-clearance' ); ?></td>
-				<td class="help"></td>
-				<td data-testid="clearance-section-page">
-					<?php render_clearance_section_page_cell( $page ); ?>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<?php
+	echo '</tbody></table>';
 }
