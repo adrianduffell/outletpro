@@ -48,4 +48,15 @@ class Publish_Clearance_Page_Task extends Task {
 	public function get_time(): string {
 		return __( '1 minute', 'wc-clearance' );
 	}
+
+	/**
+	 * Get the URL to the clearance section page editor.
+	 */
+	public function get_action_url(): string {
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $page_id <= 0 ) {
+			return '';
+		}
+		return admin_url( 'post.php?post=' . $page_id . '&action=edit' );
+	}
 }

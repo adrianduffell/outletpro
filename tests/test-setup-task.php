@@ -113,6 +113,40 @@ class Test_Setup_Task extends WP_UnitTestCase {
 		$this->assertFalse( $task->is_complete() );
 	}
 
+	public function test_get_action_url_returns_edit_url_for_clearance_page(): void {
+		// Arrange.
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$task    = new Publish_Clearance_Page_Task();
+
+		// Act.
+		$url = $task->get_action_url();
+
+		// Assert.
+		$this->assertSame( admin_url( 'post.php?post=' . $page_id . '&action=edit' ), $url );
+	}
+
+	public function test_get_action_url_returns_empty_string_when_no_clearance_page(): void {
+		// Arrange.
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		$task = new Publish_Clearance_Page_Task();
+
+		// Act.
+		$url = $task->get_action_url();
+
+		// Assert.
+		$this->assertSame( '', $url );
+	}
+
 	public function test_init_setup_task_does_not_throw_when_task_list_is_hidden(): void {
 		// Arrange.
 		update_option( 'woocommerce_task_list_hidden', 'yes' );
