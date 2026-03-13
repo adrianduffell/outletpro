@@ -11,7 +11,7 @@ use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Report_Page extends WP_UnitTestCase {
 
-	public function test_page_is_null_when_option_is_not_set(): void {
+	public function test_page_shows_error_when_option_is_not_set(): void {
 		// Arrange.
 		delete_option( CLEARANCE_PAGE_OPTION );
 
@@ -19,10 +19,10 @@ class Test_Report_Page extends WP_UnitTestCase {
 		$result = report_page();
 
 		// Assert.
-		$this->assertNull( $result['clearance-section-page'][1] );
+		$this->assertStringContainsString( 'Clearance section page not found', $result['clearance-section-page'][1] );
 	}
 
-	public function test_page_is_wp_post_when_page_exists(): void {
+	public function test_page_shows_link_when_page_exists(): void {
 		// Arrange.
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
@@ -31,7 +31,7 @@ class Test_Report_Page extends WP_UnitTestCase {
 		$result = report_page();
 
 		// Assert.
-		$this->assertInstanceOf( WP_Post::class, $result['clearance-section-page'][1] );
+		$this->assertStringContainsString( '<a ', $result['clearance-section-page'][1] );
 	}
 
 	public function test_page_has_draft_status_after_creation(): void {
@@ -43,7 +43,7 @@ class Test_Report_Page extends WP_UnitTestCase {
 		$result = report_page();
 
 		// Assert.
-		$this->assertSame( 'draft', $result['clearance-section-page'][1]->post_status );
+		$this->assertStringContainsString( '(draft)', $result['clearance-section-page'][1] );
 	}
 
 	public function test_page_reflects_updated_status(): void {
@@ -62,10 +62,10 @@ class Test_Report_Page extends WP_UnitTestCase {
 		$result = report_page();
 
 		// Assert.
-		$this->assertSame( 'publish', $result['clearance-section-page'][1]->post_status );
+		$this->assertStringContainsString( '(publish)', $result['clearance-section-page'][1] );
 	}
 
-	public function test_page_is_null_when_option_is_corrupted(): void {
+	public function test_page_shows_error_when_option_is_corrupted(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-a-number' );
 
@@ -73,6 +73,6 @@ class Test_Report_Page extends WP_UnitTestCase {
 		$result = report_page();
 
 		// Assert.
-		$this->assertNull( $result['clearance-section-page'][1] );
+		$this->assertStringContainsString( 'Clearance section page not found', $result['clearance-section-page'][1] );
 	}
 }
