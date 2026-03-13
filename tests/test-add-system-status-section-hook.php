@@ -12,6 +12,11 @@ use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_yes_when_taxonomy_is_registered(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -23,6 +28,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_no_when_taxonomy_is_not_registered(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -35,6 +45,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_term_id_when_canonical_term_exists(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -48,6 +63,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_warning_when_canonical_term_not_found(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -59,6 +79,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_zero_when_no_products_in_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -71,6 +96,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_shows_correct_product_count(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -90,6 +120,11 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		add_system_status_section_hook();
 	}
 
+	/**
+	 * Deprecated test.
+	 *
+	 * @deprecated
+	 */
 	public function test_only_counts_published_products(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
