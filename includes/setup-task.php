@@ -15,10 +15,11 @@ use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
  * Register the clearance page setup task with WooCommerce and the page lifecycle hook.
  *
  * @since 1.0.0
+ * @throws \RuntimeException If the WooCommerce TaskLists class is not available.
  */
 function init_setup_task(): void {
 	if ( ! class_exists( 'Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists' ) ) {
-		return;
+		throw new \RuntimeException( 'WooCommerce TaskLists class not found. This plugin requires WooCommerce to be active.' );
 	}
 
 	TaskLists::add_task( 'extended', new Publish_Clearance_Page_Task() );
