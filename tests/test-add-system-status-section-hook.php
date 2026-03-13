@@ -125,4 +125,26 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		// Act.
 		add_system_status_section_hook();
 	}
+
+	public function test_table_has_correct_css_class(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+
+		// Expect.
+		$this->expectOutputRegex( '/<table[^>]*class="wc_status_table widefat"/' );
+
+		// Act.
+		add_system_status_section_hook();
+	}
+
+	public function test_table_has_cellspacing_zero(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+
+		// Expect.
+		$this->expectOutputRegex( '/<table[^>]*cellspacing="0"/' );
+
+		// Act.
+		add_system_status_section_hook();
+	}
 }
