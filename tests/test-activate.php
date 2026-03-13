@@ -24,5 +24,4 @@ class Test_Activate extends WP_UnitTestCase {
 		// Assert.
 		$this->assertGreaterThan( 0, (int) get_option( CLEARANCE_PAGE_OPTION ) );
 	}
-
 }
