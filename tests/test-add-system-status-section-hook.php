@@ -160,4 +160,26 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		// Act.
 		add_system_status_section_hook();
 	}
+
+	public function test_table_has_correct_css_class(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+
+		// Expect.
+		$this->expectOutputRegex( '/<table[^>]*class="(?=[^"]*\bwc_status_table\b)(?=[^"]*\bwidefat\b)[^"]*"/' );
+
+		// Act.
+		add_system_status_section_hook();
+	}
+
+	public function test_table_has_thead_and_tbody(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+
+		// Expect.
+		$this->expectOutputRegex( '/<table[^>]*>.*?<thead>.*?<\/thead>.*?<tbody>.*?<\/tbody>.*?<\/table>/s' );
+
+		// Act.
+		add_system_status_section_hook();
+	}
 }
