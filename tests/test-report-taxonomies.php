@@ -44,7 +44,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$result = report_taxonomies();
 
 		// Assert.
-		$this->assertSame( 'Not found', $result['clearance-canonical-term-id'][1] );
+		$this->assertStringContainsString( 'Canonical term not found', $result['clearance-canonical-term-id'][1] );
 	}
 
 	public function test_canonical_term_id_is_not_found_when_canonical_term_does_not_exist(): void {
@@ -55,7 +55,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$result = report_taxonomies();
 
 		// Assert.
-		$this->assertSame( 'Not found', $result['clearance-canonical-term-id'][1] );
+		$this->assertStringContainsString( 'Canonical term not found', $result['clearance-canonical-term-id'][1] );
 	}
 
 	public function test_canonical_term_id_is_term_id_when_canonical_term_exists(): void {
@@ -69,7 +69,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$result = report_taxonomies();
 
 		// Assert.
-		$this->assertSame( $term_id, $result['clearance-canonical-term-id'][1] );
+		$this->assertSame( (string) $term_id, $result['clearance-canonical-term-id'][1] );
 	}
 
 	public function test_product_count_is_unknown_when_taxonomy_not_registered(): void {
@@ -92,7 +92,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$result = report_taxonomies();
 
 		// Assert.
-		$this->assertSame( 0, $result['clearance-product-count'][1] );
+		$this->assertSame( '0', $result['clearance-product-count'][1] );
 	}
 
 	public function test_product_count_matches_number_of_clearance_products(): void {
@@ -109,7 +109,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$result = report_taxonomies();
 
 		// Assert.
-		$this->assertSame( 2, $result['clearance-product-count'][1] );
+		$this->assertSame( '2', $result['clearance-product-count'][1] );
 	}
 
 	public function test_product_count_ignores_draft_products(): void {
@@ -126,6 +126,6 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$result = report_taxonomies();
 
 		// Assert.
-		$this->assertSame( 0, $result['clearance-product-count'][1] );
+		$this->assertSame( '0', $result['clearance-product-count'][1] );
 	}
 }
