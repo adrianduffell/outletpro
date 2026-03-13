@@ -34,7 +34,7 @@ function add_system_status_section_hook(): void {
 		$value = $report_item[1];
 
 		printf(
-			'<tr><td>%1$s</td><td data-testid="%3$s">%2$s</td></tr>',
+			'<tr><td>%1$s</td><td class="help"></td><td data-testid="%3$s">%2$s</td></tr>',
 			esc_html( (string) $label ),
 			// Special handling for the canonical term ID item to highlight the error state.
 			// todo: consider generalising this for other items.
