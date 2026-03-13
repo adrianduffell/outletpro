@@ -72,6 +72,7 @@ function clearance_page_exists(): bool {
  * {@see CLEARANCE_PAGE_OPTION} option, preventing duplicates.
  *
  * @since 1.0.0
+ * @throws \UnexpectedValueException If the clearance page option value is invalid.
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
