@@ -87,11 +87,12 @@ function init_page(): void {
 function display_clearance_page_state_hook( array $post_states, \WP_Post $post ): array {
 	$page_id = get_option( CLEARANCE_PAGE_OPTION );
 
-	if ( $page_id > 0 ) {
-		$clearance_page = get_post( $page_id );
-		if ( $clearance_page instanceof \WP_Post && $clearance_page->ID === $post->ID ) {
-			$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
-		}
+	if ( ! is_int( $page_id ) ) {
+		return $post_states;
+	}
+
+	if ( $page_id > 0 && $post->ID === $page_id ) {
+		$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
 	}
 
 	return $post_states;
