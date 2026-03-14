@@ -157,12 +157,15 @@ function get_clearance_page_id(): ?int {
 		return null;
 	}
 
-	// ctype_digit handles both int and numeric string values, rejecting negative
-	// values, floats, and non-numeric strings. Cast to string first because
-	// caching layers may return a string. The integer comparison rejects zero.
-	if ( ! ctype_digit( (string) $value ) || (int) $value <= 0 ) {
-		throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
+	if ( is_int( $value ) && $value > 0 ) {
+		return $value;
 	}
 
-	return (int) $value;
+	// Option values are stored as strings in database and some caching layers.
+	// Cast valid numeric strings to int.
+	if ( is_string( $value ) && ctype_digit( $value ) && '0' !== $value ) {
+		return (int) $value;
+	}
+
+	throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
 }
