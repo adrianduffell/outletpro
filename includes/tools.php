@@ -48,11 +48,6 @@ function run_create_clearance_page_tool(): string {
 		if ( clearance_page_exists() ) {
 			return __( 'Clearance section page already exists.', 'wc-clearance' );
 		}
-	} catch ( \UnexpectedValueException $e ) {
-		return __( 'Clearance section page could not be created.', 'wc-clearance' );
-	}
-
-	try {
 		create_clearance_page();
 	} catch ( \RuntimeException $e ) {
 		return __( 'Clearance section page could not be created.', 'wc-clearance' );

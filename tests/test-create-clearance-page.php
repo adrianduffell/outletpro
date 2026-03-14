@@ -175,6 +175,29 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertSame( 'Clearance section page already exists.', $result );
 	}
 
+	public function test_creates_page_when_existing_page_is_trashed(): void {
+		// Arrange.
+		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		$trashed_id = wp_insert_post(
+			array(
+				'post_title'  => 'Clearance',
+				'post_type'   => 'page',
+				'post_status' => 'trash',
+			)
+		);
+		update_option( CLEARANCE_PAGE_OPTION, $trashed_id );
+
+		// Act.
+		$result = run_create_clearance_page_tool();
+
+		// Assert.
+		$this->assertSame( 'Clearance section page created.', $result );
+	}
+
 	public function test_returns_could_not_be_created_message_when_option_is_corrupted(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
