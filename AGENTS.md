@@ -5,6 +5,7 @@
 * Use functions instead of classes, and as much as possible, pure functions with no side effects.
 * Ensure code passes lint checks, e.g with `npm run lint:css`, `npm run lint:js`, `npm run lint:md:docs`, `npm run lint:php`.
 * Write unit tests for new functions.
+* Don't cast variables, except in extreme circumstances (in which case the occurrence should be thoroughly documented). It is better to fail fast than coerce possibly corrupted values and land in an unknown state.
 
 ## Pull Requests
 
