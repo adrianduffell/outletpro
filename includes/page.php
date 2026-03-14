@@ -66,35 +66,6 @@ function clearance_page_exists(): bool {
 }
 
 /**
- * Helper to initialize page features.
- *
- * @since 1.0.0
- */
-function init_page(): void {
-	add_filter( 'display_post_states', 'WC_Clearance\display_clearance_page_state_hook', 10, 2 );
-}
-
-/**
- * Add a "Clearance Section Page" label to the clearance page in the admin listing table.
- *
- * Fired by `display_post_states`.
- *
- * @param string[] $post_states An array of post display states.
- * @param \WP_Post $post        The current post object.
- * @return string[] Modified post display states.
- * @internal WordPress filter
- */
-function display_clearance_page_state_hook( array $post_states, \WP_Post $post ): array {
-	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
-
-	if ( $page_id > 0 && $post->ID === $page_id ) {
-		$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
-	}
-
-	return $post_states;
-}
-
-/**
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
@@ -103,7 +74,7 @@ function display_clearance_page_state_hook( array $post_states, \WP_Post $post )
  * creation cannot be safely performed.
  *
  * @since 1.0.0
- * @throws \RuntimeException If it cannot be determined whether the clearance page already exists.
+ * @throws \RuntimeException If it cannot be determined whether the clearance page exists.
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
@@ -114,7 +85,7 @@ function create_clearance_page(): void {
 		}
 	} catch ( \UnexpectedValueException $e ) {
 		throw new \RuntimeException(
-			'Could not determine whether the clearance page already exists.',
+			'Could not determine whether the clearance page exists.',
 			0,
 			$e
 		);
@@ -136,4 +107,30 @@ function create_clearance_page(): void {
 	}
 
 	update_option( CLEARANCE_PAGE_OPTION, $result );
+}
+
+/**
+ * Check whether the clearance section page exists and is published.
+ *
+ * @since 1.0.0
+ * @throws \RuntimeException If it cannot be determined whether the clearance page already exists.
+ */
+function clearance_page_is_published(): bool {
+	try {
+		if ( ! clearance_page_exists() ) {
+			return false;
+		}
+	} catch ( \UnexpectedValueException $e ) {
+		throw new \RuntimeException(
+			'Could not determine whether the clearance page already exists.',
+			0,
+			$e
+		);
+	}
+
+	$page_id = get_option( CLEARANCE_PAGE_OPTION );
+	$page    = get_post( $page_id );
+
+	return $page instanceof \WP_Post
+		&& 'publish' === $page->post_status;
 }

@@ -5,6 +5,7 @@
 * Use functions instead of classes, and as much as possible, pure functions with no side effects.
 * Ensure code passes lint checks, e.g with `npm run lint:css`, `npm run lint:js`, `npm run lint:md:docs`, `npm run lint:php`.
 * Write unit tests for new functions.
+* Don't cast variables, except in extreme circumstances (in which case the occurrence should be thoroughly documented). It is better to fail fast than coerce possibly corrupted values and land in an unknown state.
 
 ## Pull Requests
 
@@ -20,6 +21,6 @@ For example, prefer `Standardize hooks` over `Rename WordPress hook callbacks wi
 ## Tests
 
 * Tests should be in the global namespace. Deliberately add `use` statements to import the namespaced classes, functions, and constants used in the tests.
-* Each test is self-contained. Never use `setUp` / `tearDown` or similar variants in PHPUnit.
+* Each test is self-contained. Never use shared `setUp` / `tearDown` or similar variants in PHPUnit. Each test is responsible for arranging the environment to be the exact state it needs.
 * Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
 * The test's function name should describe the test. A docblock should not be added to the test as that would create redundancy.
