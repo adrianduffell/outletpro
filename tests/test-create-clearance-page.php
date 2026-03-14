@@ -175,6 +175,17 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertSame( 'Clearance section page already exists.', $result );
 	}
 
+	public function test_returns_could_not_be_created_message_when_option_is_corrupted(): void {
+		// Arrange.
+		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
+
+		// Act.
+		$result = run_create_clearance_page_tool();
+
+		// Assert.
+		$this->assertSame( 'Clearance section page could not be created.', $result );
+	}
+
 	public function test_throws_runtime_exception_when_option_is_corrupted(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
