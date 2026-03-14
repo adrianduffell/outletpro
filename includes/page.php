@@ -103,7 +103,7 @@ function display_clearance_page_state_hook( array $post_states, \WP_Post $post )
  * creation cannot be safely performed.
  *
  * @since 1.0.0
- * @throws \RuntimeException If it cannot be determined whether the clearance page already exists.
+ * @throws \RuntimeException If it cannot be determined whether the clearance page exists.
  * @throws \RuntimeException If the page could not be created.
  */
 function create_clearance_page(): void {
@@ -114,7 +114,7 @@ function create_clearance_page(): void {
 		}
 	} catch ( \UnexpectedValueException $e ) {
 		throw new \RuntimeException(
-			'Could not determine whether the clearance page already exists.',
+			'Could not determine whether the clearance page exists.',
 			0,
 			$e
 		);
