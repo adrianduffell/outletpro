@@ -134,3 +134,29 @@ function clearance_page_is_published(): bool {
 	return $page instanceof \WP_Post
 		&& 'publish' === $page->post_status;
 }
+
+/**
+ * Get the clearance section page ID from the option.
+ *
+ * Accounts for the option value being stored as a string or int.
+ * Validates the page ID is a positive integer. Zero and non-digit values
+ * indicate a corrupted state and exceptions are thrown in these cases.
+ *
+ * @since 1.0.0
+ * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
+ */
+function get_clearance_page_id(): int {
+	$value = get_option( CLEARANCE_PAGE_OPTION, null );
+
+	if ( is_int( $value ) && $value > 0 ) {
+		return $value;
+	}
+
+	// Option values are stored as strings in database and some caching layers.
+	// Cast valid numeric strings to int.
+	if ( is_string( $value ) && ctype_digit( $value ) && 0 !== $value ) {
+		return (int) $value;
+	}
+
+	throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
+}
