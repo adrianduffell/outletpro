@@ -32,15 +32,15 @@ class Test_Get_Clearance_Page_Id extends WP_UnitTestCase {
 		$this->assertSame( 42, $result );
 	}
 
-	public function test_throws_when_option_is_not_set(): void {
+	public function test_returns_null_when_option_is_not_set(): void {
 		// Arrange.
 		delete_option( CLEARANCE_PAGE_OPTION );
 
-		// Expect.
-		$this->expectException( \UnexpectedValueException::class );
-
 		// Act.
-		get_clearance_page_id();
+		$result = get_clearance_page_id();
+
+		// Assert.
+		$this->assertNull( $result );
 	}
 
 	public function test_throws_when_option_is_zero(): void {
