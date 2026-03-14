@@ -66,15 +66,6 @@ function clearance_page_exists(): bool {
 }
 
 /**
- * Helper to initialize page features.
- *
- * @since 1.0.0
- */
-function init_page(): void {
-	add_filter( 'display_post_states', 'WC_Clearance\clearance_section_label_hook', 10, 2 );
-}
-
-/**
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
