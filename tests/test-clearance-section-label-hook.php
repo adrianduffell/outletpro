@@ -1,14 +1,14 @@
 <?php
 /**
- * Test the display_clearance_page_state_hook function.
+ * Test the clearance_section_label_hook function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\display_clearance_page_state_hook;
+use function WC_Clearance\clearance_section_label_hook;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
-class Test_Display_Clearance_Page_State extends WP_UnitTestCase {
+class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_adds_clearance_page_label_when_post_is_clearance_page(): void {
 		// Arrange.
@@ -17,7 +17,7 @@ class Test_Display_Clearance_Page_State extends WP_UnitTestCase {
 		$post = get_post( $page_id );
 
 		// Act.
-		$result = display_clearance_page_state_hook( array(), $post );
+		$result = clearance_section_label_hook( array(), $post );
 
 		// Assert.
 		$this->assertArrayHasKey( 'wc_clearance_page', $result );
@@ -32,7 +32,7 @@ class Test_Display_Clearance_Page_State extends WP_UnitTestCase {
 		$post = get_post( $other_page_id );
 
 		// Act.
-		$result = display_clearance_page_state_hook( array(), $post );
+		$result = clearance_section_label_hook( array(), $post );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
@@ -45,7 +45,7 @@ class Test_Display_Clearance_Page_State extends WP_UnitTestCase {
 		$post    = get_post( $page_id );
 
 		// Act.
-		$result = display_clearance_page_state_hook( array(), $post );
+		$result = clearance_section_label_hook( array(), $post );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
@@ -59,7 +59,7 @@ class Test_Display_Clearance_Page_State extends WP_UnitTestCase {
 		$existing_states = array( 'existing_key' => 'Existing Label' );
 
 		// Act.
-		$result = display_clearance_page_state_hook( $existing_states, $post );
+		$result = clearance_section_label_hook( $existing_states, $post );
 
 		// Assert.
 		$this->assertArrayHasKey( 'existing_key', $result );
