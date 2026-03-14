@@ -13,7 +13,7 @@ class Test_Clearance_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_when_option_does_not_exist(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
@@ -28,7 +28,7 @@ class Test_Clearance_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_when_page_is_in_draft_status(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
@@ -44,13 +44,13 @@ class Test_Clearance_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_true_when_page_is_published(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
-		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
 		wp_publish_post( $page_id );
 
 		// Act.
@@ -62,13 +62,13 @@ class Test_Clearance_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_when_page_is_in_pending_status(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
-		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
 		wp_update_post(
 			array(
 				'ID'          => $page_id,
@@ -85,13 +85,13 @@ class Test_Clearance_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_after_page_is_trashed(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
-		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
 		wp_publish_post( $page_id );
 		wp_trash_post( $page_id );
 
@@ -104,13 +104,13 @@ class Test_Clearance_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_after_page_is_deleted(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
-		$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
 		wp_publish_post( $page_id );
 		wp_delete_post( $page_id, true );
 
