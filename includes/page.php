@@ -139,14 +139,23 @@ function clearance_page_is_published(): bool {
  * Get the clearance section page ID from the option.
  *
  * Accounts for the option value being stored as a string or int.
+ *
  * Validates the page ID is a positive integer. Zero and non-digit values
  * indicate a corrupted state and exceptions are thrown in these cases.
+ *
+ * Returns null when the option does not exist, which indicates the page
+ * is not yet registered.
  *
  * @since 1.0.0
  * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
  */
-function get_clearance_page_id(): int {
-	$value = get_option( CLEARANCE_PAGE_OPTION, null );
+function get_clearance_page_id(): ?int {
+	$value = get_option( CLEARANCE_PAGE_OPTION );
+
+	// The option does not exist, return null to indicate the page is not registered.
+	if ( false === $value ) {
+		return null;
+	}
 
 	if ( is_int( $value ) && $value > 0 ) {
 		return $value;
