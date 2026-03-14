@@ -85,10 +85,13 @@ function init_page(): void {
  * @internal WordPress filter
  */
 function display_clearance_page_state_hook( array $post_states, \WP_Post $post ): array {
-	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$page_id = get_option( CLEARANCE_PAGE_OPTION );
 
-	if ( $page_id > 0 && $post->ID === $page_id ) {
-		$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
+	if ( $page_id > 0 ) {
+		$clearance_page = get_post( $page_id );
+		if ( $clearance_page instanceof \WP_Post && $clearance_page->ID === $post->ID ) {
+			$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
+		}
 	}
 
 	return $post_states;

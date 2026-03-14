@@ -44,7 +44,7 @@ function register_create_clearance_page_tool_hook( array $tools ): array {
  * @since 1.0.0
  */
 function run_create_clearance_page_tool(): string {
-	$existing_id   = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$existing_id   = get_option( CLEARANCE_PAGE_OPTION );
 	$existing_page = $existing_id > 0 ? get_post( $existing_id ) : null;
 
 	if ( $existing_page instanceof \WP_Post && 'page' === $existing_page->post_type ) {
