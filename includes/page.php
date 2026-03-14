@@ -154,7 +154,7 @@ function get_clearance_page_id(): int {
 
 	// Option values are stored as strings in database and some caching layers.
 	// Cast valid numeric strings to int.
-	if ( is_string( $value ) && ctype_digit( $value ) && 0 !== $value ) {
+	if ( is_string( $value ) && ctype_digit( $value ) && (int) $value > 0 ) {
 		return (int) $value;
 	}
 
