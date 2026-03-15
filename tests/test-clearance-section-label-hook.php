@@ -38,6 +38,33 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
 	}
 
+	public function test_adds_clearance_page_label_when_option_is_string(): void {
+		// Arrange.
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( CLEARANCE_PAGE_OPTION, (string) $page_id );
+		$post = get_post( $page_id );
+
+		// Act.
+		$result = clearance_section_label_hook( array(), $post );
+
+		// Assert.
+		$this->assertArrayHasKey( 'wc_clearance_page', $result );
+		$this->assertSame( 'Clearance Section Page', $result['wc_clearance_page'] );
+	}
+
+	public function test_does_not_add_label_when_option_is_corrupted(): void {
+		// Arrange.
+		update_option( CLEARANCE_PAGE_OPTION, 'not-a-number' );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		$post    = get_post( $page_id );
+
+		// Act.
+		$result = clearance_section_label_hook( array(), $post );
+
+		// Assert.
+		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
+	}
+
 	public function test_does_not_add_label_when_no_clearance_page_is_set(): void {
 		// Arrange.
 		delete_option( CLEARANCE_PAGE_OPTION );
