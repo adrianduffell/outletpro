@@ -45,7 +45,11 @@ require_once __DIR__ . '/includes/setup-task.php';
 function init_hook(): void {
 	init_taxonomies();
 	init_shortcodes();
-	init_setup_task();
+	try {
+		init_setup_task();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Could not initialize setup task: ' . $e->getMessage() );
+	}
 }
 
 /**
