@@ -29,7 +29,10 @@ function init_admin_page_list_table(): void {
  * @internal WordPress filter
  */
 function clearance_section_label_hook( array $post_states, \WP_Post $post ): array {
-	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+	$page_id = get_option( CLEARANCE_PAGE_OPTION );
+	if ( ! is_int( $page_id ) ) {
+		return $post_states;
+	}
 
 	if ( $page_id > 0 && $post->ID === $page_id ) {
 		$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
