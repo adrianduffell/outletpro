@@ -72,9 +72,14 @@ function clearance_page_exists(): bool {
  * @return array<string, array{0: string, 1: string}>
  */
 function report_page(): array {
-	$label   = __( 'Page ID', 'wc-clearance' );
-	$page_id = (int) get_option( CLEARANCE_PAGE_OPTION, 0 );
-	$page    = $page_id > 0 ? get_post( $page_id ) : null;
+	$label = __( 'Page ID', 'wc-clearance' );
+	try {
+		$page_id = get_clearance_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		return array( 'clearance-page-id' => array( $label, __( 'Not found', 'wc-clearance' ) ) );
+	}
+	$page_id = get_clearance_page_id();
+	$page    = $page_id ? get_post( $page_id ) : null;
 
 	if ( ! $page instanceof \WP_Post || 'page' !== $page->post_type ) {
 		return array( 'clearance-page-id' => array( $label, __( 'Not found', 'wc-clearance' ) ) );
