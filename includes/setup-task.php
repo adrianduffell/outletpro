@@ -13,7 +13,7 @@ use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
 
 /**
- * Register the clearance page setup task with WooCommerce and the page lifecycle hook.
+ * Register the clearance page setup task with WooCommerce's onboarding task list.
  *
  * @since 1.0.0
  * @throws \RuntimeException If the WooCommerce TaskLists class is not available.
