@@ -49,6 +49,12 @@ function init_setup_task(): void {
 			public function get_action_url(): string {
 				return setup_task_action_url();
 			}
+
+			public function can_view(): bool {
+				return setup_task_can_view();
+			}
+
+
 		}
 	);
 
@@ -70,6 +76,17 @@ function setup_task_action_url(): string {
 	}
 
 	return admin_url( 'post.php?post=' . $page_id . '&action=edit' );
+}
+
+/**
+ * Determine whether the clearance publish task should be visible.
+ */
+function setup_task_can_view(): bool {
+	try {
+		return clearance_page_exists();
+	} catch ( \Throwable $e ) {
+		return false;
+	}
 }
 
 /**
