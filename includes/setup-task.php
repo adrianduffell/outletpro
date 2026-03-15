@@ -9,6 +9,7 @@ namespace WC_Clearance;
 
 defined( 'ABSPATH' ) || exit;
 
+use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
 
 /**
@@ -22,8 +23,53 @@ function init_setup_task(): void {
 		throw new \RuntimeException( 'WooCommerce TaskLists class not found. This plugin requires WooCommerce to be active.' );
 	}
 
-	TaskLists::add_task( 'extended', new Publish_Clearance_Page_Task() );
+	TaskLists::add_task(
+		'extended',
+		new class( TaskLists::get_list( 'extended' ) ) extends Task {
+			public function get_id(): string {
+				return 'publish-clearance-page5';
+			}
+
+			public function get_title(): string {
+				return __( 'Publish the clearance section page', 'wc-clearance' );
+			}
+
+			public function get_content(): string {
+				return __( 'Publish the clearance section page to make it visible to your customers.', 'wc-clearance' );
+			}
+
+			public function get_time(): string {
+				return '';
+			}
+
+			public function get_action_label(): string {
+				return __( 'Publish page', 'wc-clearance' );
+			}
+
+			public function get_action_url(): string {
+				return setup_task_action_url();
+			}
+		}
+	);
+
 	add_action( 'transition_post_status', 'WC_Clearance\mark_clearance_page_task_complete_hook', 10, 3 );
+}
+
+/**
+ * Returns the URL for the clearance page setup task action button.
+ */
+function setup_task_action_url(): string {
+	try {
+		$page_id = get_clearance_page_id();
+	} catch ( \Throwable $e ) {
+		return '';
+	}
+
+	if ( is_null( $page_id ) ) {
+		return '';
+	}
+
+	return admin_url( 'post.php?post=' . $page_id . '&action=edit' );
 }
 
 /**
