@@ -84,6 +84,10 @@ function setup_task_action_url(): string {
  * Determine whether the clearance publish task should be visible.
  */
 function setup_task_can_view(): bool {
+	if ( ! current_user_can( 'edit_pages' ) ) {
+		return false;
+	}
+
 	try {
 		return clearance_page_exists();
 	} catch ( \Throwable $e ) {
