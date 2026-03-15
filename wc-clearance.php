@@ -96,7 +96,7 @@ function enqueue_admin_styles_hook(): void {
 add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
 // Hook into WordPress.
-add_action( 'init', 'WC_Clearance\init_hook' );
+add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
