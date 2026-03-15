@@ -23,6 +23,7 @@ function init_setup_task(): void {
 		throw new \RuntimeException( 'WooCommerce TaskLists class not found. This plugin requires WooCommerce to be active.' );
 	}
 
+	// phpcs:disable Squiz.Commenting.FunctionComment.Missing
 	TaskLists::add_task(
 		'extended',
 		new class( TaskLists::get_list( 'extended' ) ) extends Task {
@@ -59,6 +60,7 @@ function init_setup_task(): void {
 			}
 		}
 	);
+	// phpcs:enable Squiz.Commenting.FunctionComment.Missing
 }
 
 /**
