@@ -59,8 +59,6 @@ function init_setup_task(): void {
 			}
 		}
 	);
-
-	add_action( 'transition_post_status', 'WC_Clearance\mark_clearance_page_task_complete_hook', 10, 3 );
 }
 
 /**
@@ -100,28 +98,4 @@ function setup_task_is_complete(): bool {
 	} catch ( \Throwable $e ) {
 		return false;
 	}
-}
-
-/**
- * Mark the clearance section page task complete when the page is published.
- *
- * Fired by `transition_post_status`.
- *
- * @internal WordPress action hook
- *
- * @param string   $new_status New post status.
- * @param string   $old_status Previous post status.
- * @param \WP_Post $post       Post object.
- */
-function mark_clearance_page_task_complete_hook( string $new_status, string $old_status, \WP_Post $post ): void {
-	if ( 'publish' !== $new_status ) {
-		return;
-	}
-
-	if ( (int) get_option( CLEARANCE_PAGE_OPTION ) !== $post->ID ) {
-		return;
-	}
-
-	$task = new Publish_Clearance_Page_Task();
-	$task->mark_actioned();
 }
