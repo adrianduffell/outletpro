@@ -8,8 +8,7 @@
 	"themes": [
 		"WordPress/twentytwentyfive"
 	],
-	"port": 1111,
-	"testsEnvironment": false,
+	"port": 8889,
 	"config": {
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,

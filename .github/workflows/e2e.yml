@@ -36,7 +36,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: /tmp/wp-env-docker-cache
-        key: wp-env-docker-${{ hashFiles('.wp-env.json') }}
+        key: wp-env-docker-${{ hashFiles('.wp-env.json', '.wp-env.tests.json') }}
 
     - name: Load Docker images from cache
       if: steps.cache-docker.outputs.cache-hit == 'true'
@@ -45,7 +45,7 @@ jobs:
           echo "Warning: failed to load Docker image cache; wp-env will pull images fresh."
 
     - name: Start WordPress environment
-      run: npm run wp-env start
+      run: npx wp-env start --config .wp-env.tests.json
 
     - name: Save Docker images to cache
       if: steps.cache-docker.outputs.cache-hit != 'true'
@@ -66,4 +66,4 @@ jobs:
 
     - name: Stop WordPress environment
       if: always()
-      run: npm run wp-env stop
+      run: npx wp-env stop --config .wp-env.tests.json
