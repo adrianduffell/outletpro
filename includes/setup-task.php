@@ -54,7 +54,9 @@ function init_setup_task(): void {
 				return setup_task_can_view();
 			}
 
-
+			public function is_complete(): bool {
+				return setup_task_is_complete();
+			}
 		}
 	);
 
@@ -84,6 +86,17 @@ function setup_task_action_url(): string {
 function setup_task_can_view(): bool {
 	try {
 		return clearance_page_exists();
+	} catch ( \Throwable $e ) {
+		return false;
+	}
+}
+
+/**
+ * Determine whether the clearance publish task is complete.
+ */
+function setup_task_is_complete(): bool {
+	try {
+		return clearance_page_is_published();
 	} catch ( \Throwable $e ) {
 		return false;
 	}
