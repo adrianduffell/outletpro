@@ -28,7 +28,7 @@ function init_setup_task(): void {
 		'extended',
 		new class( TaskLists::get_list( 'extended' ) ) extends Task {
 			public function get_id(): string {
-				return 'publish-clearance-page';
+				return 'wc-clearance-publish-page';
 			}
 
 			public function get_title(): string {
