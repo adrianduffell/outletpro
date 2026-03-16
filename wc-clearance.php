@@ -33,11 +33,8 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
-<<<<<<< copilot/add-guide-for-clearance-editor
 require_once __DIR__ . '/includes/editor-guide.php';
-=======
 require_once __DIR__ . '/includes/setup-task.php';
->>>>>>> main
 
 /**
  * Initialize the plugin.
