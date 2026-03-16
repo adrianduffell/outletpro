@@ -33,6 +33,7 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
+require_once __DIR__ . '/includes/setup-task.php';
 
 /**
  * Initialize the plugin.
@@ -44,6 +45,11 @@ require_once __DIR__ . '/includes/tools.php';
 function init_hook(): void {
 	init_taxonomies();
 	init_shortcodes();
+	try {
+		init_setup_task();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Could not initialize setup task: ' . $e->getMessage() );
+	}
 }
 
 /**
@@ -93,7 +99,7 @@ function enqueue_admin_styles_hook(): void {
 add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
 // Hook into WordPress.
-add_action( 'init', 'WC_Clearance\init_hook' );
+add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
