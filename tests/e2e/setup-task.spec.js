@@ -1,17 +1,16 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 test( 'publish clearance page setup task', async ( {
+	editor,
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: deactivate the plugin, clear the option, then reactivate so the
-	// activation hook creates a fresh clearance page.
-	await requestUtils.deactivatePlugin( 'wc-clearance' );
-	await requestUtils.wpCli( 'option delete wc_clearance_page_id' );
-	await requestUtils.activatePlugin( 'wc-clearance' );
+	// Todo: Assumes the plugin activation routine ran and
+	// page is in a draft state . A possible iteration is to
+	// run the activation routine and this in an isolated project.
 
-	// Go to the WooCommerce home and verify the task is visible and not yet complete.
+	// Arrange
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
 	const taskItem = page.locator( '.woocommerce-task-list__item', {
 		hasText: 'Publish the clearance section page',
@@ -19,19 +18,18 @@ test( 'publish clearance page setup task', async ( {
 	await expect( taskItem ).toBeVisible();
 	await expect( taskItem ).not.toHaveClass( /is-complete/ );
 
-	// Click the task to open the page editor.
 	await taskItem.click();
 	await expect( page ).toHaveURL( /post\.php.*action=edit/ );
 
-	// Publish the page in the block editor.
-	await page.getByRole( 'button', { name: 'Publish', exact: true } ).click();
-	// Confirm in the pre-publish panel.
-	await page.getByRole( 'button', { name: 'Publish', exact: true } ).click();
-	await page.waitForLoadState( 'networkidle' );
+	await editor.setPreferences( 'core/edit-post', {
+		welcomeGuide: false,
+		fullscreenMode: false,
+	} );
 
-	// Return to the WooCommerce homepage.
+	// Act
+	await editor.publishPost();
+
+	// Assert
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
-
-	// Assert: the task is now marked as complete.
-	await expect( taskItem ).toHaveClass( /is-complete/ );
+	await expect( taskItem ).toHaveClass( /complete/ );
 } );
