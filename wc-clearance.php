@@ -29,10 +29,15 @@ const VERSION = '1.0.0';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
+require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
+<<<<<<< copilot/add-guide-for-clearance-editor
 require_once __DIR__ . '/includes/editor-guide.php';
+=======
+require_once __DIR__ . '/includes/setup-task.php';
+>>>>>>> main
 
 /**
  * Initialize the plugin.
@@ -44,6 +49,11 @@ require_once __DIR__ . '/includes/editor-guide.php';
 function init_hook(): void {
 	init_taxonomies();
 	init_shortcodes();
+	try {
+		init_setup_task();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Could not initialize setup task: ' . $e->getMessage() );
+	}
 }
 
 /**
@@ -57,6 +67,7 @@ function admin_init_hook(): void {
 	init_admin_product_options();
 	init_system_status();
 	init_tools();
+	init_admin_page_list_table();
 }
 
 /**
@@ -93,7 +104,7 @@ add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_editor_guide_hook' );
 
 // Hook into WordPress.
-add_action( 'init', 'WC_Clearance\init_hook' );
+add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );

@@ -3,7 +3,8 @@
 	"core": "WordPress/WordPress#6.9.1",
 	"plugins": [
 		"https://downloads.wordpress.org/plugin/woocommerce.zip",
-		"."
+		".",
+		"https://gist.github.com/adrianduffell/d7d083eb64a73523c1659c4018706b39/archive/e667267e1f07fb25d280ae289a1b19be888fa25d.zip"
 	],
 	"themes": [
 		"WordPress/twentytwentyfive"
@@ -14,6 +15,7 @@
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,
 		"WP_DEBUG_DISPLAY": true,
-		"ALTERNATE_WP_CRON": true
+		"ALTERNATE_WP_CRON": true,
+		"WC_E2E_ENV": "live"
 	}
 }

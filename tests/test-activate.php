@@ -12,7 +12,7 @@ class Test_Activate extends WP_UnitTestCase {
 
 	public function test_creates_clearance_page_on_activation(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
 		if ( $existing_id > 0 ) {
 			wp_delete_post( $existing_id, true );
 		}
@@ -22,6 +22,6 @@ class Test_Activate extends WP_UnitTestCase {
 		activate();
 
 		// Assert.
-		$this->assertGreaterThan( 0, (int) get_option( CLEARANCE_PAGE_OPTION ) );
+		$this->assertGreaterThan( 0, get_option( CLEARANCE_PAGE_OPTION ) );
 	}
 }
