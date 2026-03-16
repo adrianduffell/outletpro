@@ -4,7 +4,6 @@ test( 'publish clearance page setup task', async ( {
 	editor,
 	page,
 	admin,
-	requestUtils,
 } ) => {
 	// Todo: Assumes the plugin activation routine ran and
 	// page is in a draft state . A possible iteration is to
