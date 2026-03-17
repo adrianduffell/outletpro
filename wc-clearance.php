@@ -98,6 +98,44 @@ function enqueue_admin_styles_hook(): void {
 }
 add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
+/**
+ * Enqueue the clearance guide script for the block editor.
+ *
+ * Only enqueued when the current post being edited is the clearance section page.
+ *
+ * Fired by `enqueue_block_editor_assets`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_clearance_guide_hook(): void {
+	try {
+		$page_id = get_clearance_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		return;
+	}
+
+	if ( null === $page_id || get_the_ID() !== $page_id ) {
+		return;
+	}
+
+	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	wp_enqueue_script(
+		'wc-clearance-guide',
+		plugin_dir_url( __FILE__ ) . 'build/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_clearance_guide_hook' );
+
 // Hook into WordPress.
 add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
