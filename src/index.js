@@ -41,17 +41,24 @@ function ClearanceGuide() {
 			pages={ [
 				{
 					content: (
-						<p>
-							This page shows products in your clearance section.
-							Customize it to suit your store.
-						</p>
+						<>
+							<h1>Clearance section</h1>
+							<p>
+								This page shows all the products in the
+								clearance section.
+							</p>
+						</>
 					),
 				},
 				{
 					content: (
-						<p>
-							Publish the page to make it visible in your store.
-						</p>
+						<>
+							<h1>Edit and publish</h1>
+							<p>
+								Edit and publish this page to make it visible to
+								customers.
+							</p>
+						</>
 					),
 				},
 			] }
