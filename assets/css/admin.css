@@ -24,3 +24,21 @@
 		display: none;
 	}
 }
+
+.wc-clearance-page-guide {
+	width: 312px;
+}
+
+.wc-clearance-page-guide__heading {
+	font-size: 24px;
+	line-height: 1.4;
+	margin: 16px 0;
+	padding: 0 32px;
+}
+
+.wc-clearance-page-guide__text {
+	font-size: 13px;
+	line-height: 1.4;
+	margin: 0 0 24px;
+	padding: 0 32px;
+}
