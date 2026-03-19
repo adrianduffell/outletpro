@@ -38,6 +38,7 @@ function ClearanceGuide() {
 	return (
 		<Guide
 			className="wc-clearance-page-guide"
+			contentLabel="Clearance section tour guide"
 			onFinish={ () => set( PREFERENCE_SCOPE, PREFERENCE_KEY, true ) }
 			pages={ [
 				{

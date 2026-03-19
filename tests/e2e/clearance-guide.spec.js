@@ -28,9 +28,7 @@ test( 'shows clearance guide when editing the clearance page for the first time'
 
 	// Assert.
 	await expect(
-		page.getByText(
-			'This page shows products in your clearance section. Customize it to suit your store.'
-		)
+		page.getByLabel( 'Clearance section tour guide' )
 	).toBeVisible();
 } );
 
@@ -53,9 +51,7 @@ test( 'does not show clearance guide when it has already been seen', async ( {
 
 	// Assert.
 	await expect(
-		page.getByText(
-			'This page shows products in your clearance section. Customize it to suit your store.'
-		)
+		page.getByLabel( 'Clearance section tour guide' )
 	).not.toBeVisible();
 } );
 
