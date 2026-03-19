@@ -101,23 +101,15 @@ add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 /**
  * Enqueue the clearance guide script for the block editor.
  *
- * Only enqueued when the current post being edited is the clearance section page.
+ * Enqueued on all block editor pages. The JS component itself checks whether
+ * the current post matches the clearance section page using the page ID
+ * exposed via the `wcClearance` window variable.
  *
  * Fired by `enqueue_block_editor_assets`.
  *
  * @internal WordPress action hook
  */
 function enqueue_clearance_guide_hook(): void {
-	try {
-		$page_id = get_clearance_page_id();
-	} catch ( \UnexpectedValueException $e ) {
-		return;
-	}
-
-	if ( null === $page_id || get_the_ID() !== $page_id ) {
-		return;
-	}
-
 	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
@@ -132,6 +124,19 @@ function enqueue_clearance_guide_hook(): void {
 		$asset['dependencies'],
 		$asset['version'],
 		true
+	);
+
+	try {
+		$page_id = get_clearance_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		// Page ID is invalid; suppress the guide.
+		$page_id = null;
+	}
+
+	wp_add_inline_script(
+		'wc-clearance-guide',
+		'window.wcClearance = ' . wp_json_encode( array( 'pageId' => $page_id ) ) . ';',
+		'before'
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_clearance_guide_hook' );

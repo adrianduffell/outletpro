@@ -13,6 +13,13 @@ const PREFERENCE_SCOPE = 'wc-clearance';
 const PREFERENCE_KEY = 'hasSeenClearanceGuide';
 
 function ClearanceGuide() {
+	const isOnClearancePage = useSelect( ( select ) => {
+		return (
+			select( 'core/editor' ).getCurrentPostId() ===
+			window.wcClearance?.pageId
+		);
+	} );
+
 	const hasSeenGuide = useSelect( ( select ) => {
 		return !! select( preferencesStore ).get(
 			PREFERENCE_SCOPE,
@@ -22,7 +29,7 @@ function ClearanceGuide() {
 
 	const { set } = useDispatch( preferencesStore );
 
-	if ( hasSeenGuide ) {
+	if ( ! isOnClearancePage || hasSeenGuide ) {
 		return null;
 	}
 
