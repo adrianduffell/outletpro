@@ -13,15 +13,6 @@ const PREFERENCE_SCOPE = 'wc-clearance';
 const PREFERENCE_KEY = 'hasSeenClearanceGuide';
 
 function ClearanceGuide() {
-	const isWelcomeGuideActive = useSelect( ( select ) => {
-		return (
-			select( preferencesStore ).get(
-				'core/edit-post',
-				'welcomeGuide'
-			) !== false
-		);
-	} );
-
 	const hasSeenGuide = useSelect( ( select ) => {
 		return !! select( preferencesStore ).get(
 			PREFERENCE_SCOPE,
@@ -31,7 +22,7 @@ function ClearanceGuide() {
 
 	const { set } = useDispatch( preferencesStore );
 
-	if ( hasSeenGuide || isWelcomeGuideActive ) {
+	if ( hasSeenGuide ) {
 		return null;
 	}
 

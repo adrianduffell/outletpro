@@ -55,27 +55,3 @@ test( 'does not show clearance guide when it has already been seen', async ( {
 	).not.toBeVisible();
 } );
 
-test( 'does not show clearance guide while the welcome guide is visible', async ( {
-	editor,
-	page,
-	admin,
-} ) => {
-	// Arrange.
-	await visitClearancePageEditor( { page, admin } );
-	await editor.setPreferences( 'wc-clearance', {
-		hasSeenClearanceGuide: false,
-	} );
-
-	// Act.
-	await editor.setPreferences( 'core/edit-post', {
-		welcomeGuide: true,
-		fullscreenMode: false,
-	} );
-
-	// Assert.
-	await expect(
-		page.getByText(
-			'This page shows products in your clearance section. Customize it to suit your store.'
-		)
-	).not.toBeVisible();
-} );
