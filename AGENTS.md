@@ -11,7 +11,7 @@
 
 * PRs should be fewer than 500 lines in size.
 * Make changes to public functions in a dedicated PR. Do not mix changes to public functions and internal functions in the same PR.
-* Include manual test instructions in the PR description. Provide required commands for copy paste, eg `npm i` when packages change, or `wp option set ....` to arrange options into a pre-defined state.
+* Include manual test instructions in the PR description. Provide required commands for copy/paste, e.g. `npm i` when packages change, or `wp option set ....` to arrange options into a pre-defined state.
 
 ### Pull request titles
 
