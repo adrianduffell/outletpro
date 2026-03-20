@@ -16,6 +16,9 @@ test( 'shows clearance guide when editing the clearance page for the first time'
 } ) => {
 	// Arrange.
 	await page.goto( '/wp-admin/post-new.php' ); // fixme: Need to be on an editor page to reset preferences.
+	await editor.setPreferences( 'core/edit-post', {
+		welcomeGuide: false,
+	} );
 	await editor.setPreferences( 'wc-clearance', {
 		hasSeenClearanceGuide: false,
 	} );
