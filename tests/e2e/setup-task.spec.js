@@ -24,6 +24,9 @@ test( 'publish clearance page setup task', async ( {
 		welcomeGuide: false,
 		fullscreenMode: false,
 	} );
+	await editor.setPreferences( 'wc-clearance', {
+		hasSeenClearanceTour: true,
+	} );
 
 	// Act
 	await editor.publishPost();

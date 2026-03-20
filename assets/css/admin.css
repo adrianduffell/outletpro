@@ -24,3 +24,16 @@
 		display: none;
 	}
 }
+
+.wc-clearance-tour.driver-popover {
+	min-width: 312px;
+	max-width: 360px;
+}
+
+.wc-clearance-tour .driver-popover-title {
+	font-size: 20px;
+}
+
+.wc-clearance-tour .driver-popover-description {
+	font-size: 13px;
+}
