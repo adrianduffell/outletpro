@@ -15,16 +15,13 @@ test( 'shows clearance guide when editing the clearance page for the first time'
 	admin,
 } ) => {
 	// Arrange.
-	await visitClearancePageEditor( { page, admin } );
-	await editor.setPreferences( 'core/edit-post', {
-		welcomeGuide: false,
-		fullscreenMode: false,
-	} );
-
-	// Act.
+	await page.goto( '/wp-admin/post-new.php' ); // fixme: Need to be on an editor page to reset preferences.
 	await editor.setPreferences( 'wc-clearance', {
 		hasSeenClearanceGuide: false,
 	} );
+
+	// Act.
+	await visitClearancePageEditor( { page, admin } );
 
 	// Assert.
 	await expect(
@@ -54,4 +51,3 @@ test( 'does not show clearance guide when it has already been seen', async ( {
 		page.getByLabel( 'Clearance section tour guide' )
 	).not.toBeVisible();
 } );
-
