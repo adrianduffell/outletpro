@@ -30,12 +30,12 @@ jobs:
     - name: Run E2E tests
       run: npm run test:e2e
 
-    - name: Upload Playwright report
+    - name: Upload Playwright artifacts
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: playwright-report
-        path: playwright-report/
+        name: artifacts
+        path: artifacts/
     - name: Stop WordPress environment
       if: always()
       run: npm run wp-env stop
