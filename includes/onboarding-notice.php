@@ -24,19 +24,6 @@ function init_onboarding_notice(): void {
 }
 
 /**
- * Determine whether the onboarding notice should be shown.
- *
- * Returns true when no products have been included in the clearance section yet.
- */
-function should_show_onboarding_notice(): bool {
-	try {
-		return 0 === count_clearance();
-	} catch ( \Throwable $e ) {
-		return false;
-	}
-}
-
-/**
  * Display the onboarding notice on the product screen.
  *
  * Fired by `admin_notices`.
@@ -54,7 +41,11 @@ function add_onboarding_notice_hook(): void {
 		return;
 	}
 
-	if ( ! should_show_onboarding_notice() ) {
+	try {
+		if ( 0 !== count_clearance() ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
 		return;
 	}
 
