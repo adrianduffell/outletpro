@@ -17,12 +17,24 @@
 		"test:unit": "wp-scripts test-unit-js",
 		"wp-env": "wp-env"
 	},
+	"babel": {
+		"presets": [
+			"@wordpress/babel-preset-default"
+		]
+	},
+	"jest": {
+		"preset": "@wordpress/jest-preset-default",
+		"setupFilesAfterEnv": [
+			"@testing-library/jest-dom"
+		]
+	},
 	"devDependencies": {
 		"@playwright/test": "^1.58.2",
 		"@testing-library/jest-dom": "^6.9.1",
 		"@testing-library/react": "^16.3.2",
 		"@wordpress/e2e-test-utils-playwright": "^1.40.0",
 		"@wordpress/env": "^10.39.0",
+		"@wordpress/jest-preset-default": "^12.42.0",
 		"@wordpress/scripts": "^31.5.0"
 	}
 }
