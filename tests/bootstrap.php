@@ -45,6 +45,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/page.php';
 	require_once __DIR__ . '/../includes/tools.php';
 	require_once __DIR__ . '/../includes/setup-task.php';
+	require_once __DIR__ . '/../includes/onboarding-notice.php';
 	require_once __DIR__ . '/../wc-clearance.php';
 }
 
