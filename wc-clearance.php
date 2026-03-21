@@ -119,7 +119,7 @@ function enqueue_build_js_hook(): void {
 	$asset = require $asset_file;
 
 	wp_enqueue_script(
-		'wc-clearance-guide',
+		'wc-clearance-build',
 		plugin_dir_url( __FILE__ ) . 'build/index.js',
 		$asset['dependencies'],
 		$asset['version'],
@@ -134,7 +134,7 @@ function enqueue_build_js_hook(): void {
 	}
 
 	wp_add_inline_script(
-		'wc-clearance-guide',
+		'wc-clearance-build',
 		'window.wcClearance = ' . wp_json_encode( array( 'pageId' => $page_id ) ) . ';',
 		'before'
 	);
