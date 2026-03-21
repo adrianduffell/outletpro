@@ -59,15 +59,22 @@ function add_onboarding_notice_hook(): void {
 	}
 
 	?>
+	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice" style="display:none">
+		<p><strong><?php esc_html_e( 'New: Clearance section', 'wc-clearance' ); ?></strong></p>
+		<p>
+			<?php esc_html_e( 'Include products in the clearance section to promote them in your store.', 'wc-clearance' ); ?>
+			<a href="https://adrianduffell.com/wc-clearance/"><?php esc_html_e( 'Learn more', 'wc-clearance' ); ?></a>
+		</p>
+	</div>
 	<script>
 	( function() {
 		var storageKey = <?php echo wp_json_encode( ONBOARDING_NOTICE_STORAGE_KEY ); ?>;
 		if ( localStorage.getItem( storageKey ) ) {
-			var style = document.createElement( 'style' );
-			style.textContent = '.wc-clearance-onboarding-notice{display:none}';
-			document.head.appendChild( style );
 			return;
 		}
+		var style = document.createElement( 'style' );
+		style.textContent = '.wc-clearance-onboarding-notice{display:block}';
+		document.head.appendChild( style );
 		document.addEventListener( 'click', function( event ) {
 			if ( ! event.target.closest( '.wc-clearance-onboarding-notice .notice-dismiss' ) ) {
 				return;
@@ -76,12 +83,5 @@ function add_onboarding_notice_hook(): void {
 		} );
 	}() );
 	</script>
-	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
-		<p><strong><?php esc_html_e( 'New: Clearance section', 'wc-clearance' ); ?></strong></p>
-		<p>
-			<?php esc_html_e( 'Include products in the clearance section to promote them in your store.', 'wc-clearance' ); ?>
-			<a href="https://adrianduffell.com/wc-clearance/"><?php esc_html_e( 'Learn more', 'wc-clearance' ); ?></a>
-		</p>
-	</div>
 	<?php
 }
