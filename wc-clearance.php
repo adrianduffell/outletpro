@@ -101,10 +101,6 @@ add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 /**
  * Enqueue the built JavaScript for the block editor.
  *
- * Enqueued on all block editor pages. The JS component itself checks whether
- * the current post matches the clearance section page using the page ID
- * exposed via the `wcClearance` window variable.
- *
  * Fired by `enqueue_block_editor_assets`.
  *
  * @internal WordPress action hook
