@@ -27,13 +27,62 @@
 
 .wc-clearance-tour.driver-popover {
 	min-width: 312px;
-	max-width: 360px;
+	max-width: 300px;
+}
+
+.wc-clearance-tour p {
+	margin: 0;
+}
+
+.wc-clearance-tour p+p {
+	margin-top: 1em;
 }
 
 .wc-clearance-tour .driver-popover-title {
 	font-size: 20px;
+	color: #1e1e1e;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen-Sans, Ubuntu, Cantarell, Helvetica Neue, sans-serif;
+	font-size: 24px;
+	line-height: 1.4;
+	margin: 16px 0;
 }
 
 .wc-clearance-tour .driver-popover-description {
 	font-size: 13px;
+	font-size: 13px;
+	line-height: 1.4;
+	margin: -2px 0;
+	line-height: 20px;
+	color: #1e1e1e;
+}
+
+body {}
+
+.wc-clearance-tour button {
+	display: block;
+	align-items: center;
+	border-radius: 2px;
+	box-sizing: border-box;
+	color: var(--wp-components-color-foreground, #1e1e1e);
+	height: 36px;
+	padding: 6px 12px;
+	background: var(--wp-components-color-accent, var(--wp-admin-theme-color, #3858e9)) !important;
+	color: var(--wp-components-color-accent-inverted, #fff);
+	outline: 1px solid #0000;
+	text-decoration: none;
+	text-shadow: none;
+	white-space: nowrap;
+
+}
+
+.wc-clearance-tour button:hover {
+	background: var(--wp-components-color-accent-darker-10, var(--wp-admin-theme-color-darker-10, #2145e6)) !important;
+}
+
+.wc-clearance-tour button:focus {}
+
+.wc-clearance-tour button:active {
+	background: var(--wp-components-color-accent-darker-20, var(--wp-admin-theme-color-darker-20, #183ad6)) !important;
+	border-color: var(--wp-components-color-accent-darker-20, var(--wp-admin-theme-color-darker-20, #183ad6)) !important;
+	color: var(--wp-components-color-accent-inverted, #fff) !important;
 }

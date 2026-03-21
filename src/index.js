@@ -20,11 +20,13 @@ const PREFERENCE_KEY = 'hasSeenClearanceTour';
 function ClearanceTour() {
 	const tourStarted = useRef( false );
 
+	const shouldShowTour =
+		new URLSearchParams( window.location.search ).get(
+			'wc-clearance-tour'
+		) === '1';
+	console.log( 'shouldShowTour', shouldShowTour );
 	const isOnClearancePage = useSelect( ( select ) => {
-		return (
-			select( 'core/editor' ).getCurrentPostId() ===
-			window.wcClearance?.pageId
-		);
+		return select( 'core/editor' ).getCurrentPost()?.status === 'draft';
 	} );
 
 	const hasSeenTour = useSelect( ( select ) => {
@@ -33,6 +35,7 @@ function ClearanceTour() {
 			PREFERENCE_KEY
 		);
 	} );
+	console.log( 'hasSeenClearanceTour', hasSeenTour );
 
 	// Avoid starting the tour while the Gutenberg welcome guide is visible.
 	const isWelcomeGuideVisible = useSelect( ( select ) => {
@@ -48,10 +51,10 @@ function ClearanceTour() {
 
 	useEffect( () => {
 		if (
+			! shouldShowTour ||
 			! isOnClearancePage ||
 			hasSeenTour ||
-			isWelcomeGuideVisible ||
-			tourStarted.current
+			isWelcomeGuideVisible
 		) {
 			return;
 		}
@@ -59,24 +62,38 @@ function ClearanceTour() {
 		tourStarted.current = true;
 
 		const tourInstance = driver( {
+			stagePadding: 5,
+			overlayOpacity: 0.35,
+			animate: false,
+			allowClose: true,
 			popoverClass: 'wc-clearance-tour',
-			onDestroyStarted: () => {
+			showButtons: [ '' ],
+			/*onDestroyStarted: () => {
 				set( PREFERENCE_SCOPE, PREFERENCE_KEY, true );
 				tourInstance.destroy();
+			},*/
+
+			onHighlighted: ( element ) => {
+				const handlePublishClick = () => {
+					tourInstance.destroy();
+				};
+
+				element?.addEventListener( 'click', handlePublishClick, {
+					once: true,
+				} );
+
+				removePublishListener = () => {
+					element?.removeEventListener( 'click', handlePublishClick );
+				};
 			},
+			doneBtnText: 'Get started',
 			steps: [
 				{
+					element: '.editor-post-publish-button__button',
 					popover: {
-						title: 'Clearance section',
+						//title: 'Clearance section page',
 						description:
-							'This page shows all the products in the clearance section.',
-					},
-				},
-				{
-					popover: {
-						title: 'Edit and publish',
-						description:
-							'Edit and publish this page to make it visible to customers.',
+							'<p><b>Your clearance section page is ready!</b> <p>Make any changes and publish it to make the page visible to customers.',
 					},
 				},
 			],

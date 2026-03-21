@@ -77,7 +77,7 @@ function setup_task_action_url(): string {
 		return '';
 	}
 
-	return admin_url( 'post.php?post=' . $page_id . '&action=edit' );
+	return admin_url( 'post.php?post=' . $page_id . '&action=edit&wc-clearance-tour=1' );
 }
 
 /**
