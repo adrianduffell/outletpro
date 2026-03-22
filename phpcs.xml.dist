@@ -41,15 +41,6 @@
 		</properties>
 	</rule>
 
-	<!-- Declare WooCommerce custom capabilities -->
-	<rule ref="WordPress.WP.Capabilities">
-		<properties>
-			<property name="custom_capabilities" type="array">
-				<element value="edit_products" />
-			</property>
-		</properties>
-	</rule>
-
 	<!-- Slevomat Coding Standard rules -->
 
 	<!-- Require return type hints -->
