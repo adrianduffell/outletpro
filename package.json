@@ -14,7 +14,7 @@
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
 		"test:e2e": "wp-scripts test-playwright",
-		"test:unit": "wp-scripts test-unit-js",
+		"test:unit": "wp-scripts test-unit-js --config jest.config.cjs",
 		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit",
 		"typecheck": "tsc --noEmit",
 		"wp-env": "wp-env"
@@ -22,13 +22,6 @@
 	"babel": {
 		"presets": [
 			"@wordpress/babel-preset-default"
-		]
-	},
-	"jest": {
-		"preset": "@wordpress/jest-preset-default",
-		"setupFilesAfterEnv": [
-			"@wordpress/jest-preset-default/scripts/setup-test-framework.js",
-			"<rootDir>/tests/js/setup.js"
 		]
 	},
 	"devDependencies": {
