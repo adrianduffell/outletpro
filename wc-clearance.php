@@ -121,19 +121,6 @@ function enqueue_build_js_hook(): void {
 		$asset['version'],
 		true
 	);
-
-	try {
-		$page_id = get_clearance_page_id();
-	} catch ( \UnexpectedValueException $e ) {
-		// Page ID is invalid; ignore.
-		$page_id = null;
-	}
-
-	wp_add_inline_script(
-		'wc-clearance-build',
-		'window.wcClearance = ' . wp_json_encode( array( 'pageId' => $page_id ) ) . ';',
-		'before'
-	);
 }
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_js_hook' );
 
