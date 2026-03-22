@@ -10,13 +10,6 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress option key used to store the clearance section page ID.
- *
- * @since 1.0.0
- */
-const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
-
-/**
  * Check if the clearance section page exists.
  *
  * This performs heuristics on the {@see CLEARANCE_PAGE_OPTION} option value.
@@ -159,36 +152,4 @@ function clearance_page_is_published(): bool {
 
 	return $page instanceof \WP_Post
 		&& 'publish' === $page->post_status;
-}
-
-/**
- * Get the clearance section page ID from the option.
- *
- * Validates the page ID is a positive integer. Zero and non-digit values
- * indicate a corrupted state and exceptions are thrown in these cases.
- *
- * Returns the page ID as a normalized int, or null when the option does
- * not exist.
- *
- * @since 1.0.0
- * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
- */
-function get_clearance_page_id(): ?int {
-	$value = get_option( CLEARANCE_PAGE_OPTION );
-
-	if ( false === $value ) {
-		return null;
-	}
-
-	// Cast the value to a string for simpler validation.
-	// The original value may have been returned as an int or a string depending on the storage and caching layer.
-	$as_string = (string) $value;
-
-	// Validate the value is a positive integer.
-	if ( ! ctype_digit( $as_string ) || '0' === $as_string ) {
-		throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
-	}
-
-	// Return the original value in normalized form.
-	return (int) $value;
 }
