@@ -15,6 +15,7 @@
 		"start": "wp-scripts start",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:unit": "wp-scripts test-unit-js",
+		"typecheck": "tsc --noEmit",
 		"wp-env": "wp-env"
 	},
 	"babel": {
@@ -35,6 +36,7 @@
 		"@wordpress/e2e-test-utils-playwright": "^1.40.0",
 		"@wordpress/env": "^10.39.0",
 		"@wordpress/jest-preset-default": "^12.42.0",
-		"@wordpress/scripts": "^31.5.0"
+		"@wordpress/scripts": "^31.5.0",
+		"typescript": "^5.9.3"
 	}
 }
