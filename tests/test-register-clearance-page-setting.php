@@ -55,7 +55,12 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 		register_clearance_page_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		$page_id = $this->factory->post->create( array( 'post_type' => 'page', 'post_status' => 'publish' ) );
+		$page_id = $this->factory->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
 
 		// Act.
 		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
