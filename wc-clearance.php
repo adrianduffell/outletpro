@@ -125,7 +125,7 @@ function enqueue_build_js_hook(): void {
 	try {
 		$page_id = get_clearance_page_id();
 	} catch ( \UnexpectedValueException $e ) {
-		// Page ID is invalid; suppress the guide.
+		// Page ID is invalid; ignore.
 		$page_id = null;
 	}
 
