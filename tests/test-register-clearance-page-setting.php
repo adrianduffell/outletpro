@@ -1,11 +1,11 @@
 <?php
 /**
- * Test the init_settings function.
+ * Test the register_clearance_page_setting function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\init_settings;
+use function WC_Clearance\register_clearance_page_setting;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
@@ -14,7 +14,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 		// Arrange.
 
 		// Act.
-		init_settings();
+		register_clearance_page_setting();
 
 		// Assert.
 		$settings = get_registered_settings();
@@ -25,7 +25,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 		// Arrange.
 
 		// Act.
-		init_settings();
+		register_clearance_page_setting();
 
 		// Assert.
 		$settings = get_registered_settings();
@@ -36,7 +36,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 		// Arrange.
 
 		// Act.
-		init_settings();
+		register_clearance_page_setting();
 
 		// Assert.
 		$settings = get_registered_settings();
@@ -47,7 +47,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 		// Arrange.
 
 		// Act.
-		init_settings();
+		register_clearance_page_setting();
 
 		// Assert.
 		$settings = get_registered_settings();
@@ -58,7 +58,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 		// Arrange.
 
 		// Act.
-		init_settings();
+		register_clearance_page_setting();
 
 		// Assert.
 		$settings = get_registered_settings();

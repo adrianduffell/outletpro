@@ -22,6 +22,15 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  * @since 1.0.0
  */
 function init_settings(): void {
+	register_clearance_page_setting();
+}
+
+/**
+ * Register the clearance page ID setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_page_setting(): void {
 	register_setting(
 		'wc_clearance',
 		CLEARANCE_PAGE_OPTION,
