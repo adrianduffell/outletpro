@@ -15,6 +15,7 @@
 		"start": "wp-scripts start",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:unit": "wp-scripts test-unit-js",
+		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit",
 		"wp-env": "wp-env"
 	},
 	"devDependencies": {
