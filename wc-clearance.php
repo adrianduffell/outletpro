@@ -34,7 +34,7 @@ require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
-require_once __DIR__ . '/includes/onboarding-notice.php';
+require_once __DIR__ . '/includes/admin-product-list-table.php';
 
 /**
  * Initialize the plugin.
@@ -65,7 +65,7 @@ function admin_init_hook(): void {
 	init_system_status();
 	init_tools();
 	init_admin_page_list_table();
-	init_onboarding_notice();
+	init_admin_product_list_table();
 }
 
 /**

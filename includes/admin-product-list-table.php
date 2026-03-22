@@ -1,6 +1,6 @@
 <?php
 /**
- * Onboarding notice functions.
+ * Admin product list table functions.
  *
  * @package WC_Clearance
  */
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
 const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_onboarding_dismissed';
 
 /**
- * Helper to initialize the onboarding notice.
+ * Helper to initialize admin product list table features.
  *
  * @since 1.0.0
  */
-function init_onboarding_notice(): void {
+function init_admin_product_list_table(): void {
 	add_action( 'admin_notices', 'WC_Clearance\add_onboarding_notice_hook' );
 }
 
