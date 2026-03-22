@@ -31,6 +31,7 @@ require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
+require_once __DIR__ . '/includes/settings.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
@@ -44,6 +45,7 @@ require_once __DIR__ . '/includes/admin-product-list-table.php';
  * @internal WordPress action hook
  */
 function init_hook(): void {
+	init_settings();
 	init_taxonomies();
 	init_shortcodes();
 	try {
