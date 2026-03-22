@@ -98,6 +98,32 @@ function enqueue_admin_styles_hook(): void {
 }
 add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
+/**
+ * Enqueue the built JavaScript for the block editor.
+ *
+ * Fired by `enqueue_block_editor_assets`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_build_assets_hook(): void {
+	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	wp_enqueue_script(
+		'wc-clearance-build',
+		plugin_dir_url( __FILE__ ) . 'build/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+
 // Hook into WordPress.
 add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
