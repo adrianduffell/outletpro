@@ -65,6 +65,10 @@ function get_clearance_page_id(): ?int {
 		return null;
 	}
 
+	if ( ! is_scalar( $value ) ) {
+		throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
+	}
+
 	// Cast the value to a string for simpler validation.
 	// The original value may have been returned as an int or a string depending on the storage and caching layer.
 	$as_string = (string) $value;

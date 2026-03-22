@@ -119,4 +119,15 @@ class Test_Get_Clearance_Page_Id extends WP_UnitTestCase {
 		// Act.
 		get_clearance_page_id();
 	}
+
+	public function test_throws_when_option_is_array(): void {
+		// Arrange.
+		update_option( CLEARANCE_PAGE_OPTION, array( 1, 2, 3 ) );
+
+		// Expect.
+		$this->expectException( \UnexpectedValueException::class );
+
+		// Act.
+		get_clearance_page_id();
+	}
 }
