@@ -37,13 +37,16 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
+		register_clearance_page_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
 
 		// Act.
-		register_clearance_page_setting();
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/settings' );
+		$response = rest_do_request( $request );
 
 		// Assert.
-		$settings = get_registered_settings();
-		$this->assertNotFalse( $settings[ CLEARANCE_PAGE_OPTION ]['show_in_rest'] );
+		$this->assertArrayHasKey( CLEARANCE_PAGE_OPTION, $response->get_data() );
 	}
 
 	public function test_setting_rest_schema_type_is_integer(): void {
