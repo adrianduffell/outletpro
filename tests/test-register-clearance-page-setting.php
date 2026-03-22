@@ -52,24 +52,33 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 	public function test_setting_rest_schema_type_is_integer(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
+		register_clearance_page_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		$page_id = $this->factory->post->create( array( 'post_type' => 'page', 'post_status' => 'publish' ) );
 
 		// Act.
-		register_clearance_page_setting();
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( CLEARANCE_PAGE_OPTION, $page_id );
+		$response = rest_do_request( $request );
 
 		// Assert.
-		$settings = get_registered_settings();
-		$this->assertSame( 'integer', $settings[ CLEARANCE_PAGE_OPTION ]['show_in_rest']['schema']['type'] );
+		$this->assertIsInt( $response->get_data()[ CLEARANCE_PAGE_OPTION ] );
 	}
 
 	public function test_setting_rest_schema_minimum_is_one(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
+		register_clearance_page_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
 
 		// Act.
-		register_clearance_page_setting();
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( CLEARANCE_PAGE_OPTION, 0 );
+		$response = rest_do_request( $request );
 
 		// Assert.
-		$settings = get_registered_settings();
-		$this->assertSame( 1, $settings[ CLEARANCE_PAGE_OPTION ]['show_in_rest']['schema']['minimum'] );
+		$this->assertSame( 400, $response->get_status() );
 	}
 }
