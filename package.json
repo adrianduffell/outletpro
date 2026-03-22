@@ -27,7 +27,8 @@
 	"jest": {
 		"preset": "@wordpress/jest-preset-default",
 		"setupFilesAfterEnv": [
-			"@testing-library/jest-dom"
+			"@wordpress/jest-preset-default/scripts/setup-test-framework.js",
+			"<rootDir>/tests/js/setup.js"
 		]
 	},
 	"devDependencies": {
