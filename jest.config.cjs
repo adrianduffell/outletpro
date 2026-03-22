@@ -4,6 +4,6 @@ module.exports = {
 	...preset,
 	setupFilesAfterEnv: [
 		...( preset.setupFilesAfterEnv || [] ),
-		'<rootDir>/tests/js/setup.js',
+		'<rootDir>/jest.setup.js',
 	],
 };
