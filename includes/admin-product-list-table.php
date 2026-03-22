@@ -37,7 +37,7 @@ function add_onboarding_notice_hook(): void {
 		return;
 	}
 
-	if ( ! current_user_can( 'edit_products' ) ) { // phpcs:ignore WordPress.WP.Capabilities.Unknown -- WooCommerce custom capability.
+	if ( ! current_user_can( 'edit_products' ) ) {
 		return;
 	}
 
