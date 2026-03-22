@@ -12,6 +12,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 
 	public function test_registers_clearance_page_id_setting(): void {
 		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		register_clearance_page_setting();
@@ -23,6 +24,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_type_is_integer(): void {
 		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		register_clearance_page_setting();
@@ -34,6 +36,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		register_clearance_page_setting();
@@ -45,6 +48,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_rest_schema_type_is_integer(): void {
 		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		register_clearance_page_setting();
@@ -56,6 +60,7 @@ class Test_Register_Clearance_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_rest_schema_minimum_is_one(): void {
 		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		register_clearance_page_setting();
