@@ -105,7 +105,7 @@ add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
  *
  * @internal WordPress action hook
  */
-function enqueue_build_js_hook(): void {
+function enqueue_build_assets_hook(): void {
 	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
@@ -122,7 +122,7 @@ function enqueue_build_js_hook(): void {
 		true
 	);
 }
-add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_js_hook' );
+add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 
 // Hook into WordPress.
 add_action( 'init', 'WC_Clearance\init_hook', 20 );
