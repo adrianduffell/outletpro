@@ -10,9 +10,14 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Key used in localStorage to persist the notice dismissal.
+ * Key used in localStorage to persist the onboarding notice dismissal.
  */
 const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
+
+/**
+ * Key used in localStorage to persist the publish page notice dismissal.
+ */
+const PUBLISH_PAGE_NOTICE_STORAGE_KEY = 'wc_clearance_publish_page_notice_dismissed';
 
 /**
  * Helper to initialize admin product list table features.
@@ -139,7 +144,7 @@ function product_publish_page_notice_hook(): void {
 	$edit_link = get_edit_post_link( $page_id );
 
 	?>
-	<div class="notice notice-warning wc-clearance-publish-page-notice">
+	<div class="notice notice-warning is-dismissible wc-clearance-publish-page-notice">
 		<p>
 			<?php
 			echo wp_kses_post(
@@ -152,5 +157,38 @@ function product_publish_page_notice_hook(): void {
 			?>
 		</p>
 	</div>
+	<script>
+	( function() {
+		var storageKey = <?php echo wp_json_encode( PUBLISH_PAGE_NOTICE_STORAGE_KEY ); ?>;
+		try {
+			if ( localStorage.getItem( storageKey ) ) {
+				// Notice has been dismissed, do not show.
+				return;
+			}
+		} catch ( e ) {
+			// localStorage unavailable (e.g. privacy mode), do not show.
+			return;
+		}
+
+		var notice = document.querySelector('.wc-clearance-publish-page-notice');
+
+		if ( notice ) {
+			notice.classList.add('is-visible');
+
+			var handler = function( event ) {
+				if ( ! event.target.closest('.notice-dismiss') ) {
+					return;
+				}
+
+				try {
+					localStorage.setItem(storageKey, '1');
+				} catch ( e ) {}
+				notice.classList.remove('is-visible');
+			};
+
+			notice.addEventListener('click', handler);
+		}
+	}() );
+	</script>
 	<?php
 }

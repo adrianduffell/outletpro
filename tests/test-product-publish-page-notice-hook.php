@@ -12,6 +12,7 @@ use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
+use const WC_Clearance\PUBLISH_PAGE_NOTICE_STORAGE_KEY;
 
 class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
@@ -33,6 +34,30 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/wc-clearance-publish-page-notice/' );
+
+		// Act.
+		product_publish_page_notice_hook();
+	}
+
+	public function test_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
+		// Arrange.
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page(); // Creates page as draft.
+
+		// Expect.
+		$this->expectOutputRegex( '/is-dismissible/' );
+		$this->expectOutputRegex( '/' . preg_quote( PUBLISH_PAGE_NOTICE_STORAGE_KEY, '/' ) . '/' );
 
 		// Act.
 		product_publish_page_notice_hook();
