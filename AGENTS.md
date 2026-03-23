@@ -25,3 +25,4 @@ For example, prefer `Standardize hooks` over `Rename WordPress hook callbacks wi
 * Each test is self-contained. Never use shared `setUp` / `tearDown` or similar variants in PHPUnit, nor `test.beforeEach` / `test.afterEach` in Playwright. Each test is responsible for arranging the environment to be the exact state it needs.
 * Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
 * The test's function name should describe the test. A docblock should not be added to the test as that would create redundancy.
+* Don't use `ob_start` in tests. Use PHPUnit's `expect*` methods and the Arrange-Expect-Act pattern. Use `expectException()` for exceptions and `expectOutputRegex()` or `expectOutputString()` for echo/printed output.
