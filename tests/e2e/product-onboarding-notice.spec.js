@@ -62,6 +62,28 @@ test( 'notice is not shown when a clearance product exists', async ( {
 	} );
 } );
 
+test( 'notice does not show when localStorage is unavailable', async ( {
+	page,
+	admin,
+} ) => {
+	// Arrange: simulate a localStorage access failure (e.g. privacy mode).
+	await page.addInitScript( () => {
+		Object.defineProperty( window, 'localStorage', {
+			get() {
+				throw new Error( 'Simulated localStorage failure' );
+			},
+		} );
+	} );
+
+	// Act.
+	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
+
+	// Assert: notice stays hidden because localStorage is inaccessible.
+	await expect(
+		page.locator( '.wc-clearance-onboarding-notice' )
+	).not.toBeVisible();
+} );
+
 test( 'notice does not show again after being dismissed', async ( {
 	page,
 	admin,

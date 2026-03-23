@@ -71,7 +71,10 @@ function product_onboarding_notice_hook(): void {
 				// Notice has been dismissed, do not show.
 				return;
 			}
-		} catch ( e ) {}
+		} catch ( e ) {
+			// localStorage unavailable (e.g. privacy mode), do not show.
+			return;
+		}
 
 		var notice = document.querySelector('.wc-clearance-onboarding-notice');
 
