@@ -41,11 +41,7 @@ function product_onboarding_notice_hook(): void {
 		return;
 	}
 
-	try {
-		if ( 0 !== count_clearance() ) {
-			return;
-		}
-	} catch ( \Throwable $e ) {
+	if ( has_clearance_products() ) {
 		return;
 	}
 
@@ -66,10 +62,12 @@ function product_onboarding_notice_hook(): void {
 	<script>
 	( function() {
 		var storageKey = <?php echo wp_json_encode( ONBOARDING_NOTICE_STORAGE_KEY ); ?>;
-		if ( localStorage.getItem( storageKey ) ) {
-			// Notice has been dismissed, do not show.
-			return;
-		}
+		try {
+			if ( localStorage.getItem( storageKey ) ) {
+				// Notice has been dismissed, do not show.
+				return;
+			}
+		} catch ( e ) {}
 
 		var notice = document.querySelector('.wc-clearance-onboarding-notice');
 
@@ -81,7 +79,9 @@ function product_onboarding_notice_hook(): void {
 					return;
 				}
 
-				localStorage.setItem(storageKey, '1');
+				try {
+					localStorage.setItem(storageKey, '1');
+				} catch ( e ) {}
 				notice.classList.remove('is-visible');
 			};
 
