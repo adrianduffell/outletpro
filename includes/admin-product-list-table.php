@@ -50,7 +50,7 @@ function add_onboarding_notice_hook(): void {
 	}
 
 	?>
-	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice" style="display:none">
+	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
 		<p><strong><?php esc_html_e( 'New: Clearance section', 'wc-clearance' ); ?></strong></p>
 		<p>
 			<?php
@@ -67,17 +67,26 @@ function add_onboarding_notice_hook(): void {
 	( function() {
 		var storageKey = <?php echo wp_json_encode( ONBOARDING_NOTICE_STORAGE_KEY ); ?>;
 		if ( localStorage.getItem( storageKey ) ) {
+			// Notice has been dismissed, do not show.
 			return;
 		}
-		var style = document.createElement( 'style' );
-		style.textContent = '.wc-clearance-onboarding-notice{display:block}';
-		document.head.appendChild( style );
-		document.addEventListener( 'click', function( event ) {
-			if ( ! event.target.closest( '.wc-clearance-onboarding-notice .notice-dismiss' ) ) {
-				return;
-			}
-			localStorage.setItem( storageKey, '1' );
-		} );
+
+		var notice = document.querySelector('.wc-clearance-onboarding-notice');
+
+		if ( notice ) {
+			notice.classList.add('is-visible');
+
+			var handler = function( event ) {
+				if ( ! event.target.closest('.notice-dismiss') ) {
+					return;
+				}
+
+				localStorage.setItem(storageKey, '1');
+				notice.classList.remove('is-visible');
+			};
+
+			notice.addEventListener('click', handler);
+		}
 	}() );
 	</script>
 	<?php
