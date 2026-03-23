@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Key used in localStorage to persist the notice dismissal.
  */
-const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_onboarding_dismissed';
+const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
 
 /**
  * Helper to initialize admin product list table features.
@@ -20,17 +20,17 @@ const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_onboarding_dismissed';
  * @since 1.0.0
  */
 function init_admin_product_list_table(): void {
-	add_action( 'admin_notices', 'WC_Clearance\add_onboarding_notice_hook' );
+	add_action( 'admin_notices', 'WC_Clearance\product_onboarding_notice_hook' );
 }
 
 /**
- * Display the onboarding notice on the product screen.
+ * Display the onboarding notice on the product list screen.
  *
  * Fired by `admin_notices`.
  *
  * @internal WordPress action hook
  */
-function add_onboarding_notice_hook(): void {
+function product_onboarding_notice_hook(): void {
 	$screen = get_current_screen();
 
 	if ( ! $screen instanceof \WP_Screen || 'edit-product' !== $screen->id ) {
