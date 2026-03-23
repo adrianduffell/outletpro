@@ -184,6 +184,46 @@ function count_clearance(): int {
 }
 
 /**
+ * Check if the clearance section is empty.
+ *
+ * More performant than count_clearance() because it uses no_found_rows to skip the SQL row count.
+ *
+ * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @since 1.0.0
+ */
+function clearance_section_empty(): bool {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+
+	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( ! $canonical_term ) {
+		return true;
+	}
+
+	$query = new \WP_Query(
+		array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+					'field'    => 'term_id',
+					'terms'    => $canonical_term->term_id,
+				),
+			),
+		)
+	);
+
+	return ! $query->have_posts();
+}
+
+/**
  * Remove a product from the clearance section.
  *
  * @param \WC_Product $product Product to update.
