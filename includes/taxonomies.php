@@ -189,7 +189,6 @@ function count_clearance(): int {
  * More performant than count_clearance() because it uses no_found_rows to skip the SQL row count.
  *
  * @throws \RuntimeException If the clearance status taxonomy does not exist.
- * @return bool True if the clearance section is empty, false otherwise.
  * @since 1.0.0
  */
 function clearance_section_empty(): bool {
