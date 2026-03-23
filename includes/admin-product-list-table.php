@@ -121,11 +121,22 @@ function product_publish_page_notice_hook(): void {
 		return;
 	}
 
-	$edit_link = get_publish_page_notice_edit_link();
-
-	if ( ! $edit_link ) {
+	try {
+		if ( clearance_section_empty() ) {
+			return;
+		}
+		$page_id = get_clearance_page_id();
+	} catch ( \RuntimeException | \UnexpectedValueException $e ) {
 		return;
 	}
+
+	$page = get_post( $page_id );
+
+	if ( ! $page instanceof \WP_Post || 'publish' === $page->post_status ) {
+		return;
+	}
+
+	$edit_link = get_edit_post_link( $page_id );
 
 	?>
 	<div class="notice notice-warning wc-clearance-publish-page-notice">
@@ -134,7 +145,7 @@ function product_publish_page_notice_hook(): void {
 			echo wp_kses_post(
 				sprintf(
 					/* translators: %s: URL to edit the clearance section page */
-					__( 'There are products in the clearance section, but the page isn\'t published yet. <a href="%s">Publish now</a>.', 'wc-clearance' ),
+					__( "There are products in the clearance section, but the page isn't published yet. <a href=\"%s\">Publish now</a>.", 'wc-clearance' ),
 					esc_url( $edit_link )
 				)
 			);
@@ -142,32 +153,4 @@ function product_publish_page_notice_hook(): void {
 		</p>
 	</div>
 	<?php
-}
-
-/**
- * Get the edit link for the clearance page when it needs publishing.
- *
- * Returns the page edit URL when all of the following are true:
- * - The clearance section has at least one product.
- * - The clearance section page exists.
- * - The clearance section page is not yet published.
- *
- * Returns null in all other cases, including error conditions.
- *
- * @internal
- */
-function get_publish_page_notice_edit_link(): ?string {
-	try {
-		if ( clearance_section_empty() ) {
-			return null;
-		}
-		if ( ! clearance_page_exists() || clearance_page_is_published() ) {
-			return null;
-		}
-		$page_id = get_clearance_page_id();
-	} catch ( \RuntimeException | \UnexpectedValueException $e ) {
-		return null;
-	}
-
-	return $page_id ? get_edit_post_link( $page_id ) : null;
 }

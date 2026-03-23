@@ -7,7 +7,6 @@
 
 use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\create_clearance_page;
-use function WC_Clearance\get_publish_page_notice_edit_link;
 use function WC_Clearance\product_publish_page_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
@@ -146,93 +145,5 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 		// Act.
 		product_publish_page_notice_hook();
-	}
-
-	public function test_get_publish_page_notice_edit_link_returns_null_when_clearance_section_empty(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		// No products in clearance.
-
-		// Act.
-		$result = get_publish_page_notice_edit_link();
-
-		// Assert.
-		$this->assertNull( $result );
-	}
-
-	public function test_get_publish_page_notice_edit_link_returns_null_when_page_not_registered(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
-		delete_option( CLEARANCE_PAGE_OPTION );
-
-		// Act.
-		$result = get_publish_page_notice_edit_link();
-
-		// Assert.
-		$this->assertNull( $result );
-	}
-
-	public function test_get_publish_page_notice_edit_link_returns_null_when_page_is_published(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
-		wp_publish_post( $page_id );
-
-		// Act.
-		$result = get_publish_page_notice_edit_link();
-
-		// Assert.
-		$this->assertNull( $result );
-	}
-
-	public function test_get_publish_page_notice_edit_link_returns_url_when_page_is_draft(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page(); // Creates as draft.
-		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
-
-		// Act.
-		$result = get_publish_page_notice_edit_link();
-
-		// Assert.
-		$this->assertIsString( $result );
-		$this->assertStringContainsString( 'action=edit', $result );
-	}
-
-	public function test_get_publish_page_notice_edit_link_returns_null_when_taxonomy_throws(): void {
-		// Arrange.
-		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
-
-		// Act.
-		$result = get_publish_page_notice_edit_link();
-
-		// Assert.
-		$this->assertNull( $result );
 	}
 }
