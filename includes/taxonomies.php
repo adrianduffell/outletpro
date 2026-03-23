@@ -184,45 +184,6 @@ function count_clearance(): int {
 }
 
 /**
- * Check if any published products are in the clearance section.
- *
- * Uses a cheaper existence query (no_found_rows) than count_clearance().
- *
- * @since 1.0.0
- */
-function has_clearance_products(): bool {
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		return false;
-	}
-
-	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-
-	if ( ! $canonical_term ) {
-		return false;
-	}
-
-	$query = new \WP_Query(
-		array(
-			'post_type'              => 'product',
-			'post_status'            => 'publish',
-			'posts_per_page'         => 1,
-			'no_found_rows'          => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
-					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
-					'field'    => 'term_id',
-					'terms'    => $canonical_term->term_id,
-				),
-			),
-		)
-	);
-
-	return $query->have_posts();
-}
-
-/**
  * Remove a product from the clearance section.
  *
  * @param \WC_Product $product Product to update.

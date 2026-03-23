@@ -41,7 +41,11 @@ function product_onboarding_notice_hook(): void {
 		return;
 	}
 
-	if ( has_clearance_products() ) {
+	try {
+		if ( 0 !== count_clearance() ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
 		return;
 	}
 
