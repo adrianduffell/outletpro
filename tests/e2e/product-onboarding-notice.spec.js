@@ -11,13 +11,15 @@ import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 async function deleteAllProducts( requestUtils ) {
 	const products = await requestUtils.rest( {
 		method: 'GET',
-		path: '/wc/v3/products?per_page=100&status=any',
+		path: '/wc/v3/products',
+		params: {
+			per_page: 100,
+		},
 	} );
 	for ( const product of products ) {
 		await requestUtils.rest( {
 			method: 'DELETE',
 			path: `/wc/v3/products/${ product.id }`,
-			data: { force: true },
 		} );
 	}
 }
