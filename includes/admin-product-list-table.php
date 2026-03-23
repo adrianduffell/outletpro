@@ -42,10 +42,10 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	try {
-		if ( 0 !== count_clearance() ) {
+		if ( ! clearance_section_empty() ) {
 			return;
 		}
-	} catch ( \Throwable $e ) {
+	} catch ( \RuntimeException $e ) {
 		return;
 	}
 

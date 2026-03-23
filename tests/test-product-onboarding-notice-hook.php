@@ -9,6 +9,7 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\product_onboarding_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
@@ -81,4 +82,21 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertEmpty( $output );
 	}
+
+	public function test_does_not_render_when_taxonomy_throws(): void {
+		// Arrange.
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
+
+		// Act.
+		ob_start();
+		product_onboarding_notice_hook();
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertEmpty( $output );
+	}
 }
+
