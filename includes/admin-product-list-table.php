@@ -51,7 +51,7 @@ function add_onboarding_notice_hook(): void {
 
 	?>
 	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
-		<p><strong><?php esc_html_e( 'New: Clearance section', 'wc-clearance' ); ?></strong></p>
+		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
 		<p>
 			<?php
 			echo wp_kses_post(
