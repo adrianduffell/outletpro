@@ -4,12 +4,21 @@ test( 'publish clearance page setup task', async ( {
 	editor,
 	page,
 	admin,
+	requestUtils,
 } ) => {
-	// Todo: Assumes the plugin activation routine ran and
-	// page is in a draft state . A possible iteration is to
-	// run the activation routine and this in an isolated project.
-
 	// Arrange
+	const settings = await requestUtils.rest( {
+		method: 'GET',
+		path: '/wp/v2/settings',
+	} );
+	await requestUtils.rest( {
+		method: 'POST',
+		path: `/wp/v2/pages/${ settings.wc_clearance_page_id }`,
+		data: {
+			status: 'draft',
+		},
+	} );
+
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
 	const taskItem = page.locator( '.woocommerce-task-list__item', {
 		hasText: 'Publish the clearance section page',
