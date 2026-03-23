@@ -99,4 +99,3 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( $output );
 	}
 }
-
