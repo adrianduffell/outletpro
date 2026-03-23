@@ -21,6 +21,7 @@ const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed
  */
 function init_admin_product_list_table(): void {
 	add_action( 'admin_notices', 'WC_Clearance\product_onboarding_notice_hook' );
+	add_action( 'admin_notices', 'WC_Clearance\product_publish_page_notice_hook' );
 }
 
 /**
@@ -97,4 +98,76 @@ function product_onboarding_notice_hook(): void {
 	}() );
 	</script>
 	<?php
+}
+
+/**
+ * Display the publish page notice on the product list screen.
+ *
+ * Shows when there are products in the clearance section but the
+ * clearance section page is not yet published.
+ *
+ * Fired by `admin_notices`.
+ *
+ * @internal WordPress action hook
+ */
+function product_publish_page_notice_hook(): void {
+	$screen = get_current_screen();
+
+	if ( ! $screen instanceof \WP_Screen || 'edit-product' !== $screen->id ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_pages' ) ) {
+		return;
+	}
+
+	$edit_link = get_publish_page_notice_edit_link();
+
+	if ( ! $edit_link ) {
+		return;
+	}
+
+	?>
+	<div class="notice notice-warning wc-clearance-publish-page-notice">
+		<p>
+			<?php
+			echo wp_kses_post(
+				sprintf(
+					/* translators: %s: URL to edit the clearance section page */
+					__( 'There are products in the clearance section, but the page isn\'t published yet. <a href="%s">Publish now</a>.', 'wc-clearance' ),
+					esc_url( $edit_link )
+				)
+			);
+			?>
+		</p>
+	</div>
+	<?php
+}
+
+/**
+ * Get the edit link for the clearance page when it needs publishing.
+ *
+ * Returns the page edit URL when all of the following are true:
+ * - The clearance section has at least one product.
+ * - The clearance section page exists.
+ * - The clearance section page is not yet published.
+ *
+ * Returns null in all other cases, including error conditions.
+ *
+ * @internal
+ */
+function get_publish_page_notice_edit_link(): ?string {
+	try {
+		if ( clearance_section_empty() ) {
+			return null;
+		}
+		if ( ! clearance_page_exists() || clearance_page_is_published() ) {
+			return null;
+		}
+		$page_id = get_clearance_page_id();
+	} catch ( \RuntimeException | \UnexpectedValueException $e ) {
+		return null;
+	}
+
+	return $page_id ? get_edit_post_link( $page_id ) : null;
 }
