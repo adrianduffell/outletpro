@@ -36,6 +36,7 @@ require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';
+require_once __DIR__ . '/includes/page-editor-notice.php';
 
 /**
  * Initialize the plugin.
@@ -124,6 +125,12 @@ function enqueue_build_assets_hook(): void {
 		$asset['dependencies'],
 		$asset['version'],
 		true
+	);
+
+	wp_localize_script(
+		'wc-clearance-build',
+		'wcClearanceEditorData',
+		get_page_editor_notice_data()
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
