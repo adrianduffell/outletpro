@@ -53,8 +53,14 @@ function add_onboarding_notice_hook(): void {
 	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice" style="display:none">
 		<p><strong><?php esc_html_e( 'New: Clearance section', 'wc-clearance' ); ?></strong></p>
 		<p>
-			<?php esc_html_e( 'Include products in the clearance section to promote them in your store.', 'wc-clearance' ); ?>
-			<a href="https://adrianduffell.com/wc-clearance/"><?php esc_html_e( 'Learn more', 'wc-clearance' ); ?></a>
+			<?php
+			echo wp_kses_post(
+				__(
+					'Include products in the clearance section to promote them in your store. Edit a product and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.',
+					'wc-clearance'
+				)
+			);
+			?>
 		</p>
 	</div>
 	<script>
