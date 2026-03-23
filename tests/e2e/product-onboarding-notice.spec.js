@@ -1,14 +1,5 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-const STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
-
-test.beforeEach( async ( { page, admin } ) => {
-	// Navigate to the product list to establish the correct origin, then
-	// remove the dismissal key so each test starts with the notice un-dismissed.
-	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
-	await page.evaluate( ( key ) => localStorage.removeItem( key ), STORAGE_KEY );
-} );
-
 test( 'notice shows when there are no clearance products', async ( {
 	page,
 	admin,
