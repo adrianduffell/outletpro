@@ -5,9 +5,9 @@
  * @package WC_Clearance
  */
 
+use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
-use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 
@@ -18,7 +18,7 @@ class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 		$clearance_product     = WC_Helper_Product::create_simple_product();
 		$non_clearance_product = WC_Helper_Product::create_simple_product();
-		wp_set_object_terms( $clearance_product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		add_to_clearance( $clearance_product );
 
 		// Act.
 		$request  = new WP_REST_Request( 'GET', '/wc/v3/products' );
@@ -37,7 +37,7 @@ class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 		$clearance_product     = WC_Helper_Product::create_simple_product();
 		$non_clearance_product = WC_Helper_Product::create_simple_product();
-		wp_set_object_terms( $clearance_product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		add_to_clearance( $clearance_product );
 
 		// Act.
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
@@ -57,7 +57,7 @@ class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 		$clearance_product     = WC_Helper_Product::create_simple_product();
 		$non_clearance_product = WC_Helper_Product::create_simple_product();
-		wp_set_object_terms( $clearance_product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		add_to_clearance( $clearance_product );
 
 		// Act.
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
