@@ -33,6 +33,14 @@
 	display: block;
 }
 
+.wc-clearance-publish-page-notice {
+	display: none;
+}
+
+.wc-clearance-publish-page-notice.is-visible {
+	display: block;
+}
+
 .wc-clearance-new {
 	background: #f2edff;
 	color: #5007aa;
