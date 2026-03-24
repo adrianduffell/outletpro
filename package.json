@@ -2,7 +2,6 @@
 	"name": "wc-clearance",
 	"version": "1.0.0",
 	"private": true,
-	"type": "module",
 	"scripts": {
 		"build": "wp-scripts build",
 		"format": "wp-scripts format",
