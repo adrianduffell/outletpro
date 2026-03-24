@@ -70,7 +70,7 @@ function save_product_checkbox_hook( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_clearance = isset( $_POST['wc-clearance-status'] );
 	try {
-		set_clearance_status( $product, $is_clearance );
+		set_clearance( $product, $is_clearance );
 	} catch ( \Throwable $e ) {
 		$product_id = $product instanceof \WC_Product ? $product->get_id() : null;
 		\wc_get_logger()->error(
