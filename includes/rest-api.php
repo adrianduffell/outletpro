@@ -41,8 +41,8 @@ function rest_product_collection_params_hook( array $params ): array {
  * Filter the products REST API query to include only clearance products when requested.
  *
  * @internal WooCommerce filter hook
- * @param array<string, mixed>  $args    WP_Query arguments.
- * @param \WP_REST_Request      $request REST API request.
+ * @param array<string, mixed> $args    WP_Query arguments.
+ * @param \WP_REST_Request     $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
  */
 function woocommerce_rest_product_object_query_hook( array $args, \WP_REST_Request $request ): array {
