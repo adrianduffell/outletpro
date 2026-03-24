@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_rest_api(): void {
 	add_filter( 'rest_product_collection_params', 'WC_Clearance\add_rest_param_hook' );
-	add_filter( 'woocommerce_rest_product_object_query', 'WC_Clearance\woocommerce_rest_product_object_query_hook', 10, 2 );
+	add_filter( 'woocommerce_rest_product_object_query', 'WC_Clearance\handle_wc_clearance_rest_param', 10, 2 );
 }
 
 /**
@@ -45,7 +45,7 @@ function add_rest_param_hook( array $params ): array {
  * @param \WP_REST_Request     $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
  */
-function woocommerce_rest_product_object_query_hook( array $args, \WP_REST_Request $request ): array {
+function handle_wc_clearance_rest_param( array $args, \WP_REST_Request $request ): array {
 	if ( empty( $request['wc_clearance'] ) ) {
 		return $args;
 	}
