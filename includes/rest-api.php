@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_rest_api(): void {
-	add_filter( 'rest_product_collection_params', 'WC_Clearance\add_rest_param_hook' );
+	add_filter( 'rest_product_collection_params', 'WC_Clearance\add_wc_clearance_rest_param_hook' );
 	add_filter( 'woocommerce_rest_product_object_query', 'WC_Clearance\handle_wc_clearance_rest_param', 10, 2 );
 }
 
@@ -26,7 +26,7 @@ function init_rest_api(): void {
  * @param array<string, mixed> $params Existing collection parameters.
  * @return array<string, mixed> Modified collection parameters.
  */
-function add_rest_param_hook( array $params ): array {
+function add_wc_clearance_rest_param_hook( array $params ): array {
 	$params['wc_clearance'] = array(
 		'description'       => __( 'Limit results to products in the clearance section.', 'wc-clearance' ),
 		'type'              => 'boolean',
