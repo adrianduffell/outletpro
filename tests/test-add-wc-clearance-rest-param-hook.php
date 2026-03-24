@@ -1,13 +1,13 @@
 <?php
 /**
- * Tests for the rest_product_collection_params_hook.
+ * Tests for add_wc_clearance_rest_param_hook().
  *
  * @package WC_Clearance
  */
 
 use function WC_Clearance\register_clearance_status_taxonomy;
 
-class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
+class Test_Add_Wc_Clearance_Rest_Param_Hook extends WP_UnitTestCase {
 
 	public function test_wc_clearance_param_is_in_product_collection_schema(): void {
 		// Arrange.

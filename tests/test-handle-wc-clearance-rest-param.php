@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the wc_clearance REST API filter.
+ * Tests for handle_wc_clearance_rest_param().
  *
  * @package WC_Clearance
  */
@@ -8,7 +8,7 @@
 use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 
-class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
+class Test_Handle_Wc_Clearance_Rest_Param extends WP_UnitTestCase {
 
 	public function test_unfiltered_request_returns_all_products(): void {
 		// Arrange.
