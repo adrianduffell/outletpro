@@ -9,7 +9,7 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 
-class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
+class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 
 	public function test_unfiltered_request_returns_all_products(): void {
 		// Arrange.
