@@ -135,6 +135,9 @@ function product_publish_page_notice_hook(): void {
 		return;
 	}
 
+	if ( null === $page_id ) {
+		return;
+	}
 	$page = get_post( $page_id );
 
 	if ( ! $page instanceof \WP_Post || 'publish' === $page->post_status ) {
