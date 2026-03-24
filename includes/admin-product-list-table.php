@@ -149,8 +149,8 @@ function product_publish_page_notice_hook(): void {
 			<?php
 			echo wp_kses_post(
 				sprintf(
-					/* translators: %s: URL to edit the clearance section page */
-					__( "There are products in the clearance section, but the page isn't published yet. <a href=\"%s\">Publish now</a>.", 'wc-clearance' ),
+					/* translators: $s URL to edit the clearance section page */
+					__( 'Publish the clearance section page to help customers find those products. <a href="%s">Publish now</a>', 'wc-clearance' ),
 					esc_url( $edit_link )
 				)
 			);
