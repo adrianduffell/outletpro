@@ -28,6 +28,7 @@ const VERSION = '1.0.0';
 
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/rest-api.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
@@ -47,6 +48,7 @@ require_once __DIR__ . '/includes/admin-product-list-table.php';
 function init_hook(): void {
 	init_settings();
 	init_taxonomies();
+	init_rest_api();
 	init_shortcodes();
 	try {
 		init_setup_task();
