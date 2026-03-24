@@ -75,9 +75,4 @@
 
 	<!-- Complexity checks -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
-	<rule ref="SlevomatCodingStandard.Complexity.Cognitive">
-		<properties>
-			<property name="maxComplexity" value="7"/>
-		</properties>
-	</rule>
 </ruleset>
