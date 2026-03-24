@@ -25,7 +25,6 @@ function init_rest_api(): void {
  * @internal WordPress filter hook
  * @param array<string, mixed> $params Existing collection parameters.
  * @return array<string, mixed> Modified collection parameters.
- * @since 1.0.0
  */
 function rest_product_collection_params_hook( array $params ): array {
 	$params['wc_clearance_status'] = array(
@@ -45,7 +44,6 @@ function rest_product_collection_params_hook( array $params ): array {
  * @param array<string, mixed>  $args    WP_Query arguments.
  * @param \WP_REST_Request      $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
- * @since 1.0.0
  */
 function woocommerce_rest_product_object_query_hook( array $args, \WP_REST_Request $request ): array {
 	if ( empty( $request['wc_clearance_status'] ) ) {
