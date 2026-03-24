@@ -1,46 +1,71 @@
+import apiFetch from '@wordpress/api-fetch';
 import { useEffect } from '@wordpress/element';
-import { dispatch } from '@wordpress/data';
+import { dispatch, select } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
-
-declare global {
-	interface Window {
-		wcClearanceEditorData?: {
-			noProductsNotice: boolean;
-		};
-	}
-}
 
 const NOTICE_ID = 'wc-clearance-no-products';
 
 export function PageEditorNotice(): null {
-	// The notice data is injected server-side via wp_localize_script when the page
-	// loads and does not change during the editor session. Running once on mount is
-	// correct and intentional.
 	useEffect( () => {
-		const data = window.wcClearanceEditorData;
+		async function maybeShowNotice() {
+			const currentPostId = select(
+				'core/editor'
+			).getCurrentPostId() as number;
 
-		if ( ! data?.noProductsNotice ) {
-			return;
+			// Fetch the clearance page ID from the WP settings REST API.
+			let settings: { wc_clearance_page_id?: number };
+			try {
+				settings = await apiFetch< { wc_clearance_page_id?: number } >(
+					{
+						path: '/wp/v2/settings',
+					}
+				);
+			} catch {
+				return;
+			}
+
+			if (
+				! settings.wc_clearance_page_id ||
+				currentPostId !== settings.wc_clearance_page_id
+			) {
+				return;
+			}
+
+			// Check if any clearance products exist via the REST API.
+			let products: unknown[];
+			try {
+				products = await apiFetch< unknown[] >( {
+					path: '/wc/v3/products?wc_clearance=true&per_page=1',
+				} );
+			} catch {
+				return;
+			}
+
+			if ( products.length > 0 ) {
+				return;
+			}
+
+			// Build the products URL relative to the current wp-admin page.
+			const productsUrl = new URL( 'edit.php', window.location.href );
+			productsUrl.searchParams.set( 'post_type', 'product' );
+
+			dispatch( 'core/notices' ).createNotice(
+				'warning',
+				'The clearance section has no products. Include products to display them on this page.',
+				{
+					id: NOTICE_ID,
+					isDismissible: false,
+					actions: [
+						{
+							label: 'Learn how',
+							url: productsUrl.href,
+						},
+					],
+				}
+			);
 		}
 
-		// Build the products URL relative to the current wp-admin page.
-		const productsUrl = new URL( 'edit.php', window.location.href );
-		productsUrl.searchParams.set( 'post_type', 'product' );
-
-		dispatch( 'core/notices' ).createNotice(
-			'warning',
-			'The clearance section has no products. Include products to display them on this page.',
-			{
-				id: NOTICE_ID,
-				isDismissible: false,
-				actions: [
-					{
-						label: 'Learn how',
-						url: productsUrl.href,
-					},
-				],
-			}
-		);
+		maybeShowNotice();
 	}, [] );
 
 	return null;

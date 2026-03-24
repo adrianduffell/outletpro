@@ -5,6 +5,11 @@
  * and are provided at runtime by WordPress. Type declarations are required here for TypeScript.
  */
 
+declare module '@wordpress/api-fetch' {
+	function apiFetch< T = unknown >( options: { path: string } ): Promise< T >;
+	export default apiFetch;
+}
+
 declare module '@wordpress/element' {
 	export { useEffect } from 'react';
 }
@@ -12,6 +17,8 @@ declare module '@wordpress/element' {
 declare module '@wordpress/data' {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	export function dispatch( storeNameOrDescriptor: string ): any;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	export function select( storeNameOrDescriptor: string ): any;
 }
 
 declare module '@wordpress/plugins' {

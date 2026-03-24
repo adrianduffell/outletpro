@@ -4,6 +4,8 @@ module.exports = {
 	...preset,
 	moduleNameMapper: {
 		...preset.moduleNameMapper,
+		'^@wordpress/api-fetch$':
+			'<rootDir>/tests/js/__mocks__/@wordpress/api-fetch.js',
 		'^@wordpress/data$': '<rootDir>/tests/js/__mocks__/@wordpress/data.js',
 		'^@wordpress/element$':
 			'<rootDir>/tests/js/__mocks__/@wordpress/element.js',

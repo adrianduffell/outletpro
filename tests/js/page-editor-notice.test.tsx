@@ -1,14 +1,20 @@
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { PageEditorNotice } from '../../src/page-editor-notice';
+import apiFetch from '@wordpress/api-fetch';
 
 jest.mock( '@wordpress/plugins', () => ( {
 	registerPlugin: jest.fn(),
 } ) );
 
 const mockCreateNotice = jest.fn();
+const mockGetCurrentPostId = jest.fn();
+
 jest.mock( '@wordpress/data', () => ( {
 	dispatch: jest.fn( () => ( {
 		createNotice: mockCreateNotice,
+	} ) ),
+	select: jest.fn( () => ( {
+		getCurrentPostId: mockGetCurrentPostId,
 	} ) ),
 } ) );
 
@@ -16,43 +22,85 @@ jest.mock( '@wordpress/element', () => ( {
 	useEffect: ( callback: () => void ) => callback(),
 } ) );
 
+jest.mock( '@wordpress/api-fetch', () => jest.fn() );
+
+// Typed reference to the jest.fn() created by the factory above.
+const mockApiFetch = apiFetch as unknown as jest.Mock;
+
 describe( 'PageEditorNotice', () => {
 	beforeEach( () => {
 		mockCreateNotice.mockClear();
-		delete window.wcClearanceEditorData;
+		mockApiFetch.mockClear();
+		mockGetCurrentPostId.mockReturnValue( 5 );
 	} );
 
-	test( 'does not create a notice when noProductsNotice is false', () => {
+	test( 'does not create notice when settings fetch fails', async () => {
 		// Arrange.
-		window.wcClearanceEditorData = {
-			noProductsNotice: false,
-		};
+		mockApiFetch.mockRejectedValueOnce( new Error( 'Network error' ) );
 
 		// Act.
-		render( <PageEditorNotice /> );
+		await act( async () => {
+			render( <PageEditorNotice /> );
+		} );
 
 		// Assert.
 		expect( mockCreateNotice ).not.toHaveBeenCalled();
 	} );
 
-	test( 'does not create a notice when wcClearanceEditorData is absent', () => {
-		// Arrange: window.wcClearanceEditorData is undefined (deleted in beforeEach).
+	test( 'does not create notice when current post is not the clearance page', async () => {
+		// Arrange.
+		mockGetCurrentPostId.mockReturnValue( 99 );
+		mockApiFetch.mockResolvedValueOnce( { wc_clearance_page_id: 5 } );
 
 		// Act.
-		render( <PageEditorNotice /> );
+		await act( async () => {
+			render( <PageEditorNotice /> );
+		} );
 
 		// Assert.
 		expect( mockCreateNotice ).not.toHaveBeenCalled();
 	} );
 
-	test( 'creates a warning notice when noProductsNotice is true', () => {
+	test( 'does not create notice when clearance page is not configured', async () => {
 		// Arrange.
-		window.wcClearanceEditorData = {
-			noProductsNotice: true,
-		};
+		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
-		render( <PageEditorNotice /> );
+		await act( async () => {
+			render( <PageEditorNotice /> );
+		} );
+
+		// Assert.
+		expect( mockCreateNotice ).not.toHaveBeenCalled();
+	} );
+
+	test( 'does not create notice when clearance products exist', async () => {
+		// Arrange.
+		mockGetCurrentPostId.mockReturnValue( 5 );
+		mockApiFetch
+			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
+			.mockResolvedValueOnce( [ { id: 1 } ] );
+
+		// Act.
+		await act( async () => {
+			render( <PageEditorNotice /> );
+		} );
+
+		// Assert.
+		expect( mockCreateNotice ).not.toHaveBeenCalled();
+	} );
+
+	test( 'creates warning notice when on clearance page with no products', async () => {
+		// Arrange.
+		mockGetCurrentPostId.mockReturnValue( 5 );
+		mockApiFetch
+			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
+			.mockResolvedValueOnce( [] );
+
+		// Act.
+		await act( async () => {
+			render( <PageEditorNotice /> );
+		} );
 
 		// Assert.
 		expect( mockCreateNotice ).toHaveBeenCalledWith(
@@ -65,14 +113,17 @@ describe( 'PageEditorNotice', () => {
 		);
 	} );
 
-	test( 'notice action links to the product list screen', () => {
+	test( 'notice action links to the product list screen', async () => {
 		// Arrange.
-		window.wcClearanceEditorData = {
-			noProductsNotice: true,
-		};
+		mockGetCurrentPostId.mockReturnValue( 5 );
+		mockApiFetch
+			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
+			.mockResolvedValueOnce( [] );
 
 		// Act.
-		render( <PageEditorNotice /> );
+		await act( async () => {
+			render( <PageEditorNotice /> );
+		} );
 
 		// Assert.
 		expect( mockCreateNotice ).toHaveBeenCalledWith(
@@ -90,16 +141,17 @@ describe( 'PageEditorNotice', () => {
 		);
 	} );
 
-	test( 'renders null', () => {
+	test( 'renders null', async () => {
 		// Arrange.
-		window.wcClearanceEditorData = {
-			noProductsNotice: false,
-		};
+		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
-		const { container } = render( <PageEditorNotice /> );
+		let result!: ReturnType< typeof render >;
+		await act( async () => {
+			result = render( <PageEditorNotice /> );
+		} );
 
 		// Assert.
-		expect( container ).toBeEmptyDOMElement();
+		expect( result.container ).toBeEmptyDOMElement();
 	} );
 } );
