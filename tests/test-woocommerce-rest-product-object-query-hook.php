@@ -24,11 +24,11 @@ class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $args, $result );
 	}
 
-	public function test_query_unchanged_when_clearance_status_is_false(): void {
+	public function test_query_unchanged_when_clearance_status_is_empty_string(): void {
 		// Arrange.
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request();
-		$request->set_param( 'clearance_status', false );
+		$request->set_param( 'wc_clearance_status', '' );
 
 		// Act.
 		$result = woocommerce_rest_product_object_query_hook( $args, $request );
@@ -37,12 +37,12 @@ class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $args, $result );
 	}
 
-	public function test_adds_tax_query_when_clearance_status_is_true(): void {
+	public function test_adds_tax_query_when_clearance_status_is_clearance(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request();
-		$request->set_param( 'clearance_status', true );
+		$request->set_param( 'wc_clearance_status', CLEARANCE_STATUS_CANONICAL_TERM );
 
 		// Act.
 		$result = woocommerce_rest_product_object_query_hook( $args, $request );
@@ -67,7 +67,7 @@ class Test_Woocommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 			'tax_query' => array( $existing_tax ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
 		$request      = new WP_REST_Request();
-		$request->set_param( 'clearance_status', true );
+		$request->set_param( 'wc_clearance_status', CLEARANCE_STATUS_CANONICAL_TERM );
 
 		// Act.
 		$result = woocommerce_rest_product_object_query_hook( $args, $request );

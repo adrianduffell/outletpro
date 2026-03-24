@@ -9,7 +9,7 @@ use function WC_Clearance\rest_product_collection_params_hook;
 
 class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 
-	public function test_adds_clearance_status_param(): void {
+	public function test_adds_wc_clearance_status_param(): void {
 		// Arrange.
 		$params = array();
 
@@ -17,10 +17,10 @@ class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 		$result = rest_product_collection_params_hook( $params );
 
 		// Assert.
-		$this->assertArrayHasKey( 'clearance_status', $result );
+		$this->assertArrayHasKey( 'wc_clearance_status', $result );
 	}
 
-	public function test_clearance_status_param_has_correct_type(): void {
+	public function test_wc_clearance_status_param_has_correct_type(): void {
 		// Arrange.
 		$params = array();
 
@@ -28,10 +28,10 @@ class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 		$result = rest_product_collection_params_hook( $params );
 
 		// Assert.
-		$this->assertSame( 'boolean', $result['clearance_status']['type'] );
+		$this->assertSame( 'string', $result['wc_clearance_status']['type'] );
 	}
 
-	public function test_clearance_status_param_defaults_to_false(): void {
+	public function test_wc_clearance_status_param_has_no_default(): void {
 		// Arrange.
 		$params = array();
 
@@ -39,7 +39,7 @@ class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 		$result = rest_product_collection_params_hook( $params );
 
 		// Assert.
-		$this->assertFalse( $result['clearance_status']['default'] );
+		$this->assertArrayNotHasKey( 'default', $result['wc_clearance_status'] );
 	}
 
 	public function test_preserves_existing_params(): void {
@@ -51,6 +51,6 @@ class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayHasKey( 'per_page', $result );
-		$this->assertArrayHasKey( 'clearance_status', $result );
+		$this->assertArrayHasKey( 'wc_clearance_status', $result );
 	}
 }

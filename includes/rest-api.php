@@ -20,7 +20,7 @@ function init_rest_api(): void {
 }
 
 /**
- * Add `clearance_status` parameter to the products REST API collection params.
+ * Add `wc_clearance_status` parameter to the products REST API collection params.
  *
  * @internal WordPress filter hook
  * @param array<string, mixed> $params Existing collection parameters.
@@ -28,11 +28,10 @@ function init_rest_api(): void {
  * @since 1.0.0
  */
 function rest_product_collection_params_hook( array $params ): array {
-	$params['clearance_status'] = array(
-		'description'       => __( 'Limit results to products in the clearance section.', 'wc-clearance' ),
-		'type'              => 'boolean',
-		'default'           => false,
-		'sanitize_callback' => 'rest_sanitize_boolean',
+	$params['wc_clearance_status'] = array(
+		'description'       => __( 'Filter products by clearance status term. Parent terms include descendants.', 'wc-clearance' ),
+		'type'              => 'string',
+		'sanitize_callback' => 'sanitize_text_field',
 		'validate_callback' => 'rest_validate_request_arg',
 	);
 
@@ -49,7 +48,7 @@ function rest_product_collection_params_hook( array $params ): array {
  * @since 1.0.0
  */
 function woocommerce_rest_product_object_query_hook( array $args, \WP_REST_Request $request ): array {
-	if ( empty( $request['clearance_status'] ) ) {
+	if ( empty( $request['wc_clearance_status'] ) ) {
 		return $args;
 	}
 
@@ -58,9 +57,10 @@ function woocommerce_rest_product_object_query_hook( array $args, \WP_REST_Reque
 	}
 
 	$args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
-		'field'    => 'slug',
-		'terms'    => array( CLEARANCE_STATUS_CANONICAL_TERM ),
+		'taxonomy'         => CLEARANCE_STATUS_TAXONOMY,
+		'field'            => 'slug',
+		'terms'            => array( $request['wc_clearance_status'] ),
+		'include_children' => true,
 	);
 
 	return $args;
