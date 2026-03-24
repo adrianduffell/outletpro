@@ -28,7 +28,7 @@ function init_rest_api(): void {
  */
 function rest_product_collection_params_hook( array $params ): array {
 	$params['wc_clearance_status'] = array(
-		'description'       => __( 'Filter products by clearance status term. Parent terms include descendants.', 'wc-clearance' ),
+		'description'       => __( 'Filter products by clearance status term slug.', 'wc-clearance' ),
 		'type'              => 'string',
 		'sanitize_callback' => 'sanitize_text_field',
 		'validate_callback' => 'rest_validate_request_arg',
@@ -55,10 +55,9 @@ function woocommerce_rest_product_object_query_hook( array $args, \WP_REST_Reque
 	}
 
 	$args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		'taxonomy'         => CLEARANCE_STATUS_TAXONOMY,
-		'field'            => 'slug',
-		'terms'            => array( $request['wc_clearance_status'] ),
-		'include_children' => true,
+		'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+		'field'    => 'slug',
+		'terms'    => array( $request['wc_clearance_status'] ),
 	);
 
 	return $args;
