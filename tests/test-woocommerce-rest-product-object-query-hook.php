@@ -1,13 +1,12 @@
 <?php
 /**
- * Tests for the wc_clearance_status REST API filter.
+ * Tests for the wc_clearance REST API filter.
  *
  * @package WC_Clearance
  */
 
 use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
-use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 
 class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 
@@ -30,7 +29,7 @@ class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		$this->assertContains( $non_clearance_product->get_id(), $ids );
 	}
 
-	public function test_wc_clearance_status_param_filters_to_clearance_products_only(): void {
+	public function test_wc_clearance_param_filters_to_clearance_products_only(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -41,7 +40,7 @@ class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 
 		// Act.
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_param( 'wc_clearance_status', CLEARANCE_STATUS_CANONICAL_TERM );
+		$request->set_param( 'wc_clearance', true );
 		$response = rest_do_request( $request );
 
 		// Assert.
@@ -50,7 +49,7 @@ class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 		$this->assertNotContains( $non_clearance_product->get_id(), $ids );
 	}
 
-	public function test_empty_wc_clearance_status_param_returns_all_products(): void {
+	public function test_false_wc_clearance_param_returns_all_products(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -61,7 +60,7 @@ class Test_WooCommerce_Rest_Product_Object_Query_Hook extends WP_UnitTestCase {
 
 		// Act.
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_param( 'wc_clearance_status', '' );
+		$request->set_param( 'wc_clearance', false );
 		$response = rest_do_request( $request );
 
 		// Assert.

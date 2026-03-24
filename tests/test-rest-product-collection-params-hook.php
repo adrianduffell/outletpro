@@ -9,7 +9,7 @@ use function WC_Clearance\register_clearance_status_taxonomy;
 
 class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 
-	public function test_wc_clearance_status_param_is_in_product_collection_schema(): void {
+	public function test_wc_clearance_param_is_in_product_collection_schema(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -22,7 +22,7 @@ class Test_Rest_Product_Collection_Params_Hook extends WP_UnitTestCase {
 		// Assert.
 		$data = $response->get_data();
 		$args = $data['endpoints'][0]['args'] ?? array();
-		$this->assertArrayHasKey( 'wc_clearance_status', $args );
-		$this->assertSame( 'string', $args['wc_clearance_status']['type'] );
+		$this->assertArrayHasKey( 'wc_clearance', $args );
+		$this->assertSame( 'boolean', $args['wc_clearance']['type'] );
 	}
 }
