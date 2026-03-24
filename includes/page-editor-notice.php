@@ -17,12 +17,11 @@ defined( 'ABSPATH' ) || exit;
  * by the editor JavaScript to show a warning notice when no products exist.
  *
  * @internal
- * @return array{noProductsNotice: bool, productsUrl: string}
+ * @return array{noProductsNotice: bool}
  */
 function get_page_editor_notice_data(): array {
 	$data = array(
 		'noProductsNotice' => false,
-		'productsUrl'      => admin_url( 'edit.php?post_type=product' ),
 	);
 
 	try {

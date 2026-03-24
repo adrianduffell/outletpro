@@ -110,16 +110,4 @@ class Test_Get_Page_Editor_Notice_Data extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result['noProductsNotice'] );
 	}
-
-	public function test_products_url_points_to_product_list_screen(): void {
-		// Arrange.
-		delete_option( CLEARANCE_PAGE_OPTION );
-
-		// Act.
-		$result = get_page_editor_notice_data();
-
-		// Assert.
-		$this->assertStringContainsString( 'edit.php', $result['productsUrl'] );
-		$this->assertStringContainsString( 'post_type=product', $result['productsUrl'] );
-	}
 }

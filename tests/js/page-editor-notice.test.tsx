@@ -26,8 +26,6 @@ describe( 'PageEditorNotice', () => {
 		// Arrange.
 		window.wcClearanceEditorData = {
 			noProductsNotice: false,
-			productsUrl:
-				'http://example.com/wp-admin/edit.php?post_type=product',
 		};
 
 		// Act.
@@ -51,8 +49,6 @@ describe( 'PageEditorNotice', () => {
 		// Arrange.
 		window.wcClearanceEditorData = {
 			noProductsNotice: true,
-			productsUrl:
-				'http://example.com/wp-admin/edit.php?post_type=product',
 		};
 
 		// Act.
@@ -69,13 +65,10 @@ describe( 'PageEditorNotice', () => {
 		);
 	} );
 
-	test( 'notice action links to the products URL', () => {
+	test( 'notice action links to the product list screen', () => {
 		// Arrange.
-		const productsUrl =
-			'http://example.com/wp-admin/edit.php?post_type=product';
 		window.wcClearanceEditorData = {
 			noProductsNotice: true,
-			productsUrl,
 		};
 
 		// Act.
@@ -87,7 +80,11 @@ describe( 'PageEditorNotice', () => {
 			expect.any( String ),
 			expect.objectContaining( {
 				actions: expect.arrayContaining( [
-					expect.objectContaining( { url: productsUrl } ),
+					expect.objectContaining( {
+						url: expect.stringContaining(
+							'edit.php?post_type=product'
+						),
+					} ),
 				] ),
 			} )
 		);
@@ -97,7 +94,6 @@ describe( 'PageEditorNotice', () => {
 		// Arrange.
 		window.wcClearanceEditorData = {
 			noProductsNotice: false,
-			productsUrl: '',
 		};
 
 		// Act.

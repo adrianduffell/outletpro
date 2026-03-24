@@ -6,7 +6,6 @@ declare global {
 	interface Window {
 		wcClearanceEditorData?: {
 			noProductsNotice: boolean;
-			productsUrl: string;
 		};
 	}
 }
@@ -24,6 +23,10 @@ export function PageEditorNotice(): null {
 			return;
 		}
 
+		// Build the products URL relative to the current wp-admin page.
+		const productsUrl = new URL( 'edit.php', window.location.href );
+		productsUrl.searchParams.set( 'post_type', 'product' );
+
 		dispatch( 'core/notices' ).createNotice(
 			'warning',
 			'The clearance section has no products. Include products to display them on this page.',
@@ -33,7 +36,7 @@ export function PageEditorNotice(): null {
 				actions: [
 					{
 						label: 'Learn how',
-						url: data.productsUrl,
+						url: productsUrl.href,
 					},
 				],
 			}
