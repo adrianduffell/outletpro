@@ -26,3 +26,4 @@ For example, prefer `Standardize hooks` over `Rename WordPress hook callbacks wi
 * Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
 * The test's function name should describe the test. A docblock should not be added to the test as that would create redundancy.
 * Don't use `ob_start` in tests. Use PHPUnit's `expect*` methods and the Arrange-Expect-Act pattern. Use `expectException()` for exceptions and `expectOutputRegex()` or `expectOutputString()` for echo/printed output.
+* When writing tests for hooked functions (those with `_hook` sugfix, use indirect WordPress routines to fire the hook rather than direct calls to the hooked function. For example, if `my_title()` hooks `the_title`, call WordPress' `get_the_title()` to test the whole integration. 
