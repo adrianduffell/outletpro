@@ -98,7 +98,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		// Assert.
 		expect( mockCreateNotice ).toHaveBeenCalledWith(
 			'warning',
-			'The clearance section has no products. Include products to display them on this page.',
+			'The clearance section is empty. Include products to see them on this page.',
 			expect.objectContaining( {
 				id: 'wc-clearance-empty',
 				isDismissible: false,
@@ -106,7 +106,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		);
 	} );
 
-	test( 'notice action links to the product list screen', async () => {
+	test( 'notice action navigates to the product list screen', async () => {
 		// Arrange.
 		const mockCreateNotice = jest.fn();
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
@@ -120,20 +120,37 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
-		// Assert.
+		// Assert — the action is a primary button with an onClick handler.
 		expect( mockCreateNotice ).toHaveBeenCalledWith(
 			expect.any( String ),
 			expect.any( String ),
 			expect.objectContaining( {
 				actions: expect.arrayContaining( [
 					expect.objectContaining( {
-						url: expect.stringContaining(
-							'edit.php?post_type=product'
-						),
+						label: 'Manage products',
+						isPrimary: true,
+						onClick: expect.any( Function ),
 					} ),
 				] ),
 			} )
 		);
+
+		// Invoke the onClick and verify it navigates to the product list screen.
+		const originalLocation = window.location;
+		Object.defineProperty( window, 'location', {
+			value: { href: 'http://localhost/' },
+			writable: true,
+			configurable: true,
+		} );
+		const [ , , options ] = mockCreateNotice.mock.calls[ 0 ];
+		options.actions[ 0 ].onClick();
+		expect( window.location.href ).toContain( 'edit.php' );
+		expect( window.location.href ).toContain( 'post_type=product' );
+		Object.defineProperty( window, 'location', {
+			value: originalLocation,
+			writable: true,
+			configurable: true,
+		} );
 	} );
 
 	test( 'renders null', async () => {

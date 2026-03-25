@@ -51,14 +51,17 @@ export function ClearanceSectionEmptyNotice(): null {
 
 			dispatch( 'core/notices' ).createNotice(
 				'warning',
-				'The clearance section has no products. Include products to display them on this page.',
+				'The clearance section is empty. Include products to see them on this page.',
 				{
 					id: NOTICE_ID,
 					isDismissible: false,
 					actions: [
 						{
-							label: 'Learn how',
-							url: productsUrl.href,
+							label: 'Manage products',
+							isPrimary: true,
+							onClick: () => {
+								window.location.href = productsUrl.href;
+							},
 						},
 					],
 				}
