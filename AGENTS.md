@@ -27,3 +27,8 @@ For example, prefer `Standardize hooks` over `Rename WordPress hook callbacks wi
 * The test's function name should describe the test. A docblock should not be added to the test as that would create redundancy.
 * Don't use `ob_start` in tests. Use PHPUnit's `expect*` methods and the Arrange-Expect-Act pattern. Use `expectException()` for exceptions and `expectOutputRegex()` or `expectOutputString()` for echo/printed output.
 * When writing tests for hooked functions (those with a `_hook` suffix), use indirect WordPress routines to fire the hook rather than directly calling the hooked function. For example, if `my_title_hook()` hooks `the_title`, call WordPress' `get_the_title()` to test the whole integration.
+
+### Mocks
+* If it talks to the outside world, mock it; if it’s part of the app or React, do not.
+* Mock external boundaries (e.g. `@wordpress/api-fetch`), not React or internal logic.
+* Define mock behaviour per test (e.g. in Jest, with `mockResolvedValue`), not globally (avoid global mocks where possible).
