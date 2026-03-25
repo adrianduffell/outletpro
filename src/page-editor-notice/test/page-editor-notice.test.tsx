@@ -142,9 +142,8 @@ describe( 'PageEditorNotice', () => {
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
-		const { container } = await act( async () =>
-			render( <PageEditorNotice /> )
-		);
+		const { container } = render( <PageEditorNotice /> );
+		await act( async () => {} );
 
 		// Assert.
 		expect( container ).toBeEmptyDOMElement();
