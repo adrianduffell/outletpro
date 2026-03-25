@@ -1,5 +1,5 @@
 import { render, act } from '@testing-library/react';
-import { PageEditorNotice } from '../../src/page-editor-notice';
+import { PageEditorNotice } from '../index';
 import apiFetch from '@wordpress/api-fetch';
 
 jest.mock( '@wordpress/plugins', () => ( {
