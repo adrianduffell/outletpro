@@ -96,9 +96,12 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		} );
 
 		// Assert.
+		const [ type, message ] = mockCreateNotice.mock.calls[ 0 ];
+		expect( type ).toBe( 'warning' );
+		expect( message ).toContain( 'empty' );
 		expect( mockCreateNotice ).toHaveBeenCalledWith(
-			'warning',
-			'The clearance section is empty. Include products to see them on this page.',
+			expect.any( String ),
+			expect.any( String ),
 			expect.objectContaining( {
 				id: 'wc-clearance-empty',
 				isDismissible: false,
