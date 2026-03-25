@@ -57,8 +57,11 @@ export function PageEditorNotice(): null {
 					isDismissible: false,
 					actions: [
 						{
-							url: productsUrl.href,
 							label: 'Manage products',
+							isPrimary: true,
+							onClick: () => {
+								window.location.href = productsUrl.href;
+							},
 						},
 					],
 				}
