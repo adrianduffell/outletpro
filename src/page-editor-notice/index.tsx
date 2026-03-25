@@ -3,9 +3,9 @@ import { useEffect } from '@wordpress/element';
 import { dispatch, select } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 
-const NOTICE_ID = 'wc-clearance-no-products';
+const NOTICE_ID = 'wc-clearance-empty';
 
-export function PageEditorNotice(): null {
+export function ClearanceSectionEmptyNotice(): null {
 	useEffect( () => {
 		async function maybeShowNotice() {
 			const currentPostId = select(
@@ -51,17 +51,14 @@ export function PageEditorNotice(): null {
 
 			dispatch( 'core/notices' ).createNotice(
 				'warning',
-				'The clearance section is empty. Include products to see them on this page.',
+				'The clearance section has no products. Include products to display them on this page.',
 				{
 					id: NOTICE_ID,
 					isDismissible: false,
 					actions: [
 						{
-							label: 'Manage products',
-							isPrimary: true,
-							onClick: () => {
-								window.location.href = productsUrl.href;
-							},
+							label: 'Learn how',
+							url: productsUrl.href,
 						},
 					],
 				}
@@ -75,5 +72,5 @@ export function PageEditorNotice(): null {
 }
 
 registerPlugin( 'wc-clearance-page-editor-notice', {
-	render: PageEditorNotice,
+	render: ClearanceSectionEmptyNotice,
 } );

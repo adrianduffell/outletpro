@@ -1,5 +1,5 @@
 import { render, act } from '@testing-library/react';
-import { PageEditorNotice } from '../index';
+import { ClearanceSectionEmptyNotice } from '../index';
 import apiFetch from '@wordpress/api-fetch';
 import * as data from '@wordpress/data';
 
@@ -16,7 +16,7 @@ const mockApiFetch = apiFetch as unknown as jest.Mock;
 const mockDispatch = data.dispatch as unknown as jest.Mock;
 const mockSelect = data.select as unknown as jest.Mock;
 
-describe( 'PageEditorNotice', () => {
+describe( 'ClearanceSectionEmptyNotice', () => {
 	beforeEach( () => {
 		mockApiFetch.mockClear();
 		mockDispatch.mockClear();
@@ -30,7 +30,7 @@ describe( 'PageEditorNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <PageEditorNotice /> );
+			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -44,7 +44,7 @@ describe( 'PageEditorNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <PageEditorNotice /> );
+			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -58,7 +58,7 @@ describe( 'PageEditorNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <PageEditorNotice /> );
+			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -74,7 +74,7 @@ describe( 'PageEditorNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <PageEditorNotice /> );
+			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -92,7 +92,7 @@ describe( 'PageEditorNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <PageEditorNotice /> );
+			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -100,7 +100,7 @@ describe( 'PageEditorNotice', () => {
 			'warning',
 			'The clearance section has no products. Include products to display them on this page.',
 			expect.objectContaining( {
-				id: 'wc-clearance-no-products',
+				id: 'wc-clearance-empty',
 				isDismissible: false,
 			} )
 		);
@@ -117,7 +117,7 @@ describe( 'PageEditorNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <PageEditorNotice /> );
+			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -142,7 +142,7 @@ describe( 'PageEditorNotice', () => {
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
-		const { container } = render( <PageEditorNotice /> );
+		const { container } = render( <ClearanceSectionEmptyNotice /> );
 		await act( async () => {} );
 
 		// Assert.
