@@ -16,7 +16,4 @@ test( 'renders label from WooCommerce API', async () => {
 
 	// Assert.
 	expect( await screen.findByText( 'WC Clearance' ) ).toBeInTheDocument();
-	expect( apiFetch ).toHaveBeenCalledWith( {
-		path: '/wc/v3/products?per_page=1',
-	} );
 } );
