@@ -18,10 +18,6 @@ jest.mock( '@wordpress/data', () => ( {
 	} ) ),
 } ) );
 
-jest.mock( '@wordpress/element', () => ( {
-	useEffect: ( callback: () => void ) => callback(),
-} ) );
-
 jest.mock( '@wordpress/api-fetch', () => jest.fn() );
 
 // Typed reference to the jest.fn() created by the factory above.
