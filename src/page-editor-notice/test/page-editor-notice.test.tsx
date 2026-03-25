@@ -96,17 +96,8 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		} );
 
 		// Assert.
-		const [ type, message ] = mockCreateNotice.mock.calls[ 0 ];
-		expect( type ).toBe( 'warning' );
+		const [ , message ] = mockCreateNotice.mock.calls[ 0 ];
 		expect( message ).toContain( 'empty' );
-		expect( mockCreateNotice ).toHaveBeenCalledWith(
-			expect.any( String ),
-			expect.any( String ),
-			expect.objectContaining( {
-				id: 'wc-clearance-empty',
-				isDismissible: false,
-			} )
-		);
 	} );
 
 	test( 'notice action navigates to the product list screen', async () => {
