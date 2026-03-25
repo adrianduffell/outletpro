@@ -26,13 +26,22 @@ async function deleteAllProducts( requestUtils ) {
  *
  * @param {Object} requestUtils - Playwright request utilities.
  * @return {Promise<number>} The clearance page ID.
+ * @throws {Error} If the clearance page ID is not configured.
  */
 async function getClearancePageId( requestUtils ) {
 	const settings = await requestUtils.rest( {
 		method: 'GET',
 		path: '/wp/v2/settings',
 	} );
-	return settings.wc_clearance_page_id;
+	const clearancePageId = settings.wc_clearance_page_id;
+
+	if ( typeof clearancePageId !== 'number' || Number.isNaN( clearancePageId ) ) {
+		throw new Error(
+			'WooCommerce clearance page ID is not configured. Expected wc_clearance_page_id to be a number in the /wp/v2/settings response.'
+		);
+	}
+
+	return clearancePageId;
 }
 
 test( 'notice appears in page editor when clearance section has no products', async ( {
