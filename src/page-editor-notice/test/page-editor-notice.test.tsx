@@ -1,37 +1,31 @@
 import { render, act } from '@testing-library/react';
 import { PageEditorNotice } from '../index';
 import apiFetch from '@wordpress/api-fetch';
+import * as data from '@wordpress/data';
 
 jest.mock( '@wordpress/plugins', () => ( {
 	registerPlugin: jest.fn(),
 } ) );
 
-const mockCreateNotice = jest.fn();
-const mockGetCurrentPostId = jest.fn();
-
-jest.mock( '@wordpress/data', () => ( {
-	dispatch: jest.fn( () => ( {
-		createNotice: mockCreateNotice,
-	} ) ),
-	select: jest.fn( () => ( {
-		getCurrentPostId: mockGetCurrentPostId,
-	} ) ),
-} ) );
+jest.mock( '@wordpress/data' );
 
 jest.mock( '@wordpress/api-fetch', () => jest.fn() );
 
 // Typed reference to the jest.fn() created by the factory above.
 const mockApiFetch = apiFetch as unknown as jest.Mock;
+const mockDispatch = data.dispatch as unknown as jest.Mock;
+const mockSelect = data.select as unknown as jest.Mock;
 
 describe( 'PageEditorNotice', () => {
 	beforeEach( () => {
-		mockCreateNotice.mockClear();
 		mockApiFetch.mockClear();
-		mockGetCurrentPostId.mockReturnValue( 5 );
+		mockDispatch.mockClear();
+		mockSelect.mockClear();
 	} );
 
 	test( 'does not create notice when settings fetch fails', async () => {
 		// Arrange.
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch.mockRejectedValueOnce( new Error( 'Network error' ) );
 
 		// Act.
@@ -40,12 +34,12 @@ describe( 'PageEditorNotice', () => {
 		} );
 
 		// Assert.
-		expect( mockCreateNotice ).not.toHaveBeenCalled();
+		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
 	test( 'does not create notice when current post is not the clearance page', async () => {
 		// Arrange.
-		mockGetCurrentPostId.mockReturnValue( 99 );
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 99 } );
 		mockApiFetch.mockResolvedValueOnce( { wc_clearance_page_id: 5 } );
 
 		// Act.
@@ -54,11 +48,12 @@ describe( 'PageEditorNotice', () => {
 		} );
 
 		// Assert.
-		expect( mockCreateNotice ).not.toHaveBeenCalled();
+		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
 	test( 'does not create notice when clearance page is not configured', async () => {
 		// Arrange.
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
@@ -67,12 +62,12 @@ describe( 'PageEditorNotice', () => {
 		} );
 
 		// Assert.
-		expect( mockCreateNotice ).not.toHaveBeenCalled();
+		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
 	test( 'does not create notice when clearance products exist', async () => {
 		// Arrange.
-		mockGetCurrentPostId.mockReturnValue( 5 );
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch
 			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
 			.mockResolvedValueOnce( [ { id: 1 } ] );
@@ -83,12 +78,14 @@ describe( 'PageEditorNotice', () => {
 		} );
 
 		// Assert.
-		expect( mockCreateNotice ).not.toHaveBeenCalled();
+		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
 	test( 'creates warning notice when on clearance page with no products', async () => {
 		// Arrange.
-		mockGetCurrentPostId.mockReturnValue( 5 );
+		const mockCreateNotice = jest.fn();
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		mockDispatch.mockReturnValue( { createNotice: mockCreateNotice } );
 		mockApiFetch
 			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
 			.mockResolvedValueOnce( [] );
@@ -111,7 +108,9 @@ describe( 'PageEditorNotice', () => {
 
 	test( 'notice action links to the product list screen', async () => {
 		// Arrange.
-		mockGetCurrentPostId.mockReturnValue( 5 );
+		const mockCreateNotice = jest.fn();
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		mockDispatch.mockReturnValue( { createNotice: mockCreateNotice } );
 		mockApiFetch
 			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
 			.mockResolvedValueOnce( [] );
@@ -139,6 +138,7 @@ describe( 'PageEditorNotice', () => {
 
 	test( 'renders null', async () => {
 		// Arrange.
+		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
