@@ -1,5 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { Sample } from '../../src/components/sample';
+import { Sample } from '../index';
+
+jest.mock( '@wordpress/escape-html', () =>
+	jest.requireActual( '../__mocks__/@wordpress/escape-html' )
+);
 
 test( 'renders sample component', () => {
 	// Act.
