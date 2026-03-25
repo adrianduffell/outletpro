@@ -120,7 +120,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 			render( <ClearanceSectionEmptyNotice /> );
 		} );
 
-		// Assert — the action is a primary button with an onClick handler.
+		// Assert — the action is a primary button pointing to the product list screen.
 		expect( mockCreateNotice ).toHaveBeenCalledWith(
 			expect.any( String ),
 			expect.any( String ),
@@ -134,23 +134,6 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 				] ),
 			} )
 		);
-
-		// Invoke the onClick and verify it navigates to the product list screen.
-		const originalLocation = window.location;
-		Object.defineProperty( window, 'location', {
-			value: { href: 'http://localhost/' },
-			writable: true,
-			configurable: true,
-		} );
-		const [ , , options ] = mockCreateNotice.mock.calls[ 0 ];
-		options.actions[ 0 ].onClick();
-		expect( window.location.href ).toContain( 'edit.php' );
-		expect( window.location.href ).toContain( 'post_type=product' );
-		Object.defineProperty( window, 'location', {
-			value: originalLocation,
-			writable: true,
-			configurable: true,
-		} );
 	} );
 
 	test( 'renders null', async () => {
