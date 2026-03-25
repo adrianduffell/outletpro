@@ -1,22 +1,22 @@
 import { render, screen } from '@testing-library/react';
+import apiFetch from '@wordpress/api-fetch';
 import { Sample } from '../index';
 
-jest.mock( '@wordpress/element', () => ( {
-	useState: ( initial ) => [ initial, jest.fn() ],
+jest.mock( '@wordpress/api-fetch', () => ( {
+	__esModule: true,
+	default: jest.fn(),
 } ) );
 
-test( 'renders sample component', () => {
+test( 'renders label from WooCommerce API', async () => {
+	// Arrange.
+	apiFetch.mockResolvedValue( [ { name: 'WC Clearance' } ] );
+
 	// Act.
 	render( <Sample /> );
 
 	// Assert.
-	expect( screen.getByText( 'WC Clearance' ) ).toBeInTheDocument();
-} );
-
-test( 'renders with the correct CSS class', () => {
-	// Act.
-	const { container } = render( <Sample /> );
-
-	// Assert.
-	expect( container.firstChild ).toHaveClass( 'wc-clearance-sample' );
+	expect( await screen.findByText( 'WC Clearance' ) ).toBeInTheDocument();
+	expect( apiFetch ).toHaveBeenCalledWith( {
+		path: '/wc/v3/products?per_page=1',
+	} );
 } );
