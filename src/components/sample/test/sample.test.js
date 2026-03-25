@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { Sample } from '../index';
 
-jest.mock( '@wordpress/escape-html', () => ( {
-	escapeHTML: ( value ) => value,
+jest.mock( '@wordpress/element', () => ( {
+	useState: ( initial ) => [ initial, jest.fn() ],
 } ) );
 
 test( 'renders sample component', () => {
