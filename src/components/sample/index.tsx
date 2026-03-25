@@ -1,3 +1,16 @@
+import apiFetch from '@wordpress/api-fetch';
+import { useEffect, useState } from '@wordpress/element';
+
 export function Sample(): JSX.Element {
-	return <p className="wc-clearance-sample">WC Clearance</p>;
+	const [ label, setLabel ] = useState( '' );
+
+	useEffect( () => {
+		apiFetch< { name: string }[] >( {
+			path: '/wc/v3/products?per_page=1',
+		} ).then( ( products ) => {
+			setLabel( products[ 0 ]?.name ?? '' );
+		} );
+	}, [] );
+
+	return <p className="wc-clearance-sample">{ label }</p>;
 }
