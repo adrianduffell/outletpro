@@ -53,11 +53,13 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	// Check if the clearance page is published for the checklist status.
-	$page_published = false;
+	$page_published      = false;
+	$page_status_unknown = false;
 	try {
 		$page_published = clearance_page_is_published();
 	} catch ( \RuntimeException $e ) {
-		unset( $e ); // If the page status cannot be determined, treat as not published.
+		\wc_get_logger()->error( 'Could not determine clearance page published status: ' . $e->getMessage() );
+		$page_status_unknown = true;
 	}
 
 	?>
@@ -79,7 +81,7 @@ function product_onboarding_notice_hook(): void {
 				<?php esc_html_e( 'Include products in the clearance section', 'wc-clearance' ); ?>
 			</li>
 			<li class="wc-clearance-checklist-item<?php echo esc_attr( $page_published ? ' wc-clearance-checklist-item--checked' : '' ); ?>">
-				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo esc_html( $page_published ? '✓' : '☐' ); ?></span>
+				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo esc_html( $page_status_unknown ? '⍰' : ( $page_published ? '✓' : '☐' ) ); ?></span>
 				<?php esc_html_e( 'Publish the clearance section page', 'wc-clearance' ); ?>
 			</li>
 		</ul>

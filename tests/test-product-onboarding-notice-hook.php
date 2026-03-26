@@ -149,4 +149,24 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertEmpty( $output );
 	}
+
+	public function test_checklist_shows_unknown_symbol_when_page_status_throws(): void {
+		// Arrange.
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_PAGE_OPTION, 'invalid' ); // Triggers UnexpectedValueException → RuntimeException.
+
+		// Act.
+		ob_start();
+		product_onboarding_notice_hook();
+		$output = ob_get_clean();
+
+		// Assert: notice renders with the unknown status symbol.
+		$this->assertStringContainsString( 'wc-clearance-onboarding-notice', $output );
+		$this->assertStringContainsString( '⍰', $output );
+		$this->assertStringNotContainsString( 'wc-clearance-checklist-item--checked', $output );
+	}
 }
