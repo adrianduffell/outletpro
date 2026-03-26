@@ -75,11 +75,11 @@ function product_onboarding_notice_hook(): void {
 		</p>
 		<ul class="wc-clearance-checklist">
 			<li class="wc-clearance-checklist-item">
-				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#9744;</span>
+				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo esc_html( '☐' ); ?></span>
 				<?php esc_html_e( 'Include products in the clearance section', 'wc-clearance' ); ?>
 			</li>
-			<li class="wc-clearance-checklist-item<?php echo $page_published ? ' wc-clearance-checklist-item--checked' : ''; ?>">
-				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo $page_published ? '&#10003;' : '&#9744;'; ?></span>
+			<li class="wc-clearance-checklist-item<?php echo esc_attr( $page_published ? ' wc-clearance-checklist-item--checked' : '' ); ?>">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo esc_html( $page_published ? '✓' : '☐' ); ?></span>
 				<?php esc_html_e( 'Publish the clearance section page', 'wc-clearance' ); ?>
 			</li>
 		</ul>
