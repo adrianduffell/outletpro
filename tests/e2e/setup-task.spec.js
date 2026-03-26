@@ -1,43 +1,38 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'publish clearance page setup task', async ( {
-	editor,
+test( 'include products in clearance section setup task', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange
-	const settings = await requestUtils.rest( {
-		method: 'GET',
-		path: '/wp/v2/settings',
-	} );
-	await requestUtils.rest( {
+	// Arrange.
+	const product = await requestUtils.rest( {
 		method: 'POST',
-		path: `/wp/v2/pages/${ settings.wc_clearance_page_id }`,
+		path: '/wc/v3/products',
 		data: {
-			status: 'draft',
+			name: 'Test Clearance Product',
+			type: 'simple',
+			status: 'publish',
 		},
 	} );
 
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
 	const taskItem = page.locator( '.woocommerce-task-list__item', {
-		hasText: 'Publish the clearance section page',
+		hasText: 'Include products in the clearance section',
 	} );
 	await expect( taskItem ).toBeVisible();
 	await expect( taskItem ).not.toHaveClass( /is-complete/ );
 
 	await taskItem.click();
-	await expect( page ).toHaveURL( /post\.php.*action=edit/ );
+	await expect( page ).toHaveURL( /edit\.php\?post_type=product/ );
 
-	await editor.setPreferences( 'core/edit-post', {
-		welcomeGuide: false,
-		fullscreenMode: false,
-	} );
+	// Act.
+	await admin.visitAdminPage( 'post.php', `post=${ product.id }&action=edit` );
+	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'button', { name: 'Update' } ).click();
+	await page.waitForLoadState( 'networkidle' );
 
-	// Act
-	await editor.publishPost();
-
-	// Assert
+	// Assert.
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
 	await expect( taskItem ).toHaveClass( /complete/ );
 } );
