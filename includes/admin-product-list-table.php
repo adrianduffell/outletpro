@@ -259,13 +259,15 @@ function product_clearance_complete_notice_hook(): void {
 		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
 		<p>
 			<?php
-			echo wp_kses_post(
-				sprintf(
+			$message = __( 'Clearance section is ready. Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
+			if ( current_theme_supports( 'menus' ) ) {
+				$message .= ' ' . sprintf(
 					/* translators: %s URL to manage navigation menus */
-					__( 'Clearance section is ready. Add the clearance page to your menu so customers can easily find it. <a href="%s">Manage menus</a>', 'wc-clearance' ),
+					__( '<a href="%s">Manage menus</a>', 'wc-clearance' ),
 					esc_url( admin_url( 'nav-menus.php' ) )
-				)
-			);
+				);
+			}
+			echo wp_kses_post( $message );
 			?>
 		</p>
 		<ul class="wc-clearance-checklist">
