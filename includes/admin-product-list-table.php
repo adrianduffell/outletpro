@@ -62,7 +62,7 @@ function product_onboarding_notice_hook(): void {
 
 	?>
 	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
-		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
+		<h3><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></h3>
 		<p>
 			<?php
 			echo wp_kses_post(
@@ -163,7 +163,7 @@ function product_publish_page_notice_hook(): void {
 
 	?>
 	<div class="notice notice-info is-dismissible wc-clearance-publish-page-notice">
-		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
+		<h3><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></h3>
 		<p>
 			<?php
 			echo wp_kses_post(
@@ -256,7 +256,7 @@ function product_clearance_complete_notice_hook(): void {
 
 	?>
 	<div class="notice notice-success is-dismissible wc-clearance-complete-notice">
-		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
+		<h3>><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></h3>
 		<p><?php esc_html_e( 'Clearance section is ready. Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' ); ?></p>
 		<ul class="wc-clearance-checklist">
 			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
