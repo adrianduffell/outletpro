@@ -60,7 +60,8 @@
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
 	vertical-align: top;
-	margin-top: 1px;
+	margin-top: 2px;
+	line-height: 1.6;
 }
 
 .wc-clearance-checklist {
