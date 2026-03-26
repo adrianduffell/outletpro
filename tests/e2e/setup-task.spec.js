@@ -27,7 +27,10 @@ test( 'include products in clearance section setup task', async ( {
 	await expect( page ).toHaveURL( /edit\.php\?post_type=product/ );
 
 	// Act.
-	await admin.visitAdminPage( 'post.php', `post=${ product.id }&action=edit` );
+	await admin.visitAdminPage(
+		'post.php',
+		`post=${ product.id }&action=edit`
+	);
 	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
