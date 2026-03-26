@@ -129,6 +129,41 @@ function create_clearance_page(): void {
 }
 
 /**
+ * Check if the clearance section page is in a WordPress menu.
+ *
+ * @since 1.0.0
+ * @throws \RuntimeException If it cannot be determined whether the clearance page exists.
+ */
+function clearance_page_in_menu(): bool {
+	try {
+		$page_id = get_clearance_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		throw new \RuntimeException(
+			'Could not determine whether the clearance page is in a menu.',
+			0,
+			$e
+		);
+	}
+
+	if ( null === $page_id ) {
+		return false;
+	}
+
+	$query = new \WP_Query(
+		array(
+			'post_type'      => 'nav_menu_item',
+			'meta_key'       => '_menu_item_object_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => $page_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			'fields'         => 'ids',
+			'posts_per_page' => 1,
+			'no_found_rows'  => true,
+		)
+	);
+
+	return $query->have_posts();
+}
+
+/**
  * Check whether the clearance section page exists and is published.
  *
  * @since 1.0.0
