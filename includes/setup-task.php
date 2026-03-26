@@ -44,7 +44,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_action_label(): string {
-				return __( 'Include products', 'wc-clearance' );
+				return __( 'Manage products', 'wc-clearance' );
 			}
 
 			public function get_action_url(): string {
