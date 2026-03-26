@@ -97,6 +97,7 @@ class Test_Clearance_Page_In_Menu extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result );
 	}
+
 	public function test_throws_runtime_exception_when_option_is_non_numeric_string(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );

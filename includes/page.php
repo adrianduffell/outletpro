@@ -152,8 +152,20 @@ function clearance_page_in_menu(): bool {
 	$query = new \WP_Query(
 		array(
 			'post_type'      => 'nav_menu_item',
-			'meta_key'       => '_menu_item_object_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_value'     => $page_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				array(
+					'key'   => '_menu_item_object_id',
+					'value' => $page_id,
+				),
+				array(
+					'key'   => '_menu_item_type',
+					'value' => 'post_type',
+				),
+				array(
+					'key'   => '_menu_item_object',
+					'value' => 'page',
+				),
+			),
 			'fields'         => 'ids',
 			'posts_per_page' => 1,
 			'no_found_rows'  => true,
