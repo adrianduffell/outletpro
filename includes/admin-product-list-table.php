@@ -171,7 +171,7 @@ function product_publish_page_notice_hook(): void {
 	$edit_link = get_edit_post_link( $page_id );
 
 	?>
-	<div class="notice notice-warning is-dismissible wc-clearance-publish-page-notice">
+	<div class="notice notice-info is-dismissible wc-clearance-publish-page-notice">
 		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
 		<p>
 			<?php
