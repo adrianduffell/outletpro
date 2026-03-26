@@ -70,6 +70,33 @@ class Test_Clearance_Page_In_Menu extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
+	public function test_returns_false_when_non_page_item_has_clearance_page_id(): void {
+		// Arrange.
+		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
+		if ( $existing_id > 0 ) {
+			wp_delete_post( $existing_id, true );
+		}
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		$menu_id = wp_create_nav_menu( 'Test Menu With Taxonomy Item' );
+		wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-type'      => 'taxonomy',
+				'menu-item-object'    => 'category',
+				'menu-item-object-id' => $page_id,
+				'menu-item-status'    => 'publish',
+			)
+		);
+
+		// Act.
+		$result = clearance_page_in_menu();
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
 	public function test_throws_runtime_exception_when_option_is_non_numeric_string(): void {
 		// Arrange.
 		update_option( CLEARANCE_PAGE_OPTION, 'not-an-int' );
