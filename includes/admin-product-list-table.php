@@ -57,7 +57,7 @@ function product_onboarding_notice_hook(): void {
 	try {
 		$page_published = clearance_page_is_published();
 	} catch ( \RuntimeException $e ) {
-		// If the page status cannot be determined, treat as not published.
+		unset( $e ); // If the page status cannot be determined, treat as not published.
 	}
 
 	?>

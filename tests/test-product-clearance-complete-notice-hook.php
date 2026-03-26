@@ -10,9 +10,9 @@ use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\product_clearance_complete_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\ONBOARDING_DISMISS_KEY;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
+use const WC_Clearance\ONBOARDING_DISMISS_KEY;
 
 class Test_Product_Clearance_Complete_Notice_Hook extends WP_UnitTestCase {
 
