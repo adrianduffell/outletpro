@@ -70,11 +70,6 @@
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	color: #888;
-}
-
-.wc-clearance-checklist-item--checked {
-	color: inherit;
 }
 
 .wc-clearance-checklist-icon {
