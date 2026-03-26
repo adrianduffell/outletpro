@@ -12,7 +12,7 @@ use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
-use const WC_Clearance\PUBLISH_PAGE_NOTICE_STORAGE_KEY;
+use const WC_Clearance\DISMISS_STORAGE_KEY;
 
 class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
@@ -84,7 +84,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/is-dismissible/' );
-		$this->expectOutputRegex( '/' . preg_quote( PUBLISH_PAGE_NOTICE_STORAGE_KEY, '/' ) . '/' );
+		$this->expectOutputRegex( '/' . preg_quote( DISMISS_STORAGE_KEY, '/' ) . '/' );
 
 		// Act.
 		product_publish_page_notice_hook();

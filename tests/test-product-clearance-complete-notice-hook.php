@@ -10,7 +10,7 @@ use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\product_clearance_complete_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\CLEARANCE_COMPLETE_NOTICE_STORAGE_KEY;
+use const WC_Clearance\DISMISS_STORAGE_KEY;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
@@ -89,7 +89,7 @@ class Test_Product_Clearance_Complete_Notice_Hook extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/is-dismissible/' );
-		$this->expectOutputRegex( '/' . preg_quote( CLEARANCE_COMPLETE_NOTICE_STORAGE_KEY, '/' ) . '/' );
+		$this->expectOutputRegex( '/' . preg_quote( DISMISS_STORAGE_KEY, '/' ) . '/' );
 
 		// Act.
 		product_clearance_complete_notice_hook();
