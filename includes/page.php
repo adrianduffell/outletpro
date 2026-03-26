@@ -149,30 +149,31 @@ function clearance_page_in_menu(): bool {
 		return false;
 	}
 
-	$query = new \WP_Query(
-		array(
-			'post_type'      => 'nav_menu_item',
-			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				array(
-					'key'   => '_menu_item_object_id',
-					'value' => $page_id,
-				),
-				array(
-					'key'   => '_menu_item_type',
-					'value' => 'post_type',
-				),
-				array(
-					'key'   => '_menu_item_object',
-					'value' => 'page',
-				),
-			),
-			'fields'         => 'ids',
-			'posts_per_page' => 1,
-			'no_found_rows'  => true,
-		)
-	);
+	$locations = get_nav_menu_locations();
 
-	return $query->have_posts();
+	if ( empty( $locations ) ) {
+		return false;
+	}
+
+	foreach ( $locations as $menu_id ) {
+		$items = wp_get_nav_menu_items( $menu_id );
+
+		if ( empty( $items ) ) {
+			continue;
+		}
+
+		foreach ( $items as $item ) {
+			if (
+				'post_type' === $item->type &&
+				'page' === $item->object &&
+				$page_id === (int) $item->object_id
+			) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 /**

@@ -62,6 +62,8 @@ class Test_Clearance_Page_In_Menu extends WP_UnitTestCase {
 				'menu-item-status'    => 'publish',
 			)
 		);
+		register_nav_menu( 'test-location', 'Test Location' );
+		set_theme_mod( 'nav_menu_locations', array( 'test-location' => $menu_id ) );
 
 		// Act.
 		$result = clearance_page_in_menu();
@@ -90,6 +92,8 @@ class Test_Clearance_Page_In_Menu extends WP_UnitTestCase {
 				'menu-item-status'    => 'publish',
 			)
 		);
+		register_nav_menu( 'test-location', 'Test Location' );
+		set_theme_mod( 'nav_menu_locations', array( 'test-location' => $menu_id ) );
 
 		// Act.
 		$result = clearance_page_in_menu();
