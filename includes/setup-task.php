@@ -36,7 +36,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_content(): string {
-				return __( "Include products in the clearance section to promote them on your store's clearance page.", 'wc-clearance' );
+				return __( "Include products in the clearance section to move old stock quickly.", 'wc-clearance' );
 			}
 
 			public function get_time(): string {
