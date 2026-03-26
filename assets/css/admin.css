@@ -41,6 +41,14 @@
 	display: block;
 }
 
+.wc-clearance-complete-notice {
+	display: none;
+}
+
+.wc-clearance-complete-notice.is-visible {
+	display: block;
+}
+
 .wc-clearance-new {
 	background: #f2edff;
 	color: #5007aa;
@@ -50,4 +58,26 @@
 	font-weight: 500;
 	letter-spacing: 0.04em;
 	text-transform: uppercase;
+}
+
+.wc-clearance-checklist {
+	margin: 4px 0 8px;
+	padding: 0;
+	list-style: none;
+}
+
+.wc-clearance-checklist-item {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	color: #888;
+}
+
+.wc-clearance-checklist-item--checked {
+	color: inherit;
+}
+
+.wc-clearance-checklist-icon {
+	font-size: 14px;
+	line-height: 1;
 }

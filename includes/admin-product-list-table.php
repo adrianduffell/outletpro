@@ -20,6 +20,11 @@ const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed
 const PUBLISH_PAGE_NOTICE_STORAGE_KEY = 'wc_clearance_publish_page_notice_dismissed';
 
 /**
+ * Key used in localStorage to persist the clearance complete notice dismissal.
+ */
+const CLEARANCE_COMPLETE_NOTICE_STORAGE_KEY = 'wc_clearance_complete_notice_dismissed';
+
+/**
  * Helper to initialize admin product list table features.
  *
  * @since 1.0.0
@@ -27,6 +32,7 @@ const PUBLISH_PAGE_NOTICE_STORAGE_KEY = 'wc_clearance_publish_page_notice_dismis
 function init_admin_product_list_table(): void {
 	add_action( 'admin_notices', 'WC_Clearance\product_onboarding_notice_hook' );
 	add_action( 'admin_notices', 'WC_Clearance\product_publish_page_notice_hook' );
+	add_action( 'admin_notices', 'WC_Clearance\product_clearance_complete_notice_hook' );
 }
 
 /**
@@ -55,6 +61,14 @@ function product_onboarding_notice_hook(): void {
 		return;
 	}
 
+	// Check if the clearance page is published for the checklist status.
+	$page_published = false;
+	try {
+		$page_published = clearance_page_is_published();
+	} catch ( \RuntimeException $e ) {
+		// If the page status cannot be determined, treat as not published.
+	}
+
 	?>
 	<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
 		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
@@ -68,6 +82,16 @@ function product_onboarding_notice_hook(): void {
 			);
 			?>
 		</p>
+		<ul class="wc-clearance-checklist">
+			<li class="wc-clearance-checklist-item">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#9744;</span>
+				<?php esc_html_e( 'Include products', 'wc-clearance' ); ?>
+			</li>
+			<li class="wc-clearance-checklist-item<?php echo $page_published ? ' wc-clearance-checklist-item--checked' : ''; ?>">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo $page_published ? '&#10003;' : '&#9744;'; ?></span>
+				<?php esc_html_e( 'Publish the page', 'wc-clearance' ); ?>
+			</li>
+		</ul>
 	</div>
 	<script>
 	( function() {
@@ -148,6 +172,7 @@ function product_publish_page_notice_hook(): void {
 
 	?>
 	<div class="notice notice-warning is-dismissible wc-clearance-publish-page-notice">
+		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
 		<p>
 			<?php
 			echo wp_kses_post(
@@ -159,6 +184,16 @@ function product_publish_page_notice_hook(): void {
 			);
 			?>
 		</p>
+		<ul class="wc-clearance-checklist">
+			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>
+				<?php esc_html_e( 'Include products', 'wc-clearance' ); ?>
+			</li>
+			<li class="wc-clearance-checklist-item">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#9744;</span>
+				<?php esc_html_e( 'Publish the page', 'wc-clearance' ); ?>
+			</li>
+		</ul>
 	</div>
 	<script>
 	( function() {
@@ -174,6 +209,89 @@ function product_publish_page_notice_hook(): void {
 		}
 
 		var notice = document.querySelector('.wc-clearance-publish-page-notice');
+
+		if ( notice ) {
+			notice.classList.add('is-visible');
+
+			var handler = function( event ) {
+				if ( ! event.target.closest('.notice-dismiss') ) {
+					return;
+				}
+
+				try {
+					localStorage.setItem(storageKey, '1');
+				} catch ( e ) {}
+				notice.classList.remove('is-visible');
+			};
+
+			notice.addEventListener('click', handler);
+		}
+	}() );
+	</script>
+	<?php
+}
+
+/**
+ * Display the clearance complete notice on the product list screen.
+ *
+ * Shows when there are products in the clearance section and the
+ * clearance section page is published.
+ *
+ * Fired by `admin_notices`.
+ *
+ * @internal WordPress action hook
+ */
+function product_clearance_complete_notice_hook(): void {
+	$screen = get_current_screen();
+
+	if ( ! $screen instanceof \WP_Screen || 'edit-product' !== $screen->id ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_products' ) ) {
+		return;
+	}
+
+	try {
+		if ( clearance_section_empty() ) {
+			return;
+		}
+		if ( ! clearance_page_is_published() ) {
+			return;
+		}
+	} catch ( \RuntimeException $e ) {
+		return;
+	}
+
+	?>
+	<div class="notice notice-success is-dismissible wc-clearance-complete-notice">
+		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
+		<p><?php esc_html_e( 'Clearance section is complete! For best results, add the clearance section page to your menu so customers can easily find it.', 'wc-clearance' ); ?></p>
+		<ul class="wc-clearance-checklist">
+			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>
+				<?php esc_html_e( 'Include products', 'wc-clearance' ); ?>
+			</li>
+			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
+				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>
+				<?php esc_html_e( 'Publish the page', 'wc-clearance' ); ?>
+			</li>
+		</ul>
+	</div>
+	<script>
+	( function() {
+		var storageKey = <?php echo wp_json_encode( CLEARANCE_COMPLETE_NOTICE_STORAGE_KEY ); ?>;
+		try {
+			if ( localStorage.getItem( storageKey ) ) {
+				// Notice has been dismissed, do not show.
+				return;
+			}
+		} catch ( e ) {
+			// localStorage unavailable (e.g. privacy mode), do not show.
+			return;
+		}
+
+		var notice = document.querySelector('.wc-clearance-complete-notice');
 
 		if ( notice ) {
 			notice.classList.add('is-visible');
