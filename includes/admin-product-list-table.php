@@ -257,19 +257,7 @@ function product_clearance_complete_notice_hook(): void {
 	?>
 	<div class="notice notice-success is-dismissible wc-clearance-complete-notice">
 		<p><strong><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></strong> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></p>
-		<p>
-			<?php
-			$message = __( 'Clearance section is ready. Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
-			if ( current_theme_supports( 'menus' ) ) {
-				$message .= ' ' . sprintf(
-					/* translators: %s URL to manage navigation menus */
-					__( '<a href="%s">Manage menus</a>', 'wc-clearance' ),
-					esc_url( admin_url( 'nav-menus.php' ) )
-				);
-			}
-			echo wp_kses_post( $message );
-			?>
-		</p>
+		<p><?php esc_html_e( 'Clearance section is ready. Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' ); ?></p>
 		<ul class="wc-clearance-checklist">
 			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>

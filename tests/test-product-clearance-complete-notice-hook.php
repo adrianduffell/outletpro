@@ -95,65 +95,6 @@ class Test_Product_Clearance_Complete_Notice_Hook extends WP_UnitTestCase {
 		product_clearance_complete_notice_hook();
 	}
 
-	public function test_notice_contains_manage_menus_link_when_theme_supports_menus(): void {
-		// Arrange.
-		set_current_screen( 'edit-product' );
-		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
-		wp_publish_post( $page_id );
-		add_theme_support( 'menus' );
-
-		// Act.
-		ob_start();
-		product_clearance_complete_notice_hook();
-		$output = ob_get_clean();
-		remove_theme_support( 'menus' );
-
-		// Assert.
-		$this->assertStringContainsString( 'nav-menus.php', $output );
-		$this->assertStringContainsString( 'Manage menus', $output );
-	}
-
-	public function test_notice_omits_manage_menus_link_when_theme_does_not_support_menus(): void {
-		// Arrange.
-		set_current_screen( 'edit-product' );
-		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
-		wp_publish_post( $page_id );
-		remove_theme_support( 'menus' );
-
-		// Act.
-		ob_start();
-		product_clearance_complete_notice_hook();
-		$output = ob_get_clean();
-
-		// Assert.
-		$this->assertStringNotContainsString( 'nav-menus.php', $output );
-		$this->assertStringNotContainsString( 'Manage menus', $output );
-	}
-
 	public function test_does_not_render_when_screen_is_not_product_list(): void {
 		// Arrange.
 		set_current_screen( 'dashboard' );
