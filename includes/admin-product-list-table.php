@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  * Key used in localStorage to persist dismissal of any product micro-checklist notice.
  * All three product list notices share this key so that dismissing one dismisses them all.
  */
-const DISMISS_STORAGE_KEY = 'wc_clearance_micro_checklist_dismissed';
+const ONBOARDING_DISMISS_KEY = 'wc_clearance_onboarding_dismissed';
 
 /**
  * Helper to initialize admin product list table features.
@@ -86,7 +86,7 @@ function product_onboarding_notice_hook(): void {
 	</div>
 	<script>
 	( function() {
-		var storageKey = <?php echo wp_json_encode( DISMISS_STORAGE_KEY ); ?>;
+		var storageKey = <?php echo wp_json_encode( ONBOARDING_DISMISS_KEY ); ?>;
 		try {
 			if ( localStorage.getItem( storageKey ) ) {
 				// Notice has been dismissed, do not show.
@@ -188,7 +188,7 @@ function product_publish_page_notice_hook(): void {
 	</div>
 	<script>
 	( function() {
-		var storageKey = <?php echo wp_json_encode( DISMISS_STORAGE_KEY ); ?>;
+		var storageKey = <?php echo wp_json_encode( ONBOARDING_DISMISS_KEY ); ?>;
 		try {
 			if ( localStorage.getItem( storageKey ) ) {
 				// Notice has been dismissed, do not show.
@@ -283,7 +283,7 @@ function product_clearance_complete_notice_hook(): void {
 	</div>
 	<script>
 	( function() {
-		var storageKey = <?php echo wp_json_encode( DISMISS_STORAGE_KEY ); ?>;
+		var storageKey = <?php echo wp_json_encode( ONBOARDING_DISMISS_KEY ); ?>;
 		try {
 			if ( localStorage.getItem( storageKey ) ) {
 				// Notice has been dismissed, do not show.
