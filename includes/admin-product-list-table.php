@@ -85,11 +85,11 @@ function product_onboarding_notice_hook(): void {
 		<ul class="wc-clearance-checklist">
 			<li class="wc-clearance-checklist-item">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#9744;</span>
-				<?php esc_html_e( 'Include products', 'wc-clearance' ); ?>
+				<?php esc_html_e( 'Include products in the clearance section', 'wc-clearance' ); ?>
 			</li>
 			<li class="wc-clearance-checklist-item<?php echo $page_published ? ' wc-clearance-checklist-item--checked' : ''; ?>">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true"><?php echo $page_published ? '&#10003;' : '&#9744;'; ?></span>
-				<?php esc_html_e( 'Publish the page', 'wc-clearance' ); ?>
+				<?php esc_html_e( 'Publish the clearance section page', 'wc-clearance' ); ?>
 			</li>
 		</ul>
 	</div>
@@ -187,11 +187,11 @@ function product_publish_page_notice_hook(): void {
 		<ul class="wc-clearance-checklist">
 			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>
-				<?php esc_html_e( 'Include products', 'wc-clearance' ); ?>
+				<?php esc_html_e( 'Include products in the clearance section', 'wc-clearance' ); ?>
 			</li>
 			<li class="wc-clearance-checklist-item">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#9744;</span>
-				<?php esc_html_e( 'Publish the page', 'wc-clearance' ); ?>
+				<?php esc_html_e( 'Publish the clearance section page', 'wc-clearance' ); ?>
 			</li>
 		</ul>
 	</div>
@@ -270,11 +270,11 @@ function product_clearance_complete_notice_hook(): void {
 		<ul class="wc-clearance-checklist">
 			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>
-				<?php esc_html_e( 'Include products', 'wc-clearance' ); ?>
+				<?php esc_html_e( 'Include products in the clearance section', 'wc-clearance' ); ?>
 			</li>
 			<li class="wc-clearance-checklist-item wc-clearance-checklist-item--checked">
 				<span class="wc-clearance-checklist-icon" aria-hidden="true">&#10003;</span>
-				<?php esc_html_e( 'Publish the page', 'wc-clearance' ); ?>
+				<?php esc_html_e( 'Publish the clearance section page', 'wc-clearance' ); ?>
 			</li>
 		</ul>
 	</div>
