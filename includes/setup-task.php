@@ -13,7 +13,7 @@ use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
 
 /**
- * Register the clearance page setup task with WooCommerce's onboarding task list.
+ * Register the clearance section setup task with WooCommerce's onboarding task list.
  *
  * @since 1.0.0
  * @throws \RuntimeException If the WooCommerce TaskLists class is not available.
@@ -28,15 +28,15 @@ function init_setup_task(): void {
 		'extended',
 		new class( TaskLists::get_list( 'extended' ) ) extends Task {
 			public function get_id(): string {
-				return 'wc-clearance-publish-page';
+				return 'wc-clearance-include-products';
 			}
 
 			public function get_title(): string {
-				return __( 'Publish the clearance section page', 'wc-clearance' );
+				return __( 'Include products in the clearance section', 'wc-clearance' );
 			}
 
 			public function get_content(): string {
-				return __( 'Publish the clearance section page to make it visible to your customers.', 'wc-clearance' );
+				return __( "Include products in the clearance section to promote them on your store's clearance page.", 'wc-clearance' );
 			}
 
 			public function get_time(): string {
@@ -44,7 +44,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_action_label(): string {
-				return __( 'Publish page', 'wc-clearance' );
+				return __( 'Include products', 'wc-clearance' );
 			}
 
 			public function get_action_url(): string {
@@ -64,45 +64,26 @@ function init_setup_task(): void {
 }
 
 /**
- * Returns the URL for the clearance page setup task action button.
+ * Returns the URL for the clearance section setup task action button.
  */
 function setup_task_action_url(): string {
-	try {
-		$page_id = get_clearance_page_id();
-	} catch ( \Throwable $e ) {
-		return '';
-	}
-
-	if ( is_null( $page_id ) ) {
-		return '';
-	}
-
-	return admin_url( 'post.php?post=' . $page_id . '&action=edit' );
+	return admin_url( 'edit.php?post_type=product' );
 }
 
 /**
- * Determine whether the clearance publish task should be visible.
+ * Determine whether the clearance include products task should be visible.
  */
 function setup_task_can_view(): bool {
-	// Only show the task to users who can edit pages.
-	if ( ! current_user_can( 'edit_pages' ) ) {
-		return false;
-	}
-
-	// Ensure there is a clearance page to actually publish.
-	try {
-		return clearance_page_exists();
-	} catch ( \Throwable $e ) {
-		return false;
-	}
+	// Only show the task to users who can edit products.
+	return current_user_can( 'edit_products' );
 }
 
 /**
- * Determine whether the clearance publish task is complete.
+ * Determine whether the clearance include products task is complete.
  */
 function setup_task_is_complete(): bool {
 	try {
-		return clearance_page_is_published();
+		return ! clearance_section_empty();
 	} catch ( \Throwable $e ) {
 		return false;
 	}
