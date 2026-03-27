@@ -48,7 +48,7 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	try {
-		$section_empty = clearance_section_empty();
+		$clearance_section_empty = clearance_section_empty();
 	} catch ( \RuntimeException $e ) {
 		return;
 	}
@@ -63,7 +63,7 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	// Determine which notice state applies and build state-specific variables.
-	if ( $section_empty ) {
+	if ( $clearance_section_empty ) {
 		// State 1: No clearance products yet.
 		$notice_level      = 'notice-info';
 		$notice_type_class = '';
@@ -105,7 +105,7 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	// Build checklist item state.
-	$products_included = ! $section_empty;
+	$products_included = ! $clearance_section_empty;
 	$products_icon     = $products_included ? '✓' : '☐';
 	$products_class    = $products_included ? ' wc-clearance-checklist-item--checked' : '';
 	$page_icon         = $page_status_unknown ? '⍰' : ( $page_published ? '✓' : '☐' );
