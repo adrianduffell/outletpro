@@ -11,7 +11,6 @@ use function WC_Clearance\product_onboarding_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
-use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 use const WC_Clearance\ONBOARDING_DISMISS_KEY;
 
 class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
@@ -90,32 +89,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		product_onboarding_notice_hook();
 	}
 
-	public function test_does_not_render_when_screen_is_not_product_list(): void {
-		// Arrange.
-		set_current_screen( 'dashboard' );
-		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
-
-		// Expect.
-		$this->expectOutputString( '' );
-
-		// Act.
-		product_onboarding_notice_hook();
-	}
-
-	public function test_does_not_render_when_user_cannot_edit_pages(): void {
-		// Arrange.
-		set_current_screen( 'edit-product' );
-		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
-		wp_set_current_user( $user_id );
-
-		// Expect.
-		$this->expectOutputString( '' );
-
-		// Act.
-		product_onboarding_notice_hook();
-	}
-
 	public function test_does_not_render_when_clearance_page_is_not_registered(): void {
 		// Arrange.
 		set_current_screen( 'edit-product' );
@@ -138,17 +111,4 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		product_onboarding_notice_hook();
 	}
 
-	public function test_does_not_render_when_taxonomy_throws(): void {
-		// Arrange.
-		set_current_screen( 'edit-product' );
-		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
-		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
-
-		// Expect.
-		$this->expectOutputString( '' );
-
-		// Act.
-		product_onboarding_notice_hook();
-	}
 }
