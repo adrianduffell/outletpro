@@ -33,22 +33,6 @@
 	display: block;
 }
 
-.wc-clearance-publish-page-notice {
-	display: none;
-}
-
-.wc-clearance-publish-page-notice.is-visible {
-	display: block;
-}
-
-.wc-clearance-complete-notice {
-	display: none;
-}
-
-.wc-clearance-complete-notice.is-visible {
-	display: block;
-}
-
 .wc-clearance-new {
 	display: inline-block;
 	background: #f2edff;
