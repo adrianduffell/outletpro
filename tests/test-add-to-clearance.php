@@ -15,9 +15,7 @@ class Test_Add_To_Clearance extends WP_UnitTestCase {
 
 	public function test_throws_exception_when_taxonomy_not_registered(): void {
 		// Arrange.
-		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
-		}
+		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		$product = \WC_Helper_Product::create_simple_product();
 
 		// Expect.

@@ -42,9 +42,7 @@ class Test_Set_Clearance extends \WP_UnitTestCase {
 
 	public function test_throws_when_taxonomy_missing(): void {
 		// Arrange.
-		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
-		}
+		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		$product = \WC_Helper_Product::create_simple_product();
 
 		// Expect.
