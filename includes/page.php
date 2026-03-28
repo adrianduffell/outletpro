@@ -129,6 +129,27 @@ function create_clearance_page(): void {
 }
 
 /**
+ * Delete the clearance section page.
+ *
+ * Permanently deletes the clearance page post and removes the
+ * {@see CLEARANCE_PAGE_OPTION} option.
+ *
+ * Does nothing if the clearance page option is not set.
+ *
+ * @since 1.0.0
+ * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
+ */
+function delete_clearance_page(): void {
+	$page_id = get_clearance_page_id();
+
+	if ( null !== $page_id ) {
+		wp_delete_post( $page_id, true );
+	}
+
+	delete_option( CLEARANCE_PAGE_OPTION );
+}
+
+/**
  * Check whether the clearance section page exists and is published.
  *
  * @since 1.0.0
