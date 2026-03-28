@@ -25,10 +25,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page(); // Creates page as draft.
 
@@ -48,10 +44,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page(); // Creates page as draft.
 
@@ -97,10 +89,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		// No products added to clearance.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 
@@ -120,10 +108,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
 
 		// Expect.
@@ -142,10 +126,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 		$page_id = get_option( CLEARANCE_PAGE_OPTION );
