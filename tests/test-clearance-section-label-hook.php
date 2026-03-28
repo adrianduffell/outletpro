@@ -5,7 +5,6 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\clearance_section_label_hook;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
@@ -17,7 +16,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$post = get_post( $page_id );
 
 		// Act.
-		$result = clearance_section_label_hook( array(), $post );
+		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
 		$this->assertArrayHasKey( 'wc_clearance_page', $result );
@@ -32,7 +31,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$post = get_post( $other_page_id );
 
 		// Act.
-		$result = clearance_section_label_hook( array(), $post );
+		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
@@ -45,7 +44,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$post = get_post( $page_id );
 
 		// Act.
-		$result = clearance_section_label_hook( array(), $post );
+		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
 		$this->assertArrayHasKey( 'wc_clearance_page', $result );
@@ -59,7 +58,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$post    = get_post( $page_id );
 
 		// Act.
-		$result = clearance_section_label_hook( array(), $post );
+		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
@@ -72,7 +71,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$post    = get_post( $page_id );
 
 		// Act.
-		$result = clearance_section_label_hook( array(), $post );
+		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wc_clearance_page', $result );
@@ -86,7 +85,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 		$existing_states = array( 'existing_key' => 'Existing Label' );
 
 		// Act.
-		$result = clearance_section_label_hook( $existing_states, $post );
+		$result = apply_filters( 'display_post_states', $existing_states, $post );
 
 		// Assert.
 		$this->assertArrayHasKey( 'existing_key', $result );

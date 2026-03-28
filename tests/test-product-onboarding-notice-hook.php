@@ -6,7 +6,6 @@
  */
 
 use function WC_Clearance\add_to_clearance;
-use function WC_Clearance\product_onboarding_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
@@ -23,7 +22,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Act.
 		ob_start();
-		product_onboarding_notice_hook();
+		do_action( 'admin_notices' );
 		$output = ob_get_clean();
 
 		// Assert.
@@ -40,7 +39,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Act.
 		ob_start();
-		product_onboarding_notice_hook();
+		do_action( 'admin_notices' );
 		$output = ob_get_clean();
 
 		// Assert.
@@ -57,7 +56,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Act.
 		ob_start();
-		product_onboarding_notice_hook();
+		do_action( 'admin_notices' );
 		$output = ob_get_clean();
 
 		// Assert.
@@ -76,7 +75,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Act.
 		ob_start();
-		product_onboarding_notice_hook();
+		do_action( 'admin_notices' );
 		$output = ob_get_clean();
 
 		// Assert.
@@ -92,7 +91,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Act.
 		ob_start();
-		product_onboarding_notice_hook();
+		do_action( 'admin_notices' );
 		$output = ob_get_clean();
 
 		// Assert.

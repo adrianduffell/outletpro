@@ -7,7 +7,6 @@
 
 use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\create_clearance_page;
-use function WC_Clearance\product_publish_page_notice_hook;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
@@ -36,7 +35,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/wc-clearance-publish-page-notice/' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 
 	public function test_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
@@ -60,7 +59,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/' . preg_quote( PUBLISH_PAGE_NOTICE_STORAGE_KEY, '/' ) . '/' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_screen_is_not_product_list(): void {
@@ -73,7 +72,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputString( '' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_user_cannot_edit_pages(): void {
@@ -86,7 +85,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputString( '' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_clearance_section_is_empty(): void {
@@ -104,11 +103,13 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 
-		// Expect.
-		$this->expectOutputString( '' );
-
 		// Act.
-		product_publish_page_notice_hook();
+		ob_start();
+		do_action( 'admin_notices' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringNotContainsString( 'wc-clearance-publish-page-notice', $output );
 	}
 
 	public function test_does_not_render_when_clearance_page_is_not_registered(): void {
@@ -130,7 +131,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputString( '' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_clearance_page_is_published(): void {
@@ -155,7 +156,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputString( '' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_taxonomy_throws(): void {
@@ -169,6 +170,6 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputString( '' );
 
 		// Act.
-		product_publish_page_notice_hook();
+		do_action( 'admin_notices' );
 	}
 }
