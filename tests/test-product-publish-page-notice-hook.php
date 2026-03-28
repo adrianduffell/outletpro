@@ -103,13 +103,11 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = ob_get_clean();
+		// Expect.
+		$this->expectOutputString( '' );
 
-		// Assert.
-		$this->assertStringNotContainsString( 'wc-clearance-publish-page-notice', $output );
+		// Act.
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_clearance_page_is_not_registered(): void {
