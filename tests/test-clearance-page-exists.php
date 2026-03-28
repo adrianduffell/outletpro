@@ -46,10 +46,6 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 
 	public function test_clearance_page_exists_returns_true_when_option_is_numeric_string(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 		$page_id = (string) get_option( CLEARANCE_PAGE_OPTION );
@@ -64,10 +60,6 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 
 	public function test_clearance_page_exists_returns_false_when_no_page_exists(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -79,10 +71,6 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 
 	public function test_clearance_page_exists_returns_true_when_page_exists(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 
@@ -95,10 +83,6 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 
 	public function test_clearance_page_exists_returns_false_after_page_is_trashed(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 		$page_id = get_option( CLEARANCE_PAGE_OPTION );
@@ -113,10 +97,6 @@ class Test_Clearance_Page_Exists extends WP_UnitTestCase {
 
 	public function test_clearance_page_exists_returns_false_after_page_is_deleted(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 		$page_id = get_option( CLEARANCE_PAGE_OPTION );

@@ -12,10 +12,6 @@ class Test_Activate extends WP_UnitTestCase {
 
 	public function test_creates_clearance_page_on_activation(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
