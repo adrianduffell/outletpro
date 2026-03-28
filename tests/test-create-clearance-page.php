@@ -13,10 +13,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_title_clearance(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -36,10 +32,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_slug_clearance(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -59,10 +51,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_draft_status(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -82,10 +70,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_clearance_shortcode(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -105,10 +89,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_returns_success_message(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -120,10 +100,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_saves_page_id_in_option(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -143,10 +119,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_does_not_create_duplicate_page_when_page_already_exists(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		create_clearance_page();
 		$original_page_id = get_option( CLEARANCE_PAGE_OPTION );
@@ -161,10 +133,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_returns_already_exists_message_when_page_already_exists(): void {
 		// Arrange.
-		$existing_id = get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		run_create_clearance_page_tool();
 
@@ -177,10 +145,6 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_when_existing_page_is_trashed(): void {
 		// Arrange.
-		$existing_id = (int) get_option( CLEARANCE_PAGE_OPTION );
-		if ( $existing_id > 0 ) {
-			wp_delete_post( $existing_id, true );
-		}
 		delete_option( CLEARANCE_PAGE_OPTION );
 		$trashed_id = wp_insert_post(
 			array(
