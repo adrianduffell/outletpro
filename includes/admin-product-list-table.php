@@ -71,8 +71,40 @@ function product_notices_hook(): void {
 				?>
 			</p>
 		</div>
+		<script>
+		( function() {
+			var storageKey = <?php echo wp_json_encode( ONBOARDING_NOTICE_STORAGE_KEY ); ?>;
+			try {
+				if ( localStorage.getItem( storageKey ) ) {
+					// Notice has been dismissed, do not show.
+					return;
+				}
+			} catch ( e ) {
+				// localStorage unavailable (e.g. privacy mode), do not show.
+				return;
+			}
+
+			var notice = document.querySelector('.wc-clearance-onboarding-notice');
+
+			if ( notice ) {
+				notice.classList.add('is-visible');
+
+				var handler = function( event ) {
+					if ( ! event.target.closest('.notice-dismiss') ) {
+						return;
+					}
+
+					try {
+						localStorage.setItem( storageKey, '1' );
+					} catch ( e ) {}
+					notice.classList.remove('is-visible');
+				};
+
+				notice.addEventListener('click', handler);
+			}
+		}() );
+		</script>
 		<?php
-		render_dismissible_notice_script( ONBOARDING_NOTICE_STORAGE_KEY, 'wc-clearance-onboarding-notice' );
 		return;
 	}
 
@@ -111,21 +143,9 @@ function product_notices_hook(): void {
 			?>
 		</p>
 	</div>
-	<?php
-	render_dismissible_notice_script( PUBLISH_PAGE_NOTICE_STORAGE_KEY, 'wc-clearance-publish-page-notice' );
-}
-
-/**
- * Render the dismiss script for a dismissible admin notice.
- *
- * @param string $storage_key LocalStorage key for the dismissal flag.
- * @param string $css_class   CSS class of the notice element.
- */
-function render_dismissible_notice_script( string $storage_key, string $css_class ): void {
-	?>
 	<script>
 	( function() {
-		var storageKey = <?php echo wp_json_encode( $storage_key ); ?>;
+		var storageKey = <?php echo wp_json_encode( PUBLISH_PAGE_NOTICE_STORAGE_KEY ); ?>;
 		try {
 			if ( localStorage.getItem( storageKey ) ) {
 				// Notice has been dismissed, do not show.
@@ -136,7 +156,7 @@ function render_dismissible_notice_script( string $storage_key, string $css_clas
 			return;
 		}
 
-		var notice = document.querySelector('.<?php echo esc_js( $css_class ); ?>');
+		var notice = document.querySelector('.wc-clearance-publish-page-notice');
 
 		if ( notice ) {
 			notice.classList.add('is-visible');
@@ -199,8 +219,40 @@ function product_onboarding_notice_hook(): void {
 			?>
 		</p>
 	</div>
+	<script>
+	( function() {
+		var storageKey = <?php echo wp_json_encode( ONBOARDING_NOTICE_STORAGE_KEY ); ?>;
+		try {
+			if ( localStorage.getItem( storageKey ) ) {
+				// Notice has been dismissed, do not show.
+				return;
+			}
+		} catch ( e ) {
+			// localStorage unavailable (e.g. privacy mode), do not show.
+			return;
+		}
+
+		var notice = document.querySelector('.wc-clearance-onboarding-notice');
+
+		if ( notice ) {
+			notice.classList.add('is-visible');
+
+			var handler = function( event ) {
+				if ( ! event.target.closest('.notice-dismiss') ) {
+					return;
+				}
+
+				try {
+					localStorage.setItem( storageKey, '1' );
+				} catch ( e ) {}
+				notice.classList.remove('is-visible');
+			};
+
+			notice.addEventListener('click', handler);
+		}
+	}() );
+	</script>
 	<?php
-	render_dismissible_notice_script( ONBOARDING_NOTICE_STORAGE_KEY, 'wc-clearance-onboarding-notice' );
 }
 
 /**
@@ -258,6 +310,38 @@ function product_publish_page_notice_hook(): void {
 			?>
 		</p>
 	</div>
+	<script>
+	( function() {
+		var storageKey = <?php echo wp_json_encode( PUBLISH_PAGE_NOTICE_STORAGE_KEY ); ?>;
+		try {
+			if ( localStorage.getItem( storageKey ) ) {
+				// Notice has been dismissed, do not show.
+				return;
+			}
+		} catch ( e ) {
+			// localStorage unavailable (e.g. privacy mode), do not show.
+			return;
+		}
+
+		var notice = document.querySelector('.wc-clearance-publish-page-notice');
+
+		if ( notice ) {
+			notice.classList.add('is-visible');
+
+			var handler = function( event ) {
+				if ( ! event.target.closest('.notice-dismiss') ) {
+					return;
+				}
+
+				try {
+					localStorage.setItem( storageKey, '1' );
+				} catch ( e ) {}
+				notice.classList.remove('is-visible');
+			};
+
+			notice.addEventListener('click', handler);
+		}
+	}() );
+	</script>
 	<?php
-	render_dismissible_notice_script( PUBLISH_PAGE_NOTICE_STORAGE_KEY, 'wc-clearance-publish-page-notice' );
 }
