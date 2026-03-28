@@ -19,14 +19,6 @@
 	<rule ref="Squiz.Commenting.ClassComment">
 		<exclude-pattern>tests/</exclude-pattern>
 	</rule>
-	<rule ref="Generic.PHP.ForbiddenFunctions">
-		<include-pattern>tests/</include-pattern>
-		<properties>
-			<property name="forbiddenFunctions" type="array" extend="true">
-				<element key="ob_start" value="null"/>
-			</property>
-		</properties>
-	</rule>
 
 	<!-- Use WordPress Coding Standards -->
 	<rule ref="WordPress">
