@@ -41,7 +41,7 @@ test( 'notice shows when there are no clearance products', async ( {
 	).toBeVisible();
 } );
 
-test( 'notice is not shown when a clearance product exists', async ( {
+test( 'notice is not shown when clearance is complete', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -65,10 +65,24 @@ test( 'notice is not shown when a clearance product exists', async ( {
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
+	// Arrange: publish the clearance section page so clearance is fully set up.
+	const pages = await requestUtils.rest( {
+		method: 'GET',
+		path: '/wp/v2/pages',
+		params: { slug: 'clearance' },
+	} );
+	expect( pages.length ).toBeGreaterThan( 0 );
+	const clearancePage = pages[ 0 ];
+	await requestUtils.rest( {
+		method: 'POST',
+		path: `/wp/v2/pages/${ clearancePage.id }`,
+		data: { status: 'publish' },
+	} );
+
 	// Act.
 	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
 
-	// Assert: the notice div is not rendered at all when clearance products exist.
+	// Assert: no notice when clearance is complete.
 	await expect(
 		page.locator( '.wc-clearance-onboarding-notice' )
 	).not.toBeVisible();
@@ -78,6 +92,11 @@ test( 'notice is not shown when a clearance product exists', async ( {
 		method: 'DELETE',
 		path: `/wc/v3/products/${ product.id }`,
 		data: { force: true },
+	} );
+	await requestUtils.rest( {
+		method: 'POST',
+		path: `/wp/v2/pages/${ clearancePage.id }`,
+		data: { status: 'draft' },
 	} );
 } );
 

@@ -104,13 +104,11 @@ function product_onboarding_notice_hook(): void {
 			)
 		);
 	} elseif ( $page_published ) {
-		// State 3: Products exist, page published — clearance is complete.
-		$notice_level      = 'notice-success';
-		$notice_type_class = 'wc-clearance-complete-notice';
-		$body              = esc_html__( 'Clearance section is ready. Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
+		// State 3: Products exist, page published — clearance is complete. No notice needed.
+		return;
 	} elseif ( ! $has_page ) {
-		// Special case: no clearance products, and the page doesn't exist. In this case, we hide the checklist since the "Publish page" item isn't relevant until after the page exists.
-		$notice_level      = 'notice-success';
+		// Products exist but no clearance page yet. Prompt to create one.
+		$notice_level      = 'notice-info';
 		$notice_type_class = '';
 		$body              = wp_kses_post(
 			__(
@@ -118,10 +116,6 @@ function product_onboarding_notice_hook(): void {
 				'wc-clearance'
 			)
 		);
-
-	} else {
-		// Onboarding is complete.
-		return;
 	}
 
 	// Build checklist item state.
