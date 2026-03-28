@@ -7,6 +7,7 @@
 
 use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\create_clearance_page;
+use function WC_Clearance\init_admin_product_list_table;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
@@ -17,6 +18,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_renders_notice_when_clearance_products_exist_and_page_is_draft(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -40,6 +42,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -64,6 +67,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_screen_is_not_product_list(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'dashboard' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -77,6 +81,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_user_cannot_edit_pages(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		wp_set_current_user( $user_id );
@@ -90,6 +95,8 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_clearance_section_is_empty(): void {
 		// Arrange.
+		init_admin_product_list_table();
+		remove_action( 'admin_notices', 'WC_Clearance\product_onboarding_notice_hook' );
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -112,6 +119,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_clearance_page_is_not_registered(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -134,6 +142,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_clearance_page_is_published(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -159,6 +168,7 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_taxonomy_throws(): void {
 		// Arrange.
+		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );

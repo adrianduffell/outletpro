@@ -5,12 +5,14 @@
  * @package WC_Clearance
  */
 
+use function WC_Clearance\init_system_status;
 use function WC_Clearance\register_clearance_status_taxonomy;
 
 class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
 	public function test_output_contains_section_heading(): void {
 		// Arrange.
+		init_system_status();
 		register_clearance_status_taxonomy();
 
 		// Expect.
@@ -22,6 +24,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
 	public function test_table_has_correct_css_class(): void {
 		// Arrange.
+		init_system_status();
 		register_clearance_status_taxonomy();
 
 		// Expect.
@@ -33,6 +36,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
 	public function test_table_has_thead_and_tbody(): void {
 		// Arrange.
+		init_system_status();
 		register_clearance_status_taxonomy();
 
 		// Expect.

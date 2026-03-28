@@ -5,12 +5,14 @@
  * @package WC_Clearance
  */
 
+use function WC_Clearance\init_admin_page_list_table;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
 class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_adds_clearance_page_label_when_post_is_clearance_page(): void {
 		// Arrange.
+		init_admin_page_list_table();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( CLEARANCE_PAGE_OPTION, $page_id );
 		$post = get_post( $page_id );
@@ -25,6 +27,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_add_label_when_post_is_not_clearance_page(): void {
 		// Arrange.
+		init_admin_page_list_table();
 		$clearance_page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		$other_page_id     = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( CLEARANCE_PAGE_OPTION, $clearance_page_id );
@@ -39,6 +42,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_adds_clearance_page_label_when_option_is_string(): void {
 		// Arrange.
+		init_admin_page_list_table();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( CLEARANCE_PAGE_OPTION, (string) $page_id );
 		$post = get_post( $page_id );
@@ -53,6 +57,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_add_label_when_option_is_corrupted(): void {
 		// Arrange.
+		init_admin_page_list_table();
 		update_option( CLEARANCE_PAGE_OPTION, 'not-a-number' );
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		$post    = get_post( $page_id );
@@ -66,6 +71,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_add_label_when_no_clearance_page_is_set(): void {
 		// Arrange.
+		init_admin_page_list_table();
 		delete_option( CLEARANCE_PAGE_OPTION );
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		$post    = get_post( $page_id );
@@ -79,6 +85,7 @@ class Test_Clearance_Section_Label_Hook extends WP_UnitTestCase {
 
 	public function test_preserves_existing_post_states(): void {
 		// Arrange.
+		init_admin_page_list_table();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( CLEARANCE_PAGE_OPTION, $page_id );
 		$post            = get_post( $page_id );
