@@ -22,13 +22,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = ob_get_clean();
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
-		// Assert.
-		$this->assertStringContainsString( 'wc-clearance-onboarding-notice', $output );
+		// Act.
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_screen_is_not_product_list(): void {
@@ -40,13 +38,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = ob_get_clean();
+		// Expect.
+		$this->expectOutputString( '' );
 
-		// Assert.
-		$this->assertEmpty( $output );
+		// Act.
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_user_cannot_edit_products(): void {
@@ -58,13 +54,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = ob_get_clean();
+		// Expect.
+		$this->expectOutputString( '' );
 
-		// Assert.
-		$this->assertEmpty( $output );
+		// Act.
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_clearance_products_exist(): void {
@@ -78,13 +72,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = ob_get_clean();
+		// Expect.
+		$this->expectOutputString( '' );
 
-		// Assert.
-		$this->assertEmpty( $output );
+		// Act.
+		do_action( 'admin_notices' );
 	}
 
 	public function test_does_not_render_when_taxonomy_throws(): void {
@@ -95,12 +87,10 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = ob_get_clean();
+		// Expect.
+		$this->expectOutputString( '' );
 
-		// Assert.
-		$this->assertEmpty( $output );
+		// Act.
+		do_action( 'admin_notices' );
 	}
 }
