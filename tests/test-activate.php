@@ -5,6 +5,7 @@
  * @package WC_Clearance
  */
 
+use function WC_Clearance\activate;
 use const WC_Clearance\ACTIVATED_AT_OPTION;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 
@@ -15,7 +16,7 @@ class Test_Activate extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
-		do_action( 'activate_wc-clearance/wc-clearance.php' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		activate();
 
 		// Assert.
 		$this->assertGreaterThan( 0, get_option( CLEARANCE_PAGE_OPTION ) );
@@ -27,7 +28,7 @@ class Test_Activate extends WP_UnitTestCase {
 
 		// Act.
 		$before = time();
-		do_action( 'activate_wc-clearance/wc-clearance.php' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		activate();
 		$after = time();
 
 		// Assert.
@@ -42,7 +43,7 @@ class Test_Activate extends WP_UnitTestCase {
 
 		// Act.
 		$before = time();
-		do_action( 'activate_wc-clearance/wc-clearance.php' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		activate();
 		$after = time();
 
 		// Assert.
