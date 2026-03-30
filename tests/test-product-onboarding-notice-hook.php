@@ -32,6 +32,22 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
+	public function test_renders_notice_on_product_edit_screen(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
 	public function test_does_not_render_when_screen_is_not_product_list(): void {
 		// Arrange.
 		init_admin_product_list_table();

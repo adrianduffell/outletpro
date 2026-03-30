@@ -29,7 +29,7 @@ function init_admin_product_list_table(): void {
 }
 
 /**
- * Display the appropriate admin notice on the product list screen.
+ * Display the appropriate admin notice on products admin pages.
  *
  * Shows the onboarding notice when the clearance section is empty, or the
  * publish page notice when there are products in the clearance section but
@@ -42,7 +42,7 @@ function init_admin_product_list_table(): void {
 function product_onboarding_notice_hook(): void {
 	$screen = get_current_screen();
 
-	if ( ! $screen instanceof \WP_Screen || 'edit-product' !== $screen->id ) {
+	if ( ! $screen instanceof \WP_Screen || ! in_array( $screen->id, array( 'edit-product', 'product' ), true ) ) {
 		return;
 	}
 
