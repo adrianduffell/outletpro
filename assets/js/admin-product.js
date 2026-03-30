@@ -1,7 +1,7 @@
 /**
  * Admin product editor scripts.
  *
- * @package WC_Clearance
+ * @package
  * @since 1.0.0
  */
 
@@ -17,7 +17,7 @@
  */
 ( function () {
 	document.addEventListener( 'DOMContentLoaded', function () {
-		var span = document.querySelector(
+		const span = document.querySelector(
 			'.wc-clearance-status_field span.description'
 		);
 
@@ -25,7 +25,7 @@
 			return;
 		}
 
-		var checkbox = document.getElementById( 'wc-clearance-status' );
+		const checkbox = document.getElementById( 'wc-clearance-status' );
 
 		if ( ! checkbox ) {
 			return;

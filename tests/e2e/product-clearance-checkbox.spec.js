@@ -118,7 +118,9 @@ test( 'can toggle the clearance checkbox by clicking its label text', async ( {
 		`post=${ product.id }&action=edit`
 	);
 
-	const checkbox = page.getByRole( 'checkbox', { name: 'Clearance section' } );
+	const checkbox = page.getByRole( 'checkbox', {
+		name: 'Clearance section',
+	} );
 	await expect( checkbox ).not.toBeChecked();
 
 	// Act - click the label text beside the checkbox rather than the checkbox itself.
