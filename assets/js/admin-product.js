@@ -32,6 +32,7 @@
 		}
 
 		span.style.cursor = 'default';
+		span.style.userSelect = 'none';
 		span.addEventListener( 'click', function () {
 			checkbox.checked = ! checkbox.checked;
 			checkbox.dispatchEvent( new Event( 'change', { bubbles: true } ) );
