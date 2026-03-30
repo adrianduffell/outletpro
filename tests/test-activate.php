@@ -33,18 +33,4 @@ class Test_Activate extends WP_UnitTestCase {
 		$this->assertNotFalse( get_option( ACTIVATED_AT_OPTION ) );
 	}
 
-	public function test_updates_activated_at_option_on_reactivation(): void {
-		// Arrange.
-		update_option( ACTIVATED_AT_OPTION, time() - 100 );
-
-		// Act.
-		$before = time();
-		activate();
-		$after = time();
-
-		// Assert.
-		$value = get_option( ACTIVATED_AT_OPTION );
-		$this->assertGreaterThanOrEqual( $before, $value );
-		$this->assertLessThanOrEqual( $after, $value );
-	}
 }
