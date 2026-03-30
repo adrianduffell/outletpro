@@ -1,7 +1,6 @@
 /**
  * Admin product editor scripts.
  *
- * @package
  * @since 1.0.0
  */
 
