@@ -96,3 +96,40 @@ test( 'can unmark a product as clearance using the checkbox', async ( {
 		page.getByRole( 'checkbox', { name: 'Clearance section' } )
 	).not.toBeChecked();
 } );
+
+test( 'can toggle the clearance checkbox by clicking its label text', async ( {
+	page,
+	admin,
+	requestUtils,
+} ) => {
+	// Arrange.
+	const product = await requestUtils.rest( {
+		method: 'POST',
+		path: '/wc/v3/products',
+		data: {
+			name: 'Test Clearance Product',
+			type: 'simple',
+			status: 'publish',
+		},
+	} );
+
+	await admin.visitAdminPage(
+		'post.php',
+		`post=${ product.id }&action=edit`
+	);
+
+	const checkbox = page.getByRole( 'checkbox', { name: 'Clearance section' } );
+	await expect( checkbox ).not.toBeChecked();
+
+	// Act - click the label text beside the checkbox rather than the checkbox itself.
+	await page.getByText( 'Include in clearance section' ).click();
+
+	// Assert.
+	await expect( checkbox ).toBeChecked();
+
+	// Act - click the label text again to toggle the checkbox off.
+	await page.getByText( 'Include in clearance section' ).click();
+
+	// Assert.
+	await expect( checkbox ).not.toBeChecked();
+} );
