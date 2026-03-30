@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * WordPress option key used to store the plugin activation timestamp.
  *
- * @since 1.0.0
+ * @internal
  */
 const ACTIVATED_AT_OPTION = 'wc_clearance_activated_at';
 
@@ -21,7 +21,7 @@ const ACTIVATED_AT_OPTION = 'wc_clearance_activated_at';
  *
  * Always updates the option, so re-activating the plugin resets the timestamp.
  *
- * @since 1.0.0
+ * @internal
  */
 function seed_activated_at_option(): void {
 	update_option( ACTIVATED_AT_OPTION, time() );
