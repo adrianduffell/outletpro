@@ -13,6 +13,7 @@
  * rendering API that does not expose a way to change the wrapping element.
  * This script works around it by attaching an onclick handler to the span
  * that toggles the checkbox when the text is clicked.
+ * Todo: consider contributing a fix upstream.
  */
 ( function () {
 	document.addEventListener( 'DOMContentLoaded', function () {
