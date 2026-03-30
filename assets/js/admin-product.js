@@ -31,7 +31,7 @@
 			return;
 		}
 
-		span.style.cursor = 'pointer';
+		span.style.cursor = 'default';
 		span.addEventListener( 'click', function () {
 			checkbox.checked = ! checkbox.checked;
 			checkbox.dispatchEvent( new Event( 'change', { bubbles: true } ) );
