@@ -6,28 +6,34 @@
  */
 
 /**
- * Replace the description span next to the clearance checkbox with a label
- * element so that clicking the text toggles the checkbox.
+ * Make the description text next to the clearance checkbox clickable.
  *
  * WooCommerce's woocommerce_wp_checkbox() API renders the description as a
  * <span> rather than a <label> — a limitation of the WooCommerce field
  * rendering API that does not expose a way to change the wrapping element.
- * This script works around it by swapping the element type after DOM load.
+ * This script works around it by attaching an onclick handler to the span
+ * that toggles the checkbox when the text is clicked.
  */
 ( function () {
 	document.addEventListener( 'DOMContentLoaded', function () {
 		var span = document.querySelector(
-			'#wc-clearance-status_field span.description'
+			'.wc-clearance-status_field span.description'
 		);
 
 		if ( ! span ) {
 			return;
 		}
 
-		var label = document.createElement( 'label' );
-		label.setAttribute( 'for', 'wc-clearance-status' );
-		label.textContent = span.textContent;
-		label.className = span.className;
-		span.parentNode.replaceChild( label, span );
+		var checkbox = document.getElementById( 'wc-clearance-status' );
+
+		if ( ! checkbox ) {
+			return;
+		}
+
+		span.style.cursor = 'pointer';
+		span.addEventListener( 'click', function () {
+			checkbox.checked = ! checkbox.checked;
+			checkbox.dispatchEvent( new Event( 'change', { bubbles: true } ) );
+		} );
 	} );
 } )();
