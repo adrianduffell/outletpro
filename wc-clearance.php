@@ -105,6 +105,30 @@ function enqueue_admin_styles_hook(): void {
 add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 
 /**
+ * Enqueue admin scripts for the product edit page.
+ *
+ * Fired by `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_admin_product_scripts_hook(): void {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'product' !== $screen->post_type || 'post' !== $screen->base ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'wc-clearance-admin-product',
+		plugin_dir_url( __FILE__ ) . 'assets/js/admin-product.js',
+		array(),
+		VERSION,
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
+
+/**
  * Enqueue the built JavaScript for the block editor.
  *
  * Fired by `enqueue_block_editor_assets`.
