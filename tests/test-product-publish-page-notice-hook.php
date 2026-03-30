@@ -36,6 +36,26 @@ class Test_Product_Publish_Page_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
+	public function test_renders_notice_on_product_edit_screen(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page(); // Creates page as draft.
+
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-publish-page-notice/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
 	public function test_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
 		// Arrange.
 		init_admin_product_list_table();
