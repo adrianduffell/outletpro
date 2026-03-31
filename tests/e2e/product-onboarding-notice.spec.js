@@ -41,7 +41,7 @@ test( 'notice shows when there are no clearance products', async ( {
 	).toBeVisible();
 } );
 
-test( 'notice is not shown when a clearance product exists', async ( {
+test( 'notice still shows when a clearance product exists but no page is configured', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -68,10 +68,10 @@ test( 'notice is not shown when a clearance product exists', async ( {
 	// Act.
 	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
 
-	// Assert: the notice div is not rendered at all when clearance products exist.
+	// Assert: the notice is still shown in the "products added" state.
 	await expect(
 		page.locator( '.wc-clearance-onboarding-notice' )
-	).not.toBeVisible();
+	).toBeVisible();
 
 	// Cleanup.
 	await requestUtils.rest( {
