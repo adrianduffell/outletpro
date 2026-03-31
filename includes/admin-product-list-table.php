@@ -80,13 +80,13 @@ function render_clearance_checklist_notice( bool $is_empty, bool $is_published, 
 	$page_done     = $is_published;
 
 	if ( ! $products_done ) {
-		$message = __( "Welcome! Let's set up with a few steps. To start, add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' );
+		$message = __( "Welcome! Let's set up with a few short steps.</p> <p>Include a product in the clearance section by adding or editing a product, then find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' );
 	} elseif ( ! $page_done ) {
 		$edit_url  = get_edit_post_link( $page_id );
 		$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
-		$message   = __( 'Great, products are included in clearance section! Finally, publish the clearance section page to help customers find them.', 'wc-clearance' ) . $edit_link;
+		$message   = __( 'Great, products are included in clearance section! </p><p>There’s a clearance section page now added to help customers find these products in one place. Make any changes and publish it to finish setting up.', 'wc-clearance' ) . $edit_link;
 	} else {
-		$message = __( 'Fantastic, the clearance section is ready! Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
+		$message = __( 'Fantastic, the clearance section is ready! Tip: promote it in your store by creating a link to the clearance section page or adding it to the navigation.', 'wc-clearance' );
 	}
 
 	?>
@@ -125,10 +125,10 @@ function render_clearance_checklist_notice( bool $is_empty, bool $is_published, 
 function render_clearance_simple_notice( bool $is_empty ): void {
 	if ( $is_empty ) {
 		$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
-			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Edit a product and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' ) . '</p>';
+			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' ) . '</p>';
 	} else {
 		$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
-			'<p>' . esc_html__( 'Great, products are included in clearance section! Tip: promote them in one place by creating a page and using the clearance section block.', 'wc-clearance' ) . '</p>';
+			'<p>' . esc_html__( 'Fantastic, products are included in clearance section! Tip: display iton your store using the clearance section block.', 'wc-clearance' ) . '</p>';
 	}
 
 	?>
