@@ -80,7 +80,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_products_added_notice_when_clearance_products_exist_and_no_page(): void {
+	public function test_does_not_render_when_clearance_products_exist(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -187,7 +187,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_products_added_notice_when_clearance_page_is_not_registered(): void {
+	public function test_does_not_render_publish_page_notice_when_clearance_page_is_not_registered(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -206,7 +206,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_complete_notice_when_clearance_page_is_published(): void {
+	public function test_does_not_render_publish_page_notice_when_clearance_page_is_published(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
