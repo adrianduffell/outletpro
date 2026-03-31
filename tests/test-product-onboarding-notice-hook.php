@@ -12,7 +12,7 @@ use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
-use const WC_Clearance\PUBLISH_PAGE_NOTICE_STORAGE_KEY;
+use const WC_Clearance\ONBOARDING_DISMISS_STORAGE_KEY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
@@ -92,7 +92,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		add_to_clearance( $product );
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -127,7 +127,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_clearance_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-publish-page-notice/' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -148,7 +148,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/is-dismissible/' );
-		$this->expectOutputRegex( '/' . preg_quote( PUBLISH_PAGE_NOTICE_STORAGE_KEY, '/' ) . '/' );
+		$this->expectOutputRegex( '/' . preg_quote( ONBOARDING_DISMISS_STORAGE_KEY, '/' ) . '/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -200,7 +200,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -222,7 +222,171 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_checklist_notice_includes_both_items_unchecked_in_initial_state(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-checklist/' );
+		$this->expectOutputRegex( '/Incomplete/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_checklist_notice_marks_products_item_complete_in_middle_state(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page(); // Creates page as draft.
+
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-checklist/' );
+		$this->expectOutputRegex( '/Complete/' );
+		$this->expectOutputRegex( '/Incomplete/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_checklist_notice_marks_both_items_complete_in_complete_state(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		wp_publish_post( $page_id );
+
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-checklist/' );
+		$this->expectOutputRegex( '/' . preg_quote( ONBOARDING_DISMISS_STORAGE_KEY, '/' ) . '/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_checklist_page_item_ticked_when_no_products_and_page_published(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		// No products added to clearance.
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		wp_publish_post( $page_id );
+
+		// Expect: products item is incomplete, page item is complete.
+		$this->expectOutputRegex( '/Complete/' );
+		$this->expectOutputRegex( '/Incomplete/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_publish_page_notice_contains_edit_page_link(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page(); // Creates page as draft.
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+
+		// Expect.
+		$expected_url = esc_url( get_edit_post_link( $page_id ) );
+		$this->expectOutputRegex( '/href="' . preg_quote( $expected_url, '/' ) . '">Edit page<\/a>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_products_added_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
+
+		// Expect.
+		$this->expectOutputRegex( '/is-dismissible/' );
+		$this->expectOutputRegex( '/' . preg_quote( ONBOARDING_DISMISS_STORAGE_KEY, '/' ) . '/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_checklist_icons_have_aria_hidden_attribute(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+
+		// Expect.
+		$this->expectOutputRegex( '/aria-hidden="true"/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_checklist_icons_have_screen_reader_text(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+
+		// Expect.
+		$this->expectOutputRegex( '/screen-reader-text/' );
 
 		// Act.
 		do_action( 'admin_notices' );
