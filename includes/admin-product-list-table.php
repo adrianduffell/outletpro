@@ -12,22 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Key used in localStorage to persist the onboarding notice dismissal.
  */
-const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
-
-/**
- * Key used in localStorage to persist the publish page notice dismissal.
- */
-const PUBLISH_PAGE_NOTICE_STORAGE_KEY = 'wc_clearance_publish_page_notice_dismissed';
-
-/**
- * Key used in localStorage to persist the complete notice dismissal.
- */
-const COMPLETE_NOTICE_STORAGE_KEY = 'wc_clearance_complete_notice_dismissed';
-
-/**
- * Key used in localStorage to persist the products-added notice dismissal.
- */
-const PRODUCTS_ADDED_NOTICE_STORAGE_KEY = 'wc_clearance_products_added_dismissed';
+const ONBOARDING_DISMISS_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
 
 /**
  * Helper to initialize admin product list table features.
@@ -92,19 +77,19 @@ function product_onboarding_notice_hook(): void {
 function render_clearance_checklist_notice( bool $is_empty, bool $is_published ): void {
 	if ( $is_empty ) {
 		$css_class     = 'wc-clearance-onboarding-notice';
-		$storage_key   = ONBOARDING_NOTICE_STORAGE_KEY;
+		$storage_key   = ONBOARDING_DISMISS_STORAGE_KEY;
 		$message       = __( "Welcome! Let's set up with a few steps. To start, add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' );
 		$products_done = false;
 		$page_done     = false;
 	} elseif ( ! $is_published ) {
 		$css_class     = 'wc-clearance-publish-page-notice';
-		$storage_key   = PUBLISH_PAGE_NOTICE_STORAGE_KEY;
+		$storage_key   = ONBOARDING_DISMISS_STORAGE_KEY;
 		$message       = __( 'Great, products are included in clearance section! Finally, publish the clearance section page to help customers find them.', 'wc-clearance' );
 		$products_done = true;
 		$page_done     = false;
 	} else {
 		$css_class     = 'wc-clearance-complete-notice';
-		$storage_key   = COMPLETE_NOTICE_STORAGE_KEY;
+		$storage_key   = ONBOARDING_DISMISS_STORAGE_KEY;
 		$message       = __( 'Fantastic, the clearance section is ready! Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
 		$products_done = true;
 		$page_done     = true;
@@ -146,12 +131,12 @@ function render_clearance_checklist_notice( bool $is_empty, bool $is_published )
 function render_clearance_simple_notice( bool $is_empty ): void {
 	if ( $is_empty ) {
 		$css_class   = 'wc-clearance-onboarding-notice';
-		$storage_key = ONBOARDING_NOTICE_STORAGE_KEY;
+		$storage_key = ONBOARDING_DISMISS_STORAGE_KEY;
 		$content     = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
 			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Edit a product and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' ) . '</p>';
 	} else {
 		$css_class   = 'wc-clearance-products-added-notice';
-		$storage_key = PRODUCTS_ADDED_NOTICE_STORAGE_KEY;
+		$storage_key = ONBOARDING_DISMISS_STORAGE_KEY;
 		$content     = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
 			'<p>' . esc_html__( 'Great, products are included in clearance section! Tip: promote them in one place by creating a page and using the clearance section block.', 'wc-clearance' ) . '</p>';
 	}
