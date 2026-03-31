@@ -10,6 +10,11 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Number of days after activation during which the onboarding notice is displayed.
+ */
+const ONBOARDING_NOTICE_DISPLAY_DAYS = 14;
+
+/**
  * Key used in localStorage to persist the onboarding notice dismissal.
  */
 const ONBOARDING_NOTICE_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
@@ -43,6 +48,11 @@ function product_onboarding_notice_hook(): void {
 	$screen = get_current_screen();
 
 	if ( ! $screen instanceof \WP_Screen || ! in_array( $screen->id, array( 'edit-product', 'product' ), true ) ) {
+		return;
+	}
+
+	$activated_at = get_option( ACTIVATED_AT_OPTION );
+	if ( $activated_at && time() - (int) $activated_at > ONBOARDING_NOTICE_DISPLAY_DAYS * DAY_IN_SECONDS ) {
 		return;
 	}
 
