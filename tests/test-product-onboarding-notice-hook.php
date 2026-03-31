@@ -329,8 +329,8 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		$page_id = get_option( CLEARANCE_PAGE_OPTION );
 
 		// Expect.
-		$this->expectOutputRegex( '/Edit page/' );
-		$this->expectOutputRegex( '/' . preg_quote( get_edit_post_link( $page_id ), '/' ) . '/' );
+		$expected_url = esc_url( get_edit_post_link( $page_id ) );
+		$this->expectOutputRegex( '/href="' . preg_quote( $expected_url, '/' ) . '">Edit page<\/a>/' );
 
 		// Act.
 		do_action( 'admin_notices' );
