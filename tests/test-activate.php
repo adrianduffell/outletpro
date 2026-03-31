@@ -32,5 +32,4 @@ class Test_Activate extends WP_UnitTestCase {
 		// Assert.
 		$this->assertNotFalse( get_option( ACTIVATED_AT_OPTION ) );
 	}
-
 }
