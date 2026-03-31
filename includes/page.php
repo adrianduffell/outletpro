@@ -97,11 +97,14 @@ function get_clearance_page_content(): string {
 	$is_block_theme = (bool) apply_filters( 'wc_clearance_is_block_theme', wp_is_block_theme() );
 
 	if ( $is_block_theme ) {
+		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		$term_id        = $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0;
+
 		return '<!-- wp:woocommerce/product-collection ' . wp_json_encode(
 			array(
 				'query'     => array(
 					'taxQuery'                 => array(
-						CLEARANCE_STATUS_TAXONOMY => array( CLEARANCE_STATUS_CANONICAL_TERM ),
+						CLEARANCE_STATUS_TAXONOMY => array( $term_id ),
 					),
 					'isProductCollectionBlock' => true,
 					'inherit'                  => false,

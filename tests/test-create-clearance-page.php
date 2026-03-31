@@ -7,7 +7,9 @@
 
 use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\run_create_clearance_page_tool;
+use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
+use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Create_Clearance_Page extends WP_UnitTestCase {
@@ -93,6 +95,8 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
 		// Arrange.
 		add_filter( 'wc_clearance_is_block_theme', '__return_true' );
+		seed_clearance_status_taxonomy();
+		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -109,7 +113,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		);
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
-		$this->assertStringContainsString( CLEARANCE_STATUS_TAXONOMY, $pages[0]->post_content );
+		$this->assertStringContainsString( (string) $canonical_term->term_id, $pages[0]->post_content );
 	}
 
 	public function test_returns_success_message(): void {
