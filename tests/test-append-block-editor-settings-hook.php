@@ -8,8 +8,8 @@
 use function WC_Clearance\block_editor_init;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
