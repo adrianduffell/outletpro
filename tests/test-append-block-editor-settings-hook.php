@@ -21,7 +21,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 		// Act.
-		$settings = apply_filters( 'block_editor_settings_all', array() );
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
 
 		// Assert.
 		$this->assertArrayHasKey( 'wcClearanceCanonicalTermId', $settings );
@@ -35,7 +35,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.
-		$settings = apply_filters( 'block_editor_settings_all', $initial_settings );
+		$settings = apply_filters( 'block_editor_settings_all', $initial_settings, new WP_Block_Editor_Context() );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wcClearanceCanonicalTermId', $settings );
@@ -51,7 +51,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.
-		$settings = apply_filters( 'block_editor_settings_all', $initial_settings );
+		$settings = apply_filters( 'block_editor_settings_all', $initial_settings, new WP_Block_Editor_Context() );
 
 		// Assert.
 		$this->assertArrayHasKey( 'foo', $settings );
