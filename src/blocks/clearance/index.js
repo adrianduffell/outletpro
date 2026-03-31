@@ -1,8 +1,8 @@
 /* global wcClearance */
 
-const { registerProductCollection } = window.wc.blocksRegistry;
+const { __experimentalRegisterProductCollection } = window.wc.wcBlocksRegistry;
 
-registerProductCollection( {
+__experimentalRegisterProductCollection( {
 	name: 'wc-clearance/clearance',
 	title: 'Clearance',
 	description: 'Show products in the clearance section.',
