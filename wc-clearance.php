@@ -26,29 +26,53 @@ defined( 'ABSPATH' ) || exit;
  */
 const VERSION = '1.0.0';
 
+require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/rest-api.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
+require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/product-collection.php';
+require_once __DIR__ . '/includes/settings.php';
+require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
+require_once __DIR__ . '/includes/setup-task.php';
+require_once __DIR__ . '/includes/admin-product-list-table.php';
 
 /**
  * Initialize the plugin.
+ *
+ * Fired by `init`.
+ *
+ * @internal WordPress action hook
  */
-function init(): void {
+function init_hook(): void {
+	init_settings();
 	init_taxonomies();
 	init_product_collection();
+	init_rest_api();
 	init_shortcodes();
+	try {
+		init_setup_task();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Could not initialize setup task: ' . $e->getMessage() );
+	}
 }
 
 /**
  * Initialize the plugin’s wp-admin dashboard features.
+ *
+ * Fired by `admin_init`.
+ *
+ * @internal WordPress action hook
  */
-function admin_init(): void {
+function admin_init_hook(): void {
 	init_admin_product_options();
 	init_system_status();
 	init_tools();
+	init_admin_page_list_table();
+	init_admin_product_list_table();
 }
 
 /**
@@ -57,9 +81,11 @@ function admin_init(): void {
 function activate(): void {
 	\wc_get_logger()->info( 'Activating Clearance Section for WooCommerce plugin.' );
 
-	init_taxonomies(); // Needed since init hook does not run on activation.
 	try {
+		init_taxonomies(); // Needed since init hook does not run on activation.
 		seed_clearance_status_taxonomy();
+		create_clearance_page();
+		seed_activated_at_option();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
@@ -67,8 +93,12 @@ function activate(): void {
 
 /**
  * Enqueue admin-specific stylesheets.
+ *
+ * Fired by `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
  */
-function enqueue_admin_styles(): void {
+function enqueue_admin_styles_hook(): void {
 	wp_enqueue_style(
 		'wc-clearance-admin-styles',
 		plugin_dir_url( __FILE__ ) . 'assets/css/admin.css',
@@ -76,10 +106,60 @@ function enqueue_admin_styles(): void {
 		VERSION
 	);
 }
-add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\enqueue_admin_styles' );
+add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
+
+/**
+ * Enqueue admin scripts for the product edit page.
+ *
+ * Fired by `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_admin_product_scripts_hook(): void {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'product' !== $screen->post_type || 'post' !== $screen->base ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'wc-clearance-admin-product',
+		plugin_dir_url( __FILE__ ) . 'assets/js/admin-product.js',
+		array(),
+		VERSION,
+		true
+	);
+}
+add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
+
+/**
+ * Enqueue the built JavaScript for the block editor.
+ *
+ * Fired by `enqueue_block_editor_assets`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_build_assets_hook(): void {
+	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	wp_enqueue_script(
+		'wc-clearance-build',
+		plugin_dir_url( __FILE__ ) . 'build/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+}
+add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 
 // Hook into WordPress.
-add_action( 'init', __NAMESPACE__ . '\init' );
-add_action( 'admin_init', __NAMESPACE__ . '\admin_init' );
+add_action( 'init', 'WC_Clearance\init_hook', 20 );
+add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );

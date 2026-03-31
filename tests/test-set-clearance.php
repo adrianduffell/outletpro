@@ -1,6 +1,6 @@
 <?php
 /**
- * Test the set_clearance_status function.
+ * Test the set_clearance function.
  *
  * @package WC_Clearance
  */
@@ -9,10 +9,10 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\is_clearance;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use function WC_Clearance\set_clearance_status;
+use function WC_Clearance\set_clearance;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
-class Test_Set_Clearance_Status extends \WP_UnitTestCase {
+class Test_Set_Clearance extends \WP_UnitTestCase {
 	public function test_adds_to_clearance_when_true(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
@@ -20,7 +20,7 @@ class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 
 		// Act.
-		set_clearance_status( $product, true );
+		set_clearance( $product, true );
 
 		// Assert.
 		$this->assertTrue( is_clearance( $product ) );
@@ -34,7 +34,7 @@ class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 		add_to_clearance( $product );
 
 		// Act.
-		set_clearance_status( $product, false );
+		set_clearance( $product, false );
 
 		// Assert.
 		$this->assertFalse( is_clearance( $product ) );
@@ -42,16 +42,14 @@ class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 
 	public function test_throws_when_taxonomy_missing(): void {
 		// Arrange.
-		if ( taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-			unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
-		}
+		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
 		$product = \WC_Helper_Product::create_simple_product();
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		set_clearance_status( $product, true );
+		set_clearance( $product, true );
 	}
 
 	public function test_noop_when_already_true(): void {
@@ -64,7 +62,7 @@ class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 		$before = did_action( 'wc_clearance_status_changed' );
 
 		// Act.
-		set_clearance_status( $product, true );
+		set_clearance( $product, true );
 
 		// Assert.
 		$after = did_action( 'wc_clearance_status_changed' );
@@ -81,7 +79,7 @@ class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 		$before = did_action( 'wc_clearance_status_changed' );
 
 		// Act.
-		set_clearance_status( $product, false );
+		set_clearance( $product, false );
 
 		// Assert.
 		$after = did_action( 'wc_clearance_status_changed' );
@@ -112,7 +110,7 @@ class Test_Set_Clearance_Status extends \WP_UnitTestCase {
 		);
 
 		// Act.
-		set_clearance_status( $product, true );
+		set_clearance( $product, true );
 
 		// Assert.
 		$this->assertSame( $product->get_id(), $action_product_id );

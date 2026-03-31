@@ -32,6 +32,33 @@ function init_taxonomies(): void {
 }
 
 /**
+ * Helper to report diagnostic info on taxonomies.
+ *
+ * @internal
+ * @return array<string, array{0: string, 1: int|string}>
+ */
+function report_taxonomies(): array {
+	$taxonomy_exists         = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
+	$canonical_term          = $taxonomy_exists ? get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY ) : null;
+	$clearance_product_count = $taxonomy_exists ? count_clearance() : null;
+
+	return array(
+		'clearance-taxonomy-registered' => array(
+			__( 'Clearance status taxonomy registered', 'wc-clearance' ),
+			$taxonomy_exists ? __( 'Yes', 'wc-clearance' ) : __( 'No', 'wc-clearance' ),
+		),
+		'clearance-canonical-term-id'   => array(
+			__( 'Canonical term ID', 'wc-clearance' ),
+			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-clearance' ),
+		),
+		'clearance-product-count'       => array(
+			__( 'Total products in clearance section', 'wc-clearance' ),
+			$clearance_product_count ?? __( 'Unknown', 'wc-clearance' ),
+		),
+	);
+}
+
+/**
  * Register the clearance status taxonomy.
  *
  * @since 1.0.0
@@ -157,6 +184,46 @@ function count_clearance(): int {
 }
 
 /**
+ * Check if the clearance section is empty.
+ *
+ * More performant than count_clearance() because it uses no_found_rows to skip the SQL row count.
+ *
+ * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @since 1.0.0
+ */
+function clearance_section_empty(): bool {
+	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+	}
+
+	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+	if ( ! $canonical_term ) {
+		return true;
+	}
+
+	$query = new \WP_Query(
+		array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				array(
+					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+					'field'    => 'term_id',
+					'terms'    => $canonical_term->term_id,
+				),
+			),
+		)
+	);
+
+	return ! $query->have_posts();
+}
+
+/**
  * Remove a product from the clearance section.
  *
  * @param \WC_Product $product Product to update.
@@ -192,7 +259,7 @@ function remove_from_clearance( \WC_Product $product ): void {
  * @throws \RuntimeException If setting the status fails.
  * @since 1.0.0
  */
-function set_clearance_status( \WC_Product $product, bool $new_value ): void {
+function set_clearance( \WC_Product $product, bool $new_value ): void {
 	// The currently stored state.
 	$old_value = is_clearance( $product );
 

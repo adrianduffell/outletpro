@@ -11,6 +11,7 @@
 	<!-- Exclude directories -->
 	<exclude-pattern>vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
+	<exclude-pattern>/build/</exclude-pattern>
 
 	<rule ref="Squiz.Commenting.FunctionComment">
 		<exclude-pattern>tests/</exclude-pattern>
@@ -30,6 +31,15 @@
 
 	<!-- Set minimum supported PHP version for compatibility checks -->
 	<config name="testVersion" value="7.4-" />
+
+	<!-- Declare WooCommerce custom capabilities -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="edit_products" />
+			</property>
+		</properties>
+	</rule>
 
 	<!-- Set text domain -->
 	<rule ref="WordPress.WP.I18n">
@@ -65,5 +75,4 @@
 
 	<!-- Complexity checks -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
-	<rule ref="SlevomatCodingStandard.Complexity.Cognitive" />
 </ruleset>

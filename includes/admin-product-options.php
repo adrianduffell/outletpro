@@ -15,14 +15,18 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_admin_product_options(): void {
-	add_action( 'woocommerce_product_options_general_product_data', __NAMESPACE__ . '\hook_add_product_checkbox' );
-	add_action( 'woocommerce_admin_process_product_object', __NAMESPACE__ . '\hook_save_product_checkbox' );
+	add_action( 'woocommerce_product_options_general_product_data', 'WC_Clearance\add_product_checkbox_hook' );
+	add_action( 'woocommerce_admin_process_product_object', 'WC_Clearance\save_product_checkbox_hook' );
 }
 
 /**
- * Add clearance checkbox to product edit page
+ * Add clearance checkbox to product edit page.
+ *
+ * Fired by `woocommerce_product_options_general_product_data`.
+ *
+ * @internal WordPress action hook
  */
-function hook_add_product_checkbox(): void {
+function add_product_checkbox_hook(): void {
 	global $post;
 
 	try {
@@ -55,15 +59,18 @@ function hook_add_product_checkbox(): void {
 }
 
 /**
- * Save clearance checkbox value
+ * Save clearance checkbox value.
+ *
+ * Fired by `woocommerce_admin_process_product_object`.
  *
  * @param \WC_Product $product The product being saved.
+ * @internal WordPress action hook
  */
-function hook_save_product_checkbox( \WC_Product $product ): void {
+function save_product_checkbox_hook( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$is_clearance = isset( $_POST['wc-clearance-status'] );
 	try {
-		set_clearance_status( $product, $is_clearance );
+		set_clearance( $product, $is_clearance );
 	} catch ( \Throwable $e ) {
 		$product_id = $product instanceof \WC_Product ? $product->get_id() : null;
 		\wc_get_logger()->error(
