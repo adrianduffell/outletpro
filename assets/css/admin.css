@@ -25,20 +25,24 @@
 	}
 }
 
-.wc-clearance-onboarding-notice {
+.wc-clearance-onboarding-notice,
+.wc-clearance-publish-page-notice,
+.wc-clearance-complete-notice,
+.wc-clearance-products-added-notice {
 	display: none;
 }
 
-.wc-clearance-onboarding-notice.is-visible {
+.wc-clearance-onboarding-notice.is-visible,
+.wc-clearance-publish-page-notice.is-visible,
+.wc-clearance-complete-notice.is-visible,
+.wc-clearance-products-added-notice.is-visible {
 	display: block;
 }
 
-.wc-clearance-publish-page-notice {
-	display: none;
-}
-
-.wc-clearance-publish-page-notice.is-visible {
-	display: block;
+.wc-clearance-checklist {
+	margin: 0 0 12px 0;
+	padding: 0;
+	list-style: none;
 }
 
 .wc-clearance-new {
