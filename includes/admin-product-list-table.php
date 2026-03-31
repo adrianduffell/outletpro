@@ -45,10 +45,10 @@ function product_onboarding_notice_hook(): void {
 		return;
 	}
 
-  if ( ! current_user_can( 'edit_products' ) ) {
+	if ( ! current_user_can( 'edit_products' ) ) {
 		return;
 	}
-  
+
 	$activated_at = get_option( ACTIVATED_AT_OPTION );
 	if ( $activated_at && time() - (int) $activated_at > ONBOARDING_TTL_DAYS * DAY_IN_SECONDS ) {
 		return;
