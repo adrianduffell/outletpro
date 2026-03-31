@@ -32,10 +32,7 @@ function append_block_editor_settings_hook( array $settings ): array {
 		return $settings;
 	}
 
-	$settings['wcClearance'] = array_merge(
-		isset( $settings['wcClearance'] ) && is_array( $settings['wcClearance'] ) ? $settings['wcClearance'] : array(),
-		array( 'clearanceTermId' => $canonical_term->term_id )
-	);
+	$settings['wcClearanceCanonicalTermId'] = $canonical_term->term_id;
 
 	return $settings;
 }

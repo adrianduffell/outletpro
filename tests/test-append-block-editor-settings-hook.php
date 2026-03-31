@@ -24,8 +24,8 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$settings = apply_filters( 'block_editor_settings_all', array() );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wcClearance', $settings );
-		$this->assertSame( $canonical_term->term_id, $settings['wcClearance']['clearanceTermId'] );
+		$this->assertArrayHasKey( 'wcClearanceCanonicalTermId', $settings );
+		$this->assertSame( $canonical_term->term_id, $settings['wcClearanceCanonicalTermId'] );
 	}
 
 	public function test_settings_unchanged_when_canonical_term_missing(): void {
@@ -38,7 +38,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$settings = apply_filters( 'block_editor_settings_all', $initial_settings );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wcClearance', $settings );
+		$this->assertArrayNotHasKey( 'wcClearanceCanonicalTermId', $settings );
 		$this->assertSame( $initial_settings, $settings );
 	}
 
