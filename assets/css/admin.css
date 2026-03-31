@@ -25,17 +25,11 @@
 	}
 }
 
-.wc-clearance-onboarding-notice,
-.wc-clearance-publish-page-notice,
-.wc-clearance-complete-notice,
-.wc-clearance-products-added-notice {
+.wc-clearance-onboarding-notice {
 	display: none;
 }
 
-.wc-clearance-onboarding-notice.is-visible,
-.wc-clearance-publish-page-notice.is-visible,
-.wc-clearance-complete-notice.is-visible,
-.wc-clearance-products-added-notice.is-visible {
+.wc-clearance-onboarding-notice.is-visible {
 	display: block;
 }
 

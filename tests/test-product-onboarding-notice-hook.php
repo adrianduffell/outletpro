@@ -92,7 +92,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		add_to_clearance( $product );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-products-added-notice/' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -127,7 +127,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_clearance_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-publish-page-notice/' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -200,7 +200,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-products-added-notice/' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -222,7 +222,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-complete-notice/' );
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
