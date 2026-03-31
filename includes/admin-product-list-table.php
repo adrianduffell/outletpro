@@ -128,7 +128,7 @@ function render_clearance_simple_notice( bool $is_empty ): void {
 			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' ) . '</p>';
 	} else {
 		$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
-			'<p>' . esc_html__( 'Fantastic, products are included in clearance section! Tip: display iton your store using the clearance section block.', 'wc-clearance' ) . '</p>';
+			'<p>' . esc_html__( 'Fantastic, products are included in clearance section! Tip: display it on your store using the clearance section block.', 'wc-clearance' ) . '</p>';
 	}
 
 	?>
