@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Number of days after activation during which the onboarding notice is displayed.
  */
-const ONBOARDING_NOTICE_TTL_DAYS = 14;
+const ONBOARDING_TTL_DAYS = 14;
 
 /**
  * Key used in localStorage to persist the onboarding notice dismissal.
@@ -52,7 +52,7 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	$activated_at = get_option( ACTIVATED_AT_OPTION );
-	if ( $activated_at && time() - (int) $activated_at > ONBOARDING_NOTICE_TTL_DAYS * DAY_IN_SECONDS ) {
+	if ( $activated_at && time() - (int) $activated_at > ONBOARDING_TTL_DAYS * DAY_IN_SECONDS ) {
 		return;
 	}
 
