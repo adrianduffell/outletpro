@@ -292,6 +292,50 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
+	public function test_checklist_page_item_ticked_when_no_products_and_page_published(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		// No products added to clearance.
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		wp_publish_post( $page_id );
+
+		// Expect: products item is incomplete, page item is complete.
+		$this->expectOutputRegex( '/Complete/' );
+		$this->expectOutputRegex( '/Incomplete/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_publish_page_notice_contains_edit_page_link(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page(); // Creates page as draft.
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+
+		// Expect.
+		$this->expectOutputRegex( '/Edit page/' );
+		$this->expectOutputRegex( '/' . preg_quote( get_edit_post_link( $page_id ), '/' ) . '/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
 	public function test_products_added_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
 		// Arrange.
 		init_admin_product_list_table();

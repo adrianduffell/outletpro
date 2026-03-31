@@ -61,7 +61,7 @@ function product_onboarding_notice_hook(): void {
 		// Page is configured — show a checklist notice that tracks setup progress.
 		$page         = get_post( $page_id );
 		$is_published = $page instanceof \WP_Post && 'publish' === $page->post_status;
-		render_clearance_checklist_notice( $is_empty, $is_published );
+		render_clearance_checklist_notice( $is_empty, $is_published, $page_id );
 	} else {
 		// No page configured — show a simpler informational notice.
 		render_clearance_simple_notice( $is_empty );
@@ -73,20 +73,20 @@ function product_onboarding_notice_hook(): void {
  *
  * @param bool $is_empty     Whether the clearance section has no products yet.
  * @param bool $is_published Whether the clearance section page is published.
+ * @param int  $page_id      Post ID of the clearance section page.
  */
-function render_clearance_checklist_notice( bool $is_empty, bool $is_published ): void {
-	if ( $is_empty ) {
-		$message       = __( "Welcome! Let's set up with a few steps. To start, add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' );
-		$products_done = false;
-		$page_done     = false;
-	} elseif ( ! $is_published ) {
-		$message       = __( 'Great, products are included in clearance section! Finally, publish the clearance section page to help customers find them.', 'wc-clearance' );
-		$products_done = true;
-		$page_done     = false;
+function render_clearance_checklist_notice( bool $is_empty, bool $is_published, int $page_id ): void {
+	$products_done = ! $is_empty;
+	$page_done     = $is_published;
+
+	if ( ! $products_done ) {
+		$message = __( "Welcome! Let's set up with a few steps. To start, add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' );
+	} elseif ( ! $page_done ) {
+		$edit_url  = get_edit_post_link( $page_id );
+		$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
+		$message   = __( 'Great, products are included in clearance section! Finally, publish the clearance section page to help customers find them.', 'wc-clearance' ) . $edit_link;
 	} else {
-		$message       = __( 'Fantastic, the clearance section is ready! Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
-		$products_done = true;
-		$page_done     = true;
+		$message = __( 'Fantastic, the clearance section is ready! Tip: add the clearance section page to a menu or create a link to promote it in your store.', 'wc-clearance' );
 	}
 
 	?>
