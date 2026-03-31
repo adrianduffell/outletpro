@@ -32,15 +32,15 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		block_editor_init();
-		$initial_settings = array( 'existing' => 'value' );
+		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.
 		$settings = apply_filters( 'block_editor_settings_all', $initial_settings );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wcClearanceCanonicalTermId', $settings );
-		$this->assertArrayHasKey( 'existing', $settings );
-		$this->assertSame( 'value', $settings['existing'] );
+		$this->assertArrayHasKey( 'foo', $settings );
+		$this->assertSame( 'bar', $settings['foo'] );
 	}
 
 	public function test_existing_settings_are_preserved(): void {
@@ -48,13 +48,13 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		block_editor_init();
-		$initial_settings = array( 'someKey' => 'someValue' );
+		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.
 		$settings = apply_filters( 'block_editor_settings_all', $initial_settings );
 
 		// Assert.
-		$this->assertArrayHasKey( 'someKey', $settings );
-		$this->assertSame( 'someValue', $settings['someKey'] );
+		$this->assertArrayHasKey( 'foo', $settings );
+		$this->assertSame( 'bar', $settings['foo'] );
 	}
 }
