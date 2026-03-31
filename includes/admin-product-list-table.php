@@ -10,6 +10,11 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Number of days after activation during which the onboarding notice is displayed.
+ */
+const ONBOARDING_TTL_DAYS = 14;
+
+/**
  * Key used in localStorage to persist the onboarding notice dismissal.
  */
 const ONBOARDING_DISMISS_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
@@ -41,6 +46,11 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	if ( ! current_user_can( 'edit_products' ) ) {
+		return;
+	}
+
+	$activated_at = get_option( ACTIVATED_AT_OPTION );
+	if ( $activated_at && time() - (int) $activated_at > ONBOARDING_TTL_DAYS * DAY_IN_SECONDS ) {
 		return;
 	}
 

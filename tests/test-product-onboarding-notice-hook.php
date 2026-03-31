@@ -10,6 +10,7 @@ use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\init_admin_product_list_table;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\ACTIVATED_AT_OPTION;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 use const WC_Clearance\ONBOARDING_DISMISS_STORAGE_KEY;
@@ -387,6 +388,40 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/screen-reader-text/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_does_not_render_onboarding_notice_when_activated_more_than_14_days_ago(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		update_option( ACTIVATED_AT_OPTION, time() - ( 15 * DAY_IN_SECONDS ) );
+
+		// Expect.
+		$this->expectOutputString( '' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_renders_onboarding_notice_when_activated_within_14_days(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		update_option( ACTIVATED_AT_OPTION, time() - ( 13 * DAY_IN_SECONDS ) );
+
+		// Expect.
+		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
