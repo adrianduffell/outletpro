@@ -26,6 +26,7 @@ defined( 'ABSPATH' ) || exit;
  */
 const VERSION = '1.0.0';
 
+require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
@@ -82,6 +83,7 @@ function activate(): void {
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		seed_clearance_status_taxonomy();
 		create_clearance_page();
+		seed_activated_at_option();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
