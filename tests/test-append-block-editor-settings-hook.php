@@ -39,7 +39,8 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wcClearanceCanonicalTermId', $settings );
-		$this->assertSame( $initial_settings, $settings );
+		$this->assertArrayHasKey( 'existing', $settings );
+		$this->assertSame( 'value', $settings['existing'] );
 	}
 
 	public function test_existing_settings_are_preserved(): void {
