@@ -60,7 +60,7 @@ function product_onboarding_notice_hook(): void {
 		$notice_type = 'notice-info';
 		$css_class   = 'wc-clearance-onboarding-notice';
 		$storage_key = ONBOARDING_NOTICE_STORAGE_KEY;
-		$content     = '<p><strong>' . esc_html__( 'Clearance section', 'wc-clearance' ) . '</strong> <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></p>' .
+		$content     = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
 			'<p>' . __( 'Include products in the clearance section to promote them in your store. Edit a product and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.', 'wc-clearance' ) . '</p>';
 	} else {
 		if ( ! current_user_can( 'edit_pages' ) ) {
