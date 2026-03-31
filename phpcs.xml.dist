@@ -11,7 +11,6 @@
 	<!-- Exclude directories -->
 	<exclude-pattern>vendor/</exclude-pattern>
 	<exclude-pattern>/node_modules/</exclude-pattern>
-	<exclude-pattern>build/</exclude-pattern>
 
 	<rule ref="Squiz.Commenting.FunctionComment">
 		<exclude-pattern>tests/</exclude-pattern>
