@@ -8,6 +8,7 @@
 use function WC_Clearance\create_clearance_page;
 use function WC_Clearance\run_create_clearance_page_tool;
 use const WC_Clearance\CLEARANCE_PAGE_OPTION;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
@@ -68,12 +69,14 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertSame( 'draft', $pages[0]->post_status );
 	}
 
-	public function test_creates_page_with_clearance_shortcode(): void {
+	public function test_creates_page_with_clearance_shortcode_on_classic_theme(): void {
 		// Arrange.
+		add_filter( 'wc_clearance_is_block_theme', '__return_false' );
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
+		remove_all_filters( 'wc_clearance_is_block_theme' );
 
 		// Assert.
 		$pages = get_posts(
@@ -85,6 +88,28 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		);
 		$this->assertNotEmpty( $pages );
 		$this->assertSame( '[products is_clearance="yes"]', $pages[0]->post_content );
+	}
+
+	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
+		// Arrange.
+		add_filter( 'wc_clearance_is_block_theme', '__return_true' );
+		delete_option( CLEARANCE_PAGE_OPTION );
+
+		// Act.
+		create_clearance_page();
+		remove_all_filters( 'wc_clearance_is_block_theme' );
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'clearance',
+			)
+		);
+		$this->assertNotEmpty( $pages );
+		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
+		$this->assertStringContainsString( CLEARANCE_STATUS_TAXONOMY, $pages[0]->post_content );
 	}
 
 	public function test_returns_success_message(): void {
