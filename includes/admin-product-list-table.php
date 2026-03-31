@@ -65,19 +65,21 @@ function product_onboarding_notice_hook(): void {
 		$page_done     = $is_published;
 
 		if ( ! $products_done ) {
-			$message = __( "Welcome! Let's set up with a few short steps.</p> <p>Include a product in the clearance section by adding or editing a product, then find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' );
+			$message  = '<p>' . esc_html__( "Welcome! Let's set up with a few short steps.", 'wc-clearance' ) . '</p>';
+			$message .= '<p>' . wp_kses_post( __( 'Include a product in the clearance section by adding or editing a product, then find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.', 'wc-clearance' ) ) . '</p>';
 		} elseif ( ! $page_done ) {
 			$edit_url  = get_edit_post_link( $page_id );
 			$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
-			$message   = __( "Great, products are included in clearance section! </p><p>There's a clearance section page now added to help customers find these products in one place. Make any changes and publish it to finish setting up.", 'wc-clearance' ) . $edit_link;
+			$message   = '<p>' . esc_html__( 'Great, products are included in clearance section!', 'wc-clearance' ) . '</p>';
+			$message  .= '<p>' . esc_html__( "There's a clearance section page now added to help customers find these products in one place. Make any changes and publish it to finish setting up.", 'wc-clearance' ) . $edit_link . '</p>';
 		} else {
-			$message = __( 'Fantastic, the clearance section is ready! Tip: promote it in your store by creating a link to the clearance section page or adding it to the navigation.', 'wc-clearance' );
+			$message = '<p>' . esc_html__( 'Fantastic, the clearance section is ready! Tip: promote it in your store by creating a link to the clearance section page or adding it to the navigation.', 'wc-clearance' ) . '</p>';
 		}
 
 		?>
 <div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
 <h3><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></h3>
-<p><?php echo wp_kses_post( $message ); ?></p>
+		<?php echo wp_kses_post( $message ); ?>
 <p><strong><?php esc_html_e( 'Setup progress', 'wc-clearance' ); ?></strong></p>
 <ul class="wc-clearance-checklist">
 <li>
