@@ -1,0 +1,2 @@
+#!/bin/sh
+npm run lint:js && npm run lint:php
