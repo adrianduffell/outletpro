@@ -73,12 +73,11 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_clearance_shortcode_on_classic_theme(): void {
 		// Arrange.
-		add_filter( 'wc_clearance_is_block_theme', '__return_false' );
+		switch_theme( 'storefront' );
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
-		remove_all_filters( 'wc_clearance_is_block_theme' );
 
 		// Assert.
 		$pages = get_posts(
@@ -94,14 +93,13 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
 		// Arrange.
-		add_filter( 'wc_clearance_is_block_theme', '__return_true' );
+		switch_theme( 'twentytwentyfive' );
 		seed_clearance_status_taxonomy();
 		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
 		create_clearance_page();
-		remove_all_filters( 'wc_clearance_is_block_theme' );
 
 		// Assert.
 		$pages = get_posts(

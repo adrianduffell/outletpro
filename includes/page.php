@@ -85,39 +85,6 @@ function report_page(): array {
 }
 
 /**
- * Get the post content for the clearance section page.
- *
- * Returns a product collection block configured to show clearance products
- * when the active theme is a block theme, or a shortcode for classic themes.
- *
- * @internal
- * @since 1.0.0
- */
-function get_clearance_page_content(): string {
-	$is_block_theme = (bool) apply_filters( 'wc_clearance_is_block_theme', wp_is_block_theme() );
-
-	if ( $is_block_theme ) {
-		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-		$term_id        = $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0;
-
-		return '<!-- wp:woocommerce/product-collection ' . wp_json_encode(
-			array(
-				'query'     => array(
-					'taxQuery'                 => array(
-						CLEARANCE_STATUS_TAXONOMY => array( $term_id ),
-					),
-					'isProductCollectionBlock' => true,
-					'inherit'                  => false,
-				),
-				'namespace' => 'woocommerce/product-collection',
-			)
-		) . ' /-->';
-	}
-
-	return '[products is_clearance="yes"]';
-}
-
-/**
  * Create the clearance section page.
  *
  * Does nothing if a clearance page is already registered via the
@@ -143,12 +110,31 @@ function create_clearance_page(): void {
 		);
 	}
 
+	if ( wp_is_block_theme() ) {
+		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		$term_id        = $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0;
+		$post_content   = '<!-- wp:woocommerce/product-collection ' . wp_json_encode(
+			array(
+				'query'     => array(
+					'taxQuery'                 => array(
+						CLEARANCE_STATUS_TAXONOMY => array( $term_id ),
+					),
+					'isProductCollectionBlock' => true,
+					'inherit'                  => false,
+				),
+				'namespace' => 'woocommerce/product-collection',
+			)
+		) . ' /-->';
+	} else {
+		$post_content = '[products is_clearance="yes"]';
+	}
+
 	$result = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
 			'post_name'    => 'clearance',
 			'post_status'  => 'draft',
-			'post_content' => get_clearance_page_content(),
+			'post_content' => $post_content,
 			'post_type'    => 'page',
 		),
 		true
