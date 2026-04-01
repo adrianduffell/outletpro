@@ -57,9 +57,13 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	$badge_text  = $attributes['badgeText'] ?? __( 'Clearance', 'wc-clearance' );
-	$badge_color = $attributes['badgeColor'] ?? '#2145e6';
-	$style       = sprintf(
+	$badge_text      = $attributes['badgeText'] ?? __( 'Clearance', 'wc-clearance' );
+	$raw_badge_color = $attributes['badgeColor'] ?? '';
+	$badge_color     = sanitize_hex_color( $raw_badge_color );
+	if ( ! $badge_color ) {
+		$badge_color = '#2145e6';
+	}
+	$style = sprintf(
 		'background-color:%s;color:#ffffff;padding:4px 12px;border-radius:4px;display:inline-block;font-size:0.875rem;font-weight:600;',
 		$badge_color
 	);
