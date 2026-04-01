@@ -41,6 +41,13 @@ function register_clearance_badge_block(): void {
  * @return string Rendered HTML, or empty string if the product is not in clearance.
  */
 function render_clearance_badge_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'class' => 'wc-clearance-badge',
+			'style' => 'display:inline-block; border-radius:4px;',
+		)
+	);
+
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
 
 	if ( ! $product_id ) {
@@ -57,20 +64,9 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	$badge_text      = $attributes['badgeText'] ?? __( 'Clearance', 'wc-clearance' );
-	$raw_badge_color = $attributes['badgeColor'] ?? '';
-	$badge_color     = sanitize_hex_color( $raw_badge_color );
-	if ( ! $badge_color ) {
-		$badge_color = '#2145e6';
-	}
-	$style = sprintf(
-		'background-color:%s;color:#ffffff;padding:4px 12px;border-radius:4px;display:inline-block;font-size:0.875rem;font-weight:600;',
-		$badge_color
-	);
-
 	return sprintf(
-		'<span class="wc-clearance-badge" style="%s">%s</span>',
-		esc_attr( $style ),
-		esc_html( $badge_text )
+		'<span %1$s>%2$s</span>',
+		$wrapper_attributes,
+		wp_kses_post( $attributes['label'] ?? '' )
 	);
 }
