@@ -70,4 +70,17 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-badge', $hooked_blocks );
 	}
+
+	public function test_badge_not_inserted_when_context_is_wp_post(): void {
+		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		block_editor_init();
+		$post = self::factory()->post->create_and_get();
+
+		// Act.
+		$hooked_blocks = apply_filters( 'hooked_block_types', array(), 'after', 'core/navigation', $post );
+
+		// Assert.
+		$this->assertNotContains( 'wc-clearance/clearance-badge', $hooked_blocks );
+	}
 }

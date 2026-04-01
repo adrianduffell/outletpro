@@ -80,10 +80,10 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
  * @param array<int, string>                $hooked_blocks     Blocks to insert.
  * @param string                            $relative_position Position relative to anchor block.
  * @param string|null                       $anchor_block      Anchor block name, or null when there is no anchor.
- * @param \WP_Block_Template|array<mixed>   $_context          Template context.
+ * @param \WP_Block_Template|\WP_Post|array<mixed> $_context     Template context.
  * @return array<int, string> Modified hooked blocks.
  */
-function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, ?string $anchor_block, \WP_Block_Template|array $_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, ?string $anchor_block, \WP_Block_Template|\WP_Post|array $_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	if ( 'woocommerce/product-price' === $anchor_block && 'after' === $relative_position ) {
 		$hooked_blocks[] = 'wc-clearance/clearance-badge';
 	}
