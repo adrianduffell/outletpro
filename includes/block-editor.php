@@ -16,25 +16,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function block_editor_init(): void {
 	add_filter( 'block_editor_settings_all', 'WC_Clearance\append_block_editor_settings_hook', 10, 2 );
-	add_filter( 'hooked_block_types', 'WC_Clearance\hooked_clearance_badge_hook', 10, 4 );
-}
-
-/**
- * Auto-insert the clearance badge block after the product price in product templates.
- *
- * @internal WordPress filter hook
- * @param array<int, string>                       $hooked_blocks     Blocks to insert.
- * @param string                                   $relative_position Position relative to anchor block.
- * @param string|null                              $anchor_block      Anchor block name, or null when there is no anchor.
- * @param \WP_Block_Template|\WP_Post|array<mixed> $_context     Template context.
- * @return array<int, string> Modified hooked blocks.
- */
-function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, ?string $anchor_block, \WP_Block_Template|\WP_Post|array $_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	if ( 'woocommerce/product-price' === $anchor_block && 'after' === $relative_position ) {
-		$hooked_blocks[] = 'wc-clearance/clearance-badge';
-	}
-
-	return $hooked_blocks;
 }
 
 /**
