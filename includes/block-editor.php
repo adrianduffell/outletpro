@@ -1,6 +1,6 @@
 <?php
 /**
- * Block editor hooks and settings.
+ * Block editor integration functions.
  *
  * @package WC_Clearance
  */
