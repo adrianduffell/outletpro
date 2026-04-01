@@ -110,12 +110,93 @@ function create_clearance_page(): void {
 		);
 	}
 
+	if ( wp_is_block_theme() ) {
+		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+
+		if ( ! ( $canonical_term instanceof \WP_Term ) ) {
+			throw new \RuntimeException( 'Could not resolve the canonical clearance status term.' );
+		}
+
+		$term_id     = (string) $canonical_term->term_id;
+		$block_attrs = wp_json_encode(
+			array(
+				'queryId'              => 1,
+				'query'                => array(
+					'perPage'                       => 9,
+					'pages'                         => 0,
+					'offset'                        => 0,
+					'postType'                      => 'product',
+					'order'                         => 'asc',
+					'orderBy'                       => 'title',
+					'search'                        => '',
+					'exclude'                       => array(),
+					'inherit'                       => false,
+					'taxQuery'                      => array(
+						CLEARANCE_STATUS_TAXONOMY => array( $term_id ),
+					),
+					'isProductCollectionBlock'      => true,
+					'featured'                      => false,
+					'woocommerceOnSale'             => false,
+					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
+					'woocommerceAttributes'         => array(),
+					'woocommerceHandPickedProducts' => array(),
+					'filterable'                    => false,
+					'relatedBy'                     => array(
+						'categories' => true,
+						'tags'       => true,
+					),
+				),
+				'tagName'              => 'div',
+				'displayLayout'        => array(
+					'type'          => 'flex',
+					'columns'       => 3,
+					'shrinkColumns' => true,
+				),
+				'dimensions'           => array(
+					'widthType' => 'fill',
+				),
+				'collection'           => 'wc-clearance/clearance',
+				'hideControls'         => array( 'inherit' ),
+				'queryContextIncludes' => array( 'collection' ),
+			)
+		);
+		// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
+		$post_content = '<!-- wp:woocommerce/product-collection ' . $block_attrs . ' -->' . "\n" .
+			'<div class="wp-block-woocommerce-product-collection"><!-- wp:woocommerce/product-template -->' . "\n" .
+			'<!-- wp:woocommerce/product-image {"showSaleBadge":false,"imageSizing":"thumbnail","isDescendentOfQueryLoop":true} -->' . "\n" .
+			'<!-- wp:woocommerce/product-sale-badge {"align":"right"} /-->' . "\n" .
+			'<!-- /wp:woocommerce/product-image -->' . "\n\n" .
+			'<!-- wp:post-title {"textAlign":"center","isLink":true,"style":{"spacing":{"margin":{"bottom":"0.75rem","top":"0"}},"typography":{"lineHeight":"1.4"}},"fontSize":"medium","__woocommerceNamespace":"woocommerce/product-collection/product-title"} /-->' . "\n\n" .
+			'<!-- wp:woocommerce/product-price {"isDescendentOfQueryLoop":true,"textAlign":"center","fontSize":"small"} /-->' . "\n\n" .
+			'<!-- wp:woocommerce/product-button {"textAlign":"center","isDescendentOfQueryLoop":true,"fontSize":"small"} /-->' . "\n" .
+			'<!-- /wp:woocommerce/product-template -->' . "\n\n" .
+			'<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->' . "\n" .
+			'<!-- wp:query-pagination-previous /-->' . "\n\n" .
+			'<!-- wp:query-pagination-numbers /-->' . "\n\n" .
+			'<!-- wp:query-pagination-next /-->' . "\n" .
+			'<!-- /wp:query-pagination -->' . "\n\n" .
+			'<!-- wp:woocommerce/product-collection-no-results -->' . "\n" .
+			'<!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"center","flexWrap":"wrap"}} -->' . "\n" .
+			'<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"medium"} -->' . "\n" .
+			'<p class="has-medium-font-size"><strong>No results found</strong></p>' . "\n" .
+			'<!-- /wp:paragraph -->' . "\n\n" .
+			'<!-- wp:paragraph -->' . "\n" .
+			'<p>You can try <a href="#" class="wc-link-clear-any-filters">clearing any filters</a> or head to our <a href="#" class="wc-link-stores-home">store&#8217;s home</a></p>' . "\n" .
+			'<!-- /wp:paragraph --></div>' . "\n" .
+			'<!-- /wp:group -->' . "\n" .
+			'<!-- /wp:woocommerce/product-collection-no-results --></div>' . "\n" .
+			'<!-- /wp:woocommerce/product-collection -->';
+		// phpcs:enable
+	} else {
+		$post_content = '[products is_clearance="yes"]';
+	}
+
 	$result = wp_insert_post(
 		array(
 			'post_title'   => __( 'Clearance', 'wc-clearance' ),
 			'post_name'    => 'clearance',
 			'post_status'  => 'draft',
-			'post_content' => '[products is_clearance="yes"]',
+			'post_content' => $post_content,
 			'post_type'    => 'page',
 		),
 		true

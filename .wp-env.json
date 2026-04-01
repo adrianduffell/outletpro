@@ -7,7 +7,8 @@
 		"https://gist.github.com/adrianduffell/d7d083eb64a73523c1659c4018706b39/archive/e667267e1f07fb25d280ae289a1b19be888fa25d.zip"
 	],
 	"themes": [
-		"WordPress/twentytwentyfive"
+		"WordPress/twentytwentyfive",
+		"https://downloads.wordpress.org/theme/storefront.zip"
 	],
 	"port": 1111,
 	"testsPort": 1112,
