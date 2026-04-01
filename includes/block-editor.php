@@ -77,9 +77,9 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
  * Auto-insert the clearance badge block after the product price in product templates.
  *
  * @internal WordPress filter hook
- * @param array<int, string>                $hooked_blocks     Blocks to insert.
- * @param string                            $relative_position Position relative to anchor block.
- * @param string|null                       $anchor_block      Anchor block name, or null when there is no anchor.
+ * @param array<int, string>                       $hooked_blocks     Blocks to insert.
+ * @param string                                   $relative_position Position relative to anchor block.
+ * @param string|null                              $anchor_block      Anchor block name, or null when there is no anchor.
  * @param \WP_Block_Template|\WP_Post|array<mixed> $_context     Template context.
  * @return array<int, string> Modified hooked blocks.
  */
