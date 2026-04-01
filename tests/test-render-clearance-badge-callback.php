@@ -6,7 +6,7 @@
  */
 
 use function WC_Clearance\add_to_clearance;
-use function WC_Clearance\block_editor_init;
+use function WC_Clearance\blocks_init;
 use function WC_Clearance\register_clearance_badge_block;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\render_clearance_badge_callback;
@@ -143,14 +143,14 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$this->assertSame( '', $result );
 	}
 
-	public function test_badge_is_registered_after_block_editor_init(): void {
+	public function test_badge_is_registered_after_blocks_init(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		unregister_block_type( 'wc-clearance/clearance-badge' );
 
 		// Act.
-		block_editor_init();
+		blocks_init();
 
 		// Assert.
 		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-badge' ) );

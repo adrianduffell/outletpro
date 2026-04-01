@@ -11,7 +11,6 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_inserted_after_product_price(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		block_editor_init();
 
 		// Act.
@@ -23,7 +22,6 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_not_inserted_before_product_price(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		block_editor_init();
 
 		// Act.
@@ -35,7 +33,6 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_not_inserted_after_other_blocks(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		block_editor_init();
 
 		// Act.
@@ -47,7 +44,6 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_existing_hooked_blocks_are_preserved(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		block_editor_init();
 		$initial_blocks = array( 'some/other-block' );
 
@@ -61,7 +57,6 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_not_inserted_when_anchor_block_is_null(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		block_editor_init();
 
 		// Act.
@@ -73,7 +68,6 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_not_inserted_when_context_is_wp_post(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		block_editor_init();
 		$post = self::factory()->post->create_and_get();
 

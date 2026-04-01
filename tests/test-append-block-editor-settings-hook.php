@@ -15,7 +15,6 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 	public function test_settings_contain_clearance_term_id(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		block_editor_init();
@@ -31,7 +30,6 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 	public function test_settings_unchanged_when_canonical_term_missing(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		register_clearance_status_taxonomy();
 		block_editor_init();
 		$initial_settings = array( 'foo' => 'bar' );
@@ -47,7 +45,6 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 	public function test_existing_settings_are_preserved(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		block_editor_init();
