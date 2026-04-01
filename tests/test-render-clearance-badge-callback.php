@@ -16,6 +16,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_product_not_in_clearance(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -39,6 +41,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_badge_html_when_product_is_in_clearance(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -64,6 +68,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_badge_uses_custom_text_attribute(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -89,6 +95,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_badge_uses_custom_color_attribute(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -113,6 +121,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$block = new WP_Block(
