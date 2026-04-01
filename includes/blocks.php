@@ -57,7 +57,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	$badge_text  = $attributes['badgeText'] ?? 'Clearance';
+	$badge_text  = $attributes['badgeText'] ?? __( 'Clearance', 'wc-clearance' );
 	$badge_color = $attributes['badgeColor'] ?? '#2145e6';
 	$style       = sprintf(
 		'background-color:%s;color:#ffffff;padding:4px 12px;border-radius:4px;display:inline-block;font-size:0.875rem;font-weight:600;',
