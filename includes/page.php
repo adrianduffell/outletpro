@@ -112,8 +112,13 @@ function create_clearance_page(): void {
 
 	if ( wp_is_block_theme() ) {
 		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-		$term_id        = $canonical_term instanceof \WP_Term ? (string) $canonical_term->term_id : '0'; // Fallback if term not yet seeded; taxQuery will match nothing.
-		$block_attrs    = wp_json_encode(
+
+		if ( ! ( $canonical_term instanceof \WP_Term ) ) {
+			throw new \RuntimeException( 'Could not resolve the canonical clearance status term.' );
+		}
+
+		$term_id     = (string) $canonical_term->term_id;
+		$block_attrs = wp_json_encode(
 			array(
 				'queryId'              => 1,
 				'query'                => array(

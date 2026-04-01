@@ -96,6 +96,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		switch_theme( 'twentytwentyfive' );
 		seed_clearance_status_taxonomy();
 		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		$this->assertInstanceOf( WP_Term::class, $canonical_term );
 		delete_option( CLEARANCE_PAGE_OPTION );
 
 		// Act.
@@ -112,6 +113,19 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
 		$this->assertStringContainsString( (string) $canonical_term->term_id, $pages[0]->post_content );
+	}
+
+	public function test_throws_runtime_exception_on_block_theme_when_canonical_term_missing(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		delete_option( CLEARANCE_PAGE_OPTION );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'Could not resolve the canonical clearance status term.' );
+
+		// Act.
+		create_clearance_page();
 	}
 
 	public function test_returns_success_message(): void {
