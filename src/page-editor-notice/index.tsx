@@ -49,7 +49,15 @@ export function ClearanceSectionEmptyNotice(): null {
 			const productsUrl = new URL( 'edit.php', window.location.href );
 			productsUrl.searchParams.set( 'post_type', 'product' );
 
-			dispatch( 'core/notices' ).createNotice(
+			(
+				dispatch( 'core/notices' ) as {
+					createNotice: (
+						status: string,
+						content: string,
+						options?: object
+					) => void;
+				}
+			 ).createNotice(
 				'warning',
 				'The clearance section is empty. Include products to see them on this page.',
 				{
