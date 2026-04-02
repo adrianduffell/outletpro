@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function blocks_init(): void {
 	register_clearance_badge_block();
+	add_filter( 'hooked_block_types', 'WC_Clearance\hooked_clearance_badge_hook', 10, 4 );
 }
 
 /**
@@ -30,6 +31,33 @@ function register_clearance_badge_block(): void {
 			'render_callback' => 'WC_Clearance\render_clearance_badge_callback',
 		)
 	);
+}
+
+/**
+ * Restrict the auto-hooked clearance badge block to the single product template only.
+ *
+ * @internal WordPress filter hook
+ * @param string[]    $hooked_blocks     Block names hooked to the anchor at this position.
+ * @param string      $relative_position Position relative to the anchor block.
+ * @param string      $anchor_block      Anchor block name.
+ * @param object|null $context           Block template or post context, or null.
+ * @return string[] Filtered hooked block names.
+ */
+function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, string $anchor_block, ?object $context ): array {
+	if ( 'woocommerce/product-price' !== $anchor_block || 'after' !== $relative_position ) {
+		return $hooked_blocks;
+	}
+
+	if ( ! $context instanceof \WP_Block_Template || 'single-product' !== $context->slug ) {
+		return array_values(
+			array_filter(
+				$hooked_blocks,
+				fn( $block ) => 'wc-clearance/clearance-badge' !== $block
+			)
+		);
+	}
+
+	return $hooked_blocks;
 }
 
 /**
