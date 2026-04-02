@@ -61,25 +61,17 @@ function init_customizer(): void {
 }
 
 /**
- * Register the clearance customizer panel, sections, settings and controls.
+ * Register the clearance customizer section, settings and controls.
  *
  * @param \WP_Customize_Manager $wp_customize Customizer manager instance.
  * @internal WordPress action hook
  */
 function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
-	$wp_customize->add_panel(
+	$wp_customize->add_section(
 		'wc_clearance',
 		array(
-			'title'    => __( 'Clearance Section', 'wc-clearance' ),
-			'priority' => 200,
-		)
-	);
-
-	$wp_customize->add_section(
-		'wc_clearance_general',
-		array(
-			'title' => __( 'General', 'wc-clearance' ),
-			'panel' => 'wc_clearance',
+			'title' => __( 'Clearance Section', 'wc-clearance' ),
+			'panel' => 'woocommerce',
 		)
 	);
 
@@ -96,16 +88,8 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		CLEARANCE_MESSAGE_OPTION,
 		array(
 			'label'   => __( 'Message', 'wc-clearance' ),
-			'section' => 'wc_clearance_general',
+			'section' => 'wc_clearance',
 			'type'    => 'text',
-		)
-	);
-
-	$wp_customize->add_section(
-		'wc_clearance_badge',
-		array(
-			'title' => __( 'Badge', 'wc-clearance' ),
-			'panel' => 'wc_clearance',
 		)
 	);
 
@@ -123,7 +107,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 			CLEARANCE_BADGE_TEXT_COLOUR_MOD,
 			array(
 				'label'   => __( 'Badge text colour', 'wc-clearance' ),
-				'section' => 'wc_clearance_badge',
+				'section' => 'wc_clearance',
 			)
 		)
 	);
@@ -142,7 +126,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 			CLEARANCE_BADGE_BG_COLOUR_MOD,
 			array(
 				'label'   => __( 'Badge background colour', 'wc-clearance' ),
-				'section' => 'wc_clearance_badge',
+				'section' => 'wc_clearance',
 			)
 		)
 	);

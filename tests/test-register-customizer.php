@@ -19,7 +19,7 @@ use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 
-	public function test_registers_wc_clearance_panel(): void {
+	public function test_registers_wc_clearance_section(): void {
 		// Arrange.
 		$wp_customize = new WP_Customize_Manager();
 
@@ -27,10 +27,10 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_panel( 'wc_clearance' ) );
+		$this->assertNotNull( $wp_customize->get_section( 'wc_clearance' ) );
 	}
 
-	public function test_registers_general_section(): void {
+	public function test_section_is_nested_in_woocommerce_panel(): void {
 		// Arrange.
 		$wp_customize = new WP_Customize_Manager();
 
@@ -38,18 +38,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_section( 'wc_clearance_general' ) );
-	}
-
-	public function test_registers_badge_section(): void {
-		// Arrange.
-		$wp_customize = new WP_Customize_Manager();
-
-		// Act.
-		register_customizer_hook( $wp_customize );
-
-		// Assert.
-		$this->assertNotNull( $wp_customize->get_section( 'wc_clearance_badge' ) );
+		$this->assertSame( 'woocommerce', $wp_customize->get_section( 'wc_clearance' )->panel );
 	}
 
 	public function test_registers_message_setting(): void {
