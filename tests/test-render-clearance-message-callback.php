@@ -16,9 +16,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_product_not_in_clearance(): void {
 		// Arrange.
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) ) {
-			unregister_block_type( 'wc-clearance/clearance-message' );
-		}
+		unregister_block_type( 'wc-clearance/clearance-message' );
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -43,9 +41,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_message_html_when_product_is_in_clearance(): void {
 		// Arrange.
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) ) {
-			unregister_block_type( 'wc-clearance/clearance-message' );
-		}
+		unregister_block_type( 'wc-clearance/clearance-message' );
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -72,9 +68,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_message_uses_custom_message_attribute(): void {
 		// Arrange.
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) ) {
-			unregister_block_type( 'wc-clearance/clearance-message' );
-		}
+		unregister_block_type( 'wc-clearance/clearance-message' );
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -101,9 +95,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {
 		// Arrange.
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) ) {
-			unregister_block_type( 'wc-clearance/clearance-message' );
-		}
+		unregister_block_type( 'wc-clearance/clearance-message' );
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -129,9 +121,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) ) {
-			unregister_block_type( 'wc-clearance/clearance-message' );
-		}
+		unregister_block_type( 'wc-clearance/clearance-message' );
 
 		// Act.
 		blocks_init();
@@ -142,9 +132,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_message_is_wrapped_in_paragraph_tag(): void {
 		// Arrange.
-		if ( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) ) {
-			unregister_block_type( 'wc-clearance/clearance-message' );
-		}
+		unregister_block_type( 'wc-clearance/clearance-message' );
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();

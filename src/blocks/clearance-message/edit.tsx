@@ -24,7 +24,7 @@ export function Edit( { attributes, setAttributes }: EditProps ): JSX.Element {
 				setAttributes( { message: value } )
 			}
 			placeholder={ __(
-				'Choose carefully! Clearance products are ineligible for returns',
+				'Enter clearance message text.',
 				'wc-clearance'
 			) }
 		/>
