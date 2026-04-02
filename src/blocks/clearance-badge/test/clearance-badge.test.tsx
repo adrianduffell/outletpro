@@ -1,9 +1,10 @@
+import type { ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Edit } from '../edit';
 
 jest.mock( '@wordpress/block-editor', () => ( {
 	useBlockProps: jest.fn( ( props ) => props ?? {} ),
-	InspectorControls: ( { children }: { children: React.ReactNode } ) => (
+	InspectorControls: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
 	),
 	RichText: ( {
@@ -29,10 +30,10 @@ jest.mock( '@wordpress/components', () => ( {
 	BaseControl: ( {
 		children,
 	}: {
-		children: React.ReactNode;
+		children: ReactNode;
 		label?: string;
 	} ) => <div>{ children }</div>,
-	PanelBody: ( { children }: { children: React.ReactNode } ) => (
+	PanelBody: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
 	),
 	TextControl: ( {
