@@ -1,0 +1,45 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wc-clearance/clearance-message",
+	"title": "Clearance Message",
+	"category": "woocommerce",
+	"description": "Displays a message when a product is in the clearance section.",
+	"usesContext": [ "postId" ],
+	"supports": {
+		"html": false,
+		"color": {
+			"background": true,
+			"text": true,
+			"gradients": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"fontWeight": true,
+			"textTransform": true,
+			"textDecoration": true,
+			"letterSpacing": true,
+			"__experimentalFontFamily": true
+		},
+		"spacing": {
+			"padding": true,
+			"margin": true
+		}
+	},
+	"attributes": {
+		"message": {
+			"type": "string",
+			"default": "Choose carefully! Clearance products are ineligible for returns"
+		},
+		"style": {
+			"type": "object",
+			"default": {
+				"typography": {
+					"fontWeight": "700"
+				}
+			}
+		}
+	},
+	"textdomain": "wc-clearance"
+}
