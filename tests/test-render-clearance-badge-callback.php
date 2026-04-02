@@ -50,7 +50,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'wc-clearance/clearance-badge',
-				'attrs'        => array(),
+				'attrs'        => array( 'label' => 'Clearance' ),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),
@@ -59,7 +59,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = render_clearance_badge_callback( array( 'label' => 'Clearance' ), '', $block );
+		$result = $block->render();
 
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-badge', $result );
@@ -77,7 +77,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'wc-clearance/clearance-badge',
-				'attrs'        => array(),
+				'attrs'        => array( 'label' => 'Sale' ),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),
@@ -86,7 +86,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = render_clearance_badge_callback( array( 'label' => 'Sale' ), '', $block );
+		$result = $block->render();
 
 		// Assert.
 		$this->assertStringContainsString( 'Sale', $result );
