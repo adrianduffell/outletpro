@@ -1,6 +1,8 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
-import { BaseControl, PanelBody, TextControl } from '@wordpress/components';
+import {
+	useBlockProps,
+	RichText,
+} from '@wordpress/block-editor';
 
 interface Attributes {
 	label: string;
@@ -27,9 +29,7 @@ export function Edit( { attributes, setAttributes }: EditProps ): JSX.Element {
 				{ ...blockProps }
 				tagName="span"
 				value={ label }
-				onChange={ ( value ) =>
-					setAttributes( { label: value } )
-				}
+				onChange={ ( value ) => setAttributes( { label: value } ) }
 				placeholder={ __( 'Label', 'wc-clearance' ) }
 			/>
 		</>

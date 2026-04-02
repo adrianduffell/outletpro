@@ -74,9 +74,7 @@ describe( 'Edit', () => {
 		);
 
 		// Assert.
-		expect(
-			screen.getByDisplayValue( 'Clearance' )
-		).toBeInTheDocument();
+		expect( screen.getByDisplayValue( 'Clearance' ) ).toBeInTheDocument();
 	} );
 
 	test( 'renders badge with custom label attribute', () => {
@@ -92,9 +90,7 @@ describe( 'Edit', () => {
 		);
 
 		// Assert.
-		expect(
-			screen.getByDisplayValue( 'Sale' )
-		).toBeInTheDocument();
+		expect( screen.getByDisplayValue( 'Sale' ) ).toBeInTheDocument();
 	} );
 
 	test( 'calls setAttributes with new label when content changes', () => {
