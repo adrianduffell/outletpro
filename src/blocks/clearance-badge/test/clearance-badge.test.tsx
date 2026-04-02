@@ -27,12 +27,9 @@ jest.mock( '@wordpress/block-editor', () => ( {
 } ) );
 
 jest.mock( '@wordpress/components', () => ( {
-	BaseControl: ( {
-		children,
-	}: {
-		children: ReactNode;
-		label?: string;
-	} ) => <div>{ children }</div>,
+	BaseControl: ( { children }: { children: ReactNode; label?: string } ) => (
+		<div>{ children }</div>
+	),
 	PanelBody: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
 	),
