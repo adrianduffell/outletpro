@@ -6,21 +6,32 @@ jest.mock( '@wordpress/block-editor', () => ( {
 	InspectorControls: ( { children }: { children: React.ReactNode } ) => (
 		<div>{ children }</div>
 	),
+	RichText: ( {
+		value,
+		onChange,
+		placeholder,
+	}: {
+		value: string;
+		onChange: ( v: string ) => void;
+		placeholder?: string;
+		[ key: string ]: unknown;
+	} ) => (
+		<input
+			type="text"
+			value={ value }
+			placeholder={ placeholder }
+			onChange={ ( e ) => onChange( e.target.value ) }
+		/>
+	),
 } ) );
 
 jest.mock( '@wordpress/components', () => ( {
 	BaseControl: ( {
 		children,
-		label,
 	}: {
 		children: React.ReactNode;
-		label: string;
-	} ) => (
-		<div>
-			<div>{ label }</div>
-			{ children }
-		</div>
-	),
+		label?: string;
+	} ) => <div>{ children }</div>,
 	PanelBody: ( { children }: { children: React.ReactNode } ) => (
 		<div>{ children }</div>
 	),
@@ -33,13 +44,11 @@ jest.mock( '@wordpress/components', () => ( {
 		value: string;
 		onChange: ( v: string ) => void;
 	} ) => (
-		<div>
-			<input
-				aria-label={ label }
-				value={ value }
-				onChange={ ( e ) => onChange( e.target.value ) }
-			/>
-		</div>
+		<input
+			aria-label={ label }
+			value={ value }
+			onChange={ ( e ) => onChange( e.target.value ) }
+		/>
 	),
 } ) );
 
@@ -49,11 +58,10 @@ jest.mock( '@wordpress/i18n', () => ( {
 
 describe( 'Edit', () => {
 	const defaultAttributes = {
-		badgeText: 'Clearance',
-		badgeColor: '#2145e6',
+		label: 'Clearance',
 	};
 
-	test( 'renders badge with default badge text', () => {
+	test( 'renders badge with default label', () => {
 		// Arrange.
 		const setAttributes = jest.fn();
 
@@ -66,43 +74,30 @@ describe( 'Edit', () => {
 		);
 
 		// Assert.
-		expect( screen.getByText( 'Clearance' ) ).toBeInTheDocument();
+		expect(
+			screen.getByDisplayValue( 'Clearance' )
+		).toBeInTheDocument();
 	} );
 
-	test( 'renders badge with custom badge text attribute', () => {
+	test( 'renders badge with custom label attribute', () => {
 		// Arrange.
 		const setAttributes = jest.fn();
 
 		// Act.
 		render(
 			<Edit
-				attributes={ { ...defaultAttributes, badgeText: 'Sale' } }
+				attributes={ { label: 'Sale' } }
 				setAttributes={ setAttributes }
 			/>
 		);
 
 		// Assert.
-		expect( screen.getByText( 'Sale' ) ).toBeInTheDocument();
+		expect(
+			screen.getByDisplayValue( 'Sale' )
+		).toBeInTheDocument();
 	} );
 
-	test( 'renders badge with custom badge color as inline style', () => {
-		// Arrange.
-		const setAttributes = jest.fn();
-
-		// Act.
-		render(
-			<Edit
-				attributes={ { ...defaultAttributes, badgeColor: '#ff0000' } }
-				setAttributes={ setAttributes }
-			/>
-		);
-
-		// Assert.
-		const badge = screen.getByText( 'Clearance' );
-		expect( badge ).toHaveStyle( { backgroundColor: '#ff0000' } );
-	} );
-
-	test( 'calls setAttributes with new badge text when text control changes', () => {
+	test( 'calls setAttributes with new label when content changes', () => {
 		// Arrange.
 		const setAttributes = jest.fn();
 		render(
@@ -111,38 +106,14 @@ describe( 'Edit', () => {
 				setAttributes={ setAttributes }
 			/>
 		);
-		const textInput = screen.getByRole( 'textbox', {
-			name: 'Badge Text',
-		} );
+		const input = screen.getByDisplayValue( 'Clearance' );
 
 		// Act.
-		fireEvent.change( textInput, { target: { value: 'Discounted' } } );
+		fireEvent.change( input, { target: { value: 'Discounted' } } );
 
 		// Assert.
 		expect( setAttributes ).toHaveBeenCalledWith( {
-			badgeText: 'Discounted',
-		} );
-	} );
-
-	test( 'calls setAttributes with new badge color when color input changes', () => {
-		// Arrange.
-		const setAttributes = jest.fn();
-		render(
-			<Edit
-				attributes={ defaultAttributes }
-				setAttributes={ setAttributes }
-			/>
-		);
-		const colorInput = document.getElementById(
-			'wc-clearance-badge-color'
-		);
-
-		// Act.
-		fireEvent.change( colorInput!, { target: { value: '#abcdef' } } );
-
-		// Assert.
-		expect( setAttributes ).toHaveBeenCalledWith( {
-			badgeColor: '#abcdef',
+			label: 'Discounted',
 		} );
 	} );
 } );

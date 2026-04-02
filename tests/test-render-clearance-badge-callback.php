@@ -59,14 +59,14 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = render_clearance_badge_callback( array(), '', $block );
+		$result = render_clearance_badge_callback( array( 'label' => 'Clearance' ), '', $block );
 
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-badge', $result );
 		$this->assertStringContainsString( 'Clearance', $result );
 	}
 
-	public function test_badge_uses_custom_text_attribute(): void {
+	public function test_badge_uses_custom_label_attribute(): void {
 		// Arrange.
 		unregister_block_type( 'wc-clearance/clearance-badge' );
 		register_clearance_badge_block();
@@ -86,64 +86,11 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = render_clearance_badge_callback( array( 'badgeText' => 'Sale' ), '', $block );
+		$result = render_clearance_badge_callback( array( 'label' => 'Sale' ), '', $block );
 
 		// Assert.
 		$this->assertStringContainsString( 'Sale', $result );
-		$this->assertStringNotContainsString( '>Clearance<', $result );
-	}
-
-	public function test_badge_uses_custom_color_attribute(): void {
-		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
-		register_clearance_badge_block();
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$block = new WP_Block(
-			array(
-				'blockName'    => 'wc-clearance/clearance-badge',
-				'attrs'        => array(),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			),
-			array( 'postId' => $product->get_id() )
-		);
-
-		// Act.
-		$result = render_clearance_badge_callback( array( 'badgeColor' => '#ff0000' ), '', $block );
-
-		// Assert.
-		$this->assertStringContainsString( '#ff0000', $result );
-	}
-
-	public function test_badge_falls_back_to_default_color_for_invalid_color_attribute(): void {
-		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
-		register_clearance_badge_block();
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$block = new WP_Block(
-			array(
-				'blockName'    => 'wc-clearance/clearance-badge',
-				'attrs'        => array(),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			),
-			array( 'postId' => $product->get_id() )
-		);
-
-		// Act.
-		$result = render_clearance_badge_callback( array( 'badgeColor' => 'not-a-color;position:fixed' ), '', $block );
-
-		// Assert.
-		$this->assertStringContainsString( '#2145e6', $result );
-		$this->assertStringNotContainsString( 'not-a-color', $result );
+		$this->assertStringNotContainsString( 'Clearance', $result );
 	}
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {
