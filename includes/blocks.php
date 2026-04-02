@@ -48,13 +48,9 @@ function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_pos
 		return $hooked_blocks;
 	}
 
+	// Only auto-insert on the single product template; remove the badge from all other templates.
 	if ( ! $context instanceof \WP_Block_Template || 'single-product' !== $context->slug ) {
-		return array_values(
-			array_filter(
-				$hooked_blocks,
-				fn( $block ) => 'wc-clearance/clearance-badge' !== $block
-			)
-		);
+		return array_values( array_diff( $hooked_blocks, array( 'wc-clearance/clearance-badge' ) ) );
 	}
 
 	return $hooked_blocks;
