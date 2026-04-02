@@ -1,6 +1,6 @@
 <?php
 /**
- * Classic theme frontend functions.
+ * WooCommerce template hook functions.
  *
  * @package WC_Clearance
  */
