@@ -26,7 +26,9 @@ export function Edit( { attributes, setAttributes }: EditProps ): JSX.Element {
 				{ ...blockProps }
 				tagName="span"
 				value={ label }
-				onChange={ ( value: string ) => setAttributes( { label: value } ) }
+				onChange={ ( value: string ) =>
+					setAttributes( { label: value } )
+				}
 				placeholder={ __( 'Label', 'wc-clearance' ) }
 			/>
 		</>
