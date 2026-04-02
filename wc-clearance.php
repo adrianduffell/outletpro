@@ -40,6 +40,7 @@ require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';
 require_once __DIR__ . '/includes/block-editor.php';
 require_once __DIR__ . '/includes/blocks.php';
+require_once __DIR__ . '/includes/classic-theme.php';
 
 /**
  * Initialize the plugin.
@@ -55,6 +56,7 @@ function init_hook(): void {
 	init_shortcodes();
 	blocks_init();
 	block_editor_init();
+	classic_theme_init();
 	try {
 		init_setup_task();
 	} catch ( \Throwable $e ) {
