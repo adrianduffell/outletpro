@@ -6,6 +6,9 @@
 	"category": "woocommerce",
 	"description": "Displays a badge when a product is in the clearance section.",
 	"usesContext": [ "postId" ],
+	"blockHooks": {
+		"woocommerce/product-price": "after"
+	},
 	"supports": {
 		"html": false,
 		"spacing": {
