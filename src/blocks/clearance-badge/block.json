@@ -1,0 +1,60 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wc-clearance/clearance-badge",
+	"title": "Clearance Badge",
+	"category": "woocommerce",
+	"description": "Displays a badge when a product is in the clearance section.",
+	"usesContext": [ "postId" ],
+	"supports": {
+		"html": false,
+		"spacing": {
+			"padding": true,
+			"margin": true
+		},
+		"color": {
+			"background": true,
+			"text": true,
+			"gradients": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"fontWeight": true,
+			"textTransform": true,
+			"textDecoration": true,
+			"letterSpacing": true
+		}
+	},
+	"attributes": {
+		"label": {
+			"type": "string",
+			"default": "Clearance"
+		},
+		"style": {
+			"type": "object",
+			"default": {
+				"color": {
+					"background": "#2145e6",
+					"text": "#ffffff"
+				},
+				"spacing": {
+					"padding": {
+						"top": "4px",
+						"right": "12px",
+						"bottom": "4px",
+						"left": "12px"
+					}
+				},
+				"typography": {
+					"fontSize": "0.875rem"
+				},
+				"border": {
+					"radius": "4px"
+				}
+			}
+		}
+
+	},
+	"textdomain": "wc-clearance"
+}
