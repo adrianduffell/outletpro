@@ -27,13 +27,15 @@ function blocks_init(): void {
 function reset_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
-	if ( $registry->is_registered( 'wc-clearance/clearance-badge' ) ) {
-		unregister_block_type( 'wc-clearance/clearance-badge' );
-	}
+	$blocks = array_filter(
+		array(
+			'wc-clearance/clearance-badge',
+			'wc-clearance/clearance-message',
+		),
+		array( $registry, 'is_registered' )
+	);
 
-	if ( $registry->is_registered( 'wc-clearance/clearance-message' ) ) {
-		unregister_block_type( 'wc-clearance/clearance-message' );
-	}
+	array_map( 'unregister_block_type', $blocks );
 }
 
 /**
