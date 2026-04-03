@@ -25,8 +25,15 @@ function blocks_init(): void {
  * @since 1.0.0
  */
 function reset_blocks(): void {
-	unregister_block_type( 'wc-clearance/clearance-badge' );
-	unregister_block_type( 'wc-clearance/clearance-message' );
+	$registry = \WP_Block_Type_Registry::get_instance();
+
+	if ( $registry->is_registered( 'wc-clearance/clearance-badge' ) ) {
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+	}
+
+	if ( $registry->is_registered( 'wc-clearance/clearance-message' ) ) {
+		unregister_block_type( 'wc-clearance/clearance-message' );
+	}
 }
 
 /**

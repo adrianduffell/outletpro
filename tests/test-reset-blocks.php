@@ -33,9 +33,7 @@ class Test_Reset_Blocks extends WP_UnitTestCase {
 	}
 
 	public function test_calling_reset_blocks_when_blocks_not_registered_is_safe(): void {
-		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
-		unregister_block_type( 'wc-clearance/clearance-message' );
+		// Arrange - blocks are not registered (fresh state, no blocks_init() called).
 
 		// Act.
 		reset_blocks();
