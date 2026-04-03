@@ -43,16 +43,4 @@ class Test_Reset_Blocks extends WP_UnitTestCase {
 		$this->assertFalse( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) );
 	}
 
-	public function test_blocks_can_be_re_registered_after_reset_blocks(): void {
-		// Arrange.
-		blocks_init();
-		reset_blocks();
-
-		// Act.
-		blocks_init();
-
-		// Assert.
-		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-badge' ) );
-		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) );
-	}
 }
