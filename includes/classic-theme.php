@@ -41,7 +41,7 @@ function display_clearance_badge_hook(): void {
 	}
 
 	printf(
-		'<span class="wc-clearance-product-badge" style="display:inline-block; border-radius:9999px; padding:0.25em 0.75em; background-color:#d63638; color:#fff; font-size:0.875em;">%s</span>',
-		esc_html__( 'Choose carefully! Clearance products are ineligible for returns.', 'wc-clearance' )
+		'<p><span class="wc-clearance-product-badge" style="background-color:#FFEE85; color:#222; display:inline-block; border-radius:2px; padding:0.35em 0.5em 0.42em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
+		esc_html__( 'Clearance', 'wc-clearance' )
 	);
 }
