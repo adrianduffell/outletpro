@@ -14,6 +14,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_displays_message_for_clearance_product(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -30,6 +31,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_contains_clearance_text(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -46,6 +48,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_display_message_for_non_clearance_product(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
@@ -61,6 +64,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_display_message_when_post_is_not_a_product(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$post_id         = self::factory()->post->create();
