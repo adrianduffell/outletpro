@@ -56,7 +56,7 @@ function init_hook(): void {
 	init_shortcodes();
 	blocks_init();
 	block_editor_init();
-	init_classic_themes();
+	init_woocommerce_template_hooks();
 	try {
 		init_setup_task();
 	} catch ( \Throwable $e ) {
