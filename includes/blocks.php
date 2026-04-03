@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function blocks_init(): void {
 	register_clearance_badge_block();
-  register_clearance_message_block();
+	register_clearance_message_block();
 	add_filter( 'hooked_block_types', 'WC_Clearance\auto_insert_clearance_badge_hook', 10, 4 );
 }
 
