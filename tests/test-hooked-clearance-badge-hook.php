@@ -22,6 +22,17 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( $block_type->block_hooks );
 	}
 
+	public function test_badge_is_not_added_when_context_is_array(): void {
+		// Arrange.
+		blocks_init();
+
+		// Act: WordPress can pass an array (e.g. pattern context) — must not cause a fatal.
+		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', array() );
+
+		// Assert.
+		$this->assertNotContains( 'wc-clearance/clearance-badge', $result );
+	}
+
 	public function test_badge_is_not_added_when_context_is_null(): void {
 		// Arrange.
 		blocks_init();

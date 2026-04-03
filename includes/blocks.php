@@ -40,10 +40,10 @@ function register_clearance_badge_block(): void {
  * @param string[]    $hooked_blocks     Block names hooked to the anchor at this position.
  * @param string      $relative_position Position relative to the anchor block.
  * @param string      $anchor_block      Anchor block name.
- * @param object|null $context           Block template or post context, or null.
+ * @param \WP_Block_Template|array|null $context Block template or post context, or null.
  * @return string[] Filtered hooked block names.
  */
-function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, string $anchor_block, ?object $context ): array {
+function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, string $anchor_block, $context ): array {
 	if ( 'woocommerce/product-price' !== $anchor_block || 'after' !== $relative_position ) {
 		return $hooked_blocks;
 	}
