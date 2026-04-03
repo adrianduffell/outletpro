@@ -34,7 +34,7 @@ function register_clearance_badge_block(): void {
 }
 
 /**
- * Restrict the auto-hooked clearance badge block to the single product template only.
+ * Auto-insert the clearance badge block after the product price on the single product template.
  *
  * @internal WordPress filter hook
  * @param string[]    $hooked_blocks     Block names hooked to the anchor at this position.
@@ -48,9 +48,9 @@ function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_pos
 		return $hooked_blocks;
 	}
 
-	// Only auto-insert on the single product template; remove the badge from all other templates.
-	if ( ! $context instanceof \WP_Block_Template || 'single-product' !== $context->slug ) {
-		return array_values( array_diff( $hooked_blocks, array( 'wc-clearance/clearance-badge' ) ) );
+	// Only auto-insert the badge on the single product template.
+	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
+		$hooked_blocks[] = 'wc-clearance/clearance-badge';
 	}
 
 	return $hooked_blocks;
