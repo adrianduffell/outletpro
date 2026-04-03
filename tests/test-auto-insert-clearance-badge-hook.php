@@ -19,7 +19,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 		// Act.
 		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
 
-		// Assert: the PHP filter is the sole source of truth; block.json must not declare blockHooks.
+		// Assert.
 		$this->assertEmpty( $block_type->block_hooks );
 	}
 
@@ -28,7 +28,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 		reset_blocks();
 		blocks_init();
 
-		// Act: WordPress can pass an array (e.g. pattern context) — must not cause a fatal.
+		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', array() );
 
 		// Assert.
