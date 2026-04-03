@@ -41,6 +41,7 @@ require_once __DIR__ . '/includes/admin-product-list-table.php';
 require_once __DIR__ . '/includes/block-editor.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/customizer.php';
+require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
 
 /**
  * Initialize the plugin.
