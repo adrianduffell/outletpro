@@ -14,6 +14,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		remove_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 
 		// Act.
@@ -25,63 +26,68 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_outputs_badge_html_for_clearance_product(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
+		$product         = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
-		remove_all_actions( 'woocommerce_single_product_summary' );
+		$GLOBALS['post'] = get_post( $product->get_id() );
 		init_woocommerce_template_hooks();
-		global $post;
-		$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		setup_postdata( $post );
 
 		// Expect.
 		$this->expectOutputRegex( '/wc-clearance-badge/' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
-
-		wp_reset_postdata();
 	}
 
 	public function test_outputs_clearance_message_for_clearance_product(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
+		$product         = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
-		remove_all_actions( 'woocommerce_single_product_summary' );
+		$GLOBALS['post'] = get_post( $product->get_id() );
 		init_woocommerce_template_hooks();
-		global $post;
-		$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		setup_postdata( $post );
 
 		// Expect.
 		$this->expectOutputRegex( '/Choose carefully! Clearance products are ineligible for returns\./' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
-
-		wp_reset_postdata();
 	}
 
 	public function test_outputs_nothing_for_non_clearance_product(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
-		remove_all_actions( 'woocommerce_single_product_summary' );
+		$product         = WC_Helper_Product::create_simple_product();
+		$GLOBALS['post'] = get_post( $product->get_id() );
 		init_woocommerce_template_hooks();
-		global $post;
-		$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-		setup_postdata( $post );
 
 		// Expect.
 		$this->expectOutputString( '' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
+	}
 
-		wp_reset_postdata();
+	public function test_does_not_output_badge_for_block_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product         = WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$GLOBALS['post'] = get_post( $product->get_id() );
+		init_woocommerce_template_hooks();
+
+		// Expect.
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-badge).*/s' ); // Does not contain the badge.
+
+		// Act.
+		do_action( 'woocommerce_single_product_summary' );
 	}
 }
