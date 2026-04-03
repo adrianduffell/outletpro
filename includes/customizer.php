@@ -17,6 +17,13 @@ defined( 'ABSPATH' ) || exit;
 const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
 
 /**
+ * WordPress option key used to store the badge label text.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
+
+/**
  * Theme mod key used to store the badge text colour.
  *
  * @since 1.0.0
@@ -36,6 +43,13 @@ const CLEARANCE_BADGE_BG_COLOUR_MOD = 'wc_clearance_badge_bg_colour';
  * @since 1.0.0
  */
 const CLEARANCE_MESSAGE_DEFAULT = 'Not eligible for change of mind returns.';
+
+/**
+ * Default badge label text.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_BADGE_LABEL_DEFAULT = 'Clearance';
 
 /**
  * Default badge text colour (dark).
@@ -88,6 +102,24 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		CLEARANCE_MESSAGE_OPTION,
 		array(
 			'label'   => __( 'Message', 'wc-clearance' ),
+			'section' => 'wc_clearance',
+			'type'    => 'text',
+		)
+	);
+
+	$wp_customize->add_setting(
+		CLEARANCE_BADGE_LABEL_OPTION,
+		array(
+			'type'              => 'option',
+			'default'           => CLEARANCE_BADGE_LABEL_DEFAULT,
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	$wp_customize->add_control(
+		CLEARANCE_BADGE_LABEL_OPTION,
+		array(
+			'label'   => __( 'Badge label', 'wc-clearance' ),
 			'section' => 'wc_clearance',
 			'type'    => 'text',
 		)
@@ -160,4 +192,14 @@ function get_badge_text_colour(): string {
 function get_badge_bg_colour(): string {
 	$value = get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT );
 	return is_string( $value ) ? $value : CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+}
+
+/**
+ * Get the badge label text.
+ *
+ * @since 1.0.0
+ */
+function get_badge_label(): string {
+	$value = get_option( CLEARANCE_BADGE_LABEL_OPTION, CLEARANCE_BADGE_LABEL_DEFAULT );
+	return is_string( $value ) ? $value : CLEARANCE_BADGE_LABEL_DEFAULT;
 }

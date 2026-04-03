@@ -49,7 +49,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/Choose carefully! Clearance products are ineligible for returns\./' );
+		$this->expectOutputRegex( '/Not eligible for change of mind returns\./' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );

@@ -6,12 +6,15 @@
  */
 
 use function WC_Clearance\get_badge_bg_colour;
+use function WC_Clearance\get_badge_label;
 use function WC_Clearance\get_badge_text_colour;
 use function WC_Clearance\get_clearance_message;
 use function WC_Clearance\init_customizer;
 use function WC_Clearance\register_customizer_hook;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_MOD;
+use const WC_Clearance\CLEARANCE_BADGE_LABEL_DEFAULT;
+use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_MOD;
 use const WC_Clearance\CLEARANCE_MESSAGE_DEFAULT;
@@ -215,5 +218,60 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '#123456', $result );
+	}
+
+	public function test_registers_badge_label_setting(): void {
+		// Arrange.
+		$wp_customize = new WP_Customize_Manager();
+
+		// Act.
+		register_customizer_hook( $wp_customize );
+
+		// Assert.
+		$this->assertNotNull( $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION ) );
+	}
+
+	public function test_badge_label_setting_type_is_option(): void {
+		// Arrange.
+		$wp_customize = new WP_Customize_Manager();
+
+		// Act.
+		register_customizer_hook( $wp_customize );
+
+		// Assert.
+		$this->assertSame( 'option', $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION )->type );
+	}
+
+	public function test_badge_label_setting_default(): void {
+		// Arrange.
+		$wp_customize = new WP_Customize_Manager();
+
+		// Act.
+		register_customizer_hook( $wp_customize );
+
+		// Assert.
+		$this->assertSame( CLEARANCE_BADGE_LABEL_DEFAULT, $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION )->default );
+	}
+
+	public function test_get_badge_label_returns_default_when_option_not_set(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+
+		// Act.
+		$result = get_badge_label();
+
+		// Assert.
+		$this->assertSame( CLEARANCE_BADGE_LABEL_DEFAULT, $result );
+	}
+
+	public function test_get_badge_label_returns_stored_value(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'On Sale' );
+
+		// Act.
+		$result = get_badge_label();
+
+		// Assert.
+		$this->assertSame( 'On Sale', $result );
 	}
 }

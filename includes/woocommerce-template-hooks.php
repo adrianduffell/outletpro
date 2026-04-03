@@ -41,8 +41,10 @@ function display_clearance_badge_hook(): void {
 	}
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:#FFEE85; color:#222; display:inline-block; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
-		esc_html__( 'Clearance', 'wc-clearance' )
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; display:inline-block; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
+		esc_attr( get_badge_bg_colour() ),
+		esc_attr( get_badge_text_colour() ),
+		esc_html( get_badge_label() )
 	);
 }
 
@@ -72,5 +74,5 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	echo '<p class="wc-clearance-product-message" style="font-weight:bold;">' . esc_html__( 'Choose carefully! Clearance products are ineligible for returns.', 'wc-clearance' ) . '</p>';
+	echo '<p class="wc-clearance-product-message" style="font-weight:bold;">' . esc_html( get_clearance_message() ) . '</p>';
 }
