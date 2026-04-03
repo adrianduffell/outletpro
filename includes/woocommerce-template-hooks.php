@@ -15,6 +15,9 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_woocommerce_template_hooks(): void {
+	if ( wp_is_block_theme() ) {
+		return;
+	}
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_message_hook', 19 );
 }
