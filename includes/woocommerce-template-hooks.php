@@ -36,7 +36,11 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	if ( ! is_clearance( $product ) ) {
+	try {
+		if ( ! is_clearance( $product ) ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
 		return;
 	}
 
