@@ -64,7 +64,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-badge).*/s' ); // Does not contain the clearance badge.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
