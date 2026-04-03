@@ -121,6 +121,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		unregister_block_type( 'wc-clearance/clearance-message' );
 
 		// Act.
