@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function blocks_init(): void {
 	register_clearance_badge_block();
-	add_filter( 'hooked_block_types', 'WC_Clearance\hooked_clearance_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_types', 'WC_Clearance\auto_insert_clearance_badge_hook', 10, 4 );
 }
 
 /**
@@ -44,7 +44,7 @@ function register_clearance_badge_block(): void {
  * @param \WP_Block_Template|array|null $context Block template or post context, or null.
  * @return string[] Filtered hooked block names.
  */
-function hooked_clearance_badge_hook( array $hooked_blocks, string $relative_position, string $anchor_block, $context ): array {
+function auto_insert_clearance_badge_hook( array $hooked_blocks, string $relative_position, string $anchor_block, $context ): array {
 	if ( 'woocommerce/product-price' !== $anchor_block || 'after' !== $relative_position ) {
 		return $hooked_blocks;
 	}

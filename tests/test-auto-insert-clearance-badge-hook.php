@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for hooked_clearance_badge_hook().
+ * Tests for auto_insert_clearance_badge_hook().
  *
  * @package WC_Clearance
  */
@@ -8,7 +8,7 @@
 use function WC_Clearance\blocks_init;
 use function WC_Clearance\register_clearance_badge_block;
 
-class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
+class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_clearance_badge_has_no_block_hooks_declaration(): void {
 		// Arrange.
