@@ -38,18 +38,18 @@ const CLEARANCE_BADGE_BG_COLOUR_MOD = 'wc_clearance_badge_bg_colour';
 const CLEARANCE_MESSAGE_DEFAULT = 'Not eligible for change of mind returns.';
 
 /**
- * Default badge text colour (white).
+ * Default badge text colour (dark).
  *
  * @since 1.0.0
  */
-const CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT = '#ffffff';
+const CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT = '#222';
 
 /**
- * Default badge background colour (blue).
+ * Default badge background colour (yellow).
  *
  * @since 1.0.0
  */
-const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#0000ff';
+const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
 
 /**
  * Helper to initialize customizer integration.
