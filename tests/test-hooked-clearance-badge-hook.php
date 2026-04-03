@@ -24,6 +24,7 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_when_context_is_array(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		blocks_init();
 
 		// Act: WordPress can pass an array (e.g. pattern context) — must not cause a fatal.
@@ -35,6 +36,7 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_when_context_is_null(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		blocks_init();
 
 		// Act.
@@ -46,6 +48,7 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_when_template_is_not_single_product(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
@@ -59,6 +62,7 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_added_when_template_is_single_product(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
@@ -72,6 +76,7 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_other_hooked_blocks_are_not_filtered(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
@@ -85,6 +90,7 @@ class Test_Hooked_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_for_different_anchor(): void {
 		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
