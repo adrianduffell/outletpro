@@ -21,6 +21,24 @@ function blocks_init(): void {
 }
 
 /**
+ * Helper to reset blocks back to the uninitialized state.
+ *
+ * @since 1.0.0
+ */
+function reset_blocks(): void {
+	$registry = \WP_Block_Type_Registry::get_instance();
+
+	// Unregister all blocks in the wc-clearance namespace.
+	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
+		if ( 0 !== strpos( $block_name, 'wc-clearance/' ) ) {
+			continue;
+		}
+
+		unregister_block_type( $block_name );
+	}
+}
+
+/**
  * Register the clearance badge block type.
  *
  * @since 1.0.0
