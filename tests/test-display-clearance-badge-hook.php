@@ -14,7 +14,6 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
-		switch_theme( 'storefront' );
 		remove_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 
 		// Act.
@@ -26,7 +25,6 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_outputs_badge_html_for_clearance_product(): void {
 		// Arrange.
-		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product         = WC_Helper_Product::create_simple_product();
@@ -43,7 +41,6 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_outputs_clearance_message_for_clearance_product(): void {
 		// Arrange.
-		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product         = WC_Helper_Product::create_simple_product();
@@ -60,7 +57,6 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_outputs_nothing_for_non_clearance_product(): void {
 		// Arrange.
-		switch_theme( 'storefront' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product         = WC_Helper_Product::create_simple_product();
