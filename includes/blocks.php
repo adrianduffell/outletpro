@@ -20,22 +20,21 @@ function blocks_init(): void {
 }
 
 /**
- * Helper to unregister block registrations.
+ * Helper to reset blocks back to the un-initialiazed state.
  *
  * @since 1.0.0
  */
 function reset_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
-	$blocks = array_filter(
-		array(
-			'wc-clearance/clearance-badge',
-			'wc-clearance/clearance-message',
-		),
-		array( $registry, 'is_registered' )
-	);
+	// Unregister all blocks in the wc-clearance namespace.
+	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
+		if ( 0 !== strpos( $block_name, 'wc-clearance/' ) ) {
+			continue;
+		}
 
-	array_map( 'unregister_block_type', $blocks );
+		unregister_block_type( $block_name );
+	}
 }
 
 /**
