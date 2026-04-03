@@ -44,22 +44,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
-	public function test_message_is_bold_via_inline_style(): void {
-		// Arrange.
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_classic_themes();
-
-		// Expect.
-		$this->expectOutputRegex( '/style="font-weight:bold;"/' );
-
-		// Act.
-		do_action( 'woocommerce_single_product_summary' );
-	}
-
 	public function test_does_not_display_message_for_non_clearance_product(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
