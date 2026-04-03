@@ -20,7 +20,7 @@ function blocks_init(): void {
 }
 
 /**
- * Helper to reset blocks back to the un-initialiazed state.
+ * Helper to reset blocks back to the uninitialized state.
  *
  * @since 1.0.0
  */
