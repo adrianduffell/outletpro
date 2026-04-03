@@ -36,7 +36,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		setup_postdata( $post );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-product-badge/' );
+		$this->expectOutputRegex( '/wc-clearance-badge/' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
