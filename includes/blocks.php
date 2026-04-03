@@ -37,9 +37,10 @@ function register_clearance_badge_block(): void {
  * Auto-insert the clearance badge block after the product price on the single product template.
  *
  * @internal WordPress filter hook
- * @param string[]    $hooked_blocks     Block names hooked to the anchor at this position.
- * @param string      $relative_position Position relative to the anchor block.
- * @param string      $anchor_block      Anchor block name.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param string[]                      $hooked_blocks     Block names hooked to the anchor at this position.
+ * @param string                        $relative_position Position relative to the anchor block.
+ * @param string                        $anchor_block      Anchor block name.
  * @param \WP_Block_Template|array|null $context Block template or post context, or null.
  * @return string[] Filtered hooked block names.
  */
