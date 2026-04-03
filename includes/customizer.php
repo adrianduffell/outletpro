@@ -35,7 +35,7 @@ const CLEARANCE_BADGE_BG_COLOUR_MOD = 'wc_clearance_badge_bg_colour';
  *
  * @since 1.0.0
  */
-const CLEARANCE_MESSAGE_DEFAULT = 'Choose carefully! Clearance products are ineligible for returns';
+const CLEARANCE_MESSAGE_DEFAULT = 'Not eligible for change of mind returns.';
 
 /**
  * Default badge text colour (white).
