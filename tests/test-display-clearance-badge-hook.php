@@ -6,18 +6,18 @@
  */
 
 use function WC_Clearance\add_to_clearance;
-use function WC_Clearance\classic_theme_init;
+use function WC_Clearance\init_woocommerce_template_hooks;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 
 class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
-	public function test_hook_is_registered_after_classic_theme_init(): void {
+	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
 		remove_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 
 		// Act.
-		classic_theme_init();
+		init_woocommerce_template_hooks();
 
 		// Assert.
 		$this->assertSame( 15, has_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook' ) );
@@ -30,7 +30,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		remove_all_actions( 'woocommerce_single_product_summary' );
-		classic_theme_init();
+		init_woocommerce_template_hooks();
 		global $post;
 		$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		setup_postdata( $post );
@@ -51,7 +51,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		remove_all_actions( 'woocommerce_single_product_summary' );
-		classic_theme_init();
+		init_woocommerce_template_hooks();
 		global $post;
 		$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		setup_postdata( $post );
@@ -71,7 +71,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		remove_all_actions( 'woocommerce_single_product_summary' );
-		classic_theme_init();
+		init_woocommerce_template_hooks();
 		global $post;
 		$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		setup_postdata( $post );

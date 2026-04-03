@@ -6,7 +6,7 @@
  */
 
 use function WC_Clearance\add_to_clearance;
-use function WC_Clearance\init_classic_themes;
+use function WC_Clearance\init_woocommerce_template_hooks;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 
@@ -20,7 +20,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_classic_themes();
+		init_woocommerce_template_hooks();
 
 		// Expect.
 		$this->expectOutputRegex( '/wc-clearance-product-message/' );
@@ -37,7 +37,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_classic_themes();
+		init_woocommerce_template_hooks();
 
 		// Expect.
 		$this->expectOutputRegex( '/Choose carefully! Clearance products are ineligible for returns\./' );
@@ -53,7 +53,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_classic_themes();
+		init_woocommerce_template_hooks();
 
 		// Expect.
 		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
@@ -69,7 +69,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$post_id         = self::factory()->post->create();
 		$GLOBALS['post'] = get_post( $post_id );
-		init_classic_themes();
+		init_woocommerce_template_hooks();
 
 		// Expect.
 		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
@@ -86,7 +86,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_classic_themes();
+		init_woocommerce_template_hooks();
 
 		// Expect.
 		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
