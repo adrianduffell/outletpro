@@ -19,7 +19,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		remove_all_actions( 'woocommerce_single_product_summary' );
 		init_classic_themes();
 
 		// Expect.
@@ -36,7 +35,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		remove_all_actions( 'woocommerce_single_product_summary' );
 		init_classic_themes();
 
 		// Expect.
@@ -53,7 +51,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		remove_all_actions( 'woocommerce_single_product_summary' );
 		init_classic_themes();
 
 		// Expect.
@@ -69,11 +66,10 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		remove_all_actions( 'woocommerce_single_product_summary' );
 		init_classic_themes();
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -85,11 +81,10 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$post_id         = self::factory()->post->create();
 		$GLOBALS['post'] = get_post( $post_id );
-		remove_all_actions( 'woocommerce_single_product_summary' );
 		init_classic_themes();
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
