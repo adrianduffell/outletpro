@@ -7,12 +7,13 @@
 
 use function WC_Clearance\blocks_init;
 use function WC_Clearance\register_clearance_badge_block;
+use function WC_Clearance\reset_blocks;
 
 class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_clearance_badge_has_no_block_hooks_declaration(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		register_clearance_badge_block();
 
 		// Act.
@@ -24,7 +25,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_when_context_is_array(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		blocks_init();
 
 		// Act: WordPress can pass an array (e.g. pattern context) — must not cause a fatal.
@@ -36,7 +37,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_when_context_is_null(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		blocks_init();
 
 		// Act.
@@ -48,7 +49,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_when_template_is_not_single_product(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
@@ -62,7 +63,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_added_when_template_is_single_product(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
@@ -76,7 +77,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_other_hooked_blocks_are_not_filtered(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
@@ -90,7 +91,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_added_for_different_anchor(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		blocks_init();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
