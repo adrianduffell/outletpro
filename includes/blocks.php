@@ -20,6 +20,16 @@ function blocks_init(): void {
 }
 
 /**
+ * Helper to unregister block registrations.
+ *
+ * @since 1.0.0
+ */
+function reset_blocks(): void {
+	unregister_block_type( 'wc-clearance/clearance-badge' );
+	unregister_block_type( 'wc-clearance/clearance-message' );
+}
+
+/**
  * Register the clearance badge block type.
  *
  * @since 1.0.0
