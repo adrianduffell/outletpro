@@ -5,7 +5,6 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\blocks_init;
 use function WC_Clearance\reset_blocks;
 
 class Test_Reset_Blocks extends WP_UnitTestCase {
@@ -37,5 +36,4 @@ class Test_Reset_Blocks extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/bar' ) );
 	}
-
 }
