@@ -49,6 +49,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/setup-task.php';
 	require_once __DIR__ . '/../includes/admin-product-list-table.php';
 	require_once __DIR__ . '/../includes/block-editor.php';
+	require_once __DIR__ . '/../includes/customizer.php';
 	require_once __DIR__ . '/../wc-clearance.php';
 }
 
@@ -56,6 +57,9 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
+
+// WP_Customize_Manager and its dependencies are not loaded by default in the test environment.
+require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';
 
 // WooCommerce test helpers.
 require_once dirname( __DIR__ ) . '/vendor/class-wc-helper-product.php';
