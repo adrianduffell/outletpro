@@ -19,7 +19,7 @@ function init_woocommerce_template_hooks(): void {
 		return;
 	}
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
-	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_message_hook', 19 );
+	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
 }
 
 /**
@@ -47,9 +47,9 @@ function display_clearance_badge_hook(): void {
 }
 
 /**
- * Display the clearance message above the excerpt on single product pages (classic themes only).
+ * Display the clearance message in the product meta area on single product pages (classic themes only).
  *
- * Fired by `woocommerce_single_product_summary`.
+ * Fired by `woocommerce_product_meta_start`.
  *
  * @internal WordPress action hook
  */
