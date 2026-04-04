@@ -78,7 +78,7 @@ function auto_insert_clearance_badge_hook( $hooked_blocks, $relative_position, $
 }
 
 /**
- * Auto-insert the clearance message block before the product short description on the single product template.
+ * Auto-insert the clearance message block as the first child of the product meta block on the single product template.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -89,13 +89,13 @@ function auto_insert_clearance_badge_hook( $hooked_blocks, $relative_position, $
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'woocommerce/product-short-description' !== $anchor_block || 'before' !== $relative_position ) {
+	if ( 'woocommerce/product-meta' !== $anchor_block || 'first_child' !== $relative_position ) {
 		return $hooked_blocks;
 	}
 
 	// Only auto-insert the message on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-clearance/clearance-message';
+		array_unshift( $hooked_blocks, 'wc-clearance/clearance-message' );
 	}
 
 	return $hooked_blocks;

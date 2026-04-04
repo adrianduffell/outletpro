@@ -29,7 +29,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		blocks_init();
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'before', 'woocommerce/product-short-description', array() );
+		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', array() );
 
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
@@ -41,7 +41,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		blocks_init();
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'before', 'woocommerce/product-short-description', null );
+		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', null );
 
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
@@ -55,7 +55,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$template->slug = 'archive-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'before', 'woocommerce/product-short-description', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
@@ -69,7 +69,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$template->slug = 'single-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'before', 'woocommerce/product-short-description', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
 		$this->assertContains( 'wc-clearance/clearance-message', $result );
@@ -80,13 +80,18 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		reset_blocks();
 		blocks_init();
 		$template       = new WP_Block_Template();
-		$template->slug = 'archive-product';
+		$template->slug = 'single-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'before', 'woocommerce/product-short-description', $template );
+		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'first_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
 		$this->assertContains( 'core/paragraph', $result );
+		$this->assertContains( 'wc-clearance/clearance-message', $result );
+		$this->assertLessThan(
+			array_search( 'core/paragraph', $result, true ),
+			array_search( 'wc-clearance/clearance-message', $result, true )
+		);
 	}
 
 	public function test_message_is_not_added_for_different_anchor(): void {
@@ -97,13 +102,13 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$template->slug = 'single-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/heading', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'core/heading', $template );
 
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
 	}
 
-	public function test_message_is_not_added_for_after_position(): void {
+	public function test_message_is_not_added_for_last_child_position(): void {
 		// Arrange.
 		reset_blocks();
 		blocks_init();
@@ -111,9 +116,23 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$template->slug = 'single-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-short-description', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'last_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
+	}
+
+	public function test_message_is_inserted_before_existing_first_child_blocks(): void {
+		// Arrange.
+		reset_blocks();
+		blocks_init();
+		$template       = new WP_Block_Template();
+		$template->slug = 'single-product';
+
+		// Act.
+		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'first_child', 'woocommerce/product-meta', $template );
+
+		// Assert.
+		$this->assertSame( 0, array_search( 'wc-clearance/clearance-message', $result, true ) );
 	}
 }
