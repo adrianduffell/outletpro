@@ -24,18 +24,11 @@ jobs:
       with:
         php-version: '8.2'
 
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: npm
-
-    - run: npm ci
-
     - name: Install Composer dependencies
       run: composer install --no-scripts --no-interaction --prefer-dist
 
     - name: Run PHP lint fix
-      run: npm run lint:php:fix
+      run: vendor/bin/phpcbf
 
     - name: Commit fixes
       run: |
