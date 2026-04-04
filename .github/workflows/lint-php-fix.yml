@@ -28,7 +28,7 @@ jobs:
       run: composer install --no-scripts --no-interaction --prefer-dist
 
     - name: Run PHP lint fix
-      run: vendor/bin/phpcbf
+      run: vendor/bin/phpcbf || true
 
     - name: Commit fixes
       run: |
