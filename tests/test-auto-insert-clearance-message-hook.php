@@ -75,7 +75,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->assertContains( 'wc-clearance/clearance-message', $result );
 	}
 
-	public function test_existing_hooked_blocks_are_preserved_while_message_is_prepended(): void {
+	public function test_existing_hooked_blocks_are_preserved(): void {
 		// Arrange.
 		reset_blocks();
 		blocks_init();
@@ -88,10 +88,6 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertContains( 'core/paragraph', $result );
 		$this->assertContains( 'wc-clearance/clearance-message', $result );
-		$this->assertLessThan(
-			array_search( 'core/paragraph', $result, true ),
-			array_search( 'wc-clearance/clearance-message', $result, true )
-		);
 	}
 
 	public function test_message_is_not_added_for_different_anchor(): void {
@@ -122,7 +118,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
 	}
 
-	public function test_message_is_inserted_before_existing_first_child_blocks(): void {
+	public function test_message_is_appended_after_existing_first_child_blocks(): void {
 		// Arrange.
 		reset_blocks();
 		blocks_init();
@@ -133,6 +129,11 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'first_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
-		$this->assertSame( 0, array_search( 'wc-clearance/clearance-message', $result, true ) );
+		$this->assertContains( 'core/paragraph', $result );
+		$this->assertContains( 'wc-clearance/clearance-message', $result );
+		$this->assertGreaterThan(
+			array_search( 'core/paragraph', $result, true ),
+			array_search( 'wc-clearance/clearance-message', $result, true )
+		);
 	}
 }

@@ -95,7 +95,7 @@ function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position,
 
 	// Only auto-insert the message on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		array_unshift( $hooked_blocks, 'wc-clearance/clearance-message' );
+		$hooked_blocks[] = 'wc-clearance/clearance-message';
 	}
 
 	return $hooked_blocks;
