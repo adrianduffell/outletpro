@@ -23,6 +23,7 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  */
 function init_settings(): void {
 	register_clearance_page_setting();
+	register_clearance_message_setting();
 }
 
 /**
@@ -42,6 +43,26 @@ function register_clearance_page_setting(): void {
 					'minimum' => 1,
 				),
 			),
+		)
+	);
+}
+
+/**
+ * Register the clearance message setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_message_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_MESSAGE_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance message', 'wc-clearance' ),
+			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
+			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => true,
 		)
 	);
 }
