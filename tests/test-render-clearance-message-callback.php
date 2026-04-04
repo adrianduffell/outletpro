@@ -50,7 +50,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'wc-clearance/clearance-message',
-				'attrs'        => array( 'message' => 'Choose carefully! Clearance products are ineligible for returns' ),
+				'attrs'        => array( 'message' => 'Not eligible for change of mind returns' ),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),
@@ -63,7 +63,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-message', $result );
-		$this->assertStringContainsString( 'Choose carefully! Clearance products are ineligible for returns', $result );
+		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
 	}
 
 	public function test_message_uses_custom_message_attribute(): void {
@@ -90,7 +90,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( 'No returns on clearance!', $result );
-		$this->assertStringNotContainsString( 'Choose carefully', $result );
+		$this->assertStringNotContainsString( 'Not eligible for change of mind returns', $result );
 	}
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {
