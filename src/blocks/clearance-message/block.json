@@ -30,7 +30,11 @@
 	"attributes": {
 		"message": {
 			"type": "string",
-			"default": "Choose carefully! Clearance products are ineligible for returns"
+			"default": "Not eligible for change of mind returns"
+		},
+		"fontSize": {
+			"type": "string",
+			"default": "small"
 		},
 		"style": {
 			"type": "object",
