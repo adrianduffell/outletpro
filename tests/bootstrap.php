@@ -60,7 +60,6 @@ require "{$_tests_dir}/includes/bootstrap.php";
 
 // WP_Customize_Manager and its dependencies are not loaded by default in the test environment.
 require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';
-require_once ABSPATH . WPINC . '/customize/class-wp-customize-color-control.php';
 
 // WooCommerce test helpers.
 require_once dirname( __DIR__ ) . '/vendor/class-wc-helper-product.php';
