@@ -112,25 +112,6 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_BADGE_TEXT_COLOUR_MOD,
-		array(
-			'default'           => CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT,
-			'sanitize_callback' => 'sanitize_hex_color',
-		)
-	);
-
-	$wp_customize->add_control(
-		new \WP_Customize_Color_Control(
-			$wp_customize,
-			CLEARANCE_BADGE_TEXT_COLOUR_MOD,
-			array(
-				'label'   => __( 'Badge text colour', 'wc-clearance' ),
-				'section' => 'wc_clearance',
-			)
-		)
-	);
-
-	$wp_customize->add_setting(
 		CLEARANCE_BADGE_BG_COLOUR_MOD,
 		array(
 			'default'           => CLEARANCE_BADGE_BG_COLOUR_DEFAULT,
@@ -143,7 +124,26 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 			$wp_customize,
 			CLEARANCE_BADGE_BG_COLOUR_MOD,
 			array(
-				'label'   => __( 'Badge background colour', 'wc-clearance' ),
+				'label'   => __( 'Badge background color', 'wc-clearance' ),
+				'section' => 'wc_clearance',
+			)
+		)
+	);
+
+	$wp_customize->add_setting(
+		CLEARANCE_BADGE_TEXT_COLOUR_MOD,
+		array(
+			'default'           => CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT,
+			'sanitize_callback' => 'sanitize_hex_color',
+		)
+	);
+
+	$wp_customize->add_control(
+		new \WP_Customize_Color_Control(
+			$wp_customize,
+			CLEARANCE_BADGE_TEXT_COLOUR_MOD,
+			array(
+				'label'   => __( 'Badge text color', 'wc-clearance' ),
 				'section' => 'wc_clearance',
 			)
 		)
