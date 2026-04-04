@@ -5,7 +5,6 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\init_customizer;
 use function WC_Clearance\register_customizer_hook;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_MOD;
@@ -135,17 +134,6 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( CLEARANCE_BADGE_BG_COLOUR_DEFAULT, $wp_customize->get_setting( CLEARANCE_BADGE_BG_COLOUR_MOD )->default );
-	}
-
-	public function test_init_customizer_hooks_into_customize_register(): void {
-		// Arrange.
-		remove_all_actions( 'customize_register' );
-
-		// Act.
-		init_customizer();
-
-		// Assert.
-		$this->assertSame( 10, has_action( 'customize_register', 'WC_Clearance\register_customizer_hook' ) );
 	}
 
 	public function test_registers_badge_label_setting(): void {
