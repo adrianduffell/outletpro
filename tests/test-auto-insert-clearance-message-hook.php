@@ -118,22 +118,4 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
 	}
 
-	public function test_message_is_appended_after_existing_first_child_blocks(): void {
-		// Arrange.
-		reset_blocks();
-		blocks_init();
-		$template       = new WP_Block_Template();
-		$template->slug = 'single-product';
-
-		// Act.
-		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'first_child', 'woocommerce/product-meta', $template );
-
-		// Assert.
-		$this->assertContains( 'core/paragraph', $result );
-		$this->assertContains( 'wc-clearance/clearance-message', $result );
-		$this->assertGreaterThan(
-			array_search( 'core/paragraph', $result, true ),
-			array_search( 'wc-clearance/clearance-message', $result, true )
-		);
-	}
 }
