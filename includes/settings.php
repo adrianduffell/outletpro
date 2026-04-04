@@ -23,6 +23,7 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
  */
 function init_settings(): void {
 	register_clearance_page_setting();
+	register_clearance_badge_label_setting();
 }
 
 /**
@@ -42,6 +43,26 @@ function register_clearance_page_setting(): void {
 					'minimum' => 1,
 				),
 			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge label setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_badge_label_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_LABEL_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => 'Clearance badge label',
+			'description'       => 'Store-wide clearance badge label.',
+			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => true,
 		)
 	);
 }
