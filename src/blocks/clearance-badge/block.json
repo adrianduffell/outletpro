@@ -20,7 +20,7 @@
 		"typography": {
 			"fontSize": true,
 			"lineHeight": true,
-			"fontWeight": true,
+			"__experimentalFontWeight": true,
 			"textTransform": true,
 			"textDecoration": true,
 			"letterSpacing": true
@@ -48,7 +48,7 @@
 				},
 				"typography": {
 					"fontSize": "0.875rem",
-					"fontWeight": "600"
+					"fontWeight": "700"
 				},
 				"border": {
 					"radius": "4px"
