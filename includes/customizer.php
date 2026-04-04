@@ -38,20 +38,6 @@ const CLEARANCE_BADGE_TEXT_COLOUR_MOD = 'wc_clearance_badge_text_colour';
 const CLEARANCE_BADGE_BG_COLOUR_MOD = 'wc_clearance_badge_bg_colour';
 
 /**
- * Default clearance message.
- *
- * @since 1.0.0
- */
-const CLEARANCE_MESSAGE_DEFAULT = 'Not eligible for change of mind returns';
-
-/**
- * Default badge label text.
- *
- * @since 1.0.0
- */
-const CLEARANCE_BADGE_LABEL_DEFAULT = 'Clearance';
-
-/**
  * Default badge text colour (dark).
  *
  * @since 1.0.0
@@ -93,7 +79,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		CLEARANCE_MESSAGE_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => CLEARANCE_MESSAGE_DEFAULT,
+			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);
@@ -111,7 +97,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		CLEARANCE_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => CLEARANCE_BADGE_LABEL_DEFAULT,
+			'default'           => __( 'Clearance', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);

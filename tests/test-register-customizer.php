@@ -9,11 +9,9 @@ use function WC_Clearance\init_customizer;
 use function WC_Clearance\register_customizer_hook;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_MOD;
-use const WC_Clearance\CLEARANCE_BADGE_LABEL_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_MOD;
-use const WC_Clearance\CLEARANCE_MESSAGE_DEFAULT;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
@@ -70,7 +68,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( CLEARANCE_MESSAGE_DEFAULT, $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
+		$this->assertSame( 'Not eligible for change of mind returns', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
 	}
 
 	public function test_registers_badge_text_colour_setting(): void {
@@ -180,6 +178,6 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( CLEARANCE_BADGE_LABEL_DEFAULT, $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION )->default );
+		$this->assertSame( 'Clearance', $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION )->default );
 	}
 }

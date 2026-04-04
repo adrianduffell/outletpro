@@ -41,17 +41,27 @@ function display_clearance_badge_hook(): void {
 	}
 
 	$default_bg_colour = sanitize_hex_color( CLEARANCE_BADGE_BG_COLOUR_DEFAULT );
-	$default_bg_colour = $default_bg_colour ? $default_bg_colour : CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
-	$bg_colour         = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, $default_bg_colour ) );
-	$bg_colour         = $bg_colour ? $bg_colour : $default_bg_colour;
+	if ( ! $default_bg_colour ) {
+		$default_bg_colour = CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+	}
+	$bg_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, $default_bg_colour ) );
+	if ( ! $bg_colour ) {
+		$bg_colour = $default_bg_colour;
+	}
 
 	$default_text_colour = sanitize_hex_color( CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT );
-	$default_text_colour = $default_text_colour ? $default_text_colour : CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
-	$text_colour         = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, $default_text_colour ) );
-	$text_colour         = $text_colour ? $text_colour : $default_text_colour;
+	if ( ! $default_text_colour ) {
+		$default_text_colour = CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
+	}
+	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, $default_text_colour ) );
+	if ( ! $text_colour ) {
+		$text_colour = $default_text_colour;
+	}
 
-	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION, CLEARANCE_BADGE_LABEL_DEFAULT );
-	$label = is_string( $label ) ? $label : CLEARANCE_BADGE_LABEL_DEFAULT;
+	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	if ( ! is_string( $label ) ) {
+		$label = __( 'Clearance', 'wc-clearance' );
+	}
 
 	printf(
 		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; display:inline-block; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
@@ -87,5 +97,5 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	echo '<p class="wc-clearance-product-message" style="font-weight:bold;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, CLEARANCE_MESSAGE_DEFAULT ) ) . '</p>';
+	echo '<p class="wc-clearance-product-message" style="font-weight:bold;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }
