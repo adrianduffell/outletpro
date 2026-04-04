@@ -117,5 +117,4 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertNotContains( 'wc-clearance/clearance-message', $result );
 	}
-
 }
