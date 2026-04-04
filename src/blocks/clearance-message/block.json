@@ -32,6 +32,10 @@
 			"type": "string",
 			"default": "Choose carefully! Clearance products are ineligible for returns"
 		},
+		"fontSize": {
+			"type": "string",
+			"default": "small"
+		},
 		"style": {
 			"type": "object",
 			"default": {
