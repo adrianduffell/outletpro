@@ -40,11 +40,15 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$bg_colour = get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT );
-	$bg_colour = is_string( $bg_colour ) ? $bg_colour : CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+	$default_bg_colour = sanitize_hex_color( CLEARANCE_BADGE_BG_COLOUR_DEFAULT );
+	$default_bg_colour = $default_bg_colour ? $default_bg_colour : CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+	$bg_colour         = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, $default_bg_colour ) );
+	$bg_colour         = $bg_colour ? $bg_colour : $default_bg_colour;
 
-	$text_colour = get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT );
-	$text_colour = is_string( $text_colour ) ? $text_colour : CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
+	$default_text_colour = sanitize_hex_color( CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT );
+	$default_text_colour = $default_text_colour ? $default_text_colour : CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
+	$text_colour         = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, $default_text_colour ) );
+	$text_colour         = $text_colour ? $text_colour : $default_text_colour;
 
 	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION, CLEARANCE_BADGE_LABEL_DEFAULT );
 	$label = is_string( $label ) ? $label : CLEARANCE_BADGE_LABEL_DEFAULT;
