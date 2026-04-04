@@ -32,6 +32,13 @@ jobs:
 
     - name: Commit fixes
       run: |
+        if git diff --quiet; then
+          echo "No changes"
+          exit 0
+        fi
+
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
-        git diff --quiet && git diff --staged --quiet || (git add -A && git commit -m "Fix PHP lint issues" && git push)
+        git add -A
+        git commit -m "Fix PHP lint issues"
+        git push
