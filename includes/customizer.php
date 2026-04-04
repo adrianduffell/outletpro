@@ -76,24 +76,6 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_MESSAGE_OPTION,
-		array(
-			'type'              => 'option',
-			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
-			'sanitize_callback' => 'sanitize_text_field',
-		)
-	);
-
-	$wp_customize->add_control(
-		CLEARANCE_MESSAGE_OPTION,
-		array(
-			'label'   => __( 'Message', 'wc-clearance' ),
-			'section' => 'wc_clearance',
-			'type'    => 'text',
-		)
-	);
-
-	$wp_customize->add_setting(
 		CLEARANCE_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'option',
@@ -146,6 +128,24 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 				'label'   => __( 'Badge text color', 'wc-clearance' ),
 				'section' => 'wc_clearance',
 			)
+		)
+	);
+
+	$wp_customize->add_setting(
+		CLEARANCE_MESSAGE_OPTION,
+		array(
+			'type'              => 'option',
+			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+
+	$wp_customize->add_control(
+		CLEARANCE_MESSAGE_OPTION,
+		array(
+			'label'   => __( 'Message', 'wc-clearance' ),
+			'section' => 'wc_clearance',
+			'type'    => 'text',
 		)
 	);
 }
