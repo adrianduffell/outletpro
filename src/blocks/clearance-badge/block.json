@@ -20,7 +20,7 @@
 		"typography": {
 			"fontSize": true,
 			"lineHeight": true,
-			"fontWeight": true,
+			"__experimentalFontWeight": true,
 			"textTransform": true,
 			"textDecoration": true,
 			"letterSpacing": true
@@ -35,8 +35,8 @@
 			"type": "object",
 			"default": {
 				"color": {
-					"background": "#2145e6",
-					"text": "#ffffff"
+					"background": "#FFEE85",
+					"text": "#222"
 				},
 				"spacing": {
 					"padding": {
@@ -47,7 +47,8 @@
 					}
 				},
 				"typography": {
-					"fontSize": "0.875rem"
+					"fontSize": "0.875rem",
+					"fontWeight": "600"
 				},
 				"border": {
 					"radius": "4px"

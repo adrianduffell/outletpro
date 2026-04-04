@@ -27,7 +27,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 } ) );
 
 const defaultAttributes = {
-	message: 'Choose carefully! Clearance products are ineligible for returns',
+	message: 'Not eligible for change of mind returns',
 };
 
 describe( 'Edit', () => {
@@ -46,7 +46,7 @@ describe( 'Edit', () => {
 		// Assert.
 		expect(
 			screen.getByDisplayValue(
-				'Choose carefully! Clearance products are ineligible for returns'
+				'Not eligible for change of mind returns'
 			)
 		).toBeInTheDocument();
 	} );
@@ -79,7 +79,7 @@ describe( 'Edit', () => {
 			/>
 		);
 		const input = screen.getByDisplayValue(
-			'Choose carefully! Clearance products are ineligible for returns'
+			'Not eligible for change of mind returns'
 		);
 
 		// Act.

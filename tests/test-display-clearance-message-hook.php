@@ -12,6 +12,18 @@ use function WC_Clearance\seed_clearance_status_taxonomy;
 
 class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
+	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
+		// Arrange.
+		switch_theme( 'storefront' );
+		remove_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
+
+		// Act.
+		init_woocommerce_template_hooks();
+
+		// Assert.
+		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook' ) );
+	}
+
 	public function test_displays_message_for_clearance_product(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
@@ -26,7 +38,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/wc-clearance-product-message/' );
 
 		// Act.
-		do_action( 'woocommerce_single_product_summary' );
+		do_action( 'woocommerce_product_meta_start' );
 	}
 
 	public function test_message_contains_clearance_text(): void {
@@ -43,7 +55,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/Choose carefully! Clearance products are ineligible for returns\./' );
 
 		// Act.
-		do_action( 'woocommerce_single_product_summary' );
+		do_action( 'woocommerce_product_meta_start' );
 	}
 
 	public function test_does_not_display_message_for_non_clearance_product(): void {
@@ -59,7 +71,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
-		do_action( 'woocommerce_single_product_summary' );
+		do_action( 'woocommerce_product_meta_start' );
 	}
 
 	public function test_does_not_display_message_when_post_is_not_a_product(): void {
@@ -75,7 +87,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
-		do_action( 'woocommerce_single_product_summary' );
+		do_action( 'woocommerce_product_meta_start' );
 	}
 
 	public function test_does_not_display_message_for_block_theme(): void {
@@ -92,6 +104,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
-		do_action( 'woocommerce_single_product_summary' );
+		do_action( 'woocommerce_product_meta_start' );
 	}
 }
