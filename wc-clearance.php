@@ -175,4 +175,4 @@ add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_ho
 add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
-register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
+			register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
