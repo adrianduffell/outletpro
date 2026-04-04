@@ -75,7 +75,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 		$this->assertContains( 'wc-clearance/clearance-message', $result );
 	}
 
-	public function test_other_hooked_blocks_are_not_filtered(): void {
+	public function test_existing_hooked_blocks_are_preserved_while_message_is_prepended(): void {
 		// Arrange.
 		reset_blocks();
 		blocks_init();
