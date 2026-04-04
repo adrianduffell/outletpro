@@ -15,13 +15,13 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
-		remove_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook' );
+		remove_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
 
 		// Act.
 		init_woocommerce_template_hooks();
 
 		// Assert.
-		$this->assertSame( 10, has_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook' ) );
+		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook' ) );
 	}
 
 	public function test_displays_message_for_clearance_product(): void {

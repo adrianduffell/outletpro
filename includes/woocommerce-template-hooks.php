@@ -19,7 +19,7 @@ function init_woocommerce_template_hooks(): void {
 		return;
 	}
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
-	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook' );
+	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
 }
 
 /**
