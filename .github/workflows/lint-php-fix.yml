@@ -7,6 +7,10 @@ on:
 jobs:
   lint-php-fix:
     runs-on: ubuntu-latest
+    if: ${{ !github.event.pull_request.head.repo.fork && github.actor != 'github-actions[bot]' }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
     permissions:
       contents: write
 
