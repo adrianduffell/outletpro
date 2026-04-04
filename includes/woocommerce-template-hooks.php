@@ -40,10 +40,9 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$bg_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD ) );
+	$bg_colour   = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD ) );
 	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD ) );
-
-	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
 	printf(
 		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; display:inline-block; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
