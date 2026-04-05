@@ -2,22 +2,14 @@ import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 import { useEntityProp } from '@wordpress/core-data';
 
-interface SiteSettings {
-	wc_clearance_badge_label?: string;
-}
+type EntityProp< T > = [ T | undefined, ( value: T | undefined ) => void ];
 
 export function Edit(): JSX.Element {
-	const [ settings, setSettings ] = useEntityProp(
+	const [ label, setLabel ] = useEntityProp(
 		'root',
 		'site',
-		'settings'
-	) as unknown as [ SiteSettings, ( value: SiteSettings ) => void ];
-
-	const label =
-		settings?.wc_clearance_badge_label &&
-		'' !== settings.wc_clearance_badge_label
-			? settings.wc_clearance_badge_label
-			: __( 'Clearance', 'wc-clearance' );
+		'wc_clearance_badge_label'
+	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
 		style: {
@@ -30,13 +22,8 @@ export function Edit(): JSX.Element {
 		<RichText
 			{ ...blockProps }
 			tagName="span"
-			value={ label }
-			onChange={ ( value: string ) =>
-				setSettings( {
-					...settings,
-					wc_clearance_badge_label: value,
-				} )
-			}
+			value={ label || __( 'Clearance', 'wc-clearance' ) }
+			onChange={ ( value: string ) => setLabel( value ) }
 			allowedFormats={ [] }
 			placeholder={ __( 'Label', 'wc-clearance' ) }
 		/>
