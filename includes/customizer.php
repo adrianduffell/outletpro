@@ -17,13 +17,6 @@ defined( 'ABSPATH' ) || exit;
 const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
 
 /**
- * WordPress option key used to store the badge label text.
- *
- * @since 1.0.0
- */
-const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
-
-/**
  * Theme mod key used to store the badge text colour.
  *
  * @since 1.0.0
