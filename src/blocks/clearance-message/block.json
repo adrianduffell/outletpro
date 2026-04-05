@@ -16,11 +16,11 @@
 		"typography": {
 			"fontSize": true,
 			"lineHeight": true,
-			"__experimentalFontWeight": true,
+			"fontWeight": true,
 			"textTransform": true,
 			"textDecoration": true,
 			"letterSpacing": true,
-			"__experimentalFontFamily": true
+			"fontFamily": true
 		},
 		"spacing": {
 			"padding": true,
