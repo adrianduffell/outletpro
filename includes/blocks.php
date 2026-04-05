@@ -133,10 +133,16 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		)
 	);
 
+	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $label ) || '' === $label ) {
+		$label = __( 'Clearance', 'wc-clearance' );
+	}
+
 	return sprintf(
 		'<span %1$s>%2$s</span>',
 		$wrapper_attributes,
-		wp_kses_post( $attributes['label'] ?? '' )
+		wp_kses_post( $label )
 	);
 }
 
