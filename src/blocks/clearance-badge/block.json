@@ -40,10 +40,10 @@
 				},
 				"spacing": {
 					"padding": {
-						"top": "4px",
-						"right": "12px",
-						"bottom": "4px",
-						"left": "12px"
+						"top": "8px",
+						"right": "8px",
+						"bottom": "8px",
+						"left": "8px"
 					}
 				},
 				"typography": {
