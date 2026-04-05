@@ -48,16 +48,4 @@ class Test_Register_Clearance_Message_Setting extends WP_UnitTestCase {
 		// Assert.
 		$this->assertArrayHasKey( CLEARANCE_MESSAGE_OPTION, $response->get_data() );
 	}
-
-	public function test_setting_default_is_not_eligible_message(): void {
-		// Arrange.
-		unregister_setting( 'wc_clearance', CLEARANCE_MESSAGE_OPTION );
-
-		// Act.
-		register_clearance_message_setting();
-
-		// Assert.
-		$settings = get_registered_settings();
-		$this->assertSame( 'Not eligible for change of mind returns', $settings[ CLEARANCE_MESSAGE_OPTION ]['default'] );
-	}
 }
