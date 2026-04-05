@@ -24,12 +24,20 @@ const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
 const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 
 /**
+ * WordPress option key used to store the badge label text.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
+
+/**
  * Helper to initialize settings.
  *
  * @since 1.0.0
  */
 function init_settings(): void {
 	register_clearance_page_setting();
+	register_clearance_badge_label_setting();
 	register_clearance_message_setting();
 }
 
@@ -48,6 +56,30 @@ function register_clearance_page_setting(): void {
 				'schema' => array(
 					'type'    => 'integer',
 					'minimum' => 1,
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge label setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_badge_label_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_LABEL_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
+			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
 				),
 			),
 		)
