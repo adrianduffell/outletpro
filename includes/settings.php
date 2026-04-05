@@ -69,7 +69,11 @@ function register_clearance_badge_label_setting(): void {
 			'description'       => 'Store-wide clearance badge label.',
 			'default'           => __( 'Clearance', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
-			'show_in_rest'      => true,
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
 		)
 	);
 }
