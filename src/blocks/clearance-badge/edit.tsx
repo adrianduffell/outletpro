@@ -9,7 +9,7 @@ export function Edit(): JSX.Element {
 		'root',
 		'site',
 		'wc_clearance_badge_label'
-	) as EntityProp< string >;
+	) as unknown as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
 		style: {

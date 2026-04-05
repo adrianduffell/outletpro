@@ -65,8 +65,8 @@ const mockUseEntityProp = useEntityProp as jest.Mock;
 describe( 'Edit', () => {
 	test( 'renders badge with default label when setting is empty', () => {
 		// Arrange.
-		const setSettings = jest.fn();
-		mockUseEntityProp.mockReturnValue( [ {}, setSettings ] );
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ undefined, setLabel ] );
 
 		// Act.
 		render( <Edit /> );
@@ -77,11 +77,8 @@ describe( 'Edit', () => {
 
 	test( 'renders badge with label from global setting', () => {
 		// Arrange.
-		const setSettings = jest.fn();
-		mockUseEntityProp.mockReturnValue( [
-			{ wc_clearance_badge_label: 'Sale' },
-			setSettings,
-		] );
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 'Sale', setLabel ] );
 
 		// Act.
 		render( <Edit /> );
@@ -90,13 +87,10 @@ describe( 'Edit', () => {
 		expect( screen.getByDisplayValue( 'Sale' ) ).toBeInTheDocument();
 	} );
 
-	test( 'calls setSettings with updated label when content changes', () => {
+	test( 'calls setLabel with updated label when content changes', () => {
 		// Arrange.
-		const setSettings = jest.fn();
-		mockUseEntityProp.mockReturnValue( [
-			{ wc_clearance_badge_label: 'Clearance' },
-			setSettings,
-		] );
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 'Clearance', setLabel ] );
 		render( <Edit /> );
 		const input = screen.getByDisplayValue( 'Clearance' );
 
@@ -104,15 +98,13 @@ describe( 'Edit', () => {
 		fireEvent.change( input, { target: { value: 'Discounted' } } );
 
 		// Assert.
-		expect( setSettings ).toHaveBeenCalledWith( {
-			wc_clearance_badge_label: 'Discounted',
-		} );
+		expect( setLabel ).toHaveBeenCalledWith( 'Discounted' );
 	} );
 
-	test( 'uses root/site/settings entity prop', () => {
+	test( 'uses root/site/wc_clearance_badge_label entity prop', () => {
 		// Arrange.
-		const setSettings = jest.fn();
-		mockUseEntityProp.mockReturnValue( [ {}, setSettings ] );
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ undefined, setLabel ] );
 
 		// Act.
 		render( <Edit /> );
@@ -121,7 +113,7 @@ describe( 'Edit', () => {
 		expect( mockUseEntityProp ).toHaveBeenCalledWith(
 			'root',
 			'site',
-			'settings'
+			'wc_clearance_badge_label'
 		);
 	} );
 } );
