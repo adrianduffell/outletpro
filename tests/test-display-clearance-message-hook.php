@@ -35,7 +35,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-product-message/' );
+		$this->expectOutputRegex( '/wc-clearance-message/' );
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -68,7 +68,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -84,7 +84,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -101,7 +101,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-clearance-product-message).*/s' ); // Does not contain the clearance message.
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-message).*/s' ); // Does not contain the clearance message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
