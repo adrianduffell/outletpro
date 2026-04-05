@@ -65,8 +65,8 @@ function register_clearance_badge_label_setting(): void {
 		CLEARANCE_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => 'Clearance badge label',
-			'description'       => 'Store-wide clearance badge label.',
+			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
 			'default'           => __( 'Clearance', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
