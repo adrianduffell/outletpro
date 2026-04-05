@@ -5,12 +5,12 @@
  * @package WC_Clearance
  */
 
-use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
-use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\init_woocommerce_template_hooks;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 
 class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
