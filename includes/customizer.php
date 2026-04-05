@@ -10,13 +10,6 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress option key used to store the clearance message.
- *
- * @since 1.0.0
- */
-const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
-
-/**
  * Theme mod key used to store the badge text colour.
  *
  * @since 1.0.0

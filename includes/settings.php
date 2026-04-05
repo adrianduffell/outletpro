@@ -10,6 +10,13 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * WordPress option key used to store the clearance message.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
+
+/**
  * WordPress option key used to store the clearance section page ID.
  *
  * @since 1.0.0
@@ -31,6 +38,7 @@ const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 function init_settings(): void {
 	register_clearance_page_setting();
 	register_clearance_badge_label_setting();
+	register_clearance_message_setting();
 }
 
 /**
@@ -68,6 +76,30 @@ function register_clearance_badge_label_setting(): void {
 			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
 			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance message setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_message_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_MESSAGE_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance message', 'wc-clearance' ),
+			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
+			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(
