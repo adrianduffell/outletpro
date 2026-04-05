@@ -13,48 +13,48 @@ class Test_Clearance_Message_Block_Supports extends WP_UnitTestCase {
 	public function test_supports_font_weight(): void {
 		// Arrange.
 		reset_blocks();
-		register_clearance_message_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
+		register_clearance_message_block();
 
 		// Assert.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
 		$this->assertTrue( $block_type->supports['typography']['fontWeight'] );
 	}
 
 	public function test_supports_font_family(): void {
 		// Arrange.
 		reset_blocks();
-		register_clearance_message_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
+		register_clearance_message_block();
 
 		// Assert.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
 		$this->assertTrue( $block_type->supports['typography']['fontFamily'] );
 	}
 
 	public function test_does_not_support_experimental_font_weight(): void {
 		// Arrange.
 		reset_blocks();
-		register_clearance_message_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
+		register_clearance_message_block();
 
 		// Assert.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
 		$this->assertArrayNotHasKey( '__experimentalFontWeight', $block_type->supports['typography'] );
 	}
 
 	public function test_does_not_support_experimental_font_family(): void {
 		// Arrange.
 		reset_blocks();
-		register_clearance_message_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
+		register_clearance_message_block();
 
 		// Assert.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-message' );
 		$this->assertArrayNotHasKey( '__experimentalFontFamily', $block_type->supports['typography'] );
 	}
 }

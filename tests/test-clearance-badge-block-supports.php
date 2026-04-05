@@ -13,24 +13,24 @@ class Test_Clearance_Badge_Block_Supports extends WP_UnitTestCase {
 	public function test_supports_font_weight(): void {
 		// Arrange.
 		reset_blocks();
-		register_clearance_badge_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 
 		// Assert.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
 		$this->assertTrue( $block_type->supports['typography']['fontWeight'] );
 	}
 
 	public function test_does_not_support_experimental_font_weight(): void {
 		// Arrange.
 		reset_blocks();
-		register_clearance_badge_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
 
 		// Assert.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
 		$this->assertArrayNotHasKey( '__experimentalFontWeight', $block_type->supports['typography'] );
 	}
 }
