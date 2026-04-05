@@ -10,6 +10,13 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * WordPress option key used to store the clearance message.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
+
+/**
  * WordPress option key used to store the clearance section page ID.
  *
  * @since 1.0.0
