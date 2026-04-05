@@ -41,8 +41,10 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
-	public function test_outputs_default_colours_when_no_theme_mod_is_stored(): void {
+	public function test_outputs_default_bg_colour_when_no_theme_mod_is_stored(): void {
 		// Arrange.
+		switch_theme( 'storefront' );
+		delete_option( 'theme_mods_' . get_option( 'stylesheet' ) );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -52,6 +54,23 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectOutputRegex( '/background-color:' . preg_quote( CLEARANCE_BADGE_BG_COLOUR_DEFAULT, '/' ) . '/' );
+
+		// Act.
+		do_action( 'woocommerce_single_product_summary' );
+	}
+
+	public function test_outputs_default_text_colour_when_no_theme_mod_is_stored(): void {
+		// Arrange.
+		switch_theme( 'storefront' );
+		delete_option( 'theme_mods_' . get_option( 'stylesheet' ) );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$GLOBALS['post'] = get_post( $product->get_id() );
+		init_woocommerce_template_hooks();
+
+		// Expect.
 		$this->expectOutputRegex( '/color:' . preg_quote( CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT, '/' ) . '/' );
 
 		// Act.
