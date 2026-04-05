@@ -33,40 +33,4 @@ class Test_Clearance_Badge_Block_Supports extends WP_UnitTestCase {
 		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
 		$this->assertArrayNotHasKey( 'fontWeight', $block_type->supports['typography'] );
 	}
-
-	public function test_supports_experimental_text_transform(): void {
-		// Arrange.
-		reset_blocks();
-
-		// Act.
-		register_clearance_badge_block();
-
-		// Assert.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
-		$this->assertTrue( $block_type->supports['typography']['__experimentalTextTransform'] );
-	}
-
-	public function test_supports_experimental_text_decoration(): void {
-		// Arrange.
-		reset_blocks();
-
-		// Act.
-		register_clearance_badge_block();
-
-		// Assert.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
-		$this->assertTrue( $block_type->supports['typography']['__experimentalTextDecoration'] );
-	}
-
-	public function test_supports_experimental_letter_spacing(): void {
-		// Arrange.
-		reset_blocks();
-
-		// Act.
-		register_clearance_badge_block();
-
-		// Assert.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-clearance/clearance-badge' );
-		$this->assertTrue( $block_type->supports['typography']['__experimentalLetterSpacing'] );
-	}
 }
