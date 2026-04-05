@@ -41,9 +41,9 @@
 				"spacing": {
 					"padding": {
 						"top": "8px",
-						"right": "8px",
+						"right": "12px",
 						"bottom": "8px",
-						"left": "8px"
+						"left": "12px"
 					}
 				},
 				"typography": {
