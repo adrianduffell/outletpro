@@ -17,7 +17,7 @@ export function Edit(): JSX.Element {
 		settings?.wc_clearance_badge_label &&
 		'' !== settings.wc_clearance_badge_label
 			? settings.wc_clearance_badge_label
-			: 'Clearance';
+			: __( 'Clearance', 'wc-clearance' );
 
 	const blockProps = useBlockProps( {
 		style: {
