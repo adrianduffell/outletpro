@@ -20,10 +20,10 @@
 		"typography": {
 			"fontSize": true,
 			"lineHeight": true,
-			"fontWeight": true,
-			"textTransform": true,
-			"textDecoration": true,
-			"letterSpacing": true
+			"__experimentalFontWeight": true,
+			"__experimentalTextTransform": true,
+			"__experimentalTextDecoration": true,
+			"__experimentalLetterSpacing": true
 		}
 	},
 	"attributes": {
