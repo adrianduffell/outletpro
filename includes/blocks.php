@@ -129,7 +129,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => 'wc-clearance-badge',
-			'style' => 'display:inline-block; border-radius:4px;',
+			'style' => 'display:inline-block; border-radius:4px; text-box-trim:trim-both; text-box-edge:cap alphabetic;',
 		)
 	);
 
