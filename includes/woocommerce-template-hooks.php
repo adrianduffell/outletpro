@@ -18,8 +18,25 @@ function init_woocommerce_template_hooks(): void {
 	if ( wp_is_block_theme() ) {
 		return;
 	}
+	add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_classic_styles_hook' );
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
+}
+
+/**
+ * Enqueue classic theme front-end stylesheets.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_classic_styles_hook(): void {
+	wp_enqueue_style(
+		'wc-clearance',
+		WC_CLEARANCE_PLUGIN_URL . 'assets/css/classic.css',
+		array(),
+		VERSION
+	);
 }
 
 /**
