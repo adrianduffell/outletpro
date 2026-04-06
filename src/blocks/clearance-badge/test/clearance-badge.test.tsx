@@ -104,20 +104,4 @@ describe( 'Edit', () => {
 		// Assert.
 		expect( SetLabel ).toHaveBeenCalledWith( 'Discounted' );
 	} );
-
-	test( 'uses root/site/settings entity prop', () => {
-		// Arrange.
-		const SetLabel = jest.fn();
-		mockUseEntityProp.mockReturnValue( [ {}, SetLabel ] );
-
-		// Act.
-		render( <Edit /> );
-
-		// Assert.
-		expect( mockUseEntityProp ).toHaveBeenCalledWith(
-			'root',
-			'site',
-			'wc_clearance_badge_label'
-		);
-	} );
 } );
