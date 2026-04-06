@@ -78,5 +78,5 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	echo '<p class="wc-clearance-message" style="font-weight:700;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
+	echo '<p class="wc-clearance-message" style="font-weight:bold;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }
