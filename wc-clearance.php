@@ -57,7 +57,6 @@ function init_hook(): void {
 	init_shortcodes();
 	blocks_init();
 	block_editor_init();
-	remove_action( 'customize_register', __NAMESPACE__ . '\\register_customizer_hook' );
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
 	}
