@@ -64,8 +64,38 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
+		$this->assertStringContainsString( 'wc-clearance-badge-container', $result );
 		$this->assertStringContainsString( 'wc-clearance-badge', $result );
 		$this->assertStringContainsString( 'Clearance', $result );
+	}
+
+	public function test_badge_is_wrapped_in_container_div(): void {
+		// Arrange.
+		unregister_block_type( 'wc-clearance/clearance-badge' );
+		register_clearance_badge_block();
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$block = new WP_Block(
+			array(
+				'blockName'    => 'wc-clearance/clearance-badge',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			),
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertStringContainsString( '<div', $result );
+		$this->assertStringContainsString( 'wc-clearance-badge-container', $result );
+		$this->assertStringContainsString( '<span class="wc-clearance-badge">', $result );
 	}
 
 	public function test_badge_uses_global_badge_label_option(): void {
