@@ -57,7 +57,9 @@ function init_hook(): void {
 	init_shortcodes();
 	blocks_init();
 	block_editor_init();
-	init_customizer();
+	if ( ! wp_is_block_theme() ) {
+		init_customizer();
+	}
 	init_woocommerce_template_hooks();
 	try {
 		init_setup_task();
