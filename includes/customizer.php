@@ -43,9 +43,6 @@ const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
  * @since 1.0.0
  */
 function init_customizer(): void {
-	if ( wp_is_block_theme() ) {
-		return;
-	}
 	add_action( 'customize_register', 'WC_Clearance\register_customizer_hook' );
 }
 
