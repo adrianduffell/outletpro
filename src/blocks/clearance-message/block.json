@@ -33,6 +33,5 @@
 			"default": "small"
 		}
 	},
-	"style": "file:./style.css",
 	"textdomain": "wc-clearance"
 }
