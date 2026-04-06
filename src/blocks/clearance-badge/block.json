@@ -23,10 +23,6 @@
 		}
 	},
 	"attributes": {
-		"label": {
-			"type": "string",
-			"default": "Clearance"
-		},
 		"style": {
 			"type": "object",
 			"default": {
