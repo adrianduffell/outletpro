@@ -54,60 +54,54 @@ jest.mock( '@wordpress/i18n', () => ( {
 	__: jest.fn( ( str: string ) => str ),
 } ) );
 
-describe( 'Edit', () => {
-	const defaultAttributes = {
-		label: 'Clearance',
-	};
+jest.mock( '@wordpress/core-data', () => ( {
+	useEntityProp: jest.fn(),
+} ) );
 
-	test( 'renders badge with default label', () => {
+import { useEntityProp } from '@wordpress/core-data';
+
+const mockUseEntityProp = useEntityProp as jest.Mock;
+
+describe( 'Edit', () => {
+	test( 'renders badge with default label when setting is empty', () => {
 		// Arrange.
-		const setAttributes = jest.fn();
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ undefined, setLabel, undefined ] );
 
 		// Act.
-		render(
-			<Edit
-				attributes={ defaultAttributes }
-				setAttributes={ setAttributes }
-			/>
-		);
+		render( <Edit /> );
 
 		// Assert.
 		expect( screen.getByDisplayValue( 'Clearance' ) ).toBeInTheDocument();
 	} );
 
-	test( 'renders badge with custom label attribute', () => {
+	test( 'renders badge with label from global setting', () => {
 		// Arrange.
-		const setAttributes = jest.fn();
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 'Sale', setLabel, undefined ] );
 
 		// Act.
-		render(
-			<Edit
-				attributes={ { label: 'Sale' } }
-				setAttributes={ setAttributes }
-			/>
-		);
+		render( <Edit /> );
 
 		// Assert.
 		expect( screen.getByDisplayValue( 'Sale' ) ).toBeInTheDocument();
 	} );
 
-	test( 'calls setAttributes with new label when content changes', () => {
+	test( 'calls setLabel with updated label when content changes', () => {
 		// Arrange.
-		const setAttributes = jest.fn();
-		render(
-			<Edit
-				attributes={ defaultAttributes }
-				setAttributes={ setAttributes }
-			/>
-		);
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			'Clearance',
+			setLabel,
+			undefined,
+		] );
+		render( <Edit /> );
 		const input = screen.getByDisplayValue( 'Clearance' );
 
 		// Act.
 		fireEvent.change( input, { target: { value: 'Discounted' } } );
 
 		// Assert.
-		expect( setAttributes ).toHaveBeenCalledWith( {
-			label: 'Discounted',
-		} );
+		expect( setLabel ).toHaveBeenCalledWith( 'Discounted' );
 	} );
 } );

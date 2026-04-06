@@ -1,36 +1,34 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useEntityProp } from '@wordpress/core-data';
 
-interface Attributes {
-	label: string;
-}
+type EntityProp< T > = [
+	T | undefined,
+	( value: T | undefined ) => void,
+	unknown,
+];
 
-interface EditProps {
-	attributes: Attributes;
-	setAttributes: ( attrs: Partial< Attributes > ) => void;
-}
-
-export function Edit( { attributes, setAttributes }: EditProps ): JSX.Element {
-	const { label } = attributes;
+export function Edit(): JSX.Element {
+	const [ label, setLabel ] = useEntityProp(
+		'root',
+		'site',
+		'wc_clearance_badge_label'
+	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
 		style: {
 			display: 'inline-block',
-			borderRadius: '4px',
 		},
 	} );
 
 	return (
-		<>
-			<RichText
-				{ ...blockProps }
-				tagName="span"
-				value={ label }
-				onChange={ ( value: string ) =>
-					setAttributes( { label: value } )
-				}
-				placeholder={ __( 'Label', 'wc-clearance' ) }
-			/>
-		</>
+		<RichText
+			{ ...blockProps }
+			tagName="span"
+			value={ label || __( 'Clearance', 'wc-clearance' ) }
+			onChange={ ( value: string ) => setLabel( value ) }
+			allowedFormats={ [] }
+			placeholder={ __( 'Label', 'wc-clearance' ) }
+		/>
 	);
 }
