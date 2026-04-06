@@ -11,6 +11,7 @@ use function WC_Clearance\register_clearance_badge_block;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\render_clearance_badge_callback;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 
 class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
@@ -45,12 +46,13 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'wc-clearance/clearance-badge',
-				'attrs'        => array( 'label' => 'Clearance' ),
+				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),
@@ -66,18 +68,19 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Clearance', $result );
 	}
 
-	public function test_badge_uses_custom_label_attribute(): void {
+	public function test_badge_uses_global_badge_label_option(): void {
 		// Arrange.
 		unregister_block_type( 'wc-clearance/clearance-badge' );
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Sale' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'wc-clearance/clearance-badge',
-				'attrs'        => array( 'label' => 'Sale' ),
+				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),

@@ -129,14 +129,21 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => 'wc-clearance-badge',
-			'style' => 'display:inline-block; border-radius:4px; line-height:1; text-box-trim:trim-both; text-box-edge:cap alphabetic;',
+			'style' => 'display:inline-block; line-height:1; text-box-trim:trim-both; text-box-edge:cap alphabetic;',
+			'style' => 'display:inline-block;',
 		)
 	);
+
+	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $label ) || '' === $label ) {
+		$label = __( 'Clearance', 'wc-clearance' );
+	}
 
 	return sprintf(
 		'<span %1$s>%2$s</span>',
 		$wrapper_attributes,
-		wp_kses_post( $attributes['label'] ?? '' )
+		wp_kses_post( $label )
 	);
 }
 
