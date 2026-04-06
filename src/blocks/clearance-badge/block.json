@@ -20,6 +20,11 @@
 		"typography": {
 			"fontSize": true,
 			"__experimentalFontWeight": true
+		},
+		"__experimentalBorder": {
+			"radius": true,
+			"width": true,
+			"color": true
 		}
 	},
 	"attributes": {

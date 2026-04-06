@@ -18,7 +18,6 @@ export function Edit(): JSX.Element {
 	const blockProps = useBlockProps( {
 		style: {
 			display: 'inline-block',
-			borderRadius: '4px',
 		},
 	} );
 
