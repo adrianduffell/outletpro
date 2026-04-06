@@ -20,6 +20,9 @@
 		"typography": {
 			"fontSize": true,
 			"__experimentalFontWeight": true
+		},
+		"__experimentalBorder": {
+			"radius": true
 		}
 	},
 	"attributes": {
