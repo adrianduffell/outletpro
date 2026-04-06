@@ -26,8 +26,6 @@ defined( 'ABSPATH' ) || exit;
  */
 const VERSION = '1.0.0';
 
-define( 'WC_CLEARANCE_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
@@ -111,7 +109,7 @@ function activate(): void {
 function register_classic_styles_hook(): void {
 	wp_register_style(
 		'wc-clearance',
-		WC_CLEARANCE_PLUGIN_URL . 'assets/css/classic.css',
+		plugin_dir_url( __FILE__ ) . 'assets/css/classic.css',
 		array(),
 		VERSION
 	);
