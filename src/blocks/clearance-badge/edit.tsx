@@ -18,6 +18,7 @@ export function Edit(): JSX.Element {
 	const blockProps = useBlockProps( {
 		style: {
 			display: 'inline-block',
+			lineHeight: 1,
 		},
 	} );
 
