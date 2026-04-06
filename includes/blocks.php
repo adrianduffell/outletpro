@@ -182,6 +182,7 @@ function render_clearance_message_callback( array $attributes, string $_content,
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => 'wc-clearance-message',
+			'style' => 'font-weight:700;',
 		)
 	);
 
