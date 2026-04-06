@@ -22,7 +22,9 @@
 			"__experimentalFontWeight": true
 		},
 		"__experimentalBorder": {
-			"radius": true
+			"radius": true,
+			"width": true,
+			"color": true
 		}
 	},
 	"attributes": {
