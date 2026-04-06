@@ -64,7 +64,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'wc-clearance-badge-container', $result );
+		$this->assertStringContainsString( '<div class="wc-clearance-badge-container">', $result );
 		$this->assertStringContainsString( 'wc-clearance-badge', $result );
 		$this->assertStringContainsString( 'Clearance', $result );
 	}
@@ -93,9 +93,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( '<div', $result );
-		$this->assertStringContainsString( 'wc-clearance-badge-container', $result );
-		$this->assertStringContainsString( '<span class="wc-clearance-badge">', $result );
+		$this->assertStringContainsString( '<div class="wc-clearance-badge-container">', $result );
+		$this->assertStringContainsString( 'wc-clearance-badge', $result );
 	}
 
 	public function test_badge_uses_global_badge_label_option(): void {

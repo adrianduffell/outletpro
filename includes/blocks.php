@@ -128,7 +128,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-clearance-badge-container',
+			'class' => 'wc-clearance-badge',
 		)
 	);
 
@@ -139,7 +139,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 	}
 
 	return sprintf(
-		'<div %1$s><span class="wc-clearance-badge">%2$s</span></div>',
+		'<div class="wc-clearance-badge-container"><span %1$s>%2$s</span></div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
 	);
