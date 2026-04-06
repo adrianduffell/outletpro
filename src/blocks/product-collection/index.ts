@@ -23,7 +23,7 @@ declare global {
 }
 
 window.wc.wcBlocksRegistry.__experimentalRegisterProductCollection( {
-	name: 'wc-clearance/clearance',
+	name: 'wc-clearance/product-collection/clearance',
 	title: 'Clearance Section',
 	description: 'Show products in the clearance section.',
 	icon: 'tag',

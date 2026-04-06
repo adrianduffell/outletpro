@@ -155,7 +155,7 @@ function create_clearance_page(): void {
 				'dimensions'           => array(
 					'widthType' => 'fill',
 				),
-				'collection'           => 'wc-clearance/clearance',
+				'collection'           => 'wc-clearance/product-collection/clearance',
 				'hideControls'         => array( 'inherit' ),
 				'queryContextIncludes' => array( 'collection' ),
 			)
