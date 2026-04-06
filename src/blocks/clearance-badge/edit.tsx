@@ -15,7 +15,11 @@ export function Edit(): JSX.Element {
 		'wc_clearance_badge_label'
 	) as EntityProp< string >;
 
-	const blockProps = useBlockProps();
+	const blockProps = useBlockProps( {
+		style: {
+			display: 'inline-block',
+		},
+	} );
 
 	return (
 		<RichText
