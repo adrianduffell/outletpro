@@ -1,17 +1,19 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
+import { useEntityProp } from '@wordpress/core-data';
 
-interface Attributes {
-	message: string;
-}
+type EntityProp< T > = [
+	T | undefined,
+	( value: T | undefined ) => void,
+	unknown,
+];
 
-interface EditProps {
-	attributes: Attributes;
-	setAttributes: ( attrs: Partial< Attributes > ) => void;
-}
-
-export function Edit( { attributes, setAttributes }: EditProps ): JSX.Element {
-	const { message } = attributes;
+export function Edit(): JSX.Element {
+	const [ message, setMessage ] = useEntityProp(
+		'root',
+		'site',
+		'wc_clearance_message'
+	) as EntityProp< string >;
 
 	const blockProps = useBlockProps();
 
@@ -19,10 +21,11 @@ export function Edit( { attributes, setAttributes }: EditProps ): JSX.Element {
 		<RichText
 			{ ...blockProps }
 			tagName="p"
-			value={ message }
-			onChange={ ( value: string ) =>
-				setAttributes( { message: value } )
+			value={
+				message ||
+				__( 'Not eligible for change of mind returns', 'wc-clearance' )
 			}
+			onChange={ ( value: string ) => setMessage( value ) }
 			placeholder={ __(
 				'Enter clearance message text.',
 				'wc-clearance'

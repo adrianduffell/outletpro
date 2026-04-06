@@ -190,9 +190,15 @@ function render_clearance_message_callback( array $attributes, string $_content,
 		)
 	);
 
+	$message = get_option( CLEARANCE_MESSAGE_OPTION );
+
+	if ( ! is_string( $message ) || '' === $message ) {
+		$message = __( 'Not eligible for change of mind returns', 'wc-clearance' );
+	}
+
 	return sprintf(
 		'<p %1$s>%2$s</p>',
 		$wrapper_attributes,
-		wp_kses_post( $attributes['message'] ?? '' )
+		wp_kses_post( $message )
 	);
 }
