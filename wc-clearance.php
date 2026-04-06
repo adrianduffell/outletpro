@@ -102,6 +102,23 @@ function activate(): void {
 }
 
 /**
+ * Register classic theme front-end stylesheets.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function register_classic_styles_hook(): void {
+	wp_register_style(
+		'wc-clearance',
+		WC_CLEARANCE_PLUGIN_URL . 'assets/css/classic.css',
+		array(),
+		VERSION
+	);
+}
+add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
+
+/**
  * Enqueue admin-specific stylesheets.
  *
  * Fired by `admin_enqueue_scripts`.
