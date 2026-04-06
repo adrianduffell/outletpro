@@ -16,19 +16,22 @@ export function Edit(): JSX.Element {
 	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
+		className: 'wc-clearance-badge',
 		style: {
 			display: 'inline-block',
 		},
 	} );
 
 	return (
-		<RichText
-			{ ...blockProps }
-			tagName="span"
-			value={ label || __( 'Clearance', 'wc-clearance' ) }
-			onChange={ ( value: string ) => setLabel( value ) }
-			allowedFormats={ [] }
-			placeholder={ __( 'Label', 'wc-clearance' ) }
-		/>
+		<div className="wc-clearance-badge-container">
+			<RichText
+				{ ...blockProps }
+				tagName="span"
+				value={ label || __( 'Clearance', 'wc-clearance' ) }
+				onChange={ ( value: string ) => setLabel( value ) }
+				allowedFormats={ [] }
+				placeholder={ __( 'Label', 'wc-clearance' ) }
+			/>
+		</div>
 	);
 }
