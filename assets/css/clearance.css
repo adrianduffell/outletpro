@@ -1,0 +1,19 @@
+/**
+ * Front-end styles.
+ *
+ * @package WC_Clearance
+ * @since 1.0.0
+ */
+
+.wc-clearance-badge {
+	display: inline-block;
+	border-radius: 2px;
+	padding: 0.35em 0.5em;
+	line-height: 1;
+	font-weight: 600;
+	font-size: 0.875em;
+}
+
+.wc-clearance-message {
+	font-weight: 700;
+}

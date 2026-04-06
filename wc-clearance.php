@@ -98,6 +98,23 @@ function activate(): void {
 }
 
 /**
+ * Enqueue front-end stylesheets.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_frontend_styles_hook(): void {
+	wp_enqueue_style(
+		'wc-clearance',
+		plugin_dir_url( __FILE__ ) . 'assets/css/clearance.css',
+		array(),
+		VERSION
+	);
+}
+add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_frontend_styles_hook' );
+
+/**
  * Enqueue admin-specific stylesheets.
  *
  * Fired by `admin_enqueue_scripts`.
