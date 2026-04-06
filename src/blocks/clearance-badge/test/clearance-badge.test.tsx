@@ -65,8 +65,8 @@ const mockUseEntityProp = useEntityProp as jest.Mock;
 describe( 'Edit', () => {
 	test( 'renders badge with default label when setting is empty', () => {
 		// Arrange.
-		const SetLabel = jest.fn();
-		mockUseEntityProp.mockReturnValue( [ undefined, SetLabel, undefined ] );
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ undefined, setLabel, undefined ] );
 
 		// Act.
 		render( <Edit /> );
@@ -77,8 +77,8 @@ describe( 'Edit', () => {
 
 	test( 'renders badge with label from global setting', () => {
 		// Arrange.
-		const SetLabel = jest.fn();
-		mockUseEntityProp.mockReturnValue( [ 'Sale', SetLabel, undefined ] );
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 'Sale', setLabel, undefined ] );
 
 		// Act.
 		render( <Edit /> );
@@ -87,12 +87,12 @@ describe( 'Edit', () => {
 		expect( screen.getByDisplayValue( 'Sale' ) ).toBeInTheDocument();
 	} );
 
-	test( 'calls SetLabel with updated label when content changes', () => {
+	test( 'calls setLabel with updated label when content changes', () => {
 		// Arrange.
-		const SetLabel = jest.fn();
+		const setLabel = jest.fn();
 		mockUseEntityProp.mockReturnValue( [
 			'Clearance',
-			SetLabel,
+			setLabel,
 			undefined,
 		] );
 		render( <Edit /> );
@@ -102,6 +102,6 @@ describe( 'Edit', () => {
 		fireEvent.change( input, { target: { value: 'Discounted' } } );
 
 		// Assert.
-		expect( SetLabel ).toHaveBeenCalledWith( 'Discounted' );
+		expect( setLabel ).toHaveBeenCalledWith( 'Discounted' );
 	} );
 } );
