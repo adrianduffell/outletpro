@@ -19,10 +19,7 @@
 		},
 		"typography": {
 			"fontSize": true,
-			"__experimentalFontWeight": true,
-			"textTransform": true,
-			"textDecoration": true,
-			"letterSpacing": true
+			"__experimentalFontWeight": true
 		}
 	},
 	"attributes": {

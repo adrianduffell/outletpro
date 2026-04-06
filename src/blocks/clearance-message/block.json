@@ -16,11 +16,7 @@
 		"typography": {
 			"fontSize": true,
 			"lineHeight": true,
-			"__experimentalFontWeight": true,
-			"textTransform": true,
-			"textDecoration": true,
-			"letterSpacing": true,
-			"__experimentalFontFamily": true
+			"__experimentalFontWeight": true
 		},
 		"spacing": {
 			"padding": true,
