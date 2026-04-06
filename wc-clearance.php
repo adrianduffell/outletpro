@@ -57,7 +57,9 @@ function init_hook(): void {
 	init_shortcodes();
 	blocks_init();
 	block_editor_init();
-	init_customizer();
+	if ( ! wp_is_block_theme() ) {
+		init_customizer();
+	}
 	init_woocommerce_template_hooks();
 	try {
 		init_setup_task();
@@ -96,6 +98,23 @@ function activate(): void {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
 }
+
+/**
+ * Enqueue front-end stylesheets.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_frontend_styles_hook(): void {
+	wp_enqueue_style(
+		'wc-clearance',
+		plugin_dir_url( __FILE__ ) . 'assets/css/clearance.css',
+		array(),
+		VERSION
+	);
+}
+add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_frontend_styles_hook' );
 
 /**
  * Enqueue admin-specific stylesheets.

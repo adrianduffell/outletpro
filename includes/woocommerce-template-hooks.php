@@ -45,7 +45,7 @@ function display_clearance_badge_hook(): void {
 	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; display:inline-block; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
 		esc_attr( $bg_colour ),
 		esc_attr( $text_colour ),
 		esc_html( $label )
@@ -78,5 +78,5 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	echo '<p class="wc-clearance-message" style="font-weight:bold;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
+	echo '<p class="wc-clearance-message" style="font-weight:700;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }
