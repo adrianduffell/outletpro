@@ -45,7 +45,7 @@ function display_clearance_badge_hook(): void {
 	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:2px; padding:0.35em 0.5em; font-weight:600; font-size:0.875em; line-height:1;">%s</span></p>',
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
 		esc_attr( $bg_colour ),
 		esc_attr( $text_colour ),
 		esc_html( $label )
