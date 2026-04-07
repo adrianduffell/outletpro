@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize block editor integrations.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_block_editor(): void {
 	add_filter( 'block_editor_settings_all', 'WC_Clearance\append_block_editor_settings_hook', 10, 2 );

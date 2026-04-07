@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize shortcodes.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_shortcodes(): void {
 	add_filter( 'woocommerce_shortcode_products_query', 'WC_Clearance\filter_products_shortcode_query_hook', 10, 3 );
@@ -20,7 +20,7 @@ function init_shortcodes(): void {
 }
 
 /**
- * Filter the [products] shortcode query args to include only clearance products when is_clearance is set.
+ * Filter the [products] shortcode query args to include only clearance products when wc_clearance is set.
  *
  * Fired by `woocommerce_shortcode_products_query`.
  *
@@ -32,11 +32,11 @@ function init_shortcodes(): void {
  */
 function filter_products_shortcode_query_hook( array $query_args, array $attributes, string $unused_type ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
-	if ( empty( $attributes['is_clearance'] ) ) {
+	if ( empty( $attributes['wc_clearance'] ) ) {
 		return $query_args;
 	}
 
-	if ( ! \wc_string_to_bool( $attributes['is_clearance'] ) ) {
+	if ( ! \wc_string_to_bool( $attributes['wc_clearance'] ) ) {
 		return $query_args;
 	}
 
@@ -54,7 +54,7 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 }
 
 /**
- * Register the is_clearance attribute for the [products] shortcode.
+ * Register the wc_clearance attribute for the [products] shortcode.
  *
  * Fired by `shortcode_atts_products`.
  *
@@ -66,8 +66,8 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
  */
 function add_products_shortcode_attribute_hook( array $out, array $unused_pairs, array $atts ): array {
 
-	if ( isset( $atts['is_clearance'] ) ) {
-		$out['is_clearance'] = \wc_string_to_bool( $atts['is_clearance'] );
+	if ( isset( $atts['wc_clearance'] ) ) {
+		$out['wc_clearance'] = \wc_string_to_bool( $atts['wc_clearance'] );
 	}
 
 	return $out;

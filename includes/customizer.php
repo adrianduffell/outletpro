@@ -40,7 +40,7 @@ const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
 /**
  * Helper to initialize customizer integration.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_customizer(): void {
 	add_action( 'customize_register', 'WC_Clearance\register_customizer_hook' );

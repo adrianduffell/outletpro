@@ -10,6 +10,7 @@ use function WC_Clearance\init_blocks;
 use function WC_Clearance\register_clearance_badge_block;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\render_clearance_badge_callback;
+use function WC_Clearance\reset_blocks;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 
@@ -17,7 +18,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_product_not_in_clearance(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -42,7 +43,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_badge_html_when_product_is_in_clearance(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -70,7 +71,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_badge_uses_global_badge_label_option(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -98,7 +99,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {
 		// Arrange.
-		unregister_block_type( 'wc-clearance/clearance-badge' );
+		reset_blocks();
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -124,8 +125,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		unregister_block_type( 'wc-clearance/clearance-badge' );
-		unregister_block_type( 'wc-clearance/clearance-message' );
+		reset_blocks();
 
 		// Act.
 		init_blocks();

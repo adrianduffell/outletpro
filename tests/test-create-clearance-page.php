@@ -88,7 +88,7 @@ class Test_Create_Clearance_Page extends WP_UnitTestCase {
 			)
 		);
 		$this->assertNotEmpty( $pages );
-		$this->assertSame( '[products is_clearance="yes"]', $pages[0]->post_content );
+		$this->assertSame( '[products wc_clearance="yes"]', $pages[0]->post_content );
 	}
 
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {

@@ -13,7 +13,7 @@ use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Shortcode_Products extends WP_UnitTestCase {
 
-	public function test_query_unchanged_when_is_clearance_attribute_absent(): void {
+	public function test_query_unchanged_when_wc_clearance_attribute_absent(): void {
 		// Arrange.
 		$query_args = array( 'post_type' => 'product' );
 		$attributes = array();
@@ -25,10 +25,10 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( $query_args, $result );
 	}
 
-	public function test_query_unchanged_when_is_clearance_is_false(): void {
+	public function test_query_unchanged_when_wc_clearance_is_false(): void {
 		// Arrange.
 		$query_args = array( 'post_type' => 'product' );
-		$attributes = array( 'is_clearance' => false );
+		$attributes = array( 'wc_clearance' => false );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -37,11 +37,11 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( $query_args, $result );
 	}
 
-	public function test_query_gets_tax_query_when_is_clearance_is_true(): void {
+	public function test_query_gets_tax_query_when_wc_clearance_is_true(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		$query_args = array( 'post_type' => 'product' );
-		$attributes = array( 'is_clearance' => true );
+		$attributes = array( 'wc_clearance' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -65,7 +65,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 			'post_type' => 'product',
 			'tax_query' => array( $existing_tax ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
-		$attributes   = array( 'is_clearance' => true );
+		$attributes   = array( 'wc_clearance' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -76,33 +76,33 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( CLEARANCE_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
 	}
 
-	public function test_add_products_shortcode_attribute_hook_adds_is_clearance_when_present(): void {
+	public function test_add_products_shortcode_attribute_hook_adds_wc_clearance_when_present(): void {
 		// Arrange.
 		$out  = array();
-		$atts = array( 'is_clearance' => 'yes' );
+		$atts = array( 'wc_clearance' => 'yes' );
 
 		// Act.
 		$result = add_products_shortcode_attribute_hook( $out, array(), $atts );
 
 		// Assert.
-		$this->assertArrayHasKey( 'is_clearance', $result );
-		$this->assertTrue( $result['is_clearance'] );
+		$this->assertArrayHasKey( 'wc_clearance', $result );
+		$this->assertTrue( $result['wc_clearance'] );
 	}
 
 	public function test_add_products_shortcode_attribute_hook_converts_false_string(): void {
 		// Arrange.
 		$out  = array();
-		$atts = array( 'is_clearance' => 'no' );
+		$atts = array( 'wc_clearance' => 'no' );
 
 		// Act.
 		$result = add_products_shortcode_attribute_hook( $out, array(), $atts );
 
 		// Assert.
-		$this->assertArrayHasKey( 'is_clearance', $result );
-		$this->assertFalse( $result['is_clearance'] );
+		$this->assertArrayHasKey( 'wc_clearance', $result );
+		$this->assertFalse( $result['wc_clearance'] );
 	}
 
-	public function test_add_products_shortcode_attribute_hook_unchanged_when_is_clearance_absent(): void {
+	public function test_add_products_shortcode_attribute_hook_unchanged_when_wc_clearance_absent(): void {
 		// Arrange.
 		$out  = array( 'limit' => 12 );
 		$atts = array();
@@ -111,7 +111,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = add_products_shortcode_attribute_hook( $out, array(), $atts );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'is_clearance', $result );
+		$this->assertArrayNotHasKey( 'wc_clearance', $result );
 		$this->assertSame( $out, $result );
 	}
 }
