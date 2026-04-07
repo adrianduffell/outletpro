@@ -203,7 +203,7 @@ function enqueue_checkout_fill_hook(): void {
 	wp_enqueue_script(
 		'wc-clearance-checkout-fill',
 		plugin_dir_url( __FILE__ ) . 'assets/js/checkout.js',
-		array( 'wp-plugins', 'wp-element', 'wp-data' ),
+		array( 'wp-plugins', 'wp-element', 'wp-data', 'wp-i18n' ),
 		VERSION,
 		true
 	);

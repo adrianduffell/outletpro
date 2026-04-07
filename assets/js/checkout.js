@@ -12,6 +12,7 @@
 	const registerPlugin = window.wp?.plugins?.registerPlugin;
 	const createElement = window.wp?.element?.createElement;
 	const useSelect = window.wp?.data?.useSelect;
+	const __ = window.wp?.i18n?.__ ?? ( ( text ) => text );
 
 	if ( ! registerPlugin || ! createElement || ! useSelect ) {
 		return;
@@ -38,7 +39,7 @@
 			createElement(
 				'span',
 				{ className: 'wc-clearance-badge' },
-				'Clearance'
+				__( 'Clearance', 'wc-clearance' )
 			)
 		);
 	}
