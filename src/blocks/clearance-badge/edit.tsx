@@ -16,10 +16,7 @@ export function Edit(): JSX.Element {
 	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
-		style: {
-			display: 'inline-block',
-			lineHeight: 1,
-		},
+		className: 'wc-clearance-badge',
 	} );
 
 	return (
