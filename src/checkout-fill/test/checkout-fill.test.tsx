@@ -66,7 +66,7 @@ describe( 'ClearanceBadgeForOrder', () => {
 		expect( container ).toBeEmptyDOMElement();
 	} );
 
-	test( 'renders nothing when only some items are not clearance', () => {
+	test( 'renders nothing when all items are not clearance', () => {
 		// Arrange.
 		const cart = {
 			items: [
