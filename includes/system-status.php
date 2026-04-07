@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize system status.
  *
  * @internal
- * @since 1.0.0
  */
 function init_system_status(): void {
 	add_action( 'woocommerce_system_status_report', 'WC_Clearance\add_system_status_section_hook', 99 );

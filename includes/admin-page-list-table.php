@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize admin page list table features.
  *
  * @internal
- * @since 1.0.0
  */
 function init_admin_page_list_table(): void {
 	add_filter( 'display_post_states', 'WC_Clearance\clearance_section_label_hook', 10, 2 );

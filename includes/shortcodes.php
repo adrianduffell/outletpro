@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize shortcodes.
  *
  * @internal
- * @since 1.0.0
  */
 function init_shortcodes(): void {
 	add_filter( 'woocommerce_shortcode_products_query', 'WC_Clearance\filter_products_shortcode_query_hook', 10, 3 );

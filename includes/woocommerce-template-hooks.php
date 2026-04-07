@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize classic theme frontend integrations.
  *
  * @internal
- * @since 1.0.0
  */
 function init_woocommerce_template_hooks(): void {
 	if ( wp_is_block_theme() ) {

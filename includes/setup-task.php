@@ -16,7 +16,6 @@ use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
  * Register the clearance section setup task with WooCommerce's onboarding task list.
  *
  * @internal
- * @since 1.0.0
  * @throws \RuntimeException If the WooCommerce TaskLists class is not available.
  */
 function init_setup_task(): void {

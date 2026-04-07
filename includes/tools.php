@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize tools.
  *
  * @internal
- * @since 1.0.0
  */
 function init_tools(): void {
 	add_filter( 'woocommerce_debug_tools', 'WC_Clearance\register_create_clearance_page_tool_hook' );

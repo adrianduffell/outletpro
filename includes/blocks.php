@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize block registrations.
  *
  * @internal
- * @since 1.0.0
  */
 function blocks_init(): void {
 	register_clearance_badge_block();
@@ -26,7 +25,6 @@ function blocks_init(): void {
  * Helper to reset blocks back to the uninitialized state.
  *
  * @internal
- * @since 1.0.0
  */
 function reset_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
