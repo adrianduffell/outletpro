@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize block registrations.
  *
+ * @internal
  * @since 1.0.0
  */
 function blocks_init(): void {
@@ -24,6 +25,7 @@ function blocks_init(): void {
 /**
  * Helper to reset blocks back to the uninitialized state.
  *
+ * @internal
  * @since 1.0.0
  */
 function reset_blocks(): void {

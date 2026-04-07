@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize shortcodes.
  *
+ * @internal
  * @since 1.0.0
  */
 function init_shortcodes(): void {

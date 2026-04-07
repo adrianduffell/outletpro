@@ -22,6 +22,7 @@ const ONBOARDING_DISMISS_STORAGE_KEY = 'wc_clearance_product_onboarding_dismisse
 /**
  * Helper to initialize admin product list table features.
  *
+ * @internal
  * @since 1.0.0
  */
 function init_admin_product_list_table(): void {

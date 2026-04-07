@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize block editor integrations.
  *
+ * @internal
  * @since 1.0.0
  */
 function block_editor_init(): void {

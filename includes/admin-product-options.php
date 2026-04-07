@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize product options.
  *
+ * @internal
  * @since 1.0.0
  */
 function init_admin_product_options(): void {

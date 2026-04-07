@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize REST API integrations.
  *
+ * @internal
  * @since 1.0.0
  */
 function init_rest_api(): void {
