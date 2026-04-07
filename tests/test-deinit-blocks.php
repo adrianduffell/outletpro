@@ -1,15 +1,15 @@
 <?php
 /**
- * Tests for reset_blocks().
+ * Tests for deinit_blocks().
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\reset_blocks;
+use function WC_Clearance\deinit_blocks;
 
-class Test_Reset_Blocks extends WP_UnitTestCase {
+class Test_Deinit_Blocks extends WP_UnitTestCase {
 
-	public function test_block_is_unregistered_after_reset_blocks(): void {
+	public function test_block_is_unregistered_after_deinit_blocks(): void {
 		// Arrange.
 		register_block_type(
 			'wc-clearance/foo',
@@ -20,7 +20,7 @@ class Test_Reset_Blocks extends WP_UnitTestCase {
 		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/foo' ) );
 
 		// Act.
-		reset_blocks();
+		deinit_blocks();
 
 		// Assert.
 		$this->assertFalse( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/foo' ) );
@@ -31,7 +31,7 @@ class Test_Reset_Blocks extends WP_UnitTestCase {
 		$this->assertFalse( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/bar' ) );
 
 		// Act.
-		reset_blocks();
+		deinit_blocks();
 
 		// Assert.
 		$this->assertFalse( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/bar' ) );

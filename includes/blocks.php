@@ -22,11 +22,11 @@ function blocks_init(): void {
 }
 
 /**
- * Helper to reset blocks back to the uninitialized state.
+ * Helper to de-initialize blocks back to the uninitialized state.
  *
  * @since 1.0.0
  */
-function reset_blocks(): void {
+function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
 	// Unregister all blocks in the wc-clearance namespace.
