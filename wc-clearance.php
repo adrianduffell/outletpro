@@ -192,6 +192,34 @@ function enqueue_build_assets_hook(): void {
 }
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 
+/**
+ * Enqueue the checkout block slot fill script on frontend pages.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_checkout_fill_hook(): void {
+	$asset_file = plugin_dir_path( __FILE__ ) . 'build/checkout-fill.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	wp_enqueue_script(
+		'wc-clearance-checkout-fill',
+		plugin_dir_url( __FILE__ ) . 'build/checkout-fill.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+
+	wp_enqueue_style( 'wp-block-wc-clearance-clearance-badge' );
+}
+add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_checkout_fill_hook', 20 );
+
 // Hook into WordPress.
 add_action( 'init', 'WC_Clearance\init_hook', 20 );
 add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );

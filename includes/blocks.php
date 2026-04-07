@@ -160,6 +160,65 @@ function register_clearance_message_block(): void {
 }
 
 /**
+ * Register WooCommerce Store API extension to expose clearance status on cart items.
+ *
+ * Fired by `woocommerce_blocks_loaded`.
+ *
+ * @since 1.0.0
+ * @internal WordPress action hook
+ */
+function register_cart_item_clearance_extension(): void {
+	if ( ! function_exists( 'woocommerce_store_api_register_endpoint_data' ) ) {
+		return;
+	}
+
+	woocommerce_store_api_register_endpoint_data(
+		array(
+			'endpoint'        => 'cart-item',
+			'namespace'       => 'wc-clearance',
+			'data_callback'   => 'WC_Clearance\cart_item_clearance_data_callback',
+			'schema_callback' => 'WC_Clearance\cart_item_clearance_schema_callback',
+		)
+	);
+}
+
+/**
+ * Provide clearance extension data for a Store API cart item.
+ *
+ * @param array<string, mixed> $cart_item Cart item data.
+ * @return array<string, bool>
+ */
+function cart_item_clearance_data_callback( array $cart_item ): array {
+	$product_id = ! empty( $cart_item['variation_id'] ) ? (int) $cart_item['variation_id'] : (int) $cart_item['product_id'];
+	$product    = wc_get_product( $product_id );
+
+	if ( ! $product instanceof \WC_Product ) {
+		return array( 'is_clearance' => false );
+	}
+
+	try {
+		return array( 'is_clearance' => is_clearance( $product ) );
+	} catch ( \Throwable $e ) {
+		return array( 'is_clearance' => false );
+	}
+}
+
+/**
+ * Define the Store API schema for the clearance cart item extension.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function cart_item_clearance_schema_callback(): array {
+	return array(
+		'is_clearance' => array(
+			'description' => __( 'Whether the product is in the clearance section.', 'wc-clearance' ),
+			'type'        => 'boolean',
+			'readonly'    => true,
+		),
+	);
+}
+
+/**
  * Render callback for the clearance message block.
  *
  * @param array<string, mixed> $attributes Block attributes.
@@ -196,3 +255,5 @@ function render_clearance_message_callback( array $attributes, string $_content,
 		wp_kses_post( $attributes['message'] ?? '' )
 	);
 }
+
+add_action( 'woocommerce_blocks_loaded', 'WC_Clearance\register_cart_item_clearance_extension' );
