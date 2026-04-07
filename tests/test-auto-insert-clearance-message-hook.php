@@ -5,7 +5,7 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\blocks_init;
+use function WC_Clearance\init_blocks;
 use function WC_Clearance\deinit_blocks;
 use function WC_Clearance\register_clearance_message_block;
 
@@ -25,7 +25,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_when_context_is_array(): void {
 		// Arrange.
-		deinit_blocks();
+		init_blocks();
 		blocks_init();
 
 		// Act.
@@ -38,7 +38,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_message_is_not_added_when_context_is_null(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', null );
@@ -50,7 +50,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_message_is_not_added_when_template_is_not_single_product(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
 
@@ -64,7 +64,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_message_is_added_when_template_is_single_product(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -78,7 +78,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_existing_hooked_blocks_are_preserved(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -93,7 +93,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_message_is_not_added_for_different_anchor(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -107,7 +107,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 	public function test_message_is_not_added_for_last_child_position(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 

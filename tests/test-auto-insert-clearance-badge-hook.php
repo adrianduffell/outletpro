@@ -5,8 +5,8 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\blocks_init;
 use function WC_Clearance\deinit_blocks;
+use function WC_Clearance\init_blocks;
 use function WC_Clearance\register_clearance_badge_block;
 
 class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
@@ -50,7 +50,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_is_not_added_when_template_is_not_single_product(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
 
@@ -64,7 +64,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_is_added_when_template_is_single_product(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -78,7 +78,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 	public function test_other_hooked_blocks_are_not_filtered(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
 
@@ -92,7 +92,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_is_not_added_for_different_anchor(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
