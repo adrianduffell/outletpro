@@ -15,9 +15,6 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function init_woocommerce_template_hooks(): void {
-	if ( wp_is_block_theme() ) {
-		return;
-	}
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
 }
@@ -62,10 +59,6 @@ function display_clearance_badge_hook(): void {
  * @internal WordPress action hook
  */
 function display_clearance_message_hook(): void {
-	if ( wp_is_block_theme() ) {
-		return;
-	}
-
 	$product = wc_get_product( get_the_ID() );
 
 	if ( ! $product instanceof \WC_Product ) {
