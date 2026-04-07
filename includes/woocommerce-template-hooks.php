@@ -17,6 +17,23 @@ defined( 'ABSPATH' ) || exit;
 function init_woocommerce_template_hooks(): void {
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
 	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
+	init_astra_template_hooks();
+}
+
+/**
+ * Swap the clearance badge hook to the Astra theme's equivalent when Astra is active.
+ *
+ * Astra removes the default WooCommerce `woocommerce_single_product_summary` hooks.
+ *
+ * @internal
+ */
+function init_astra_template_hooks(): void {
+	if ( 'astra' !== get_template() ) {
+		return;
+	}
+
+	remove_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
+	add_action( 'astra_woo_single_short_description_before', 'WC_Clearance\display_clearance_badge_hook', 15 );
 }
 
 /**
