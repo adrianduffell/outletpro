@@ -5,15 +5,15 @@
  * @package WC_Clearance
  */
 
+use function WC_Clearance\deinit_blocks;
 use function WC_Clearance\init_blocks;
 use function WC_Clearance\register_clearance_message_block;
-use function WC_Clearance\reset_blocks;
 
 class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_clearance_message_has_no_block_hooks_declaration(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 
 		// Act.
@@ -25,7 +25,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_when_context_is_array(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 
 		// Act.
@@ -37,7 +37,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_when_context_is_null(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 
 		// Act.
@@ -49,7 +49,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_when_template_is_not_single_product(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
@@ -63,7 +63,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_added_when_template_is_single_product(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
@@ -77,7 +77,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_existing_hooked_blocks_are_preserved(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
@@ -92,7 +92,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_for_different_anchor(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
@@ -106,7 +106,7 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_for_last_child_position(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		init_blocks();
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';

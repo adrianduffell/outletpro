@@ -6,11 +6,11 @@
  */
 
 use function WC_Clearance\add_to_clearance;
+use function WC_Clearance\deinit_blocks;
 use function WC_Clearance\init_blocks;
 use function WC_Clearance\register_clearance_message_block;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\render_clearance_message_callback;
-use function WC_Clearance\reset_blocks;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
 
@@ -18,7 +18,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_product_not_in_clearance(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -43,7 +43,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_message_html_when_product_is_in_clearance(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -71,7 +71,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_message_uses_global_message_option(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -102,7 +102,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -128,7 +128,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		reset_blocks();
+		deinit_blocks();
 
 		// Act.
 		init_blocks();
@@ -139,7 +139,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_empty_option_falls_back_to_default_message(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
@@ -169,7 +169,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_message_is_wrapped_in_paragraph_tag(): void {
 		// Arrange.
-		reset_blocks();
+		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
