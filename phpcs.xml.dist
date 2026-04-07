@@ -75,4 +75,15 @@
 
 	<!-- Complexity checks -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
+
+	<!-- Disallow nesting in tests -->
+	<rule ref="Generic.Metrics.NestingLevel">
+		<include-pattern>tests/</include-pattern>
+		<exclude-pattern>tests/test-seed-clearance-status-taxonomy.php</exclude-pattern>
+		<exclude-pattern>tests/test-set-clearance.php</exclude-pattern>
+		<exclude-pattern>tests/test-add-to-clearance.php</exclude-pattern>
+		<properties>
+			<property name="absoluteNestingLevel" value="0" />
+		</properties>
+	</rule>
 </ruleset>
