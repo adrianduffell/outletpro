@@ -3,6 +3,7 @@
  */
 
 .wc-clearance-badge {
+	line-height: 1;
 	line-height: 1cap;
 	display: inline-block;
 }
