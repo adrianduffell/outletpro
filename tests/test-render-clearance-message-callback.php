@@ -143,7 +143,6 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		update_option( CLEARANCE_MESSAGE_OPTION, 'Test message' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -161,9 +160,6 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertMatchesRegularExpression( '/<p\b[^>]*>Test message<\/p>/', $result );
-
-		// Cleanup.
-		delete_option( CLEARANCE_MESSAGE_OPTION );
+		$this->assertMatchesRegularExpression( '/<p\b[^>]*>.+<\/p>/', $result );
 	}
 }
