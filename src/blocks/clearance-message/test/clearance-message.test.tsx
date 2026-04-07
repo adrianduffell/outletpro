@@ -26,22 +26,26 @@ jest.mock( '@wordpress/i18n', () => ( {
 	__: jest.fn( ( str: string ) => str ),
 } ) );
 
-const defaultAttributes = {
-	message: 'Not eligible for change of mind returns',
-};
+jest.mock( '@wordpress/core-data', () => ( {
+	useEntityProp: jest.fn(),
+} ) );
+
+import { useEntityProp } from '@wordpress/core-data';
+
+const mockUseEntityProp = useEntityProp as jest.Mock;
 
 describe( 'Edit', () => {
-	test( 'renders message with default text', () => {
+	test( 'renders message with default text when setting is undefined', () => {
 		// Arrange.
-		const setAttributes = jest.fn();
+		const setMessage = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			undefined,
+			setMessage,
+			undefined,
+		] );
 
 		// Act.
-		render(
-			<Edit
-				attributes={ defaultAttributes }
-				setAttributes={ setAttributes }
-			/>
-		);
+		render( <Edit /> );
 
 		// Assert.
 		expect(
@@ -51,33 +55,49 @@ describe( 'Edit', () => {
 		).toBeInTheDocument();
 	} );
 
-	test( 'renders message with custom message attribute', () => {
+	test( 'renders message with default text when setting is empty string', () => {
 		// Arrange.
-		const setAttributes = jest.fn();
+		const setMessage = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ '', setMessage, undefined ] );
 
 		// Act.
-		render(
-			<Edit
-				attributes={ { message: 'No returns on clearance!' } }
-				setAttributes={ setAttributes }
-			/>
-		);
+		render( <Edit /> );
 
 		// Assert.
 		expect(
-			screen.getByDisplayValue( 'No returns on clearance!' )
+			screen.getByDisplayValue(
+				'Not eligible for change of mind returns'
+			)
 		).toBeInTheDocument();
 	} );
 
-	test( 'calls setAttributes with new message when content changes', () => {
+	test( 'renders message with value from global setting', () => {
 		// Arrange.
-		const setAttributes = jest.fn();
-		render(
-			<Edit
-				attributes={ defaultAttributes }
-				setAttributes={ setAttributes }
-			/>
-		);
+		const setMessage = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			'Final sale — no returns.',
+			setMessage,
+			undefined,
+		] );
+
+		// Act.
+		render( <Edit /> );
+
+		// Assert.
+		expect(
+			screen.getByDisplayValue( 'Final sale — no returns.' )
+		).toBeInTheDocument();
+	} );
+
+	test( 'calls setMessage with new value when content changes', () => {
+		// Arrange.
+		const setMessage = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			'Not eligible for change of mind returns',
+			setMessage,
+			undefined,
+		] );
+		render( <Edit /> );
 		const input = screen.getByDisplayValue(
 			'Not eligible for change of mind returns'
 		);
@@ -88,8 +108,6 @@ describe( 'Edit', () => {
 		} );
 
 		// Assert.
-		expect( setAttributes ).toHaveBeenCalledWith( {
-			message: 'Final sale — no returns.',
-		} );
+		expect( setMessage ).toHaveBeenCalledWith( 'Final sale — no returns.' );
 	} );
 } );

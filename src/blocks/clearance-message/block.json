@@ -24,10 +24,6 @@
 		}
 	},
 	"attributes": {
-		"message": {
-			"type": "string",
-			"default": "Not eligible for change of mind returns"
-		},
 		"fontSize": {
 			"type": "string",
 			"default": "small"
