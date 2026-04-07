@@ -68,7 +68,7 @@ function register_clearance_status_taxonomy(): void {
 		'label'        => __( 'Clearance Status', 'wc-clearance' ),
 		'public'       => false,
 		'show_ui'      => false,
-		'show_in_rest' => false,
+		'show_in_rest' => true,
 		'hierarchical' => false,
 		'query_var'    => false,
 		'rewrite'      => false,

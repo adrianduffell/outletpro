@@ -21,6 +21,17 @@ class Test_Register_Clearance_Status_Taxonomy extends \WP_UnitTestCase {
 		$this->assertContains( 'product', get_taxonomy( 'wc_clearance_status' )->object_type );
 	}
 
+	public function test_taxonomy_is_show_in_rest(): void {
+		// Arrange.
+		unregister_taxonomy( 'wc_clearance_status' );
+
+		// Act.
+		register_clearance_status_taxonomy();
+
+		// Assert.
+		$this->assertTrue( get_taxonomy( 'wc_clearance_status' )->show_in_rest );
+	}
+
 	public function test_calling_function_multiple_times_is_safe(): void {
 		// Arrange.
 
