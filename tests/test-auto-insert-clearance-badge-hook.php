@@ -26,7 +26,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_is_not_added_when_context_is_array(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', array() );
@@ -38,7 +38,7 @@ class Test_Auto_Insert_Clearance_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_is_not_added_when_context_is_null(): void {
 		// Arrange.
 		deinit_blocks();
-		blocks_init();
+		init_blocks();
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', null );

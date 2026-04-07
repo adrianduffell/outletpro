@@ -5,8 +5,8 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\init_blocks;
 use function WC_Clearance\deinit_blocks;
+use function WC_Clearance\init_blocks;
 use function WC_Clearance\register_clearance_message_block;
 
 class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
@@ -25,8 +25,8 @@ class Test_Auto_Insert_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_is_not_added_when_context_is_array(): void {
 		// Arrange.
+		deinit_blocks();
 		init_blocks();
-		blocks_init();
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', array() );
