@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 1.0.0
  */
-function block_editor_init(): void {
+function init_block_editor(): void {
 	add_filter( 'block_editor_settings_all', 'WC_Clearance\append_block_editor_settings_hook', 10, 2 );
 }
 

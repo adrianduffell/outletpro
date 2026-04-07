@@ -5,7 +5,7 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\block_editor_init;
+use function WC_Clearance\init_block_editor;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
@@ -17,7 +17,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		block_editor_init();
+		init_block_editor();
 		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
 		// Act.
@@ -31,7 +31,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 	public function test_settings_unchanged_when_canonical_term_missing(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
-		block_editor_init();
+		init_block_editor();
 		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.
@@ -47,7 +47,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		block_editor_init();
+		init_block_editor();
 		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.

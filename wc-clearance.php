@@ -55,8 +55,8 @@ function init_hook(): void {
 	init_taxonomies();
 	init_rest_api();
 	init_shortcodes();
-	blocks_init();
-	block_editor_init();
+	init_blocks();
+	init_block_editor();
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
 	}
