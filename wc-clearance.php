@@ -200,19 +200,11 @@ add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_ho
  * @internal WordPress action hook
  */
 function enqueue_checkout_fill_hook(): void {
-	$asset_file = plugin_dir_path( __FILE__ ) . 'build/checkout-fill.asset.php';
-
-	if ( ! file_exists( $asset_file ) ) {
-		return;
-	}
-
-	$asset = require $asset_file;
-
 	wp_enqueue_script(
 		'wc-clearance-checkout-fill',
-		plugin_dir_url( __FILE__ ) . 'build/checkout-fill.js',
-		$asset['dependencies'],
-		$asset['version'],
+		plugin_dir_url( __FILE__ ) . 'assets/js/checkout.js',
+		array( 'wp-plugins', 'wp-element', 'wp-data' ),
+		VERSION,
 		true
 	);
 
