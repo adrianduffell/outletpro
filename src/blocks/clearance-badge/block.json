@@ -37,9 +37,9 @@
 				},
 				"spacing": {
 					"padding": {
-						"top": "4px",
+						"top": "8px",
 						"right": "12px",
-						"bottom": "4px",
+						"bottom": "8px",
 						"left": "12px"
 					}
 				},
