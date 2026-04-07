@@ -188,7 +188,9 @@ function create_clearance_page(): void {
 			'<!-- /wp:woocommerce/product-collection -->';
 		// phpcs:enable
 	} else {
-		$post_content = '[products wc_clearance="yes"]';
+		$post_content = '<!-- wp:shortcode -->' . "\n" .
+			'[products wc_clearance="yes"]' . "\n" .
+			'<!-- /wp:shortcode -->';
 	}
 
 	$result = wp_insert_post(
