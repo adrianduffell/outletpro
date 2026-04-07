@@ -37,16 +37,12 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$bg_colour   = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
-	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
-	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
 	wp_enqueue_style( 'wc-clearance' );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:4px; padding:8px 12px; font-weight:600; font-size:0.875em;">%s</span></p>',
-		esc_attr( $bg_colour ),
-		esc_attr( $text_colour ),
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge">%s</span></p>',
 		esc_html( $label )
 	);
 }
@@ -75,5 +71,5 @@ function display_clearance_message_hook(): void {
 
 	wp_enqueue_style( 'wc-clearance' );
 
-	echo '<p class="wc-clearance-message" style="font-weight:700;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
+	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }
