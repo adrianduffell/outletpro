@@ -44,7 +44,7 @@ function display_clearance_badge_hook(): void {
 	wp_enqueue_style( 'wc-clearance' );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:2px; padding:0.5em; font-weight:600; font-size:0.875em;">%s</span></p>',
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:4px; padding:8px 12px; font-weight:600; font-size:0.875em;">%s</span></p>',
 		esc_attr( $bg_colour ),
 		esc_attr( $text_colour ),
 		esc_html( $label )
