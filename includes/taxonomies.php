@@ -25,7 +25,7 @@ const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
 /**
  * Helper to initialize taxonomies.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_taxonomies(): void {
 	register_clearance_status_taxonomy();

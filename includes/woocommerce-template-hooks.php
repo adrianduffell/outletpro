@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize classic theme frontend integrations.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_woocommerce_template_hooks(): void {
 	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );

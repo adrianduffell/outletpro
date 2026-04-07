@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Helper to initialize REST API integrations.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_rest_api(): void {
 	add_filter( 'rest_product_collection_params', 'WC_Clearance\add_wc_clearance_rest_param_hook' );

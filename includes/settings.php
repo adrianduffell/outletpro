@@ -33,7 +33,7 @@ const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 /**
  * Helper to initialize settings.
  *
- * @since 1.0.0
+ * @internal
  */
 function init_settings(): void {
 	register_clearance_page_setting();
