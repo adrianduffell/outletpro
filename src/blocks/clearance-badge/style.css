@@ -8,6 +8,7 @@
 }
 
 @supports (text-box-trim: trim-both) {
+
 	.wc-clearance-badge {
 		line-height: 1;
 		text-box-trim: trim-both;
