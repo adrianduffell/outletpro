@@ -3,14 +3,9 @@
  */
 
 .wc-clearance-badge {
-	line-height: 1;
 	display: inline-block;
+	line-height: 1;
+	text-box-trim: trim-both;
+	text-box-edge: cap alphabetic;
 }
 
-@supports (text-box-trim: trim-both) {
-
-	.wc-clearance-badge {
-		text-box-trim: trim-both;
-		text-box-edge: cap alphabetic;
-	}
-}
