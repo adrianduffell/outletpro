@@ -4,7 +4,15 @@
 
 .wc-clearance-badge {
 	display: inline-block;
+	border-radius: 4px;
+	padding: 8px 12px;
+	font-weight: 600;
+	font-size: 0.875em;
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
+}
+
+.wc-clearance-message {
+	font-weight: 700;
 }
