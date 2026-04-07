@@ -37,12 +37,16 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	$bg_colour   = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
+	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
+	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
 	wp_enqueue_style( 'wc-clearance' );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge">%s</span></p>',
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s;">%s</span></p>',
+		esc_attr( $bg_colour ),
+		esc_attr( $text_colour ),
 		esc_html( $label )
 	);
 }

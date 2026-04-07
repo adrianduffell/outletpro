@@ -113,18 +113,6 @@ function register_classic_styles_hook(): void {
 		array(),
 		VERSION
 	);
-
-	$bg_colour   = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
-	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
-
-	wp_add_inline_style(
-		'wc-clearance',
-		sprintf(
-			'.wc-clearance-badge { background-color: %s; color: %s; }',
-			esc_attr( $bg_colour ),
-			esc_attr( $text_colour )
-		)
-	);
 }
 add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
 
