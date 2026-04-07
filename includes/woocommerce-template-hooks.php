@@ -44,6 +44,8 @@ function display_clearance_badge_hook(): void {
 	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
 	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
+	wp_enqueue_style( 'wc-clearance' );
+
 	printf(
 		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s; border-radius:2px; padding:0.35em 0.5em; line-height:1; font-weight:600; font-size:0.875em;">%s</span></p>',
 		esc_attr( $bg_colour ),
@@ -77,6 +79,8 @@ function display_clearance_message_hook(): void {
 	} catch ( \Throwable $e ) {
 		return;
 	}
+
+	wp_enqueue_style( 'wc-clearance' );
 
 	echo '<p class="wc-clearance-message" style="font-weight:700;">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }
