@@ -34,7 +34,7 @@ require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
-require_once __DIR__ . '/includes/page.php';
+require_once __DIR__ . '/includes/pages.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';
