@@ -4,8 +4,8 @@
 
 .wc-clearance-badge {
 	display: inline-block;
-	border-radius: 4px;
-	padding: 8px 12px;
+	border-radius: 2px;
+	padding: 0.36em;
 	font-weight: 600;
 	font-size: 0.875em;
 	line-height: 1;

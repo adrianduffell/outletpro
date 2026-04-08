@@ -37,10 +37,10 @@
 				},
 				"spacing": {
 					"padding": {
-						"top": "8px",
-						"right": "12px",
-						"bottom": "8px",
-						"left": "12px"
+						"top": "5px",
+						"right": "5px",
+						"bottom": "5px",
+						"left": "5px"
 					}
 				},
 				"typography": {
@@ -48,7 +48,7 @@
 					"fontWeight": "600"
 				},
 				"border": {
-					"radius": "4px"
+					"radius": "2px"
 				}
 			}
 		}
