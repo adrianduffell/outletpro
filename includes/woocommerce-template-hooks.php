@@ -29,7 +29,7 @@ function init_woocommerce_template_hooks(): void {
 		'woocommerce_single_product_summary'
 	);
 
-	if ( ! is_string( $single_product_badge_hook ) || '' === trim( $single_product_badge_hook ) ) {
+	if ( ! is_string( $single_product_badge_hook ) || '' === $single_product_badge_hook ) {
 		throw new \InvalidArgumentException( 'The wc_clearance_badge_single_product_hook filter must return a non-empty string.' );
 	}
 
