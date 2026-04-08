@@ -25,6 +25,39 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$this->assertSame( 15, has_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook' ) );
 	}
 
+	public function test_custom_hook_filter_registers_badge_on_custom_action(): void {
+		// Arrange.
+		$callback = fn() => 'custom_product_hook';
+		add_filter( 'wc_clearance_badge_single_product_hook', $callback );
+
+		// Act.
+		init_woocommerce_template_hooks();
+
+		// Assert.
+		$this->assertSame( 15, has_action( 'custom_product_hook', 'WC_Clearance\display_clearance_badge_hook' ) );
+		$this->assertFalse( has_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook' ) );
+
+		// Cleanup.
+		remove_filter( 'wc_clearance_badge_single_product_hook', $callback );
+		remove_action( 'custom_product_hook', 'WC_Clearance\display_clearance_badge_hook', 15 );
+	}
+
+	public function test_custom_priority_filter_registers_badge_at_custom_priority(): void {
+		// Arrange.
+		$callback = fn() => 6;
+		add_filter( 'wc_clearance_badge_single_product_priority', $callback );
+
+		// Act.
+		init_woocommerce_template_hooks();
+
+		// Assert.
+		$this->assertSame( 6, has_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook' ) );
+
+		// Cleanup.
+		remove_filter( 'wc_clearance_badge_single_product_priority', $callback );
+		remove_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 6 );
+	}
+
 	public function test_outputs_badge_html_for_clearance_product(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();

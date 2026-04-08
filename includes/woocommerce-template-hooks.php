@@ -15,8 +15,27 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_woocommerce_template_hooks(): void {
-	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
-	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
+	$single_product_badge_hook = apply_filters(
+		'wc_clearance_badge_single_product_hook',
+		'woocommerce_single_product_summary'
+	);
+
+	$single_product_badge_priority = apply_filters(
+		'wc_clearance_badge_single_product_priority',
+		15
+	);
+
+	add_action(
+		$single_product_badge_hook,
+		'WC_Clearance\display_clearance_badge_hook',
+		$single_product_badge_priority
+	);
+
+	add_action(
+		'woocommerce_product_meta_start',
+		'WC_Clearance\display_clearance_message_hook',
+		1
+	);
 }
 
 /**
