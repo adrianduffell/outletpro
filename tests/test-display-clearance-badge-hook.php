@@ -25,9 +25,11 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$this->assertSame( 15, has_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook' ) );
 	}
 
-	public function test_custom_hook_filter_registers_badge_on_custom_action(): void {
+	public function test_custom_hook_filter_registers_badge_on_custom_action(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		$callback = fn() => 'custom_product_hook';
+		$callback = static function () {
+			return 'custom_product_hook';
+		};
 		add_filter( 'wc_clearance_badge_single_product_hook', $callback );
 
 		// Act.
@@ -42,9 +44,11 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		remove_action( 'custom_product_hook', 'WC_Clearance\display_clearance_badge_hook', 15 );
 	}
 
-	public function test_custom_priority_filter_registers_badge_at_custom_priority(): void {
+	public function test_custom_priority_filter_registers_badge_at_custom_priority(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		$callback = fn() => 6;
+		$callback = static function () {
+			return 6;
+		};
 		add_filter( 'wc_clearance_badge_single_product_priority', $callback );
 
 		// Act.
