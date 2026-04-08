@@ -13,9 +13,43 @@ defined( 'ABSPATH' ) || exit;
  * Helper to initialize classic theme frontend integrations.
  *
  * @internal
+ * @throws \InvalidArgumentException When a filter returns an invalid value.
  */
 function init_woocommerce_template_hooks(): void {
-	add_action( 'woocommerce_single_product_summary', 'WC_Clearance\display_clearance_badge_hook', 15 );
+
+	/**
+	 * Filters the hook used to display the clearance badge.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $name The template hook name to display the clearance badge.
+	 */
+	$single_product_badge_hook = apply_filters(
+		'wc_clearance_badge_single_product_hook',
+		'woocommerce_single_product_summary'
+	);
+
+	if ( ! is_string( $single_product_badge_hook ) || '' === $single_product_badge_hook ) {
+		throw new \InvalidArgumentException( 'The wc_clearance_badge_single_product_hook filter must return a non-empty string.' );
+	}
+
+	/**
+	 * Filters the priority used in the template hook to display the clearance badge.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $priority The priority to display the clearance badge.
+	 */
+	$single_product_badge_priority = apply_filters(
+		'wc_clearance_badge_single_product_priority',
+		15
+	);
+
+	if ( ! is_int( $single_product_badge_priority ) ) {
+		throw new \InvalidArgumentException( 'The wc_clearance_badge_single_product_priority filter must return an integer.' );
+	}
+
+	add_action( $single_product_badge_hook, 'WC_Clearance\display_clearance_badge_hook', $single_product_badge_priority );
 	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
 }
 
