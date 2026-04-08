@@ -120,4 +120,52 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
 	}
+
+	public function test_throws_when_hook_filter_returns_non_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		add_filter(
+			'wc_clearance_badge_single_product_hook',
+			static function () {
+				return 123;
+			}
+		);
+
+		// Expect.
+		$this->expectException( InvalidArgumentException::class );
+
+		// Act.
+		init_woocommerce_template_hooks();
+	}
+
+	public function test_throws_when_hook_filter_returns_empty_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		add_filter(
+			'wc_clearance_badge_single_product_hook',
+			static function () {
+				return '';
+			}
+		);
+
+		// Expect.
+		$this->expectException( InvalidArgumentException::class );
+
+		// Act.
+		init_woocommerce_template_hooks();
+	}
+
+	public function test_throws_when_priority_filter_returns_non_integer(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		add_filter(
+			'wc_clearance_badge_single_product_priority',
+			static function () {
+				return '6';
+			}
+		);
+
+		// Expect.
+		$this->expectException( InvalidArgumentException::class );
+
+		// Act.
+		init_woocommerce_template_hooks();
+	}
 }
