@@ -121,7 +121,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
-	public function test_throws_when_hook_filter_returns_non_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_badge_single_product_hook_throws_on_non_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
 			'wc_clearance_badge_single_product_hook',
@@ -137,7 +137,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 	}
 
-	public function test_throws_when_hook_filter_returns_empty_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_badge_single_product_hook_throws_on_empty_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
 			'wc_clearance_badge_single_product_hook',
@@ -153,7 +153,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 	}
 
-	public function test_throws_when_priority_filter_returns_non_integer(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_badge_single_product_priority_throws_on_non_integer(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
 			'wc_clearance_badge_single_product_priority',
