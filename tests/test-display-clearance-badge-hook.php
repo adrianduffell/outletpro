@@ -106,7 +106,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		add_filter(
 			'wc_clearance_badge_single_product_priority',
 			static function () {
-				return 6;
+				return 1;
 			}
 		);
 		$product = WC_Helper_Product::create_simple_product();
@@ -115,7 +115,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-badge/' );
+		$this->expectOutputRegex( '/wc-clearance-badge(?=.*<h1)/s' ); // Badge appears before the product title.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
