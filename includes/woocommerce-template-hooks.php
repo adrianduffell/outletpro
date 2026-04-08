@@ -16,6 +16,14 @@ defined( 'ABSPATH' ) || exit;
  * @throws \InvalidArgumentException When a filter returns an invalid value.
  */
 function init_woocommerce_template_hooks(): void {
+
+	/**
+	 * Filters the hook used to display the clearance badge.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $name The template hook name to display the clearance badge.
+	 */
 	$single_product_badge_hook = apply_filters(
 		'wc_clearance_badge_single_product_hook',
 		'woocommerce_single_product_summary'
@@ -25,6 +33,13 @@ function init_woocommerce_template_hooks(): void {
 		throw new \InvalidArgumentException( 'The wc_clearance_badge_single_product_hook filter must return a non-empty string.' );
 	}
 
+	/**
+	 * Filters the priority used in the template hook to display the clearance badge.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $priority The priority to display the clearance badge.
+	 */
 	$single_product_badge_priority = apply_filters(
 		'wc_clearance_badge_single_product_priority',
 		15
