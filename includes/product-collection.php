@@ -50,11 +50,14 @@ function filter_clearance_product_collection_hook( array $query, \WP_Block $bloc
 		$canonical_term = 0;
 	}
 
-	$query['tax_query']   = $query['tax_query'] ?? array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+	if ( ! isset( $query['tax_query'] ) || ! is_array( $query['tax_query'] ) ) { // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		$query['tax_query'] = array();
+	}
+
 	$query['tax_query'][] = array(
 		'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
 		'field'    => 'term_id',
-		'terms'    => $canonical_term instanceof \WP_Term ? $canonical_term->term_id : $canonical_term,
+		'terms'    => $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0,
 	);
 
 	return $query;
