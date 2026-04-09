@@ -48,20 +48,21 @@ function add_product_checkbox_hook(): void {
 	);
 
 	// Custom help text under the field.
-	if ( settings_screen_enabled() ) {
-		$settings_url = admin_url( 'admin.php' ); // todo: add link to settings page when it exists.
-		printf(
-			'<div class="wc-clearance-status-help">%1$s <a href="%2$s" style="text-decoration:none;">%3$s</a></div><!-- .wc-clearance-status-help -->',
-			esc_html__( 'Included products appear in the store’s clearance section and display a badge.', 'wc-clearance' ),
+	$settings_url = admin_url( 'admin.php' ); // todo: real settings URL.
+
+	$link = settings_screen_enabled()
+		? sprintf(
+			' <a href="%s" style="text-decoration:none;">%s</a>',
 			esc_url( $settings_url ),
 			esc_html__( 'Edit settings', 'wc-clearance' )
-		);
-	} else {
-		printf(
-			'<div class="wc-clearance-status-help">%s</div><!-- .wc-clearance-status-help -->',
-			esc_html__( 'Included products appear in the store’s clearance section and display a badge.', 'wc-clearance' )
-		);
-	}
+		)
+		: '';
+
+	printf(
+		'<div class="wc-clearance-status-help">%s%s</div><!-- .wc-clearance-status-help -->',
+		esc_html__( 'Included products appear in the store’s clearance section and display a badge.', 'wc-clearance' ),
+		wp_kses_post( $link )
+	);
 	echo '</div><!-- .wc-clearance-status-panel -->';
 }
 
