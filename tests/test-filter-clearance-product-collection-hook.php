@@ -14,8 +14,18 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_not_product_collection_block(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context = array( 'query' => array( 'isProductCollectionBlock' => false ) );
 		$expected       = $query;
 
@@ -28,8 +38,18 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_product_collection_block_flag_is_missing(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context = array();
 		$expected       = $query;
 
@@ -42,8 +62,18 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_different(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context = array(
 			'query'      => array( 'isProductCollectionBlock' => true ),
 			'collection' => 'wc-clearance/product-collection/other',
@@ -59,8 +89,18 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_missing(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context = array( 'query' => array( 'isProductCollectionBlock' => true ) );
 		$expected       = $query;
 
@@ -73,10 +113,20 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_tax_query_terms_is_zero_when_canonical_term_missing(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		init_taxonomies();
 		// Do not seed the taxonomy so the canonical term is absent.
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context = array(
 			'query'      => array( 'isProductCollectionBlock' => true ),
 			'collection' => 'wc-clearance/product-collection/clearance',
@@ -92,11 +142,21 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_tax_query_is_added_when_canonical_term_exists(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		init_taxonomies();
 		seed_clearance_status_taxonomy();
 		$canonical_term = get_term_by( 'name', 'clearance', CLEARANCE_STATUS_TAXONOMY );
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context = array(
 			'query'      => array( 'isProductCollectionBlock' => true ),
 			'collection' => 'wc-clearance/product-collection/clearance',
@@ -115,6 +175,8 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_existing_tax_query_entries_are_preserved(): void {
 		// Arrange.
+		remove_all_filters( 'query_loop_block_query_vars' );
+		init_product_collection();
 		init_taxonomies();
 		seed_clearance_status_taxonomy();
 		$existing_tax_clause = array(
@@ -126,7 +188,15 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 			'post_type' => 'product',
 			'tax_query' => array( $existing_tax_clause ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
-		$block               = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block               = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
 		$block->context      = array(
 			'query'      => array( 'isProductCollectionBlock' => true ),
 			'collection' => 'wc-clearance/product-collection/clearance',
