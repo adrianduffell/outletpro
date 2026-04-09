@@ -52,7 +52,7 @@ function add_product_checkbox_hook(): void {
 
 	$link = settings_screen_enabled()
 		? sprintf(
-			' <a href="%s" style="text-decoration:none;">%s</a>',
+			' <a href="%s" class="wc-clearance-button-link">%s</a>',
 			esc_url( $settings_url ),
 			esc_html__( 'Edit settings', 'wc-clearance' )
 		)
@@ -61,7 +61,7 @@ function add_product_checkbox_hook(): void {
 	printf(
 		'<div class="wc-clearance-status-help">%s%s</div><!-- .wc-clearance-status-help -->',
 		esc_html__( 'Included products appear in the store’s clearance section and display a badge.', 'wc-clearance' ),
-		wp_kses_post( $link )
+		$link // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 	echo '</div><!-- .wc-clearance-status-panel -->';
 }
