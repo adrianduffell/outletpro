@@ -1,3 +1,4 @@
+import ClearanceIcon from './icon';
 export {};
 
 declare const wcClearance: { clearanceTermId: number };
@@ -10,7 +11,7 @@ declare global {
 					name: string;
 					title: string;
 					description: string;
-					icon: string;
+					icon?: string | JSX.Element;
 					attributes: {
 						query: {
 							taxQuery: Record< string, number[] >;
@@ -26,7 +27,7 @@ window.wc.wcBlocksRegistry.__experimentalRegisterProductCollection( {
 	name: 'wc-clearance/product-collection/clearance',
 	title: 'Clearance Section',
 	description: 'Show products in the clearance section.',
-	icon: 'tag',
+	icon: ClearanceIcon,
 	attributes: {
 		query: {
 			taxQuery: {
