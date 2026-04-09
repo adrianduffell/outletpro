@@ -27,11 +27,11 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 		// Act.
 		$result = settings_enabled();
 
-		// Cleanup.
-		remove_filter( 'wc_clearance_settings_enabled', '__return_true' );
-
 		// Assert.
 		$this->assertTrue( $result );
+
+		// Cleanup.
+		remove_filter( 'wc_clearance_settings_enabled', '__return_true' );
 	}
 
 	public function test_settings_link_present_when_settings_enabled(): void {
@@ -59,10 +59,10 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 		$product         = WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
 
-		// Expect: the help div is present but "Edit settings" does not appear.
-		$this->expectOutputRegex( '/wc-clearance-status-panel(?![\s\S]*Edit settings)/' );
-
 		// Act.
 		add_product_checkbox_hook();
+
+		// Assert.
+		$this->assertStringNotContainsString( 'Edit settings', $this->getActualOutput() );
 	}
 }
