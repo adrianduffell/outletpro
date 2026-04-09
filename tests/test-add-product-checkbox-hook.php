@@ -36,10 +36,10 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 		$product         = WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
 
+		// Expect.
+		$this->expectOutputRegex( '/^(?!.*Edit Settings).*/s' ); // Doesn't contain "Edit Settings".
+
 		// Act.
 		add_product_checkbox_hook();
-
-		// Assert.
-		$this->expectOutputRegex( '/^(?!.*Edit Settings).*/s' ); // Doesn't contain "Edit Settings".
 	}
 }
