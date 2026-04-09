@@ -48,7 +48,7 @@ function add_product_checkbox_hook(): void {
 	);
 
 	// Custom help text under the field.
-	if ( settings_enabled() ) {
+	if ( settings_screen_enabled() ) {
 		$settings_url = admin_url( 'admin.php' ); // todo: add link to settings page when it exists.
 		printf(
 			'<div class="wc-clearance-status-help">%1$s <a href="%2$s" style="text-decoration:none;">%3$s</a></div><!-- .wc-clearance-status-help -->',

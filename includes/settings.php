@@ -35,8 +35,8 @@ const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
  *
  * @internal
  */
-function settings_enabled(): bool {
-	return (bool) apply_filters( 'wc_clearance_settings_enabled', false );
+function settings_screen_enabled(): bool {
+	return (bool) apply_filters( 'wc_clearance_settings_screen_enabled', false );
 }
 
 /**
