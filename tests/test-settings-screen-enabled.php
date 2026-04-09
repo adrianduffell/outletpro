@@ -26,8 +26,5 @@ class Test_Settings_Screen_Enabled extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-
-		// Cleanup.
-		remove_filter( 'wc_clearance_settings_screen_enabled', '__return_true' );
 	}
 }
