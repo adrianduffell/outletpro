@@ -31,6 +31,15 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 
 /**
+ * Check whether the settings screen is enabled.
+ *
+ * @internal
+ */
+function settings_screen_enabled(): bool {
+	return (bool) apply_filters( 'wc_clearance_settings_screen_enabled', false );
+}
+
+/**
  * Helper to initialize settings.
  *
  * @internal
