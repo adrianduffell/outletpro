@@ -11,7 +11,7 @@ declare global {
 					name: string;
 					title: string;
 					description: string;
-					icon: string;
+					icon?: string | JSX.Element;
 					attributes: {
 						query: {
 							taxQuery: Record< string, number[] >;
