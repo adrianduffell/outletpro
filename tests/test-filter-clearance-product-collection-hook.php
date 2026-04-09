@@ -12,30 +12,12 @@ use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
-	/**
-	 * Create a WP_Block instance with the given context.
-	 *
-	 * @param array<string, mixed> $context
-	 */
-	private function make_block( array $context ): WP_Block {
-		$block          = new WP_Block(
-			array(
-				'blockName'    => 'core/query',
-				'attrs'        => array(),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			)
-		);
-		$block->context = $context;
-		return $block;
-	}
-
 	public function test_query_is_unchanged_when_not_product_collection_block(): void {
 		// Arrange.
-		$query    = array( 'post_type' => 'product' );
-		$block    = $this->make_block( array( 'query' => array( 'isProductCollectionBlock' => false ) ) );
-		$expected = $query;
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context = array( 'query' => array( 'isProductCollectionBlock' => false ) );
+		$expected       = $query;
 
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
@@ -46,9 +28,10 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_product_collection_block_flag_is_missing(): void {
 		// Arrange.
-		$query    = array( 'post_type' => 'product' );
-		$block    = $this->make_block( array() );
-		$expected = $query;
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context = array();
+		$expected       = $query;
 
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
@@ -59,14 +42,13 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_different(): void {
 		// Arrange.
-		$query    = array( 'post_type' => 'product' );
-		$block    = $this->make_block(
-			array(
-				'query'      => array( 'isProductCollectionBlock' => true ),
-				'collection' => 'wc-clearance/product-collection/other',
-			)
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context = array(
+			'query'      => array( 'isProductCollectionBlock' => true ),
+			'collection' => 'wc-clearance/product-collection/other',
 		);
-		$expected = $query;
+		$expected       = $query;
 
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
@@ -77,9 +59,10 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_missing(): void {
 		// Arrange.
-		$query    = array( 'post_type' => 'product' );
-		$block    = $this->make_block( array( 'query' => array( 'isProductCollectionBlock' => true ) ) );
-		$expected = $query;
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context = array( 'query' => array( 'isProductCollectionBlock' => true ) );
+		$expected       = $query;
 
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
@@ -92,12 +75,11 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 		// Arrange.
 		init_taxonomies();
 		// Do not seed the taxonomy so the canonical term is absent.
-		$query = array( 'post_type' => 'product' );
-		$block = $this->make_block(
-			array(
-				'query'      => array( 'isProductCollectionBlock' => true ),
-				'collection' => 'wc-clearance/product-collection/clearance',
-			)
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context = array(
+			'query'      => array( 'isProductCollectionBlock' => true ),
+			'collection' => 'wc-clearance/product-collection/clearance',
 		);
 
 		// Act.
@@ -114,11 +96,10 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$canonical_term = get_term_by( 'name', 'clearance', CLEARANCE_STATUS_TAXONOMY );
 		$query          = array( 'post_type' => 'product' );
-		$block          = $this->make_block(
-			array(
-				'query'      => array( 'isProductCollectionBlock' => true ),
-				'collection' => 'wc-clearance/product-collection/clearance',
-			)
+		$block          = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context = array(
+			'query'      => array( 'isProductCollectionBlock' => true ),
+			'collection' => 'wc-clearance/product-collection/clearance',
 		);
 
 		// Act.
@@ -145,11 +126,10 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 			'post_type' => 'product',
 			'tax_query' => array( $existing_tax_clause ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
-		$block               = $this->make_block(
-			array(
-				'query'      => array( 'isProductCollectionBlock' => true ),
-				'collection' => 'wc-clearance/product-collection/clearance',
-			)
+		$block               = new WP_Block( array( 'blockName' => 'core/query', 'attrs' => array(), 'innerBlocks' => array(), 'innerHTML' => '', 'innerContent' => array() ) );
+		$block->context      = array(
+			'query'      => array( 'isProductCollectionBlock' => true ),
+			'collection' => 'wc-clearance/product-collection/clearance',
 		);
 
 		// Act.
