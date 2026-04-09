@@ -8,6 +8,7 @@
 use function WC_Clearance\init_product_collection;
 use function WC_Clearance\init_taxonomies;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
@@ -146,7 +147,7 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 		init_product_collection();
 		init_taxonomies();
 		seed_clearance_status_taxonomy();
-		$canonical_term = get_term_by( 'name', 'clearance', CLEARANCE_STATUS_TAXONOMY );
+		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 		$query          = array( 'post_type' => 'product' );
 		$block          = new WP_Block(
 			array(
