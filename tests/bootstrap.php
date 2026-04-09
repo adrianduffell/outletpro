@@ -61,5 +61,8 @@ require "{$_tests_dir}/includes/bootstrap.php";
 // WP_Customize_Manager and its dependencies are not loaded by default in the test environment.
 require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';
 
+// WooCommerce meta box functions are not loaded by default in the test environment, but are needed for some tests.
+require_once WP_PLUGIN_DIR . '/woocommerce/includes/admin/wc-meta-box-functions.php';
+
 // WooCommerce test helpers.
 require_once dirname( __DIR__ ) . '/vendor/class-wc-helper-product.php';
