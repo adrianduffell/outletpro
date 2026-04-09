@@ -1,5 +1,3 @@
-import { Icon, store } from '@wordpress/icons';
-import { createElement } from '@wordpress/element';
 import ClearanceIcon from './icon';
 export {};
 
