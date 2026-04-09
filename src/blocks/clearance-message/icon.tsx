@@ -8,7 +8,7 @@ const ClearanceMessageIcon = (
 			strokeLinejoin="round"
 		/>
 		<path
-			d="M8.5 7.9L11 11.1L8.5 14.3"
+			d="M9.5 7.9L12 11.1L9.5 14.3"
 			fill="none"
 			stroke="currentColor"
 			strokeWidth="1.1"
@@ -16,15 +16,7 @@ const ClearanceMessageIcon = (
 			strokeLinejoin="miter"
 		/>
 		<path
-			d="M11 7.9L13.5 11.1L11 14.3"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="1.1"
-			strokeLinecap="butt"
-			strokeLinejoin="miter"
-		/>
-		<path
-			d="M13.5 7.9L16 11.1L13.5 14.3"
+			d="M12 7.9L14.5 11.1L12 14.3"
 			fill="none"
 			stroke="currentColor"
 			strokeWidth="1.1"
