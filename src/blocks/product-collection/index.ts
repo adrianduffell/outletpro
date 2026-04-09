@@ -1,3 +1,6 @@
+import { Icon, store } from '@wordpress/icons';
+import { createElement } from '@wordpress/element';
+import ClearanceIcon from './icon';
 export {};
 
 declare const wcClearance: { clearanceTermId: number };
@@ -26,7 +29,7 @@ window.wc.wcBlocksRegistry.__experimentalRegisterProductCollection( {
 	name: 'wc-clearance/product-collection/clearance',
 	title: 'Clearance Section',
 	description: 'Show products in the clearance section.',
-	icon: 'tag',
+	icon: ClearanceIcon,
 	attributes: {
 		query: {
 			taxQuery: {
