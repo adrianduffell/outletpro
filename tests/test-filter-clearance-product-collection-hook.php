@@ -16,7 +16,6 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 	 * Create a WP_Block instance with the given context.
 	 *
 	 * @param array<string, mixed> $context
-	 * @return WP_Block
 	 */
 	private function make_block( array $context ): WP_Block {
 		$block          = new WP_Block(
@@ -60,8 +59,8 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_different(): void {
 		// Arrange.
-		$query = array( 'post_type' => 'product' );
-		$block = $this->make_block(
+		$query    = array( 'post_type' => 'product' );
+		$block    = $this->make_block(
 			array(
 				'query'      => array( 'isProductCollectionBlock' => true ),
 				'collection' => 'wc-clearance/product-collection/other',
@@ -143,7 +142,7 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 		);
 		$query               = array(
 			'post_type' => 'product',
-			'tax_query' => array( $existing_tax_clause ),
+			'tax_query' => array( $existing_tax_clause ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
 		$block               = $this->make_block(
 			array(
