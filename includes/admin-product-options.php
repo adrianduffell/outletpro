@@ -48,7 +48,7 @@ function add_product_checkbox_hook(): void {
 	);
 
 	// Custom help text under the field.
-	$settings_url = admin_url( 'admin.php' ); // todo: real settings URL.
+	$settings_url = admin_url( 'admin.php' ); // todo: add link to settings page when it exists.
 
 	$link = settings_screen_enabled()
 		? sprintf(
