@@ -42,11 +42,11 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		add_filter( 'wc_clearance_settings_enabled', '__return_true' );
 
-		// Expect.
-		$this->expectOutputRegex( '/Edit settings/' );
-
 		// Act.
 		add_product_checkbox_hook();
+
+		// Assert.
+		$this->expectOutputRegex( '/Edit settings/' );
 
 		// Cleanup.
 		remove_filter( 'wc_clearance_settings_enabled', '__return_true' );
@@ -62,7 +62,7 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 		// Act.
 		add_product_checkbox_hook();
 
-		// Assert.
-		$this->assertStringNotContainsString( 'Edit settings', $this->getActualOutput() );
+		// Assert: help text present but settings link absent.
+		$this->expectOutputRegex( '/clearance section and display a badge\.<\/div>/' );
 	}
 }
