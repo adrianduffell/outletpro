@@ -50,8 +50,8 @@ function filter_clearance_product_collection_hook( array $query, \WP_Block $bloc
 		$canonical_term = 0;
 	}
 
-	if ( ! isset( $query['tax_query'] ) || ! is_array( $query['tax_query'] ) ) { // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		$query['tax_query'] = array();
+	if ( ! isset( $query['tax_query'] ) || ! is_array( $query['tax_query'] ) ) {
+		$query['tax_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 	}
 
 	$query['tax_query'][] = array(
