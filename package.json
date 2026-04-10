@@ -24,6 +24,14 @@
 			"@wordpress/babel-preset-default"
 		]
 	},
+	"files": [
+		"assets",
+		"build",
+		"includes",
+		"wc-clearance.php",
+		"readme.txt",
+		"LICENSE"
+	],
 	"devDependencies": {
 		"@playwright/test": "^1.58.2",
 		"@testing-library/jest-dom": "^6.9.1",
