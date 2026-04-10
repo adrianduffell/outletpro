@@ -80,7 +80,12 @@ function product_collection_editor_query_hook( $args, $request ): array { // php
 		return $args;
 	}
 
-	$context    = $request->get_param( 'productCollectionQueryContext' );
+	$context = $request->get_param( 'productCollectionQueryContext' );
+
+	if ( ! is_array( $context ) ) {
+		return $args;
+	}
+
 	$collection = $context['collection'] ?? '';
 
 	if ( 'wc-clearance/product-collection/clearance' !== $collection ) {
