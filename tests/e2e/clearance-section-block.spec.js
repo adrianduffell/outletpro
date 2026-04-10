@@ -36,12 +36,13 @@ test( 'clearance section block shows clearance products in editor and on front e
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
 
-	// Insert the clearance section block via the block inserter.
-	await page.getByRole( 'button', { name: 'Toggle block inserter' } ).click();
-	await page
-		.getByRole( 'searchbox', { name: 'Search for blocks and patterns' } )
-		.fill( 'Clearance Section' );
-	await page.getByRole( 'option', { name: 'Clearance Section' } ).click();
+	// Insert the clearance section block.
+	await editor.insertBlock( {
+		name: 'woocommerce/product-collection',
+		attributes: {
+			collection: 'wc-clearance/product-collection/clearance',
+		},
+	} );
 
 	// Assert: 2 products shown in editor.
 	await expect(
@@ -52,10 +53,9 @@ test( 'clearance section block shows clearance products in editor and on front e
 	).toBeVisible();
 
 	// Publish the page.
-	await editor.publishPost();
+	const pageId = await editor.publishPost();
 
 	// Navigate to the page on the front end.
-	const pageId = new URL( page.url() ).searchParams.get( 'post' );
 	const pageData = await requestUtils.rest( {
 		method: 'GET',
 		path: `/wp/v2/pages/${ pageId }`,
