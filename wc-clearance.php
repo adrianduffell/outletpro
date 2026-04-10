@@ -167,7 +167,8 @@ add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts
  * @internal WordPress action hook
  */
 function enqueue_build_assets_hook(): void {
-	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
+	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	$asset_file     = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
 		return;
@@ -181,6 +182,14 @@ function enqueue_build_assets_hook(): void {
 		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
 		$asset['version'],
 		true
+	);
+
+	wp_localize_script(
+		'wc-clearance-build',
+		'wcClearance',
+		array(
+			'clearanceTermId' => $canonical_term->term_id,
+		)
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
