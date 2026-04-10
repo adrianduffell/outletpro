@@ -182,7 +182,6 @@ function enqueue_build_assets_hook(): void {
 		$asset['version'],
 		true
 	);
-
 }
 add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 
