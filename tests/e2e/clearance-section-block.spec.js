@@ -34,19 +34,33 @@ test( 'clearance section block shows clearance products in editor and on front e
 		await page.waitForLoadState( 'networkidle' );
 	}
 
-	// Act: open a new page in the page editor.
-	await admin.createNewPost( { postType: 'page' } );
-
-	// Insert the clearance section block.
-	await editor.insertBlock( {
-		name: 'woocommerce/product-collection',
-		attributes: {
-			collection: 'wc-clearance/product-collection/clearance',
+	// Act: create a published page with the clearance section block via the REST API.
+	// Creating the page via REST avoids the flaky WooCommerce-entity publish flow
+	// that occurs when editor.publishPost() is called after inserting a
+	// woocommerce/product-collection block.
+	const testPage = await requestUtils.rest( {
+		method: 'POST',
+		path: '/wp/v2/pages',
+		data: {
+			title: `Clearance Block Test Page ${ runId }`,
+			status: 'publish',
+			content:
+				'<!-- wp:woocommerce/product-collection {"queryId":0,"query":{"isProductCollectionBlock":true},"collection":"wc-clearance/product-collection/clearance"} -->' +
+				'<div class="wp-block-woocommerce-product-collection">' +
+				'<!-- wp:woocommerce/product-template -->' +
+				'<!-- wp:post-title {"isLink":true} /-->' +
+				'<!-- /wp:woocommerce/product-template -->' +
+				'</div>' +
+				'<!-- /wp:woocommerce/product-collection -->',
 		},
 	} );
 
 	// Assert: clearance products shown in editor; use .first() because the product
 	// collection block renders the title as both a link and an image overlay link.
+	await admin.visitAdminPage(
+		'post.php',
+		`post=${ testPage.id }&action=edit`
+	);
 	await expect(
 		editor.canvas
 			.getByRole( 'link', {
@@ -62,17 +76,8 @@ test( 'clearance section block shows clearance products in editor and on front e
 			.first()
 	).toBeVisible();
 
-	// Publish the page.
-	const pageId = await editor.publishPost();
-
-	// Navigate to the page on the front end.
-	const pageData = await requestUtils.rest( {
-		method: 'GET',
-		path: `/wp/v2/pages/${ pageId }`,
-	} );
-	await page.goto( pageData.link );
-
 	// Assert: clearance products shown on front end.
+	await page.goto( testPage.link );
 	await expect(
 		page
 			.getByRole( 'link', {
