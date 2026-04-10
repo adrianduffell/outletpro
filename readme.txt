@@ -14,7 +14,7 @@ Move old stock easily by adding a dedicated clearance section to WooCommerce.
 
 Every store needs a clearance section.
 
-This extension adds a dedicated clerance section to your store to help you sell old stock, so you can make way for newer and exciting products.
+This extension adds a dedicated clearance section to your store to help you sell old stock, so you can make way for newer and exciting products.
 
 It gives you a simple, easy way to manage this:
 
