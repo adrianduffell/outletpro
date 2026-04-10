@@ -78,30 +78,6 @@ test( 'clearance section block shows clearance products in editor and on front e
 			.first()
 	).toBeVisible();
 
-	// Undo any entity changes (e.g. template edits) that the product-collection
-	// block may have dispatched when it mounted in the editor.  These dirty
-	// non-page entities cause the top bar to show "Save" instead of "Publish",
-	// which breaks editor.publishPost().  We only clear records that are not the
-	// current page so that the block content we just inserted is preserved.
-	// __experimentalGetDirtyEntityRecords has been stable since WP 5.x despite
-	// the experimental prefix; clearEntityRecordEdits resets edits by setting all
-	// changed keys back to undefined via undoIgnore so they leave no undo history.
-	await page.evaluate( () => {
-		const coreSelect = window.wp.data.select( 'core' );
-		const coreDispatch = window.wp.data.dispatch( 'core' );
-		const dirtyRecords =
-			coreSelect.__experimentalGetDirtyEntityRecords?.() ?? [];
-		for ( const record of dirtyRecords ) {
-			if ( record.kind !== 'postType' || record.name !== 'page' ) {
-				coreDispatch.clearEntityRecordEdits?.(
-					record.kind,
-					record.name,
-					record.key
-				);
-			}
-		}
-	} );
-
 	// Publish the page.
 	const pageId = await editor.publishPost();
 
