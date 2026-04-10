@@ -27,6 +27,7 @@ test( 'clearance section block shows clearance products in editor and on front e
 			'post.php',
 			`post=${ product.id }&action=edit`
 		);
+		await page.getByRole( 'link', { name: 'Inventory' } ).click();
 		await page
 			.getByRole( 'checkbox', { name: 'Clearance section' } )
 			.check();
