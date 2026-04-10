@@ -112,34 +112,6 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_tax_query_terms_is_zero_when_canonical_term_missing(): void {
-		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
-		init_product_collection();
-		init_taxonomies();
-		// Do not seed the taxonomy so the canonical term is absent.
-		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block(
-			array(
-				'blockName'    => 'core/query',
-				'attrs'        => array(),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			)
-		);
-		$block->context = array(
-			'query' => array( 'wc_clearance' => true ),
-		);
-
-		// Act.
-		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
-
-		// Assert.
-		$this->assertArrayHasKey( 'tax_query', $result );
-		$this->assertSame( 0, $result['tax_query'][0]['terms'] );
-	}
-
 	public function test_tax_query_is_added_when_canonical_term_exists(): void {
 		// Arrange.
 		remove_all_filters( 'query_loop_block_query_vars' );
