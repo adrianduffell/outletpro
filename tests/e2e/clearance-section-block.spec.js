@@ -6,14 +6,15 @@ test( 'clearance section block shows clearance products in editor and on front e
 	editor,
 	requestUtils,
 } ) => {
-	// Arrange: create 5 products, mark 2 as clearance.
+	// Arrange: create 5 products with a unique run ID to avoid cross-run collisions.
+	const runId = Date.now();
 	const products = await Promise.all(
 		[ 1, 2, 3, 4, 5 ].map( ( productNumber ) =>
 			requestUtils.rest( {
 				method: 'POST',
 				path: '/wc/v3/products',
 				data: {
-					name: `Clearance Block Test Product ${ productNumber }`,
+					name: `Clearance Block Test Product ${ productNumber } ${ runId }`,
 					type: 'simple',
 					status: 'publish',
 				},
@@ -44,12 +45,21 @@ test( 'clearance section block shows clearance products in editor and on front e
 		},
 	} );
 
-	// Assert: 2 products shown in editor.
+	// Assert: clearance products shown in editor; use .first() because the product
+	// collection block renders the title as both a link and an image overlay link.
 	await expect(
-		editor.canvas.getByText( 'Clearance Block Test Product 1' )
+		editor.canvas
+			.getByRole( 'link', {
+				name: `Clearance Block Test Product 1 ${ runId }`,
+			} )
+			.first()
 	).toBeVisible();
 	await expect(
-		editor.canvas.getByText( 'Clearance Block Test Product 2' )
+		editor.canvas
+			.getByRole( 'link', {
+				name: `Clearance Block Test Product 2 ${ runId }`,
+			} )
+			.first()
 	).toBeVisible();
 
 	// Publish the page.
@@ -62,11 +72,19 @@ test( 'clearance section block shows clearance products in editor and on front e
 	} );
 	await page.goto( pageData.link );
 
-	// Assert: 2 products shown on front end.
+	// Assert: clearance products shown on front end.
 	await expect(
-		page.getByText( 'Clearance Block Test Product 1' )
+		page
+			.getByRole( 'link', {
+				name: `Clearance Block Test Product 1 ${ runId }`,
+			} )
+			.first()
 	).toBeVisible();
 	await expect(
-		page.getByText( 'Clearance Block Test Product 2' )
+		page
+			.getByRole( 'link', {
+				name: `Clearance Block Test Product 2 ${ runId }`,
+			} )
+			.first()
 	).toBeVisible();
 } );
