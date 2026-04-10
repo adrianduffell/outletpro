@@ -37,6 +37,16 @@ test( 'clearance section block shows clearance products in editor and on front e
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
 
+	// WordPress shows a 'Choose a pattern' starter-patterns modal for new pages.
+	// Dismiss it if present so the block inserter is reachable.
+	const closePatternModal = page
+		.getByRole( 'dialog', { name: 'Choose a pattern' } )
+		.getByRole( 'button', { name: 'Close' } );
+	await closePatternModal
+		.waitFor( { state: 'visible', timeout: 5000 } )
+		.then( () => closePatternModal.click() )
+		.catch( () => {} );
+
 	// Insert the clearance section block.
 	await editor.insertBlock( {
 		name: 'woocommerce/product-collection',
