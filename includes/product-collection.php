@@ -77,11 +77,11 @@ function filter_clearance_product_collection_hook( array $query, \WP_Block $bloc
  */
 function product_collection_editor_query_hook( $args, $request ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	if ( ! $request->get_param( 'isProductCollectionBlock' ) ) {
-			return $args;
+		return $args;
 	}
 
-		$context    = $request->get_param( 'productCollectionQueryContext' );
-		$collection = $context['collection'] ?? '';
+	$context    = $request->get_param( 'productCollectionQueryContext' );
+	$collection = $context['collection'] ?? '';
 
 	if ( 'wc-clearance/product-collection/clearance' !== $collection ) {
 		return $args;
