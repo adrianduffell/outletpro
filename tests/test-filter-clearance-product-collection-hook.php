@@ -129,8 +129,7 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 			)
 		);
 		$block->context = array(
-			'query'      => array( 'isProductCollectionBlock' => true ),
-			'collection' => 'wc-clearance/product-collection/clearance',
+			'query' => array( 'wc_clearance' => true ),
 		);
 
 		// Act.
@@ -159,8 +158,7 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 			)
 		);
 		$block->context = array(
-			'query'      => array( 'isProductCollectionBlock' => true ),
-			'collection' => 'wc-clearance/product-collection/clearance',
+			'query' => array( 'wc_clearance' => true ),
 		);
 
 		// Act.
@@ -198,9 +196,8 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 				'innerContent' => array(),
 			)
 		);
-		$block->context      = array(
-			'query'      => array( 'isProductCollectionBlock' => true ),
-			'collection' => 'wc-clearance/product-collection/clearance',
+		$block->context = array(
+			'query' => array( 'wc_clearance' => true ),
 		);
 
 		// Act.
