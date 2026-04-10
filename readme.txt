@@ -1,0 +1,53 @@
+=== Clearance Section for WooCommerce ===
+Contributors: adrianduffell
+Tags: woocommerce, clearance, discontinued, stock, merchandising, products
+Requires at least: 6.9
+Tested up to: 6.9
+Requires PHP: 7.4
+Stable tag: 1.0.0
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+
+Move old stock easily by adding a dedicated clearance section to WooCommerce.
+
+== Description ==
+
+Every store needs a clearance section.
+
+This extension adds a dedicated clerance section to your store to help you sell old stock, so you can make way for newer and exciting products.
+
+It gives you a simple, easy way to manage this:
+
+* Include products in the clearance section with a single checkbox
+* A page listing the products in the clearance section
+* A customizable badge on products belonging in the clearance section
+* Policy messaging (e.g. no change-of-mind returns)
+* Customize the name and messaging to suit your store (e.g. "Last chance", "Discontinued", "Reduced to clear")
+
+Clear stock faster and help customers find it before it’s gone.
+
+= What is a clearance section? =
+
+The clearance section is a permanent area on your store to list the products you need to clear. It helps customers easily discover products they might want before they are gone. Products in the clearance section display a badge and message, allowing you to apply special policies such as no change-of-mind returns.
+
+= How do I add products to the clearance section? =
+
+Add or edit a product, scroll to the "Product data" section, and under General check "Include in clearance section", then save.
+
+= Is this the same as putting products on sale? =
+
+No. This plugin introduces a dedicated clearance section, which you can name anything you like. Use it to clear old stock and apply different policies to these products. Sales campaigns are better suited for store-wide or time-limited promotions.
+
+= Where is the clearance section on my store? =
+
+A draft clearance section page named "Clearance" is automatically created when the extension is installed. Update it as needed and publish it to make it visible on your store.
+
+== Changelog ==
+
+= 1.0.0 =
+* Initial release.
+
+== Upgrade Notice ==
+
+= 1.0.0 =
+Initial release.
