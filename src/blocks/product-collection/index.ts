@@ -1,8 +1,6 @@
 import ClearanceIcon from './icon';
 export {};
 
-declare const wcClearance: { clearanceTermId: number };
-
 declare global {
 	interface Window {
 		wc: {
@@ -12,11 +10,6 @@ declare global {
 					title: string;
 					description: string;
 					icon?: string | JSX.Element;
-					attributes: {
-						query: {
-							taxQuery: Record< string, number[] >;
-						};
-					};
 				} ) => void;
 			};
 		};
@@ -28,11 +21,4 @@ window.wc.wcBlocksRegistry.__experimentalRegisterProductCollection( {
 	title: 'Clearance Section',
 	description: 'Show products in the clearance section.',
 	icon: ClearanceIcon,
-	attributes: {
-		query: {
-			taxQuery: {
-				wc_clearance_status: [ wcClearance.clearanceTermId ],
-			},
-		},
-	},
 } );
