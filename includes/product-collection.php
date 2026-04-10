@@ -15,8 +15,44 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_product_collection(): void {
+	add_filter( 'render_block_data', 'WC_Clearance\inject_clearance_query_flag_hook', 10, 3 );
 	add_filter( 'query_loop_block_query_vars', 'WC_Clearance\filter_clearance_product_collection_hook', 11, 3 );
 	add_filter( 'rest_product_query', 'WC_Clearance\product_collection_editor_query_hook', 10, 2 );
+}
+
+/**
+ * Inject the clearance query flag into the product collection block attributes.
+ *
+ * Ensures descendant pagination and total blocks inherit the clearance marker
+ * through the normal query context propagation mechanism.
+ *
+ * Fired by `render_block_data`.
+ *
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param array<string, mixed> $parsed_block The parsed block data.
+ * @param array<string, mixed> $source_block The source block data.
+ * @param \WP_Block|null       $parent_block The parent block instance.
+ * @return array<string, mixed> Filtered parsed block data.
+ */
+function inject_clearance_query_flag_hook( array $parsed_block, array $source_block, ?\WP_Block $parent_block ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? '' ) ) {
+		return $parsed_block;
+	}
+
+	$collection = $parsed_block['attrs']['collection'] ?? '';
+
+	if ( 'wc-clearance/product-collection/clearance' !== $collection ) {
+		return $parsed_block;
+	}
+
+	if ( ! isset( $parsed_block['attrs']['query'] ) || ! is_array( $parsed_block['attrs']['query'] ) ) {
+		$parsed_block['attrs']['query'] = array();
+	}
+
+	$parsed_block['attrs']['query']['wc_clearance'] = true;
+
+	return $parsed_block;
 }
 
 /**
@@ -35,14 +71,9 @@ function init_product_collection(): void {
  * @return array<string, mixed> Filtered query vars.
  */
 function filter_clearance_product_collection_hook( array $query, \WP_Block $block, int $page ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	$is_product_collection_block = $block->context['query']['isProductCollectionBlock'] ?? false;
+	$is_clearance_query = $block->context['query']['wc_clearance'] ?? false;
 
-	if ( ! $is_product_collection_block ) {
-		return $query;
-	}
-
-	$collection = $block->context['collection'] ?? '';
-	if ( 'wc-clearance/product-collection/clearance' !== $collection ) {
+	if ( ! $is_clearance_query ) {
 		return $query;
 	}
 
