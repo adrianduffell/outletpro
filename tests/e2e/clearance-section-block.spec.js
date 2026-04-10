@@ -34,18 +34,24 @@ test( 'clearance section block shows clearance products in editor and on front e
 		await page.waitForLoadState( 'networkidle' );
 	}
 
+	// Disable the 'Choose a pattern' starter-patterns modal before the editor
+	// loads.  The preference is persisted in user meta and read by WordPress on
+	// page load, so setting it here (before createNewPost navigates) prevents
+	// the modal from ever opening.
+	await requestUtils.rest( {
+		method: 'PUT',
+		path: '/wp/v2/users/me',
+		data: {
+			meta: {
+				persisted_preferences: {
+					core: { enableChoosePatternModal: false },
+				},
+			},
+		},
+	} );
+
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
-
-	// WordPress shows a 'Choose a pattern' starter-patterns modal for new pages.
-	// Dismiss it if present so the block inserter is reachable.
-	const closePatternModal = page
-		.getByRole( 'dialog', { name: 'Choose a pattern' } )
-		.getByRole( 'button', { name: 'Close' } );
-	await closePatternModal
-		.waitFor( { state: 'visible', timeout: 5000 } )
-		.then( () => closePatternModal.click() )
-		.catch( () => {} );
 
 	// Insert the clearance section block.
 	await editor.insertBlock( {
