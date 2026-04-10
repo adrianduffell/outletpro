@@ -6,6 +6,7 @@
  */
 
 use function WC_Clearance\init_product_collection;
+use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
 
 class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 
@@ -88,7 +89,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertArrayHasKey( 'tax_query', $result );
 		$this->assertCount( 1, $result['tax_query'] );
-		$this->assertSame( 'wc_clearance_status', $result['tax_query'][0]['taxonomy'] );
+		$this->assertSame( CLEARANCE_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
 		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
 		$this->assertSame( array( 'clearance' ), $result['tax_query'][0]['terms'] );
 	}
@@ -116,7 +117,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertCount( 2, $result['tax_query'] );
 		$this->assertSame( $existing_tax_clause, $result['tax_query'][0] );
-		$this->assertSame( 'wc_clearance_status', $result['tax_query'][1]['taxonomy'] );
+		$this->assertSame( CLEARANCE_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
 	}
 
 	public function test_filter_is_registered_by_init_product_collection(): void {
