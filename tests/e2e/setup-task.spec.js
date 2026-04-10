@@ -31,6 +31,7 @@ test( 'include products in clearance section setup task', async ( {
 		'post.php',
 		`post=${ product.id }&action=edit`
 	);
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );

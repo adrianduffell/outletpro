@@ -32,7 +32,7 @@ The clearance section is a permanent area on your store to list the products you
 
 = How do I add products to the clearance section? =
 
-Add or edit a product, scroll to the "Product data" section, and under General check "Include in clearance section", then save.
+Add or edit a product, scroll to the "Product data" section, and under Inventory check "Include in clearance section", then save.
 
 = Is this the same as putting products on sale? =
 

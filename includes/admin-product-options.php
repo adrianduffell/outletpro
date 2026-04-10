@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_admin_product_options(): void {
-	add_action( 'woocommerce_product_options_general_product_data', 'WC_Clearance\add_product_checkbox_hook' );
+	add_action( 'woocommerce_product_options_inventory_product_data', 'WC_Clearance\add_product_checkbox_hook' );
 	add_action( 'woocommerce_admin_process_product_object', 'WC_Clearance\save_product_checkbox_hook' );
 }
 
 /**
- * Add clearance checkbox to product edit page.
+ * Add clearance checkbox to product inventory panel.
  *
- * Fired by `woocommerce_product_options_general_product_data`.
+ * Fired by `woocommerce_product_options_inventory_product_data`.
  *
  * @internal WordPress action hook
  */

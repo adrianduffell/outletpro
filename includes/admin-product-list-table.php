@@ -76,7 +76,7 @@ function product_onboarding_notice_hook(): void {
 
 		if ( ! $products_done ) {
 			$message  = '<p>' . esc_html__( "Welcome! Let's set up with a few short steps.", 'wc-clearance' ) . '</p>';
-			$message .= '<p>' . wp_kses_post( __( 'Include a product in the clearance section by adding or editing a product, then find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.', 'wc-clearance' ) ) . '</p>';
+			$message .= '<p>' . wp_kses_post( __( 'Include a product in the clearance section by adding or editing a product, then find the clearance section field in <strong>Product data</strong> → <strong>Inventory</strong>.', 'wc-clearance' ) ) . '</p>';
 		} elseif ( ! $page_done ) {
 			$edit_url  = get_edit_post_link( $page_id );
 			$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
@@ -115,7 +115,7 @@ function product_onboarding_notice_hook(): void {
 		// No page configured — show a simpler informational notice.
 		if ( $is_empty ) {
 			$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
-			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>General</strong>.", 'wc-clearance' ) . '</p>';
+			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>Inventory</strong>.", 'wc-clearance' ) . '</p>';
 		} else {
 			$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
 			'<p>' . esc_html__( 'Fantastic, products are included in clearance section! Tip: display it on your store using the clearance section block.', 'wc-clearance' ) . '</p>';

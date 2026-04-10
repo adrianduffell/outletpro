@@ -5,6 +5,10 @@
  * @since 1.0.0
  */
 
+.wc-clearance-status-panel {
+	margin-bottom: 1.5em;
+}
+
 .wc-clearance-status-panel .form-field {
 	margin-bottom: 0;
 
