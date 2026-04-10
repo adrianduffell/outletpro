@@ -7,10 +7,10 @@
 
 use function WC_Clearance\init_product_collection;
 use function WC_Clearance\init_taxonomies;
+use function WC_Clearance\inject_clearance_query_flag_hook;
 use function WC_Clearance\seed_clearance_status_taxonomy;
 use const WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM;
 use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
-
 class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_not_product_collection_block(): void {
@@ -155,11 +155,13 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 			'field'    => 'slug',
 			'terms'    => array( 'clothing' ),
 		);
-		$query               = array(
+
+		$query = array(
 			'post_type' => 'product',
 			'tax_query' => array( $existing_tax_clause ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
-		$block               = new WP_Block(
+
+		$block = new WP_Block(
 			array(
 				'blockName'    => 'core/query',
 				'attrs'        => array(),
@@ -168,6 +170,7 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 				'innerContent' => array(),
 			)
 		);
+
 		$block->context = array(
 			'query' => array( 'wc_clearance' => true ),
 		);
@@ -190,5 +193,77 @@ class Test_Filter_Clearance_Product_Collection_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'WC_Clearance\filter_clearance_product_collection_hook' ) );
+	}
+
+	public function test_block_is_unchanged_when_not_product_collection_block(): void {
+		// Arrange.
+		$parsed_block = array(
+			'blockName' => 'core/query',
+			'attrs'     => array(
+				'collection' => 'wc-clearance/product-collection/clearance',
+			),
+		);
+		$expected     = $parsed_block;
+
+		// Act.
+		$result = inject_clearance_query_flag_hook( $parsed_block, $parsed_block, null );
+
+		// Assert.
+		$this->assertSame( $expected, $result );
+	}
+
+	public function test_block_is_unchanged_when_collection_is_different(): void {
+		// Arrange.
+		$parsed_block = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'collection' => 'wc-clearance/product-collection/other',
+			),
+		);
+		$expected     = $parsed_block;
+
+		// Act.
+		$result = inject_clearance_query_flag_hook( $parsed_block, $parsed_block, null );
+
+		// Assert.
+		$this->assertSame( $expected, $result );
+	}
+
+	public function test_wc_clearance_flag_is_injected_for_clearance_collection(): void {
+		// Arrange.
+		$parsed_block = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'collection' => 'wc-clearance/product-collection/clearance',
+			),
+		);
+
+		// Act.
+		$result = inject_clearance_query_flag_hook( $parsed_block, $parsed_block, null );
+
+		// Assert.
+		$this->assertTrue( $result['attrs']['query']['wc_clearance'] );
+	}
+
+	public function test_existing_query_keys_are_preserved_when_injecting_wc_clearance_flag(): void {
+		// Arrange.
+		$parsed_block = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'collection' => 'wc-clearance/product-collection/clearance',
+				'query'      => array(
+					'perPage' => 9,
+					'order'   => 'asc',
+				),
+			),
+		);
+
+		// Act.
+		$result = inject_clearance_query_flag_hook( $parsed_block, $parsed_block, null );
+
+		// Assert.
+		$this->assertSame( 9, $result['attrs']['query']['perPage'] );
+		$this->assertSame( 'asc', $result['attrs']['query']['order'] );
+		$this->assertTrue( $result['attrs']['query']['wc_clearance'] );
 	}
 }
