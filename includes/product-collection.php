@@ -92,9 +92,9 @@ function product_collection_editor_query_hook( $args, $request ): array { // php
 	}
 
 	$args['tax_query'][] = array(
-		'taxonomy' => 'wc_clearance_status',
+		'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
 		'field'    => 'slug',
-		'terms'    => array( 'clearance' ),
+		'terms'    => array( CLEARANCE_STATUS_CANONICAL_TERM ),
 	);
 
 	return $args;
