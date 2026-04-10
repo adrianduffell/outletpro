@@ -28,6 +28,8 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 		} )
 	).toBeVisible();
 
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
+
 	await expect(
 		page.getByRole( 'checkbox', { name: 'Clearance section' } )
 	).toBeVisible();
@@ -45,6 +47,7 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 		'post.php',
 		`post=${ product.id }&action=edit`
 	);
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await expect(
 		page.getByRole( 'checkbox', { name: 'Clearance section' } )
 	).toBeVisible();
@@ -81,14 +84,17 @@ test( 'can unmark a product as clearance using the checkbox', async ( {
 		'post.php',
 		`post=${ product.id }&action=edit`
 	);
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).uncheck();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
 	// Assert.
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await expect(
 		page.getByRole( 'checkbox', { name: 'Clearance section' } )
 	).toBeVisible();
@@ -117,6 +123,8 @@ test( 'can toggle the clearance checkbox by clicking its label text', async ( {
 		'post.php',
 		`post=${ product.id }&action=edit`
 	);
+
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 
 	const checkbox = page.getByRole( 'checkbox', {
 		name: 'Clearance section',
