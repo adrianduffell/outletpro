@@ -150,5 +150,5 @@ test( '"New" badge in notice title has light purple background and dark purple t
 		'background-color',
 		'rgb(242, 237, 255)'
 	);
-	await expect( newBadge ).toHaveCSS( 'color', 'rgb(80, 7, 170)' );
+	await expect( newBadge ).toHaveCSS( 'color', 'rgb(44, 4, 93)' );
 } );
