@@ -31,7 +31,7 @@ function enqueue_init(): void {
 function register_classic_styles_hook(): void {
 	wp_register_style(
 		'wc-clearance',
-		plugin_dir_url( __DIR__ ) . 'assets/css/classic.css',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
 		array(),
 		VERSION
 	);
@@ -47,7 +47,7 @@ function register_classic_styles_hook(): void {
 function enqueue_admin_styles_hook(): void {
 	wp_enqueue_style(
 		'wc-clearance-admin-styles',
-		plugin_dir_url( __DIR__ ) . 'assets/css/admin.css',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin.css',
 		array(),
 		VERSION
 	);
@@ -69,7 +69,7 @@ function enqueue_admin_product_scripts_hook(): void {
 
 	wp_enqueue_script(
 		'wc-clearance-admin-product',
-		plugin_dir_url( __DIR__ ) . 'assets/js/admin-product.js',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-product.js',
 		array(),
 		VERSION,
 		true
@@ -84,7 +84,7 @@ function enqueue_admin_product_scripts_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_build_assets_hook(): void {
-	$asset_file = plugin_dir_path( __DIR__ ) . 'build/index.asset.php';
+	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
 		return;
@@ -94,7 +94,7 @@ function enqueue_build_assets_hook(): void {
 
 	wp_enqueue_script(
 		'wc-clearance-build',
-		plugin_dir_url( __DIR__ ) . 'build/index.js',
+		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
 		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
 		$asset['version'],
 		true

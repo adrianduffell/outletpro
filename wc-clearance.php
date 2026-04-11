@@ -26,6 +26,13 @@ defined( 'ABSPATH' ) || exit;
  */
 const VERSION = '1.0.0';
 
+/**
+ * Plugin file path.
+ *
+ * @since 1.0.0
+ */
+const PLUGIN_FILE = __FILE__;
+
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
