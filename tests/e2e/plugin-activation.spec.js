@@ -24,7 +24,7 @@ test( 'plugin activation seeds clearance section data', async ( {
 	// Act: activate the plugin from the WP plugins screen.
 	await admin.visitAdminPage( 'plugins.php' );
 	await page
-		.locator( 'tr[data-slug="wc-clearance"]' )
+		.locator( 'tr[data-slug="clearance-section-for-woocommerce"]' )
 		.getByRole( 'link', { name: 'Activate' } )
 		.click();
 
