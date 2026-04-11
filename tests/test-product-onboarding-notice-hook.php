@@ -81,7 +81,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_ready_state_notice_when_clearance_products_exist_and_no_page(): void {
+	public function test_renders_no_page_notice_when_clearance_products_exist_and_no_page(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -341,7 +341,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_ready_state_notice_contains_ready_message_when_page_not_registered(): void {
+	public function test_no_page_notice_contains_tip_message_when_page_not_registered(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -354,7 +354,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section is ready/' );
+		$this->expectOutputRegex( '/Tip: add it to a page or post using the Clearance Section block\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -376,7 +376,30 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section is ready/' );
+		$this->expectOutputRegex( '/Clearance section is ready\./' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_ready_state_notice_contains_view_page_link_when_page_is_published(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page();
+		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		wp_publish_post( $page_id );
+
+		// Expect.
+		$expected_url = esc_url( get_permalink( $page_id ) );
+		$this->expectOutputRegex( '/href="' . preg_quote( $expected_url, '/' ) . '">View page<\/a>/' );
 
 		// Act.
 		do_action( 'admin_notices' );

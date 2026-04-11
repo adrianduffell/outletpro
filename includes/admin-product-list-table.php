@@ -64,24 +64,33 @@ function product_onboarding_notice_hook(): void {
 		$page_id = null;
 	}
 
-	$header = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>';
+	$new_badge = '<span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span> ';
 
 	if ( $is_empty ) {
-		$content = $header .
-			'<p><strong>' . esc_html__( 'Clearance section is empty.', 'wc-clearance' ) . '</strong> ' .
+		$content = '<p>' . $new_badge .
+			'<strong>' . esc_html__( 'Clearance section is empty.', 'wc-clearance' ) . '</strong> ' .
 			esc_html__( "Get started by including a product using the checkbox in the product's inventory section.", 'wc-clearance' ) . '</p>';
-	} elseif ( null !== $page_id && 'publish' !== get_post_status( $page_id ) ) {
+	} elseif ( null === $page_id ) {
+		$count   = count_clearance();
+		$content = '<p>' . $new_badge .
+			/* translators: %d: number of products in the clearance section */
+			'<strong>' . sprintf( _n( 'Clearance section has %d product.', 'Clearance section has %d products.', $count, 'wc-clearance' ), $count ) . '</strong> ' .
+			esc_html__( 'Tip: add it to a page or post using the Clearance Section block.', 'wc-clearance' ) . '</p>';
+	} elseif ( 'publish' !== get_post_status( $page_id ) ) {
 		$count     = count_clearance();
 		$edit_url  = get_edit_post_link( $page_id );
 		$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
-		$content   = $header .
+		$content   = '<p>' . $new_badge .
 			/* translators: %d: number of products in the clearance section */
-			'<p><strong>' . sprintf( _n( 'Clearance section has %d product.', 'Clearance section has %d products.', $count, 'wc-clearance' ), $count ) . '</strong> ' .
-			esc_html__( 'Make it visible on the store by editing and publishing the Clearance page.', 'wc-clearance' ) .
+			'<strong>' . sprintf( _n( 'Clearance section has %d product.', 'Clearance section has %d products.', $count, 'wc-clearance' ), $count ) . '</strong> ' .
+			esc_html__( 'Make it visible on the store by editing and publishing the clearance section page.', 'wc-clearance' ) .
 			$edit_link . '</p>';
 	} else {
-		$content = $header .
-			'<p><strong>' . esc_html__( 'Clearance section is ready', 'wc-clearance' ) . '</strong> <span aria-hidden="true">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span></p>';
+		$view_url  = get_permalink( $page_id );
+		$view_link = $view_url ? ' <a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'wc-clearance' ) . '</a>' : '';
+		$content   = '<p><span aria-hidden="true">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span> ' .
+			esc_html__( 'Clearance section is ready.', 'wc-clearance' ) .
+			$view_link . '</p>';
 	}
 
 	?>
