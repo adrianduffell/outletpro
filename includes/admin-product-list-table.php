@@ -31,9 +31,6 @@ function init_admin_product_list_table(): void {
 /**
  * Display the appropriate admin notice on products admin pages.
  *
- * When the clearance page is configured, shows a unified notice with a setup
- * progress checklist. When no page is configured, shows a simpler notice.
- *
  * Fired by `admin_notices`.
  *
  * @internal WordPress action hook
@@ -67,68 +64,30 @@ function product_onboarding_notice_hook(): void {
 		$page_id = null;
 	}
 
-	if ( null !== $page_id ) {
-		// Page is configured — show a checklist notice that tracks setup progress.
-		$page          = get_post( $page_id );
-		$is_published  = $page instanceof \WP_Post && 'publish' === $page->post_status;
-		$products_done = ! $is_empty;
-		$page_done     = $is_published;
+	$header = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>';
 
-		if ( ! $products_done ) {
-			$message  = '<p>' . esc_html__( "Welcome! Let's set up with a few short steps.", 'wc-clearance' ) . '</p>';
-			$message .= '<p>' . wp_kses_post( __( 'Include a product in the clearance section by adding or editing a product, then find the clearance section field in <strong>Product data</strong> → <strong>Inventory</strong>.', 'wc-clearance' ) ) . '</p>';
-		} elseif ( ! $page_done ) {
-			$edit_url  = get_edit_post_link( $page_id );
-			$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
-			$message   = '<p>' . esc_html__( 'Great, products are included in clearance section!', 'wc-clearance' ) . '</p>';
-			$message  .= '<p>' . esc_html__( "There's a clearance section page now added to help customers find these products in one place. Make any changes and publish it to finish setting up.", 'wc-clearance' ) . $edit_link . '</p>';
-		} else {
-			$message = '<p>' . esc_html__( 'Fantastic, the clearance section is ready! Tip: promote it in your store by creating a link to the clearance section page or adding it to the navigation.', 'wc-clearance' ) . '</p>';
-		}
-
-		?>
-<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
-<h3><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?> <span class="wc-clearance-new"><?php esc_html_e( 'New', 'wc-clearance' ); ?></span></h3>
-		<?php echo wp_kses_post( $message ); ?>
-<p><strong><?php esc_html_e( 'Setup progress', 'wc-clearance' ); ?></strong></p>
-<ul class="wc-clearance-checklist">
-<li>
-		<?php if ( $products_done ) : ?>
-<span aria-hidden="true">✓</span><span class="screen-reader-text"><?php esc_html_e( 'Complete:', 'wc-clearance' ); ?></span>
-<?php else : ?>
-<span aria-hidden="true">☐</span><span class="screen-reader-text"><?php esc_html_e( 'Incomplete:', 'wc-clearance' ); ?></span>
-<?php endif; ?>
-		<?php esc_html_e( 'Include products in the clearance section', 'wc-clearance' ); ?>
-</li>
-<li>
-		<?php if ( $page_done ) : ?>
-<span aria-hidden="true">✓</span><span class="screen-reader-text"><?php esc_html_e( 'Complete:', 'wc-clearance' ); ?></span>
-<?php else : ?>
-<span aria-hidden="true">☐</span><span class="screen-reader-text"><?php esc_html_e( 'Incomplete:', 'wc-clearance' ); ?></span>
-<?php endif; ?>
-		<?php esc_html_e( 'Publish the clearance section page', 'wc-clearance' ); ?>
-</li>
-</ul>
-</div>
-		<?php
+	if ( $is_empty ) {
+		$content = $header .
+			'<p><strong>' . esc_html__( 'Clearance section is empty.', 'wc-clearance' ) . '</strong> ' .
+			esc_html__( "Get started by including a product using the checkbox in the product's inventory section.", 'wc-clearance' ) . '</p>';
+	} elseif ( null !== $page_id && 'publish' !== get_post_status( $page_id ) ) {
+		$count     = count_clearance();
+		$edit_url  = get_edit_post_link( $page_id );
+		$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
+		$content   = $header .
+			/* translators: %d: number of products in the clearance section */
+			'<p><strong>' . sprintf( esc_html__( 'Clearance section has %d products.', 'wc-clearance' ), $count ) . '</strong> ' .
+			esc_html__( 'Make it visible on the store by editing and publishing the Clearance page.', 'wc-clearance' ) .
+			$edit_link . '</p>';
 	} else {
-		// No page configured — show a simpler informational notice.
-		if ( $is_empty ) {
-			$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
-			'<p>' . __( "Welcome! Let's get started by including products in the clearance section. Add or edit a product, and find the clearance section field in <strong>Product data</strong> → <strong>Inventory</strong>.", 'wc-clearance' ) . '</p>';
-		} else {
-			$content = '<h3>' . esc_html__( 'Clearance section', 'wc-clearance' ) . ' <span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span></h3>' .
-			'<p>' . esc_html__( 'Fantastic, products are included in clearance section! Tip: display it on your store using the clearance section block.', 'wc-clearance' ) . '</p>';
-		}
-
-		?>
-<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
-		<?php echo wp_kses_post( $content ); ?>
-</div>
-		<?php
+		$content = $header .
+			'<p><strong>' . esc_html__( 'Clearance section is ready', 'wc-clearance' ) . '</strong> ✅</p>';
 	}
 
 	?>
+<div class="notice notice-info is-dismissible wc-clearance-onboarding-notice">
+	<?php echo wp_kses_post( $content ); ?>
+</div>
 <script>
 ( function() {
 var storageKey = <?php echo wp_json_encode( ONBOARDING_DISMISS_STORAGE_KEY ); ?>;
