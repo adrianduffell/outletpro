@@ -131,3 +131,24 @@ test( 'notice does not show again after being dismissed', async ( {
 		page.locator( '.wc-clearance-onboarding-notice' )
 	).not.toBeVisible();
 } );
+
+test( '"New" badge in notice title has light purple background and dark purple text', async ( {
+	page,
+	admin,
+	requestUtils,
+} ) => {
+	// Arrange: delete all products so the notice appears.
+	await deleteAllProducts( requestUtils );
+
+	// Act.
+	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
+
+	// Assert.
+	const newBadge = page.locator( '.wc-clearance-new' );
+	await expect( newBadge ).toBeVisible();
+	await expect( newBadge ).toHaveCSS(
+		'background-color',
+		'rgb(242, 237, 255)'
+	);
+	await expect( newBadge ).toHaveCSS( 'color', 'rgb(80, 7, 170)' );
+} );
