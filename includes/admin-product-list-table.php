@@ -90,7 +90,7 @@ function product_onboarding_notice_hook(): void {
 		$status = 'success';
 		$view_url  = get_permalink( $page_id );
 		$view_link = $view_url ? ' <a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'wc-clearance' ) . '</a>' : '';
-		$content   = '<p><span aria-hidden="true" style="font-size:1.1em">✅</span> <span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span> ' .
+		$content   = '<p><span aria-hidden="true" style="font-size:1.1em; margin-right:0.25em">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span> ' .
 			'<strong>' . esc_html__( 'Clearance section is ready.', 'wc-clearance' ) . '</strong>' .
 			esc_html__( ' Tip: promote it in your store by creating a link to the clearance section page or adding it to the navigation.', 'wc-clearance' ) .
 			$view_link . '</p>';
