@@ -539,4 +539,3 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 }
-

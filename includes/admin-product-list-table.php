@@ -75,7 +75,7 @@ function product_onboarding_notice_hook(): void {
 		$content = '<p>' . $new_badge .
 			/* translators: %d: number of products in the clearance section */
 			'<strong>' . sprintf( _n( 'Clearance section has %d product.', 'Clearance section has %d products.', $count, 'wc-clearance' ), $count ) . '</strong> ' .
-			esc_html__( 'Tip: add it to a page or post using the clearance section block.', 'wc-clearance' ) . '</p>';
+			esc_html__( 'Tip: add it to a page or post using the Clearance Section block.', 'wc-clearance' ) . '</p>';
 	} elseif ( 'publish' !== get_post_status( $page_id ) ) {
 		$count     = count_clearance();
 		$edit_url  = get_edit_post_link( $page_id );
