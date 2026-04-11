@@ -64,7 +64,7 @@ function product_onboarding_notice_hook(): void {
 		$page_id = null;
 	}
 
-	$status = 'info';
+	$status    = 'info';
 	$new_badge = '<span class="wc-clearance-new">' . esc_html__( 'New', 'wc-clearance' ) . '</span> ';
 
 	if ( $is_empty ) {
@@ -87,7 +87,7 @@ function product_onboarding_notice_hook(): void {
 			esc_html__( 'Make it visible on the store by editing and publishing the clearance section page.', 'wc-clearance' ) .
 			$edit_link . '</p>';
 	} else {
-		$status = 'success';
+		$status    = 'success';
 		$view_url  = get_permalink( $page_id );
 		$view_link = $view_url ? ' <a class="wc-clearance-button-link" href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'wc-clearance' ) . '</a>' : '';
 		$content   = '<p><span aria-hidden="true" style="font-size:1.1em; margin-right:0.25em">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span> ' .
