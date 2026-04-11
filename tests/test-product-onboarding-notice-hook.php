@@ -475,6 +475,28 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
+	public function test_draft_page_notice_contains_plural_product_count(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product1 = \WC_Helper_Product::create_simple_product();
+		$product2 = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product1 );
+		add_to_clearance( $product2 );
+		delete_option( CLEARANCE_PAGE_OPTION );
+		create_clearance_page(); // Creates page as draft.
+
+		// Expect.
+		$this->expectOutputRegex( '/Clearance section has 2 products\./' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
 	public function test_no_page_notice_contains_tip_message_when_page_not_registered(): void {
 		// Arrange.
 		init_admin_product_list_table();
