@@ -95,6 +95,20 @@ function admin_init_hook(): void {
 }
 
 /**
+ * Register the plugin's init hooks once WooCommerce is active.
+ *
+ * Fired by `woocommerce_loaded`.
+ *
+ * @internal WordPress action hook
+ */
+function woocommerce_loaded_hook(): void {
+	add_action( 'init', 'WC_Clearance\init_hook', 20 );
+	add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
+}
+
+add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
+
+/**
  * Plugin activation hook.
  */
 function activate(): void {
@@ -109,9 +123,5 @@ function activate(): void {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
 }
-
-// Hook into WordPress.
-add_action( 'init', 'WC_Clearance\init_hook', 20 );
-add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 
 register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
