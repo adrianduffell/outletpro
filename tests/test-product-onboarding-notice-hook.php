@@ -81,7 +81,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_notice_when_clearance_products_exist(): void {
+	public function test_renders_ready_state_notice_when_clearance_products_exist_and_no_page(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
