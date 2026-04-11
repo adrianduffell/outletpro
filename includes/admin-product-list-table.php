@@ -69,7 +69,7 @@ function product_onboarding_notice_hook(): void {
 	if ( $is_empty ) {
 		$content = '<p>' . $new_badge .
 			'<strong>' . esc_html__( 'Clearance section is empty.', 'wc-clearance' ) . '</strong> ' .
-			esc_html__( "Get started by including a product using the checkbox in the product’s inventory panel.", 'wc-clearance' ) . '</p>';
+			esc_html__( 'Get started by including a product using the checkbox in the product’s inventory panel.', 'wc-clearance' ) . '</p>';
 	} elseif ( null === $page_id || 'trash' === get_post_status( $page_id ) ) {
 		$count   = count_clearance();
 		$content = '<p>' . $new_badge .
