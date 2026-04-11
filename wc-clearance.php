@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Clearance Section for WooCommerce
+ * Plugin Name: Clearance Section
  * Description: Move old stock easily by adding a dedicated clearance section to WooCommerce.
  * Version: 1.0.0
  * Author: Adrian Duffell
@@ -112,7 +112,7 @@ add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
  * Plugin activation hook.
  */
 function activate(): void {
-	\wc_get_logger()->info( 'Activating Clearance Section for WooCommerce plugin.' );
+	\wc_get_logger()->info( 'Activating Clearance Section plugin.' );
 
 	try {
 		init_taxonomies(); // Needed since init hook does not run on activation.
