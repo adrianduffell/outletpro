@@ -26,6 +26,13 @@ defined( 'ABSPATH' ) || exit;
  */
 const VERSION = '1.0.0';
 
+/**
+ * Plugin file path.
+ *
+ * @since 1.0.0
+ */
+const PLUGIN_FILE = __FILE__;
+
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
@@ -43,6 +50,7 @@ require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
+require_once __DIR__ . '/includes/enqueue.php';
 
 /**
  * Initialize the plugin.
@@ -63,6 +71,7 @@ function init_hook(): void {
 		init_customizer();
 		init_woocommerce_template_hooks();
 	}
+	enqueue_init();
 	try {
 		init_setup_task();
 	} catch ( \Throwable $e ) {
@@ -100,90 +109,6 @@ function activate(): void {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
 }
-
-/**
- * Register classic theme front-end stylesheets.
- *
- * Fired by `wp_enqueue_scripts`.
- *
- * @internal WordPress action hook
- */
-function register_classic_styles_hook(): void {
-	wp_register_style(
-		'wc-clearance',
-		plugin_dir_url( __FILE__ ) . 'assets/css/classic.css',
-		array(),
-		VERSION
-	);
-}
-add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
-
-/**
- * Enqueue admin-specific stylesheets.
- *
- * Fired by `admin_enqueue_scripts`.
- *
- * @internal WordPress action hook
- */
-function enqueue_admin_styles_hook(): void {
-	wp_enqueue_style(
-		'wc-clearance-admin-styles',
-		plugin_dir_url( __FILE__ ) . 'assets/css/admin.css',
-		array(),
-		VERSION
-	);
-}
-add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
-
-/**
- * Enqueue admin scripts for the product edit page.
- *
- * Fired by `admin_enqueue_scripts`.
- *
- * @internal WordPress action hook
- */
-function enqueue_admin_product_scripts_hook(): void {
-	$screen = get_current_screen();
-
-	if ( ! $screen || 'product' !== $screen->post_type || 'post' !== $screen->base ) {
-		return;
-	}
-
-	wp_enqueue_script(
-		'wc-clearance-admin-product',
-		plugin_dir_url( __FILE__ ) . 'assets/js/admin-product.js',
-		array(),
-		VERSION,
-		true
-	);
-}
-add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
-
-/**
- * Enqueue the built JavaScript for the block editor.
- *
- * Fired by `enqueue_block_editor_assets`.
- *
- * @internal WordPress action hook
- */
-function enqueue_build_assets_hook(): void {
-	$asset_file = plugin_dir_path( __FILE__ ) . 'build/index.asset.php';
-
-	if ( ! file_exists( $asset_file ) ) {
-		return;
-	}
-
-	$asset = require $asset_file;
-
-	wp_enqueue_script(
-		'wc-clearance-build',
-		plugin_dir_url( __FILE__ ) . 'build/index.js',
-		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
-		$asset['version'],
-		true
-	);
-}
-add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 
 // Hook into WordPress.
 add_action( 'init', 'WC_Clearance\init_hook', 20 );
