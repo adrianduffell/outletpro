@@ -76,12 +76,12 @@ function product_onboarding_notice_hook(): void {
 		$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
 		$content   = $header .
 			/* translators: %d: number of products in the clearance section */
-			'<p><strong>' . sprintf( esc_html__( 'Clearance section has %d products.', 'wc-clearance' ), $count ) . '</strong> ' .
+			'<p><strong>' . sprintf( _n( 'Clearance section has %d product.', 'Clearance section has %d products.', $count, 'wc-clearance' ), $count ) . '</strong> ' .
 			esc_html__( 'Make it visible on the store by editing and publishing the Clearance page.', 'wc-clearance' ) .
 			$edit_link . '</p>';
 	} else {
 		$content = $header .
-			'<p><strong>' . esc_html__( 'Clearance section is ready', 'wc-clearance' ) . '</strong> ✅</p>';
+			'<p><strong>' . esc_html__( 'Clearance section is ready', 'wc-clearance' ) . '</strong> <span aria-hidden="true">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span></p>';
 	}
 
 	?>

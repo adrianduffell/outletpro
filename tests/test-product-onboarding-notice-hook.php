@@ -335,7 +335,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_clearance_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section has 1 products\./' );
+		$this->expectOutputRegex( '/Clearance section has 1 product\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
