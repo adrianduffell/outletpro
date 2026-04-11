@@ -488,7 +488,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/Tip: add it to a page or post using the Clearance Section block\./' );
+		$this->expectOutputRegex( '/Tip: add it to a page or post using the clearance section block\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
