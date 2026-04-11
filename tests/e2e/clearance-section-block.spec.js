@@ -105,3 +105,42 @@ test( 'clearance section block shows clearance products in editor and on front e
 			.first()
 	).toBeVisible();
 } );
+
+test( 'clearance badge has default black text and yellow background', async ( {
+	page,
+	admin,
+	requestUtils,
+} ) => {
+	// Arrange: create a clearance product.
+	const product = await requestUtils.rest( {
+		method: 'POST',
+		path: '/wc/v3/products',
+		data: {
+			name: 'Badge Color Test Product',
+			type: 'simple',
+			status: 'publish',
+		},
+	} );
+
+	await admin.visitAdminPage(
+		'post.php',
+		`post=${ product.id }&action=edit`
+	);
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
+	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'button', { name: 'Update' } ).click();
+	await page.waitForLoadState( 'networkidle' );
+
+	// Act: navigate to the product's front-end page.
+	const productData = await requestUtils.rest( {
+		method: 'GET',
+		path: `/wc/v3/products/${ product.id }`,
+	} );
+	await page.goto( productData.permalink );
+
+	// Assert.
+	const badge = page.locator( '.wc-clearance-badge' );
+	await expect( badge ).toBeVisible();
+	await expect( badge ).toHaveCSS( 'color', 'rgb(34, 34, 34)' );
+	await expect( badge ).toHaveCSS( 'background-color', 'rgb(255, 238, 133)' );
+} );
