@@ -1,4 +1,4 @@
-=== Clearance Section for WooCommerce ===
+=== Clearance Section ===
 Contributors: adrianduffell
 Tags: woocommerce, clearance, discontinued, stock, merchandising, products
 Requires at least: 6.9
