@@ -80,7 +80,7 @@ function product_onboarding_notice_hook(): void {
 	} elseif ( 'publish' !== get_post_status( $page_id ) ) {
 		$count     = count_clearance();
 		$edit_url  = get_edit_post_link( $page_id );
-		$edit_link = $edit_url ? ' <a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
+		$edit_link = $edit_url ? ' <a class="wc-clearance-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-clearance' ) . '</a>' : '';
 		$content   = '<p>' . $new_badge .
 			/* translators: %d: number of products in the clearance section */
 			'<strong>' . sprintf( _n( 'Clearance section has %d product.', 'Clearance section has %d products.', $count, 'wc-clearance' ), $count ) . '</strong> ' .
@@ -89,7 +89,7 @@ function product_onboarding_notice_hook(): void {
 	} else {
 		$status = 'success';
 		$view_url  = get_permalink( $page_id );
-		$view_link = $view_url ? ' <a href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'wc-clearance' ) . '</a>' : '';
+		$view_link = $view_url ? ' <a class="wc-clearance-button-link" href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'wc-clearance' ) . '</a>' : '';
 		$content   = '<p><span aria-hidden="true" style="font-size:1.1em; margin-right:0.25em">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-clearance' ) . '</span> ' .
 			'<strong>' . esc_html__( 'Clearance section is ready.', 'wc-clearance' ) . '</strong>' .
 			esc_html__( ' Tip: promote it in your store by creating a link to the clearance section page or adding it to the navigation.', 'wc-clearance' ) .
