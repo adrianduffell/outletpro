@@ -6,6 +6,14 @@ test( 'plugin activation seeds clearance section data', async ( {
 	requestUtils,
 } ) => {
 	// Arrange.
+	await requestUtils.resetSite();
+	await requestUtils.rest( {
+		path: '/wp/v2/plugins/woocommerce/woocommerce',
+		method: 'PUT',
+		data: {
+			status: 'active',
+		},
+	} );
 	await requestUtils.rest( {
 		path: '/wp/v2/plugins/wc-clearance/wc-clearance',
 		method: 'PUT',
