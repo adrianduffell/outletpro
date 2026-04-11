@@ -143,3 +143,43 @@ test( 'can toggle the clearance checkbox by clicking its label text', async ( {
 	// Assert.
 	await expect( checkbox ).not.toBeChecked();
 } );
+
+test( 'clearance status panel has correct styles', async ( {
+	page,
+	admin,
+	requestUtils,
+} ) => {
+	// Arrange.
+	const product = await requestUtils.rest( {
+		method: 'POST',
+		path: '/wc/v3/products',
+		data: {
+			name: 'Style Test Product',
+			type: 'simple',
+			status: 'publish',
+		},
+	} );
+
+	// Act.
+	await admin.visitAdminPage(
+		'post.php',
+		`post=${ product.id }&action=edit`
+	);
+	await page.getByRole( 'link', { name: 'Inventory' } ).click();
+
+	// Assert: help text has font-size 12px.
+	const helpText = page.locator( '.wc-clearance-status-help' );
+	await expect( helpText ).toBeVisible();
+	await expect( helpText ).toHaveCSS( 'font-size', '12px' );
+
+	// Assert: panel has margin-bottom of 1.5em (verified against the element's own font-size).
+	const panel = page.locator( '.wc-clearance-status-panel' );
+	await expect( panel ).toBeVisible();
+	const panelFontSizePx = await panel.evaluate( ( el ) =>
+		parseFloat( window.getComputedStyle( el ).fontSize )
+	);
+	await expect( panel ).toHaveCSS(
+		'margin-bottom',
+		`${ panelFontSizePx * 1.5 }px`
+	);
+} );
