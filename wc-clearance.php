@@ -106,10 +106,6 @@ function woocommerce_loaded_hook(): void {
 	add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
 }
 
-function woocommerce_loaded_hook(): void {
-    add_action( 'init', 'WC_Clearance\init_hook', 20 );
-    add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
-}
 add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
 
 /**
