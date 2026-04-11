@@ -29,16 +29,14 @@ test( 'plugin activation seeds clearance section data', async ( {
 		.click();
 
 	// Assert: plugin activation success message is shown.
-	await expect(
-		page.getByText('Plugin activated')
-	).toBeVisible();
+	await expect( page.getByText( 'Plugin activated' ) ).toBeVisible();
 
 	// Assert: WooCommerce Status screen shows seeded Canonical term ID and Page ID.
 	await admin.visitAdminPage( 'admin.php', 'page=wc-status' );
 	await expect(
 		page.getByTestId( 'clearance-canonical-term-id' )
 	).toContainText( /\d+/ );
-	await expect(
-		page.getByTestId( 'clearance-page-id' )
-	).toContainText( /\d+/ );
+	await expect( page.getByTestId( 'clearance-page-id' ) ).toContainText(
+		/\d+/
+	);
 } );
