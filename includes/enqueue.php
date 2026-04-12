@@ -16,11 +16,27 @@ defined( 'ABSPATH' ) || exit;
  */
 function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
-	add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_block_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
-	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_block_styles_hook' );
 	add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+
+	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	wp_enqueue_block_style(
+		'wc-clearance/clearance-badge',
+		array(
+			'handle' => 'wc-clearance-block-styles',
+			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+			'deps'   => array(),
+			'ver'    => $asset['version'],
+		)
+	);
 }
 
 /**
@@ -75,30 +91,6 @@ function enqueue_admin_product_scripts_hook(): void {
 		array(),
 		VERSION,
 		true
-	);
-}
-
-/**
- * Enqueue the built block CSS for both public and admin sites.
- *
- * Fired by `wp_enqueue_scripts` and `admin_enqueue_scripts`.
- *
- * @internal WordPress action hook
- */
-function enqueue_block_styles_hook(): void {
-	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
-
-	if ( ! file_exists( $asset_file ) ) {
-		return;
-	}
-
-	$asset = require $asset_file;
-
-	wp_enqueue_style(
-		'wc-clearance-block-styles',
-		plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
-		array(),
-		$asset['version']
 	);
 }
 
