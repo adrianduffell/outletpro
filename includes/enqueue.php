@@ -16,8 +16,10 @@ defined( 'ABSPATH' ) || exit;
  */
 function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
+	add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_block_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
+	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_block_styles_hook' );
 	add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 }
 
@@ -73,6 +75,28 @@ function enqueue_admin_product_scripts_hook(): void {
 		array(),
 		VERSION,
 		true
+	);
+}
+
+/**
+ * Enqueue the built block CSS for both public and admin sites.
+ *
+ * Fired by `wp_enqueue_scripts` and `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_block_styles_hook(): void {
+	$style_file = plugin_dir_path( PLUGIN_FILE ) . 'build/style-index.css';
+
+	if ( ! file_exists( $style_file ) ) {
+		return;
+	}
+
+	wp_enqueue_style(
+		'wc-clearance-block-styles',
+		plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+		array(),
+		VERSION
 	);
 }
 
