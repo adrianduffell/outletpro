@@ -1,0 +1,112 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pr-checks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: npm
+
+    - name: Install npm dependencies
+      run: npm ci
+
+    - name: Install Composer dependencies
+      run: composer install --no-interaction --prefer-dist
+
+    - name: Run post-install script
+      run: composer run-script post-install-cmd --no-interaction
+
+    - name: Check VERSION constant matches plugin header
+      run: bash bin/version-check.sh
+
+    - name: Run unit tests
+      run: npm run test:unit
+
+    - name: Run type check
+      run: npm run typecheck
+
+    - name: Run CSS lint
+      run: npm run lint:css
+
+    - name: Run JS lint
+      run: npm run lint:js
+
+    - name: Run Markdown docs lint
+      run: npm run lint:md:docs
+
+    - name: Run PHP lint
+      run: npm run lint:php
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    - name: Start WordPress environment
+      run: npm run wp-env start
+
+    - name: Run E2E tests
+      run: npm run test:e2e
+
+    - name: Upload Playwright artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright
+        path: artifacts/
+
+    - name: Stop WordPress environment
+      if: always()
+      run: npm run wp-env stop
+
+    - name: Install wp-env
+      run: npm install -g @wordpress/env
+
+    - name: PHPUnit - PHP 7.4 - Start WordPress environment
+      run: wp-env start
+      env:
+        WP_ENV_PHP_VERSION: '7.4'
+
+    - name: PHPUnit - PHP 7.4 - Docker container debug information
+      run: |
+        wp-env run tests-cli php -- --version
+        wp-env run tests-cli wp core version
+
+    - name: PHPUnit - PHP 7.4 - Run tests
+      run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
+
+    - name: PHPUnit - PHP 7.4 - Stop WordPress environment
+      if: always()
+      run: wp-env stop
+
+    - name: PHPUnit - PHP 8.5 - Start WordPress environment
+      run: wp-env start
+      env:
+        WP_ENV_PHP_VERSION: '8.5'
+
+    - name: PHPUnit - PHP 8.5 - Docker container debug information
+      run: |
+        wp-env run tests-cli php -- --version
+        wp-env run tests-cli wp core version
+
+    - name: PHPUnit - PHP 8.5 - Run tests
+      run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
+
+    - name: PHPUnit - PHP 8.5 - Stop WordPress environment
+      if: always()
+      run: wp-env stop
