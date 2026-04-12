@@ -24,7 +24,6 @@ build/
 
 # Composer
 vendor/
-composer.lock
 
 # Environment files
 .env
