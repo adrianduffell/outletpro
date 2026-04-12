@@ -71,10 +71,16 @@ jobs:
 
     - name: Install WP-CLI
       run: |
-        curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-        chmod +x wp-cli.phar
-        sudo mv wp-cli.phar /usr/local/bin/wp
+        WP_CLI_VERSION=2.10.0
+        WP_CLI_PHAR="wp-cli-${WP_CLI_VERSION}.phar"
+        WP_CLI_BASE_URL="https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}"
 
+        curl --fail --location --silent --show-error --output "${WP_CLI_PHAR}" "${WP_CLI_BASE_URL}/${WP_CLI_PHAR}"
+        curl --fail --location --silent --show-error --output "${WP_CLI_PHAR}.sha512" "${WP_CLI_BASE_URL}/${WP_CLI_PHAR}.sha512"
+        sha512sum -c "${WP_CLI_PHAR}.sha512"
+
+        chmod +x "${WP_CLI_PHAR}"
+        sudo mv "${WP_CLI_PHAR}" /usr/local/bin/wp
     - name: Set up WordPress with WP-CLI
       run: |
         wp core config \
