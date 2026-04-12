@@ -19,6 +19,8 @@ function enqueue_init(): void {
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+
+	register_block_styles();
 }
 
 /**
@@ -34,6 +36,33 @@ function register_classic_styles_hook(): void {
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
 		array(),
 		VERSION
+	);
+}
+
+/**
+ * Register the block stylesheet so it only loads when the clearance badge block is rendered.
+ *
+ * The message block doesn't have any styles currently.
+ *
+ * @internal
+ */
+function register_block_styles(): void {
+	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	wp_enqueue_block_style(
+		'wc-clearance/clearance-badge',
+		array(
+			'handle' => 'wc-clearance-block-styles',
+			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+			'deps'   => array(),
+			'ver'    => $asset['version'],
+		)
 	);
 }
 
