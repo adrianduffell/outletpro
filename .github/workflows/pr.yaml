@@ -64,26 +64,6 @@ jobs:
     - name: Run PHP lint
       run: npm run lint:php
 
-    - name: Install Playwright browsers
-      run: npx playwright install --with-deps
-
-    - name: Start WordPress environment
-      run: npm run wp-env start
-
-    - name: Run E2E tests
-      run: npm run test:e2e
-
-    - name: Upload Playwright artifacts
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: playwright
-        path: artifacts/
-
-    - name: Stop WordPress environment
-      if: always()
-      run: npm run wp-env stop
-
     - name: Install SVN
       run: sudo apt-get install -y subversion
 
@@ -111,3 +91,23 @@ jobs:
 
     - name: Run PHPUnit (PHP 8.5)
       run: composer run test
+
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps
+
+    - name: Start WordPress environment
+      run: npm run wp-env start
+
+    - name: Run E2E tests
+      run: npm run test:e2e
+
+    - name: Upload Playwright artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright
+        path: artifacts/
+
+    - name: Stop WordPress environment
+      if: always()
+      run: npm run wp-env stop
