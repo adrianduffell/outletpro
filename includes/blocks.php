@@ -46,7 +46,7 @@ function deinit_blocks(): void {
  */
 function register_clearance_badge_block(): void {
 	register_block_type(
-		plugin_dir_path( __DIR__ ) . 'src/blocks/clearance-badge/',
+		plugin_dir_path( __DIR__ ) . 'build/blocks/clearance-badge/',
 		array(
 			'render_callback' => 'WC_Clearance\render_clearance_badge_callback',
 		)
@@ -152,7 +152,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
  */
 function register_clearance_message_block(): void {
 	register_block_type(
-		plugin_dir_path( __DIR__ ) . 'src/blocks/clearance-message/',
+		plugin_dir_path( __DIR__ ) . 'build/blocks/clearance-message/',
 		array(
 			'render_callback' => 'WC_Clearance\render_clearance_message_callback',
 		)
