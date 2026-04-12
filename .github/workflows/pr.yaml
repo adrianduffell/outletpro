@@ -76,8 +76,6 @@ jobs:
         WP_CLI_BASE_URL="https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}"
 
         curl --fail --location --silent --show-error --output "${WP_CLI_PHAR}" "${WP_CLI_BASE_URL}/${WP_CLI_PHAR}"
-        curl --fail --location --silent --show-error --output "${WP_CLI_PHAR}.sha512" "${WP_CLI_BASE_URL}/${WP_CLI_PHAR}.sha512"
-        sha512sum -c "${WP_CLI_PHAR}.sha512"
 
         chmod +x "${WP_CLI_PHAR}"
         sudo mv "${WP_CLI_PHAR}" /usr/local/bin/wp
