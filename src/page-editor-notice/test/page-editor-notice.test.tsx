@@ -130,11 +130,6 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		);
 	} );
 
-	test.skip( 'notice action onClick navigates to the product list screen', () => {
-		// Not yet implemented: JSDOM does not allow redefining window.location, so
-		// the navigation side-effect of the onClick action cannot be asserted here.
-	} );
-
 	test( 'renders null', async () => {
 		// Arrange.
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
