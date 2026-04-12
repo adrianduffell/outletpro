@@ -86,17 +86,19 @@ function enqueue_admin_product_scripts_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_block_styles_hook(): void {
-	$style_file = plugin_dir_path( PLUGIN_FILE ) . 'build/style-index.css';
+	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
 
-	if ( ! file_exists( $style_file ) ) {
+	if ( ! file_exists( $asset_file ) ) {
 		return;
 	}
+
+	$asset = require $asset_file;
 
 	wp_enqueue_style(
 		'wc-clearance-block-styles',
 		plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 		array(),
-		VERSION
+		$asset['version']
 	);
 }
 
