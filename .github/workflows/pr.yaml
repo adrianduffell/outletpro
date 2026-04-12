@@ -85,6 +85,17 @@ jobs:
           --dbhost=127.0.0.1 \
           --dbprefix=wptests_
 
+    - name: Install WordPress with WP-CLI
+      run: |
+        wp core install \
+          --path=/tmp/wordpress \
+          --url=http://local.wordpress.test \
+          --title=Example \
+          --admin_user=admin \
+          --admin_password=password \
+          --admin_email=info@example.com \
+          --skip-email
+
     - name: Check WP loads
       run: wp core version --path=/tmp/wordpress
 
