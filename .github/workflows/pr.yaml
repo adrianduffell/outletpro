@@ -10,6 +10,15 @@ jobs:
     permissions:
       contents: read
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
     - uses: actions/checkout@v3
 
@@ -54,6 +63,71 @@ jobs:
     - name: Run PHP lint
       run: npm run lint:php
 
+    - name: Install SVN
+      run: sudo apt-get install -y subversion
+
+    - name: Install WordPress test suite
+      run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
+
+    - name: Install WP-CLI
+      run: |
+        WP_CLI_VERSION=2.10.0
+        WP_CLI_PHAR="wp-cli-${WP_CLI_VERSION}.phar"
+        WP_CLI_BASE_URL="https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}"
+
+        curl --fail --location --silent --show-error --output "${WP_CLI_PHAR}" "${WP_CLI_BASE_URL}/${WP_CLI_PHAR}"
+
+        chmod +x "${WP_CLI_PHAR}"
+        sudo mv "${WP_CLI_PHAR}" /usr/local/bin/wp
+    - name: Set up WordPress with WP-CLI
+      run: |
+        wp core config \
+          --path=/tmp/wordpress \
+          --dbname=wordpress_test \
+          --dbuser=root \
+          --dbpass=root \
+          --dbhost=127.0.0.1 \
+          --dbprefix=wptests_
+
+    - name: Install WordPress with WP-CLI
+      run: |
+        wp core install \
+          --path=/tmp/wordpress \
+          --url=http://local.wordpress.test \
+          --title=Example \
+          --admin_user=admin \
+          --admin_password=password \
+          --admin_email=info@example.com \
+          --skip-email
+
+    - name: Check WP loads
+      run: wp core version --path=/tmp/wordpress
+
+    - name: Install WooCommerce
+      run: wp plugin install woocommerce --activate --path=/tmp/wordpress
+
+    - name: Run Woo setup tasks
+      run: wp cron event run --due-now --path=/tmp/wordpress
+
+    - name: Set up PHP 7.4
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+
+    - name: Install Composer dependencies (PHP 7.4)
+      run: composer install --no-interaction --prefer-dist
+
+    - name: Run PHPUnit (PHP 7.4)
+      run: composer run test
+
+    - name: Set up PHP 8.5
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.5'
+
+    - name: Run PHPUnit (PHP 8.5)
+      run: composer run test
+
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
 
@@ -73,40 +147,3 @@ jobs:
     - name: Stop WordPress environment
       if: always()
       run: npm run wp-env stop
-
-    - name: Install wp-env
-      run: npm install -g @wordpress/env
-
-    - name: PHPUnit - PHP 7.4 - Start WordPress environment
-      run: wp-env start
-      env:
-        WP_ENV_PHP_VERSION: '7.4'
-
-    - name: PHPUnit - PHP 7.4 - Docker container debug information
-      run: |
-        wp-env run tests-cli php -- --version
-        wp-env run tests-cli wp core version
-
-    - name: PHPUnit - PHP 7.4 - Run tests
-      run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
-
-    - name: PHPUnit - PHP 7.4 - Stop WordPress environment
-      if: always()
-      run: wp-env stop
-
-    - name: PHPUnit - PHP 8.5 - Start WordPress environment
-      run: wp-env start
-      env:
-        WP_ENV_PHP_VERSION: '8.5'
-
-    - name: PHPUnit - PHP 8.5 - Docker container debug information
-      run: |
-        wp-env run tests-cli php -- --version
-        wp-env run tests-cli wp core version
-
-    - name: PHPUnit - PHP 8.5 - Run tests
-      run: wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit
-
-    - name: PHPUnit - PHP 8.5 - Stop WordPress environment
-      if: always()
-      run: wp-env stop
