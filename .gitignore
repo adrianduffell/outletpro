@@ -21,6 +21,7 @@ yarn-error.log
 
 # Build files
 build/
+wc-clearance.zip
 
 # Composer
 vendor/
