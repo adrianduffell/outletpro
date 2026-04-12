@@ -19,7 +19,33 @@ function enqueue_init(): void {
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+	add_action( 'after_setup_theme', 'WC_Clearance\register_block_styles_hook' );
+}
 
+/**
+ * Register classic theme front-end stylesheets.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function register_classic_styles_hook(): void {
+	wp_register_style(
+		'wc-clearance',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
+		array(),
+		VERSION
+	);
+}
+
+/**
+ * Register the block stylesheet so it only loads when the Clearance Badge block is rendered.
+ *
+ * Fired by `after_setup_theme`.
+ *
+ * @internal WordPress action hook
+ */
+function register_block_styles_hook(): void {
 	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
@@ -36,22 +62,6 @@ function enqueue_init(): void {
 			'deps'   => array(),
 			'ver'    => $asset['version'],
 		)
-	);
-}
-
-/**
- * Register classic theme front-end stylesheets.
- *
- * Fired by `wp_enqueue_scripts`.
- *
- * @internal WordPress action hook
- */
-function register_classic_styles_hook(): void {
-	wp_register_style(
-		'wc-clearance',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
-		array(),
-		VERSION
 	);
 }
 
