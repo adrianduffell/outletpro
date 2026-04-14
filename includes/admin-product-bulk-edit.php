@@ -51,12 +51,12 @@ function bulk_edit_field_hook(): void {
  */
 function save_bulk_edit_hook( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! isset( $_REQUEST['wc_clearance_bulk'] ) ) {
+	if ( ! isset( $_GET['wc_clearance_bulk'] ) ) {
 		return;
 	}
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$value = sanitize_text_field( wp_unslash( $_REQUEST['wc_clearance_bulk'] ) );
+	$value = sanitize_text_field( wp_unslash( $_GET['wc_clearance_bulk'] ) );
 
 	try {
 		if ( 'yes' === $value ) {

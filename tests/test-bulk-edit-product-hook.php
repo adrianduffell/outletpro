@@ -50,8 +50,8 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		$product                       = WC_Helper_Product::create_simple_product();
-		$_REQUEST['wc_clearance_bulk'] = 'yes';
+		$product                   = WC_Helper_Product::create_simple_product();
+		$_GET['wc_clearance_bulk'] = 'yes';
 
 		// Act.
 		save_bulk_edit_hook( $product );
@@ -61,7 +61,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 
 		// Cleanup.
-		unset( $_REQUEST['wc_clearance_bulk'] );
+		unset( $_GET['wc_clearance_bulk'] );
 	}
 
 	public function test_save_bulk_edit_hook_removes_product_from_clearance(): void {
@@ -70,7 +70,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-		$_REQUEST['wc_clearance_bulk'] = 'no';
+		$_GET['wc_clearance_bulk'] = 'no';
 
 		// Act.
 		save_bulk_edit_hook( $product );
@@ -80,7 +80,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( $terms );
 
 		// Cleanup.
-		unset( $_REQUEST['wc_clearance_bulk'] );
+		unset( $_GET['wc_clearance_bulk'] );
 	}
 
 	public function test_save_bulk_edit_hook_does_nothing_when_value_is_empty(): void {
@@ -89,7 +89,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-		$_REQUEST['wc_clearance_bulk'] = '';
+		$_GET['wc_clearance_bulk'] = '';
 
 		// Act.
 		save_bulk_edit_hook( $product );
@@ -99,7 +99,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		$this->assertContains( CLEARANCE_STATUS_CANONICAL_TERM, $terms );
 
 		// Cleanup.
-		unset( $_REQUEST['wc_clearance_bulk'] );
+		unset( $_GET['wc_clearance_bulk'] );
 	}
 
 	public function test_save_bulk_edit_hook_does_nothing_when_field_not_set(): void {
@@ -108,7 +108,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
-		unset( $_REQUEST['wc_clearance_bulk'] );
+		unset( $_GET['wc_clearance_bulk'] );
 
 		// Act.
 		save_bulk_edit_hook( $product );
