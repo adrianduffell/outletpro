@@ -64,5 +64,5 @@
 }
 
 .wc-clearance-bulk-edit-title {
-	line-height: 1.3;
+	line-height: 1.3 !important;
 }
