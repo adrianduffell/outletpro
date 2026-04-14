@@ -38,6 +38,7 @@ require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
+require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
@@ -88,6 +89,7 @@ function init_hook(): void {
  */
 function admin_init_hook(): void {
 	init_admin_product_options();
+	init_admin_product_bulk_edit();
 	init_system_status();
 	init_tools();
 	init_admin_page_list_table();
