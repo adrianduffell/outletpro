@@ -55,7 +55,7 @@ function save_bulk_edit_hook( \WC_Product $product ): void {
 		return;
 	}
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	$value = wc_clean( wp_unslash( $_REQUEST['wc_clearance_bulk'] ) );
 
 	try {
