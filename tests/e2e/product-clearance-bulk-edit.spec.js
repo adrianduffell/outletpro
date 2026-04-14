@@ -29,10 +29,7 @@ test( 'can bulk edit products to include in clearance section', async ( {
 	] );
 
 	// Act: navigate to the products list, filter to the test products, and select them.
-	await admin.visitAdminPage(
-		'edit.php',
-		`post_type=product&s=${ runId }`
-	);
+	await admin.visitAdminPage( 'edit.php', `post_type=product&s=${ runId }` );
 	await page.locator( `#cb-select-${ product1.id }` ).check();
 	await page.locator( `#cb-select-${ product2.id }` ).check();
 
@@ -41,7 +38,9 @@ test( 'can bulk edit products to include in clearance section', async ( {
 	await page.locator( '#doaction' ).click();
 
 	// Set the Clearance section field to "Include" and click Update.
-	await page.locator( 'select[name="wc_clearance_bulk"]' ).selectOption( 'yes' );
+	await page
+		.locator( 'select[name="wc_clearance_bulk"]' )
+		.selectOption( 'yes' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -85,10 +84,7 @@ test( 'can bulk edit products to remove from clearance section', async ( {
 	await page.waitForLoadState( 'networkidle' );
 
 	// Act: navigate to the products list, filter to the test product, and select it.
-	await admin.visitAdminPage(
-		'edit.php',
-		`post_type=product&s=${ runId }`
-	);
+	await admin.visitAdminPage( 'edit.php', `post_type=product&s=${ runId }` );
 	await page.locator( `#cb-select-${ product.id }` ).check();
 
 	// Choose "Edit" from the bulk actions dropdown and click Apply.
@@ -96,7 +92,9 @@ test( 'can bulk edit products to remove from clearance section', async ( {
 	await page.locator( '#doaction' ).click();
 
 	// Set the Clearance section field to "Remove" and click Update.
-	await page.locator( 'select[name="wc_clearance_bulk"]' ).selectOption( 'no' );
+	await page
+		.locator( 'select[name="wc_clearance_bulk"]' )
+		.selectOption( 'no' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 
