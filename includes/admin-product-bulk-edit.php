@@ -30,7 +30,7 @@ function bulk_edit_field_hook(): void {
 	?>
 	<div class="inline-edit-group">
 		<label class="alignleft">
-			<span class="title"><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></span>
+			<span class="title wc-clearance-bulk-edit-title"><?php esc_html_e( 'Clearance section', 'wc-clearance' ); ?></span>
 			<select name="wc_clearance_bulk">
 				<option value=""><?php esc_html_e( '— No change —', 'wc-clearance' ); ?></option>
 				<option value="yes"><?php esc_html_e( 'Include', 'wc-clearance' ); ?></option>
