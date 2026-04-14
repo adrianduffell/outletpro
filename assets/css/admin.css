@@ -62,3 +62,7 @@
 .wc-clearance-button-link {
 	text-decoration: none;
 }
+
+.wc-clearance-bulk-edit-title {
+	line-height: 1.3 !important;
+}
