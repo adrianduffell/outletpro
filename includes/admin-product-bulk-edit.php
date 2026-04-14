@@ -58,23 +58,16 @@ function save_bulk_edit_hook( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	$value = wc_clean( wp_unslash( $_REQUEST['wc_clearance_bulk'] ) );
 
-	if ( 'yes' === $value ) {
-		try {
+	try {
+		if ( 'yes' === $value ) {
 			add_to_clearance( $product );
-		} catch ( \Throwable $e ) {
-			\wc_get_logger()->error(
-				'Could not add product ID ' . $product->get_id() . ' to clearance: ' . $e->getMessage(),
-				array( 'product_id' => $product->get_id() )
-			);
-		}
-	} elseif ( 'no' === $value ) {
-		try {
+		} elseif ( 'no' === $value ) {
 			remove_from_clearance( $product );
-		} catch ( \Throwable $e ) {
-			\wc_get_logger()->error(
-				'Could not remove product ID ' . $product->get_id() . ' from clearance: ' . $e->getMessage(),
-				array( 'product_id' => $product->get_id() )
-			);
 		}
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error(
+			'Could not update clearance status for product ID ' . $product->get_id() . ': ' . $e->getMessage(),
+			array( 'product_id' => $product->get_id() )
+		);
 	}
 }
