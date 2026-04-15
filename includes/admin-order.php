@@ -62,5 +62,5 @@ function display_order_item_clearance_badge_hook( $_item_id, \WC_Order_Item $ite
 		$label = __( 'Clearance', 'wc-clearance' );
 	}
 
-	echo esc_html( $label );
+	echo '<span class="wc-clearance-admin-badge">' . esc_html( $label ) . '</span>';
 }

@@ -20,7 +20,7 @@ class Test_Display_Order_Item_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( 'Last Chance' );
+		$this->expectOutputString( '<span class="wc-clearance-admin-badge">Last Chance</span>' );
 
 		// Act.
 		display_order_item_clearance_badge_hook( 1, $item, null );
@@ -33,7 +33,7 @@ class Test_Display_Order_Item_Clearance_Badge_Hook extends WP_UnitTestCase {
 		$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( 'Clearance' );
+		$this->expectOutputString( '<span class="wc-clearance-admin-badge">Clearance</span>' );
 
 		// Act.
 		display_order_item_clearance_badge_hook( 1, $item, null );
