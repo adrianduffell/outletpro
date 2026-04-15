@@ -22,7 +22,7 @@ const ORDER_ITEM_CLEARANCE_META_KEY = '_wc_clearance';
  * @internal
  */
 function init_admin_order(): void {
-	add_action( 'woocommerce_before_order_itemmeta', 'WC_Clearance\display_order_item_clearance_badge_hook', 10, 3 );
+	add_action( 'woocommerce_after_order_itemmeta', 'WC_Clearance\display_order_item_clearance_badge_hook', 1, 3 );
 	add_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Clearance\hide_order_item_clearance_meta_hook' );
 }
 
