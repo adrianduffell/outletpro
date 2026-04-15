@@ -6,6 +6,7 @@
  */
 
 use function WC_Clearance\display_order_item_clearance_badge_hook;
+use function WC_Clearance\hide_order_item_clearance_meta_hook;
 use function WC_Clearance\init_admin_order;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\ORDER_ITEM_CLEARANCE_META_KEY;
@@ -55,5 +56,24 @@ class Test_Display_Order_Item_Clearance_Badge_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 10, has_action( 'woocommerce_after_order_itemmeta', 'WC_Clearance\display_order_item_clearance_badge_hook' ) );
+	}
+
+	public function test_hides_clearance_meta_key(): void {
+		// Arrange.
+		$hidden_keys = array( '_other_key' );
+
+		// Act.
+		$result = hide_order_item_clearance_meta_hook( $hidden_keys );
+
+		// Assert.
+		$this->assertContains( ORDER_ITEM_CLEARANCE_META_KEY, $result );
+	}
+
+	public function test_hidden_meta_filter_hooked_via_init(): void {
+		// Arrange.
+		init_admin_order();
+
+		// Assert.
+		$this->assertSame( 10, has_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Clearance\hide_order_item_clearance_meta_hook' ) );
 	}
 }
