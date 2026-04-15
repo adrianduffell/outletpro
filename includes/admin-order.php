@@ -66,7 +66,7 @@ function flag_order_line_item_clearance_hook( \WC_Order_Item_Product $item, stri
 		return;
 	}
 
-	$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, '1', true );
+	$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
 }
 
 /**
@@ -81,7 +81,7 @@ function flag_order_line_item_clearance_hook( \WC_Order_Item_Product $item, stri
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
 function display_order_item_clearance_badge_hook( $_item_id, \WC_Order_Item $item, $_product ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	if ( '1' !== $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) ) {
+	if ( 'yes' !== $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) ) {
 		return;
 	}
 

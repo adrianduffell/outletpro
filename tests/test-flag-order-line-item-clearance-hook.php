@@ -27,7 +27,7 @@ class Test_Flag_Order_Line_Item_Clearance_Hook extends WP_UnitTestCase {
 		flag_order_line_item_clearance_hook( $item, 'key', $values, $order );
 
 		// Assert.
-		$this->assertSame( '1', $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) );
+		$this->assertSame( 'yes', $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) );
 	}
 
 	public function test_does_not_add_clearance_meta_for_non_clearance_product(): void {
@@ -65,7 +65,7 @@ class Test_Flag_Order_Line_Item_Clearance_Hook extends WP_UnitTestCase {
 		flag_order_line_item_clearance_hook( $item, 'key', $values, $order );
 
 		// Assert.
-		$this->assertSame( '1', $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) );
+		$this->assertSame( 'yes', $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) );
 	}
 
 	public function test_does_not_add_meta_when_product_id_is_missing(): void {

@@ -16,7 +16,7 @@ class Test_Display_Order_Item_Clearance_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Last Chance' );
 		$item = new WC_Order_Item_Product();
-		$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, '1', true );
+		$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
 
 		// Expect.
 		$this->expectOutputString( 'Last Chance' );
@@ -29,7 +29,7 @@ class Test_Display_Order_Item_Clearance_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
 		$item = new WC_Order_Item_Product();
-		$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, '1', true );
+		$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
 
 		// Expect.
 		$this->expectOutputString( 'Clearance' );
