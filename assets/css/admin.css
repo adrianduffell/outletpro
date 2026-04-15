@@ -71,7 +71,11 @@
 	display: inline-block;
 	background-color: #f0f0f1;
 	color: var(--wp-admin-text-color);
-	border-radius: 999px;
-	padding: 0 5px;
+	border-radius: 2px;
 	font-size: 10px;
+	padding: 0.36em;
+	font-weight: 500;
+	line-height: 1;
+	text-box-trim: trim-both;
+	text-box-edge: cap alphabetic;
 }
