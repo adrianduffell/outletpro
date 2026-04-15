@@ -50,12 +50,12 @@ class Test_Display_Order_Item_Clearance_Badge_Hook extends WP_UnitTestCase {
 		display_order_item_clearance_badge_hook( 1, $item, null );
 	}
 
-	public function test_hooked_to_woocommerce_after_order_itemmeta(): void {
+	public function test_hooked_to_woocommerce_before_order_itemmeta(): void {
 		// Arrange.
 		init_admin_order();
 
 		// Assert.
-		$this->assertSame( 10, has_action( 'woocommerce_after_order_itemmeta', 'WC_Clearance\display_order_item_clearance_badge_hook' ) );
+		$this->assertSame( 10, has_action( 'woocommerce_before_order_itemmeta', 'WC_Clearance\display_order_item_clearance_badge_hook' ) );
 	}
 
 	public function test_hides_clearance_meta_key(): void {
