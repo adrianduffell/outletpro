@@ -23,13 +23,13 @@ function init_orders(): void {
  *
  * Fired by `woocommerce_new_order_item`.
  *
- * @param int            $_item_id The order item ID (unused).
- * @param \WC_Order_Item $item     The order item being added.
+ * @param int            $item_id   The order item ID.
+ * @param \WC_Order_Item $item      The order item being added.
  * @param int            $_order_id The order ID (unused).
  * @internal WordPress action hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
-function flag_order_item_clearance_hook( $_item_id, \WC_Order_Item $item, $_order_id ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function flag_order_item_clearance_hook( $item_id, \WC_Order_Item $item, $_order_id ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	if ( ! $item instanceof \WC_Order_Item_Product ) {
 		return;
 	}
@@ -54,6 +54,5 @@ function flag_order_item_clearance_hook( $_item_id, \WC_Order_Item $item, $_orde
 		return;
 	}
 
-	$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
-	$item->save();
+	wc_add_order_item_meta( $item_id, ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
 }
