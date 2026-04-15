@@ -85,6 +85,6 @@ class Test_Flag_Order_Item_Clearance_Hook extends WP_UnitTestCase {
 		flag_order_item_clearance_hook( 0, $item, 0 );
 
 		// Assert.
-		$this->assertSame( '', wc_get_order_item_meta( 0, ORDER_ITEM_CLEARANCE_META_KEY, true ) );
+		$this->assertEmpty( wc_get_order_item_meta( 0, ORDER_ITEM_CLEARANCE_META_KEY, true ) );
 	}
 }
