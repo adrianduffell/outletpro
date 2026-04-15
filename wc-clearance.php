@@ -50,7 +50,7 @@ require_once __DIR__ . '/includes/block-editor.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/admin-order.php';
-require_once __DIR__ . '/includes/checkout.php';
+require_once __DIR__ . '/includes/orders.php';
 require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
 require_once __DIR__ . '/includes/enqueue.php';
@@ -70,7 +70,7 @@ function init_hook(): void {
 	init_blocks();
 	init_block_editor();
 	init_product_collection();
-	init_checkout();
+	init_orders();
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
 		init_woocommerce_template_hooks();

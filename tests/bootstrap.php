@@ -51,7 +51,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/admin-product-list-table.php';
 	require_once __DIR__ . '/../includes/block-editor.php';
 	require_once __DIR__ . '/../includes/admin-order.php';
-	require_once __DIR__ . '/../includes/checkout.php';
+	require_once __DIR__ . '/../includes/orders.php';
 	require_once __DIR__ . '/../includes/customizer.php';
 	require_once __DIR__ . '/../includes/enqueue.php';
 	require_once __DIR__ . '/../wc-clearance.php';
