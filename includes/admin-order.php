@@ -52,17 +52,17 @@ function flag_order_line_item_clearance_hook( \WC_Order_Item_Product $item, stri
 		return;
 	}
 
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		return;
-	}
-
 	$product = wc_get_product( $product_id );
 
 	if ( ! $product instanceof \WC_Product ) {
 		return;
 	}
 
-	if ( ! is_clearance( $product ) ) {
+	try {
+		if ( ! is_clearance( $product ) ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
 		return;
 	}
 
