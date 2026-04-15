@@ -55,4 +55,5 @@ function flag_order_item_clearance_hook( $_item_id, \WC_Order_Item $item, $_orde
 	}
 
 	$item->add_meta_data( ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
+	$item->save();
 }
