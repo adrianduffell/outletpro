@@ -2,13 +2,13 @@ import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 const themeSlug = process.env.THEME;
 
+// Not a real test. Configures the theme on the test site based on the THEME environment variable.
 test( 'activates theme from THEME environment variable', async ( {
 	page,
 	admin,
 } ) => {
 	test.skip( ! themeSlug, 'THEME env variable not set' );
 
-	// Arrange.
 	await admin.visitAdminPage( 'themes.php' );
 	const themeEl = page.locator( `.theme[data-slug="${ themeSlug }"]` );
 	await expect( themeEl ).toBeVisible();
@@ -19,10 +19,8 @@ test( 'activates theme from THEME environment variable', async ( {
 		return;
 	}
 
-	// Act.
 	await themeEl.hover();
 	await activateLink.click();
 
-	// Assert.
 	await page.getByText( 'New theme activated.' ).waitFor();
 } );
