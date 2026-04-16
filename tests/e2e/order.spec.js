@@ -7,11 +7,13 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	browser,
 } ) => {
 	// Arrange.
+	const runId = Date.now();
+
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Order Flow Test Product',
+			name: `Order Flow Test Product ${ runId }`,
 			type: 'simple',
 			status: 'publish',
 			regular_price: '9.99',
