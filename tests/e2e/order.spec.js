@@ -4,6 +4,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	page,
 	admin,
 	requestUtils,
+	browser,
 } ) => {
 	// Arrange.
 	await requestUtils.rest( {
@@ -30,7 +31,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
-	await page.waitForLoadState( 'networkidle' );
 
 	const wpSettings = await requestUtils.rest( {
 		method: 'GET',
@@ -46,42 +46,55 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
 	} );
 
-	// Act.
-	await page.goto( '/wp-login.php?action=logout' );
-	await page.getByRole( 'link', { name: /log out/i } ).click();
-	await page.waitForURL( '**/wp-login.php**' );
+	// Customer flow in isolated context.
+	const customerContext = await browser.newContext();
+	const customerPage = await customerContext.newPage();
 
-	await page.goto( clearancePage.link );
+	await customerPage.goto( clearancePage.link );
 
-	const cartUpdatePromise = page.waitForResponse(
-		( response ) =>
-			response.url().includes( '/wc/store/v1/cart/add-item' ) &&
-			response.ok()
-	);
-	await page
+	const cartUpdatePromise = customerPage
+		.locator( '.added_to_cart' )
+		.first()
+		.waitFor( { state: 'attached' } );
+
+	await customerPage
 		.getByRole( 'button', { name: /add to cart/i } )
 		.first()
 		.click();
+
 	await cartUpdatePromise;
 
-	await page.goto( '/checkout/' );
+	await customerPage.getByRole('link', { name: /checkout/i }).first().click();
 
-	await page.locator( '#email' ).fill( 'test@example.com' );
-	await page.locator( '#billing-first_name' ).fill( 'Test' );
-	await page.locator( '#billing-last_name' ).fill( 'Customer' );
-	await page.locator( '#billing-address_1' ).fill( '123 Test Street' );
-	await page.locator( '#billing-city' ).fill( 'Test City' );
-	await page.locator( '#billing-postcode' ).fill( '10001' );
-	await page.locator( '#billing-state' ).selectOption( 'NY' );
+	await customerPage.locator( '#billing_email' ).fill( 'test@example.com' );
+	await customerPage.locator( '#billing_first_name' ).fill( 'Test' );
+	await customerPage.locator( '#billing_last_name' ).fill( 'Customer' );
+	await customerPage.locator( '#billing_country' ).selectOption( 'US' );
+	await customerPage.locator( '#billing_address_1' ).fill( '123 Test Street' );
+	await customerPage.locator( '#billing_city' ).fill( 'Test City' );
+	await customerPage.locator( '#billing_postcode' ).fill( '10001' );
+	await customerPage.locator( '#billing_state' ).selectOption( 'NY' );
+	await customerPage.locator( '#billing_phone' ).fill( '1234567890' );
 
-	await page.getByLabel( 'Cash on delivery' ).click();
+	await customerPage.getByRole( 'button', { name: /place order/i } ).click();
 
-	await page.getByRole( 'button', { name: /place order/i } ).click();
-	await page.waitForURL( '**/order-received/**' );
+	const orderId = (
+		await customerPage
+			// Match block or classic confirmation page.
+			.locator(
+				`
+				.woocommerce-order-overview__order strong,
+				.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
+					.wc-block-order-confirmation-summary-list-item__value
+				`
+			)
+			.first()
+			.textContent()
+	)?.trim();
 
-	const orderMatch = page.url().match( /order-received\/(\d+)/ );
-	expect( orderMatch ).not.toBeNull();
-	const orderId = orderMatch[ 1 ];
+	expect( orderId ).toMatch( /^\d+$/ );
+
+	await customerContext.close();
 
 	// Assert.
 	await admin.visitAdminPage(
