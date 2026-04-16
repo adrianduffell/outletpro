@@ -14,12 +14,12 @@ test( 'activates theme from THEME environment variable', async ( {
 	await expect( themeEl ).toBeVisible();
 	const activateLink = themeEl.getByRole( 'link', { name: 'Activate' } );
 
+	await themeEl.hover();
+
 	if ( ! ( await activateLink.isVisible() ) ) {
 		await expect( themeEl ).toHaveClass( /\bactive\b/ );
 		return;
 	}
-
-	await themeEl.hover();
 	await activateLink.click();
 
 	await page.getByText( 'New theme activated.' ).waitFor();
