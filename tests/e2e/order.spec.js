@@ -7,12 +7,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	browser,
 } ) => {
 	// Arrange.
-	await requestUtils.rest( {
-		method: 'PUT',
-		path: '/wc/v3/payment_gateways/cod',
-		data: { enabled: true },
-	} );
-
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
