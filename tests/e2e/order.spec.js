@@ -48,15 +48,24 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 
 	await customerPage.goto( clearancePage.link );
 
-	const cartUpdatePromise = customerPage
+	// Assert the product is visible on the clearance page, then scope add-to-cart
+	// to that specific product's card to avoid adding a different product.
+	const productLink = customerPage.getByRole( 'link', {
+		name: product.name,
+		exact: true,
+	} );
+	await expect( productLink ).toBeVisible();
+
+	const productCard = customerPage
+		.locator( 'li.product, .wc-block-grid__product' )
+		.filter( { has: productLink } )
+		.first();
+
+	const cartUpdatePromise = productCard
 		.locator( '.added_to_cart' )
-		.first()
 		.waitFor( { state: 'attached' } );
 
-	await customerPage
-		.getByRole( 'button', { name: /add to cart/i } )
-		.first()
-		.click();
+	await productCard.getByRole( 'button', { name: /add to cart/i } ).click();
 
 	await cartUpdatePromise;
 
