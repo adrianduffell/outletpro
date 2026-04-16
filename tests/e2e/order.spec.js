@@ -64,13 +64,18 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 
 	await cartUpdatePromise;
 
-	await customerPage.getByRole('link', { name: /checkout/i }).first().click();
+	await customerPage
+		.getByRole( 'link', { name: /checkout/i } )
+		.first()
+		.click();
 
 	await customerPage.locator( '#billing_email' ).fill( 'test@example.com' );
 	await customerPage.locator( '#billing_first_name' ).fill( 'Test' );
 	await customerPage.locator( '#billing_last_name' ).fill( 'Customer' );
 	await customerPage.locator( '#billing_country' ).selectOption( 'US' );
-	await customerPage.locator( '#billing_address_1' ).fill( '123 Test Street' );
+	await customerPage
+		.locator( '#billing_address_1' )
+		.fill( '123 Test Street' );
 	await customerPage.locator( '#billing_city' ).fill( 'Test City' );
 	await customerPage.locator( '#billing_postcode' ).fill( '10001' );
 	await customerPage.locator( '#billing_state' ).selectOption( 'NY' );
