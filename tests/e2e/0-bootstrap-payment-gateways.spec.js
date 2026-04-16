@@ -1,7 +1,7 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+// Not a real test. Configures the bank transfer payment gateway on the test site.
 test( 'enable bank transfer payment gateway', async ( { requestUtils } ) => {
-	// Act.
 	const gateway = await requestUtils.rest( {
 		method: 'PUT',
 		path: '/wc/v3/payment_gateways/bacs',
@@ -10,12 +10,11 @@ test( 'enable bank transfer payment gateway', async ( { requestUtils } ) => {
 		},
 	} );
 
-	// Assert.
 	expect( gateway.enabled ).toBe( true );
 } );
 
+// Not a real test. Configures the cash on delivery payment gateway on the test site.
 test( 'enable cash on delivery payment gateway', async ( { requestUtils } ) => {
-	// Act.
 	const gateway = await requestUtils.rest( {
 		method: 'PUT',
 		path: '/wc/v3/payment_gateways/cod',
@@ -24,6 +23,5 @@ test( 'enable cash on delivery payment gateway', async ( { requestUtils } ) => {
 		},
 	} );
 
-	// Assert.
 	expect( gateway.enabled ).toBe( true );
 } );
