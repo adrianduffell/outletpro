@@ -139,25 +139,19 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 
 	await customerPage.getByRole( 'button', { name: /place order/i } ).click();
 
-	// Wait for the order-received page before reading the order ID so the
-	// confirmation content is guaranteed to have rendered.
-	const orderConfirmationLocator = customerPage
-		// Match block or classic confirmation page.
-		.locator(
-			`
-			.woocommerce-order-overview__order strong,
-			.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
-				.wc-block-order-confirmation-summary-list-item__value
-			`
-		)
-		.first();
-
-	await Promise.race( [
-		customerPage.waitForURL( /order-received/i ),
-		orderConfirmationLocator.waitFor( { state: 'visible' } ),
-	] );
-
-	const orderId = ( await orderConfirmationLocator.textContent() )?.trim();
+	const orderId = (
+		await customerPage
+			// Match block or classic confirmation page.
+			.locator(
+				`
+				.woocommerce-order-overview__order strong,
+				.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
+					.wc-block-order-confirmation-summary-list-item__value
+				`
+			)
+			.first()
+			.textContent()
+	)?.trim();
 
 	expect( orderId ).toMatch( /^\d+$/ );
 
