@@ -46,7 +46,10 @@ async function deletePage( requestUtils, pageId ) {
 }
 
 setup( 'install store pages with blocks', async ( { requestUtils } ) => {
-	setup.skip( storeContent !== 'block', 'STORE_CONTENT is not set to block' );
+	setup.skip(
+		storeContent !== 'blocks',
+		'STORE_CONTENT is not set to blocks'
+	);
 
 	const { cartPageId, checkoutPageId } =
 		await getStorePageIds( requestUtils );
@@ -67,8 +70,8 @@ setup( 'install store pages with blocks', async ( { requestUtils } ) => {
 
 setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
 	setup.skip(
-		storeContent !== 'shortcode',
-		'STORE_CONTENT is not set to shortcode'
+		storeContent !== 'shortcodes',
+		'STORE_CONTENT is not set to shortcodes'
 	);
 
 	const { cartPageId, checkoutPageId } =
