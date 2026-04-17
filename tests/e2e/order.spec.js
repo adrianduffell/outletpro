@@ -1,5 +1,60 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+/**
+ * Fills a WooCommerce checkout form (block or classic shortcode).
+ *
+ * Detects which checkout variant is present and fills the billing fields
+ * using the accessibility API (labels) so the helper works regardless of
+ * the active checkout implementation.
+ *
+ * @param {import('@playwright/test').Page} checkoutPage
+ */
+async function fillCheckout( checkoutPage ) {
+	const isBlock =
+		( await checkoutPage
+			.locator( '.wp-block-woocommerce-checkout' )
+			.count() ) > 0;
+
+	if ( isBlock ) {
+		await checkoutPage
+			.getByLabel( 'Email address' )
+			.fill( 'test@example.com' );
+		await checkoutPage.getByLabel( 'First name' ).fill( 'Test' );
+		await checkoutPage.getByLabel( 'Last name' ).fill( 'Customer' );
+		await checkoutPage.getByLabel( /country/i ).selectOption( 'US' );
+		// Use .first() to target Address line 1, skipping the optional line 2.
+		await checkoutPage
+			.getByLabel( /^address/i )
+			.first()
+			.fill( '123 Test Street' );
+		await checkoutPage.getByLabel( 'City' ).fill( 'Test City' );
+		await checkoutPage.getByLabel( /zip|postal/i ).fill( '10001' );
+		await checkoutPage.getByLabel( /^state/i ).selectOption( 'NY' );
+		// Phone is optional in block checkout — only fill if the field is present.
+		const blockPhone = checkoutPage.getByLabel( /phone/i );
+		if ( ( await blockPhone.count() ) > 0 ) {
+			await blockPhone.first().fill( '1234567890' );
+		}
+	} else {
+		// Classic shortcode checkout.
+		await checkoutPage
+			.getByLabel( /email address/i )
+			.fill( 'test@example.com' );
+		await checkoutPage.getByLabel( /first name/i ).fill( 'Test' );
+		await checkoutPage.getByLabel( /last name/i ).fill( 'Customer' );
+		await checkoutPage.getByLabel( /country/i ).selectOption( 'US' );
+		// Use .first() to target "Street address" line 1, skipping the optional line 2.
+		await checkoutPage
+			.getByLabel( /street address/i )
+			.first()
+			.fill( '123 Test Street' );
+		await checkoutPage.getByLabel( /town|city/i ).fill( 'Test City' );
+		await checkoutPage.getByLabel( /zip|postcode/i ).fill( '10001' );
+		await checkoutPage.getByLabel( /state/i ).selectOption( 'NY' );
+		await checkoutPage.getByLabel( /phone/i ).fill( '1234567890' );
+	}
+}
+
 test( 'customer places clearance order and admin sees clearance badge on order', async ( {
 	page,
 	admin,
@@ -80,17 +135,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		.first()
 		.click();
 
-	await customerPage.locator( '#billing_email' ).fill( 'test@example.com' );
-	await customerPage.locator( '#billing_first_name' ).fill( 'Test' );
-	await customerPage.locator( '#billing_last_name' ).fill( 'Customer' );
-	await customerPage.locator( '#billing_country' ).selectOption( 'US' );
-	await customerPage
-		.locator( '#billing_address_1' )
-		.fill( '123 Test Street' );
-	await customerPage.locator( '#billing_city' ).fill( 'Test City' );
-	await customerPage.locator( '#billing_postcode' ).fill( '10001' );
-	await customerPage.locator( '#billing_state' ).selectOption( 'NY' );
-	await customerPage.locator( '#billing_phone' ).fill( '1234567890' );
+	await fillCheckout( customerPage );
 
 	await customerPage.getByRole( 'button', { name: /place order/i } ).click();
 
