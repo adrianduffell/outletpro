@@ -6,7 +6,7 @@ const storeContent = process.env.STORE_CONTENT;
  * Fetches the cart and checkout page IDs from the WooCommerce advanced settings.
  *
  * @param {Object} requestUtils - Playwright request utilities.
- * @return {Promise<{cartPageId: number|null, checkoutPageId: number|null}>}
+ * @return {Promise<{cartPageId: number|null, checkoutPageId: number|null}>} Cart and checkout page IDs.
  */
 async function getStorePageIds( requestUtils ) {
 	const settings = await requestUtils.rest( {
@@ -14,8 +14,12 @@ async function getStorePageIds( requestUtils ) {
 		path: '/wc/v3/settings/advanced',
 	} );
 
-	const cartSetting = settings.find( ( s ) => s.id === 'woocommerce_cart_page_id' );
-	const checkoutSetting = settings.find( ( s ) => s.id === 'woocommerce_checkout_page_id' );
+	const cartSetting = settings.find(
+		( s ) => s.id === 'woocommerce_cart_page_id'
+	);
+	const checkoutSetting = settings.find(
+		( s ) => s.id === 'woocommerce_checkout_page_id'
+	);
 
 	return {
 		cartPageId: cartSetting?.value ? Number( cartSetting.value ) : null,
@@ -44,7 +48,10 @@ async function deletePage( requestUtils, pageId ) {
 setup( 'install store pages with blocks', async ( { requestUtils } ) => {
 	setup.skip( storeContent !== 'block', 'STORE_CONTENT is not set to block' );
 
-	const { cartPageId, checkoutPageId } = await getStorePageIds( requestUtils );
+	const {
+		cartPageId,
+		checkoutPageId,
+	} = await getStorePageIds( requestUtils );
 
 	if ( cartPageId ) {
 		await deletePage( requestUtils, cartPageId );
@@ -66,7 +73,10 @@ setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
 		'STORE_CONTENT is not set to shortcode'
 	);
 
-	const { cartPageId, checkoutPageId } = await getStorePageIds( requestUtils );
+	const {
+		cartPageId,
+		checkoutPageId,
+	} = await getStorePageIds( requestUtils );
 
 	if ( cartPageId ) {
 		await deletePage( requestUtils, cartPageId );
@@ -81,7 +91,8 @@ setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
 		path: '/wp/v2/pages',
 		data: {
 			title: 'Cart',
-			content: '<!-- wp:shortcode -->[woocommerce_cart]<!-- /wp:shortcode -->',
+			content:
+				'<!-- wp:shortcode -->[woocommerce_cart]<!-- /wp:shortcode -->',
 			status: 'publish',
 		},
 	} );
@@ -91,7 +102,8 @@ setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
 		path: '/wp/v2/pages',
 		data: {
 			title: 'Checkout',
-			content: '<!-- wp:shortcode -->[woocommerce_checkout]<!-- /wp:shortcode -->',
+			content:
+				'<!-- wp:shortcode -->[woocommerce_checkout]<!-- /wp:shortcode -->',
 			status: 'publish',
 		},
 	} );
