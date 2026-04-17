@@ -1,13 +1,13 @@
-import { test, expect } from '@wordpress/e2e-test-utils-playwright';
+import { test as setup, expect } from '@wordpress/e2e-test-utils-playwright';
 
 const themeSlug = process.env.THEME;
 
 // Not a real test. Configures the theme on the test site based on the THEME environment variable.
-test( 'activates theme from THEME environment variable', async ( {
+setup( 'activates theme from THEME environment variable', async ( {
 	page,
 	admin,
 } ) => {
-	test.skip( ! themeSlug, 'THEME env variable not set' );
+	setup.skip( ! themeSlug, 'THEME env variable not set' );
 
 	await admin.visitAdminPage( 'themes.php' );
 	const themeEl = page.locator( `.theme[data-slug="${ themeSlug }"]` );
