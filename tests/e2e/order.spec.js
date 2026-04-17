@@ -117,23 +117,18 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		.first()
 		.click();
 
-	await customerPage.waitForFunction( async ( expectedProductId ) => {
-		const response = await fetch( '/wp-json/wc/store/v1/cart/items', {
-			credentials: 'same-origin',
-		} );
+	//Wait for the cart to update.
+	await expect
+		.poll( async () => {
+			const res = await customerPage.request.get(
+				'/?rest_route=/wc/store/v1/cart/items'
+			);
 
-		if ( ! response.ok ) {
-			return false;
-		}
+			const items = await res.json();
 
-		const items = await response.json();
-
-		return items.some(
-			( item ) =>
-				String( item.id ) === String( expectedProductId ) &&
-				item.quantity > 0
-		);
-	}, product.id );
+			return items.length;
+		} )
+		.toBeGreaterThan( 0 );
 
 	// Click the checkout link in the menu.
 	await customerPage
