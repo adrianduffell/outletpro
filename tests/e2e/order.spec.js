@@ -42,7 +42,10 @@ async function fillCheckout( checkoutPage ) {
 			.fill( 'test@example.com' );
 		await checkoutPage.getByLabel( /first name/i ).fill( 'Test' );
 		await checkoutPage.getByLabel( /last name/i ).fill( 'Customer' );
-		await checkoutPage.getByLabel( /country/i ).selectOption( 'US' );
+		await checkoutPage
+			.getByLabel( /country/i )
+			.first()
+			.selectOption( 'US' );
 		// Use .first() to target "Street address" line 1, skipping the optional line 2.
 		await checkoutPage
 			.getByLabel( /street address/i )
@@ -50,7 +53,7 @@ async function fillCheckout( checkoutPage ) {
 			.fill( '123 Test Street' );
 		await checkoutPage.getByLabel( /town|city/i ).fill( 'Test City' );
 		await checkoutPage.getByLabel( /zip|postcode/i ).fill( '10001' );
-		await checkoutPage.getByLabel( /state/i ).selectOption( 'NY' );
+		await checkoutPage.getByLabel( /state/i ).first().selectOption( 'NY' );
 		await checkoutPage.getByLabel( /phone/i ).fill( '1234567890' );
 	}
 }
@@ -103,42 +106,52 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	} );
 	const customerPage = await customerContext.newPage();
 
+	// Open the clearance page.
 	await customerPage.goto( clearancePage.link );
 
 	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
-	// Assert the product is visible on the clearance page, then scope add-to-cart
-	// to that specific product's card to avoid adding a different product.
-	const productLink = customerPage
-		.getByRole( 'link', {
-			name: product.name,
-			exact: true,
-		} )
-		.first();
-	await expect( productLink ).toBeVisible();
-
-	const productCard = customerPage
-		.locator( 'li.product, .wc-block-grid__product' )
-		.filter( { has: productLink } )
-		.first();
-
-	const cartUpdatePromise = productCard
-		.locator( '.added_to_cart' )
-		.waitFor( { state: 'attached' } );
-
-	await productCard.getByRole( 'button', { name: /add to cart/i } ).click();
-
-	await cartUpdatePromise;
-
+	// Add a product in the clearance section to the cart.
 	await customerPage
-		.getByRole( 'link', { name: /checkout/i } )
+		.getByRole( 'button', { name: /add to cart/i } )
 		.first()
 		.click();
+
+	await customerPage.waitForFunction( async ( expectedProductId ) => {
+		const response = await fetch( '/wp-json/wc/store/v1/cart/items', {
+			credentials: 'same-origin',
+		} );
+
+		if ( ! response.ok ) {
+			return false;
+		}
+
+		const items = await response.json();
+
+		return items.some(
+			( item ) =>
+				String( item.id ) === String( expectedProductId ) &&
+				item.quantity > 0
+		);
+	}, product.id );
+
+	// Click the checkout link in the menu.
+	await customerPage
+		.locator( 'nav' )
+		.getByRole( 'link', { name: /^checkout$/i } )
+		.first()
+		.click();
+
+	// Wait for visible email field.
+	await customerPage
+		.getByLabel( /email address|billing email/i )
+		.waitFor( { state: 'visible' } );
 
 	await fillCheckout( customerPage );
 
 	await customerPage.getByRole( 'button', { name: /place order/i } ).click();
 
+	// Wait for the order page.
 	const orderId = (
 		await customerPage
 			// Match block or classic confirmation page.
