@@ -117,7 +117,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		.first()
 		.click();
 
-	//Wait for the cart to update.
+	// Wait for the cart to update.
 	await expect
 		.poll( async () => {
 			const res = await customerPage.request.get(
