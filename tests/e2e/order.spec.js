@@ -43,10 +43,14 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	} );
 
 	// Customer flow in isolated context.
-	const customerContext = await browser.newContext();
+	const customerContext = await browser.newContext( {
+		storageState: { cookies: [], origins: [] },
+	} );
 	const customerPage = await customerContext.newPage();
 
 	await customerPage.goto( clearancePage.link );
+
+	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
 	// Assert the product is visible on the clearance page, then scope add-to-cart
 	// to that specific product's card to avoid adding a different product.
