@@ -50,10 +50,12 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 
 	// Assert the product is visible on the clearance page, then scope add-to-cart
 	// to that specific product's card to avoid adding a different product.
-	const productLink = customerPage.getByRole( 'link', {
-		name: product.name,
-		exact: true,
-	} );
+	const productLink = customerPage
+		.getByRole( 'link', {
+			name: product.name,
+			exact: true,
+		} )
+		.first();
 	await expect( productLink ).toBeVisible();
 
 	const productCard = customerPage
