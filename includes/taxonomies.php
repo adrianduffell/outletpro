@@ -118,6 +118,16 @@ function is_clearance( \WC_Product $product ): bool {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
 		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
 	}
+
+	// Handle variations by checking the parent product.
+	if ( $product->is_type( 'variation' ) ) {
+		$parent = wc_get_product( $product->get_parent_id() );
+		if ( ! $parent ) {
+			return false;
+		}
+		return is_clearance( $parent );
+	}
+
 	return has_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY, $product->get_id() );
 }
 
