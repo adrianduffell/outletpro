@@ -58,7 +58,6 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'On Sale', $result[0]['key'] );
-		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
 	}
 
 	public function test_preserves_existing_item_data(): void {
