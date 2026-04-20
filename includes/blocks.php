@@ -108,6 +108,7 @@ function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position,
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
  * @return string Rendered HTML, or empty string if the product is not in clearance.
+ * @internal
  */
 function render_clearance_badge_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
@@ -166,6 +167,7 @@ function register_clearance_message_block(): void {
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
  * @return string Rendered HTML, or empty string if the product is not in clearance.
+ * @internal
  */
 function render_clearance_message_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;

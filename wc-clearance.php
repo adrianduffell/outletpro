@@ -116,6 +116,8 @@ add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
 
 /**
  * Plugin activation hook.
+ *
+ * @internal
  */
 function activate(): void {
 	\wc_get_logger()->info( 'Activating Clearance Section plugin.' );
