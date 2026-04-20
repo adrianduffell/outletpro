@@ -112,12 +112,29 @@ function seed_clearance_status_taxonomy(): void {
  *
  * @param \WC_Product $product The product to check.
  * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If a variation's parent product cannot be found.
  * @since 1.0.0
  */
 function is_clearance( \WC_Product $product ): bool {
 	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
 		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
 	}
+
+	// Handle variations by checking the parent product.
+	if ( $product->is_type( 'variation' ) ) {
+		$parent = wc_get_product( $product->get_parent_id() );
+		if ( ! $parent ) {
+			throw new \RuntimeException(
+				sprintf(
+					'Parent product (ID %d) for variation (ID %d) could not be found.',
+					$product->get_parent_id(),
+					$product->get_id()
+				)
+			);
+		}
+		return is_clearance( $parent );
+	}
+
 	return has_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY, $product->get_id() );
 }
 
