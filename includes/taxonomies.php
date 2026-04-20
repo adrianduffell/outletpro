@@ -111,7 +111,7 @@ function seed_clearance_status_taxonomy(): void {
  * Check if a product is in the clearance section.
  *
  * @param \WC_Product $product The product to check.
- * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If the clearance status taxonomy does not exist or the parent product cannot be found.
  * @since 1.0.0
  */
 function is_clearance( \WC_Product $product ): bool {
@@ -123,7 +123,13 @@ function is_clearance( \WC_Product $product ): bool {
 	if ( $product->is_type( 'variation' ) ) {
 		$parent = wc_get_product( $product->get_parent_id() );
 		if ( ! $parent ) {
-			return false;
+			throw new \RuntimeException(
+				sprintf(
+					'Parent product (ID %d) for variation (ID %d) could not be found.',
+					$product->get_parent_id(),
+					$product->get_id()
+				)
+			);
 		}
 		return is_clearance( $parent );
 	}
