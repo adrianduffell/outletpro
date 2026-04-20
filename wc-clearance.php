@@ -50,6 +50,7 @@ require_once __DIR__ . '/includes/block-editor.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/admin-order.php';
+require_once __DIR__ . '/includes/cart.php';
 require_once __DIR__ . '/includes/orders.php';
 require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
@@ -71,6 +72,7 @@ function init_hook(): void {
 	init_block_editor();
 	init_product_collection();
 	init_orders();
+	init_cart();
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
 		init_woocommerce_template_hooks();
@@ -125,6 +127,7 @@ function activate(): void {
 		seed_clearance_status_taxonomy();
 		create_clearance_page();
 		seed_activated_at_option();
+		seed_settings();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
 	}

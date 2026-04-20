@@ -147,6 +147,3 @@ jobs:
         name: playwright
         path: artifacts/
 
-    - name: Stop WordPress environment
-      if: always()
-      run: npm run wp-env stop
