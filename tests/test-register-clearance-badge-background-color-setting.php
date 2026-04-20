@@ -61,7 +61,7 @@ class Test_Register_Clearance_Badge_Background_Color_Setting extends WP_UnitTest
 		$this->assertSame( '#FFEE85', $settings[ CLEARANCE_BADGE_BG_COLOR_OPTION ]['default'] );
 	}
 
-	public function test_setting_can_be_updated_via_rest_and_is_sanitized(): void {
+	public function test_setting_can_be_updated_via_rest(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_BG_COLOR_OPTION );
 		register_clearance_badge_background_color_setting();
