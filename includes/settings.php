@@ -48,11 +48,10 @@ function init_settings(): void {
 	register_clearance_page_setting();
 	register_clearance_badge_label_setting();
 	register_clearance_message_setting();
-	set_option_defaults();
 }
 
 /**
- * Set option values with defaults on init.
+ * Seed option values with defaults.
  *
  * Uses add_option() so that existing values are never overwritten. This
  * preserves the default at the time of installation even if defaults change
@@ -60,7 +59,7 @@ function init_settings(): void {
  *
  * @internal
  */
-function set_option_defaults(): void {
+function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 	add_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) );
 }

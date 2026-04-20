@@ -125,6 +125,7 @@ function activate(): void {
 		seed_clearance_status_taxonomy();
 		create_clearance_page();
 		seed_activated_at_option();
+		seed_settings();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
 	}
