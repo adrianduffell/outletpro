@@ -25,7 +25,7 @@ function init_cart(): void {
  *
  * @param array $item_data The existing cart item data.
  * @param array $cart_item The cart item.
- * @return array<int, array{key: string, value: string}>
+ * @return array<int, array<string, mixed>>
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
