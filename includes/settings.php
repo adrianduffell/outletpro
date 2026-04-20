@@ -31,6 +31,20 @@ const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 
 /**
+ * WordPress option key used to store the badge text color.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
+
+/**
+ * WordPress option key used to store the badge background color.
+ *
+ * @since 1.0.0
+ */
+const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
@@ -47,6 +61,8 @@ function settings_screen_enabled(): bool {
 function init_settings(): void {
 	register_clearance_page_setting();
 	register_clearance_badge_label_setting();
+	register_clearance_badge_text_color_setting();
+	register_clearance_badge_bg_color_setting();
 	register_clearance_message_setting();
 }
 
@@ -100,6 +116,54 @@ function register_clearance_badge_label_setting(): void {
 			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
 			'default'           => __( 'Clearance', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge text color setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_badge_text_color_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge text color', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge text color.', 'wc-clearance' ),
+			'default'           => '#222',
+			'sanitize_callback' => 'sanitize_hex_color',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge background color setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_badge_bg_color_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_BG_COLOR_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
+			'default'           => '#FFEE85',
+			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
