@@ -44,8 +44,14 @@ function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 		return $item_data;
 	}
 
+	$clearance_label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $clearance_label ) || '' === trim( $clearance_label ) ) {
+		$clearance_label = __( 'Clearance', 'wc-clearance' );
+	}
+
 	$item_data[] = array(
-		'key'   => get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ),
+		'key'   => $clearance_label,
 		'value' => __( 'Yes', 'wc-clearance' ),
 	);
 
