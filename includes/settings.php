@@ -38,7 +38,7 @@ const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
 
 /**
- * WordPress option key used to store the badge bg color.
+ * WordPress option key used to store the badge background color.
  *
  * @since 1.0.0
  */
@@ -136,7 +136,7 @@ function register_clearance_badge_text_color_setting(): void {
 }
 
 /**
- * Register the clearance badge bg color setting.
+ * Register the clearance badge background color setting.
  *
  * @since 1.0.0
  */
@@ -146,8 +146,8 @@ function register_clearance_badge_bg_color_setting(): void {
 		CLEARANCE_BADGE_BG_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge bg color', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge bg color.', 'wc-clearance' ),
+			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
 			'default'           => '#FFEE85',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
