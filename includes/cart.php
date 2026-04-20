@@ -19,6 +19,15 @@ function init_cart(): void {
 }
 
 /**
+ * Helper to de-initialize cart integrations back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_cart(): void {
+	remove_filter( 'woocommerce_get_item_data', 'WC_Clearance\add_clearance_to_cart_item_meta_hook', PHP_INT_MAX );
+}
+
+/**
  * Adds clearance status into the cart item meta.
  *
  * Fired by `woocommerce_get_item_data`.
