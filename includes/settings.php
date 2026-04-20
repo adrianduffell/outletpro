@@ -51,6 +51,20 @@ function init_settings(): void {
 }
 
 /**
+ * Seed option values with defaults.
+ *
+ * Uses add_option() so that existing values are never overwritten. This
+ * preserves the default at the time of installation even if defaults change
+ * in future versions.
+ *
+ * @internal
+ */
+function seed_settings(): void {
+	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	add_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) );
+}
+
+/**
  * Register the clearance page ID setting.
  *
  * @since 1.0.0
