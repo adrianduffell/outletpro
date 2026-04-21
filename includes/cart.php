@@ -60,9 +60,12 @@ function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 	}
 
 	$item_data[] = array(
-		'key'   => $clearance_label,
-		'value' => __( 'Yes', 'wc-clearance' ),
-		'display' => '<span class="wc-clearance-cart-item-meta">' . __( 'Yes', 'wc-clearance' ) . '</span>',
+		'key'     => $clearance_label,
+		'value'   => __( 'Yes', 'wc-clearance' ),
+		'display' => sprintf(
+			'<span class="wc-clearance-cart-item-meta">%s</span>',
+			esc_html__( 'Yes', 'wc-clearance' )
+		),
 	);
 
 	return $item_data;
