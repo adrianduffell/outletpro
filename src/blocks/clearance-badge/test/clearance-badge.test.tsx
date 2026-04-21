@@ -1,34 +1,8 @@
-import type { ReactNode } from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { Edit } from '../edit';
 
 jest.mock( '@wordpress/block-editor', () => ( {
 	useBlockProps: jest.fn( ( props ) => props ?? {} ),
-	InspectorControls: ( { children }: { children: ReactNode } ) => (
-		<div>{ children }</div>
-	),
-	PanelColorSettings: ( {
-		colorSettings,
-	}: {
-		title: string;
-		colorSettings: Array< {
-			value: string | undefined;
-			onChange: ( v: string | undefined ) => void;
-			label: string;
-		} >;
-	} ) => (
-		<div>
-			{ colorSettings.map( ( setting ) => (
-				<input
-					key={ setting.label }
-					aria-label={ setting.label }
-					type="color"
-					value={ setting.value ?? '' }
-					onChange={ ( e ) => setting.onChange( e.target.value ) }
-				/>
-			) ) }
-		</div>
-	),
 	RichText: ( {
 		value,
 		onChange,
@@ -48,30 +22,6 @@ jest.mock( '@wordpress/block-editor', () => ( {
 	),
 } ) );
 
-jest.mock( '@wordpress/components', () => ( {
-	BaseControl: ( { children }: { children: ReactNode; label?: string } ) => (
-		<div>{ children }</div>
-	),
-	PanelBody: ( { children }: { children: ReactNode } ) => (
-		<div>{ children }</div>
-	),
-	TextControl: ( {
-		label,
-		value,
-		onChange,
-	}: {
-		label: string;
-		value: string;
-		onChange: ( v: string ) => void;
-	} ) => (
-		<input
-			aria-label={ label }
-			value={ value }
-			onChange={ ( e ) => onChange( e.target.value ) }
-		/>
-	),
-} ) );
-
 jest.mock( '@wordpress/i18n', () => ( {
 	__: jest.fn( ( str: string ) => str ),
 } ) );
@@ -83,6 +33,14 @@ jest.mock( '@wordpress/core-data', () => ( {
 import { useEntityProp } from '@wordpress/core-data';
 
 const mockUseEntityProp = useEntityProp as jest.Mock;
+
+function makeProps( overrides: object = {} ) {
+	return {
+		attributes: { style: {} },
+		setAttributes: jest.fn(),
+		...overrides,
+	};
+}
 
 describe( 'Edit', () => {
 	test( 'renders badge with default label when setting is empty', () => {
@@ -96,7 +54,7 @@ describe( 'Edit', () => {
 			.mockReturnValueOnce( [ undefined, setTextColor, undefined ] );
 
 		// Act.
-		render( <Edit /> );
+		render( <Edit { ...makeProps() } /> );
 
 		// Assert.
 		expect( screen.getByDisplayValue( 'Clearance' ) ).toBeInTheDocument();
@@ -113,7 +71,7 @@ describe( 'Edit', () => {
 			.mockReturnValueOnce( [ undefined, setTextColor, undefined ] );
 
 		// Act.
-		render( <Edit /> );
+		render( <Edit { ...makeProps() } /> );
 
 		// Assert.
 		expect( screen.getByDisplayValue( 'Sale' ) ).toBeInTheDocument();
@@ -128,7 +86,7 @@ describe( 'Edit', () => {
 			.mockReturnValueOnce( [ 'Clearance', setLabel, undefined ] )
 			.mockReturnValueOnce( [ undefined, setBgColor, undefined ] )
 			.mockReturnValueOnce( [ undefined, setTextColor, undefined ] );
-		render( <Edit /> );
+		render( <Edit { ...makeProps() } /> );
 		const input = screen.getByDisplayValue( 'Clearance' );
 
 		// Act.
@@ -138,79 +96,66 @@ describe( 'Edit', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Discounted' );
 	} );
 
-	test( 'renders background color from global setting', () => {
+	test( 'seeds block style.color from global settings on first load', () => {
 		// Arrange.
 		const setLabel = jest.fn();
 		const setBgColor = jest.fn();
 		const setTextColor = jest.fn();
+		const setAttributes = jest.fn();
 		mockUseEntityProp
 			.mockReturnValueOnce( [ 'Clearance', setLabel, undefined ] )
 			.mockReturnValueOnce( [ '#FFEE85', setBgColor, undefined ] )
 			.mockReturnValueOnce( [ '#222222', setTextColor, undefined ] );
 
 		// Act.
-		render( <Edit /> );
+		act( () => {
+			render( <Edit { ...makeProps( { setAttributes } ) } /> );
+		} );
 
 		// Assert.
-		expect( screen.getByLabelText( 'Background color' ) ).toHaveValue(
-			'#ffee85'
+		expect( setAttributes ).toHaveBeenCalledWith(
+			expect.objectContaining( {
+				style: expect.objectContaining( {
+					color: expect.objectContaining( {
+						background: '#FFEE85',
+						text: '#222222',
+					} ),
+				} ),
+			} )
 		);
 	} );
 
-	test( 'renders text color from global setting', () => {
+	test( 'does not overwrite block color attributes already set', () => {
 		// Arrange.
 		const setLabel = jest.fn();
 		const setBgColor = jest.fn();
 		const setTextColor = jest.fn();
+		const setAttributes = jest.fn();
 		mockUseEntityProp
 			.mockReturnValueOnce( [ 'Clearance', setLabel, undefined ] )
 			.mockReturnValueOnce( [ '#FFEE85', setBgColor, undefined ] )
 			.mockReturnValueOnce( [ '#222222', setTextColor, undefined ] );
 
 		// Act.
-		render( <Edit /> );
+		act( () => {
+			render(
+				<Edit
+					{ ...makeProps( {
+						attributes: {
+							style: {
+								color: {
+									background: '#FF0000',
+									text: '#0000FF',
+								},
+							},
+						},
+						setAttributes,
+					} ) }
+				/>
+			);
+		} );
 
 		// Assert.
-		expect( screen.getByLabelText( 'Text color' ) ).toHaveValue(
-			'#222222'
-		);
-	} );
-
-	test( 'calls setBgColor with updated value when background color changes', () => {
-		// Arrange.
-		const setLabel = jest.fn();
-		const setBgColor = jest.fn();
-		const setTextColor = jest.fn();
-		mockUseEntityProp
-			.mockReturnValueOnce( [ 'Clearance', setLabel, undefined ] )
-			.mockReturnValueOnce( [ '#FFEE85', setBgColor, undefined ] )
-			.mockReturnValueOnce( [ '#222222', setTextColor, undefined ] );
-		render( <Edit /> );
-		const colorInput = screen.getByLabelText( 'Background color' );
-
-		// Act.
-		fireEvent.change( colorInput, { target: { value: '#FF0000' } } );
-
-		// Assert.
-		expect( setBgColor ).toHaveBeenCalledWith( '#ff0000' );
-	} );
-
-	test( 'calls setTextColor with updated value when text color changes', () => {
-		// Arrange.
-		const setLabel = jest.fn();
-		const setBgColor = jest.fn();
-		const setTextColor = jest.fn();
-		mockUseEntityProp
-			.mockReturnValueOnce( [ 'Clearance', setLabel, undefined ] )
-			.mockReturnValueOnce( [ '#FFEE85', setBgColor, undefined ] )
-			.mockReturnValueOnce( [ '#222222', setTextColor, undefined ] );
-		render( <Edit /> );
-		const colorInput = screen.getByLabelText( 'Text color' );
-
-		// Act.
-		fireEvent.change( colorInput, { target: { value: '#0000FF' } } );
-
-		// Assert.
-		expect( setTextColor ).toHaveBeenCalledWith( '#0000ff' );
+		expect( setAttributes ).not.toHaveBeenCalled();
 	} );
 } );

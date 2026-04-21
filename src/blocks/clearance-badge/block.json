@@ -12,6 +12,11 @@
 			"padding": true,
 			"margin": true
 		},
+		"color": {
+			"background": true,
+			"text": true,
+			"gradients": true
+		},
 		"typography": {
 			"fontSize": true,
 			"__experimentalFontWeight": true
@@ -26,6 +31,10 @@
 		"style": {
 			"type": "object",
 			"default": {
+				"color": {
+					"background": "#FFEE85",
+					"text": "#222"
+				},
 				"spacing": {
 					"padding": {
 						"top": "5px",
