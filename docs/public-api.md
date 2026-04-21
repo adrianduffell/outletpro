@@ -204,6 +204,41 @@ apply_filters( 'wc_clearance_badge_single_product_priority', int $priority )
 
 Must return an integer. Added in 1.0.0.
 
+## Script and style handles
+
+These handles are registered by the plugin and can be used as dependencies in third-party
+enqueues.
+
+### Styles
+
+#### `wc-clearance`
+
+Front-end stylesheet for classic (non-block) themes. Registered — but not automatically
+enqueued — on `wp_enqueue_scripts`. Use `wp_enqueue_style( 'wc-clearance' )` or declare
+it as a dependency to load it on demand. Added in 1.0.0.
+
+#### `wc-clearance-block-styles`
+
+Stylesheet for the clearance badge block. Registered via `wp_enqueue_block_style` so it
+is only loaded when the `wc-clearance/clearance-badge` block is rendered on the page.
+Added in 1.0.0.
+
+#### `wc-clearance-admin-styles`
+
+Admin stylesheet enqueued on all `admin_enqueue_scripts` pages. Added in 1.0.0.
+
+### Scripts
+
+#### `wc-clearance-build`
+
+Block editor JavaScript enqueued on `enqueue_block_editor_assets`. Contains the block
+editor integration for the clearance badge and clearance message blocks. Added in 1.0.0.
+
+#### `wc-clearance-admin-product`
+
+Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
+Added in 1.0.0.
+
 ## Flagged for review
 
 The following symbols have no `@internal` annotation but appear to be implementation
