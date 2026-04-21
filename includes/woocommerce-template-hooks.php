@@ -70,8 +70,8 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$bg_colour   = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
-	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
+	$bg_colour   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
+	$text_colour = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
 	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
 	wp_enqueue_style( 'wc-clearance' );
