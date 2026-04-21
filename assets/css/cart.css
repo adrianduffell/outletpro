@@ -25,7 +25,7 @@
 	}
 
 	/* Applies when clearance is the only definition. */
-	.shop_table dl.variation:has(> dt:only-of-type) {
+	.shop_table dl.variation:has(> dt:only-of-type):has(.wc-clearance-cart-item-meta) {
 		margin: 0;
 	}
 
