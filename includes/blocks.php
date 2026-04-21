@@ -126,11 +126,23 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes(
-		array(
-			'class' => 'wc-clearance-badge',
-		)
-	);
+	$bg_color   = get_option( CLEARANCE_BADGE_BG_COLOR_OPTION );
+	$text_color = get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
+
+	$style_parts = array();
+	if ( is_string( $bg_color ) && '' !== $bg_color ) {
+		$style_parts[] = 'background-color:' . esc_attr( $bg_color );
+	}
+	if ( is_string( $text_color ) && '' !== $text_color ) {
+		$style_parts[] = 'color:' . esc_attr( $text_color );
+	}
+
+	$extra_attrs = array( 'class' => 'wc-clearance-badge' );
+	if ( ! empty( $style_parts ) ) {
+		$extra_attrs['style'] = implode( ';', $style_parts );
+	}
+
+	$wrapper_attributes = get_block_wrapper_attributes( $extra_attrs );
 
 	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
 
