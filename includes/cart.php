@@ -59,13 +59,17 @@ function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 		$clearance_label = __( 'Clearance', 'wc-clearance' );
 	}
 
-	$item_data[] = array(
-		'key'     => $clearance_label,
-		'value'   => __( 'Yes', 'wc-clearance' ),
-		'display' => sprintf(
+	// Important: The CSS badge replacement expects clearance meta to be first.
+	array_unshift(
+		$item_data,
+		array(
+			'key'   => $clearance_label,
+			'value' => __( 'Yes', 'wc-clearance' ),
+			'display' => sprintf(
 			'<span class="wc-clearance-cart-item-meta">%s</span>',
-			esc_html__( 'Yes', 'wc-clearance' )
-		),
+				esc_html__( 'Yes', 'wc-clearance' )
+			),
+		)
 	);
 
 	return $item_data;
