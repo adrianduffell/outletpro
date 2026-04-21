@@ -37,6 +37,13 @@ function register_classic_styles_hook(): void {
 		array(),
 		VERSION
 	);
+
+	wp_register_style(
+		'wc-clearance-cart',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/cart.css',
+		array(),
+		VERSION
+	);
 }
 
 /**

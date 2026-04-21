@@ -59,6 +59,17 @@ function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 		$clearance_label = __( 'Clearance', 'wc-clearance' );
 	}
 
+	if ( ! wp_style_is( 'wc-clearance-cart', 'enqueued' ) ) {
+		$bg_color   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' ) );
+		$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' ) );
+
+		wp_enqueue_style( 'wc-clearance-cart' );
+		wp_add_inline_style(
+			'wc-clearance-cart',
+			':root { --wc-clearance-badge-bg-color: ' . $bg_color . '; --wc-clearance-badge-text-color: ' . $text_color . '; }'
+		);
+	}
+
 	$item_data[] = array(
 		'key'   => $clearance_label,
 		'value' => __( 'Yes', 'wc-clearance' ),
