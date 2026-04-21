@@ -8,7 +8,7 @@
 /* Shortcode styles. */
 
 .shop_table td.product-name:has(.variation-Clearance):after {
-	content: "Clearance";
+	content: var(--wc-clearance-badge-label, "Clearance");
 	display: block;
 	width: fit-content;
 	border-radius: 2px;
