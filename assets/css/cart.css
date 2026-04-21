@@ -1,7 +1,7 @@
 /**
  * Block and shortcode styles for the cart badge.
  *
- * Replaces the "Clearance: Yes" meta text with a styled badge using css :after.
+ * Replaces the "Clearance: Yes" meta text with a styled badge using css before/after.
  * Uses accessible hiding technique from https://webaim.org/techniques/css/invisiblecontent/
  */
 
