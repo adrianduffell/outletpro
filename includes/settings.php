@@ -69,6 +69,8 @@ function init_settings(): void {
  */
 function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
+	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
 }
 
 /**
