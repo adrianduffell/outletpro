@@ -111,13 +111,13 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		$product   = WC_Helper_Product::create_simple_product();
+		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$cart_item = array( 'data' => $product );
 		deinit_cart();
 		init_cart();
 		wp_deregister_style( 'wc-clearance-cart' );
-		wp_register_style( 'wc-clearance-cart', false );
+		wp_register_style( 'wc-clearance-cart', false, array(), false );
 
 		// Act.
 		apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -135,7 +135,7 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 		wp_deregister_style( 'wc-clearance-cart' );
-		wp_register_style( 'wc-clearance-cart', false );
+		wp_register_style( 'wc-clearance-cart', false, array(), false );
 
 		// Act.
 		apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -149,13 +149,13 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		update_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FF0000' );
-		$product   = WC_Helper_Product::create_simple_product();
+		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$cart_item = array( 'data' => $product );
 		deinit_cart();
 		init_cart();
 		wp_deregister_style( 'wc-clearance-cart' );
-		wp_register_style( 'wc-clearance-cart', false );
+		wp_register_style( 'wc-clearance-cart', false, array(), false );
 
 		// Act.
 		apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -171,13 +171,13 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		update_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#00FF00' );
-		$product   = WC_Helper_Product::create_simple_product();
+		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$cart_item = array( 'data' => $product );
 		deinit_cart();
 		init_cart();
 		wp_deregister_style( 'wc-clearance-cart' );
-		wp_register_style( 'wc-clearance-cart', false );
+		wp_register_style( 'wc-clearance-cart', false, array(), false );
 
 		// Act.
 		apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
