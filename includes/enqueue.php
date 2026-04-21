@@ -65,8 +65,7 @@ function register_classic_styles_hook(): void {
 function enqueue_cart_styles_hook(): void {
 	$bg_color   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' ) );
 	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' ) );
-	$label         = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ) );
-	$escaped_label = str_replace( array( '\\', '"' ), array( '\\\\', '\\"' ), $label );
+	$label = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ) );
 
 	wp_register_style(
 		'wc-clearance-cart',
@@ -79,7 +78,7 @@ function enqueue_cart_styles_hook(): void {
 
 	wp_add_inline_style(
 		'wc-clearance-cart',
-		':root { --wc-clearance-badge-bg-color: ' . $bg_color . '; --wc-clearance-badge-text-color: ' . $text_color . '; --wc-clearance-badge-label: "' . $escaped_label . '"; }'
+		':root { --wc-clearance-badge-bg-color: ' . $bg_color . '; --wc-clearance-badge-text-color: ' . $text_color . '; --wc-clearance-badge-label: ' . wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) . '; }'
 	);
 }
 
