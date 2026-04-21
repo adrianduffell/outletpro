@@ -53,4 +53,25 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( has_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' ) );
 	}
+
+	public function test_deregisters_block_styles(): void {
+		// Arrange.
+		wp_register_style( 'wc-clearance-block-styles', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance-block-styles', 'registered' ) );
+	}
+
+	public function test_safely_handles_block_styles_not_registered(): void {
+		// Arrange - 'wc-clearance-block-styles' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance-block-styles', 'registered' ) );
+	}
 }
