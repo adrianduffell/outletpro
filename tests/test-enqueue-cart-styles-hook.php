@@ -14,7 +14,6 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
 	public function test_enqueues_cart_style(): void {
 		// Arrange.
-		wp_deregister_style( 'wc-clearance-cart' );
 		deinit_enqueue();
 		enqueue_init();
 
@@ -28,7 +27,6 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 	public function test_inline_css_includes_bg_color_from_settings(): void {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FF0000' );
-		wp_deregister_style( 'wc-clearance-cart' );
 		deinit_enqueue();
 		enqueue_init();
 
@@ -45,7 +43,6 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 	public function test_inline_css_includes_text_color_from_settings(): void {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#00FF00' );
-		wp_deregister_style( 'wc-clearance-cart' );
 		deinit_enqueue();
 		enqueue_init();
 
