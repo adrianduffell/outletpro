@@ -33,6 +33,24 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'Yes', $result[0]['value'] );
 	}
 
+	public function test_includes_display_field_with_wrapper_class(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$cart_item = array( 'data' => $product );
+		deinit_cart();
+		init_cart();
+
+		// Act.
+		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
+
+		// Assert.
+		$this->assertArrayHasKey( 'display', $result[0] );
+		$this->assertStringContainsString( 'wc-clearance-cart-item-meta', $result[0]['display'] );
+	}
+
 	public function test_does_not_add_clearance_meta_for_non_clearance_product(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
