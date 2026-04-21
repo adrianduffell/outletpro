@@ -88,8 +88,8 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertCount( 2, $result );
-		$this->assertSame( 'Color', $result[0]['key'] );
-		$this->assertSame( 'Clearance', $result[1]['key'] );
+		$this->assertSame( 'Clearance', $result[0]['key'] );
+		$this->assertSame( 'Color', $result[1]['key'] );
 	}
 
 	public function test_returns_item_data_unchanged_when_product_is_missing(): void {
