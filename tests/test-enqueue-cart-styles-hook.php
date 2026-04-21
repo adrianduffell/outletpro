@@ -5,7 +5,8 @@
  * @package WC_Clearance
  */
 
-use function WC_Clearance\enqueue_cart_styles_hook;
+use function WC_Clearance\deinit_enqueue;
+use function WC_Clearance\enqueue_init;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 
@@ -14,9 +15,11 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 	public function test_enqueues_cart_style(): void {
 		// Arrange.
 		wp_deregister_style( 'wc-clearance-cart' );
+		deinit_enqueue();
+		enqueue_init();
 
 		// Act.
-		enqueue_cart_styles_hook();
+		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
 		$this->assertTrue( wp_style_is( 'wc-clearance-cart', 'enqueued' ) );
@@ -26,9 +29,11 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FF0000' );
 		wp_deregister_style( 'wc-clearance-cart' );
+		deinit_enqueue();
+		enqueue_init();
 
 		// Act.
-		enqueue_cart_styles_hook();
+		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
@@ -41,9 +46,11 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#00FF00' );
 		wp_deregister_style( 'wc-clearance-cart' );
+		deinit_enqueue();
+		enqueue_init();
 
 		// Act.
-		enqueue_cart_styles_hook();
+		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );

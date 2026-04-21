@@ -25,6 +25,19 @@ function enqueue_init(): void {
 }
 
 /**
+ * Helper to de-initialize enqueue registrations back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_enqueue(): void {
+	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
+	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
+	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
+	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
+	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+}
+
+/**
  * Register classic theme front-end stylesheets.
  *
  * Fired by `wp_enqueue_scripts`.
