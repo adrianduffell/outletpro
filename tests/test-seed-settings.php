@@ -6,9 +6,9 @@
  */
 
 use function WC_Clearance\seed_settings;
+use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
 
 class Test_Seed_Settings extends WP_UnitTestCase {
