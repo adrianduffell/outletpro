@@ -163,6 +163,7 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-bg-color: #FF0000', implode( '', (array) $after ) );
+		delete_option( CLEARANCE_BADGE_BG_COLOR_OPTION );
 	}
 
 	public function test_cart_style_inline_css_includes_text_color_from_settings(): void {
@@ -184,5 +185,6 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-text-color: #00FF00', implode( '', (array) $after ) );
+		delete_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
 	}
 }
