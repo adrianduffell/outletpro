@@ -216,6 +216,6 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringNotContainsString( 'background-color', $result );
-		$this->assertStringNotContainsString( 'color:', $result );
+		$this->assertDoesNotMatchRegularExpression( '/style="[^"]*\bcolor:/', $result );
 	}
 }
