@@ -34,7 +34,7 @@ jobs:
       run: composer run-script post-install-cmd --no-interaction
 
     - name: Run PHP lint
-      run: npm run lint:php
+      run: composer run lint
 
     - name: Set up Node.js
       uses: actions/setup-node@v4
