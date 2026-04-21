@@ -7,7 +7,7 @@
 
 /* Shortcode styles. */
 
-.shop_table td.product-name:has(.variation-Clearance):after {
+.shop_table td.product-name:has(.variation-Clearance)::after {
 	content: var(--wc-clearance-badge-label, "Clearance");
 	display: block;
 	width: fit-content;
@@ -18,12 +18,12 @@
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
-	background-color: var(--wc-clearance-badge-bg-color, #FFEE85);
+	background-color: var(--wc-clearance-badge-bg-color, #ffee85);
 	color: var(--wc-clearance-badge-text-color, #222);
 }
 
+/* Applies when .variation-Clearance are the only children. */
 .shop_table dl.variation:has(> .variation-Clearance):not(:has(> :not(.variation-Clearance))) {
-	/* Applies when .variation-Clearance are the only children. */
 	margin: 0;
 }
 
