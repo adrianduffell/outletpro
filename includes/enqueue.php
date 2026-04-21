@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
+	add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
@@ -29,6 +30,7 @@ function enqueue_init(): void {
  * @internal
  */
 function deinit_enqueue(): void {
+	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
@@ -50,6 +52,32 @@ function register_classic_styles_hook(): void {
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
 		array(),
 		VERSION
+	);
+}
+
+/**
+ * Enqueue front-end cart stylesheet.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_cart_styles_hook(): void {
+	$bg_color   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' ) );
+	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' ) );
+
+	wp_register_style(
+		'wc-clearance-cart',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/cart.css',
+		array(),
+		VERSION
+	);
+
+	wp_enqueue_style( 'wc-clearance-cart' );
+
+	wp_add_inline_style(
+		'wc-clearance-cart',
+		':root { --wc-clearance-badge-bg-color: ' . $bg_color . '; --wc-clearance-badge-text-color: ' . $text_color . '; }'
 	);
 }
 
