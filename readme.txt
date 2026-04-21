@@ -28,7 +28,7 @@ Clear stock faster and help customers find it before it’s gone.
 
 = What is a clearance section? =
 
-The clearance section is a permanent area on your store to list the products you need to clear. It helps customers easily discover products they might want before they are gone. Products in the clearance section display a badge and message, allowing you to apply special policies such as no change-of-mind returns.
+The clearance section is a permanent area on your store to list the products you need to clear. It helps customers easily discover products they might want before they are gone. Products in the clearance section display a badge.
 
 = How do I add products to the clearance section? =
 

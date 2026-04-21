@@ -50,7 +50,6 @@ function init_woocommerce_template_hooks(): void {
 	}
 
 	add_action( $single_product_badge_hook, 'WC_Clearance\display_clearance_badge_hook', $single_product_badge_priority );
-	add_action( 'woocommerce_product_meta_start', 'WC_Clearance\display_clearance_message_hook', 1 );
 }
 
 /**
@@ -83,31 +82,4 @@ function display_clearance_badge_hook(): void {
 		esc_attr( $text_colour ),
 		esc_html( $label )
 	);
-}
-
-/**
- * Display the clearance message in the product meta area on single product pages (classic themes only).
- *
- * Fired by `woocommerce_product_meta_start`.
- *
- * @internal WordPress action hook
- */
-function display_clearance_message_hook(): void {
-	$product = wc_get_product( get_the_ID() );
-
-	if ( ! $product instanceof \WC_Product ) {
-		return;
-	}
-
-	try {
-		if ( ! is_clearance( $product ) ) {
-			return;
-		}
-	} catch ( \Throwable $e ) {
-		return;
-	}
-
-	wp_enqueue_style( 'wc-clearance' );
-
-	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }
