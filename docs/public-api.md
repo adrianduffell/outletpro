@@ -1,67 +1,7 @@
 # Public API Reference
 
-All functions, constants, and hooks listed here are part of the public API for the
+All functions and hooks listed here are part of the public API for the
 `WC_Clearance` namespace. They are stable and intended for use by third-party code.
-
-## Constants
-
-### Plugin
-
-#### `WC_Clearance\VERSION`
-
-Current plugin version string. Added in 1.0.0.
-
-#### `WC_Clearance\PLUGIN_FILE`
-
-Absolute path to the main plugin file. Added in 1.0.0.
-
-### Settings
-
-Option keys used with the WordPress Settings API and `get_option()` / `update_option()`.
-
-#### `WC_Clearance\CLEARANCE_PAGE_OPTION`
-
-WordPress option key (`wc_clearance_page_id`) storing the clearance section page ID.
-Added in 1.0.0.
-
-#### `WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION`
-
-WordPress option key (`wc_clearance_badge_label`) storing the clearance badge label text.
-Added in 1.0.0.
-
-#### `WC_Clearance\CLEARANCE_MESSAGE_OPTION`
-
-WordPress option key (`wc_clearance_message`) storing the clearance message text.
-Added in 1.0.0.
-
-### Customizer
-
-Theme mod keys and default values used with `get_theme_mod()`.
-
-#### `WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_MOD`
-
-Theme mod key (`wc_clearance_badge_bg_colour`) for the badge background colour.
-Added in 1.0.0.
-
-#### `WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_MOD`
-
-Theme mod key (`wc_clearance_badge_text_colour`) for the badge text colour.
-Added in 1.0.0.
-
-#### `WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT`
-
-Default badge background colour (`#FFEE85`). Added in 1.0.0.
-
-#### `WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT`
-
-Default badge text colour (`#222`). Added in 1.0.0.
-
-### Orders
-
-#### `WC_Clearance\ORDER_ITEM_CLEARANCE_META_KEY`
-
-Order item meta key (`_wc_clearance`) used to store the clearance status at time of
-purchase. Added in 1.0.0.
 
 ## Functions
 
@@ -118,7 +58,7 @@ Added in 1.0.0.
 
 #### `WC_Clearance\get_clearance_page_id(): ?int`
 
-Get the clearance section page ID from the `CLEARANCE_PAGE_OPTION` option.
+Get the clearance section page ID from the `wc_clearance_page_id` option.
 
 Returns the page ID as a normalised `int`, or `null` when the option does not exist.
 
@@ -129,7 +69,7 @@ Added in 1.0.0.
 
 Check if the clearance section page exists.
 
-Uses heuristics on the `CLEARANCE_PAGE_OPTION` value. Returns `false` when the option
+Uses heuristics on the `wc_clearance_page_id` option value. Returns `false` when the option
 is missing. Trashed pages are not considered to exist.
 
 Throws `\UnexpectedValueException` if the stored option value is not a positive integer.
@@ -335,16 +275,12 @@ template hooks. Added in 1.0.0.
 
 ### Taxonomy slug: `wc_clearance_status`
 
-Also accessible as the `WC_Clearance\CLEARANCE_STATUS_TAXONOMY` constant.
-
 The internal taxonomy used to track which products are in the clearance section. It is
 non-public and not exposed via the REST API, so it cannot be queried through the WordPress
 or WooCommerce REST endpoints directly. It is registered for every `product` post type.
 Added in 1.0.0.
 
 ### Term slug: `clearance`
-
-Also accessible as the `WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM` constant.
 
 The canonical term in the `wc_clearance_status` taxonomy that identifies a clearance
 product. Products assigned this term are returned by `is_clearance()`, `count_clearance()`,
@@ -369,10 +305,3 @@ promoted to the public API (with `@since` tags and full documentation) or marked
 | `WC_Clearance\register_clearance_status_taxonomy()` | `includes/taxonomies.php` | Called only by internal `init_taxonomies()`. |
 | `WC_Clearance\seed_clearance_status_taxonomy()` | `includes/taxonomies.php` | Called only by internal `activate()`. |
 | `WC_Clearance\run_create_clearance_page_tool()` | `includes/tools.php` | Registered as a WooCommerce admin tools callback string; not intended for direct calls. |
-
-### Flagged constants
-
-| Constant | File | Reason |
-|---|---|---|
-| `WC_Clearance\ONBOARDING_TTL_DAYS` | `includes/admin-product-list-table.php` | Internal admin UI detail; no `@since` tag. |
-| `WC_Clearance\ONBOARDING_DISMISS_STORAGE_KEY` | `includes/admin-product-list-table.php` | Internal localStorage key; no `@since` tag. |

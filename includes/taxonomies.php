@@ -15,14 +15,14 @@ defined( 'ABSPATH' ) || exit;
  * Used with a canonical term for flagging products belonging
  * in the clearance section.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
 
 /**
  * Canonical term slug for products belonging in the clearance section.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
 
