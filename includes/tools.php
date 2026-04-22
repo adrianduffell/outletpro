@@ -41,7 +41,7 @@ function register_create_clearance_page_tool_hook( array $tools ): array {
 /**
  * WooCommerce Status > Tools callback for the create clearance section page tool.
  *
- * @since 1.0.0
+ * @internal
  */
 function run_create_clearance_page_tool(): string {
 	try {

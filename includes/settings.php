@@ -104,7 +104,7 @@ function seed_settings(): void {
 /**
  * Register the clearance page ID setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_page_setting(): void {
 	register_setting(
@@ -125,7 +125,7 @@ function register_clearance_page_setting(): void {
 /**
  * Register the clearance badge label setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_badge_label_setting(): void {
 	register_setting(
@@ -197,7 +197,7 @@ function register_clearance_badge_bg_color_setting(): void {
 /**
  * Register the clearance message setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_message_setting(): void {
 	register_setting(
