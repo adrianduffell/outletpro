@@ -299,9 +299,15 @@ promoted to the public API (with `@since` tags and full documentation) or marked
 |---|---|---|
 | `WC_Clearance\register_clearance_badge_block()` | `includes/blocks.php` | Called only by internal `init_blocks()`. |
 | `WC_Clearance\register_clearance_message_block()` | `includes/blocks.php` | Called only by internal `init_blocks()`. |
+| `WC_Clearance\render_clearance_badge_callback()` | `includes/blocks.php` | Registered as a block render callback; not for direct calls. |
+| `WC_Clearance\render_clearance_message_callback()` | `includes/blocks.php` | Registered as a block render callback; not for direct calls. |
 | `WC_Clearance\register_clearance_page_setting()` | `includes/settings.php` | Called only by internal `init_settings()`. |
 | `WC_Clearance\register_clearance_badge_label_setting()` | `includes/settings.php` | Called only by internal `init_settings()`. |
 | `WC_Clearance\register_clearance_message_setting()` | `includes/settings.php` | Called only by internal `init_settings()`. |
+| `WC_Clearance\setup_task_action_url()` | `includes/setup-task.php` | Registered as a WooCommerce task callback; not for direct calls. |
+| `WC_Clearance\setup_task_can_view()` | `includes/setup-task.php` | Registered as a WooCommerce task callback; not for direct calls. |
+| `WC_Clearance\setup_task_is_complete()` | `includes/setup-task.php` | Registered as a WooCommerce task callback; not for direct calls. |
 | `WC_Clearance\register_clearance_status_taxonomy()` | `includes/taxonomies.php` | Called only by internal `init_taxonomies()`. |
 | `WC_Clearance\seed_clearance_status_taxonomy()` | `includes/taxonomies.php` | Called only by internal `activate()`. |
 | `WC_Clearance\run_create_clearance_page_tool()` | `includes/tools.php` | Registered as a WooCommerce admin tools callback string; not intended for direct calls. |
+| `WC_Clearance\activate()` | `wc-clearance.php` | Registered as a plugin activation hook callback; not for direct calls. |

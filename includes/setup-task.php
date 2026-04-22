@@ -65,8 +65,6 @@ function init_setup_task(): void {
 
 /**
  * Returns the URL for the clearance section setup task action button.
- *
- * @internal
  */
 function setup_task_action_url(): string {
 	return admin_url( 'edit.php?post_type=product' );
@@ -74,8 +72,6 @@ function setup_task_action_url(): string {
 
 /**
  * Determine whether the clearance include products task should be visible.
- *
- * @internal
  */
 function setup_task_can_view(): bool {
 	// Only show the task to users who can edit products.
@@ -84,8 +80,6 @@ function setup_task_can_view(): bool {
 
 /**
  * Determine whether the clearance include products task is complete.
- *
- * @internal
  */
 function setup_task_is_complete(): bool {
 	try {
