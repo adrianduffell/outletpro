@@ -98,7 +98,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
 	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
-	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
+	add_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) );
 }
 
 /**
@@ -207,7 +207,7 @@ function register_clearance_message_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance message', 'wc-clearance' ),
 			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
-			'default'           => get_default_clearance_message(),
+			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(

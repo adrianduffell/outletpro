@@ -109,7 +109,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		CLEARANCE_MESSAGE_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => get_default_clearance_message(),
+			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);
