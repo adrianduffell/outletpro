@@ -28,19 +28,44 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$this->assertSame( $canonical_term->term_id, $settings['wcClearanceCanonicalTermId'] );
 	}
 
-	public function test_settings_unchanged_when_canonical_term_missing(): void {
+	public function test_canonical_term_id_not_added_when_canonical_term_missing(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		init_block_editor();
-		$initial_settings = array( 'foo' => 'bar' );
 
 		// Act.
-		$settings = apply_filters( 'block_editor_settings_all', $initial_settings, new WP_Block_Editor_Context() );
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'wcClearanceCanonicalTermId', $settings );
-		$this->assertArrayHasKey( 'foo', $settings );
-		$this->assertSame( 'bar', $settings['foo'] );
+	}
+
+	public function test_settings_contain_default_message_for_non_us_store(): void {
+		// Arrange.
+		update_option( 'woocommerce_default_country', 'GB' );
+		register_clearance_status_taxonomy();
+		init_block_editor();
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertArrayHasKey( 'wcClearanceDefaultMessage', $settings );
+		$this->assertSame( 'Only while stocks last', $settings['wcClearanceDefaultMessage'] );
+	}
+
+	public function test_settings_contain_default_message_for_us_store(): void {
+		// Arrange.
+		update_option( 'woocommerce_default_country', 'US' );
+		register_clearance_status_taxonomy();
+		init_block_editor();
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertArrayHasKey( 'wcClearanceDefaultMessage', $settings );
+		$this->assertSame( 'Only while supplies last', $settings['wcClearanceDefaultMessage'] );
 	}
 
 	public function test_existing_settings_are_preserved(): void {
