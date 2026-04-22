@@ -28,7 +28,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$this->assertSame( $canonical_term->term_id, $settings['wcClearanceCanonicalTermId'] );
 	}
 
-	public function test_settings_do_not_contain_clearance_term_id_when_canonical_term_missing(): void {
+	public function test_canonical_term_id_not_added_when_canonical_term_missing(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		init_block_editor();

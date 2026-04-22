@@ -17,15 +17,16 @@ export function Edit(): JSX.Element {
 	) as EntityProp< string >;
 
 	const defaultMessage = useSelect( ( select ) => {
+		type BlockEditorStore = {
+			getSettings: () => Record< string, unknown >;
+		};
 		const settings = (
-			select( 'core/block-editor' ) as {
-				getSettings: () => Record< string, unknown >;
-			}
+			select( 'core/block-editor' ) as BlockEditorStore
 		 ).getSettings();
-		return (
-			( settings.wcClearanceDefaultMessage as string ) ||
-			__( 'Only while stocks last', 'wc-clearance' )
-		);
+		const serverDefault = settings.wcClearanceDefaultMessage;
+		return typeof serverDefault === 'string' && serverDefault
+			? serverDefault
+			: __( 'Only while stocks last', 'wc-clearance' );
 	}, [] );
 
 	const blockProps = useBlockProps();
