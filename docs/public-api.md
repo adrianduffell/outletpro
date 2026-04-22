@@ -239,6 +239,117 @@ editor integration for the clearance badge and clearance message blocks. Added i
 Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
 Added in 1.0.0.
 
+## Blocks
+
+### `wc-clearance/clearance-badge`
+
+Displays a clearance badge when the product is in the clearance section. Automatically
+inserted after the product price on the single product template (block themes). Added
+in 1.0.0.
+
+#### Attributes
+
+| Attribute | Type | Description |
+|---|---|---|
+| `style` | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding, margin), typography (fontSize, fontWeight), and border (radius, width, color). |
+
+Default style values:
+
+| Property | Default |
+|---|---|
+| `style.color.background` | `#FFEE85` |
+| `style.color.text` | `#222` |
+| `style.spacing.padding` | `5px` on all sides |
+| `style.typography.fontSize` | `0.875rem` |
+| `style.typography.fontWeight` | `600` |
+| `style.border.radius` | `2px` |
+
+### `wc-clearance/clearance-message`
+
+Displays the clearance message when the product is in the clearance section. Automatically
+inserted as the first child of the product meta block on the single product template (block
+themes). Added in 1.0.0.
+
+#### clearance-message attributes
+
+| Attribute | Type | Default | Description |
+|---|---|---|---|
+| `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
+
+### `wc-clearance/product-collection/clearance`
+
+A product collection variation that shows only clearance products. Available in the block
+editor when inserting a Product Collection block. Added in 1.0.0.
+
+## REST API
+
+The plugin extends the WooCommerce products REST endpoint with a `wc_clearance` query
+parameter.
+
+```http
+GET /wc/v3/products?wc_clearance=true
+```
+
+| Parameter | Type | Description |
+|---|---|---|
+| `wc_clearance` | `boolean` | When `true`, limits results to products in the clearance section. |
+
+Added in 1.0.0.
+
+## Shortcodes
+
+The plugin extends the WooCommerce `[products]` shortcode with a `wc_clearance` attribute.
+
+```text
+[products wc_clearance="true"]
+```
+
+| Attribute | Type | Description |
+|---|---|---|
+| `wc_clearance` | `boolean` (`true`/`false`) | When `true`, limits results to products in the clearance section. |
+
+Added in 1.0.0.
+
+## CSS classes
+
+These classes are part of the public API and stable across versions. They can be targeted
+for custom styling.
+
+### Front-end classes
+
+#### `.wc-clearance-badge`
+
+Applied to the clearance badge element. Used by both the block renderer and classic theme
+template hooks. Added in 1.0.0.
+
+#### `.wc-clearance-badge-container`
+
+Wraps the badge in classic (non-block) themes. Added in 1.0.0.
+
+#### `.wc-clearance-message`
+
+Applied to the clearance message element. Used by both the block renderer and classic theme
+template hooks. Added in 1.0.0.
+
+## Taxonomy
+
+### Taxonomy slug: `wc_clearance_status`
+
+Also accessible as the `WC_Clearance\CLEARANCE_STATUS_TAXONOMY` constant.
+
+The internal taxonomy used to track which products are in the clearance section. It is
+non-public and not exposed via the REST API, so it cannot be queried through the WordPress
+or WooCommerce REST endpoints directly. It is registered for every `product` post type.
+Added in 1.0.0.
+
+### Term slug: `clearance`
+
+Also accessible as the `WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM` constant.
+
+The canonical term in the `wc_clearance_status` taxonomy that identifies a clearance
+product. Products assigned this term are returned by `is_clearance()`, `count_clearance()`,
+and `clearance_section_empty()`. Added in 1.0.0.
+
 ## Flagged for review
 
 The following symbols have no `@internal` annotation but appear to be implementation
@@ -263,7 +374,5 @@ promoted to the public API (with `@since` tags and full documentation) or marked
 
 | Constant | File | Reason |
 |---|---|---|
-| `WC_Clearance\CLEARANCE_STATUS_TAXONOMY` | `includes/taxonomies.php` | Internal taxonomy slug; no `@since` tag. |
-| `WC_Clearance\CLEARANCE_STATUS_CANONICAL_TERM` | `includes/taxonomies.php` | Internal term slug; no `@since` tag. |
 | `WC_Clearance\ONBOARDING_TTL_DAYS` | `includes/admin-product-list-table.php` | Internal admin UI detail; no `@since` tag. |
 | `WC_Clearance\ONBOARDING_DISMISS_STORAGE_KEY` | `includes/admin-product-list-table.php` | Internal localStorage key; no `@since` tag. |

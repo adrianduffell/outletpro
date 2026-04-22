@@ -10,15 +10,19 @@ namespace WC_Clearance;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Non-public taxonomy used to represent the clearance status of products.
+ * Taxonomy slug used to represent the clearance status of products.
  *
- * Used with a canonical term for internal flagging of products belonging
+ * Used with a canonical term for flagging products belonging
  * in the clearance section.
+ *
+ * @since 1.0.0
  */
 const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
 
 /**
- * Canonical term for products belonging in the clearance section.
+ * Canonical term slug for products belonging in the clearance section.
+ *
+ * @since 1.0.0
  */
 const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
 
