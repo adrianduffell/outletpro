@@ -27,14 +27,6 @@
 		"fontSize": {
 			"type": "string",
 			"default": "small"
-		},
-		"style": {
-			"type": "object",
-			"default": {
-				"typography": {
-					"fontWeight": "700"
-				}
-			}
 		}
 	},
 	"textdomain": "wc-clearance"

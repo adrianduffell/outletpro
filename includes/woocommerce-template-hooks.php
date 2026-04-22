@@ -109,5 +109,5 @@ function display_clearance_message_hook(): void {
 
 	wp_enqueue_style( 'wc-clearance' );
 
-	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() ) ) . '</p>';
+	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
 }

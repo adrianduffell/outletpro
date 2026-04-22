@@ -48,7 +48,6 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		delete_option( CLEARANCE_MESSAGE_OPTION );
-		update_option( 'woocommerce_default_country', 'GB' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -67,7 +66,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-message', $result );
-		$this->assertStringContainsString( 'Only while stocks last', $result );
+		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
 	}
 
 	public function test_message_uses_global_message_option(): void {
@@ -95,8 +94,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( 'Final sale — no returns.', $result );
-		$this->assertStringNotContainsString( 'Only while stocks last', $result );
-		$this->assertStringNotContainsString( 'Only while supplies last', $result );
+		$this->assertStringNotContainsString( 'Not eligible for change of mind returns', $result );
 
 		// Cleanup.
 		delete_option( CLEARANCE_MESSAGE_OPTION );
@@ -146,7 +144,6 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		update_option( CLEARANCE_MESSAGE_OPTION, '' );
-		update_option( 'woocommerce_default_country', 'GB' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -164,7 +161,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'Only while stocks last', $result );
+		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
 
 		// Cleanup.
 		delete_option( CLEARANCE_MESSAGE_OPTION );
