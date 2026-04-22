@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Order item meta key used to store the clearance status at time of purchase.
  *
- * @since 1.0.0
+ * @internal
  */
 const ORDER_ITEM_CLEARANCE_META_KEY = '_wc_clearance';
 

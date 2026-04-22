@@ -11,11 +11,15 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Number of days after activation during which the onboarding notice is displayed.
+ *
+ * @internal
  */
 const ONBOARDING_TTL_DAYS = 14;
 
 /**
  * Key used in localStorage to persist the onboarding notice dismissal.
+ *
+ * @internal
  */
 const ONBOARDING_DISMISS_STORAGE_KEY = 'wc_clearance_product_onboarding_dismissed';
 

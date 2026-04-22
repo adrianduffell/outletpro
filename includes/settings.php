@@ -12,35 +12,35 @@ defined( 'ABSPATH' ) || exit;
 /**
  * WordPress option key used to store the clearance message.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
 
 /**
  * WordPress option key used to store the clearance section page ID.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 
 /**
  * WordPress option key used to store the badge label text.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 
 /**
  * WordPress option key used to store the badge text color.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
 
 /**
  * WordPress option key used to store the badge background color.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 
