@@ -42,7 +42,7 @@ function deinit_blocks(): void {
 /**
  * Register the clearance badge block type.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_badge_block(): void {
 	register_block_type(
@@ -148,7 +148,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 /**
  * Register the clearance message block type.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_message_block(): void {
 	register_block_type(
