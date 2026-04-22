@@ -30,6 +30,22 @@ jest.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: jest.fn(),
 } ) );
 
+jest.mock( '@wordpress/data', () => ( {
+	useSelect: jest.fn(
+		( selector: ( select: ( store: string ) => unknown ) => unknown ) =>
+			selector( ( store: string ) => {
+				if ( store === 'core/block-editor' ) {
+					return {
+						getSettings: () => ( {
+							wcClearanceDefaultMessage: 'Only while stocks last',
+						} ),
+					};
+				}
+				return {};
+			} )
+	),
+} ) );
+
 import { useEntityProp } from '@wordpress/core-data';
 
 const mockUseEntityProp = useEntityProp as jest.Mock;
@@ -50,6 +66,39 @@ describe( 'Edit', () => {
 		// Assert.
 		expect(
 			screen.getByDisplayValue( 'Only while stocks last' )
+		).toBeInTheDocument();
+	} );
+
+	test( 'renders message with supplies last when store is in US', () => {
+		// Arrange.
+		const { useSelect } = jest.requireMock( '@wordpress/data' );
+		( useSelect as jest.Mock ).mockImplementationOnce(
+			( selector: ( select: ( store: string ) => unknown ) => unknown ) =>
+				selector( ( store: string ) => {
+					if ( store === 'core/block-editor' ) {
+						return {
+							getSettings: () => ( {
+								wcClearanceDefaultMessage:
+									'Only while supplies last',
+							} ),
+						};
+					}
+					return {};
+				} )
+		);
+		const setMessage = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			undefined,
+			setMessage,
+			undefined,
+		] );
+
+		// Act.
+		render( <Edit /> );
+
+		// Assert.
+		expect(
+			screen.getByDisplayValue( 'Only while supplies last' )
 		).toBeInTheDocument();
 	} );
 
