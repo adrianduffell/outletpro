@@ -67,6 +67,25 @@ function init_settings(): void {
 }
 
 /**
+ * Get the default clearance message based on the store's country.
+ *
+ * Returns "Only while supplies last" for US and Canada, and
+ * "Only while stocks last" for all other countries.
+ *
+ * @since 1.0.0
+ */
+function get_default_clearance_message(): string {
+	$base_location = (string) get_option( 'woocommerce_default_country', '' );
+	$country       = explode( ':', $base_location )[0];
+
+	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
+		return __( 'Only while supplies last', 'wc-clearance' );
+	}
+
+	return __( 'Only while stocks last', 'wc-clearance' );
+}
+
+/**
  * Seed option values with defaults.
  *
  * Uses add_option() so that existing values are never overwritten. This
@@ -79,7 +98,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
 	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
-	add_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) );
+	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
 /**
@@ -188,7 +207,7 @@ function register_clearance_message_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance message', 'wc-clearance' ),
 			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
-			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
+			'default'           => get_default_clearance_message(),
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(

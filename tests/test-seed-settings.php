@@ -35,15 +35,40 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		$this->assertSame( 'Custom Label', get_option( CLEARANCE_BADGE_LABEL_OPTION ) );
 	}
 
-	public function test_sets_message_default_when_option_does_not_exist(): void {
+	public function test_sets_stocks_last_message_for_non_us_store(): void {
 		// Arrange.
+		update_option( 'woocommerce_default_country', 'GB' );
 		delete_option( CLEARANCE_MESSAGE_OPTION );
 
 		// Act.
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 'Not eligible for change of mind returns', get_option( CLEARANCE_MESSAGE_OPTION ) );
+		$this->assertSame( 'Only while stocks last', get_option( CLEARANCE_MESSAGE_OPTION ) );
+	}
+
+	public function test_sets_supplies_last_message_for_us_store(): void {
+		// Arrange.
+		update_option( 'woocommerce_default_country', 'US' );
+		delete_option( CLEARANCE_MESSAGE_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 'Only while supplies last', get_option( CLEARANCE_MESSAGE_OPTION ) );
+	}
+
+	public function test_sets_supplies_last_message_for_canadian_store(): void {
+		// Arrange.
+		update_option( 'woocommerce_default_country', 'CA' );
+		delete_option( CLEARANCE_MESSAGE_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 'Only while supplies last', get_option( CLEARANCE_MESSAGE_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_message_option(): void {

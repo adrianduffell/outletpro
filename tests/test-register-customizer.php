@@ -61,13 +61,14 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 
 	public function test_message_setting_default(): void {
 		// Arrange.
+		update_option( 'woocommerce_default_country', 'GB' );
 		$wp_customize = new WP_Customize_Manager();
 
 		// Act.
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'Not eligible for change of mind returns', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
+		$this->assertSame( 'Only while stocks last', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
 	}
 
 	public function test_registers_badge_text_colour_setting(): void {

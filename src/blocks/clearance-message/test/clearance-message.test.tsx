@@ -49,9 +49,7 @@ describe( 'Edit', () => {
 
 		// Assert.
 		expect(
-			screen.getByDisplayValue(
-				'Not eligible for change of mind returns'
-			)
+			screen.getByDisplayValue( 'Only while stocks last' )
 		).toBeInTheDocument();
 	} );
 
@@ -65,9 +63,7 @@ describe( 'Edit', () => {
 
 		// Assert.
 		expect(
-			screen.getByDisplayValue(
-				'Not eligible for change of mind returns'
-			)
+			screen.getByDisplayValue( 'Only while stocks last' )
 		).toBeInTheDocument();
 	} );
 
@@ -93,14 +89,12 @@ describe( 'Edit', () => {
 		// Arrange.
 		const setMessage = jest.fn();
 		mockUseEntityProp.mockReturnValue( [
-			'Not eligible for change of mind returns',
+			'Only while stocks last',
 			setMessage,
 			undefined,
 		] );
 		render( <Edit /> );
-		const input = screen.getByDisplayValue(
-			'Not eligible for change of mind returns'
-		);
+		const input = screen.getByDisplayValue( 'Only while stocks last' );
 
 		// Act.
 		fireEvent.change( input, {
