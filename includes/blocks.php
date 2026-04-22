@@ -104,6 +104,7 @@ function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position,
 /**
  * Render callback for the clearance badge block.
  *
+ * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
@@ -162,6 +163,7 @@ function register_clearance_message_block(): void {
 /**
  * Render callback for the clearance message block.
  *
+ * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
