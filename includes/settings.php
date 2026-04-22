@@ -67,6 +67,25 @@ function init_settings(): void {
 }
 
 /**
+ * Get the default clearance message based on the store's country.
+ *
+ * Returns "Only while supplies last" for US and Canada, and
+ * "Only while stocks last" for all other countries.
+ *
+ * @since 1.0.0
+ */
+function get_default_clearance_message(): string {
+	$base_location = (string) get_option( 'woocommerce_default_country', '' );
+	$country       = explode( ':', $base_location )[0];
+
+	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
+		return __( 'Only while supplies last', 'wc-clearance' );
+	}
+
+	return __( 'Only while stocks last', 'wc-clearance' );
+}
+
+/**
  * Seed option values with defaults.
  *
  * Uses add_option() so that existing values are never overwritten. This
