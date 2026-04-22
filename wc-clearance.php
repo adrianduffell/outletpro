@@ -22,14 +22,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin version.
  *
- * @since 1.0.0
+ * @internal
  */
 const VERSION = '1.0.0';
 
 /**
  * Plugin file path.
  *
- * @since 1.0.0
+ * @internal
  */
 const PLUGIN_FILE = __FILE__;
 
