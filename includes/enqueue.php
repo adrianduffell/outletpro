@@ -35,8 +35,8 @@ function deinit_enqueue(): void {
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
-	wp_dequeue_style( 'wc-clearance-block-styles' );
-	wp_deregister_style( 'wc-clearance-block-styles' );
+	wp_dequeue_style( 'wc-clearance-block-style' );
+	wp_deregister_style( 'wc-clearance-block-style' );
 }
 
 /**
@@ -47,8 +47,13 @@ function deinit_enqueue(): void {
  * @internal WordPress action hook
  */
 function register_classic_styles_hook(): void {
+	/**
+	 * Classic theme front-end stylesheet.
+	 *
+	 * @since 1.0.0
+	 */
 	wp_register_style(
-		'wc-clearance',
+		'wc-clearance-classic-style',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
 		array(),
 		VERSION
@@ -98,10 +103,15 @@ function register_block_styles(): void {
 
 	$asset = require $asset_file;
 
+	/**
+	 * Block stylesheet for the clearance badge block.
+	 *
+	 * @since 1.0.0
+	 */
 	wp_enqueue_block_style(
 		'wc-clearance/clearance-badge',
 		array(
-			'handle' => 'wc-clearance-block-styles',
+			'handle' => 'wc-clearance-block-style',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 			'deps'   => array(),
 			'ver'    => $asset['version'],
@@ -117,8 +127,13 @@ function register_block_styles(): void {
  * @internal WordPress action hook
  */
 function enqueue_admin_styles_hook(): void {
+	/**
+	 * Admin stylesheet.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_style(
-		'wc-clearance-admin-styles',
+		'wc-clearance-admin-style',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin.css',
 		array(),
 		VERSION
@@ -139,8 +154,13 @@ function enqueue_admin_product_scripts_hook(): void {
 		return;
 	}
 
+	/**
+	 * Admin product edit page script.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_script(
-		'wc-clearance-admin-product',
+		'wc-clearance-admin-product-script',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-product.js',
 		array(),
 		VERSION,
@@ -164,8 +184,13 @@ function enqueue_build_assets_hook(): void {
 
 	$asset = require $asset_file;
 
+	/**
+	 * Block editor script.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_script(
-		'wc-clearance-build',
+		'wc-clearance-admin-editor-script',
 		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
 		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
 		$asset['version'],
