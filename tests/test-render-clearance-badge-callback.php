@@ -12,7 +12,9 @@ use function WC_Clearance\register_clearance_badge_block;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\render_clearance_badge_callback;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
@@ -132,5 +134,59 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-badge' ) );
+	}
+
+	public function test_badge_uses_global_bg_color_setting(): void {
+		// Arrange.
+		deinit_blocks();
+		register_clearance_badge_block();
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FF0000' );
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$block = new WP_Block(
+			array(
+				'blockName'    => 'wc-clearance/clearance-badge',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			),
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertStringContainsString( 'background-color:#FF0000', $result );
+	}
+
+	public function test_badge_uses_global_text_color_setting(): void {
+		// Arrange.
+		deinit_blocks();
+		register_clearance_badge_block();
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#0000FF' );
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$block = new WP_Block(
+			array(
+				'blockName'    => 'wc-clearance/clearance-badge',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			),
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertStringContainsString( 'color:#0000FF', $result );
 	}
 }

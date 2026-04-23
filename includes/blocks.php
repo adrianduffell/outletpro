@@ -127,9 +127,21 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
+	$bg_color   = sanitize_hex_color( (string) get_option( CLEARANCE_BADGE_BG_COLOR_OPTION ) );
+	$text_color = sanitize_hex_color( (string) get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION ) );
+
+	$color_style = '';
+	if ( $bg_color ) {
+		$color_style .= 'background-color:' . $bg_color . ';';
+	}
+	if ( $text_color ) {
+		$color_style .= 'color:' . $text_color . ';';
+	}
+
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => 'wc-clearance-badge',
+			'style' => $color_style,
 		)
 	);
 
