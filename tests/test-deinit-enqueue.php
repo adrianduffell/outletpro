@@ -10,7 +10,7 @@ use function WC_Clearance\enqueue_init;
 
 class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
-	public function test_removes_wp_enqueue_scripts_hook(): void {
+	public function test_removes_wp_enqueue_scripts_register_classic_styles_hook(): void {
 		// Arrange.
 		enqueue_init();
 
@@ -19,6 +19,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' ) );
+	}
+
+	public function test_removes_wp_enqueue_scripts_enqueue_cart_styles_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' ) );
 	}
 
 	public function test_removes_admin_enqueue_scripts_styles_hook(): void {
@@ -73,5 +84,110 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( wp_style_is( 'wc-clearance-block-styles', 'registered' ) );
+	}
+
+	public function test_deregisters_classic_style(): void {
+		// Arrange.
+		wp_register_style( 'wc-clearance', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance', 'registered' ) );
+	}
+
+	public function test_safely_handles_classic_style_not_registered(): void {
+		// Arrange - 'wc-clearance' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance', 'registered' ) );
+	}
+
+	public function test_deregisters_cart_style(): void {
+		// Arrange.
+		wp_register_style( 'wc-clearance-cart', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance-cart', 'registered' ) );
+	}
+
+	public function test_safely_handles_cart_style_not_registered(): void {
+		// Arrange - 'wc-clearance-cart' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance-cart', 'registered' ) );
+	}
+
+	public function test_deregisters_admin_styles(): void {
+		// Arrange.
+		wp_register_style( 'wc-clearance-admin-styles', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance-admin-styles', 'registered' ) );
+	}
+
+	public function test_safely_handles_admin_styles_not_registered(): void {
+		// Arrange - 'wc-clearance-admin-styles' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-clearance-admin-styles', 'registered' ) );
+	}
+
+	public function test_deregisters_admin_product_script(): void {
+		// Arrange.
+		wp_register_script( 'wc-clearance-admin-product', false, array(), 'test', true );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'wc-clearance-admin-product', 'registered' ) );
+	}
+
+	public function test_safely_handles_admin_product_script_not_registered(): void {
+		// Arrange - 'wc-clearance-admin-product' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'wc-clearance-admin-product', 'registered' ) );
+	}
+
+	public function test_deregisters_build_script(): void {
+		// Arrange.
+		wp_register_script( 'wc-clearance-build', false, array(), 'test', true );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'wc-clearance-build', 'registered' ) );
+	}
+
+	public function test_safely_handles_build_script_not_registered(): void {
+		// Arrange - 'wc-clearance-build' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'wc-clearance-build', 'registered' ) );
 	}
 }
