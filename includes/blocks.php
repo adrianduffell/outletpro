@@ -127,9 +127,13 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
+	$bg_color   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION ) ) ?? '#FFEE85';
+	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION ) ) ?? '#222';
+
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => 'wc-clearance-badge',
+			'style' => "background-color:{$bg_color};color:{$text_color};",
 		)
 	);
 
