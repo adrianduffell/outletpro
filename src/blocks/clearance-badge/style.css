@@ -7,6 +7,6 @@
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
-	background-color: var( --wc-clearance-badge-bg-color, #FFEE85 );
-	color: var( --wc-clearance-badge-text-color, #222 );
+	background-color: var(--wc-clearance-badge-bg-color, #ffee85);
+	color: var(--wc-clearance-badge-text-color, #222);
 }
