@@ -56,13 +56,13 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 	public function test_deregisters_block_styles(): void {
 		// Arrange.
-		wp_register_style( 'wc-clearance-block-style', false, array(), 'test' );
+		wp_register_style( 'wc-clearance-badge-block', false, array(), 'test' );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-clearance-block-style', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'wc-clearance-badge-block', 'registered' ) );
 	}
 
 	public function test_safely_handles_block_styles_not_registered(): void {
@@ -72,6 +72,6 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-clearance-block-style', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'wc-clearance-badge-block', 'registered' ) );
 	}
 }
