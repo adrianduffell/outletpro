@@ -60,7 +60,7 @@ function add_product_checkbox_hook(): void {
 
 	printf(
 		'<div class="wc-clearance-status-help">%s%s</div><!-- .wc-clearance-status-help -->',
-		esc_html__( 'Sell out old or overstocked products in the clearance section. Included products display a badge and message.', 'wc-clearance' ),
+		esc_html__( 'Sell remaining stock in the clearance section. Included products display a badge and message.', 'wc-clearance' ),
 		wp_kses_post( $link )
 	);
 	echo '</div><!-- .wc-clearance-status-panel -->';
