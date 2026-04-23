@@ -10,7 +10,7 @@ use function WC_Clearance\enqueue_init;
 
 class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
-	public function test_removes_wp_enqueue_scripts_register_classic_styles_hook(): void {
+	public function test_removes_register_classic_styles_hook(): void {
 		// Arrange.
 		enqueue_init();
 
@@ -21,7 +21,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' ) );
 	}
 
-	public function test_removes_wp_enqueue_scripts_enqueue_cart_styles_hook(): void {
+	public function test_removes_enqueue_cart_styles_hook(): void {
 		// Arrange.
 		enqueue_init();
 
