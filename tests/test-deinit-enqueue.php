@@ -66,7 +66,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 	}
 
 	public function test_safely_handles_block_styles_not_registered(): void {
-		// Arrange - 'wc-clearance-block-style' is not registered.
+		// Arrange.
 
 		// Act.
 		deinit_enqueue();
