@@ -48,8 +48,15 @@ function deinit_enqueue(): void {
  */
 function register_classic_styles_hook(): void {
 	wp_register_style(
-		'wc-clearance',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
+		'wc-clearance-classic-badge',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-badge.css',
+		array(),
+		VERSION
+	);
+
+	wp_register_style(
+		'wc-clearance-classic-message',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-message.css',
 		array(),
 		VERSION
 	);
