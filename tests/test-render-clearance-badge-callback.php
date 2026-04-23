@@ -163,8 +163,8 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'background-color:' . CLEARANCE_BADGE_BG_COLOUR_DEFAULT, $result );
-		$this->assertStringContainsString( 'color:' . CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT, $result );
+		$this->assertStringContainsString( '--wc-clearance-badge-bg-color:' . CLEARANCE_BADGE_BG_COLOUR_DEFAULT, $result );
+		$this->assertStringContainsString( '--wc-clearance-badge-text-color:' . CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT, $result );
 	}
 
 	public function test_badge_uses_global_color_options(): void {
@@ -192,7 +192,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'background-color:#FF0000', $result );
-		$this->assertStringContainsString( 'color:#0000FF', $result );
+		$this->assertStringContainsString( '--wc-clearance-badge-bg-color:#FF0000', $result );
+		$this->assertStringContainsString( '--wc-clearance-badge-text-color:#0000FF', $result );
 	}
 }

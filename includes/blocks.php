@@ -127,13 +127,17 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	$bg_color   = sanitize_hex_color( (string) get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
-	$text_color = sanitize_hex_color( (string) get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
+	$bg_color   = (string) get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, CLEARANCE_BADGE_BG_COLOUR_DEFAULT );
+	$text_color = (string) get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT );
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => 'wc-clearance-badge',
-			'style' => sprintf( 'background-color:%s;color:%s;', $bg_color, $text_color ),
+			'style' => sprintf(
+				'--wc-clearance-badge-bg-color:%s;--wc-clearance-badge-text-color:%s;',
+				esc_attr( $bg_color ),
+				esc_attr( $text_color )
+			),
 		)
 	);
 
