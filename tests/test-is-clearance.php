@@ -64,16 +64,32 @@ class Test_Is_Clearance extends WP_UnitTestCase {
 		$this->assertFalse( $result, 'Should return false after removing clearance status' );
 	}
 
-	public function test_variation_product_type(): void {
+	public function test_variation_inherits_clearance_from_parent(): void {
 		// Arrange.
 		register_clearance_status_taxonomy();
-		$variation_product = \WC_Helper_Product::create_variation_product();
-		add_to_clearance( $variation_product );
+		$variable_product = \WC_Helper_Product::create_variation_product();
+		add_to_clearance( $variable_product );
+		$variation_id = $variable_product->get_children()[0];
+		$variation    = wc_get_product( $variation_id );
 
 		// Act.
-		$result = is_clearance( $variation_product );
+		$result = is_clearance( $variation );
 
 		// Assert.
-		$this->assertTrue( $result, 'Should work with variation products' );
+		$this->assertTrue( $result, 'Variation should inherit clearance status from its parent' );
+	}
+
+	public function test_variation_not_clearance_when_parent_not_clearance(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		$variable_product = \WC_Helper_Product::create_variation_product();
+		$variation_id     = $variable_product->get_children()[0];
+		$variation        = wc_get_product( $variation_id );
+
+		// Act.
+		$result = is_clearance( $variation );
+
+		// Assert.
+		$this->assertFalse( $result, 'Variation should not be clearance when parent is not on clearance' );
 	}
 }

@@ -9,7 +9,9 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\init_woocommerce_template_hooks;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
+use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 
 class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
@@ -30,10 +32,9 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
-	public function test_outputs_default_bg_colour_when_no_theme_mod_is_stored(): void {
+	public function test_outputs_default_bg_colour_when_no_option_is_stored(): void {
 		// Arrange.
-		switch_theme( 'storefront' );
-		delete_option( 'theme_mods_' . get_option( 'stylesheet' ) );
+		delete_option( CLEARANCE_BADGE_BG_COLOR_OPTION );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -48,10 +49,9 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
-	public function test_outputs_default_text_colour_when_no_theme_mod_is_stored(): void {
+	public function test_outputs_default_text_colour_when_no_option_is_stored(): void {
 		// Arrange.
-		switch_theme( 'storefront' );
-		delete_option( 'theme_mods_' . get_option( 'stylesheet' ) );
+		delete_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();

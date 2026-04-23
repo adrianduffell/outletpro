@@ -12,23 +12,37 @@ defined( 'ABSPATH' ) || exit;
 /**
  * WordPress option key used to store the clearance message.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
 
 /**
  * WordPress option key used to store the clearance section page ID.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 
 /**
  * WordPress option key used to store the badge label text.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
+
+/**
+ * WordPress option key used to store the badge text color.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
+
+/**
+ * WordPress option key used to store the badge background color.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 
 /**
  * Check whether the settings screen is enabled.
@@ -47,13 +61,50 @@ function settings_screen_enabled(): bool {
 function init_settings(): void {
 	register_clearance_page_setting();
 	register_clearance_badge_label_setting();
+	register_clearance_badge_text_color_setting();
+	register_clearance_badge_bg_color_setting();
 	register_clearance_message_setting();
+}
+
+/**
+ * Get the default clearance message based on the store's country.
+ *
+ * Returns "Only while supplies last" for US and Canada, and
+ * "Only while stocks last" for all other countries.
+ *
+ * @since 1.0.0
+ */
+function get_default_clearance_message(): string {
+	$base_location = (string) get_option( 'woocommerce_default_country', '' );
+	$country       = explode( ':', $base_location )[0];
+
+	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
+		return __( 'Only while supplies last', 'wc-clearance' );
+	}
+
+	return __( 'Only while stocks last', 'wc-clearance' );
+}
+
+/**
+ * Seed option values with defaults.
+ *
+ * Uses add_option() so that existing values are never overwritten. This
+ * preserves the default at the time of installation even if defaults change
+ * in future versions.
+ *
+ * @internal
+ */
+function seed_settings(): void {
+	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
+	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
+	add_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) );
 }
 
 /**
  * Register the clearance page ID setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_page_setting(): void {
 	register_setting(
@@ -74,7 +125,7 @@ function register_clearance_page_setting(): void {
 /**
  * Register the clearance badge label setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_badge_label_setting(): void {
 	register_setting(
@@ -96,9 +147,57 @@ function register_clearance_badge_label_setting(): void {
 }
 
 /**
- * Register the clearance message setting.
+ * Register the clearance badge text color setting.
  *
  * @since 1.0.0
+ */
+function register_clearance_badge_text_color_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge text color', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge text color.', 'wc-clearance' ),
+			'default'           => '#222',
+			'sanitize_callback' => 'sanitize_hex_color',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge background color setting.
+ *
+ * @since 1.0.0
+ */
+function register_clearance_badge_bg_color_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_BG_COLOR_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
+			'default'           => '#FFEE85',
+			'sanitize_callback' => 'sanitize_hex_color',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance message setting.
+ *
+ * @internal
  */
 function register_clearance_message_setting(): void {
 	register_setting(

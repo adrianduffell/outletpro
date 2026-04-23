@@ -27,6 +27,15 @@ jobs:
       with:
         php-version: '8.2'
 
+    - name: Install Composer dependencies
+      run: composer install --no-interaction --prefer-dist
+
+    - name: Run post-install script
+      run: composer run-script post-install-cmd --no-interaction
+
+    - name: Run PHP lint
+      run: composer run lint
+
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
@@ -38,12 +47,6 @@ jobs:
 
     - name: Build
       run: npm run build
-
-    - name: Install Composer dependencies
-      run: composer install --no-interaction --prefer-dist
-
-    - name: Run post-install script
-      run: composer run-script post-install-cmd --no-interaction
 
     - name: Check VERSION constant matches plugin header
       run: bash bin/version-check.sh
@@ -62,9 +65,6 @@ jobs:
 
     - name: Run Markdown docs lint
       run: npm run lint:md:docs
-
-    - name: Run PHP lint
-      run: npm run lint:php
 
     - name: Install SVN
       run: sudo apt-get install -y subversion
@@ -147,6 +147,3 @@ jobs:
         name: playwright
         path: artifacts/
 
-    - name: Stop WordPress environment
-      if: always()
-      run: npm run wp-env stop
