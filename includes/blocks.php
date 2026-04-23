@@ -127,8 +127,8 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	$bg_color   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION ) ) ?? '#FFEE85';
-	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION ) ) ?? '#222';
+	$bg_color   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) ) ?? CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
+	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) ) ?? CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(

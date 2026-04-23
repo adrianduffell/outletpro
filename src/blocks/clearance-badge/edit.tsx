@@ -62,7 +62,7 @@ export function Edit(): JSX.Element {
 			<RichText
 				{ ...blockProps }
 				tagName="span"
-				value={ label ?? __( 'Clearance', 'wc-clearance' ) }
+				value={ label || __( 'Clearance', 'wc-clearance' ) }
 				onChange={ ( value: string ) => setLabel( value ) }
 				allowedFormats={ [] }
 				placeholder={ __( 'Label', 'wc-clearance' ) }
