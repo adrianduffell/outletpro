@@ -54,6 +54,25 @@ function settings_screen_enabled(): bool {
 }
 
 /**
+ * Get the default clearance message for the store's locale.
+ *
+ * Returns a locale-aware default: US and Canadian stores use "Only while
+ * supplies last"; all other stores use "Only while stocks last".
+ *
+ * @internal
+ */
+function get_default_clearance_message(): string {
+	$base_location = wc_get_base_location();
+	$country       = $base_location['country'] ?? '';
+
+	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
+		return __( 'Only while supplies last', 'wc-clearance' );
+	}
+
+	return __( 'Only while stocks last', 'wc-clearance' );
+}
+
+/**
  * Helper to initialize settings.
  *
  * @internal

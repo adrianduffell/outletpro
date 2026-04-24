@@ -43,6 +43,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_message_html_when_product_is_in_clearance(): void {
 		// Arrange.
+		update_option( 'woocommerce_default_country', 'US' );
 		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
