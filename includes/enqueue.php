@@ -94,6 +94,11 @@ function enqueue_cart_styles_hook(): void {
 	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' ) );
 	$label      = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ) );
 
+	/**
+	 * Front-end cart badge stylesheet.
+	 *
+	 * @since 1.0.0
+	 */
 	wp_register_style(
 		'wc-clearance-cart-badge',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/cart.css',
