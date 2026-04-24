@@ -43,12 +43,11 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_message_html_when_product_is_in_clearance(): void {
 		// Arrange.
-		update_option( 'woocommerce_default_country', 'US' );
 		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		delete_option( CLEARANCE_MESSAGE_OPTION );
+		update_option( CLEARANCE_MESSAGE_OPTION, 'Only while supplies last' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -68,6 +67,9 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-message', $result );
 		$this->assertStringContainsString( 'Only while supplies last', $result );
+
+		// Cleanup.
+		delete_option( CLEARANCE_MESSAGE_OPTION );
 	}
 
 	public function test_message_uses_global_message_option(): void {
@@ -139,43 +141,13 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) );
 	}
 
-	public function test_empty_option_falls_back_to_default_message(): void {
-		// Arrange.
-		deinit_blocks();
-		register_clearance_message_block();
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		update_option( CLEARANCE_MESSAGE_OPTION, '' );
-		update_option( 'woocommerce_default_country', 'GB' );
-		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$block = new WP_Block(
-			array(
-				'blockName'    => 'wc-clearance/clearance-message',
-				'attrs'        => array(),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			),
-			array( 'postId' => $product->get_id() )
-		);
-
-		// Act.
-		$result = $block->render();
-
-		// Assert.
-		$this->assertStringContainsString( 'Only while stocks last', $result );
-
-		// Cleanup.
-		delete_option( CLEARANCE_MESSAGE_OPTION );
-	}
-
 	public function test_message_is_wrapped_in_paragraph_tag(): void {
 		// Arrange.
 		deinit_blocks();
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_MESSAGE_OPTION, 'Test message.' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -194,5 +166,8 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertMatchesRegularExpression( '/<p\b[^>]*>.+<\/p>/', $result );
+
+		// Cleanup.
+		delete_option( CLEARANCE_MESSAGE_OPTION );
 	}
 }

@@ -207,7 +207,7 @@ function register_clearance_message_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance message', 'wc-clearance' ),
 			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
-			'default'           => get_default_clearance_message(),
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(

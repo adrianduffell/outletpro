@@ -109,7 +109,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		CLEARANCE_MESSAGE_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => get_default_clearance_message(),
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);

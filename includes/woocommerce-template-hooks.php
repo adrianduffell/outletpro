@@ -107,7 +107,13 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
+	$message = get_option( CLEARANCE_MESSAGE_OPTION );
+
+	if ( ! is_string( $message ) || '' === $message ) {
+		return;
+	}
+
 	wp_enqueue_style( 'wc-clearance-classic-message' );
 
-	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() ) ) . '</p>';
+	echo '<p class="wc-clearance-message">' . esc_html( $message ) . '</p>';
 }

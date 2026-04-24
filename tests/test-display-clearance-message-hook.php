@@ -28,6 +28,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_MESSAGE_OPTION, 'Only while stocks last' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
@@ -42,8 +43,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_contains_clearance_text(): void {
 		// Arrange.
-		update_option( 'woocommerce_default_country', 'GB' );
-		delete_option( CLEARANCE_MESSAGE_OPTION );
+		update_option( CLEARANCE_MESSAGE_OPTION, 'Only while stocks last' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();

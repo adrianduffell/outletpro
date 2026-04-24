@@ -195,7 +195,7 @@ function render_clearance_message_callback( array $attributes, string $_content,
 	$message = get_option( CLEARANCE_MESSAGE_OPTION );
 
 	if ( ! is_string( $message ) || '' === $message ) {
-		$message = get_default_clearance_message();
+		return '';
 	}
 
 	return sprintf(
