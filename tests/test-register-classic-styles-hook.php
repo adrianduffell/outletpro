@@ -12,6 +12,7 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 
 	public function test_registers_classic_badge_style(): void {
 		// Arrange.
+		wp_deregister_style( 'wc-clearance-classic-badge' );
 		deinit_enqueue();
 		enqueue_init();
 
@@ -24,6 +25,7 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 
 	public function test_registers_classic_message_style(): void {
 		// Arrange.
+		wp_deregister_style( 'wc-clearance-classic-message' );
 		deinit_enqueue();
 		enqueue_init();
 
