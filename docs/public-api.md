@@ -10,45 +10,54 @@ Clearance Section implements [semver versioning](https://semver.org) and include
 
 Check if a product is in the clearance section.
 
-Throws `\RuntimeException` if the clearance status taxonomy does not exist.
-Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 | Parameter | Type | Description |
 |---|---|---|
 | `$product` | `\WC_Product` | The product to check. |
 
 ```php
-$is_clearance = WC_Clearance\is_clearance( $product );
+try {
+    $is_clearance = WC_Clearance\is_clearance( $product );
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 #### `WC_Clearance\add_to_clearance( \WC_Product $product ): void`
 
 Add a product to the clearance section.
 
-Throws `\RuntimeException` if the clearance status taxonomy does not exist or the term
-assignment fails. Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 | Parameter | Type | Description |
 |---|---|---|
 | `$product` | `\WC_Product` | The product to add. |
 
 ```php
-WC_Clearance\add_to_clearance( $product );
+try {
+    WC_Clearance\add_to_clearance( $product );
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 #### `WC_Clearance\remove_from_clearance( \WC_Product $product ): void`
 
 Remove a product from the clearance section.
 
-Throws `\RuntimeException` if the clearance status taxonomy does not exist or term
-removal fails. Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 | Parameter | Type | Description |
 |---|---|---|
 | `$product` | `\WC_Product` | The product to remove. |
 
 ```php
-WC_Clearance\remove_from_clearance( $product );
+try {
+    WC_Clearance\remove_from_clearance( $product );
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 #### `WC_Clearance\set_clearance( \WC_Product $product, bool $new_value ): void`
@@ -59,7 +68,7 @@ Checks the current stored state and only calls `add_to_clearance()` or
 `remove_from_clearance()` when a change is required. Fires the
 `wc_clearance_status_changed` action on a status change.
 
-Throws `\RuntimeException` if setting the status fails. Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 | Parameter | Type | Description |
 |---|---|---|
@@ -67,18 +76,25 @@ Throws `\RuntimeException` if setting the status fails. Added in 1.0.0.
 | `$new_value` | `bool` | `true` to add to clearance, `false` to remove. |
 
 ```php
-WC_Clearance\set_clearance( $product, true );
+try {
+    WC_Clearance\set_clearance( $product, true );
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 #### `WC_Clearance\count_clearance(): int`
 
 Count the number of published products in the clearance section.
 
-Throws `\RuntimeException` if the clearance status taxonomy does not exist.
-Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 ```php
-$count = WC_Clearance\count_clearance();
+try {
+    $count = WC_Clearance\count_clearance();
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 #### `WC_Clearance\clearance_section_empty(): bool`
@@ -87,12 +103,15 @@ Check if the clearance section has no published products.
 
 More performant than `count_clearance()` because it skips the SQL `COUNT(*)`.
 
-Throws `\RuntimeException` if the clearance status taxonomy does not exist.
-Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 ```php
-if ( WC_Clearance\clearance_section_empty() ) {
-    // nothing to display
+try {
+    if ( WC_Clearance\clearance_section_empty() ) {
+        // nothing to display
+    }
+} catch ( \Throwable $e ) {
+    // Handle exception
 }
 ```
 
@@ -104,11 +123,14 @@ Get the clearance section page ID from the `wc_clearance_page_id` option.
 
 Returns the page ID as a normalised `int`, or `null` when the option does not exist.
 
-Throws `\UnexpectedValueException` if the stored value is not a positive integer.
-Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 ```php
-$page_id = WC_Clearance\get_clearance_page_id();
+try {
+    $page_id = WC_Clearance\get_clearance_page_id();
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 #### `WC_Clearance\clearance_page_exists(): bool`
@@ -118,12 +140,15 @@ Check if the clearance section page exists.
 Uses heuristics on the `wc_clearance_page_id` option value. Returns `false` when the option
 is missing. Trashed pages are not considered to exist.
 
-Throws `\UnexpectedValueException` if the stored option value is not a positive integer.
-Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 ```php
-if ( WC_Clearance\clearance_page_exists() ) {
-    // page is present
+try {
+    if ( WC_Clearance\clearance_page_exists() ) {
+        // page is present
+    }
+} catch ( \Throwable $e ) {
+    // Handle exception
 }
 ```
 
@@ -131,11 +156,15 @@ if ( WC_Clearance\clearance_page_exists() ) {
 
 Check whether the clearance section page exists and is published.
 
-Throws `\RuntimeException` if existence cannot be determined. Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 ```php
-if ( WC_Clearance\clearance_page_is_published() ) {
-    // page is live
+try {
+    if ( WC_Clearance\clearance_page_is_published() ) {
+        // page is live
+    }
+} catch ( \Throwable $e ) {
+    // Handle exception
 }
 ```
 
@@ -147,11 +176,14 @@ Does nothing when a clearance page is already registered, preventing duplicates.
 The created page is a draft. The page content varies depending on whether the active
 theme is a block theme or a classic theme.
 
-Throws `\RuntimeException` if existence cannot be determined, or if page creation fails.
-Added in 1.0.0.
+Throws exception on error. Added in 1.0.0.
 
 ```php
-WC_Clearance\create_clearance_page();
+try {
+    WC_Clearance\create_clearance_page();
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
 ```
 
 ## Hooks
