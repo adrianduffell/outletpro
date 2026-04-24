@@ -6,28 +6,52 @@ Clearance Section implements [semver versioning](https://semver.org) and include
 
 ### Clearance status
 
-#### `WC_Clearance\is_clearance( WC_Product $product ): bool`
+#### `WC_Clearance\is_clearance( \WC_Product $product ): bool`
 
 Check if a product is in the clearance section.
 
 Throws `\RuntimeException` if the clearance status taxonomy does not exist.
 Added in 1.0.0.
 
-#### `WC_Clearance\add_to_clearance( WC_Product $product ): void`
+| Parameter | Type | Description |
+|---|---|---|
+| `$product` | `\WC_Product` | The product to check. |
+
+```php
+$is_clearance = WC_Clearance\is_clearance( $product );
+```
+
+#### `WC_Clearance\add_to_clearance( \WC_Product $product ): void`
 
 Add a product to the clearance section.
 
 Throws `\RuntimeException` if the clearance status taxonomy does not exist or the term
 assignment fails. Added in 1.0.0.
 
-#### `WC_Clearance\remove_from_clearance( WC_Product $product ): void`
+| Parameter | Type | Description |
+|---|---|---|
+| `$product` | `\WC_Product` | The product to add. |
+
+```php
+WC_Clearance\add_to_clearance( $product );
+```
+
+#### `WC_Clearance\remove_from_clearance( \WC_Product $product ): void`
 
 Remove a product from the clearance section.
 
 Throws `\RuntimeException` if the clearance status taxonomy does not exist or term
 removal fails. Added in 1.0.0.
 
-#### `WC_Clearance\set_clearance( WC_Product $product, bool $new_value ): void`
+| Parameter | Type | Description |
+|---|---|---|
+| `$product` | `\WC_Product` | The product to remove. |
+
+```php
+WC_Clearance\remove_from_clearance( $product );
+```
+
+#### `WC_Clearance\set_clearance( \WC_Product $product, bool $new_value ): void`
 
 Set the clearance section status for a product.
 
@@ -37,12 +61,25 @@ Checks the current stored state and only calls `add_to_clearance()` or
 
 Throws `\RuntimeException` if setting the status fails. Added in 1.0.0.
 
+| Parameter | Type | Description |
+|---|---|---|
+| `$product` | `\WC_Product` | The product to update. |
+| `$new_value` | `bool` | `true` to add to clearance, `false` to remove. |
+
+```php
+WC_Clearance\set_clearance( $product, true );
+```
+
 #### `WC_Clearance\count_clearance(): int`
 
 Count the number of published products in the clearance section.
 
 Throws `\RuntimeException` if the clearance status taxonomy does not exist.
 Added in 1.0.0.
+
+```php
+$count = WC_Clearance\count_clearance();
+```
 
 #### `WC_Clearance\clearance_section_empty(): bool`
 
@@ -52,6 +89,12 @@ More performant than `count_clearance()` because it skips the SQL `COUNT(*)`.
 
 Throws `\RuntimeException` if the clearance status taxonomy does not exist.
 Added in 1.0.0.
+
+```php
+if ( WC_Clearance\clearance_section_empty() ) {
+    // nothing to display
+}
+```
 
 ### Clearance page
 
@@ -64,6 +107,10 @@ Returns the page ID as a normalised `int`, or `null` when the option does not ex
 Throws `\UnexpectedValueException` if the stored value is not a positive integer.
 Added in 1.0.0.
 
+```php
+$page_id = WC_Clearance\get_clearance_page_id();
+```
+
 #### `WC_Clearance\clearance_page_exists(): bool`
 
 Check if the clearance section page exists.
@@ -74,11 +121,23 @@ is missing. Trashed pages are not considered to exist.
 Throws `\UnexpectedValueException` if the stored option value is not a positive integer.
 Added in 1.0.0.
 
+```php
+if ( WC_Clearance\clearance_page_exists() ) {
+    // page is present
+}
+```
+
 #### `WC_Clearance\clearance_page_is_published(): bool`
 
 Check whether the clearance section page exists and is published.
 
 Throws `\RuntimeException` if existence cannot be determined. Added in 1.0.0.
+
+```php
+if ( WC_Clearance\clearance_page_is_published() ) {
+    // page is live
+}
+```
 
 #### `WC_Clearance\create_clearance_page(): void`
 
@@ -91,6 +150,10 @@ theme is a block theme or a classic theme.
 Throws `\RuntimeException` if existence cannot be determined, or if page creation fails.
 Added in 1.0.0.
 
+```php
+WC_Clearance\create_clearance_page();
+```
+
 ## Hooks
 
 ### Actions
@@ -100,7 +163,7 @@ Added in 1.0.0.
 Fires when a product's clearance section status changes.
 
 ```php
-do_action( 'wc_clearance_status_changed', int $product_id, bool $old_value, bool $new_value );
+do_action( 'wc_clearance_status_changed', $product_id, $old_value, $new_value );
 ```
 
 | Parameter | Type | Description |
@@ -118,7 +181,7 @@ Added in 1.0.0.
 Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the clearance badge on.
 
 ```php
-apply_filters( 'wc_clearance_badge_single_product_hook', string $name )
+apply_filters( 'wc_clearance_badge_single_product_hook', $name );
 ```
 
 | Parameter | Type | Description |
@@ -132,7 +195,7 @@ Must return a non-empty string. Added in 1.0.0.
 Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the clearance badge to the `single-product` classic templates.
 
 ```php
-apply_filters( 'wc_clearance_badge_single_product_priority', int $priority )
+apply_filters( 'wc_clearance_badge_single_product_priority', $priority );
 ```
 
 | Parameter | Type | Description |
