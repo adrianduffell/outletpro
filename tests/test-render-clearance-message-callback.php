@@ -47,7 +47,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		delete_option( CLEARANCE_MESSAGE_OPTION );
+		update_option( CLEARANCE_MESSAGE_OPTION, 'Not eligible for change of mind returns' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -67,6 +67,9 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-message', $result );
 		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
+
+		// Cleanup.
+		delete_option( CLEARANCE_MESSAGE_OPTION );
 	}
 
 	public function test_message_uses_global_message_option(): void {
@@ -137,7 +140,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-clearance/clearance-message' ) );
 	}
 
-	public function test_empty_option_falls_back_to_default_message(): void {
+	public function test_empty_option_returns_empty_string(): void {
 		// Arrange.
 		deinit_blocks();
 		register_clearance_message_block();
@@ -161,10 +164,37 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
+		$this->assertSame( '', $result );
 
 		// Cleanup.
 		delete_option( CLEARANCE_MESSAGE_OPTION );
+	}
+
+	public function test_missing_option_returns_empty_string(): void {
+		// Arrange.
+		deinit_blocks();
+		register_clearance_message_block();
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_MESSAGE_OPTION );
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$block = new WP_Block(
+			array(
+				'blockName'    => 'wc-clearance/clearance-message',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			),
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertSame( '', $result );
 	}
 
 	public function test_message_is_wrapped_in_paragraph_tag(): void {
@@ -173,6 +203,7 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 		register_clearance_message_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_MESSAGE_OPTION, 'Not eligible for change of mind returns' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(
@@ -191,5 +222,8 @@ class Test_Render_Clearance_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertMatchesRegularExpression( '/<p\b[^>]*>.+<\/p>/', $result );
+
+		// Cleanup.
+		delete_option( CLEARANCE_MESSAGE_OPTION );
 	}
 }

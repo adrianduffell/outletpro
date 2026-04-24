@@ -207,7 +207,7 @@ function register_clearance_message_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance message', 'wc-clearance' ),
 			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
-			'default'           => __( 'Not eligible for change of mind returns', 'wc-clearance' ),
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(
