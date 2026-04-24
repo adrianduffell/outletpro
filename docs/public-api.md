@@ -285,8 +285,6 @@ Displays a clearance badge when the product is in the clearance section. Automat
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
-#### Attributes
-
 | Attribute | Type | Description |
 |---|---|---|
 | `style` | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding, margin), typography (fontSize, fontWeight), and border (radius, width, color). |
@@ -307,8 +305,6 @@ Default style values:
 Displays the clearance message when the product is in the clearance section. Automatically
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
-
-#### Attributes
 
 | Attribute | Type | Default | Description |
 |---|---|---|---|
