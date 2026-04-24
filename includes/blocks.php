@@ -195,7 +195,7 @@ function render_clearance_message_callback( array $attributes, string $_content,
 	$message = get_option( CLEARANCE_MESSAGE_OPTION );
 
 	if ( ! is_string( $message ) || '' === $message ) {
-		return '';
+		$message = __( 'Not eligible for change of mind returns', 'wc-clearance' );
 	}
 
 	return sprintf(

@@ -67,7 +67,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( '', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
+		$this->assertSame( 'Not eligible for change of mind returns', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
 	}
 
 	public function test_registers_badge_text_colour_setting(): void {

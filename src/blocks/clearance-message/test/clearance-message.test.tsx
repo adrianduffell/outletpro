@@ -35,7 +35,7 @@ import { useEntityProp } from '@wordpress/core-data';
 const mockUseEntityProp = useEntityProp as jest.Mock;
 
 describe( 'Edit', () => {
-	test( 'renders placeholder when setting is undefined', () => {
+	test( 'renders message with default text when setting is undefined', () => {
 		// Arrange.
 		const setMessage = jest.fn();
 		mockUseEntityProp.mockReturnValue( [
@@ -49,11 +49,13 @@ describe( 'Edit', () => {
 
 		// Assert.
 		expect(
-			screen.getByPlaceholderText( 'Enter clearance message text.' )
+			screen.getByDisplayValue(
+				'Not eligible for change of mind returns'
+			)
 		).toBeInTheDocument();
 	} );
 
-	test( 'renders placeholder when setting is empty string', () => {
+	test( 'renders message with default text when setting is empty string', () => {
 		// Arrange.
 		const setMessage = jest.fn();
 		mockUseEntityProp.mockReturnValue( [ '', setMessage, undefined ] );
@@ -63,7 +65,9 @@ describe( 'Edit', () => {
 
 		// Assert.
 		expect(
-			screen.getByPlaceholderText( 'Enter clearance message text.' )
+			screen.getByDisplayValue(
+				'Not eligible for change of mind returns'
+			)
 		).toBeInTheDocument();
 	} );
 
@@ -89,12 +93,14 @@ describe( 'Edit', () => {
 		// Arrange.
 		const setMessage = jest.fn();
 		mockUseEntityProp.mockReturnValue( [
-			'Only while stocks last',
+			'Not eligible for change of mind returns',
 			setMessage,
 			undefined,
 		] );
 		render( <Edit /> );
-		const input = screen.getByDisplayValue( 'Only while stocks last' );
+		const input = screen.getByDisplayValue(
+			'Not eligible for change of mind returns'
+		);
 
 		// Act.
 		fireEvent.change( input, {

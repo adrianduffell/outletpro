@@ -9,7 +9,6 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\init_woocommerce_template_hooks;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
 
 class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
@@ -28,7 +27,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		update_option( CLEARANCE_MESSAGE_OPTION, 'Only while stocks last' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
@@ -43,7 +41,6 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_contains_clearance_text(): void {
 		// Arrange.
-		update_option( CLEARANCE_MESSAGE_OPTION, 'Only while stocks last' );
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -52,7 +49,7 @@ class Test_Display_Clearance_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/Only while stocks last/' );
+		$this->expectOutputRegex( '/Not eligible for change of mind returns/' );
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
