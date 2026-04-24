@@ -270,6 +270,9 @@ template hooks. Added in 1.0.0.
 
 ## Non-Public API
 
+The following items are intentionally excluded from the public API. They may change at any
+time without a MAJOR version bump. Do not rely on them in third-party code.
+
 * All code items tagged with `@internal` comment.
 
   These are intended only for use internally and are likely to change in refactors.
