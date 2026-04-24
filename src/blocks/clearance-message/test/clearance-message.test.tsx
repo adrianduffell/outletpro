@@ -35,7 +35,7 @@ import { useEntityProp } from '@wordpress/core-data';
 const mockUseEntityProp = useEntityProp as jest.Mock;
 
 describe( 'Edit', () => {
-	test( 'renders message with default text when setting is undefined', () => {
+	test( 'renders empty message when setting is undefined', () => {
 		// Arrange.
 		const setMessage = jest.fn();
 		mockUseEntityProp.mockReturnValue( [
@@ -48,14 +48,10 @@ describe( 'Edit', () => {
 		render( <Edit /> );
 
 		// Assert.
-		expect(
-			screen.getByDisplayValue(
-				'Not eligible for change of mind returns'
-			)
-		).toBeInTheDocument();
+		expect( screen.getByDisplayValue( '' ) ).toBeInTheDocument();
 	} );
 
-	test( 'renders message with default text when setting is empty string', () => {
+	test( 'renders empty message when setting is empty string', () => {
 		// Arrange.
 		const setMessage = jest.fn();
 		mockUseEntityProp.mockReturnValue( [ '', setMessage, undefined ] );
@@ -64,11 +60,7 @@ describe( 'Edit', () => {
 		render( <Edit /> );
 
 		// Assert.
-		expect(
-			screen.getByDisplayValue(
-				'Not eligible for change of mind returns'
-			)
-		).toBeInTheDocument();
+		expect( screen.getByDisplayValue( '' ) ).toBeInTheDocument();
 	} );
 
 	test( 'renders message with value from global setting', () => {
