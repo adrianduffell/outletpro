@@ -195,7 +195,9 @@ try {
 Fires when a product's clearance section status changes.
 
 ```php
-do_action( 'wc_clearance_status_changed', $product_id, $old_value, $new_value );
+add_action( 'wc_clearance_status_changed', function ( $product_id, $old_value, $new_value ) {
+    // React to the clearance status change.
+}, 10, 3 );
 ```
 
 | Parameter | Type | Description |
@@ -213,7 +215,9 @@ Added in 1.0.0.
 Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the clearance badge on.
 
 ```php
-apply_filters( 'wc_clearance_badge_single_product_hook', $name );
+add_filter( 'wc_clearance_badge_single_product_hook', function ( $name ) {
+    return 'woocommerce_before_single_product';
+} );
 ```
 
 | Parameter | Type | Description |
@@ -227,7 +231,9 @@ Must return a non-empty string. Added in 1.0.0.
 Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the clearance badge to the `single-product` classic templates.
 
 ```php
-apply_filters( 'wc_clearance_badge_single_product_priority', $priority );
+add_filter( 'wc_clearance_badge_single_product_priority', function ( $priority ) {
+    return 5;
+} );
 ```
 
 | Parameter | Type | Description |
