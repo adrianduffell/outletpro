@@ -270,19 +270,18 @@ template hooks. Added in 1.0.0.
 
 ## Non-Public API
 
-The following items are intentionally excluded from the public API. They may change at any
-time without a MAJOR version bump. Do not rely on them in third-party code.
+* All code items tagged with `@internal` comment.
 
-### Taxonomy
+  These are intended only for use internally and are likely to change in refactors.
 
-#### Taxonomy slug: `wc_clearance_status`
+* File paths.
 
-The internal taxonomy used to track which products are in the clearance section. It is
-non-public and not exposed via the REST API, so it cannot be queried through the WordPress
-or WooCommerce REST endpoints directly. It is registered for every `product` post type.
+  File paths are subject to change in future versions.
 
-#### Term slug: `clearance`
+* The taxonomy slug `wc_clearance_status` and term slug `clearance`.
 
-The canonical term in the `wc_clearance_status` taxonomy that identifies a clearance
-product. Products assigned this term are returned by `is_clearance()`, `count_clearance()`,
-and `clearance_section_empty()`.
+  The clearance status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the clearance status functions or REST API parameter for stable access to the clearance status.
+
+* Admin dashboard CSS.
+
+  Admin dashboard-related selectors and HTML structures are subject to change.
