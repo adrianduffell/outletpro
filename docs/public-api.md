@@ -1,7 +1,6 @@
 # Public API Reference
 
-All functions and hooks listed here are part of the public API for the
-`WC_Clearance` namespace. They are stable and intended for use by third-party code.
+Clearance Section implements [semver versioning](https://semver.org) and includes a public API of stable integration points intended for use by third-party code. All items listed here increment the plugin's MAJOR version when any known incompatible changes are made.
 
 ## Functions
 
@@ -116,8 +115,7 @@ Added in 1.0.0.
 
 #### `wc_clearance_badge_single_product_hook`
 
-Filter the WordPress action hook used to display the clearance badge on single product
-pages (classic themes only).
+Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the clearance badge on.
 
 ```php
 apply_filters( 'wc_clearance_badge_single_product_hook', string $name )
@@ -131,8 +129,7 @@ Must return a non-empty string. Added in 1.0.0.
 
 #### `wc_clearance_badge_single_product_priority`
 
-Filter the priority used when hooking the clearance badge display callback (classic
-themes only).
+Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the clearance badge to the `single-product` classic templates.
 
 ```php
 apply_filters( 'wc_clearance_badge_single_product_priority', int $priority )
@@ -271,17 +268,21 @@ Wraps the badge in classic (non-block) themes. Added in 1.0.0.
 Applied to the clearance message element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
-## Taxonomy
+## Non-Public API
 
-### Taxonomy slug: `wc_clearance_status`
+The following items are intentionally excluded from the public API. They may change at any
+time without a MAJOR version bump. Do not rely on them in third-party code.
+
+### Taxonomy
+
+#### Taxonomy slug: `wc_clearance_status`
 
 The internal taxonomy used to track which products are in the clearance section. It is
 non-public and not exposed via the REST API, so it cannot be queried through the WordPress
 or WooCommerce REST endpoints directly. It is registered for every `product` post type.
-Added in 1.0.0.
 
-### Term slug: `clearance`
+#### Term slug: `clearance`
 
 The canonical term in the `wc_clearance_status` taxonomy that identifies a clearance
 product. Products assigned this term are returned by `is_clearance()`, `count_clearance()`,
-and `clearance_section_empty()`. Added in 1.0.0.
+and `clearance_section_empty()`.
