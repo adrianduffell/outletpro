@@ -1,6 +1,6 @@
 # Public API
 
-Clearance Section implements [semver versioning](https://semver.org) and includes a public API of stable integration points intended for use by third-party code. All items listed here increment the plugin's MAJOR version when any known incompatible changes are made.
+Clearance Section implements a stable public API intended for use by third-party code. All items listed here increment the plugin's MAJOR semver version when any known incompatible changes are made.
 
 ## Functions
 
