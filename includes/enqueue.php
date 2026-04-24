@@ -97,7 +97,7 @@ function enqueue_cart_styles_hook(): void {
 	/**
 	 * Front-end cart badge stylesheet.
 	 *
-	 * @since 1.0.0
+	 * @internal
 	 */
 	wp_register_style(
 		'wc-clearance-cart-badge',
@@ -133,7 +133,7 @@ function register_block_styles(): void {
 	/**
 	 * Block stylesheet for the clearance badge block.
 	 *
-	 * @since 1.0.0
+	 * @internal
 	 */
 	wp_enqueue_block_style(
 		'wc-clearance/clearance-badge',
