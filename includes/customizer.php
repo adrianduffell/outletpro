@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Default badge text colour (dark).
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT = '#222';
 
 /**
  * Default badge background colour (yellow).
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
 

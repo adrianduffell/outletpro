@@ -42,7 +42,7 @@ function deinit_blocks(): void {
 /**
  * Register the clearance badge block type.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_badge_block(): void {
 	register_block_type(
@@ -104,6 +104,7 @@ function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position,
 /**
  * Render callback for the clearance badge block.
  *
+ * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
@@ -148,7 +149,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 /**
  * Register the clearance message block type.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_message_block(): void {
 	register_block_type(
@@ -162,6 +163,7 @@ function register_clearance_message_block(): void {
 /**
  * Render callback for the clearance message block.
  *
+ * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.

@@ -22,14 +22,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Plugin version.
  *
- * @since 1.0.0
+ * @internal
  */
 const VERSION = '1.0.0';
 
 /**
  * Plugin file path.
  *
- * @since 1.0.0
+ * @internal
  */
 const PLUGIN_FILE = __FILE__;
 
@@ -118,6 +118,8 @@ add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
 
 /**
  * Plugin activation hook.
+ *
+ * @internal
  */
 function activate(): void {
 	\wc_get_logger()->info( 'Activating Clearance Section plugin.' );

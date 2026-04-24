@@ -14,11 +14,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * Used with a canonical term for internal flagging of products belonging
  * in the clearance section.
+ *
+ * @internal
  */
 const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
 
 /**
  * Canonical term for products belonging in the clearance section.
+ *
+ * @internal
  */
 const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
 
@@ -61,7 +65,7 @@ function report_taxonomies(): array {
 /**
  * Register the clearance status taxonomy.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_status_taxonomy(): void {
 	$args = array(
@@ -87,8 +91,8 @@ function register_clearance_status_taxonomy(): void {
 /**
  * Seed the clearance status taxonomy with the canonical term.
  *
+ * @internal
  * @throws \RuntimeException If the term seeding fails.
- * @since 1.0.0
  */
 function seed_clearance_status_taxonomy(): void {
 	if ( term_exists( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY ) ) {

@@ -75,7 +75,7 @@ function display_clearance_badge_hook(): void {
 	$text_colour = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
 	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 
-	wp_enqueue_style( 'wc-clearance' );
+	wp_enqueue_style( 'wc-clearance-classic-badge' );
 
 	printf(
 		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s;">%s</span></p>',
@@ -107,7 +107,7 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	wp_enqueue_style( 'wc-clearance' );
+	wp_enqueue_style( 'wc-clearance-classic-message' );
 
 	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() ) ) . '</p>';
 }

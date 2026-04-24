@@ -12,35 +12,35 @@ defined( 'ABSPATH' ) || exit;
 /**
  * WordPress option key used to store the clearance message.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
 
 /**
  * WordPress option key used to store the clearance section page ID.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
 
 /**
  * WordPress option key used to store the badge label text.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
 
 /**
  * WordPress option key used to store the badge text color.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
 
 /**
  * WordPress option key used to store the badge background color.
  *
- * @since 1.0.0
+ * @internal
  */
 const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 
@@ -54,25 +54,6 @@ function settings_screen_enabled(): bool {
 }
 
 /**
- * Get the default clearance message for the store's locale.
- *
- * Returns a locale-aware default: US and Canadian stores use "Only while
- * supplies last"; all other stores use "Only while stocks last".
- *
- * @internal
- */
-function get_default_clearance_message(): string {
-	$base_location = wc_get_base_location();
-	$country       = $base_location['country'] ?? '';
-
-	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
-		return __( 'Only while supplies last', 'wc-clearance' );
-	}
-
-	return __( 'Only while stocks last', 'wc-clearance' );
-}
-
-/**
  * Helper to initialize settings.
  *
  * @internal
@@ -83,6 +64,25 @@ function init_settings(): void {
 	register_clearance_badge_text_color_setting();
 	register_clearance_badge_bg_color_setting();
 	register_clearance_message_setting();
+}
+
+/**
+ * Get the default clearance message based on the store's country.
+ *
+ * Returns "Only while supplies last" for US and Canada, and
+ * "Only while stocks last" for all other countries.
+ *
+ * @since 1.0.0
+ */
+function get_default_clearance_message(): string {
+	$base_location = (string) get_option( 'woocommerce_default_country', '' );
+	$country       = explode( ':', $base_location )[0];
+
+	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
+		return __( 'Only while supplies last', 'wc-clearance' );
+	}
+
+	return __( 'Only while stocks last', 'wc-clearance' );
 }
 
 /**
@@ -104,7 +104,7 @@ function seed_settings(): void {
 /**
  * Register the clearance page ID setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_page_setting(): void {
 	register_setting(
@@ -125,7 +125,7 @@ function register_clearance_page_setting(): void {
 /**
  * Register the clearance badge label setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_badge_label_setting(): void {
 	register_setting(
@@ -197,7 +197,7 @@ function register_clearance_badge_bg_color_setting(): void {
 /**
  * Register the clearance message setting.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_message_setting(): void {
 	register_setting(
