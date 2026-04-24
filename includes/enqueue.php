@@ -35,6 +35,10 @@ function deinit_enqueue(): void {
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+	wp_dequeue_style( 'wc-clearance-classic-badge' );
+	wp_deregister_style( 'wc-clearance-classic-badge' );
+	wp_dequeue_style( 'wc-clearance-classic-message' );
+	wp_deregister_style( 'wc-clearance-classic-message' );
 	wp_dequeue_style( 'wc-clearance-cart' );
 	wp_deregister_style( 'wc-clearance-cart' );
 	wp_dequeue_style( 'wc-clearance-admin-styles' );
