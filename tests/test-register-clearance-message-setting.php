@@ -34,6 +34,18 @@ class Test_Register_Clearance_Message_Setting extends WP_UnitTestCase {
 		$this->assertSame( 'string', $settings[ CLEARANCE_MESSAGE_OPTION ]['type'] );
 	}
 
+	public function test_setting_default_is_empty_string(): void {
+		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_MESSAGE_OPTION );
+
+		// Act.
+		register_clearance_message_setting();
+
+		// Assert.
+		$settings = get_registered_settings();
+		$this->assertSame( '', $settings[ CLEARANCE_MESSAGE_OPTION ]['default'] );
+	}
+
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_MESSAGE_OPTION );

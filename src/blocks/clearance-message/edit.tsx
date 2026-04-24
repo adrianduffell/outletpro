@@ -21,10 +21,7 @@ export function Edit(): JSX.Element {
 		<RichText
 			{ ...blockProps }
 			tagName="p"
-			value={
-				message ||
-				__( 'Not eligible for change of mind returns', 'wc-clearance' )
-			}
+			value={ message ?? '' }
 			onChange={ ( value: string ) => setMessage( value ) }
 			placeholder={ __(
 				'Enter clearance message text.',
