@@ -35,6 +35,8 @@ function deinit_enqueue(): void {
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+	wp_deregister_style( 'wc-clearance-classic-badge' );
+	wp_deregister_style( 'wc-clearance-classic-message' );
 	wp_dequeue_style( 'wc-clearance-cart' );
 	wp_deregister_style( 'wc-clearance-cart' );
 	wp_dequeue_style( 'wc-clearance-admin-styles' );
@@ -56,8 +58,15 @@ function deinit_enqueue(): void {
  */
 function register_classic_styles_hook(): void {
 	wp_register_style(
-		'wc-clearance',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
+		'wc-clearance-classic-badge',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-badge.css',
+		array(),
+		VERSION
+	);
+
+	wp_register_style(
+		'wc-clearance-classic-message',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-message.css',
 		array(),
 		VERSION
 	);
