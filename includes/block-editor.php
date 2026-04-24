@@ -29,11 +29,11 @@ function init_block_editor(): void {
 function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Context $_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
 
-	if ( $canonical_term instanceof \WP_Term ) {
-		$settings['wcClearanceCanonicalTermId'] = $canonical_term->term_id;
+	if ( ! $canonical_term instanceof \WP_Term ) {
+		return $settings;
 	}
 
-	$settings['wcClearanceDefaultMessage'] = get_default_clearance_message();
+	$settings['wcClearanceCanonicalTermId'] = $canonical_term->term_id;
 
 	return $settings;
 }
