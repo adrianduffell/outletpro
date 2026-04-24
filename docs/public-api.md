@@ -302,7 +302,7 @@ Displays the clearance message when the product is in the clearance section. Aut
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
 
-#### clearance-message attributes
+#### Attributes
 
 | Attribute | Type | Default | Description |
 |---|---|---|---|
