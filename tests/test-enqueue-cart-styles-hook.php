@@ -22,7 +22,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'wc-clearance-cart', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'wc-clearance-cart-badge', 'enqueued' ) );
 	}
 
 	public function test_inline_css_includes_bg_color_from_settings(): void {
@@ -35,7 +35,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-bg-color: #FF0000', implode( '', (array) $after ) );
 
 		delete_option( CLEARANCE_BADGE_BG_COLOR_OPTION );
@@ -51,7 +51,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-text-color: #00FF00', implode( '', (array) $after ) );
 
 		delete_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
@@ -67,7 +67,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-label: "Sale"', implode( '', (array) $after ) );
 
 		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
@@ -83,7 +83,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-label: "Big \"Clearance\""', implode( '', (array) $after ) );
 
 		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
@@ -99,7 +99,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-clearance-cart', 'after' );
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
 		$this->assertStringContainsString( '--wc-clearance-badge-label: "Sale \\\\ Today 🔥"', implode( '', (array) $after ) );
 
 		delete_option( CLEARANCE_BADGE_LABEL_OPTION );

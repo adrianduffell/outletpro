@@ -37,16 +37,16 @@ function deinit_enqueue(): void {
 	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
 	wp_deregister_style( 'wc-clearance-classic-badge' );
 	wp_deregister_style( 'wc-clearance-classic-message' );
-	wp_dequeue_style( 'wc-clearance-cart' );
-	wp_deregister_style( 'wc-clearance-cart' );
-	wp_dequeue_style( 'wc-clearance-admin-styles' );
-	wp_deregister_style( 'wc-clearance-admin-styles' );
-	wp_dequeue_script( 'wc-clearance-admin-product' );
-	wp_deregister_script( 'wc-clearance-admin-product' );
-	wp_dequeue_script( 'wc-clearance-build' );
-	wp_deregister_script( 'wc-clearance-build' );
-	wp_dequeue_style( 'wc-clearance-block-styles' );
-	wp_deregister_style( 'wc-clearance-block-styles' );
+	wp_dequeue_style( 'wc-clearance-cart-badge' );
+	wp_deregister_style( 'wc-clearance-cart-badge' );
+	wp_dequeue_style( 'wc-clearance-admin' );
+	wp_deregister_style( 'wc-clearance-admin' );
+	wp_dequeue_script( 'wc-clearance-products-admin' );
+	wp_deregister_script( 'wc-clearance-products-admin' );
+	wp_dequeue_script( 'wc-clearance-editor' );
+	wp_deregister_script( 'wc-clearance-editor' );
+	wp_dequeue_style( 'wc-clearance-badge-block' );
+	wp_deregister_style( 'wc-clearance-badge-block' );
 }
 
 /**
@@ -57,6 +57,11 @@ function deinit_enqueue(): void {
  * @internal WordPress action hook
  */
 function register_classic_styles_hook(): void {
+	/**
+	 * Classic theme front-end badge stylesheet.
+	 *
+	 * @since 1.0.0
+	 */
 	wp_register_style(
 		'wc-clearance-classic-badge',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-badge.css',
@@ -64,6 +69,11 @@ function register_classic_styles_hook(): void {
 		VERSION
 	);
 
+	/**
+	 * Classic theme front-end message stylesheet.
+	 *
+	 * @since 1.0.0
+	 */
 	wp_register_style(
 		'wc-clearance-classic-message',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-message.css',
@@ -84,17 +94,22 @@ function enqueue_cart_styles_hook(): void {
 	$text_color = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' ) );
 	$label      = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ) );
 
+	/**
+	 * Front-end cart badge stylesheet.
+	 *
+	 * @internal
+	 */
 	wp_register_style(
-		'wc-clearance-cart',
+		'wc-clearance-cart-badge',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/cart.css',
 		array(),
 		VERSION
 	);
 
-	wp_enqueue_style( 'wc-clearance-cart' );
+	wp_enqueue_style( 'wc-clearance-cart-badge' );
 
 	wp_add_inline_style(
-		'wc-clearance-cart',
+		'wc-clearance-cart-badge',
 		':root { --wc-clearance-badge-bg-color: ' . $bg_color . '; --wc-clearance-badge-text-color: ' . $text_color . '; --wc-clearance-badge-label: ' . wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) . '; }'
 	);
 }
@@ -115,10 +130,15 @@ function register_block_styles(): void {
 
 	$asset = require $asset_file;
 
+	/**
+	 * Block stylesheet for the clearance badge block.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_block_style(
 		'wc-clearance/clearance-badge',
 		array(
-			'handle' => 'wc-clearance-block-styles',
+			'handle' => 'wc-clearance-badge-block',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 			'deps'   => array(),
 			'ver'    => $asset['version'],
@@ -134,8 +154,13 @@ function register_block_styles(): void {
  * @internal WordPress action hook
  */
 function enqueue_admin_styles_hook(): void {
+	/**
+	 * Admin stylesheet.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_style(
-		'wc-clearance-admin-styles',
+		'wc-clearance-admin',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin.css',
 		array(),
 		VERSION
@@ -156,8 +181,13 @@ function enqueue_admin_product_scripts_hook(): void {
 		return;
 	}
 
+	/**
+	 * Admin product edit page script.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_script(
-		'wc-clearance-admin-product',
+		'wc-clearance-products-admin',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-product.js',
 		array(),
 		VERSION,
@@ -181,8 +211,13 @@ function enqueue_build_assets_hook(): void {
 
 	$asset = require $asset_file;
 
+	/**
+	 * Block editor script.
+	 *
+	 * @internal
+	 */
 	wp_enqueue_script(
-		'wc-clearance-build',
+		'wc-clearance-editor',
 		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
 		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
 		$asset['version'],
