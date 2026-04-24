@@ -35,6 +35,16 @@ function deinit_enqueue(): void {
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
+	wp_deregister_style( 'wc-clearance-classic-badge' );
+	wp_deregister_style( 'wc-clearance-classic-message' );
+	wp_dequeue_style( 'wc-clearance-cart-badge' );
+	wp_deregister_style( 'wc-clearance-cart-badge' );
+	wp_dequeue_style( 'wc-clearance-admin' );
+	wp_deregister_style( 'wc-clearance-admin' );
+	wp_dequeue_script( 'wc-clearance-products-admin' );
+	wp_deregister_script( 'wc-clearance-products-admin' );
+	wp_dequeue_script( 'wc-clearance-editor' );
+	wp_deregister_script( 'wc-clearance-editor' );
 	wp_dequeue_style( 'wc-clearance-badge-block' );
 	wp_deregister_style( 'wc-clearance-badge-block' );
 }
@@ -48,13 +58,25 @@ function deinit_enqueue(): void {
  */
 function register_classic_styles_hook(): void {
 	/**
-	 * Classic theme front-end stylesheet.
+	 * Classic theme front-end badge stylesheet.
 	 *
 	 * @since 1.0.0
 	 */
 	wp_register_style(
-		'wc-clearance-classic',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic.css',
+		'wc-clearance-classic-badge',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-badge.css',
+		array(),
+		VERSION
+	);
+
+	/**
+	 * Classic theme front-end message stylesheet.
+	 *
+	 * @since 1.0.0
+	 */
+	wp_register_style(
+		'wc-clearance-classic-message',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-message.css',
 		array(),
 		VERSION
 	);
