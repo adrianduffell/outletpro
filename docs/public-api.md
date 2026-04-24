@@ -64,9 +64,7 @@ try {
 
 Set the clearance section status for a product.
 
-Checks the current stored state and only calls `add_to_clearance()` or
-`remove_from_clearance()` when a change is required. Fires the
-`wc_clearance_status_changed` action on a status change.
+Fires the `wc_clearance_status_changed` action on a status change.
 
 Throws exception on error. Added in 1.0.0.
 
