@@ -57,9 +57,9 @@ function wc_clearance_sanitize_css_value( string $value ): string {
 	$value = sanitize_text_field( $value );
 
 	if (
-		str_contains( $value, ';' ) ||
-		str_contains( $value, '{' ) ||
-		str_contains( $value, '}' )
+		false !== strpos( $value, ';' ) ||
+		false !== strpos( $value, '{' ) ||
+		false !== strpos( $value, '}' )
 	) {
 		return '';
 	}
