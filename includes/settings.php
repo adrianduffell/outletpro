@@ -45,6 +45,13 @@ const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
 const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 
 /**
+ * WordPress option key used to store the badge border radius.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_BORDER_RADIUS_OPTION = 'wc_clearance_badge_border_radius';
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
@@ -63,6 +70,7 @@ function init_settings(): void {
 	register_clearance_badge_label_setting();
 	register_clearance_badge_text_color_setting();
 	register_clearance_badge_bg_color_setting();
+	register_clearance_badge_border_radius_setting();
 	register_clearance_message_setting();
 }
 
@@ -98,6 +106,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
 	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
 	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
+	add_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '2px' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -185,6 +194,30 @@ function register_clearance_badge_bg_color_setting(): void {
 			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
 			'default'           => '#FFEE85',
 			'sanitize_callback' => 'sanitize_hex_color',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge border radius setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_border_radius_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_BORDER_RADIUS_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge border radius', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge border radius.', 'wc-clearance' ),
+			'default'           => '2px',
+			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
