@@ -10,160 +10,220 @@ use function WC_Clearance\wc_clearance_sanitize_css_value;
 class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 
 	public function test_returns_valid_hex_color(): void {
+		// Arrange.
+		$value = '#FF0000';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '#FF0000' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '#FF0000', $result );
 	}
 
 	public function test_trims_whitespace(): void {
+		// Arrange.
+		$value = '  #FF0000  ';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '  #FF0000  ' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '#FF0000', $result );
 	}
 
 	public function test_returns_empty_string_when_value_contains_semicolon(): void {
+		// Arrange.
+		$value = '#FF0000; color: red';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '#FF0000; color: red' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
 	}
 
 	public function test_returns_empty_string_when_value_contains_open_brace(): void {
+		// Arrange.
+		$value = 'red { color: blue';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'red { color: blue' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
 	}
 
 	public function test_returns_empty_string_when_value_contains_close_brace(): void {
+		// Arrange.
+		$value = 'red } color: blue';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'red } color: blue' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
 	}
 
 	public function test_strips_html_tags(): void {
+		// Arrange.
+		$value = '<script>alert(1)</script>#FF0000';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '<script>alert(1)</script>#FF0000' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '#FF0000', $result );
 	}
 
 	public function test_returns_valid_rgba_value(): void {
+		// Arrange.
+		$value = 'rgba(255, 0, 0, 0.5)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'rgba(255, 0, 0, 0.5)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'rgba(255, 0, 0, 0.5)', $result );
 	}
 
 	public function test_returns_valid_calc_value(): void {
+		// Arrange.
+		$value = 'calc(100% - 2px)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'calc(100% - 2px)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'calc(100% - 2px)', $result );
 	}
 
 	public function test_returns_valid_nested_calc_value(): void {
+		// Arrange.
+		$value = 'calc(1rem + calc(2px * 3))';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'calc(1rem + calc(2px * 3))' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'calc(1rem + calc(2px * 3))', $result );
 	}
 
 	public function test_returns_valid_var_value(): void {
+		// Arrange.
+		$value = 'var(--my-spacing, 10px)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'var(--my-spacing, 10px)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'var(--my-spacing, 10px)', $result );
 	}
 
 	public function test_returns_valid_nested_var_value(): void {
+		// Arrange.
+		$value = 'var(--a, var(--b, 5px))';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'var(--a, var(--b, 5px))' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'var(--a, var(--b, 5px))', $result );
 	}
 
 	public function test_returns_valid_clamp_value(): void {
+		// Arrange.
+		$value = 'clamp(0.75rem, 1vw, 1rem)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'clamp(0.75rem, 1vw, 1rem)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'clamp(0.75rem, 1vw, 1rem)', $result );
 	}
 
 	public function test_returns_valid_color_mix_value(): void {
+		// Arrange.
+		$value = 'color-mix(in srgb, red 40%, blue)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'color-mix(in srgb, red 40%, blue)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'color-mix(in srgb, red 40%, blue)', $result );
 	}
 
 	public function test_returns_valid_oklch_value(): void {
+		// Arrange.
+		$value = 'oklch(70% 0.15 200)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'oklch(70% 0.15 200)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'oklch(70% 0.15 200)', $result );
 	}
 
 	public function test_returns_valid_unitless_decimal_rem_value(): void {
+		// Arrange.
+		$value = '.5rem';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '.5rem' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '.5rem', $result );
 	}
 
 	public function test_returns_valid_calc_with_em_value(): void {
+		// Arrange.
+		$value = 'calc(50% + 1em)';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( 'calc(50% + 1em)' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'calc(50% + 1em)', $result );
 	}
 
 	public function test_returns_valid_negative_px_value(): void {
+		// Arrange.
+		$value = '-2px';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '-2px' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '-2px', $result );
 	}
 
 	public function test_returns_empty_string_when_value_contains_semicolon_injection(): void {
+		// Arrange.
+		$value = '2px; color: red';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '2px; color: red' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
 	}
 
 	public function test_returns_empty_string_when_value_starts_with_close_brace_injection(): void {
+		// Arrange.
+		$value = '} body { display: none';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '} body { display: none' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
 	}
 
 	public function test_returns_empty_string_when_value_contains_close_brace_injection(): void {
+		// Arrange.
+		$value = '" ); } body { display: none; } /*"';
+
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '" ); } body { display: none; } /*"' );
+		$result = wc_clearance_sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
