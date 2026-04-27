@@ -163,7 +163,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_value_contains_close_brace_injection(): void {
 		// Act.
-		$result = wc_clearance_sanitize_css_value( '10px } .evil { color: red' );
+		$result = wc_clearance_sanitize_css_value( '" ); } body { display: none; } /*"' );
 
 		// Assert.
 		$this->assertSame( '', $result );
