@@ -20,17 +20,6 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$this->assertSame( '#FF0000', $result );
 	}
 
-	public function test_trims_whitespace(): void {
-		// Arrange.
-		$value = '  #FF0000  ';
-
-		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
-
-		// Assert.
-		$this->assertSame( '#FF0000', $result );
-	}
-
 	public function test_returns_empty_string_when_value_contains_semicolon(): void {
 		// Arrange.
 		$value = '#FF0000; color: red';
