@@ -241,7 +241,7 @@ function register_clearance_badge_border_radius_setting(): void {
 			'label'             => __( 'Clearance badge border radius', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge border radius.', 'wc-clearance' ),
 			'default'           => '',
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'WC_Clearance\wc_clearance_sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
