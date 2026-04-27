@@ -47,7 +47,11 @@ const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 /**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters.
  *
+ * Intentionally light-weight as CSS is broad and evolving. Aims to remove known delimiters.
+ *
  * @internal
+ *
+ * @param string $value The CSS property value to sanitize.
  */
 function wc_clearance_sanitize_css_value( string $value ): string {
 	$value = sanitize_text_field( $value );
