@@ -50,7 +50,7 @@ const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
  * @internal
  */
 function wc_clearance_sanitize_css_value( string $value ): string {
-	$value = trim( sanitize_text_field( $value ) );
+	$value = sanitize_text_field( $value );
 
 	if (
 		str_contains( $value, ';' ) ||
