@@ -45,6 +45,25 @@ const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
 const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 
 /**
+ * Sanitize a CSS property value, rejecting values that contain CSS block delimiters.
+ *
+ * @internal
+ */
+function wc_clearance_sanitize_css_value( string $value ): string {
+	$value = trim( sanitize_text_field( $value ) );
+
+	if (
+		str_contains( $value, ';' ) ||
+		str_contains( $value, '{' ) ||
+		str_contains( $value, '}' )
+	) {
+		return '';
+	}
+
+	return $value;
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
