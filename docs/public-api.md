@@ -275,6 +275,27 @@ editor integration for the clearance badge and clearance message blocks. Added i
 Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
 Added in 1.0.0.
 
+## CSS classes
+
+These classes are part of the public API and stable across versions. They can be targeted
+for custom styling.
+
+### Front-end classes
+
+#### `.wc-clearance-badge`
+
+Applied to the clearance badge element. Used by both the block renderer and classic theme
+template hooks. Added in 1.0.0.
+
+#### `.wc-clearance-badge-container`
+
+Wraps the badge in classic (non-block) themes. Added in 1.0.0.
+
+#### `.wc-clearance-message`
+
+Applied to the clearance message element. Used by both the block renderer and classic theme
+template hooks. Added in 1.0.0.
+
 ## Blocks
 
 ### `wc-clearance/clearance-badge`
@@ -341,27 +362,6 @@ The plugin extends the WooCommerce `[products]` shortcode with a `wc_clearance` 
 | `wc_clearance` | `boolean` (`true`/`false`) | When `true`, limits results to products in the clearance section. |
 
 Added in 1.0.0.
-
-## CSS classes
-
-These classes are part of the public API and stable across versions. They can be targeted
-for custom styling.
-
-### Front-end classes
-
-#### `.wc-clearance-badge`
-
-Applied to the clearance badge element. Used by both the block renderer and classic theme
-template hooks. Added in 1.0.0.
-
-#### `.wc-clearance-badge-container`
-
-Wraps the badge in classic (non-block) themes. Added in 1.0.0.
-
-#### `.wc-clearance-message`
-
-Applied to the clearance message element. Used by both the block renderer and classic theme
-template hooks. Added in 1.0.0.
 
 ## Non-Public API
 
