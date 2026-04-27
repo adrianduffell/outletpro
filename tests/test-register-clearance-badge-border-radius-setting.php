@@ -34,7 +34,7 @@ class Test_Register_Clearance_Badge_Border_Radius_Setting extends WP_UnitTestCas
 		$this->assertSame( 'string', $settings[ CLEARANCE_BADGE_BORDER_RADIUS_OPTION ]['type'] );
 	}
 
-	public function test_setting_default_is_2px(): void {
+	public function test_setting_default_is_empty_string(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_BORDER_RADIUS_OPTION );
 
@@ -43,7 +43,7 @@ class Test_Register_Clearance_Badge_Border_Radius_Setting extends WP_UnitTestCas
 
 		// Assert.
 		$settings = get_registered_settings();
-		$this->assertSame( '2px', $settings[ CLEARANCE_BADGE_BORDER_RADIUS_OPTION ]['default'] );
+		$this->assertSame( '', $settings[ CLEARANCE_BADGE_BORDER_RADIUS_OPTION ]['default'] );
 	}
 
 	public function test_setting_is_shown_in_rest(): void {
