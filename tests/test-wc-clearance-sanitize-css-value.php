@@ -53,7 +53,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$this->assertSame( '', $result );
 	}
 
-	public function test_strips_html_tags(): void {
+	public function test_removes_scripts(): void {
 		// Arrange.
 		$value = '<script>alert(1)</script>#FF0000';
 
