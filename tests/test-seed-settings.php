@@ -7,6 +7,7 @@
 
 use function WC_Clearance\seed_settings;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
@@ -124,5 +125,27 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '#FF0000', get_option( CLEARANCE_BADGE_BG_COLOR_OPTION ) );
+	}
+
+	public function test_sets_badge_border_radius_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '2px', get_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_border_radius_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '50%' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '50%', get_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION ) );
 	}
 }
