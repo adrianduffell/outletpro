@@ -52,6 +52,30 @@ const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 const CLEARANCE_BADGE_BORDER_RADIUS_OPTION = 'wc_clearance_badge_border_radius';
 
 /**
+ * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
+ * values that fail sanitize_text_field().
+ *
+ * Intentionally light-weight as CSS is broad and evolving.
+ *
+ * @internal
+ *
+ * @param string $value The CSS property value to sanitize.
+ */
+function wc_clearance_sanitize_css_value( string $value ): string {
+	$value = sanitize_text_field( $value );
+
+	if (
+		false !== strpos( $value, ';' ) ||
+		false !== strpos( $value, '{' ) ||
+		false !== strpos( $value, '}' )
+	) {
+		return '';
+	}
+
+	return $value;
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
