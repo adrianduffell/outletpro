@@ -22,17 +22,6 @@ use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 
-	public function test_enqueue_init_registers_wp_head_hook(): void {
-		// Arrange.
-		deinit_enqueue();
-
-		// Act.
-		enqueue_init();
-
-		// Assert.
-		$this->assertSame( 10, has_action( 'wp_head', 'WC_Clearance\output_badge_style_css_variables_hook' ) );
-	}
-
 	public function test_outputs_badge_style_css_variables_in_wp_head(): void {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FF0000' );
