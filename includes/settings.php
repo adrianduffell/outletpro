@@ -59,9 +59,14 @@ const CLEARANCE_BADGE_BORDER_RADIUS_OPTION = 'wc_clearance_badge_border_radius';
  *
  * @internal
  *
- * @param string $value The CSS property value to sanitize.
+ * @param mixed $value The CSS property value to sanitize.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
-function wc_clearance_sanitize_css_value( string $value ): string {
+function wc_clearance_sanitize_css_value( $value ): string {
+	if ( ! is_string( $value ) ) {
+		return '';
+	}
+
 	$value = sanitize_text_field( $value );
 
 	if (
