@@ -9,6 +9,7 @@ use function WC_Clearance\seed_settings;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
@@ -170,5 +171,27 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '14px', get_option( CLEARANCE_BADGE_FONT_SIZE_OPTION ) );
+	}
+
+	public function test_sets_badge_font_weight_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '600', get_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_font_weight_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '400' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '400', get_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION ) );
 	}
 }
