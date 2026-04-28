@@ -17,10 +17,11 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody>
 				<p>
 					{ __(
-						'Customize the appearance of the clearance section. Changes apply to the whole site.'
+						'Customize the appearance of the clearance section. Changes apply to the whole site.',
+						'wc-clearance'
 					) }
 				</p>
-				<h2>{ __( 'Badge' ) }</h2>
+				<h2>{ __( 'Badge', 'wc-clearance' ) }</h2>
 			</PanelBody>
 		</PluginSidebar>
 	);
