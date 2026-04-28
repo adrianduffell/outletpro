@@ -87,6 +87,34 @@ const CLEARANCE_BADGE_FONT_SIZE_OPTION = 'wc_clearance_badge_font_size';
 const CLEARANCE_BADGE_FONT_WEIGHT_OPTION = 'wc_clearance_badge_font_weight';
 
 /**
+ * WordPress option key used to store the badge top padding.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_PADDING_TOP_OPTION = 'wc_clearance_badge_padding_top';
+
+/**
+ * WordPress option key used to store the badge right padding.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_PADDING_RIGHT_OPTION = 'wc_clearance_badge_padding_right';
+
+/**
+ * WordPress option key used to store the badge bottom padding.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_PADDING_BOTTOM_OPTION = 'wc_clearance_badge_padding_bottom';
+
+/**
+ * WordPress option key used to store the badge left padding.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_PADDING_LEFT_OPTION = 'wc_clearance_badge_padding_left';
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
@@ -140,6 +168,10 @@ function init_settings(): void {
 	register_clearance_badge_border_radius_setting();
 	register_clearance_badge_font_size_setting();
 	register_clearance_badge_font_weight_setting();
+	register_clearance_badge_padding_top_setting();
+	register_clearance_badge_padding_right_setting();
+	register_clearance_badge_padding_bottom_setting();
+	register_clearance_badge_padding_left_setting();
 	register_clearance_message_setting();
 }
 
@@ -181,6 +213,10 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '2px' );
 	add_option( CLEARANCE_BADGE_FONT_SIZE_OPTION, '0.875rem' );
 	add_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '600' );
+	add_option( CLEARANCE_BADGE_PADDING_TOP_OPTION, '5px' );
+	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '5px' );
+	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '5px' );
+	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '5px' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -410,6 +446,102 @@ function register_clearance_badge_font_weight_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge font weight', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge font weight.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge top padding setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_padding_top_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_PADDING_TOP_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge top padding', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge top padding.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge right padding setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_padding_right_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_PADDING_RIGHT_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge right padding', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge right padding.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge bottom padding setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_padding_bottom_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_PADDING_BOTTOM_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge bottom padding', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge bottom padding.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge left padding setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_padding_left_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_PADDING_LEFT_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge left padding', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge left padding.', 'wc-clearance' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
 			'show_in_rest'      => array(
