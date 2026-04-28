@@ -1,20 +1,20 @@
 <?php
 /**
- * Test the wc_clearance_sanitize_border function.
+ * Test the sanitize_border function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\wc_clearance_sanitize_border;
+use function WC_Clearance\sanitize_border;
 
-class Test_Wc_Clearance_Sanitize_Border extends WP_UnitTestCase {
+class Test_Sanitize_Border extends WP_UnitTestCase {
 
 	public function test_returns_empty_array_when_value_is_not_an_array(): void {
 		// Arrange.
 		$value = '1px solid red';
 
 		// Act.
-		$result = wc_clearance_sanitize_border( $value );
+		$result = sanitize_border( $value );
 
 		// Assert.
 		$this->assertSame( array(), $result );
@@ -29,7 +29,7 @@ class Test_Wc_Clearance_Sanitize_Border extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = wc_clearance_sanitize_border( $value );
+		$result = sanitize_border( $value );
 
 		// Assert.
 		$this->assertSame(
@@ -49,7 +49,7 @@ class Test_Wc_Clearance_Sanitize_Border extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = wc_clearance_sanitize_border( $value );
+		$result = sanitize_border( $value );
 
 		// Assert.
 		$this->assertSame(
@@ -71,7 +71,7 @@ class Test_Wc_Clearance_Sanitize_Border extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = wc_clearance_sanitize_border( $value );
+		$result = sanitize_border( $value );
 
 		// Assert.
 		$this->assertSame(
