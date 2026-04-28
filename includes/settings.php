@@ -61,7 +61,7 @@ const CLEARANCE_BADGE_BORDER_RADIUS_OPTION = 'wc_clearance_badge_border_radius';
  *
  * @param string $value The CSS property value to sanitize.
  */
-function wc_clearance_sanitize_css_value( string $value ): string {
+function sanitize_css_value( string $value ): string {
 	$value = sanitize_text_field( $value );
 
 	if (
@@ -98,9 +98,9 @@ function sanitize_border( $value ): array {
 	$width = $value['width'] ?? '';
 
 	return array(
-		'color' => wc_clearance_sanitize_css_value( is_scalar( $color ) ? strval( $color ) : '' ),
-		'style' => wc_clearance_sanitize_css_value( is_scalar( $style ) ? strval( $style ) : '' ),
-		'width' => wc_clearance_sanitize_css_value( is_scalar( $width ) ? strval( $width ) : '' ),
+		'color' => sanitize_css_value( is_scalar( $color ) ? strval( $color ) : '' ),
+		'style' => sanitize_css_value( is_scalar( $style ) ? strval( $style ) : '' ),
+		'width' => sanitize_css_value( is_scalar( $width ) ? strval( $width ) : '' ),
 	);
 }
 
@@ -270,7 +270,7 @@ function register_clearance_badge_border_radius_setting(): void {
 			'label'             => __( 'Clearance badge border radius', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge border radius.', 'wc-clearance' ),
 			'default'           => '',
-			'sanitize_callback' => 'WC_Clearance\wc_clearance_sanitize_css_value',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
