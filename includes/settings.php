@@ -52,6 +52,13 @@ const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
 const CLEARANCE_BADGE_BORDER_RADIUS_OPTION = 'wc_clearance_badge_border_radius';
 
 /**
+ * WordPress option key used to store the badge font weight.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_FONT_WEIGHT_OPTION = 'wc_clearance_badge_font_weight';
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
@@ -129,6 +136,7 @@ function init_settings(): void {
 	register_clearance_badge_text_color_setting();
 	register_clearance_badge_bg_color_setting();
 	register_clearance_badge_border_radius_setting();
+	register_clearance_badge_font_weight_setting();
 	register_clearance_message_setting();
 }
 
@@ -165,6 +173,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
 	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
 	add_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '2px' );
+	add_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '600' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -274,6 +283,30 @@ function register_clearance_badge_border_radius_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge border radius', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge border radius.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge font weight setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_font_weight_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_FONT_WEIGHT_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge font weight', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge font weight.', 'wc-clearance' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
 			'show_in_rest'      => array(
