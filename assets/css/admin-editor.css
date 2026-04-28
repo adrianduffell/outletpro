@@ -4,7 +4,7 @@
 
 .wc-block-cart-items__row:first-child .wc-block-components-product-metadata::before,
 .wc-block-components-order-summary-item:first-child .wc-block-components-product-metadata::before {
-	content: var(--wc-clearance-badge-label, "Clearance");
+	content: "Clearance";
 	display: inline-block;
 	width: fit-content;
 	border-radius: 2px;
@@ -14,6 +14,6 @@
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
-	background-color: var(--wc-clearance-badge-bg-color, #ffee85);
-	color: var(--wc-clearance-badge-text-color, #222);
+	background-color: #ffee85;
+	color: #222;
 }
