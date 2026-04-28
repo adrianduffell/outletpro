@@ -73,6 +73,13 @@ const CLEARANCE_BADGE_BORDER_STYLE_OPTION = 'wc_clearance_badge_border_style';
 const CLEARANCE_BADGE_BORDER_WIDTH_OPTION = 'wc_clearance_badge_border_width';
 
 /**
+ * WordPress option key used to store the badge font size.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_FONT_SIZE_OPTION = 'wc_clearance_badge_font_size';
+
+/**
  * WordPress option key used to store the badge font weight.
  *
  * @internal
@@ -160,6 +167,7 @@ function init_settings(): void {
 	register_clearance_badge_border_style_setting();
 	register_clearance_badge_border_width_setting();
 	register_clearance_badge_border_radius_setting();
+	register_clearance_badge_font_size_setting();
 	register_clearance_badge_font_weight_setting();
 	register_clearance_message_setting();
 }
@@ -200,6 +208,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION, 'none' );
 	add_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION, '0' );
 	add_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '2px' );
+	add_option( CLEARANCE_BADGE_FONT_SIZE_OPTION, '0.875rem' );
 	add_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '600' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
@@ -382,6 +391,30 @@ function register_clearance_badge_border_width_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge border width', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge border width.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge font size setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_font_size_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_FONT_SIZE_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge font size', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge font size.', 'wc-clearance' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
 			'show_in_rest'      => array(
