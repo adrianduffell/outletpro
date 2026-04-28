@@ -32,6 +32,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' ) );
 	}
 
+	public function test_removes_output_badge_style_css_variables_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'wp_head', 'WC_Clearance\output_badge_style_css_variables_hook' ) );
+	}
+
 	public function test_removes_admin_enqueue_scripts_styles_hook(): void {
 		// Arrange.
 		enqueue_init();
