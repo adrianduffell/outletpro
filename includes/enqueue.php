@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
+	add_action( 'wp_head', 'WC_Clearance\output_badge_style_css_variables_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	add_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
@@ -32,6 +33,7 @@ function enqueue_init(): void {
 function deinit_enqueue(): void {
 	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
+	remove_action( 'wp_head', 'WC_Clearance\output_badge_style_css_variables_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'WC_Clearance\enqueue_build_assets_hook' );
@@ -112,6 +114,41 @@ function enqueue_cart_styles_hook(): void {
 		'wc-clearance-cart-badge',
 		':root { --wc-clearance-badge-bg-color: ' . $bg_color . '; --wc-clearance-badge-text-color: ' . $text_color . '; --wc-clearance-badge-label: ' . wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) . '; }'
 	);
+}
+
+/**
+ * Output badge style settings as CSS variables on front-end pages.
+ *
+ * Fired by `wp_head`.
+ *
+ * @internal WordPress action hook
+ */
+function output_badge_style_css_variables_hook(): void {
+	$badge_style_options = array(
+		CLEARANCE_BADGE_BG_COLOR_OPTION,
+		CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+		CLEARANCE_BADGE_BORDER_COLOR_OPTION,
+		CLEARANCE_BADGE_BORDER_STYLE_OPTION,
+		CLEARANCE_BADGE_BORDER_WIDTH_OPTION,
+		CLEARANCE_BADGE_BORDER_RADIUS_OPTION,
+		CLEARANCE_BADGE_FONT_SIZE_OPTION,
+		CLEARANCE_BADGE_FONT_WEIGHT_OPTION,
+		CLEARANCE_BADGE_PADDING_TOP_OPTION,
+		CLEARANCE_BADGE_PADDING_RIGHT_OPTION,
+		CLEARANCE_BADGE_PADDING_BOTTOM_OPTION,
+		CLEARANCE_BADGE_PADDING_LEFT_OPTION,
+	);
+	$declarations = array_map(
+		function ( string $option_name ): string {
+			$variable_name = '--' . str_replace( '_', '-', $option_name );
+			$option_value  = sanitize_css_value( get_option( $option_name, '' ) );
+
+			return $variable_name . ': ' . ( '' !== $option_value ? $option_value : 'unset' );
+		},
+		$badge_style_options
+	);
+
+	echo '<style id="wc-clearance-badge-vars">:root { ' . esc_html( implode( '; ', $declarations ) ) . '; }</style>';
 }
 
 /**
