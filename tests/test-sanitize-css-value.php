@@ -1,20 +1,20 @@
 <?php
 /**
- * Test the wc_clearance_sanitize_css_value function.
+ * Test the sanitize_css_value function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\wc_clearance_sanitize_css_value;
+use function WC_Clearance\sanitize_css_value;
 
-class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
+class Test_Sanitize_Css_Value extends WP_UnitTestCase {
 
 	public function test_returns_valid_hex_color(): void {
 		// Arrange.
 		$value = '#FF0000';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '#FF0000', $result );
@@ -25,7 +25,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '#FF0000; color: red';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
@@ -36,7 +36,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'red { color: blue';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
@@ -47,7 +47,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'red } color: blue';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
@@ -58,7 +58,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '<script>alert(1)</script>#FF0000';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '#FF0000', $result );
@@ -69,7 +69,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'red</style><script>alert(1)</script>';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'red', $result );
@@ -80,7 +80,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'rgba(255, 0, 0, 0.5)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'rgba(255, 0, 0, 0.5)', $result );
@@ -91,7 +91,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'calc(100% - 2px)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'calc(100% - 2px)', $result );
@@ -102,7 +102,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'calc(1rem + calc(2px * 3))';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'calc(1rem + calc(2px * 3))', $result );
@@ -113,7 +113,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'var(--my-spacing, 10px)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'var(--my-spacing, 10px)', $result );
@@ -124,7 +124,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'var(--a, var(--b, 5px))';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'var(--a, var(--b, 5px))', $result );
@@ -135,7 +135,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'clamp(0.75rem, 1vw, 1rem)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'clamp(0.75rem, 1vw, 1rem)', $result );
@@ -146,7 +146,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'color-mix(in srgb, red 40%, blue)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'color-mix(in srgb, red 40%, blue)', $result );
@@ -157,7 +157,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'oklch(70% 0.15 200)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'oklch(70% 0.15 200)', $result );
@@ -168,7 +168,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '.5rem';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '.5rem', $result );
@@ -179,7 +179,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 'calc(50% + 1em)';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( 'calc(50% + 1em)', $result );
@@ -190,7 +190,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '-2px';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '-2px', $result );
@@ -201,7 +201,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '2px; color: red';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
@@ -212,7 +212,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '} body { display: none';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
@@ -223,7 +223,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = '" ); } body { display: none; } /*"';
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
@@ -234,7 +234,7 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		$value = 10;
 
 		// Act.
-		$result = wc_clearance_sanitize_css_value( $value );
+		$result = sanitize_css_value( $value );
 
 		// Assert.
 		$this->assertSame( '', $result );
