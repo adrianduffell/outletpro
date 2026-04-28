@@ -110,6 +110,38 @@ function sanitize_border( $value ): array {
 }
 
 /**
+ * Sanitize a spacing object from Gutenberg's SpacingSizesControl component format.
+ *
+ * @internal
+ *
+ * @param mixed $value The spacing value to sanitize.
+ * @return array{
+ *     top: string,
+ *     right: string,
+ *     bottom: string,
+ *     left: string
+ * }
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints
+ */
+function sanitize_spacing_sizes( $value ): array {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$top    = $value['top'] ?? '';
+	$right  = $value['right'] ?? '';
+	$bottom = $value['bottom'] ?? '';
+	$left   = $value['left'] ?? '';
+
+	return array(
+		'top'    => wc_clearance_sanitize_css_value( is_scalar( $top ) ? strval( $top ) : '' ),
+		'right'  => wc_clearance_sanitize_css_value( is_scalar( $right ) ? strval( $right ) : '' ),
+		'bottom' => wc_clearance_sanitize_css_value( is_scalar( $bottom ) ? strval( $bottom ) : '' ),
+		'left'   => wc_clearance_sanitize_css_value( is_scalar( $left ) ? strval( $left ) : '' ),
+	);
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
