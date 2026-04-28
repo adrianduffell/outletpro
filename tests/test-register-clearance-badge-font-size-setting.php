@@ -93,5 +93,4 @@ class Test_Register_Clearance_Badge_Font_Size_Setting extends WP_UnitTestCase {
 		$this->assertSame( '0.875rem', $data[ CLEARANCE_BADGE_FONT_SIZE_OPTION ] );
 		$this->assertSame( '0.875rem', get_option( CLEARANCE_BADGE_FONT_SIZE_OPTION ) );
 	}
-
 }
