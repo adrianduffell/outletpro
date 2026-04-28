@@ -1,4 +1,4 @@
-import { PluginSidebar } from '@wordpress/edit-post';
+import { PluginSidebar } from '@wordpress/editor';
 import { registerPlugin } from '@wordpress/plugins';
 import ClearanceIcon from './icon';
 
