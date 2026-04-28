@@ -40,22 +40,24 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		deinit_enqueue();
 		enqueue_init();
 
-		// Assert.
-		$this->expectOutputRegex( '/--wc-clearance-badge-bg-color: #FF0000/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-text-color: #00FF00/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-border-color: #123456/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-border-style: solid/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-border-width: 2px/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-border-radius: 4px/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-font-size: 1rem/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-font-weight: 700/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-padding-top: 1px/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-padding-right: 2px/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-padding-bottom: 3px/' );
-		$this->expectOutputRegex( '/--wc-clearance-badge-padding-left: 4px/' );
-
 		// Act.
+		ob_start();
 		do_action( 'wp_head' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringContainsString( '--wc-clearance-badge-bg-color: #FF0000', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-text-color: #00FF00', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-border-color: #123456', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-border-style: solid', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-border-width: 2px', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-border-radius: 4px', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-font-size: 1rem', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-font-weight: 700', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-padding-top: 1px', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-padding-right: 2px', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-padding-bottom: 3px', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-padding-left: 4px', $output );
 	}
 
 	public function test_uses_unset_when_setting_value_is_empty(): void {
