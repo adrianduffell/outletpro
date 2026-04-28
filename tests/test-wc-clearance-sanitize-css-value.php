@@ -228,4 +228,15 @@ class Test_Wc_Clearance_Sanitize_Css_Value extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( '', $result );
 	}
+
+	public function test_returns_empty_string_for_non_string_value(): void {
+		// Arrange.
+		$value = 10;
+
+		// Act.
+		$result = wc_clearance_sanitize_css_value( $value );
+
+		// Assert.
+		$this->assertSame( '', $result );
+	}
 }
