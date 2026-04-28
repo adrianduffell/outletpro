@@ -308,7 +308,7 @@ function register_clearance_badge_font_weight_setting(): void {
 			'label'             => __( 'Clearance badge font weight', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge font weight.', 'wc-clearance' ),
 			'default'           => '',
-			'sanitize_callback' => 'sanitize_css_field',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
