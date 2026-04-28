@@ -1,0 +1,19 @@
+/**
+ * Admin editor styles for cart and checkout templates.
+ */
+
+.wc-block-cart-items__row:first-child .wc-block-components-product-metadata::before,
+.wc-block-components-order-summary-item:first-child .wc-block-components-product-metadata::before {
+	content: var(--wc-clearance-badge-label, "Clearance");
+	display: inline-block;
+	width: fit-content;
+	border-radius: 2px;
+	padding: 0.36em;
+	font-weight: 600;
+	font-size: 0.875em;
+	line-height: 1;
+	text-box-trim: trim-both;
+	text-box-edge: cap alphabetic;
+	background-color: var(--wc-clearance-badge-bg-color, #ffee85);
+	color: var(--wc-clearance-badge-text-color, #222);
+}
