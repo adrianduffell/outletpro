@@ -10,7 +10,7 @@ const ClearanceSectionSidebar = () => {
 	return (
 		<PluginSidebar
 			name={ SIDEBAR_NAME }
-			title="Clearance section"
+			title={ __( 'Clearance section', 'wc-clearance' ) }
 			isPinnable={ true }
 			icon={ ClearanceIcon }
 		>
