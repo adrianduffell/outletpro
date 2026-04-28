@@ -67,7 +67,6 @@ function sanitize_css_value( $value ): string {
 		return '';
 	}
 
-
 	$value = sanitize_text_field( $value );
 
 	if (
