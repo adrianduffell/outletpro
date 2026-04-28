@@ -138,6 +138,7 @@ function output_badge_style_css_variables_hook(): void {
 		CLEARANCE_BADGE_PADDING_BOTTOM_OPTION,
 		CLEARANCE_BADGE_PADDING_LEFT_OPTION,
 	);
+
 	$declarations = array_map(
 		function ( string $option_name ): string {
 			$variable_name = '--' . str_replace( '_', '-', $option_name );
