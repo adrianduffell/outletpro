@@ -87,10 +87,14 @@ function wc_clearance_sanitize_border( $value ): array {
 		return array();
 	}
 
+	$color = $value['color'] ?? '';
+	$style = $value['style'] ?? '';
+	$width = $value['width'] ?? '';
+
 	return array(
-		'color' => wc_clearance_sanitize_css_value( $value['color'] ?? '' ),
-		'style' => wc_clearance_sanitize_css_value( $value['style'] ?? '' ),
-		'width' => wc_clearance_sanitize_css_value( $value['width'] ?? '' ),
+		'color' => wc_clearance_sanitize_css_value( is_scalar( $color ) ? strval( $color ) : '' ),
+		'style' => wc_clearance_sanitize_css_value( is_scalar( $style ) ? strval( $style ) : '' ),
+		'width' => wc_clearance_sanitize_css_value( is_scalar( $width ) ? strval( $width ) : '' ),
 	);
 }
 

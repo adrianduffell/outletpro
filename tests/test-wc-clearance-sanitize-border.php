@@ -61,4 +61,26 @@ class Test_Wc_Clearance_Sanitize_Border extends WP_UnitTestCase {
 			$result
 		);
 	}
+
+	public function test_returns_empty_strings_for_non_scalar_fields(): void {
+		// Arrange.
+		$value = array(
+			'color' => array( 'red' ),
+			'style' => (object) array( 'value' => 'solid' ),
+			'width' => array(),
+		);
+
+		// Act.
+		$result = wc_clearance_sanitize_border( $value );
+
+		// Assert.
+		$this->assertSame(
+			array(
+				'color' => '',
+				'style' => '',
+				'width' => '',
+			),
+			$result
+		);
+	}
 }
