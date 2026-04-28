@@ -76,6 +76,35 @@ function wc_clearance_sanitize_css_value( string $value ): string {
 }
 
 /**
+ * Sanitize a border object from Gutenberg's BorderControl component format.
+ *
+ * @internal
+ *
+ * @param mixed $value The border value to sanitize.
+ * @return array{
+ *     color: string,
+ *     style: string,
+ *     width: string
+ * }
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints
+ */
+function sanitize_border( $value ): array {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+
+	$color = $value['color'] ?? '';
+	$style = $value['style'] ?? '';
+	$width = $value['width'] ?? '';
+
+	return array(
+		'color' => wc_clearance_sanitize_css_value( is_scalar( $color ) ? strval( $color ) : '' ),
+		'style' => wc_clearance_sanitize_css_value( is_scalar( $style ) ? strval( $style ) : '' ),
+		'width' => wc_clearance_sanitize_css_value( is_scalar( $width ) ? strval( $width ) : '' ),
+	);
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
