@@ -66,5 +66,4 @@ class Test_Register_Clearance_Badge_Font_Weight_Setting extends WP_UnitTestCase 
 		$this->assertSame( '600', $data[ CLEARANCE_BADGE_FONT_WEIGHT_OPTION ] );
 		$this->assertSame( '600', get_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION ) );
 	}
-
 }
