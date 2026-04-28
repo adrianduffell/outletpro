@@ -7,7 +7,10 @@
 
 use function WC_Clearance\seed_settings;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_BORDER_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
@@ -138,6 +141,72 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '2px', get_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION ) );
+	}
+
+	public function test_sets_badge_border_color_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_BORDER_COLOR_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '', get_option( CLEARANCE_BADGE_BORDER_COLOR_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_border_color_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_BORDER_COLOR_OPTION, '#000000' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '#000000', get_option( CLEARANCE_BADGE_BORDER_COLOR_OPTION ) );
+	}
+
+	public function test_sets_badge_border_style_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 'none', get_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_border_style_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION, 'solid' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 'solid', get_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION ) );
+	}
+
+	public function test_sets_badge_border_width_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '0', get_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_border_width_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION, '2px' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '2px', get_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_border_radius_option(): void {
