@@ -88,18 +88,6 @@ function sanitize_css_value( $value ): string {
 }
 
 /**
- * Sanitize a CSS property value.
- *
- * @internal
- *
- * @param mixed $value The CSS property value to sanitize.
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
- */
-function wc_clearance_sanitize_css_value( $value ): string {
-	return sanitize_css_value( $value );
-}
-
-/**
  * Sanitize a border object from Gutenberg's BorderControl component format.
  *
  * @internal
