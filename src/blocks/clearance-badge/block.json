@@ -9,50 +9,8 @@
 	"supports": {
 		"html": false,
 		"spacing": {
-			"padding": true,
 			"margin": true
-		},
-		"color": {
-			"background": true,
-			"text": true,
-			"gradients": true
-		},
-		"typography": {
-			"fontSize": true,
-			"__experimentalFontWeight": true
-		},
-		"__experimentalBorder": {
-			"radius": true,
-			"width": true,
-			"color": true
 		}
-	},
-	"attributes": {
-		"style": {
-			"type": "object",
-			"default": {
-				"color": {
-					"background": "#FFEE85",
-					"text": "#222"
-				},
-				"spacing": {
-					"padding": {
-						"top": "5px",
-						"right": "5px",
-						"bottom": "5px",
-						"left": "5px"
-					}
-				},
-				"typography": {
-					"fontSize": "0.875rem",
-					"fontWeight": "600"
-				},
-				"border": {
-					"radius": "2px"
-				}
-			}
-		}
-
 	},
 	"textdomain": "wc-clearance"
 }
