@@ -558,4 +558,48 @@ describe( 'page-editor-sidebar registration', () => {
 		// Assert.
 		expect( setBorderWidth ).toHaveBeenCalledWith( '2px' );
 	} );
+
+	test( 'border control auto-applies solid style when width > 1 and style is not set', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setBorderStyle = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_border_style: [ '', setBorderStyle ],
+			wc_clearance_badge_border_width: [ '', jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Border' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '2px' } } );
+
+		// Assert.
+		expect( setBorderStyle ).toHaveBeenCalledWith( 'solid' );
+	} );
+
+	test( 'border control does not overwrite user-set style when width > 1', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setBorderStyle = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_border_style: [ 'dashed', setBorderStyle ],
+			wc_clearance_badge_border_width: [ '', jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Border' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '2px' } } );
+
+		// Assert.
+		expect( setBorderStyle ).not.toHaveBeenCalledWith( 'solid' );
+	} );
 } );

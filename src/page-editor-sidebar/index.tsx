@@ -279,13 +279,23 @@ const ClearanceSectionSidebar = () => {
 					<BorderControl
 						value={ border }
 						onChange={ ( value ) => {
-							setBorderColor( value?.color || undefined );
-							setBorderStyle( value?.style || undefined );
-							setBorderWidth(
+							const nextWidth =
 								value?.width !== undefined
 									? String( value.width )
-									: undefined
-							);
+									: undefined;
+							const nextStyle = value?.style || undefined;
+
+							// Auto-apply 'solid' when width > 1 and the user
+							// hasn't explicitly set a style yet.
+							const effectiveStyle =
+								parseFloat( nextWidth || '0' ) > 1 &&
+								borderStyle === ''
+									? 'solid'
+									: nextStyle;
+
+							setBorderColor( value?.color || undefined );
+							setBorderStyle( effectiveStyle );
+							setBorderWidth( nextWidth );
 						} }
 					/>
 				</div>
