@@ -194,6 +194,7 @@ const ClearanceSectionSidebar = () => {
 						value={ label }
 						onChange={ ( value ) => setLabel( value ) }
 						__nextHasNoMarginBottom
+						__next40pxDefaultSize
 					/>
 				</BaseControl>
 			</PanelBody>
@@ -208,6 +209,7 @@ const ClearanceSectionSidebar = () => {
 						}
 						withReset={ false }
 						withSlider
+						__next40pxDefaultSize
 					/>
 				</BaseControl>
 
@@ -219,6 +221,7 @@ const ClearanceSectionSidebar = () => {
 						onChange={ ( { selectedItem } ) => {
 							setFontWeight( selectedItem?.key || '' );
 						} }
+						__next40pxDefaultSize
 					/>
 				</BaseControl>
 			</PanelBody>
@@ -270,6 +273,7 @@ const ClearanceSectionSidebar = () => {
 					} }
 					sides={ [ 'vertical', 'horizontal' ] }
 					splitOnAxis
+					__next40pxDefaultSize
 				/>
 			</PanelBody>
 
@@ -313,6 +317,7 @@ const ClearanceSectionSidebar = () => {
 							setBorderRadius( value || undefined )
 						}
 						min={ 0 }
+						__next40pxDefaultSize
 					/>
 				</BaseControl>
 			</PanelBody>
