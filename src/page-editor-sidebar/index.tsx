@@ -1,14 +1,12 @@
 import {
 	BaseControl,
+	BorderControl,
+	BoxControl,
 	CustomSelectControl,
 	FontSizePicker,
 	PanelBody,
 	TabPanel,
 	TextControl,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalBorderControl as BorderControl,
-	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-	__experimentalBoxControl as BoxControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
