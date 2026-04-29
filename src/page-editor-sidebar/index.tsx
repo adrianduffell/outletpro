@@ -64,6 +64,17 @@ const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Black', 'wc-clearance' ), key: '900' },
 ];
 
+const bordersEnabled = ( () => {
+	try {
+		return (
+			window.localStorage.getItem( 'wc_clearance_borders_enabled' ) ===
+			'1'
+		);
+	} catch {
+		return false;
+	}
+} )();
+
 const ClearanceSectionSidebar = () => {
 	const [ label, setLabel ] = useEntityProp(
 		'root',
@@ -275,30 +286,32 @@ const ClearanceSectionSidebar = () => {
 			</PanelBody>
 
 			<PanelBody title={ __( 'Border', 'wc-clearance' ) }>
-				<div style={ { marginBottom: 16 } }>
-					<BorderControl
-						value={ border }
-						onChange={ ( value ) => {
-							const nextWidth =
-								value?.width !== undefined
-									? String( value.width )
-									: undefined;
-							const nextStyle = value?.style || undefined;
+				{ bordersEnabled && (
+					<div style={ { marginBottom: 16 } }>
+						<BorderControl
+							value={ border }
+							onChange={ ( value ) => {
+								const nextWidth =
+									value?.width !== undefined
+										? String( value.width )
+										: undefined;
+								const nextStyle = value?.style || undefined;
 
-							// Auto-apply 'solid' when width > 0 and the user
-							// hasn't explicitly set a style yet.
-							const effectiveStyle =
-								parseFloat( nextWidth || '0' ) > 0 &&
-								borderStyle === ''
-									? 'solid'
-									: nextStyle;
+								// Auto-apply 'solid' when width > 0 and the user
+								// hasn't explicitly set a style yet.
+								const effectiveStyle =
+									parseFloat( nextWidth || '0' ) > 0 &&
+									borderStyle === ''
+										? 'solid'
+										: nextStyle;
 
-							setBorderColor( value?.color || undefined );
-							setBorderStyle( effectiveStyle );
-							setBorderWidth( nextWidth );
-						} }
-					/>
-				</div>
+								setBorderColor( value?.color || undefined );
+								setBorderStyle( effectiveStyle );
+								setBorderWidth( nextWidth );
+							} }
+						/>
+					</div>
+				) }
 
 				<BaseControl
 					id="wc-clearance-border-radius"

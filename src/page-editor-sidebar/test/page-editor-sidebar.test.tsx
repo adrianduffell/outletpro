@@ -545,9 +545,11 @@ describe( 'page-editor-sidebar registration', () => {
 			wc_clearance_badge_border_style: [ 'none', setBorderStyle ],
 			wc_clearance_badge_border_width: [ '0', setBorderWidth ],
 		} );
+		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
+		window.localStorage.removeItem( 'wc_clearance_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -567,9 +569,11 @@ describe( 'page-editor-sidebar registration', () => {
 			wc_clearance_badge_border_style: [ '', setBorderStyle ],
 			wc_clearance_badge_border_width: [ '', jest.fn() ],
 		} );
+		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
+		window.localStorage.removeItem( 'wc_clearance_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -589,9 +593,11 @@ describe( 'page-editor-sidebar registration', () => {
 			wc_clearance_badge_border_style: [ 'dashed', setBorderStyle ],
 			wc_clearance_badge_border_width: [ '', jest.fn() ],
 		} );
+		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
+		window.localStorage.removeItem( 'wc_clearance_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
