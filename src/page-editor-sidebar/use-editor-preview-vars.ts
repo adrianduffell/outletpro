@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from '@wordpress/element';
+import { useEffect, useRef } from '@wordpress/element';
 
 type PreviewVars = {
 	label?: string;
@@ -120,52 +120,35 @@ function applyToDocument( doc: Document, css: string ): void {
 }
 
 export function useEditorPreviewVars( vars: PreviewVars ): void {
-	const css = useMemo(
-		() => buildCss( vars ),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[
-			vars.label,
-			vars.textColor,
-			vars.bgColor,
-			vars.fontSize,
-			vars.fontWeight,
-			vars.borderColor,
-			vars.borderStyle,
-			vars.borderWidth,
-			vars.borderRadius,
-			vars.paddingTop,
-			vars.paddingRight,
-			vars.paddingBottom,
-			vars.paddingLeft,
-		]
-	);
+	const css = buildCss( vars );
 
+	const iframeRef = useRef< HTMLIFrameElement | null >( null );
+	const cssRef = useRef( css );
+	cssRef.current = css;
+
+	// Effect 1: wire up the MutationObserver and iframe load listener once.
+	// Uses cssRef so callbacks always apply the latest CSS without re-wiring.
 	useEffect( () => {
-		applyToDocument( document, css );
-
-		const cleanups: Array< () => void > = [];
+		const onLoad = () => {
+			if ( iframeRef.current?.contentDocument ) {
+				applyToDocument(
+					iframeRef.current.contentDocument,
+					cssRef.current
+				);
+			}
+		};
 
 		function attachToIframe( iframeEl: HTMLIFrameElement ): void {
+			iframeRef.current = iframeEl;
 			if ( iframeEl.contentDocument ) {
-				applyToDocument( iframeEl.contentDocument, css );
+				applyToDocument( iframeEl.contentDocument, cssRef.current );
 			}
-
-			const onLoad = () => {
-				if ( iframeEl.contentDocument ) {
-					applyToDocument( iframeEl.contentDocument, css );
-				}
-			};
-
 			iframeEl.addEventListener( 'load', onLoad );
-			cleanups.push( () =>
-				iframeEl.removeEventListener( 'load', onLoad )
-			);
 		}
 
 		const existingIframe = document.querySelector< HTMLIFrameElement >(
 			'iframe[name="editor-canvas"]'
 		);
-
 		if ( existingIframe ) {
 			attachToIframe( existingIframe );
 		}
@@ -190,14 +173,21 @@ export function useEditorPreviewVars( vars: PreviewVars ): void {
 
 		return () => {
 			observer.disconnect();
-			cleanups.forEach( ( cleanup ) => cleanup() );
+			iframeRef.current?.removeEventListener( 'load', onLoad );
 			applyToDocument( document, '' );
-			const iframeEl = document.querySelector< HTMLIFrameElement >(
-				'iframe[name="editor-canvas"]'
-			);
-			if ( iframeEl?.contentDocument ) {
-				applyToDocument( iframeEl.contentDocument, '' );
+			if ( iframeRef.current?.contentDocument ) {
+				applyToDocument( iframeRef.current.contentDocument, '' );
 			}
+			iframeRef.current = null;
 		};
+	}, [] );
+
+	// Effect 2: apply CSS to the main document and iframe whenever it changes.
+	// No cleanup here — applyToDocument handles removal when css is ''.
+	useEffect( () => {
+		applyToDocument( document, css );
+		if ( iframeRef.current?.contentDocument ) {
+			applyToDocument( iframeRef.current.contentDocument, css );
+		}
 	}, [ css ] );
 }
