@@ -190,7 +190,7 @@ const ClearanceSectionSidebar = () => {
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextControl
 						label={ __( 'Label', 'wc-clearance' ) }
-						value={ label }
+						value={ label ?? '' }
 						onChange={ ( value ) => setLabel( value ) }
 						hideLabelFromVision={ true }
 						__next40pxDefaultSize
