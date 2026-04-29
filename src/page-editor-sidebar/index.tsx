@@ -189,8 +189,10 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody title={ __( 'Label', 'wc-clearance' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextControl
+						label={ __( 'Label', 'wc-clearance' ) }
 						value={ label }
 						onChange={ ( value ) => setLabel( value ) }
+						hideLabelFromVision={ true }
 						__next40pxDefaultSize
 						__nextHasNoMarginBottom={ true }
 					/>
@@ -282,6 +284,8 @@ const ClearanceSectionSidebar = () => {
 				{ bordersEnabled && (
 					<div style={ { marginBottom: 16 } }>
 						<BorderControl
+							label={ __( 'Border', 'wc-clearance' ) }
+							hideLabelFromVision={ true }
 							value={ border }
 							onChange={ ( value ) => {
 								const nextWidth =
