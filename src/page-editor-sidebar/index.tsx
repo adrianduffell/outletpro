@@ -3,6 +3,7 @@ import {
 	CustomSelectControl,
 	FontSizePicker,
 	PanelBody,
+	TabPanel,
 	TextControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalBorderControl as BorderControl,
@@ -181,27 +182,20 @@ const ClearanceSectionSidebar = () => {
 			( option ) => option.key === ( fontWeight || '' )
 		) || fontWeightOptions[ 0 ];
 
-	return (
-		<PluginSidebar
-			name={ SIDEBAR_NAME }
-			title={ __( 'Clearance section', 'wc-clearance' ) }
-			isPinnable={ true }
-			icon={ ClearanceIcon }
-			className="wc-clearance-sidebar"
-		>
+	const renderBadgeSettings = () => (
+		<>
 			<PanelBody>
 				<p style={ { marginBottom: 0 } }>
 					{ __(
-						'Customize the appearance of the clearance section. Changes apply to the whole site.',
+						'Customize the appearance of the clearance badge. Changes apply to the whole site.',
 						'wc-clearance'
 					) }
 				</p>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Badge', 'wc-clearance' ) } initialOpen>
+			<PanelBody title={ __( 'Label', 'wc-clearance' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ false }>
 					<TextControl
-						label={ __( 'Badge label', 'wc-clearance' ) }
 						value={ label || DEFAULT_LABEL }
 						onChange={ ( value ) => setLabel( value ) }
 						__nextHasNoMarginBottom
@@ -236,7 +230,7 @@ const ClearanceSectionSidebar = () => {
 			</PanelBody>
 
 			<PanelColorSettings
-				title={ __( 'Badge color', 'wc-clearance' ) }
+				title={ __( 'Color', 'wc-clearance' ) }
 				initialOpen={ false }
 				colorSettings={ [
 					{
@@ -328,6 +322,30 @@ const ClearanceSectionSidebar = () => {
 					/>
 				</BaseControl>
 			</PanelBody>
+		</>
+	);
+
+	return (
+		<PluginSidebar
+			name={ SIDEBAR_NAME }
+			title={ __( 'Clearance section', 'wc-clearance' ) }
+			isPinnable={ true }
+			icon={ ClearanceIcon }
+			className="wc-clearance-sidebar"
+		>
+			<TabPanel
+				className="wc-clearance-sidebar__tabs"
+				activeClass="is-active"
+				tabs={ [
+					{
+						name: 'badge',
+						title: __( 'Badge', 'wc-clearance' ),
+						className: 'wc-clearance-sidebar__tab',
+					},
+				] }
+			>
+				{ renderBadgeSettings }
+			</TabPanel>
 		</PluginSidebar>
 	);
 };
