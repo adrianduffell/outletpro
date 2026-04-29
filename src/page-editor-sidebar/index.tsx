@@ -275,6 +275,7 @@ const ClearanceSectionSidebar = () => {
 					} }
 					sides={ [ 'vertical', 'horizontal' ] }
 					splitOnAxis
+					allowReset={ false }
 					__next40pxDefaultSize
 				/>
 			</PanelBody>
