@@ -78,6 +78,40 @@ function enqueue_admin_editor_styles_hook(): void {
 		array(),
 		VERSION
 	);
+
+	$label = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ) );
+
+	$badge_style_options = array(
+		CLEARANCE_BADGE_BG_COLOR_OPTION,
+		CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+		CLEARANCE_BADGE_BORDER_COLOR_OPTION,
+		CLEARANCE_BADGE_BORDER_STYLE_OPTION,
+		CLEARANCE_BADGE_BORDER_WIDTH_OPTION,
+		CLEARANCE_BADGE_BORDER_RADIUS_OPTION,
+		CLEARANCE_BADGE_FONT_SIZE_OPTION,
+		CLEARANCE_BADGE_FONT_WEIGHT_OPTION,
+		CLEARANCE_BADGE_PADDING_TOP_OPTION,
+		CLEARANCE_BADGE_PADDING_RIGHT_OPTION,
+		CLEARANCE_BADGE_PADDING_BOTTOM_OPTION,
+		CLEARANCE_BADGE_PADDING_LEFT_OPTION,
+	);
+
+	$declarations = array_map(
+		function ( string $option_name ): string {
+			$variable_name = '--' . str_replace( '_', '-', $option_name );
+			$option_value  = sanitize_css_value( get_option( $option_name, '' ) );
+
+			return $variable_name . ': ' . ( '' !== $option_value ? $option_value : 'unset' );
+		},
+		$badge_style_options
+	);
+
+	array_unshift( $declarations, '--wc-clearance-badge-label: ' . wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) );
+
+	wp_add_inline_style(
+		'wc-clearance-admin-editor',
+		':root { ' . implode( '; ', $declarations ) . '; }'
+	);
 }
 
 /**
