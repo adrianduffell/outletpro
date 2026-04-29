@@ -139,6 +139,12 @@ export function useEditorPreviewVars( vars: PreviewVars ): void {
 		};
 
 		function attachToIframe( iframeEl: HTMLIFrameElement ): void {
+			if ( iframeRef.current === iframeEl ) {
+				return;
+			}
+			if ( iframeRef.current ) {
+				iframeRef.current.removeEventListener( 'load', onLoad );
+			}
 			iframeRef.current = iframeEl;
 			if ( iframeEl.contentDocument ) {
 				applyToDocument( iframeEl.contentDocument, cssRef.current );

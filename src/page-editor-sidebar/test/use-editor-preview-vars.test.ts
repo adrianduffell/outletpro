@@ -385,4 +385,61 @@ describe( 'useEditorPreviewVars', () => {
 		// Cleanup.
 		iframe.remove();
 	} );
+
+	test( 'does not attach duplicate load listeners when the same iframe is seen twice', () => {
+		// Arrange.
+		const iframe = document.createElement( 'iframe' );
+		iframe.setAttribute( 'name', 'editor-canvas' );
+		document.body.appendChild( iframe );
+
+		const addSpy = jest.spyOn( iframe, 'addEventListener' );
+
+		// Act.
+		renderHook( () => useEditorPreviewVars( { label: 'Sale' } ) );
+
+		// Simulate observer firing for the same iframe a second time.
+		const loadCalls = addSpy.mock.calls.filter(
+			( [ event ] ) => event === 'load'
+		).length;
+
+		// Assert — load listener added only once.
+		expect( loadCalls ).toBe( 1 );
+
+		// Cleanup.
+		iframe.remove();
+		addSpy.mockRestore();
+	} );
+
+	test( 'removes load listener from previous iframe when iframe changes', () => {
+		// Arrange.
+		const iframe1 = document.createElement( 'iframe' );
+		iframe1.setAttribute( 'name', 'editor-canvas' );
+		document.body.appendChild( iframe1 );
+
+		renderHook( () => useEditorPreviewVars( { label: 'Sale' } ) );
+
+		const removeSpy = jest.spyOn( iframe1, 'removeEventListener' );
+
+		// Act — replace the iframe so the observer fires for iframe2.
+		iframe1.remove();
+		const iframe2 = document.createElement( 'iframe' );
+		iframe2.setAttribute( 'name', 'editor-canvas' );
+		document.body.appendChild( iframe2 );
+
+		// Wait one microtask tick so MutationObserver callbacks fire.
+		return new Promise< void >( ( resolve ) => {
+			setTimeout( () => {
+				// Assert — load listener removed from the previous iframe.
+				const removedLoad = removeSpy.mock.calls.some(
+					( [ event ] ) => event === 'load'
+				);
+				expect( removedLoad ).toBe( true );
+
+				// Cleanup.
+				iframe2.remove();
+				removeSpy.mockRestore();
+				resolve();
+			}, 0 );
+		} );
+	} );
 } );
