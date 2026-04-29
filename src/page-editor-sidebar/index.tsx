@@ -189,31 +189,33 @@ const ClearanceSectionSidebar = () => {
 			</PanelBody>
 
 			<PanelBody title={ __( 'Label', 'wc-clearance' ) } initialOpen>
-				<BaseControl __nextHasNoMarginBottom={ false }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextControl
 						value={ label }
 						onChange={ ( value ) => setLabel( value ) }
-						__nextHasNoMarginBottom
 						__next40pxDefaultSize
+						__nextHasNoMarginBottom={ true }
 					/>
 				</BaseControl>
 			</PanelBody>
 
 			<PanelBody title={ __( 'Typography', 'wc-clearance' ) }>
-				<BaseControl __nextHasNoMarginBottom={ false }>
-					<FontSizePicker
-						fontSizes={ FONT_SIZES }
-						value={ fontSize || undefined }
-						onChange={ ( value ) =>
-							setFontSize( value as string | undefined )
-						}
-						withReset={ false }
-						withSlider
-						__next40pxDefaultSize
-					/>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<div style={ { marginBottom: '16px' } }>
+						<FontSizePicker
+							fontSizes={ FONT_SIZES }
+							value={ fontSize || undefined }
+							onChange={ ( value ) =>
+								setFontSize( value as string | undefined )
+							}
+							withReset={ false }
+							withSlider
+							__next40pxDefaultSize
+						/>
+					</div>
 				</BaseControl>
 
-				<BaseControl __nextHasNoMarginBottom={ false }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
 					<CustomSelectControl
 						label={ __( 'Font weight', 'wc-clearance' ) }
 						options={ fontWeightOptions }
@@ -308,7 +310,7 @@ const ClearanceSectionSidebar = () => {
 				<BaseControl
 					id="wc-clearance-border-radius"
 					label={ __( 'Radius', 'wc-clearance' ) }
-					__nextHasNoMarginBottom={ false }
+					__nextHasNoMarginBottom={ true }
 				>
 					<UnitControl
 						id="wc-clearance-border-radius"
