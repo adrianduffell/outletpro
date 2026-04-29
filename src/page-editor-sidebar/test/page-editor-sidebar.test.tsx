@@ -7,6 +7,10 @@ jest.mock( '@wordpress/plugins', () => ( {
 	registerPlugin: jest.fn(),
 } ) );
 
+jest.mock( '../use-editor-preview-vars', () => ( {
+	useEditorPreviewVars: jest.fn(),
+} ) );
+
 jest.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: jest.fn(),
 } ) );

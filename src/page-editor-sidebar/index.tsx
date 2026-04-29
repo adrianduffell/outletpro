@@ -13,6 +13,7 @@ import {
 import { PanelColorSettings } from '@wordpress/block-editor';
 import { useEntityProp } from '@wordpress/core-data';
 import { useMemo } from '@wordpress/element';
+import { useEditorPreviewVars } from './use-editor-preview-vars';
 import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
@@ -147,6 +148,22 @@ const ClearanceSectionSidebar = () => {
 		'site',
 		'wc_clearance_badge_padding_left'
 	) as EntityProp< string >;
+
+	useEditorPreviewVars( {
+		label,
+		textColor,
+		bgColor,
+		fontSize,
+		fontWeight,
+		borderColor,
+		borderStyle,
+		borderWidth,
+		borderRadius,
+		paddingTop,
+		paddingRight,
+		paddingBottom,
+		paddingLeft,
+	} );
 
 	const border = {
 		color: borderColor || undefined,
