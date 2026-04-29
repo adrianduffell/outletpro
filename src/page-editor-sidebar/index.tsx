@@ -285,10 +285,10 @@ const ClearanceSectionSidebar = () => {
 									: undefined;
 							const nextStyle = value?.style || undefined;
 
-							// Auto-apply 'solid' when width > 1 and the user
+							// Auto-apply 'solid' when width > 0 and the user
 							// hasn't explicitly set a style yet.
 							const effectiveStyle =
-								parseFloat( nextWidth || '0' ) > 1 &&
+								parseFloat( nextWidth || '0' ) > 0 &&
 								borderStyle === ''
 									? 'solid'
 									: nextStyle;
