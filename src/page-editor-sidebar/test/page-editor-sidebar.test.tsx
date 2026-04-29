@@ -26,7 +26,18 @@ jest.mock( '@wordpress/components', () => ( {
 	}: {
 		children: ( tab: { name: string; title: string } ) => ReactNode;
 		tabs: { name: string; title: string }[];
-	} ) => <section>{ children( tabs[ 0 ] ) }</section>,
+	} ) => (
+		<section>
+			<div role="tablist">
+				{ tabs.map( ( tab ) => (
+					<button key={ tab.name } role="tab">
+						{ tab.title }
+					</button>
+				) ) }
+			</div>
+			{ children( tabs[ 0 ] ) }
+		</section>
+	),
 	CustomSelectControl: ( {
 		label,
 		options,
@@ -609,5 +620,80 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( setBorderStyle ).not.toHaveBeenCalledWith( 'solid' );
+	} );
+
+	test( 'render function outputs the badge tab description', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock();
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByText(
+				'Customize the appearance of the clearance badge. Changes apply to the whole site.'
+			)
+		).toBeInTheDocument();
+	} );
+
+	test( 'render function outputs the badge tab', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock();
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect( screen.getByText( 'Badge' ) ).toBeInTheDocument();
+	} );
+
+	test( 'border control is not visible when feature flag is disabled', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock();
+		// Do NOT set localStorage flag — bordersEnabled should be false.
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.queryByRole( 'textbox', { name: 'Border' } )
+		).not.toBeInTheDocument();
+	} );
+
+	test( 'border radius control shows stored value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_border_radius: [ '4px', jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect( screen.getByRole( 'textbox', { name: 'Radius' } ) ).toHaveValue(
+			'4px'
+		);
 	} );
 } );
