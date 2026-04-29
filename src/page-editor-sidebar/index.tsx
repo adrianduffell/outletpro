@@ -220,7 +220,6 @@ const ClearanceSectionSidebar = () => {
 						onChange={ ( { selectedItem } ) => {
 							setFontWeight( selectedItem?.key || '' );
 						} }
-						__nextUnconstrainedWidth
 					/>
 				</BaseControl>
 			</PanelBody>
