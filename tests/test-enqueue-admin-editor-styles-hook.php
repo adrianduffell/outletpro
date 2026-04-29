@@ -102,6 +102,19 @@ class Test_Enqueue_Admin_Editor_Styles_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-right: 2px', $css );
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-bottom: 3px', $css );
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-left: 4px', $css );
+
+		delete_option( CLEARANCE_BADGE_BG_COLOR_OPTION );
+		delete_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
+		delete_option( CLEARANCE_BADGE_BORDER_COLOR_OPTION );
+		delete_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION );
+		delete_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION );
+		delete_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION );
+		delete_option( CLEARANCE_BADGE_FONT_SIZE_OPTION );
+		delete_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION );
+		delete_option( CLEARANCE_BADGE_PADDING_TOP_OPTION );
+		delete_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION );
+		delete_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION );
+		delete_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION );
 	}
 
 	public function test_inline_css_uses_unset_when_badge_style_value_is_empty(): void {
