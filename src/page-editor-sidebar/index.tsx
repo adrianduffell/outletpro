@@ -41,6 +41,70 @@ type EntityProp< T > = [
 
 const SIDEBAR_NAME = 'wc-clearance-sidebar';
 
+const BADGE_VARS_STYLE_ID = 'wc-clearance-badge-vars-preview';
+const EDITOR_CANVAS_IFRAME_SELECTOR = 'iframe[name="editor-canvas"]';
+
+const previousBadgeVarValuesByDocument = new WeakMap<
+	Document,
+	Record< string, string | undefined >
+>();
+
+const getCssVarValue = ( value: string | undefined ): string =>
+	value && '' !== value ? value : 'unset';
+
+const getBadgeVarName = ( optionName: string ): string =>
+	`--${ optionName.replaceAll( '_', '-' ) }`;
+
+const ensureBadgeVarsStyleElement = (
+	targetDocument: Document
+): HTMLStyleElement | null => {
+	const existing = targetDocument.getElementById( BADGE_VARS_STYLE_ID );
+
+	if ( existing instanceof HTMLStyleElement ) {
+		return existing;
+	}
+
+	if ( ! targetDocument.head ) {
+		return null;
+	}
+
+	const style = targetDocument.createElement( 'style' );
+	style.id = BADGE_VARS_STYLE_ID;
+	style.textContent = ':root {}';
+	targetDocument.head.appendChild( style );
+
+	return style;
+};
+
+const syncBadgeVarsInDocument = (
+	targetDocument: Document,
+	nextValues: Record< string, string | undefined >
+): void => {
+	const style = ensureBadgeVarsStyleElement( targetDocument );
+
+	if ( ! style ) {
+		return;
+	}
+
+	const previousValues = previousBadgeVarValuesByDocument.get( targetDocument ) || {};
+	const changedEntries = Object.entries( nextValues ).filter(
+		( [ key, value ] ) => previousValues[ key ] !== value
+	);
+
+	if ( 0 === changedEntries.length ) {
+		return;
+	}
+
+	changedEntries.forEach( ( [ key, value ] ) => {
+		targetDocument.documentElement.style.setProperty(
+			getBadgeVarName( key ),
+			getCssVarValue( value )
+		);
+	} );
+
+	previousBadgeVarValuesByDocument.set( targetDocument, { ...nextValues } );
+};
+
 const FONT_SIZES = [
 	{ name: 'S', slug: 'xs', size: '0.625rem' },
 	{ name: 'M', slug: 's', size: '0.75rem' },
@@ -174,6 +238,35 @@ const ClearanceSectionSidebar = () => {
 		fontWeightOptions.find(
 			( option ) => option.key === ( fontWeight || '' )
 		) || fontWeightOptions[ 0 ];
+
+
+	const badgeStyleValues = {
+		wc_clearance_badge_bg_color: bgColor,
+		wc_clearance_badge_text_color: textColor,
+		wc_clearance_badge_border_color: borderColor,
+		wc_clearance_badge_border_style: borderStyle,
+		wc_clearance_badge_border_width: borderWidth,
+		wc_clearance_badge_border_radius: borderRadius,
+		wc_clearance_badge_font_size: fontSize,
+		wc_clearance_badge_font_weight: fontWeight,
+		wc_clearance_badge_padding_top: paddingTop,
+		wc_clearance_badge_padding_right: paddingRight,
+		wc_clearance_badge_padding_bottom: paddingBottom,
+		wc_clearance_badge_padding_left: paddingLeft,
+	};
+
+	syncBadgeVarsInDocument( document, badgeStyleValues );
+
+	document
+		.querySelectorAll( EDITOR_CANVAS_IFRAME_SELECTOR )
+		.forEach( ( frame ) => {
+			const frameDocument = frame.contentDocument;
+			if ( ! frameDocument ) {
+				return;
+			}
+
+			syncBadgeVarsInDocument( frameDocument, badgeStyleValues );
+		} );
 
 	const renderBadgeSettings = () => (
 		<>

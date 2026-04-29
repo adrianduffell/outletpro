@@ -696,4 +696,29 @@ describe( 'page-editor-sidebar registration', () => {
 			'4px'
 		);
 	} );
+	test( 'injects badge CSS vars into the editor document for live preview', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_bg_color: [ '#ffee85', jest.fn() ],
+			wc_clearance_badge_text_color: [ '#222222', jest.fn() ],
+			wc_clearance_badge_font_weight: [ '700', jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		const style = document.getElementById(
+			'wc-clearance-badge-vars-preview'
+		);
+		expect( style ).not.toBeNull();
+		expect( document.documentElement.style.getPropertyValue( '--wc-clearance-badge-bg-color' ) ).toBe( '#ffee85' );
+		expect( document.documentElement.style.getPropertyValue( '--wc-clearance-badge-text-color' ) ).toBe( '#222222' );
+	} );
+
 } );
