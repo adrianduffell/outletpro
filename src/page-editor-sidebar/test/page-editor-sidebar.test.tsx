@@ -293,9 +293,9 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect(
-			screen.getByRole( 'textbox', { name: 'Label' } )
-		).toHaveValue( 'Sale' );
+		expect( screen.getByRole( 'textbox', { name: 'Label' } ) ).toHaveValue(
+			'Sale'
+		);
 	} );
 
 	test( 'badge label control is empty when setting is empty', () => {
@@ -313,9 +313,9 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect(
-			screen.getByRole( 'textbox', { name: 'Label' } )
-		).toHaveValue( '' );
+		expect( screen.getByRole( 'textbox', { name: 'Label' } ) ).toHaveValue(
+			''
+		);
 	} );
 
 	test( 'badge label control calls setter when changed', () => {
