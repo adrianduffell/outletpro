@@ -43,10 +43,6 @@ type EntityProp< T > = [
 
 const SIDEBAR_NAME = 'wc-clearance-sidebar';
 
-const DEFAULT_LABEL = __( 'Clearance', 'wc-clearance' );
-const DEFAULT_BACKGROUND_COLOR = '#FFEE85';
-const DEFAULT_TEXT_COLOR = '#222';
-
 const FONT_SIZES = [
 	{ name: 'XS', slug: 'xs', size: '0.625rem' },
 	{ name: 'S', slug: 's', size: '0.75rem' },
@@ -196,7 +192,7 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody title={ __( 'Label', 'wc-clearance' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ false }>
 					<TextControl
-						value={ label || DEFAULT_LABEL }
+						value={ label }
 						onChange={ ( value ) => setLabel( value ) }
 						__nextHasNoMarginBottom
 					/>
@@ -234,13 +230,13 @@ const ClearanceSectionSidebar = () => {
 				initialOpen={ false }
 				colorSettings={ [
 					{
-						value: textColor || DEFAULT_TEXT_COLOR,
+						value: textColor,
 						label: __( 'Text', 'wc-clearance' ),
 						onChange: ( color: string | undefined ) =>
 							setTextColor( color || undefined ),
 					},
 					{
-						value: bgColor || DEFAULT_BACKGROUND_COLOR,
+						value: bgColor,
 						label: __( 'Background', 'wc-clearance' ),
 						onChange: ( backgroundColor: string | undefined ) =>
 							setBgColor( backgroundColor || undefined ),
