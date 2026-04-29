@@ -20,6 +20,13 @@ jest.mock( '@wordpress/components', () => ( {
 	BaseControl: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
 	),
+	TabPanel: ( {
+		children,
+		tabs,
+	}: {
+		children: ( tab: { name: string; title: string } ) => ReactNode;
+		tabs: { name: string; title: string }[];
+	} ) => <section>{ children( tabs[ 0 ] ) }</section>,
 	CustomSelectControl: ( {
 		label,
 		options,
@@ -94,7 +101,7 @@ jest.mock( '@wordpress/components', () => ( {
 			onChange={ ( e ) => onChange( e.target.value ) }
 		/>
 	),
-	__experimentalBorderControl: ( {
+	BorderControl: ( {
 		value,
 		onChange,
 	}: {
@@ -111,7 +118,7 @@ jest.mock( '@wordpress/components', () => ( {
 			}
 		/>
 	),
-	__experimentalBoxControl: ( {
+	BoxControl: ( {
 		label,
 		values,
 		onChange,
@@ -234,7 +241,7 @@ describe( 'page-editor-sidebar registration', () => {
 		);
 	} );
 
-	test( 'render function outputs the sidebar title and description', () => {
+	test( 'render function outputs the sidebar title', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		setupEntityPropMock();
@@ -248,11 +255,6 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( screen.getByText( 'Clearance section' ) ).toBeInTheDocument();
-		expect(
-			screen.getByText(
-				'Customize the appearance of the clearance section. Changes apply to the whole site.'
-			)
-		).toBeInTheDocument();
 	} );
 
 	test( 'render function outputs all panel sections', () => {
@@ -268,9 +270,9 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect( screen.getByText( 'Badge' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Label' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Typography' ) ).toBeInTheDocument();
-		expect( screen.getByText( 'Badge color' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Color' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Dimensions' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Border' ) ).toBeInTheDocument();
 	} );
@@ -292,11 +294,11 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect(
-			screen.getByRole( 'textbox', { name: 'Badge label' } )
+			screen.getByRole( 'textbox', { name: 'Label' } )
 		).toHaveValue( 'Sale' );
 	} );
 
-	test( 'badge label control falls back to default when setting is empty', () => {
+	test( 'badge label control is empty when setting is empty', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		setupEntityPropMock( {
@@ -312,8 +314,8 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect(
-			screen.getByRole( 'textbox', { name: 'Badge label' } )
-		).toHaveValue( 'Clearance' );
+			screen.getByRole( 'textbox', { name: 'Label' } )
+		).toHaveValue( '' );
 	} );
 
 	test( 'badge label control calls setter when changed', () => {
@@ -328,7 +330,7 @@ describe( 'page-editor-sidebar registration', () => {
 		} );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
-		const input = screen.getByRole( 'textbox', { name: 'Badge label' } );
+		const input = screen.getByRole( 'textbox', { name: 'Label' } );
 
 		// Act.
 		fireEvent.change( input, { target: { value: 'Discounts' } } );
@@ -398,7 +400,7 @@ describe( 'page-editor-sidebar registration', () => {
 		);
 	} );
 
-	test( 'background color control falls back to default when setting is empty', () => {
+	test( 'background color control is empty when setting is empty', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		setupEntityPropMock( {
@@ -415,7 +417,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Assert.
 		expect(
 			screen.getByRole( 'textbox', { name: 'Background' } )
-		).toHaveValue( '#FFEE85' );
+		).toHaveValue( '' );
 	} );
 
 	test( 'border radius control calls setter when changed', () => {
