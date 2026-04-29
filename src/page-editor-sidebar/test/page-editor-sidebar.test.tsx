@@ -144,7 +144,7 @@ jest.mock( '@wordpress/components', () => ( {
 		onChange: ( v: string | undefined ) => void;
 	} ) => (
 		<input
-			aria-label="Border radius"
+			aria-label="Radius"
 			value={ value ?? '' }
 			onChange={ ( e ) => onChange( e.target.value || undefined ) }
 		/>
@@ -431,7 +431,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', {
-			name: 'Border radius',
+			name: 'Radius',
 		} );
 
 		// Act.
@@ -441,7 +441,7 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( setBorderRadius ).toHaveBeenCalledWith( '8px' );
 	} );
 
-	test( 'padding control calls setters for each side when changed', () => {
+	test( 'padding control only calls setter for sides that changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setPaddingTop = jest.fn();
@@ -464,10 +464,98 @@ describe( 'page-editor-sidebar registration', () => {
 		// Act.
 		fireEvent.change( input, { target: { value: '10px' } } );
 
-		// Assert.
+		// Assert: only top changed, the rest are unchanged and must not be called.
 		expect( setPaddingTop ).toHaveBeenCalledWith( '10px' );
-		expect( setPaddingRight ).toHaveBeenCalledWith( '5px' );
-		expect( setPaddingBottom ).toHaveBeenCalledWith( '5px' );
-		expect( setPaddingLeft ).toHaveBeenCalledWith( '5px' );
+		expect( setPaddingRight ).not.toHaveBeenCalled();
+		expect( setPaddingBottom ).not.toHaveBeenCalled();
+		expect( setPaddingLeft ).not.toHaveBeenCalled();
+	} );
+
+	test( 'font size control calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setFontSize = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_font_size: [ '0.875rem', setFontSize ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Font size' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '1rem' } } );
+
+		// Assert.
+		expect( setFontSize ).toHaveBeenCalledWith( '1rem' );
+	} );
+
+	test( 'text color control calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setTextColor = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_text_color: [ '#222', setTextColor ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Text' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '#ff0000' } } );
+
+		// Assert.
+		expect( setTextColor ).toHaveBeenCalledWith( '#ff0000' );
+	} );
+
+	test( 'background color control calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setBgColor = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_bg_color: [ '#FFEE85', setBgColor ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Background' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '#0000ff' } } );
+
+		// Assert.
+		expect( setBgColor ).toHaveBeenCalledWith( '#0000ff' );
+	} );
+
+	test( 'border control calls setters when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setBorderColor = jest.fn();
+		const setBorderStyle = jest.fn();
+		const setBorderWidth = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_border_color: [ '', setBorderColor ],
+			wc_clearance_badge_border_style: [ 'none', setBorderStyle ],
+			wc_clearance_badge_border_width: [ '0', setBorderWidth ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Border' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '2px' } } );
+
+		// Assert.
+		expect( setBorderWidth ).toHaveBeenCalledWith( '2px' );
 	} );
 } );

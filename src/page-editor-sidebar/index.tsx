@@ -248,10 +248,26 @@ const ClearanceSectionSidebar = () => {
 					values={ padding }
 					label={ __( 'Padding', 'wc-clearance' ) }
 					onChange={ ( value: BoxValue ) => {
-						setPaddingTop( value?.top || undefined );
-						setPaddingRight( value?.right || undefined );
-						setPaddingBottom( value?.bottom || undefined );
-						setPaddingLeft( value?.left || undefined );
+						const nextTop = value?.top || undefined;
+						const nextRight = value?.right || undefined;
+						const nextBottom = value?.bottom || undefined;
+						const nextLeft = value?.left || undefined;
+
+						if ( nextTop !== padding.top ) {
+							setPaddingTop( nextTop );
+						}
+
+						if ( nextRight !== padding.right ) {
+							setPaddingRight( nextRight );
+						}
+
+						if ( nextBottom !== padding.bottom ) {
+							setPaddingBottom( nextBottom );
+						}
+
+						if ( nextLeft !== padding.left ) {
+							setPaddingLeft( nextLeft );
+						}
 					} }
 					sides={ [ 'vertical', 'horizontal' ] }
 					splitOnAxis
