@@ -44,11 +44,10 @@ type EntityProp< T > = [
 const SIDEBAR_NAME = 'wc-clearance-sidebar';
 
 const FONT_SIZES = [
-	{ name: 'XS', slug: 'xs', size: '0.625rem' },
-	{ name: 'S', slug: 's', size: '0.75rem' },
-	{ name: 'M', slug: 'm', size: '0.875rem' },
-	{ name: 'L', slug: 'l', size: '1rem' },
-	{ name: 'XL', slug: 'xl', size: '1.125rem' },
+	{ name: 'S', slug: 'xs', size: '0.625rem' },
+	{ name: 'M', slug: 's', size: '0.75rem' },
+	{ name: 'L', slug: 'm', size: '0.875rem' },
+	{ name: 'XL', slug: 'l', size: '1rem' },
 ];
 
 const FONT_WEIGHTS: FontWeightOption[] = [
