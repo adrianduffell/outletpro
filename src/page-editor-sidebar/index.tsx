@@ -211,7 +211,7 @@ const ClearanceSectionSidebar = () => {
 			`--wc-clearance-badge-padding-left: ${ paddingLeft || 'unset' }`,
 		];
 
-		styleEl.textContent = `:root { ${ declarations.join( '; ' ) }; }`;
+		styleEl.textContent = `:root { ${ declarations.join( ' !important; ' ) } !important; }`;
 	}, [
 		label,
 		bgColor,
