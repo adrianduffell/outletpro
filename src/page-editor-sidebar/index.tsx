@@ -11,7 +11,8 @@ import {
 	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 import { PanelColorSettings } from '@wordpress/block-editor';
-import { useEntityProp } from '@wordpress/core-data';
+import { store as coreStore, useEntityProp } from '@wordpress/core-data';
+import { useSelect } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
 import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
@@ -132,6 +133,15 @@ const bordersEnabled = ( () => {
 		return false;
 	}
 } )();
+
+const withSiteRecord = ( Component: React.ComponentType ) => () => {
+	const hasSiteRecord = useSelect(
+		( select ) => !! select( coreStore ).getEntityRecord( 'root', 'site' ),
+		[]
+	);
+
+	return hasSiteRecord ? <Component /> : null;
+};
 
 const ClearanceSectionSidebar = () => {
 	const [ label, setLabel ] = useEntityProp(
@@ -448,5 +458,5 @@ const ClearanceSectionSidebar = () => {
 };
 
 registerPlugin( SIDEBAR_NAME, {
-	render: ClearanceSectionSidebar,
+	render: withSiteRecord( ClearanceSectionSidebar ),
 } );
