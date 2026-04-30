@@ -18,6 +18,7 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Clearance' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$cart_item = array( 'data' => $product );
@@ -37,6 +38,7 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Clearance' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$cart_item = array( 'data' => $product );
@@ -89,6 +91,7 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Clearance' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$existing  = array(
@@ -113,6 +116,24 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 	public function test_returns_item_data_unchanged_when_product_is_missing(): void {
 		// Arrange.
 		$cart_item = array();
+		deinit_cart();
+		init_cart();
+
+		// Act.
+		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
+
+		// Assert.
+		$this->assertCount( 0, $result );
+	}
+
+	public function test_does_not_add_clearance_meta_when_label_is_empty(): void {
+		// Arrange.
+		register_clearance_status_taxonomy();
+		seed_clearance_status_taxonomy();
+		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_clearance( $product );
+		$cart_item = array( 'data' => $product );
 		deinit_cart();
 		init_cart();
 
