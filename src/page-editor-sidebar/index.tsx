@@ -177,7 +177,7 @@ const ClearanceSectionSidebar = () => {
 
 	useEffect( () => {
 		const iframe = document.querySelector(
-			'iframe.editor-canvas__iframe'
+			'iframe[name="editor-canvas"]'
 		) as HTMLIFrameElement | null;
 		const targetDoc = iframe?.contentDocument ?? document;
 
