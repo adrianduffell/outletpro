@@ -70,16 +70,14 @@ const bordersEnabled = ( () => {
 	}
 } )();
 
-const withSiteRecord =
-	( Component: React.ComponentType ) => () => {
-		const hasSiteRecord = useSelect(
-			( select ) =>
-				!! select( coreStore ).getEntityRecord( 'root', 'site' ),
-			[]
-		);
+const withSiteRecord = ( Component: React.ComponentType ) => () => {
+	const hasSiteRecord = useSelect(
+		( select ) => !! select( coreStore ).getEntityRecord( 'root', 'site' ),
+		[]
+	);
 
-		return hasSiteRecord ? <Component /> : null;
-	};
+	return hasSiteRecord ? <Component /> : null;
+};
 
 const ClearanceSectionSidebar = () => {
 	const [ label, setLabel ] = useEntityProp(
