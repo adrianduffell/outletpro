@@ -7,19 +7,19 @@
 
 use function WC_Clearance\deinit_enqueue;
 use function WC_Clearance\enqueue_init;
-use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_COLOR_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_TOP_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_RIGHT_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_BOTTOM_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_LEFT_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_PADDING_RIGHT_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_PADDING_TOP_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Enqueue_Admin_Editor_Styles_Hook extends WP_UnitTestCase {
 
