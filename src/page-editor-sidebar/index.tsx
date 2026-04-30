@@ -74,11 +74,7 @@ const withSiteRecord =
 	( Component: React.ComponentType ) => () => {
 		const hasSiteRecord = useSelect(
 			( select ) =>
-				!! select( coreStore ).getEntityRecord(
-					'root',
-					'site',
-					undefined
-				),
+				!! select( coreStore ).getEntityRecord( 'root', 'site' ),
 			[]
 		);
 
