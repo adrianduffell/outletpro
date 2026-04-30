@@ -721,4 +721,49 @@ describe( 'page-editor-sidebar registration', () => {
 			'4px'
 		);
 	} );
+
+	test( 'preview effect injects CSS vars into the document when called', () => {
+		// Arrange.
+		const mockUseEffect = jest.mocked(
+			( jest.requireMock( '@wordpress/element' ) as {
+				useEffect: jest.Mock;
+			} ).useEffect
+		);
+
+		let capturedEffect: ( () => void ) | undefined;
+		mockUseEffect.mockImplementationOnce( ( fn: () => void ) => {
+			capturedEffect = fn;
+		} );
+
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_label: [ 'Sale', jest.fn() ],
+			wc_clearance_badge_bg_color: [ '#ff0000', jest.fn() ],
+			wc_clearance_badge_text_color: [ '#ffffff', jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+
+		// Act.
+		capturedEffect?.();
+
+		// Assert.
+		const styleEl = document.getElementById( 'wc-clearance-preview-vars' );
+		expect( styleEl ).not.toBeNull();
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-label: "Sale"'
+		);
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-bg-color: #ff0000'
+		);
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-text-color: #ffffff'
+		);
+
+		// Cleanup.
+		styleEl?.remove();
+	} );
 } );
