@@ -130,7 +130,7 @@ class Test_Add_Clearance_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, '' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$cart_item = array( 'data' => $product );

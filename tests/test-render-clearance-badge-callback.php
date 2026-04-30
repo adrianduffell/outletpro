@@ -140,7 +140,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		register_clearance_badge_block();
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, '' );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$block = new WP_Block(

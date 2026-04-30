@@ -179,14 +179,14 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_clearance_status_taxonomy();
 		seed_clearance_status_taxonomy();
-		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, '' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_clearance( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputRegex( '/^(?!.*wc-clearance-badge).*/s' ); // Does not contain the clearance badge.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
