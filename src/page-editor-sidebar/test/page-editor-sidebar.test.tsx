@@ -2,13 +2,19 @@ import type { ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { registerPlugin } from '@wordpress/plugins';
 import { useEntityProp } from '@wordpress/core-data';
+import { useSelect } from '@wordpress/data';
 
 jest.mock( '@wordpress/plugins', () => ( {
 	registerPlugin: jest.fn(),
 } ) );
 
+jest.mock( '@wordpress/data', () => ( {
+	useSelect: jest.fn(),
+} ) );
+
 jest.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: jest.fn(),
+	store: {},
 } ) );
 
 jest.mock( '@wordpress/element', () => ( {
@@ -218,10 +224,12 @@ jest.mock( '@wordpress/i18n', () => ( {
 
 const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseEntityProp = useEntityProp as jest.Mock;
+const mockUseSelect = useSelect as jest.Mock;
 
 function setupEntityPropMock(
 	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}
 ) {
+	mockUseSelect.mockReturnValue( true );
 	mockUseEntityProp.mockImplementation(
 		( _kind: string, _name: string, key: string ) => {
 			if ( overrides[ key ] ) {
@@ -250,6 +258,22 @@ describe( 'page-editor-sidebar registration', () => {
 				render: expect.any( Function ),
 			} )
 		);
+	} );
+
+	test( 'render function renders nothing when site record is not available', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		mockUseSelect.mockReturnValue( false );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		const { container } = render( pluginConfig.render() );
+
+		// Assert.
+		expect( container ).toBeEmptyDOMElement();
 	} );
 
 	test( 'render function outputs the sidebar title', () => {
