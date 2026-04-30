@@ -176,42 +176,78 @@ const ClearanceSectionSidebar = () => {
 		) || fontWeightOptions[ 0 ];
 
 	useEffect( () => {
-		const iframe = document.querySelector(
+		const applyPreviewVars = () => {
+			const iframe = document.querySelector(
+				'iframe[name="editor-canvas"]'
+			) as HTMLIFrameElement | null;
+			const targetDoc = iframe?.contentDocument ?? document;
+
+			if ( ! targetDoc.head ) {
+				return;
+			}
+
+			let styleEl = targetDoc.getElementById(
+				'wc-clearance-preview-vars'
+			) as HTMLStyleElement | null;
+
+			if ( ! styleEl ) {
+				styleEl = targetDoc.createElement( 'style' );
+				styleEl.id = 'wc-clearance-preview-vars';
+				targetDoc.head.appendChild( styleEl );
+			}
+
+			const declarations = [
+				`--wc-clearance-badge-label: ${ JSON.stringify( label ?? '' ) }`,
+				`--wc-clearance-badge-bg-color: ${ bgColor || 'unset' }`,
+				`--wc-clearance-badge-text-color: ${ textColor || 'unset' }`,
+				`--wc-clearance-badge-font-size: ${ fontSize || 'unset' }`,
+				`--wc-clearance-badge-font-weight: ${ fontWeight || 'unset' }`,
+				`--wc-clearance-badge-border-color: ${ borderColor || 'unset' }`,
+				`--wc-clearance-badge-border-style: ${ borderStyle || 'unset' }`,
+				`--wc-clearance-badge-border-width: ${ borderWidth || 'unset' }`,
+				`--wc-clearance-badge-border-radius: ${ borderRadius || 'unset' }`,
+				`--wc-clearance-badge-padding-top: ${ paddingTop || 'unset' }`,
+				`--wc-clearance-badge-padding-right: ${ paddingRight || 'unset' }`,
+				`--wc-clearance-badge-padding-bottom: ${ paddingBottom || 'unset' }`,
+				`--wc-clearance-badge-padding-left: ${ paddingLeft || 'unset' }`,
+			];
+
+			styleEl.textContent = `:root { ${ declarations.join(
+				' !important; '
+			) } !important; }`;
+		};
+
+		applyPreviewVars();
+
+		let iframe = document.querySelector(
 			'iframe[name="editor-canvas"]'
 		) as HTMLIFrameElement | null;
-		const targetDoc = iframe?.contentDocument ?? document;
 
-		if ( ! targetDoc.head ) {
-			return;
-		}
+		iframe?.addEventListener( 'load', applyPreviewVars );
 
-		let styleEl = targetDoc.getElementById(
-			'wc-clearance-preview-vars'
-		) as HTMLStyleElement | null;
+		const observer = new MutationObserver( () => {
+			const nextIframe = document.querySelector(
+				'iframe[name="editor-canvas"]'
+			) as HTMLIFrameElement | null;
 
-		if ( ! styleEl ) {
-			styleEl = targetDoc.createElement( 'style' );
-			styleEl.id = 'wc-clearance-preview-vars';
-			targetDoc.head.appendChild( styleEl );
-		}
+			if ( nextIframe !== iframe ) {
+				iframe?.removeEventListener( 'load', applyPreviewVars );
+				iframe = nextIframe;
+				iframe?.addEventListener( 'load', applyPreviewVars );
+			}
 
-		const declarations = [
-			`--wc-clearance-badge-label: ${ JSON.stringify( label ?? '' ) }`,
-			`--wc-clearance-badge-bg-color: ${ bgColor || 'unset' }`,
-			`--wc-clearance-badge-text-color: ${ textColor || 'unset' }`,
-			`--wc-clearance-badge-font-size: ${ fontSize || 'unset' }`,
-			`--wc-clearance-badge-font-weight: ${ fontWeight || 'unset' }`,
-			`--wc-clearance-badge-border-color: ${ borderColor || 'unset' }`,
-			`--wc-clearance-badge-border-style: ${ borderStyle || 'unset' }`,
-			`--wc-clearance-badge-border-width: ${ borderWidth || 'unset' }`,
-			`--wc-clearance-badge-border-radius: ${ borderRadius || 'unset' }`,
-			`--wc-clearance-badge-padding-top: ${ paddingTop || 'unset' }`,
-			`--wc-clearance-badge-padding-right: ${ paddingRight || 'unset' }`,
-			`--wc-clearance-badge-padding-bottom: ${ paddingBottom || 'unset' }`,
-			`--wc-clearance-badge-padding-left: ${ paddingLeft || 'unset' }`,
-		];
+			applyPreviewVars();
+		} );
 
-		styleEl.textContent = `:root { ${ declarations.join( ' !important; ' ) } !important; }`;
+		observer.observe( document.body, {
+			childList: true,
+			subtree: true,
+		} );
+
+		return () => {
+			iframe?.removeEventListener( 'load', applyPreviewVars );
+			observer.disconnect();
+		};
 	}, [
 		label,
 		bgColor,
