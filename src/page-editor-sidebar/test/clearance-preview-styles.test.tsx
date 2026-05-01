@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import { useEntityProp } from '@wordpress/core-data';
+import ClearancePreviewStyles from '../clearance-preview-styles';
 
 jest.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: jest.fn(),
@@ -31,10 +32,7 @@ describe( 'ClearancePreviewStyles', () => {
 		setupEntityPropMock();
 
 		// Act.
-		const { container } = render(
-			// eslint-disable-next-line @typescript-eslint/no-require-imports
-			require( '../clearance-preview-styles' ).default( {} )
-		);
+		const { container } = render( <ClearancePreviewStyles /> );
 
 		// Assert.
 		expect( container ).toBeEmptyDOMElement();
@@ -61,14 +59,8 @@ describe( 'ClearancePreviewStyles', () => {
 			wc_clearance_badge_text_color: [ '#ffffff', jest.fn() ],
 		} );
 
-		jest.isolateModules( () => {
-			render(
-				// eslint-disable-next-line @typescript-eslint/no-require-imports
-				require( '../clearance-preview-styles' ).default( {} )
-			);
-		} );
-
 		// Act.
+		render( <ClearancePreviewStyles /> );
 		capturedEffect?.();
 
 		// Assert.

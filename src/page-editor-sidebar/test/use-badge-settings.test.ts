@@ -8,7 +8,7 @@ jest.mock( '@wordpress/core-data', () => ( {
 
 const mockUseEntityProp = useEntityProp as jest.Mock;
 
-function makeEntityPropMock(
+function setupEntityPropMock(
 	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}
 ) {
 	mockUseEntityProp.mockImplementation(
@@ -24,7 +24,7 @@ function makeEntityPropMock(
 describe( 'useBadgeSettings', () => {
 	test( 'returns label value from entity prop', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_label: [ 'Sale', jest.fn() ],
 		} );
 
@@ -37,7 +37,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns undefined label when entity prop is not set', () => {
 		// Arrange.
-		makeEntityPropMock();
+		setupEntityPropMock();
 
 		// Act.
 		const { result } = renderHook( () => useBadgeSettings() );
@@ -48,7 +48,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns bg color value from entity prop', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_bg_color: [ '#FFEE85', jest.fn() ],
 		} );
 
@@ -61,7 +61,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns text color value from entity prop', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_text_color: [ '#333333', jest.fn() ],
 		} );
 
@@ -74,7 +74,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns font size value from entity prop', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_font_size: [ '0.875rem', jest.fn() ],
 		} );
 
@@ -87,7 +87,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns font weight value from entity prop', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_font_weight: [ '700', jest.fn() ],
 		} );
 
@@ -100,7 +100,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns border radius value from entity prop', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_border_radius: [ '4px', jest.fn() ],
 		} );
 
@@ -113,7 +113,7 @@ describe( 'useBadgeSettings', () => {
 
 	test( 'returns padding values from entity props', () => {
 		// Arrange.
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_padding_top: [ '8px', jest.fn() ],
 			wc_clearance_badge_padding_right: [ '12px', jest.fn() ],
 			wc_clearance_badge_padding_bottom: [ '8px', jest.fn() ],
@@ -133,7 +133,7 @@ describe( 'useBadgeSettings', () => {
 	test( 'exposes setLabel setter from entity prop', () => {
 		// Arrange.
 		const setLabel = jest.fn();
-		makeEntityPropMock( {
+		setupEntityPropMock( {
 			wc_clearance_badge_label: [ 'Clearance', setLabel ],
 		} );
 
@@ -148,7 +148,7 @@ describe( 'useBadgeSettings', () => {
 	test( 'calls useEntityProp for all 13 badge settings', () => {
 		// Arrange.
 		mockUseEntityProp.mockClear();
-		makeEntityPropMock();
+		setupEntityPropMock();
 
 		// Act.
 		renderHook( () => useBadgeSettings() );
