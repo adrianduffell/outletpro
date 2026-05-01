@@ -725,9 +725,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'preview effect injects CSS vars into the document when called', () => {
 		// Arrange.
 		const mockUseEffect = jest.mocked(
-			( jest.requireMock( '@wordpress/element' ) as {
-				useEffect: jest.Mock;
-			} ).useEffect
+			(
+				jest.requireMock( '@wordpress/element' ) as {
+					useEffect: jest.Mock;
+				}
+			 ).useEffect
 		);
 
 		let capturedEffect: ( () => void ) | undefined;
