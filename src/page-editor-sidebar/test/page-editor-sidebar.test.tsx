@@ -261,6 +261,25 @@ describe( 'page-editor-sidebar registration', () => {
 		);
 	} );
 
+	test( 'registers the preview-styles plugin with expected name and render function', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock();
+
+		// Act.
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+
+		// Assert.
+		expect( mockRegisterPlugin ).toHaveBeenCalledWith(
+			'wc-clearance-preview-styles',
+			expect.objectContaining( {
+				render: expect.any( Function ),
+			} )
+		);
+	} );
+
 	test( 'render function renders nothing when site record is not available', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
@@ -746,7 +765,8 @@ describe( 'page-editor-sidebar registration', () => {
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		// calls[1] is the wc-clearance-preview-styles plugin registration.
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 1 ];
 		render( pluginConfig.render() );
 
 		// Act.
