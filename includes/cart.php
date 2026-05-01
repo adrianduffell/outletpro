@@ -56,7 +56,7 @@ function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 	$clearance_label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
 
 	if ( ! is_string( $clearance_label ) || '' === trim( $clearance_label ) ) {
-		$clearance_label = __( 'Clearance', 'wc-clearance' );
+		return $item_data;
 	}
 
 	// Important: The CSS badge replacement expects clearance meta to be first.

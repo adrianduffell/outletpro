@@ -73,7 +73,11 @@ function display_clearance_badge_hook(): void {
 
 	$bg_colour   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
 	$text_colour = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
-	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $label ) || '' === $label ) {
+		return;
+	}
 
 	wp_enqueue_style( 'wc-clearance-classic-badge' );
 

@@ -121,7 +121,7 @@ function register_classic_styles_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_cart_styles_hook(): void {
-	$label = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) ) );
+	$label = sanitize_text_field( get_option( CLEARANCE_BADGE_LABEL_OPTION, '' ) );
 
 	/**
 	 * Front-end cart badge stylesheet.
