@@ -206,25 +206,32 @@ const ClearanceSectionSidebar = () => {
 				targetDoc.head.appendChild( styleEl );
 			}
 
-			const declarations = [
-				`--wc-clearance-badge-label: ${ JSON.stringify( label ?? '' ) }`,
-				`--wc-clearance-badge-bg-color: ${ bgColor || 'unset' }`,
-				`--wc-clearance-badge-text-color: ${ textColor || 'unset' }`,
-				`--wc-clearance-badge-font-size: ${ fontSize || 'unset' }`,
-				`--wc-clearance-badge-font-weight: ${ fontWeight || 'unset' }`,
-				`--wc-clearance-badge-border-color: ${ borderColor || 'unset' }`,
-				`--wc-clearance-badge-border-style: ${ borderStyle || 'unset' }`,
-				`--wc-clearance-badge-border-width: ${ borderWidth || 'unset' }`,
-				`--wc-clearance-badge-border-radius: ${ borderRadius || 'unset' }`,
-				`--wc-clearance-badge-padding-top: ${ paddingTop || 'unset' }`,
-				`--wc-clearance-badge-padding-right: ${ paddingRight || 'unset' }`,
-				`--wc-clearance-badge-padding-bottom: ${ paddingBottom || 'unset' }`,
-				`--wc-clearance-badge-padding-left: ${ paddingLeft || 'unset' }`,
-			];
+			const entries = {
+				'--wc-clearance-badge-bg-color': bgColor,
+				'--wc-clearance-badge-text-color': textColor,
+				'--wc-clearance-badge-font-size': fontSize,
+				'--wc-clearance-badge-font-weight': fontWeight,
+				'--wc-clearance-badge-border-color': borderColor,
+				'--wc-clearance-badge-border-style': borderStyle,
+				'--wc-clearance-badge-border-width': borderWidth,
+				'--wc-clearance-badge-border-radius': borderRadius,
+				'--wc-clearance-badge-padding-top': paddingTop,
+				'--wc-clearance-badge-padding-right': paddingRight,
+				'--wc-clearance-badge-padding-bottom': paddingBottom,
+				'--wc-clearance-badge-padding-left': paddingLeft,
+			};
 
-			styleEl.textContent = `:root { ${ declarations.join(
-				' !important; '
-			) } !important; }`;
+			const styleText = `:root { ${ [
+				`--wc-clearance-badge-label: ${ JSON.stringify(
+					label ?? ''
+				) } !important`,
+				...Object.entries( entries ).map(
+					( [ key, value ] ) =>
+						`${ key }: ${ value ?? 'unset' } !important`
+				),
+			].join( '; ' ) } }`;
+
+			styleEl.textContent = styleText;
 		};
 
 		applyPreviewVars();
