@@ -6,9 +6,7 @@ export default function useStringEntityProp(
 	const [ value, setValue ] = useEntityProp( 'root', 'site', key );
 
 	if ( value !== undefined && typeof value !== 'string' ) {
-		throw new Error(
-			`wc_clearance setting "${ key }" must be a string`
-		);
+		throw new Error( `wc_clearance setting "${ key }" must be a string` );
 	}
 
 	return [ value, ( v: string | undefined ) => setValue( v ) ];

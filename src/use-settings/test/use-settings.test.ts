@@ -6,9 +6,7 @@ jest.mock( '../../use-string-entity-prop', () => jest.fn() );
 
 const mockUseStringEntityProp = useStringEntityProp as jest.Mock;
 
-function setupMock(
-	overrides: Record< string, string | undefined > = {}
-) {
+function setupMock( overrides: Record< string, string | undefined > = {} ) {
 	mockUseStringEntityProp.mockImplementation( ( key: string ) => {
 		return [ overrides[ key ], jest.fn() ];
 	} );
