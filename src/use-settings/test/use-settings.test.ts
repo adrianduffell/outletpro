@@ -9,7 +9,7 @@ jest.mock( '@wordpress/core-data', () => ( {
 const mockUseEntityProp = useEntityProp as jest.Mock;
 
 function setupEntityPropMock(
-	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}
+	overrides: Record< string, [ unknown, jest.Mock ] > = {}
 ) {
 	mockUseEntityProp.mockImplementation(
 		( _kind: string, _name: string, key: string ) => {
@@ -171,5 +171,26 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toHaveLength( 13 );
+	} );
+
+	test( 'throws when a setting value is not a string', () => {
+		// Arrange.
+		setupEntityPropMock( {
+			wc_clearance_badge_label: [ 42, jest.fn() ],
+		} );
+
+		// Expect.
+		expect( () => renderHook( () => useSettings() ) ).toThrow(
+			'wc_clearance setting "wc_clearance_badge_label" must be a string, got number'
+		);
+		expect( console ).toHaveErrored();
+	} );
+
+	test( 'does not throw when a setting value is undefined', () => {
+		// Arrange.
+		setupEntityPropMock();
+
+		// Act + Assert: no throw when all values are undefined.
+		expect( () => renderHook( () => useSettings() ) ).not.toThrow();
 	} );
 } );

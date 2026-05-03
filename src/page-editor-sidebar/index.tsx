@@ -18,7 +18,6 @@ import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import ClearanceIcon from './icon';
-import type { EntityProp } from '../types';
 
 type BoxValue = {
 	top?: string;
@@ -34,6 +33,12 @@ type FontWeightOption = {
 		fontWeight: string;
 	};
 };
+
+type EntityProp< T > = [
+	T | undefined,
+	( value: T | undefined ) => void,
+	unknown,
+];
 
 const SIDEBAR_NAME = 'wc-clearance-sidebar';
 
