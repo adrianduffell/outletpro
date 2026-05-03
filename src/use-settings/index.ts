@@ -1,10 +1,5 @@
 import { useEntityProp } from '@wordpress/core-data';
-
-type EntityProp< T > = [
-	T | undefined,
-	( value: T | undefined ) => void,
-	unknown,
-];
+import type { EntityProp } from '../types';
 
 export type Settings = {
 	label: string | undefined;

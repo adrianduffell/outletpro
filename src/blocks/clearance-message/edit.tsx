@@ -1,12 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, RichText } from '@wordpress/block-editor';
 import { useEntityProp } from '@wordpress/core-data';
-
-type EntityProp< T > = [
-	T | undefined,
-	( value: T | undefined ) => void,
-	unknown,
-];
+import type { EntityProp } from '../../types';
 
 export function Edit(): JSX.Element {
 	const [ message, setMessage ] = useEntityProp(
