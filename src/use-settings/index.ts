@@ -1,4 +1,4 @@
-import { useEntityProp } from '@wordpress/core-data';
+import useStringEntityProp from '../use-string-entity-prop';
 
 export type Settings = {
 	label: string | undefined;
@@ -29,55 +29,44 @@ export type Settings = {
 	setPaddingLeft: ( value: string | undefined ) => void;
 };
 
-function useStringSetting(
-	key: string
-): [ string | undefined, ( value: string | undefined ) => void ] {
-	const [ rawValue, setValue ] = useEntityProp( 'root', 'site', key );
-	const value: unknown = rawValue;
-	if ( value !== undefined && typeof value !== 'string' ) {
-		throw new Error(
-			`wc_clearance setting "${ key }" must be a string, got ${ typeof value }`
-		);
-	}
-	return [ value, ( v: string | undefined ) => setValue( v ) ];
-}
-
 const useSettings = (): Settings => {
-	const [ label, setLabel ] = useStringSetting( 'wc_clearance_badge_label' );
-	const [ textColor, setTextColor ] = useStringSetting(
+	const [ label, setLabel ] = useStringEntityProp(
+		'wc_clearance_badge_label'
+	);
+	const [ textColor, setTextColor ] = useStringEntityProp(
 		'wc_clearance_badge_text_color'
 	);
-	const [ bgColor, setBgColor ] = useStringSetting(
+	const [ bgColor, setBgColor ] = useStringEntityProp(
 		'wc_clearance_badge_bg_color'
 	);
-	const [ fontSize, setFontSize ] = useStringSetting(
+	const [ fontSize, setFontSize ] = useStringEntityProp(
 		'wc_clearance_badge_font_size'
 	);
-	const [ fontWeight, setFontWeight ] = useStringSetting(
+	const [ fontWeight, setFontWeight ] = useStringEntityProp(
 		'wc_clearance_badge_font_weight'
 	);
-	const [ borderColor, setBorderColor ] = useStringSetting(
+	const [ borderColor, setBorderColor ] = useStringEntityProp(
 		'wc_clearance_badge_border_color'
 	);
-	const [ borderStyle, setBorderStyle ] = useStringSetting(
+	const [ borderStyle, setBorderStyle ] = useStringEntityProp(
 		'wc_clearance_badge_border_style'
 	);
-	const [ borderWidth, setBorderWidth ] = useStringSetting(
+	const [ borderWidth, setBorderWidth ] = useStringEntityProp(
 		'wc_clearance_badge_border_width'
 	);
-	const [ borderRadius, setBorderRadius ] = useStringSetting(
+	const [ borderRadius, setBorderRadius ] = useStringEntityProp(
 		'wc_clearance_badge_border_radius'
 	);
-	const [ paddingTop, setPaddingTop ] = useStringSetting(
+	const [ paddingTop, setPaddingTop ] = useStringEntityProp(
 		'wc_clearance_badge_padding_top'
 	);
-	const [ paddingRight, setPaddingRight ] = useStringSetting(
+	const [ paddingRight, setPaddingRight ] = useStringEntityProp(
 		'wc_clearance_badge_padding_right'
 	);
-	const [ paddingBottom, setPaddingBottom ] = useStringSetting(
+	const [ paddingBottom, setPaddingBottom ] = useStringEntityProp(
 		'wc_clearance_badge_padding_bottom'
 	);
-	const [ paddingLeft, setPaddingLeft ] = useStringSetting(
+	const [ paddingLeft, setPaddingLeft ] = useStringEntityProp(
 		'wc_clearance_badge_padding_left'
 	);
 

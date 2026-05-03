@@ -1,32 +1,23 @@
-import { useEntityProp } from '@wordpress/core-data';
+import useStringEntityProp from '../../use-string-entity-prop';
 import { renderHook } from '@testing-library/react';
 import useSettings from '../';
 
-jest.mock( '@wordpress/core-data', () => ( {
-	useEntityProp: jest.fn(),
-} ) );
+jest.mock( '../../use-string-entity-prop', () => jest.fn() );
 
-const mockUseEntityProp = useEntityProp as jest.Mock;
+const mockUseStringEntityProp = useStringEntityProp as jest.Mock;
 
-function setupEntityPropMock(
-	overrides: Record< string, [ unknown, jest.Mock ] > = {}
+function setupMock(
+	overrides: Record< string, string | undefined > = {}
 ) {
-	mockUseEntityProp.mockImplementation(
-		( _kind: string, _name: string, key: string ) => {
-			if ( overrides[ key ] ) {
-				return [ ...overrides[ key ], undefined ];
-			}
-			return [ undefined, jest.fn(), undefined ];
-		}
-	);
+	mockUseStringEntityProp.mockImplementation( ( key: string ) => {
+		return [ overrides[ key ], jest.fn() ];
+	} );
 }
 
 describe( 'useSettings', () => {
 	test( 'returns label value from entity prop', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_label: [ 'Sale', jest.fn() ],
-		} );
+		setupMock( { wc_clearance_badge_label: 'Sale' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -37,7 +28,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns undefined label when entity prop is not set', () => {
 		// Arrange.
-		setupEntityPropMock();
+		setupMock();
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -48,9 +39,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns bg color value from entity prop', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_bg_color: [ '#FFEE85', jest.fn() ],
-		} );
+		setupMock( { wc_clearance_badge_bg_color: '#FFEE85' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -61,9 +50,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns text color value from entity prop', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_text_color: [ '#333333', jest.fn() ],
-		} );
+		setupMock( { wc_clearance_badge_text_color: '#333333' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -74,9 +61,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns font size value from entity prop', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_font_size: [ '0.875rem', jest.fn() ],
-		} );
+		setupMock( { wc_clearance_badge_font_size: '0.875rem' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -87,9 +72,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns font weight value from entity prop', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_font_weight: [ '700', jest.fn() ],
-		} );
+		setupMock( { wc_clearance_badge_font_weight: '700' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -100,9 +83,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns border radius value from entity prop', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_border_radius: [ '4px', jest.fn() ],
-		} );
+		setupMock( { wc_clearance_badge_border_radius: '4px' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -113,11 +94,11 @@ describe( 'useSettings', () => {
 
 	test( 'returns padding values from entity props', () => {
 		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_padding_top: [ '8px', jest.fn() ],
-			wc_clearance_badge_padding_right: [ '12px', jest.fn() ],
-			wc_clearance_badge_padding_bottom: [ '8px', jest.fn() ],
-			wc_clearance_badge_padding_left: [ '12px', jest.fn() ],
+		setupMock( {
+			wc_clearance_badge_padding_top: '8px',
+			wc_clearance_badge_padding_right: '12px',
+			wc_clearance_badge_padding_bottom: '8px',
+			wc_clearance_badge_padding_left: '12px',
 		} );
 
 		// Act.
@@ -133,8 +114,11 @@ describe( 'useSettings', () => {
 	test( 'exposes setLabel setter from entity prop', () => {
 		// Arrange.
 		const setLabel = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_label: [ 'Clearance', setLabel ],
+		mockUseStringEntityProp.mockImplementation( ( key: string ) => {
+			if ( key === 'wc_clearance_badge_label' ) {
+				return [ 'Clearance', setLabel ];
+			}
+			return [ undefined, jest.fn() ];
 		} );
 
 		// Act.
@@ -145,17 +129,17 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'calls useEntityProp for all 13 badge settings', () => {
+	test( 'calls useStringEntityProp for all 13 badge settings', () => {
 		// Arrange.
-		mockUseEntityProp.mockClear();
-		setupEntityPropMock();
+		mockUseStringEntityProp.mockClear();
+		setupMock();
 
 		// Act.
 		renderHook( () => useSettings() );
 
 		// Assert.
-		const keys = mockUseEntityProp.mock.calls.map(
-			( call: [ string, string, string ] ) => call[ 2 ]
+		const keys = mockUseStringEntityProp.mock.calls.map(
+			( call: [ string ] ) => call[ 0 ]
 		);
 		expect( keys ).toContain( 'wc_clearance_badge_label' );
 		expect( keys ).toContain( 'wc_clearance_badge_text_color' );
@@ -171,26 +155,5 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toHaveLength( 13 );
-	} );
-
-	test( 'throws when a setting value is not a string', () => {
-		// Arrange.
-		setupEntityPropMock( {
-			wc_clearance_badge_label: [ 42, jest.fn() ],
-		} );
-
-		// Expect.
-		expect( () => renderHook( () => useSettings() ) ).toThrow(
-			'wc_clearance setting "wc_clearance_badge_label" must be a string, got number'
-		);
-		expect( console ).toHaveErrored();
-	} );
-
-	test( 'does not throw when a setting value is undefined', () => {
-		// Arrange.
-		setupEntityPropMock();
-
-		// Act + Assert: no throw when all values are undefined.
-		expect( () => renderHook( () => useSettings() ) ).not.toThrow();
 	} );
 } );
