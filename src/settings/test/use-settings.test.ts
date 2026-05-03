@@ -1,6 +1,6 @@
 import { useEntityProp } from '@wordpress/core-data';
 import { renderHook } from '@testing-library/react';
-import useBadgeSettings from '../use-badge-settings';
+import useSettings from '../use-settings';
 
 jest.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: jest.fn(),
@@ -21,7 +21,7 @@ function setupEntityPropMock(
 	);
 }
 
-describe( 'useBadgeSettings', () => {
+describe( 'useSettings', () => {
 	test( 'returns label value from entity prop', () => {
 		// Arrange.
 		setupEntityPropMock( {
@@ -29,7 +29,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.label ).toBe( 'Sale' );
@@ -40,7 +40,7 @@ describe( 'useBadgeSettings', () => {
 		setupEntityPropMock();
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.label ).toBeUndefined();
@@ -53,7 +53,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.bgColor ).toBe( '#FFEE85' );
@@ -66,7 +66,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.textColor ).toBe( '#333333' );
@@ -79,7 +79,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.fontSize ).toBe( '0.875rem' );
@@ -92,7 +92,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.fontWeight ).toBe( '700' );
@@ -105,7 +105,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.borderRadius ).toBe( '4px' );
@@ -121,7 +121,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.paddingTop ).toBe( '8px' );
@@ -138,7 +138,7 @@ describe( 'useBadgeSettings', () => {
 		} );
 
 		// Act.
-		const { result } = renderHook( () => useBadgeSettings() );
+		const { result } = renderHook( () => useSettings() );
 		result.current.setLabel( 'Sale' );
 
 		// Assert.
@@ -151,7 +151,7 @@ describe( 'useBadgeSettings', () => {
 		setupEntityPropMock();
 
 		// Act.
-		renderHook( () => useBadgeSettings() );
+		renderHook( () => useSettings() );
 
 		// Assert.
 		const keys = mockUseEntityProp.mock.calls.map(

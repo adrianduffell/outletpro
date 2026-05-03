@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { useEntityProp } from '@wordpress/core-data';
-import ClearancePreviewStyles from '../clearance-preview-styles';
+import ClearancePreviewStyles from '../index';
 
 jest.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: jest.fn(),

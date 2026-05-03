@@ -6,7 +6,7 @@ type EntityProp< T > = [
 	unknown,
 ];
 
-export type BadgeSettings = {
+export type Settings = {
 	label: string | undefined;
 	setLabel: ( value: string | undefined ) => void;
 	textColor: string | undefined;
@@ -35,7 +35,7 @@ export type BadgeSettings = {
 	setPaddingLeft: ( value: string | undefined ) => void;
 };
 
-const useBadgeSettings = (): BadgeSettings => {
+const useSettings = (): Settings => {
 	const [ label, setLabel ] = useEntityProp(
 		'root',
 		'site',
@@ -144,4 +144,4 @@ const useBadgeSettings = (): BadgeSettings => {
 	};
 };
 
-export default useBadgeSettings;
+export default useSettings;

@@ -17,9 +17,9 @@ import { useMemo } from '@wordpress/element';
 import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
-import ClearancePreviewStyles from './clearance-preview-styles';
+import ClearancePreviewStyles from '../settings-preview';
+import useSettings from '../settings/use-settings';
 import ClearanceIcon from './icon';
-import useBadgeSettings from './use-badge-settings';
 
 type BoxValue = {
 	top?: string;
@@ -104,7 +104,7 @@ const ClearanceSectionSidebar = () => {
 		setPaddingBottom,
 		paddingLeft,
 		setPaddingLeft,
-	} = useBadgeSettings();
+	} = useSettings();
 
 	const border = {
 		color: borderColor || undefined,

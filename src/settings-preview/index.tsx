@@ -1,5 +1,5 @@
 import { useEffect } from '@wordpress/element';
-import useBadgeSettings from './use-badge-settings';
+import useSettings from '../settings/use-settings';
 
 const ClearancePreviewStyles = () => {
 	const {
@@ -16,7 +16,7 @@ const ClearancePreviewStyles = () => {
 		paddingRight,
 		paddingBottom,
 		paddingLeft,
-	} = useBadgeSettings();
+	} = useSettings();
 
 	useEffect( () => {
 		const applyPreviewVars = () => {
