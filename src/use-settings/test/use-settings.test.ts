@@ -127,6 +127,88 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
+	test( 'exposes all 13 setters wired to the correct entity prop key', () => {
+		// Arrange.
+		const setters: Record< string, jest.Mock > = {};
+		const keyToSetter: Record< string, string > = {
+			wc_clearance_badge_label: 'setLabel',
+			wc_clearance_badge_text_color: 'setTextColor',
+			wc_clearance_badge_bg_color: 'setBgColor',
+			wc_clearance_badge_font_size: 'setFontSize',
+			wc_clearance_badge_font_weight: 'setFontWeight',
+			wc_clearance_badge_border_color: 'setBorderColor',
+			wc_clearance_badge_border_style: 'setBorderStyle',
+			wc_clearance_badge_border_width: 'setBorderWidth',
+			wc_clearance_badge_border_radius: 'setBorderRadius',
+			wc_clearance_badge_padding_top: 'setPaddingTop',
+			wc_clearance_badge_padding_right: 'setPaddingRight',
+			wc_clearance_badge_padding_bottom: 'setPaddingBottom',
+			wc_clearance_badge_padding_left: 'setPaddingLeft',
+		};
+		for ( const key of Object.keys( keyToSetter ) ) {
+			setters[ key ] = jest.fn();
+		}
+		mockUseStringEntityProp.mockImplementation( ( key: string ) => [
+			undefined,
+			setters[ key ] ?? jest.fn(),
+		] );
+
+		// Act.
+		const { result } = renderHook( () => useSettings() );
+		result.current.setLabel( 'a' );
+		result.current.setTextColor( 'b' );
+		result.current.setBgColor( 'c' );
+		result.current.setFontSize( 'd' );
+		result.current.setFontWeight( 'e' );
+		result.current.setBorderColor( 'f' );
+		result.current.setBorderStyle( 'g' );
+		result.current.setBorderWidth( 'h' );
+		result.current.setBorderRadius( 'i' );
+		result.current.setPaddingTop( 'j' );
+		result.current.setPaddingRight( 'k' );
+		result.current.setPaddingBottom( 'l' );
+		result.current.setPaddingLeft( 'm' );
+
+		// Assert.
+		expect( setters.wc_clearance_badge_label ).toHaveBeenCalledWith( 'a' );
+		expect( setters.wc_clearance_badge_text_color ).toHaveBeenCalledWith(
+			'b'
+		);
+		expect( setters.wc_clearance_badge_bg_color ).toHaveBeenCalledWith(
+			'c'
+		);
+		expect( setters.wc_clearance_badge_font_size ).toHaveBeenCalledWith(
+			'd'
+		);
+		expect( setters.wc_clearance_badge_font_weight ).toHaveBeenCalledWith(
+			'e'
+		);
+		expect( setters.wc_clearance_badge_border_color ).toHaveBeenCalledWith(
+			'f'
+		);
+		expect( setters.wc_clearance_badge_border_style ).toHaveBeenCalledWith(
+			'g'
+		);
+		expect( setters.wc_clearance_badge_border_width ).toHaveBeenCalledWith(
+			'h'
+		);
+		expect(
+			setters.wc_clearance_badge_border_radius
+		).toHaveBeenCalledWith( 'i' );
+		expect( setters.wc_clearance_badge_padding_top ).toHaveBeenCalledWith(
+			'j'
+		);
+		expect(
+			setters.wc_clearance_badge_padding_right
+		).toHaveBeenCalledWith( 'k' );
+		expect(
+			setters.wc_clearance_badge_padding_bottom
+		).toHaveBeenCalledWith( 'l' );
+		expect(
+			setters.wc_clearance_badge_padding_left
+		).toHaveBeenCalledWith( 'm' );
+	} );
+
 	test( 'calls useStringEntityProp for all 13 badge settings', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();

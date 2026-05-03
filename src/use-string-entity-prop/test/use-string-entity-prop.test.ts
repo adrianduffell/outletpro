@@ -39,6 +39,27 @@ describe( 'useStringEntityProp', () => {
 		expect( result.current[ 0 ] ).toBeUndefined();
 	} );
 
+	test( 'calls useEntityProp with root, site, and the given key', () => {
+		// Arrange.
+		mockUseEntityProp.mockReturnValue( [
+			undefined,
+			jest.fn(),
+			undefined,
+		] );
+
+		// Act.
+		renderHook( () =>
+			useStringEntityProp( 'wc_clearance_badge_label' )
+		);
+
+		// Assert.
+		expect( mockUseEntityProp ).toHaveBeenCalledWith(
+			'root',
+			'site',
+			'wc_clearance_badge_label'
+		);
+	} );
+
 	test( 'exposes setter from entity prop', () => {
 		// Arrange.
 		const setValue = jest.fn();
@@ -52,6 +73,21 @@ describe( 'useStringEntityProp', () => {
 
 		// Assert.
 		expect( setValue ).toHaveBeenCalledWith( 'Clearance' );
+	} );
+
+	test( 'setter forwards undefined to clear the value', () => {
+		// Arrange.
+		const setValue = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 'Sale', setValue, undefined ] );
+
+		// Act.
+		const { result } = renderHook( () =>
+			useStringEntityProp( 'wc_clearance_badge_label' )
+		);
+		result.current[ 1 ]( undefined );
+
+		// Assert.
+		expect( setValue ).toHaveBeenCalledWith( undefined );
 	} );
 
 	test( 'throws when value is not a string', () => {
