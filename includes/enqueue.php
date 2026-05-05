@@ -18,6 +18,7 @@ function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
 	add_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
 	add_action( 'enqueue_block_assets', 'WC_Clearance\enqueue_admin_editor_styles_hook' );
+	add_action( 'enqueue_block_assets', 'WC_Clearance\enqueue_admin_canvas_scripts_hook' );
 	add_action( 'wp_head', 'WC_Clearance\output_badge_style_css_variables_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
@@ -35,6 +36,7 @@ function deinit_enqueue(): void {
 	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\enqueue_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'WC_Clearance\register_classic_styles_hook' );
 	remove_action( 'enqueue_block_assets', 'WC_Clearance\enqueue_admin_editor_styles_hook' );
+	remove_action( 'enqueue_block_assets', 'WC_Clearance\enqueue_admin_canvas_scripts_hook' );
 	remove_action( 'wp_head', 'WC_Clearance\output_badge_style_css_variables_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'WC_Clearance\enqueue_admin_product_scripts_hook' );
@@ -47,12 +49,40 @@ function deinit_enqueue(): void {
 	wp_deregister_style( 'wc-clearance-admin' );
 	wp_dequeue_style( 'wc-clearance-admin-editor' );
 	wp_deregister_style( 'wc-clearance-admin-editor' );
+	wp_dequeue_script( 'wc-clearance-admin-canvas-scripts' );
+	wp_deregister_script( 'wc-clearance-admin-canvas-scripts' );
 	wp_dequeue_script( 'wc-clearance-products-admin' );
 	wp_deregister_script( 'wc-clearance-products-admin' );
 	wp_dequeue_script( 'wc-clearance-editor' );
 	wp_deregister_script( 'wc-clearance-editor' );
 	wp_dequeue_style( 'wc-clearance-badge-block' );
 	wp_deregister_style( 'wc-clearance-badge-block' );
+}
+
+/**
+ * Enqueue admin canvas scripts.
+ *
+ * Fired by `enqueue_block_assets`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_admin_canvas_scripts_hook(): void {
+	if ( ! is_admin() ) {
+		return;
+	}
+
+	/**
+	 * Admin canvas scripts.
+	 *
+	 * @internal
+	 */
+	wp_enqueue_script(
+		'wc-clearance-admin-canvas-scripts',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-canvas.js',
+		array(),
+		VERSION,
+		false
+	);
 }
 
 /**

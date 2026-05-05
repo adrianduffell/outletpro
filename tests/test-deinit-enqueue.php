@@ -54,6 +54,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'enqueue_block_assets', 'WC_Clearance\enqueue_admin_editor_styles_hook' ) );
 	}
 
+	public function test_removes_enqueue_admin_canvas_scripts_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'enqueue_block_assets', 'WC_Clearance\enqueue_admin_canvas_scripts_hook' ) );
+	}
+
 	public function test_removes_admin_enqueue_scripts_styles_hook(): void {
 		// Arrange.
 		enqueue_init();
@@ -211,5 +222,26 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( wp_script_is( 'wc-clearance-editor', 'registered' ) );
+	}
+
+	public function test_deregisters_admin_canvas_script(): void {
+		// Arrange.
+		wp_register_script( 'wc-clearance-admin-canvas-scripts', false, array(), 'test', false );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'wc-clearance-admin-canvas-scripts', 'registered' ) );
+	}
+
+	public function test_safely_handles_admin_canvas_script_not_registered(): void {
+		// Arrange - 'wc-clearance-admin-canvas-scripts' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'wc-clearance-admin-canvas-scripts', 'registered' ) );
 	}
 }
