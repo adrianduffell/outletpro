@@ -32,12 +32,12 @@ export function buildPreviewStyles(
 		'--wc-clearance-badge-padding-left': settings.paddingLeft,
 	};
 
-	return `:root { ${ [
-		`--wc-clearance-badge-label: ${ JSON.stringify(
-			settings.label ?? ''
-		) }`,
+	const declarations = [
+		`--wc-clearance-badge-label: ${ JSON.stringify( settings.label ?? '' ) }`,
 		...Object.entries( entries ).map(
 			( [ key, value ] ) => `${ key }: ${ value ?? 'unset' }`
 		),
-	].join( '; ' ) } }`;
+	].join( '; ' );
+
+	return `:root { ${ declarations }` + ' }';
 }
