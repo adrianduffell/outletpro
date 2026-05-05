@@ -26,9 +26,3 @@
 		}
 	} );
 } )();
-
-window.addEventListener('wc-clearance-canvas-ready', (e) => {
-
-	console.log('fired', e.detail);
-
-});
