@@ -49,6 +49,8 @@ function deinit_enqueue(): void {
 	wp_deregister_style( 'wc-clearance-admin' );
 	wp_dequeue_style( 'wc-clearance-admin-editor' );
 	wp_deregister_style( 'wc-clearance-admin-editor' );
+	wp_dequeue_script( 'wc-clearance-admin-canvas-scripts' );
+	wp_deregister_script( 'wc-clearance-admin-canvas-scripts' );
 	wp_dequeue_script( 'wc-clearance-products-admin' );
 	wp_deregister_script( 'wc-clearance-products-admin' );
 	wp_dequeue_script( 'wc-clearance-editor' );
