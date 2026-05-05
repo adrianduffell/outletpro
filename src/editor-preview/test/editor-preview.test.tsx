@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { useEntityProp } from '@wordpress/core-data';
 import EditorPreview from '../index';
 
@@ -85,5 +85,100 @@ describe( 'EditorPreview', () => {
 		expect( styleEl?.textContent ).toContain(
 			'--wc-clearance-badge-text-color: unset'
 		);
+	} );
+
+	describe( 'iframe portal targeting', () => {
+		test( 'portals style tag into iframe document head when editor-canvas iframe appears', () => {
+			// Arrange.
+			const originalMutationObserver = global.MutationObserver;
+			let observerCallback!: MutationCallback;
+			global.MutationObserver = jest.fn().mockImplementation(
+				( cb: MutationCallback ) => {
+					observerCallback = cb;
+					return { observe: jest.fn(), disconnect: jest.fn() };
+				}
+			) as unknown as typeof MutationObserver;
+
+			const iframeDoc = document.implementation.createHTMLDocument();
+			const iframe = document.createElement( 'iframe' );
+			iframe.setAttribute( 'name', 'editor-canvas' );
+			Object.defineProperty( iframe, 'contentDocument', {
+				configurable: true,
+				get: () => iframeDoc,
+			} );
+
+			setupEntityPropMock();
+			render( <EditorPreview /> );
+			document.body.appendChild( iframe );
+
+			// Act.
+			act( () => {
+				observerCallback( [], {} as MutationObserver );
+			} );
+
+			// Assert.
+			expect(
+				iframeDoc.head.querySelector( '#wc-clearance-preview-vars' )
+			).not.toBeNull();
+
+			global.MutationObserver = originalMutationObserver;
+			iframe.remove();
+		} );
+
+		test( 're-portals style tag to replacement iframe document head', () => {
+			// Arrange.
+			const originalMutationObserver = global.MutationObserver;
+			let observerCallback!: MutationCallback;
+			global.MutationObserver = jest.fn().mockImplementation(
+				( cb: MutationCallback ) => {
+					observerCallback = cb;
+					return { observe: jest.fn(), disconnect: jest.fn() };
+				}
+			) as unknown as typeof MutationObserver;
+
+			const iframeDoc1 = document.implementation.createHTMLDocument();
+			const iframe1 = document.createElement( 'iframe' );
+			iframe1.setAttribute( 'name', 'editor-canvas' );
+			Object.defineProperty( iframe1, 'contentDocument', {
+				configurable: true,
+				get: () => iframeDoc1,
+			} );
+
+			const iframeDoc2 = document.implementation.createHTMLDocument();
+			const iframe2 = document.createElement( 'iframe' );
+			iframe2.setAttribute( 'name', 'editor-canvas' );
+			Object.defineProperty( iframe2, 'contentDocument', {
+				configurable: true,
+				get: () => iframeDoc2,
+			} );
+
+			setupEntityPropMock();
+			render( <EditorPreview /> );
+
+			// Establish the first iframe as the initial portal target.
+			document.body.appendChild( iframe1 );
+			act( () => {
+				observerCallback( [], {} as MutationObserver );
+			} );
+
+			expect(
+				iframeDoc1.head.querySelector( '#wc-clearance-preview-vars' )
+			).not.toBeNull();
+
+			// Act: replace the first iframe with a second.
+			document.body.removeChild( iframe1 );
+			document.body.appendChild( iframe2 );
+			act( () => {
+				observerCallback( [], {} as MutationObserver );
+			} );
+
+			// Assert.
+			expect(
+				iframeDoc2.head.querySelector( '#wc-clearance-preview-vars' )
+			).not.toBeNull();
+
+			global.MutationObserver = originalMutationObserver;
+			iframe2.remove();
+		} );
 	} );
 } );
