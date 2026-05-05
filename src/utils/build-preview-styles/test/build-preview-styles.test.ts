@@ -193,4 +193,52 @@ describe( 'buildPreviewStyles', () => {
 
 		expect( result ).not.toMatch( /;\s+\}$/ );
 	} );
+
+	test( 'mix of defined and undefined values', () => {
+		const result = buildPreviewStyles( {
+			bgColor: '#000',
+			textColor: undefined,
+		} );
+
+		expect( result ).toContain(
+			'--wc-clearance-badge-bg-color: #000 !important'
+		);
+		expect( result ).toContain(
+			'--wc-clearance-badge-text-color: unset !important'
+		);
+	} );
+
+	test( 'does not convert empty string to unset', () => {
+		const result = buildPreviewStyles( {
+			bgColor: '',
+		} );
+
+		expect( result ).toContain(
+			'--wc-clearance-badge-bg-color:  !important'
+		);
+	} );
+
+	test( 'preserves zero-like values', () => {
+		const result = buildPreviewStyles( {
+			borderWidth: '0',
+			paddingTop: '0',
+		} );
+
+		expect( result ).toContain(
+			'--wc-clearance-badge-border-width: 0 !important'
+		);
+		expect( result ).toContain(
+			'--wc-clearance-badge-padding-top: 0 !important'
+		);
+	} );
+
+	test( 'handles special characters in label', () => {
+		const result = buildPreviewStyles( {
+			label: 'A "quote"\nand newline',
+		} );
+
+		expect( result ).toContain(
+			'--wc-clearance-badge-label: "A \\"quote\\"\\nand newline" !important'
+		);
+	} );
 } );
