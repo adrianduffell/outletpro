@@ -97,9 +97,9 @@ const EditorPreview = () => {
 	const styleText = `:root { ${ [
 		`--wc-clearance-badge-label: ${ JSON.stringify(
 			label ?? ''
-		) } !important`,
+		) }`,
 		...Object.entries( entries ).map(
-			( [ key, value ] ) => `${ key }: ${ value ?? 'unset' } !important`
+			( [ key, value ] ) => `${ key }: ${ value ?? 'unset' }`
 		),
 	].join( '; ' ) } }`;
 
