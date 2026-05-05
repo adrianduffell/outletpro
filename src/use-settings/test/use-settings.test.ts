@@ -192,21 +192,21 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_badge_border_width ).toHaveBeenCalledWith(
 			'h'
 		);
-		expect(
-			setters.wc_clearance_badge_border_radius
-		).toHaveBeenCalledWith( 'i' );
+		expect( setters.wc_clearance_badge_border_radius ).toHaveBeenCalledWith(
+			'i'
+		);
 		expect( setters.wc_clearance_badge_padding_top ).toHaveBeenCalledWith(
 			'j'
 		);
-		expect(
-			setters.wc_clearance_badge_padding_right
-		).toHaveBeenCalledWith( 'k' );
+		expect( setters.wc_clearance_badge_padding_right ).toHaveBeenCalledWith(
+			'k'
+		);
 		expect(
 			setters.wc_clearance_badge_padding_bottom
 		).toHaveBeenCalledWith( 'l' );
-		expect(
-			setters.wc_clearance_badge_padding_left
-		).toHaveBeenCalledWith( 'm' );
+		expect( setters.wc_clearance_badge_padding_left ).toHaveBeenCalledWith(
+			'm'
+		);
 	} );
 
 	test( 'calls useStringEntityProp for all 13 badge settings', () => {
