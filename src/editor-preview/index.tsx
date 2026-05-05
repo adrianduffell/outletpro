@@ -21,10 +21,12 @@ const EditorPreview = () => {
 	const [ targetDoc, setTargetDoc ] = useState< Document >( document );
 
 	useEffect( () => {
-		// Keep a reference to the current iframe so we can:
+		// Keep references to the current iframe and document so we can:
 		// - Avoid re-binding listeners unnecessarily
-		// - Clean up correctly when it changes
+		// - Skip state updates when the document hasn't changed
+		// - Clean up correctly when they change
 		let iframe: HTMLIFrameElement | null = null;
+		let currentDoc: Document = document;
 
 		const update = () => {
 			// The Site Editor dynamically mounts/replaces the canvas iframe.
@@ -42,8 +44,13 @@ const EditorPreview = () => {
 				iframe?.addEventListener( 'load', update );
 			}
 
-			// Point React at the correct document (iframe or fallback)
-			setTargetDoc( iframe?.contentDocument ?? document );
+			// Only update state when the document actually changes to avoid
+			// unnecessary re-renders on unrelated DOM mutations.
+			const nextDoc = iframe?.contentDocument ?? document;
+			if ( nextDoc !== currentDoc ) {
+				currentDoc = nextDoc;
+				setTargetDoc( nextDoc );
+			}
 		};
 
 		// Initial run (covers first render)
