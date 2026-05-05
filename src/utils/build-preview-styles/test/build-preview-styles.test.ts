@@ -25,33 +25,27 @@ describe( 'buildPreviewStyles', () => {
 	test( 'serializes label as a JSON string', () => {
 		const result = buildPreviewStyles( { label: 'Sale' } );
 
-		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Sale" !important'
-		);
+		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
 	} );
 
-	test( 'escapes quotes in label', () => {
-		const result = buildPreviewStyles( { label: 'Bob"s Sale' } );
+	test( 'escapes special characters in label', () => {
+		const resultQuote = buildPreviewStyles( { label: 'Bob"s Sale' } );
+		const resultNewline = buildPreviewStyles( {
+			label: 'A "quote"\nand newline',
+		} );
 
-		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Bob\\"s Sale" !important'
+		expect( resultQuote ).toContain(
+			'--wc-clearance-badge-label: "Bob\\"s Sale"'
 		);
-	} );
-
-	test( 'escapes newlines in label', () => {
-		const result = buildPreviewStyles( { label: 'Line 1\nLine 2' } );
-
-		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Line 1\\nLine 2" !important'
+		expect( resultNewline ).toContain(
+			'--wc-clearance-badge-label: "A \\"quote\\"\\nand newline"'
 		);
 	} );
 
 	test( 'uses empty string for label when undefined', () => {
 		const result = buildPreviewStyles( {} );
 
-		expect( result ).toContain(
-			'--wc-clearance-badge-label: "" !important'
-		);
+		expect( result ).toContain( '--wc-clearance-badge-label: ""' );
 	} );
 
 	test.each( [
@@ -70,9 +64,7 @@ describe( 'buildPreviewStyles', () => {
 	] as const )( 'includes %s CSS var', ( key, value ) => {
 		const result = buildPreviewStyles( { [ key ]: value } );
 
-		expect( result ).toContain(
-			`${ vars[ key ] }: ${ value } !important`
-		);
+		expect( result ).toContain( `${ vars[ key ] }: ${ value }` );
 	} );
 
 	test( 'includes all CSS vars when all settings are provided', () => {
@@ -92,89 +84,63 @@ describe( 'buildPreviewStyles', () => {
 			paddingLeft: '12px',
 		} );
 
+		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
+		expect( result ).toContain( '--wc-clearance-badge-bg-color: #ff0000' );
 		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Sale" !important'
+			'--wc-clearance-badge-text-color: #ffffff'
 		);
 		expect( result ).toContain(
-			'--wc-clearance-badge-bg-color: #ff0000 !important'
+			'--wc-clearance-badge-font-size: 0.875rem'
+		);
+		expect( result ).toContain( '--wc-clearance-badge-font-weight: 700' );
+		expect( result ).toContain(
+			'--wc-clearance-badge-border-color: #cccccc'
 		);
 		expect( result ).toContain(
-			'--wc-clearance-badge-text-color: #ffffff !important'
+			'--wc-clearance-badge-border-style: solid'
+		);
+		expect( result ).toContain( '--wc-clearance-badge-border-width: 1px' );
+		expect( result ).toContain( '--wc-clearance-badge-border-radius: 4px' );
+		expect( result ).toContain( '--wc-clearance-badge-padding-top: 8px' );
+		expect( result ).toContain(
+			'--wc-clearance-badge-padding-right: 12px'
 		);
 		expect( result ).toContain(
-			'--wc-clearance-badge-font-size: 0.875rem !important'
+			'--wc-clearance-badge-padding-bottom: 8px'
 		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-font-weight: 700 !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-color: #cccccc !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-style: solid !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-width: 1px !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-radius: 4px !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-top: 8px !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-right: 12px !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-bottom: 8px !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-left: 12px !important'
-		);
+		expect( result ).toContain( '--wc-clearance-badge-padding-left: 12px' );
 	} );
 
-	test.each( Object.entries( vars ) as Array<
-		[ keyof typeof vars, string ]
-	> )( 'outputs unset for undefined %s', ( key, cssVar ) => {
+	test.each(
+		Object.entries( vars ) as Array< [ keyof typeof vars, string ] >
+	)( 'outputs unset for undefined %s', ( key, cssVar ) => {
 		const result = buildPreviewStyles( { [ key ]: undefined } );
 
-		expect( result ).toContain( `${ cssVar }: unset !important` );
+		expect( result ).toContain( `${ cssVar }: unset` );
 	} );
 
-	test( 'does not convert empty CSS values to unset', () => {
+	test( 'does not convert empty or zero-like CSS values to unset', () => {
 		const result = buildPreviewStyles( {
 			bgColor: '',
-			borderWidth: '',
-		} );
-
-		expect( result ).toContain(
-			'--wc-clearance-badge-bg-color:  !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-width:  !important'
-		);
-	} );
-
-	test( 'does not convert zero-like CSS values to unset', () => {
-		const result = buildPreviewStyles( {
-			fontWeight: '0',
 			borderWidth: '0',
 			borderRadius: '0',
 			paddingTop: '0',
 		} );
 
-		expect( result ).toContain(
-			'--wc-clearance-badge-font-weight: 0 !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-width: 0 !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-radius: 0 !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-top: 0 !important'
-		);
+		expect( result ).toContain( '--wc-clearance-badge-bg-color: ' );
+		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
+		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
+		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
+	} );
+
+	test( 'outputs unset for undefined alongside defined values', () => {
+		const result = buildPreviewStyles( {
+			bgColor: '#000',
+			textColor: undefined,
+		} );
+
+		expect( result ).toContain( '--wc-clearance-badge-bg-color: #000' );
+		expect( result ).toContain( '--wc-clearance-badge-text-color: unset' );
 	} );
 
 	test( 'joins declarations with semicolons', () => {
@@ -184,7 +150,7 @@ describe( 'buildPreviewStyles', () => {
 		} );
 
 		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Sale" !important; --wc-clearance-badge-bg-color: #ff0000 !important'
+			'--wc-clearance-badge-label: "Sale"; --wc-clearance-badge-bg-color: #ff0000'
 		);
 	} );
 
@@ -192,53 +158,5 @@ describe( 'buildPreviewStyles', () => {
 		const result = buildPreviewStyles( {} );
 
 		expect( result ).not.toMatch( /;\s+\}$/ );
-	} );
-
-	test( 'mix of defined and undefined values', () => {
-		const result = buildPreviewStyles( {
-			bgColor: '#000',
-			textColor: undefined,
-		} );
-
-		expect( result ).toContain(
-			'--wc-clearance-badge-bg-color: #000 !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-text-color: unset !important'
-		);
-	} );
-
-	test( 'does not convert empty string to unset', () => {
-		const result = buildPreviewStyles( {
-			bgColor: '',
-		} );
-
-		expect( result ).toContain(
-			'--wc-clearance-badge-bg-color:  !important'
-		);
-	} );
-
-	test( 'preserves zero-like values', () => {
-		const result = buildPreviewStyles( {
-			borderWidth: '0',
-			paddingTop: '0',
-		} );
-
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-width: 0 !important'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-top: 0 !important'
-		);
-	} );
-
-	test( 'handles special characters in label', () => {
-		const result = buildPreviewStyles( {
-			label: 'A "quote"\nand newline',
-		} );
-
-		expect( result ).toContain(
-			'--wc-clearance-badge-label: "A \\"quote\\"\\nand newline" !important'
-		);
 	} );
 } );

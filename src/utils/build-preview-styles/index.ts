@@ -1,26 +1,21 @@
-import useSettings from '../../use-settings';
-
-type SettingsStyles = Partial<
-	Pick<
-		ReturnType<typeof useSettings>,
-		| 'label'
-		| 'textColor'
-		| 'bgColor'
-		| 'fontSize'
-		| 'fontWeight'
-		| 'borderColor'
-		| 'borderStyle'
-		| 'borderWidth'
-		| 'borderRadius'
-		| 'paddingTop'
-		| 'paddingRight'
-		| 'paddingBottom'
-		| 'paddingLeft'
-	>
->;
+type BuildPreviewStylesParams = {
+	label?: string;
+	bgColor?: string;
+	textColor?: string;
+	fontSize?: string;
+	fontWeight?: string;
+	borderColor?: string;
+	borderStyle?: string;
+	borderWidth?: string;
+	borderRadius?: string;
+	paddingTop?: string;
+	paddingRight?: string;
+	paddingBottom?: string;
+	paddingLeft?: string;
+};
 
 export function buildPreviewStyles(
-	settings: SettingsStyles
+	settings: BuildPreviewStylesParams
 ): string {
 	const entries = {
 		'--wc-clearance-badge-bg-color': settings.bgColor,
@@ -40,10 +35,9 @@ export function buildPreviewStyles(
 	return `:root { ${ [
 		`--wc-clearance-badge-label: ${ JSON.stringify(
 			settings.label ?? ''
-		) } !important`,
+		) }`,
 		...Object.entries( entries ).map(
-			( [ key, value ] ) =>
-				`${ key }: ${ value ?? 'unset' } !important`
+			( [ key, value ] ) => `${ key }: ${ value ?? 'unset' }`
 		),
 	].join( '; ' ) } }`;
 }
