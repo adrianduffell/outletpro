@@ -92,12 +92,12 @@ describe( 'EditorPreview', () => {
 			// Arrange.
 			const originalMutationObserver = global.MutationObserver;
 			let observerCallback!: MutationCallback;
-			global.MutationObserver = jest.fn().mockImplementation(
-				( cb: MutationCallback ) => {
+			global.MutationObserver = jest
+				.fn()
+				.mockImplementation( ( cb: MutationCallback ) => {
 					observerCallback = cb;
 					return { observe: jest.fn(), disconnect: jest.fn() };
-				}
-			) as unknown as typeof MutationObserver;
+				} ) as unknown as typeof MutationObserver;
 
 			const iframeDoc = document.implementation.createHTMLDocument();
 			const iframe = document.createElement( 'iframe' );
@@ -129,12 +129,12 @@ describe( 'EditorPreview', () => {
 			// Arrange.
 			const originalMutationObserver = global.MutationObserver;
 			let observerCallback!: MutationCallback;
-			global.MutationObserver = jest.fn().mockImplementation(
-				( cb: MutationCallback ) => {
+			global.MutationObserver = jest
+				.fn()
+				.mockImplementation( ( cb: MutationCallback ) => {
 					observerCallback = cb;
 					return { observe: jest.fn(), disconnect: jest.fn() };
-				}
-			) as unknown as typeof MutationObserver;
+				} ) as unknown as typeof MutationObserver;
 
 			const iframeDoc1 = document.implementation.createHTMLDocument();
 			const iframe1 = document.createElement( 'iframe' );
