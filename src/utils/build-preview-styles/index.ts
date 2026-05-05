@@ -1,7 +1,26 @@
-import useSettings from '../use-settings';
+import useSettings from '../../use-settings';
+
+type SettingsStyles = Partial<
+	Pick<
+		ReturnType<typeof useSettings>,
+		| 'label'
+		| 'textColor'
+		| 'bgColor'
+		| 'fontSize'
+		| 'fontWeight'
+		| 'borderColor'
+		| 'borderStyle'
+		| 'borderWidth'
+		| 'borderRadius'
+		| 'paddingTop'
+		| 'paddingRight'
+		| 'paddingBottom'
+		| 'paddingLeft'
+	>
+>;
 
 export function buildPreviewStyles(
-	settings: ReturnType<typeof useSettings>
+	settings: SettingsStyles
 ): string {
 	const entries = {
 		'--wc-clearance-badge-bg-color': settings.bgColor,
