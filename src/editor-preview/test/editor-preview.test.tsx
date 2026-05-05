@@ -87,6 +87,33 @@ describe( 'EditorPreview', () => {
 		);
 	} );
 
+	test( 'falls back to unset for empty string style values', () => {
+		// Arrange.
+		setupEntityPropMock( {
+			wc_clearance_badge_bg_color: [ '', jest.fn() ],
+			wc_clearance_badge_border_style: [ '', jest.fn() ],
+			wc_clearance_badge_font_weight: [ '', jest.fn() ],
+		} );
+
+		// Act.
+		render( <EditorPreview /> );
+
+		// Assert.
+		const styleEl = document.head.querySelector(
+			'#wc-clearance-preview-vars'
+		);
+
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-bg-color: unset'
+		);
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-border-style: unset'
+		);
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-font-weight: unset'
+		);
+	} );
+
 	describe( 'iframe portal targeting', () => {
 		test( 'portals style tag into canvas document head when ready event fires', () => {
 			// Arrange.
