@@ -127,7 +127,7 @@ describe( 'buildPreviewStyles', () => {
 			paddingTop: '0',
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-bg-color: ' );
+		expect( result ).toContain( '--wc-clearance-badge-bg-color: ;' );
 		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
