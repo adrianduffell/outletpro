@@ -126,7 +126,9 @@ describe( 'EditorPreview', () => {
 			act( () => {
 				window.dispatchEvent(
 					new CustomEvent( 'wc-clearance-canvas-ready', {
-						detail: canvasDoc,
+						detail: {
+							document: canvasDoc,
+						}
 					} )
 				);
 			} );
@@ -151,7 +153,9 @@ describe( 'EditorPreview', () => {
 			act( () => {
 				window.dispatchEvent(
 					new CustomEvent( 'wc-clearance-canvas-ready', {
-						detail: canvasDoc1,
+						detail: {
+							document: canvasDoc1,
+						}
 					} )
 				);
 			} );
@@ -164,7 +168,9 @@ describe( 'EditorPreview', () => {
 			act( () => {
 				window.dispatchEvent(
 					new CustomEvent( 'wc-clearance-canvas-ready', {
-						detail: canvasDoc2,
+						detail: {
+							document: canvasDoc2,
+						}
 					} )
 				);
 			} );
