@@ -108,13 +108,6 @@ function enqueue_admin_editor_styles_hook(): void {
 		array(),
 		VERSION
 	);
-
-	wp_enqueue_script(
-		'wc-clearance-admin-editor-js',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-editor.js',
-		array(),
-		VERSION
-	);
 }
 
 /**
