@@ -13,4 +13,3 @@ registerPlugin( 'wc-clearance-editor-preview', {
 } );
 
 export { Sample };
-

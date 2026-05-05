@@ -99,8 +99,7 @@ const EditorPreview = () => {
 			label ?? ''
 		) } !important`,
 		...Object.entries( entries ).map(
-			( [ key, value ] ) =>
-				`${ key }: ${ value ?? 'unset' } !important`
+			( [ key, value ] ) => `${ key }: ${ value ?? 'unset' } !important`
 		),
 	].join( '; ' ) } }`;
 
