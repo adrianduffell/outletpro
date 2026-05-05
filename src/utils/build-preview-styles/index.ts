@@ -33,9 +33,11 @@ export function buildPreviewStyles(
 	};
 
 	const declarations = [
-		`--wc-clearance-badge-label: ${ JSON.stringify( settings.label ?? '' ) }`,
+		`--wc-clearance-badge-label: ${ JSON.stringify(
+			settings.label ?? ''
+		) }`,
 		...Object.entries( entries ).map(
-			( [ key, value ] ) => `${ key }: ${ value ?? 'unset' }`
+			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
 		),
 	].join( '; ' );
 

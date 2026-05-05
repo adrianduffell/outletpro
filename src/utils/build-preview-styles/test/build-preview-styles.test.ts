@@ -119,7 +119,7 @@ describe( 'buildPreviewStyles', () => {
 		expect( result ).toContain( `${ cssVar }: unset` );
 	} );
 
-	test( 'does not convert empty or zero-like CSS values to unset', () => {
+	test( 'outputs unset for empty or undefined CSS values', () => {
 		const result = buildPreviewStyles( {
 			bgColor: '',
 			borderWidth: '0',
@@ -127,20 +127,22 @@ describe( 'buildPreviewStyles', () => {
 			paddingTop: '0',
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-bg-color: ;' );
+		expect( result ).toContain( '--wc-clearance-badge-bg-color: unset' );
 		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
 	} );
 
-	test( 'outputs unset for undefined alongside defined values', () => {
+	test( 'outputs unset for undefined or empty alongside defined values', () => {
 		const result = buildPreviewStyles( {
 			bgColor: '#000',
 			textColor: undefined,
+			fontSize: '',
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: #000' );
 		expect( result ).toContain( '--wc-clearance-badge-text-color: unset' );
+		expect( result ).toContain( '--wc-clearance-badge-font-size: unset' );
 	} );
 
 	test( 'joins declarations with semicolons', () => {
