@@ -48,9 +48,7 @@ describe( 'useStringEntityProp', () => {
 		] );
 
 		// Act.
-		renderHook( () =>
-			useStringEntityProp( 'wc_clearance_badge_label' )
-		);
+		renderHook( () => useStringEntityProp( 'wc_clearance_badge_label' ) );
 
 		// Assert.
 		expect( mockUseEntityProp ).toHaveBeenCalledWith(
