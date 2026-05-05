@@ -64,7 +64,7 @@ jobs:
       run: npm run lint:js
 
     - name: Run Markdown docs lint
-      run: npm run lint:md:docs
+      run: npm run lint:md-docs
 
     - name: Install SVN
       run: sudo apt-get install -y subversion
