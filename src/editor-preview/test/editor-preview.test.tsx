@@ -128,7 +128,7 @@ describe( 'EditorPreview', () => {
 					new CustomEvent( 'wc-clearance-canvas-ready', {
 						detail: {
 							document: canvasDoc,
-						}
+						},
 					} )
 				);
 			} );
@@ -155,7 +155,7 @@ describe( 'EditorPreview', () => {
 					new CustomEvent( 'wc-clearance-canvas-ready', {
 						detail: {
 							document: canvasDoc1,
-						}
+						},
 					} )
 				);
 			} );
@@ -170,7 +170,7 @@ describe( 'EditorPreview', () => {
 					new CustomEvent( 'wc-clearance-canvas-ready', {
 						detail: {
 							document: canvasDoc2,
-						}
+						},
 					} )
 				);
 			} );

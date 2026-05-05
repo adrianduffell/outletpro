@@ -22,7 +22,8 @@ const EditorPreview = () => {
 
 	useEffect( () => {
 		const handleCanvasReady = ( event: Event ) => {
-			const canvasDoc = ( event as CustomEvent< { document: Document } > ).detail.document;
+			const canvasDoc = ( event as CustomEvent< { document: Document } > )
+				.detail.document;
 			setTargetDoc( canvasDoc );
 		};
 
