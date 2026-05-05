@@ -78,7 +78,8 @@ function enqueue_admin_canvas_scripts_hook(): void {
 		'wc-clearance-admin-canvas-scripts',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-canvas.js',
 		array(),
-		VERSION
+		VERSION,
+		true
 	);
 }
 
