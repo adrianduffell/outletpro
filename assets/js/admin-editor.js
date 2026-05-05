@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener( 'DOMContentLoaded', () => {
 	window.parent.dispatchEvent(
-		new CustomEvent('wc-clearance-canvas-ready', {
+		new CustomEvent( 'wc-clearance-canvas-ready', {
 			detail: document,
-		})
+		} )
 	);
-});
+} );
