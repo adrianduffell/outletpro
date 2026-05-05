@@ -1,22 +1,9 @@
 import { createPortal, useEffect, useState } from '@wordpress/element';
+import { buildPreviewStyles } from '../utils/build-preview-styles';
 import useSettings from '../use-settings';
 
 const EditorPreview = () => {
-	const {
-		label,
-		textColor,
-		bgColor,
-		fontSize,
-		fontWeight,
-		borderColor,
-		borderStyle,
-		borderWidth,
-		borderRadius,
-		paddingTop,
-		paddingRight,
-		paddingBottom,
-		paddingLeft,
-	} = useSettings();
+	const settings = useSettings();
 
 	const [ targetDoc, setTargetDoc ] = useState< Document >( document );
 
@@ -44,27 +31,7 @@ const EditorPreview = () => {
 		};
 	}, [] );
 
-	const entries = {
-		'--wc-clearance-badge-bg-color': bgColor,
-		'--wc-clearance-badge-text-color': textColor,
-		'--wc-clearance-badge-font-size': fontSize,
-		'--wc-clearance-badge-font-weight': fontWeight,
-		'--wc-clearance-badge-border-color': borderColor,
-		'--wc-clearance-badge-border-style': borderStyle,
-		'--wc-clearance-badge-border-width': borderWidth,
-		'--wc-clearance-badge-border-radius': borderRadius,
-		'--wc-clearance-badge-padding-top': paddingTop,
-		'--wc-clearance-badge-padding-right': paddingRight,
-		'--wc-clearance-badge-padding-bottom': paddingBottom,
-		'--wc-clearance-badge-padding-left': paddingLeft,
-	};
-
-	const styleText = `:root { ${ [
-		`--wc-clearance-badge-label: ${ JSON.stringify( label ?? '' ) }`,
-		...Object.entries( entries ).map(
-			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
-		),
-	].join( '; ' ) } }`;
+	const styleText = buildPreviewStyles( settings );
 
 	// Portal needed because the editor canvas is not in the same document as the plugin script.
 	return createPortal(
