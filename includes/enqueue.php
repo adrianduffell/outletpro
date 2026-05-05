@@ -79,7 +79,7 @@ function enqueue_admin_canvas_scripts_hook(): void {
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-canvas.js',
 		array(),
 		VERSION,
-		true
+		false
 	);
 }
 
