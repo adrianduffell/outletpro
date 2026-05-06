@@ -793,7 +793,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Assert.
 		expect(
 			screen.getByText(
-				'The clearance section message displays on product pages when the product is in the clearance section.'
+				'Customize the message shown for products in the clearance section.'
 			)
 		).toBeInTheDocument();
 	} );
