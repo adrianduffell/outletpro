@@ -361,8 +361,10 @@ const ClearanceSectionSidebar = () => {
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextareaControl
 						label={ __( 'Message', 'wc-clearance' ) }
+						hideLabelFromVision={ true }
 						value={ message ?? '' }
 						onChange={ ( value ) => setMessage( value ) }
+						rows={ 2 }
 						__nextHasNoMarginBottom={ true }
 					/>
 				</BaseControl>
