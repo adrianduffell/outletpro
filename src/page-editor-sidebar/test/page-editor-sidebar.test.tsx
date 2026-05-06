@@ -661,7 +661,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Assert.
 		expect(
 			screen.getByText(
-				'Customize the appearance of the clearance badge. Changes apply to the whole site.'
+				'Customize the appearance of the clearance message badge. Changes apply to the whole site.'
 			)
 		).toBeInTheDocument();
 	} );

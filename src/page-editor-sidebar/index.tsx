@@ -190,7 +190,7 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody>
 				<p style={ { marginBottom: 0 } }>
 					{ __(
-						'Customize the appearance of the clearance badge. Changes apply to the whole site.',
+						'Customize the appearance of the clearance message badge. Changes apply to the whole site.',
 						'wc-clearance'
 					) }
 				</p>
