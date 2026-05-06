@@ -243,7 +243,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseEntityProp = useEntityProp as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
-const mockTabPanel = TabPanel as jest.Mock;
+const mockTabPanel = TabPanel as unknown as jest.Mock;
 
 function setupEntityPropMock(
 	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}

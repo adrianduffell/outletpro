@@ -399,7 +399,7 @@ const ClearanceSectionSidebar = () => {
 					},
 				] }
 			>
-				{ ( tab: { name: string } ) => {
+				{ ( tab ) => {
 					if ( tab.name === 'message' ) {
 						return renderMessageSettings();
 					}
