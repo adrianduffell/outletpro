@@ -753,7 +753,9 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect( screen.getByRole( 'tab', { name: 'Message' } ) ).toBeInTheDocument();
+		expect(
+			screen.getByRole( 'tab', { name: 'Message' } )
+		).toBeInTheDocument();
 	} );
 
 	test( 'render function outputs the message tab description', () => {
