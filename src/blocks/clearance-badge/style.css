@@ -10,10 +10,10 @@
 	border-color: var(--wc-clearance-badge-border-color, unset);
 	border-style: var(--wc-clearance-badge-border-style, unset);
 	border-width: var(--wc-clearance-badge-border-width, unset);
-	padding-top: var(--wc-clearance-badge-padding-top, unset);
-	padding-right: var(--wc-clearance-badge-padding-right, unset);
-	padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
-	padding-left: var(--wc-clearance-badge-padding-left, unset);
+	padding-top: var(--wc-clearance-badge-padding-top, 0.36em);
+	padding-right: var(--wc-clearance-badge-padding-right, 0.36em);
+	padding-bottom: var(--wc-clearance-badge-padding-bottom, 0.36em);
+	padding-left: var(--wc-clearance-badge-padding-left, 0.36em);
 	font-weight: var(--wc-clearance-badge-font-weight, unset);
 	font-size: var(--wc-clearance-badge-font-size, unset);
 	line-height: 1;
