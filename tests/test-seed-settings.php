@@ -232,7 +232,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '0.875rem', get_option( CLEARANCE_BADGE_FONT_SIZE_OPTION ) );
+		$this->assertSame( '0.83em', get_option( CLEARANCE_BADGE_FONT_SIZE_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_font_size_option(): void {
@@ -276,7 +276,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '5px', get_option( CLEARANCE_BADGE_PADDING_TOP_OPTION ) );
+		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_TOP_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_padding_top_option(): void {
@@ -298,7 +298,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '5px', get_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION ) );
+		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_padding_right_option(): void {
@@ -320,7 +320,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '5px', get_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION ) );
+		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_padding_bottom_option(): void {
@@ -342,7 +342,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '5px', get_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION ) );
+		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_padding_left_option(): void {

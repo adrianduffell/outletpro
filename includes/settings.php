@@ -211,12 +211,12 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION, 'none' );
 	add_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION, '0' );
 	add_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '2px' );
-	add_option( CLEARANCE_BADGE_FONT_SIZE_OPTION, '0.875rem' );
+	add_option( CLEARANCE_BADGE_FONT_SIZE_OPTION, '0.83em' );
 	add_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '600' );
-	add_option( CLEARANCE_BADGE_PADDING_TOP_OPTION, '5px' );
-	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '5px' );
-	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '5px' );
-	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '5px' );
+	add_option( CLEARANCE_BADGE_PADDING_TOP_OPTION, '0.36em' );
+	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '0.36em' );
+	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '0.36em' );
+	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
