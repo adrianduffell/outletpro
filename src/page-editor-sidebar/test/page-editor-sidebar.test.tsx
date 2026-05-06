@@ -276,6 +276,24 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( container ).toBeEmptyDOMElement();
 	} );
 
+	test( 'render function renders nothing when not in site editor', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		mockUseSelect
+			.mockReturnValueOnce( true ) // hasSiteRecord = true
+			.mockReturnValueOnce( false ); // isSiteEditor = false
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		const { container } = render( pluginConfig.render() );
+
+		// Assert.
+		expect( container ).toBeEmptyDOMElement();
+	} );
+
 	test( 'render function outputs the sidebar title', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();

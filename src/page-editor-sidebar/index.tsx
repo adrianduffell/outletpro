@@ -75,8 +75,21 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 		( select ) => !! select( coreStore ).getEntityRecord( 'root', 'site' ),
 		[]
 	);
+	const isSiteEditor = useSelect(
+		( select ) => {
+			// The 'core/edit-site' store is only registered in the site editor context.
+			// Cast through unknown to allow dynamic string-based store lookup without 'any'.
+			const editSiteStore = (
+				select as unknown as (
+					store: string
+				) => Record< string, unknown > | undefined
+			)( 'core/edit-site' );
+			return !! editSiteStore;
+		},
+		[]
+	);
 
-	return hasSiteRecord ? <Component /> : null;
+	return hasSiteRecord && isSiteEditor ? <Component /> : null;
 };
 
 const ClearanceSectionSidebar = () => {
