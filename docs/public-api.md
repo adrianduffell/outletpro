@@ -314,8 +314,8 @@ Default style values:
 |---|---|
 | `style.color.background` | `#FFEE85` |
 | `style.color.text` | `#222` |
-| `style.spacing.padding` | `5px` on all sides |
-| `style.typography.fontSize` | `0.875rem` |
+| `style.spacing.padding` | `0.36em` on all sides |
+| `style.typography.fontSize` | `0.83em` |
 | `style.typography.fontWeight` | `600` |
 | `style.border.radius` | `2px` |
 
