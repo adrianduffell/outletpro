@@ -1,6 +1,6 @@
 # Glossary
 
-Established terminology used in the plugin.
+Clearance Section uses the following terminology:
 
 | Name | Definition |
 |---|---|
