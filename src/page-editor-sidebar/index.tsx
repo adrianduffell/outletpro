@@ -351,7 +351,7 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody>
 				<p style={ { marginBottom: 0 } }>
 					{ __(
-						'The clearance section message displays on product pages when the product is in the clearance section.',
+						'Customize the message shown for products in the clearance section.',
 						'wc-clearance'
 					) }
 				</p>
