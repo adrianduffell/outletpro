@@ -349,7 +349,10 @@ const ClearanceSectionSidebar = () => {
 	const renderMessageSettings = () => (
 		<>
 			<PanelBody>
-				<p style={ { marginBottom: 0 } }>
+				<p
+					data-testid="wc-clearance-message-tab-description"
+					style={ { marginBottom: 0 } }
+				>
 					{ __(
 						'Customize the message shown for products in the clearance section.',
 						'wc-clearance'
@@ -396,7 +399,7 @@ const ClearanceSectionSidebar = () => {
 					},
 				] }
 			>
-				{ ( tab ) => {
+				{ ( tab: { name: string } ) => {
 					if ( tab.name === 'message' ) {
 						return renderMessageSettings();
 					}

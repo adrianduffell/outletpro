@@ -792,9 +792,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect(
-			screen.getByText(
-				'Customize the message shown for products in the clearance section.'
-			)
+			screen.getByTestId( 'wc-clearance-message-tab-description' )
 		).toBeInTheDocument();
 	} );
 
