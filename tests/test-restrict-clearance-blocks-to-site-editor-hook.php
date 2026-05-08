@@ -115,10 +115,10 @@ class Test_Restrict_Clearance_Blocks_To_Site_Editor_Hook extends WP_UnitTestCase
 		// Act.
 		$result = apply_filters( 'allowed_block_types_all', true, $context );
 
-		// Cleanup.
-		unregister_block_type( 'test/my-block' );
-
 		// Assert.
 		$this->assertContains( 'test/my-block', $result );
+
+		// Cleanup.
+		unregister_block_type( 'test/my-block' );
 	}
 }
