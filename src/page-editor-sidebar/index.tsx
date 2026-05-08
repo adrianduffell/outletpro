@@ -75,21 +75,8 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 		( select ) => !! select( coreStore ).getEntityRecord( 'root', 'site' ),
 		[]
 	);
-	const isSiteEditor = useSelect(
-		( select ) => {
-			// The 'core/edit-site' store is only registered in the site editor context.
-			// Cast through unknown to allow dynamic string-based store lookup without 'any'.
-			const editSiteStore = (
-				select as unknown as (
-					store: string
-				) => Record< string, unknown > | undefined
-			)( 'core/edit-site' );
-			return !! editSiteStore;
-		},
-		[]
-	);
 
-	return hasSiteRecord && isSiteEditor ? <Component /> : null;
+	return hasSiteRecord ? <Component /> : null;
 };
 
 const ClearanceSectionSidebar = () => {
@@ -377,6 +364,13 @@ const ClearanceSectionSidebar = () => {
 	);
 };
 
-registerPlugin( SIDEBAR_NAME, {
-	render: withSiteRecord( ClearanceSectionSidebar ),
-} );
+const isBlockEditor =
+	window.location.pathname.includes( 'post.php' ) ||
+	window.location.pathname.includes( 'post-new.php' );
+
+// Exclude from the block editor (post/pages editor).
+if ( ! isBlockEditor ) {
+	registerPlugin( SIDEBAR_NAME, {
+		render: withSiteRecord( ClearanceSectionSidebar ),
+	} );
+}

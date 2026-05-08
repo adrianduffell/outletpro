@@ -276,22 +276,46 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( container ).toBeEmptyDOMElement();
 	} );
 
-	test( 'render function renders nothing when not in site editor', () => {
+	test( 'does not register plugin on post.php', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		mockUseSelect
-			.mockReturnValueOnce( true ) // hasSiteRecord = true
-			.mockReturnValueOnce( false ); // isSiteEditor = false
+		const originalPathname = window.location.pathname;
+		window.history.pushState( {}, '', '/wp-admin/post.php' );
+
+		// Act.
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-
-		// Act.
-		const { container } = render( pluginConfig.render() );
 
 		// Assert.
-		expect( container ).toBeEmptyDOMElement();
+		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
+			'wc-clearance-sidebar',
+			expect.anything()
+		);
+
+		// Cleanup.
+		window.history.pushState( {}, '', originalPathname );
+	} );
+
+	test( 'does not register plugin on post-new.php', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const originalPathname = window.location.pathname;
+		window.history.pushState( {}, '', '/wp-admin/post-new.php' );
+
+		// Act.
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+
+		// Assert.
+		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
+			'wc-clearance-sidebar',
+			expect.anything()
+		);
+
+		// Cleanup.
+		window.history.pushState( {}, '', originalPathname );
 	} );
 
 	test( 'render function outputs the sidebar title', () => {
