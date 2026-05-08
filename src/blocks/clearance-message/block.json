@@ -19,8 +19,7 @@
 			"__experimentalFontWeight": true
 		},
 		"spacing": {
-			"padding": true,
-			"margin": true
+			"padding": true
 		}
 	},
 	"attributes": {
