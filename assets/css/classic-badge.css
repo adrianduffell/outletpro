@@ -4,10 +4,18 @@
 
 .wc-clearance-badge {
 	display: inline-block;
-	border-radius: 2px;
-	padding: 0.36em;
-	font-weight: 600;
-	font-size: 0.83em;
+	background-color: var(--wc-clearance-badge-bg-color, unset);
+	color: var(--wc-clearance-badge-text-color, unset);
+	border-radius: var(--wc-clearance-badge-border-radius, unset);
+	border-color: var(--wc-clearance-badge-border-color, unset);
+	border-style: var(--wc-clearance-badge-border-style, unset);
+	border-width: var(--wc-clearance-badge-border-width, unset);
+	padding-top: var(--wc-clearance-badge-padding-top, unset);
+	padding-right: var(--wc-clearance-badge-padding-right, unset);
+	padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
+	padding-left: var(--wc-clearance-badge-padding-left, unset);
+	font-weight: var(--wc-clearance-badge-font-weight, unset);
+	font-size: var(--wc-clearance-badge-font-size, unset);
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
