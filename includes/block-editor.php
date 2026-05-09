@@ -53,7 +53,7 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
  * @param \WP_Block_Editor_Context $context             The block editor context.
  * @return bool|string[] Modified allowed block types.
  */
-function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \WP_Block_Editor_Context $context ) {
+function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \WP_Block_Editor_Context $context ): bool|array {
 	// Allow clearance blocks in the site editor (template editor).
 	if ( 'core/edit-site' === $context->name ) {
 		return $allowed_block_types;
