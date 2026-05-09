@@ -60,16 +60,10 @@ function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \W
 	}
 
 	if ( true === $allowed_block_types ) {
-		$all_block_names     = array_keys( \WP_Block_Type_Registry::get_instance()->get_all_registered() );
-		$allowed_block_types = array_values(
-			array_filter(
-				$all_block_names,
-				function ( string $block_name ): bool {
-					return 0 !== strpos( $block_name, 'wc-clearance/' );
-				}
-			)
-		);
-	} elseif ( is_array( $allowed_block_types ) ) {
+		$allowed_block_types = array_keys( \WP_Block_Type_Registry::get_instance()->get_all_registered() );
+	}
+
+	if ( is_array( $allowed_block_types ) ) {
 		$allowed_block_types = array_values(
 			array_filter(
 				$allowed_block_types,
