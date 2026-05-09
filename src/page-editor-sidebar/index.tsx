@@ -354,7 +354,7 @@ const ClearanceSectionSidebar = () => {
 					style={ { marginBottom: 0 } }
 				>
 					{ __(
-						'Customize the message shown for products in the clearance section.',
+						'Customize the clearance message. Changes apply to the whole site.',
 						'wc-clearance'
 					) }
 				</p>
@@ -369,6 +369,10 @@ const ClearanceSectionSidebar = () => {
 						onChange={ ( value ) => setMessage( value ) }
 						rows={ 2 }
 						__nextHasNoMarginBottom={ true }
+						help={ __(
+							'Displayed for products included in the clearance section.',
+							'wc-clearance'
+						) }
 					/>
 				</BaseControl>
 			</PanelBody>
