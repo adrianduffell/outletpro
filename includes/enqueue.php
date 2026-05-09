@@ -194,12 +194,18 @@ function output_badge_style_css_variables_hook(): void {
 		CLEARANCE_BADGE_PADDING_RIGHT_OPTION,
 		CLEARANCE_BADGE_PADDING_BOTTOM_OPTION,
 		CLEARANCE_BADGE_PADDING_LEFT_OPTION,
+		CLEARANCE_BADGE_SCALE_OPTION,
 	);
 
 	$declarations = array_map(
 		function ( string $option_name ): string {
 			$variable_name = '--' . str_replace( '_', '-', $option_name );
-			$option_value  = sanitize_css_value( get_option( $option_name, '' ) );
+
+			if ( CLEARANCE_BADGE_SCALE_OPTION === $option_name ) {
+				$option_value = strval( absint( get_option( $option_name, 120 ) ) );
+			} else {
+				$option_value = sanitize_css_value( get_option( $option_name, '' ) );
+			}
 
 			return $variable_name . ': ' . ( '' !== $option_value ? $option_value : 'unset' );
 		},

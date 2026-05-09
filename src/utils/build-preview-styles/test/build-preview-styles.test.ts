@@ -14,6 +14,7 @@ describe( 'buildPreviewStyles', () => {
 		paddingRight: '--wc-clearance-badge-padding-right',
 		paddingBottom: '--wc-clearance-badge-padding-bottom',
 		paddingLeft: '--wc-clearance-badge-padding-left',
+		scale: '--wc-clearance-badge-scale',
 	};
 
 	test( 'wraps declarations in a :root rule', () => {
@@ -61,6 +62,7 @@ describe( 'buildPreviewStyles', () => {
 		[ 'paddingRight', '12px' ],
 		[ 'paddingBottom', '8px' ],
 		[ 'paddingLeft', '12px' ],
+		[ 'scale', 120 ],
 	] as const )( 'includes %s CSS var', ( key, value ) => {
 		const result = buildPreviewStyles( { [ key ]: value } );
 
@@ -82,6 +84,7 @@ describe( 'buildPreviewStyles', () => {
 			paddingRight: '12px',
 			paddingBottom: '8px',
 			paddingLeft: '12px',
+			scale: 120,
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
@@ -109,6 +112,7 @@ describe( 'buildPreviewStyles', () => {
 			'--wc-clearance-badge-padding-bottom: 8px'
 		);
 		expect( result ).toContain( '--wc-clearance-badge-padding-left: 12px' );
+		expect( result ).toContain( '--wc-clearance-badge-scale: 120' );
 	} );
 
 	test.each(
@@ -125,12 +129,14 @@ describe( 'buildPreviewStyles', () => {
 			borderWidth: '0',
 			borderRadius: '0',
 			paddingTop: '0',
+			scale: 0,
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: unset' );
 		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
+		expect( result ).toContain( '--wc-clearance-badge-scale: 0' );
 	} );
 
 	test( 'outputs unset for undefined or empty alongside defined values', () => {

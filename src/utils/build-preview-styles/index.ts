@@ -12,6 +12,7 @@ type BuildPreviewStylesParams = {
 	paddingRight?: string;
 	paddingBottom?: string;
 	paddingLeft?: string;
+	scale?: number;
 };
 
 export function buildPreviewStyles(
@@ -30,6 +31,7 @@ export function buildPreviewStyles(
 		'--wc-clearance-badge-padding-right': settings.paddingRight,
 		'--wc-clearance-badge-padding-bottom': settings.paddingBottom,
 		'--wc-clearance-badge-padding-left': settings.paddingLeft,
+		'--wc-clearance-badge-scale': settings.scale,
 	};
 
 	const declarations = [
@@ -37,7 +39,10 @@ export function buildPreviewStyles(
 			settings.label ?? ''
 		) }`,
 		...Object.entries( entries ).map(
-			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
+			( [ key, value ] ) =>
+				`${ key }: ${
+					value === undefined || value === '' ? 'unset' : value
+				}`
 		),
 	].join( '; ' );
 

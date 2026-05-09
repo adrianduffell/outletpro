@@ -1,15 +1,26 @@
 import useStringEntityProp from '../../use-string-entity-prop';
+import { useEntityProp } from '@wordpress/core-data';
 import { renderHook } from '@testing-library/react';
 import useSettings from '../';
 
 jest.mock( '../../use-string-entity-prop', () => jest.fn() );
+jest.mock( '@wordpress/core-data', () => ( {
+	useEntityProp: jest.fn(),
+} ) );
 
 const mockUseStringEntityProp = useStringEntityProp as jest.Mock;
+const mockUseEntityProp = useEntityProp as jest.Mock;
 
-function setupMock( overrides: Record< string, string | undefined > = {} ) {
+function setupMock(
+	overrides: Record< string, string | undefined > = {},
+	scaleOverride?: [ number | undefined, jest.Mock ]
+) {
 	mockUseStringEntityProp.mockImplementation( ( key: string ) => {
 		return [ overrides[ key ], jest.fn() ];
 	} );
+	mockUseEntityProp.mockReturnValue(
+		scaleOverride ?? [ undefined, jest.fn(), undefined ]
+	);
 }
 
 describe( 'useSettings', () => {
@@ -109,6 +120,17 @@ describe( 'useSettings', () => {
 		expect( result.current.paddingLeft ).toBe( '12px' );
 	} );
 
+	test( 'returns scale value from entity prop', () => {
+		// Arrange.
+		setupMock( {}, [ 140, jest.fn() ] );
+
+		// Act.
+		const { result } = renderHook( () => useSettings() );
+
+		// Assert.
+		expect( result.current.scale ).toBe( 140 );
+	} );
+
 	test( 'exposes setLabel setter from entity prop', () => {
 		// Arrange.
 		const setLabel = jest.fn();
@@ -127,7 +149,7 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'exposes all 14 setters wired to the correct entity prop key', () => {
+	test( 'exposes all 15 setters wired to the correct entity prop key', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
@@ -153,6 +175,12 @@ describe( 'useSettings', () => {
 			undefined,
 			setters[ key ] ?? jest.fn(),
 		] );
+		const scaleSetter = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			undefined,
+			scaleSetter,
+			undefined,
+		] );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -169,6 +197,7 @@ describe( 'useSettings', () => {
 		result.current.setPaddingRight( 'k' );
 		result.current.setPaddingBottom( 'l' );
 		result.current.setPaddingLeft( 'm' );
+		result.current.setScale( 140 );
 		result.current.setMessage( 'n' );
 
 		// Assert.
@@ -209,12 +238,14 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_badge_padding_left ).toHaveBeenCalledWith(
 			'm'
 		);
+		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
 		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'n' );
 	} );
 
-	test( 'calls useStringEntityProp for all 14 settings', () => {
+	test( 'calls useStringEntityProp for all 14 string settings and useEntityProp for scale', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
+		mockUseEntityProp.mockClear();
 		setupMock();
 
 		// Act.
@@ -239,5 +270,11 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
 		expect( keys ).toHaveLength( 14 );
+		expect( mockUseEntityProp ).toHaveBeenCalledWith(
+			'root',
+			'site',
+			'wc_clearance_badge_scale'
+		);
+		expect( mockUseEntityProp ).toHaveBeenCalledTimes( 1 );
 	} );
 } );
