@@ -202,7 +202,10 @@ function output_badge_style_css_variables_hook(): void {
 			$variable_name = '--' . str_replace( '_', '-', $option_name );
 
 			if ( CLEARANCE_BADGE_SCALE_OPTION === $option_name ) {
-				$option_value = strval( absint( get_option( $option_name, 120 ) ) );
+				$raw_scale    = get_option( $option_name, 120 );
+				$option_value = is_numeric( $raw_scale )
+					? strval( absint( $raw_scale ) )
+					: '120';
 			} else {
 				$option_value = sanitize_css_value( get_option( $option_name, '' ) );
 			}

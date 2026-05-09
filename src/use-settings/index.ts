@@ -86,7 +86,6 @@ const useSettings = (): Settings => {
 		);
 	}
 
-	const scale = rawScale;
 	const setScale = ( value: number | undefined ) => setRawScale( value );
 	const [ message, setMessage ] = useStringEntityProp(
 		'wc_clearance_message'
@@ -119,7 +118,7 @@ const useSettings = (): Settings => {
 		setPaddingBottom,
 		paddingLeft,
 		setPaddingLeft,
-		scale,
+		scale: rawScale,
 		setScale,
 		message,
 		setMessage,
