@@ -103,6 +103,51 @@ describe( 'useUnsignedIntegerEntityProp', () => {
 		expect( setValue ).toHaveBeenCalledWith( undefined );
 	} );
 
+	test( 'setter throws when given a negative integer', () => {
+		// Arrange.
+		const setValue = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 2, setValue, undefined ] );
+		const { result } = renderHook( () =>
+			useUnsignedIntegerEntityProp( 'wc_clearance_badge_scale' )
+		);
+
+		// Act + Assert.
+		expect( () => result.current[ 1 ]( -1 ) ).toThrow(
+			'wc_clearance setting "wc_clearance_badge_scale" must be an integer >= 0'
+		);
+		expect( setValue ).not.toHaveBeenCalled();
+	} );
+
+	test( 'setter throws when given a non-integer number', () => {
+		// Arrange.
+		const setValue = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 2, setValue, undefined ] );
+		const { result } = renderHook( () =>
+			useUnsignedIntegerEntityProp( 'wc_clearance_badge_scale' )
+		);
+
+		// Act + Assert.
+		expect( () => result.current[ 1 ]( 1.5 ) ).toThrow(
+			'wc_clearance setting "wc_clearance_badge_scale" must be an integer >= 0'
+		);
+		expect( setValue ).not.toHaveBeenCalled();
+	} );
+
+	test( 'setter throws when given NaN', () => {
+		// Arrange.
+		const setValue = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ 2, setValue, undefined ] );
+		const { result } = renderHook( () =>
+			useUnsignedIntegerEntityProp( 'wc_clearance_badge_scale' )
+		);
+
+		// Act + Assert.
+		expect( () => result.current[ 1 ]( Number.NaN ) ).toThrow(
+			'wc_clearance setting "wc_clearance_badge_scale" must be an integer >= 0'
+		);
+		expect( setValue ).not.toHaveBeenCalled();
+	} );
+
 	test( 'throws when value is a string', () => {
 		// Arrange.
 		mockUseEntityProp.mockReturnValue( [ 'two', jest.fn(), undefined ] );
