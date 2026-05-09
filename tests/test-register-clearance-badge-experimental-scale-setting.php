@@ -64,7 +64,7 @@ class Test_Register_Clearance_Badge_Experimental_Scale_Setting extends WP_UnitTe
 
 		// Assert.
 		$this->assertSame( 140, $data[ CLEARANCE_BADGE_SCALE_OPTION ] );
-		$this->assertSame( '140', get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
+		$this->assertSame( 140, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
 	}
 
 	public function test_setting_rest_schema_minimum_is_zero(): void {

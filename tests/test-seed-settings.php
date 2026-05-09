@@ -365,17 +365,17 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '120', get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
+		$this->assertSame( 120, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_experimental_scale_option(): void {
 		// Arrange.
-		update_option( CLEARANCE_BADGE_SCALE_OPTION, '140' );
+		update_option( CLEARANCE_BADGE_SCALE_OPTION, 999 );
 
 		// Act.
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '140', get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
+		$this->assertSame( 999, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
 	}
 }
