@@ -119,27 +119,7 @@ const CLEARANCE_BADGE_PADDING_LEFT_OPTION = 'wc_clearance_badge_padding_left';
  *
  * @internal
  */
-const CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION = 'wc_clearance_badge_experimental_scale';
-
-/**
- * Sanitize a badge experimental scale value, rejecting non-numeric values and values less than zero.
- *
- * @internal
- *
- * @param mixed $value The badge scale value to sanitize.
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
- */
-function sanitize_badge_experimental_scale( $value ): string {
-	if ( ! is_numeric( $value ) ) {
-		return '';
-	}
-
-	if ( (float) $value < 0 ) {
-		return '';
-	}
-
-	return (string) (float) $value;
-}
+const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_experimental_scale';
 
 /**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
@@ -245,7 +225,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
-	add_option( CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION, '1.2' );
+	add_option( CLEARANCE_BADGE_SCALE_OPTION, 120 );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -590,16 +570,16 @@ function register_clearance_badge_padding_left_setting(): void {
 function register_clearance_badge_experimental_scale_setting(): void {
 	register_setting(
 		'wc_clearance',
-		CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION,
+		CLEARANCE_BADGE_SCALE_OPTION,
 		array(
-			'type'              => 'number',
+			'type'              => 'integer',
 			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge scale relative to surrounding text cap height.', 'wc-clearance' ),
-			'default'           => 1.2,
-			'sanitize_callback' => 'WC_Clearance\sanitize_badge_experimental_scale',
+			'default'           => 120,
+			'sanitize_callback' => 'absint',
 			'show_in_rest'      => array(
 				'schema' => array(
-					'type'    => 'number',
+					'type'    => 'integer',
 					'minimum' => 0,
 				),
 			),
