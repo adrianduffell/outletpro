@@ -115,11 +115,11 @@ const CLEARANCE_BADGE_PADDING_BOTTOM_OPTION = 'wc_clearance_badge_padding_bottom
 const CLEARANCE_BADGE_PADDING_LEFT_OPTION = 'wc_clearance_badge_padding_left';
 
 /**
- * WordPress option key used to store the experimental badge scale.
+ * WordPress option key used to store the badge scale.
  *
  * @internal
  */
-const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_experimental_scale';
+const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_scale';
 
 /**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
@@ -179,7 +179,7 @@ function init_settings(): void {
 	register_clearance_badge_padding_right_setting();
 	register_clearance_badge_padding_bottom_setting();
 	register_clearance_badge_padding_left_setting();
-	register_clearance_badge_experimental_scale_setting();
+	register_clearance_badge_scale_setting();
 	register_clearance_message_setting();
 }
 
@@ -563,11 +563,11 @@ function register_clearance_badge_padding_left_setting(): void {
 }
 
 /**
- * Register the clearance badge experimental scale setting.
+ * Register the clearance badge scale setting.
  *
  * @internal
  */
-function register_clearance_badge_experimental_scale_setting(): void {
+function register_clearance_badge_scale_setting(): void {
 	register_setting(
 		'wc_clearance',
 		CLEARANCE_BADGE_SCALE_OPTION,

@@ -357,7 +357,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		$this->assertSame( 'var(--wp--preset--spacing--40)', get_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION ) );
 	}
 
-	public function test_sets_badge_experimental_scale_default_when_option_does_not_exist(): void {
+	public function test_sets_badge_scale_default_when_option_does_not_exist(): void {
 		// Arrange.
 		delete_option( CLEARANCE_BADGE_SCALE_OPTION );
 
@@ -368,7 +368,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		$this->assertSame( 120, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
 	}
 
-	public function test_does_not_overwrite_existing_badge_experimental_scale_option(): void {
+	public function test_does_not_overwrite_existing_badge_scale_option(): void {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_SCALE_OPTION, 999 );
 

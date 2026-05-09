@@ -1,21 +1,21 @@
 <?php
 /**
- * Test the register_clearance_badge_experimental_scale_setting function.
+ * Test the register_clearance_badge_scale_setting function.
  *
  * @package WC_Clearance
  */
 
-use function WC_Clearance\register_clearance_badge_experimental_scale_setting;
+use function WC_Clearance\register_clearance_badge_scale_setting;
 use const WC_Clearance\CLEARANCE_BADGE_SCALE_OPTION;
 
-class Test_Register_Clearance_Badge_Experimental_Scale_Setting extends WP_UnitTestCase {
+class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 
-	public function test_registers_clearance_badge_experimental_scale_setting(): void {
+	public function test_registers_clearance_badge_scale_setting(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
 
 		// Act.
-		register_clearance_badge_experimental_scale_setting();
+		register_clearance_badge_scale_setting();
 
 		// Assert.
 		$settings = get_registered_settings();
@@ -27,7 +27,7 @@ class Test_Register_Clearance_Badge_Experimental_Scale_Setting extends WP_UnitTe
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
 
 		// Act.
-		register_clearance_badge_experimental_scale_setting();
+		register_clearance_badge_scale_setting();
 
 		// Assert.
 		$settings = get_registered_settings();
@@ -37,7 +37,7 @@ class Test_Register_Clearance_Badge_Experimental_Scale_Setting extends WP_UnitTe
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
-		register_clearance_badge_experimental_scale_setting();
+		register_clearance_badge_scale_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
@@ -52,7 +52,7 @@ class Test_Register_Clearance_Badge_Experimental_Scale_Setting extends WP_UnitTe
 	public function test_setting_can_be_updated_via_rest_with_valid_value(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
-		register_clearance_badge_experimental_scale_setting();
+		register_clearance_badge_scale_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
@@ -70,7 +70,7 @@ class Test_Register_Clearance_Badge_Experimental_Scale_Setting extends WP_UnitTe
 	public function test_setting_rest_schema_minimum_is_zero(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
-		register_clearance_badge_experimental_scale_setting();
+		register_clearance_badge_scale_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
