@@ -1,4 +1,4 @@
-import { unregisterBlockType } from '@wordpress/blocks';
+import { getBlockType, unregisterBlockType } from '@wordpress/blocks';
 import { select } from '@wordpress/data';
 
 declare global {
@@ -9,7 +9,7 @@ declare global {
 	}
 }
 
-const BLOCKS_RESTRICTED_TO_SITE_EDITOR = [
+const SITE_EDITOR_ONLY_BLOCKS = [
 	'wc-clearance/clearance-badge',
 	'wc-clearance/clearance-message',
 ];
@@ -24,7 +24,11 @@ window.wp?.domReady( () => {
 		return;
 	}
 
-	BLOCKS_RESTRICTED_TO_SITE_EDITOR.forEach( ( blockName ) => {
+	SITE_EDITOR_ONLY_BLOCKS.forEach( ( blockName ) => {
+		if ( ! getBlockType( blockName ) ) {
+			return;
+		}
+
 		unregisterBlockType( blockName );
 	} );
 } );
