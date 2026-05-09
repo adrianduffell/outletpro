@@ -49,11 +49,12 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint
  * @param bool|string[]            $allowed_block_types Array of block type slugs, or true to allow all, or false to allow none.
  * @param \WP_Block_Editor_Context $context             The block editor context.
  * @return bool|string[] Modified allowed block types.
  */
-function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \WP_Block_Editor_Context $context ): bool|array {
+function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \WP_Block_Editor_Context $context ) {
 	// Allow clearance blocks in the site editor (template editor).
 	if ( 'core/edit-site' === $context->name ) {
 		return $allowed_block_types;
