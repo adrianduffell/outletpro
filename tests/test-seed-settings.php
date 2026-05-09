@@ -11,6 +11,7 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
@@ -354,5 +355,27 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'var(--wp--preset--spacing--40)', get_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION ) );
+	}
+
+	public function test_sets_badge_experimental_scale_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '1.2', get_option( CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_experimental_scale_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION, '1.4' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '1.4', get_option( CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION ) );
 	}
 }

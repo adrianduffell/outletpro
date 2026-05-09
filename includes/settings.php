@@ -115,6 +115,33 @@ const CLEARANCE_BADGE_PADDING_BOTTOM_OPTION = 'wc_clearance_badge_padding_bottom
 const CLEARANCE_BADGE_PADDING_LEFT_OPTION = 'wc_clearance_badge_padding_left';
 
 /**
+ * WordPress option key used to store the experimental badge scale.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION = 'wc_clearance_badge_experimental_scale';
+
+/**
+ * Sanitize a badge experimental scale value, rejecting non-numeric values and values less than zero.
+ *
+ * @internal
+ *
+ * @param mixed $value The badge scale value to sanitize.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function sanitize_badge_experimental_scale( $value ): string {
+	if ( ! is_numeric( $value ) ) {
+		return '';
+	}
+
+	if ( (float) $value < 0 ) {
+		return '';
+	}
+
+	return (string) (float) $value;
+}
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
@@ -172,6 +199,7 @@ function init_settings(): void {
 	register_clearance_badge_padding_right_setting();
 	register_clearance_badge_padding_bottom_setting();
 	register_clearance_badge_padding_left_setting();
+	register_clearance_badge_experimental_scale_setting();
 	register_clearance_message_setting();
 }
 
@@ -217,6 +245,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
+	add_option( CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION, '1.2' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -547,6 +576,31 @@ function register_clearance_badge_padding_left_setting(): void {
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge experimental scale setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_experimental_scale_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_EXPERIMENTAL_SCALE_OPTION,
+		array(
+			'type'              => 'number',
+			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
+			'description'       => __( 'Store-wide clearance badge scale relative to surrounding text cap height.', 'wc-clearance' ),
+			'default'           => 1.2,
+			'sanitize_callback' => 'WC_Clearance\sanitize_badge_experimental_scale',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type'    => 'number',
+					'minimum' => 0,
 				),
 			),
 		)
