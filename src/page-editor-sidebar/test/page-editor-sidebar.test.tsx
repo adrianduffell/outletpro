@@ -94,6 +94,22 @@ jest.mock( '@wordpress/components', () => ( {
 			onChange={ ( e ) => onChange( e.target.value || undefined ) }
 		/>
 	),
+	RangeControl: ( {
+		label,
+		value,
+		onChange,
+	}: {
+		label: string;
+		value: number;
+		onChange: ( v: number | undefined ) => void;
+	} ) => (
+		<input
+			type="range"
+			aria-label={ label }
+			value={ value }
+			onChange={ ( e ) => onChange( Number( e.target.value ) ) }
+		/>
+	),
 	PanelBody: ( {
 		children,
 		title,
@@ -455,6 +471,26 @@ describe( 'page-editor-sidebar registration', () => {
 		).toHaveValue( '1rem' );
 	} );
 
+	test( 'font scale control reflects stored font size', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_font_size: [ '1em', jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect( screen.getByRole( 'slider', { name: 'Scale' } ) ).toHaveValue(
+			'3'
+		);
+	} );
+
 	test( 'font weight control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
@@ -588,6 +624,27 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( setFontSize ).toHaveBeenCalledWith( '1rem' );
+	} );
+
+	test( 'font scale control calls font size setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setFontSize = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_font_size: [ '0.83em', setFontSize ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '1' } } );
+
+		// Assert.
+		expect( setFontSize ).toHaveBeenCalledWith( '0.75em' );
 	} );
 
 	test( 'text color control calls setter when changed', () => {

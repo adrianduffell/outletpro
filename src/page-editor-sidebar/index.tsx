@@ -5,6 +5,7 @@ import {
 	CustomSelectControl,
 	FontSizePicker,
 	PanelBody,
+	RangeControl,
 	TabPanel,
 	TextareaControl,
 	TextControl,
@@ -49,6 +50,7 @@ const FONT_SIZES = [
 	{ name: 'L', slug: 'm', size: '0.83em' },
 	{ name: 'XL', slug: 'l', size: '1em' },
 ];
+const DEFAULT_FONT_SCALE = 2;
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'wc-clearance' ), key: '' },
@@ -192,6 +194,12 @@ const ClearanceSectionSidebar = () => {
 			( option ) => option.key === ( fontWeight || '' )
 		) || fontWeightOptions[ 0 ];
 
+	const currentFontScale = FONT_SIZES.findIndex(
+		( option ) => option.size === fontSize
+	);
+	const selectedFontScale =
+		currentFontScale >= 0 ? currentFontScale : DEFAULT_FONT_SCALE;
+
 	const renderBadgeSettings = () => (
 		<>
 			<PanelBody>
@@ -217,6 +225,25 @@ const ClearanceSectionSidebar = () => {
 			</PanelBody>
 
 			<PanelBody title={ __( 'Typography', 'wc-clearance' ) }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<RangeControl
+						label={ __( 'Scale', 'wc-clearance' ) }
+						value={ selectedFontScale }
+						onChange={ ( value ) => {
+							if ( typeof value !== 'number' ) {
+								return;
+							}
+							setFontSize( FONT_SIZES[ value ]?.size );
+						} }
+						min={ 0 }
+						max={ FONT_SIZES.length - 1 }
+						step={ 1 }
+						allowReset={ false }
+						withInputField={ false }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginBottom: '16px' } }>
 						<FontSizePicker
