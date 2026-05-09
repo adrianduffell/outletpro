@@ -42,8 +42,9 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
 /**
  * Restrict clearance blocks to the site editor inserter.
  *
- * Clearance blocks are intended for site templates, not individual pages or posts.
- * This removes them from the inserter in all editor contexts except the site editor.
+ * The clearance-badge and clearance-message blocks are intended for site templates,
+ * not individual pages or posts. This removes them from the inserter in all editor
+ * contexts except the site editor.
  *
  * Fired by `allowed_block_types_all`.
  *
@@ -55,10 +56,15 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
  * @return bool|string[] Modified allowed block types.
  */
 function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \WP_Block_Editor_Context $context ) {
-	// Allow clearance blocks in the site editor (template editor).
+	// Allow all blocks in the site editor (template editor).
 	if ( 'core/edit-site' === $context->name ) {
 		return $allowed_block_types;
 	}
+
+	$blocks_to_restrict = array(
+		'wc-clearance/clearance-badge',
+		'wc-clearance/clearance-message',
+	);
 
 	if ( true === $allowed_block_types ) {
 		$allowed_block_types = array_keys( \WP_Block_Type_Registry::get_instance()->get_all_registered() );
@@ -68,8 +74,8 @@ function restrict_clearance_blocks_to_site_editor_hook( $allowed_block_types, \W
 		$allowed_block_types = array_values(
 			array_filter(
 				$allowed_block_types,
-				function ( string $block_name ): bool {
-					return 0 !== strpos( $block_name, 'wc-clearance/' );
+				function ( string $block_name ) use ( $blocks_to_restrict ): bool {
+					return ! in_array( $block_name, $blocks_to_restrict, true );
 				}
 			)
 		);

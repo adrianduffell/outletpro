@@ -104,6 +104,22 @@ class Test_Restrict_Clearance_Blocks_To_Site_Editor_Hook extends WP_UnitTestCase
 		$this->assertFalse( $result );
 	}
 
+	public function test_product_collection_block_not_excluded_from_page_editor(): void {
+		// Arrange.
+		init_block_editor();
+		$context = new WP_Block_Editor_Context( array( 'name' => 'core/edit-post' ) );
+
+		// Act.
+		$result = apply_filters(
+			'allowed_block_types_all',
+			array( 'core/paragraph', 'wc-clearance/clearance-badge', 'wc-clearance/product-collection/clearance' ),
+			$context
+		);
+
+		// Assert.
+		$this->assertContains( 'wc-clearance/product-collection/clearance', $result );
+	}
+
 	public function test_other_blocks_remain_when_all_blocks_allowed_in_page_editor(): void {
 		// Arrange.
 		deinit_blocks();
