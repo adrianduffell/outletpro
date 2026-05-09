@@ -306,7 +306,7 @@ in 1.0.0.
 
 | Attribute | Type | Description |
 |---|---|---|
-| `style` | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding, margin), typography (fontSize, fontWeight), and border (radius, width, color). |
+| `style` | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding), typography (fontSize, fontWeight), and border (radius, width, color). |
 
 Default style values:
 
