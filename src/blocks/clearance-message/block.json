@@ -17,9 +17,6 @@
 			"fontSize": true,
 			"lineHeight": true,
 			"__experimentalFontWeight": true
-		},
-		"spacing": {
-			"padding": true
 		}
 	},
 	"attributes": {
