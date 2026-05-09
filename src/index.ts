@@ -6,6 +6,7 @@ import './page-editor-sidebar';
 import EditorPreview from './editor-preview';
 import './blocks/clearance-badge';
 import './blocks/clearance-message';
+import './blocks/restrict-post-page-inserter';
 import './blocks/product-collection';
 
 registerPlugin( 'wc-clearance-editor-preview', {
