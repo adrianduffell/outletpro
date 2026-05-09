@@ -295,6 +295,48 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( container ).toBeEmptyDOMElement();
 	} );
 
+	test( 'does not register plugin on post.php', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const originalPathname = window.location.pathname;
+		window.history.pushState( {}, '', '/wp-admin/post.php' );
+
+		// Act.
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+
+		// Assert.
+		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
+			'wc-clearance-sidebar',
+			expect.anything()
+		);
+
+		// Cleanup.
+		window.history.pushState( {}, '', originalPathname );
+	} );
+
+	test( 'does not register plugin on post-new.php', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const originalPathname = window.location.pathname;
+		window.history.pushState( {}, '', '/wp-admin/post-new.php' );
+
+		// Act.
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+
+		// Assert.
+		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
+			'wc-clearance-sidebar',
+			expect.anything()
+		);
+
+		// Cleanup.
+		window.history.pushState( {}, '', originalPathname );
+	} );
+
 	test( 'render function outputs the sidebar title', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();

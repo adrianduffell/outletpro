@@ -414,6 +414,13 @@ const ClearanceSectionSidebar = () => {
 	);
 };
 
-registerPlugin( SIDEBAR_NAME, {
-	render: withSiteRecord( ClearanceSectionSidebar ),
-} );
+const isBlockEditor =
+	window.location.pathname.includes( 'post.php' ) ||
+	window.location.pathname.includes( 'post-new.php' );
+
+// Exclude from the block editor (post/pages editor).
+if ( ! isBlockEditor ) {
+	registerPlugin( SIDEBAR_NAME, {
+		render: withSiteRecord( ClearanceSectionSidebar ),
+	} );
+}
