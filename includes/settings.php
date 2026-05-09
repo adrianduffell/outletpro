@@ -122,6 +122,13 @@ const CLEARANCE_BADGE_PADDING_LEFT_OPTION = 'wc_clearance_badge_padding_left';
 const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_scale';
 
 /**
+ * Default clearance badge scale percentage.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_SCALE_DEFAULT = 120;
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
@@ -225,7 +232,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
-	add_option( CLEARANCE_BADGE_SCALE_OPTION, 120 );
+	add_option( CLEARANCE_BADGE_SCALE_OPTION, CLEARANCE_BADGE_SCALE_DEFAULT );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -575,7 +582,7 @@ function register_clearance_badge_scale_setting(): void {
 			'type'              => 'integer',
 			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
 			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
-			'default'           => 120,
+			'default'           => CLEARANCE_BADGE_SCALE_DEFAULT,
 			'sanitize_callback' => 'absint',
 			'show_in_rest'      => array(
 				'schema' => array(
