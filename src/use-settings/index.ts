@@ -27,6 +27,8 @@ export type Settings = {
 	setPaddingBottom: ( value: string | undefined ) => void;
 	paddingLeft: string | undefined;
 	setPaddingLeft: ( value: string | undefined ) => void;
+	message: string | undefined;
+	setMessage: ( value: string | undefined ) => void;
 };
 
 const useSettings = (): Settings => {
@@ -69,6 +71,9 @@ const useSettings = (): Settings => {
 	const [ paddingLeft, setPaddingLeft ] = useStringEntityProp(
 		'wc_clearance_badge_padding_left'
 	);
+	const [ message, setMessage ] = useStringEntityProp(
+		'wc_clearance_message'
+	);
 
 	return {
 		label,
@@ -97,6 +102,8 @@ const useSettings = (): Settings => {
 		setPaddingBottom,
 		paddingLeft,
 		setPaddingLeft,
+		message,
+		setMessage,
 	};
 };
 

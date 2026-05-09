@@ -127,7 +127,7 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'exposes all 13 setters wired to the correct entity prop key', () => {
+	test( 'exposes all 14 setters wired to the correct entity prop key', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
@@ -144,6 +144,7 @@ describe( 'useSettings', () => {
 			wc_clearance_badge_padding_right: 'setPaddingRight',
 			wc_clearance_badge_padding_bottom: 'setPaddingBottom',
 			wc_clearance_badge_padding_left: 'setPaddingLeft',
+			wc_clearance_message: 'setMessage',
 		};
 		for ( const key of Object.keys( keyToSetter ) ) {
 			setters[ key ] = jest.fn();
@@ -168,6 +169,7 @@ describe( 'useSettings', () => {
 		result.current.setPaddingRight( 'k' );
 		result.current.setPaddingBottom( 'l' );
 		result.current.setPaddingLeft( 'm' );
+		result.current.setMessage( 'n' );
 
 		// Assert.
 		expect( setters.wc_clearance_badge_label ).toHaveBeenCalledWith( 'a' );
@@ -207,9 +209,10 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_badge_padding_left ).toHaveBeenCalledWith(
 			'm'
 		);
+		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'n' );
 	} );
 
-	test( 'calls useStringEntityProp for all 13 badge settings', () => {
+	test( 'calls useStringEntityProp for all 14 settings', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
 		setupMock();
@@ -234,6 +237,7 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_right' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
-		expect( keys ).toHaveLength( 13 );
+		expect( keys ).toContain( 'wc_clearance_message' );
+		expect( keys ).toHaveLength( 14 );
 	} );
 } );

@@ -3,6 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { registerPlugin } from '@wordpress/plugins';
 import { useEntityProp } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
+import { TabPanel } from '@wordpress/components';
 
 jest.mock( '@wordpress/plugins', () => ( {
 	registerPlugin: jest.fn(),
@@ -26,23 +27,25 @@ jest.mock( '@wordpress/components', () => ( {
 	BaseControl: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
 	),
-	TabPanel: ( {
-		children,
-		tabs,
-	}: {
-		children: ( tab: { name: string; title: string } ) => ReactNode;
-		tabs: { name: string; title: string }[];
-	} ) => (
-		<section>
-			<div role="tablist">
-				{ tabs.map( ( tab ) => (
-					<button key={ tab.name } role="tab">
-						{ tab.title }
-					</button>
-				) ) }
-			</div>
-			{ children( tabs[ 0 ] ) }
-		</section>
+	TabPanel: jest.fn(
+		( {
+			children,
+			tabs,
+		}: {
+			children: ( tab: { name: string; title: string } ) => ReactNode;
+			tabs: { name: string; title: string }[];
+		} ) => (
+			<section>
+				<div role="tablist">
+					{ tabs.map( ( tab ) => (
+						<button key={ tab.name } role="tab">
+							{ tab.title }
+						</button>
+					) ) }
+				</div>
+				{ children( tabs[ 0 ] ) }
+			</section>
+		)
 	),
 	CustomSelectControl: ( {
 		label,
@@ -113,6 +116,21 @@ jest.mock( '@wordpress/components', () => ( {
 		onChange: ( v: string ) => void;
 	} ) => (
 		<input
+			aria-label={ label }
+			value={ value }
+			onChange={ ( e ) => onChange( e.target.value ) }
+		/>
+	),
+	TextareaControl: ( {
+		label,
+		value,
+		onChange,
+	}: {
+		label: string;
+		value: string;
+		onChange: ( v: string ) => void;
+	} ) => (
+		<textarea
 			aria-label={ label }
 			value={ value }
 			onChange={ ( e ) => onChange( e.target.value ) }
@@ -225,6 +243,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseEntityProp = useEntityProp as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
+const mockTabPanel = TabPanel as unknown as jest.Mock;
 
 function setupEntityPropMock(
 	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}
@@ -719,5 +738,185 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( screen.getByRole( 'textbox', { name: 'Radius' } ) ).toHaveValue(
 			'4px'
 		);
+	} );
+
+	test( 'render function outputs the message tab', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock();
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByRole( 'tab', { name: 'Message' } )
+		).toBeInTheDocument();
+	} );
+
+	test( 'render function outputs the message tab description', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock();
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		mockTabPanel.mockImplementationOnce(
+			( {
+				children,
+				tabs,
+			}: {
+				children: ( tab: { name: string; title: string } ) => ReactNode;
+				tabs: { name: string; title: string }[];
+			} ) => (
+				<section>
+					<div role="tablist">
+						{ tabs.map( ( tab ) => (
+							<button key={ tab.name } role="tab">
+								{ tab.title }
+							</button>
+						) ) }
+					</div>
+					{ children( tabs[ 1 ] ) }
+				</section>
+			)
+		);
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByTestId( 'wc-clearance-message-tab-description' )
+		).toBeInTheDocument();
+	} );
+
+	test( 'message textarea shows stored value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setMessage = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_message: [ 'Only while stocks last', setMessage ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		mockTabPanel.mockImplementationOnce(
+			( {
+				children,
+				tabs,
+			}: {
+				children: ( tab: { name: string; title: string } ) => ReactNode;
+				tabs: { name: string; title: string }[];
+			} ) => (
+				<section>
+					<div role="tablist">
+						{ tabs.map( ( tab ) => (
+							<button key={ tab.name } role="tab">
+								{ tab.title }
+							</button>
+						) ) }
+					</div>
+					{ children( tabs[ 1 ] ) }
+				</section>
+			)
+		);
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByRole( 'textbox', { name: 'Message' } )
+		).toHaveValue( 'Only while stocks last' );
+	} );
+
+	test( 'message textarea is empty when setting is not set', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_message: [ undefined, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		mockTabPanel.mockImplementationOnce(
+			( {
+				children,
+				tabs,
+			}: {
+				children: ( tab: { name: string; title: string } ) => ReactNode;
+				tabs: { name: string; title: string }[];
+			} ) => (
+				<section>
+					<div role="tablist">
+						{ tabs.map( ( tab ) => (
+							<button key={ tab.name } role="tab">
+								{ tab.title }
+							</button>
+						) ) }
+					</div>
+					{ children( tabs[ 1 ] ) }
+				</section>
+			)
+		);
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByRole( 'textbox', { name: 'Message' } )
+		).toHaveValue( '' );
+	} );
+
+	test( 'message textarea calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setMessage = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_message: [ 'Only while stocks last', setMessage ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		mockTabPanel.mockImplementationOnce(
+			( {
+				children,
+				tabs,
+			}: {
+				children: ( tab: { name: string; title: string } ) => ReactNode;
+				tabs: { name: string; title: string }[];
+			} ) => (
+				<section>
+					<div role="tablist">
+						{ tabs.map( ( tab ) => (
+							<button key={ tab.name } role="tab">
+								{ tab.title }
+							</button>
+						) ) }
+					</div>
+					{ children( tabs[ 1 ] ) }
+				</section>
+			)
+		);
+		render( pluginConfig.render() );
+		const textarea = screen.getByRole( 'textbox', { name: 'Message' } );
+
+		// Act.
+		fireEvent.change( textarea, {
+			target: { value: 'Only while supplies last' },
+		} );
+
+		// Assert.
+		expect( setMessage ).toHaveBeenCalledWith( 'Only while supplies last' );
 	} );
 } );

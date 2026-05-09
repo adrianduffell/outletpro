@@ -6,6 +6,7 @@ import {
 	FontSizePicker,
 	PanelBody,
 	TabPanel,
+	TextareaControl,
 	TextControl,
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUnitControl as UnitControl,
@@ -156,6 +157,12 @@ const ClearanceSectionSidebar = () => {
 		'root',
 		'site',
 		'wc_clearance_badge_padding_left'
+	) as EntityProp< string >;
+
+	const [ message, setMessage ] = useEntityProp(
+		'root',
+		'site',
+		'wc_clearance_message'
 	) as EntityProp< string >;
 
 	const border = {
@@ -339,6 +346,39 @@ const ClearanceSectionSidebar = () => {
 		</>
 	);
 
+	const renderMessageSettings = () => (
+		<>
+			<PanelBody>
+				<p
+					data-testid="wc-clearance-message-tab-description"
+					style={ { marginBottom: 0 } }
+				>
+					{ __(
+						'Customize the clearance message. Changes apply to the whole site.',
+						'wc-clearance'
+					) }
+				</p>
+			</PanelBody>
+
+			<PanelBody title={ __( 'Message', 'wc-clearance' ) } initialOpen>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<TextareaControl
+						label={ __( 'Message', 'wc-clearance' ) }
+						hideLabelFromVision={ true }
+						value={ message ?? '' }
+						onChange={ ( value ) => setMessage( value ) }
+						rows={ 2 }
+						__nextHasNoMarginBottom={ true }
+						help={ __(
+							'Displayed for products included in the clearance section.',
+							'wc-clearance'
+						) }
+					/>
+				</BaseControl>
+			</PanelBody>
+		</>
+	);
+
 	return (
 		<PluginSidebar
 			name={ SIDEBAR_NAME }
@@ -356,9 +396,19 @@ const ClearanceSectionSidebar = () => {
 						title: __( 'Badge', 'wc-clearance' ),
 						className: 'wc-clearance-sidebar__tab',
 					},
+					{
+						name: 'message',
+						title: __( 'Message', 'wc-clearance' ),
+						className: 'wc-clearance-sidebar__tab',
+					},
 				] }
 			>
-				{ renderBadgeSettings }
+				{ ( tab ) => {
+					if ( tab.name === 'message' ) {
+						return renderMessageSettings();
+					}
+					return renderBadgeSettings();
+				} }
 			</TabPanel>
 		</PluginSidebar>
 	);
