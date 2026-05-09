@@ -574,7 +574,7 @@ function register_clearance_badge_experimental_scale_setting(): void {
 		array(
 			'type'              => 'integer',
 			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge scale relative to surrounding text cap height.', 'wc-clearance' ),
+			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
 			'default'           => 120,
 			'sanitize_callback' => 'absint',
 			'show_in_rest'      => array(
