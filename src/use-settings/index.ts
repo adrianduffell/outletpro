@@ -1,5 +1,5 @@
 import useStringEntityProp from '../use-string-entity-prop';
-import { useEntityProp } from '@wordpress/core-data';
+import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
 
 export type Settings = {
 	label: string | undefined;
@@ -74,19 +74,9 @@ const useSettings = (): Settings => {
 	const [ paddingLeft, setPaddingLeft ] = useStringEntityProp(
 		'wc_clearance_badge_padding_left'
 	);
-	const [ rawScale, setRawScale ] = useEntityProp(
-		'root',
-		'site',
+	const [ scale, setScale ] = useUnsignedIntegerEntityProp(
 		'wc_clearance_badge_scale'
 	);
-
-	if ( rawScale !== undefined && typeof rawScale !== 'number' ) {
-		throw new Error(
-			'wc_clearance setting "wc_clearance_badge_scale" must be a number'
-		);
-	}
-
-	const setScale = ( value: number | undefined ) => setRawScale( value );
 	const [ message, setMessage ] = useStringEntityProp(
 		'wc_clearance_message'
 	);
@@ -118,7 +108,7 @@ const useSettings = (): Settings => {
 		setPaddingBottom,
 		paddingLeft,
 		setPaddingLeft,
-		scale: rawScale,
+		scale,
 		setScale,
 		message,
 		setMessage,

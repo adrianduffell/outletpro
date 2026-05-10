@@ -200,16 +200,7 @@ function output_badge_style_css_variables_hook(): void {
 	$declarations = array_map(
 		function ( string $option_name ): string {
 			$variable_name = '--' . str_replace( '_', '-', $option_name );
-
-			if ( CLEARANCE_BADGE_SCALE_OPTION === $option_name ) {
-				$default_scale = CLEARANCE_BADGE_SCALE_DEFAULT;
-				$raw_scale     = get_option( $option_name, $default_scale );
-				$option_value  = is_numeric( $raw_scale )
-					? strval( absint( $raw_scale ) )
-					: strval( $default_scale );
-			} else {
-				$option_value = sanitize_css_value( get_option( $option_name, '' ) );
-			}
+			$option_value  = sanitize_css_value( get_option( $option_name, '' ) );
 
 			return $variable_name . ': ' . ( '' !== $option_value ? $option_value : 'unset' );
 		},

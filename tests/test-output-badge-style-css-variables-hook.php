@@ -37,7 +37,7 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		update_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '2px' );
 		update_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '3px' );
 		update_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '4px' );
-		update_option( CLEARANCE_BADGE_SCALE_OPTION, 140 );
+		update_option( CLEARANCE_BADGE_SCALE_OPTION, '140' );
 
 		deinit_enqueue();
 		enqueue_init();

@@ -1,15 +1,14 @@
 import useStringEntityProp from '../../use-string-entity-prop';
-import { useEntityProp } from '@wordpress/core-data';
+import useUnsignedIntegerEntityProp from '../../use-unsigned-integer-entity-prop';
 import { renderHook } from '@testing-library/react';
 import useSettings from '../';
 
 jest.mock( '../../use-string-entity-prop', () => jest.fn() );
-jest.mock( '@wordpress/core-data', () => ( {
-	useEntityProp: jest.fn(),
-} ) );
+jest.mock( '../../use-unsigned-integer-entity-prop', () => jest.fn() );
 
 const mockUseStringEntityProp = useStringEntityProp as jest.Mock;
-const mockUseEntityProp = useEntityProp as jest.Mock;
+const mockUseUnsignedIntegerEntityProp =
+	useUnsignedIntegerEntityProp as jest.Mock;
 
 function setupMock(
 	overrides: Record< string, string | undefined > = {},
@@ -18,8 +17,8 @@ function setupMock(
 	mockUseStringEntityProp.mockImplementation( ( key: string ) => {
 		return [ overrides[ key ], jest.fn() ];
 	} );
-	mockUseEntityProp.mockReturnValue(
-		scaleOverride ?? [ undefined, jest.fn(), undefined ]
+	mockUseUnsignedIntegerEntityProp.mockReturnValue(
+		scaleOverride ?? [ undefined, jest.fn() ]
 	);
 }
 
@@ -176,10 +175,9 @@ describe( 'useSettings', () => {
 			setters[ key ] ?? jest.fn(),
 		] );
 		const scaleSetter = jest.fn();
-		mockUseEntityProp.mockReturnValue( [
+		mockUseUnsignedIntegerEntityProp.mockReturnValue( [
 			undefined,
 			scaleSetter,
-			undefined,
 		] );
 
 		// Act.
@@ -242,10 +240,10 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'n' );
 	} );
 
-	test( 'calls useStringEntityProp for all 14 string settings and useEntityProp for scale', () => {
+	test( 'calls useStringEntityProp for all 14 string settings and useUnsignedIntegerEntityProp for scale', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
-		mockUseEntityProp.mockClear();
+		mockUseUnsignedIntegerEntityProp.mockClear();
 		setupMock();
 
 		// Act.
@@ -270,11 +268,9 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
 		expect( keys ).toHaveLength( 14 );
-		expect( mockUseEntityProp ).toHaveBeenCalledWith(
-			'root',
-			'site',
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledWith(
 			'wc_clearance_badge_scale'
 		);
-		expect( mockUseEntityProp ).toHaveBeenCalledTimes( 1 );
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledTimes( 1 );
 	} );
 } );
