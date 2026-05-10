@@ -39,7 +39,10 @@ export function buildPreviewStyles(
 			settings.label ?? ''
 		) }`,
 		...Object.entries( entries ).map(
-			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
+			( [ key, value ] ) =>
+				`${ key }: ${
+					value === undefined || value === '' ? 'unset' : value
+				}`
 		),
 	].join( '; ' );
 
