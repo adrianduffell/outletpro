@@ -161,6 +161,36 @@ function sanitize_css_value( $value ): string {
 }
 
 /**
+ * Sanitize a value as an unsigned integer.
+ *
+ * Returns null when the input cannot be normalized to an unsigned integer.
+ *
+ * @internal
+ *
+ * @param mixed $value The value to sanitize.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function sanitize_unsigned_integer( $value ): ?int {
+	if ( is_null( $value ) ) {
+		return null;
+	}
+
+	if ( is_int( $value ) ) {
+		return abs( $value );
+	}
+
+	if ( is_string( $value ) && ctype_digit( $value ) ) {
+		return abs( (int) $value );
+	}
+
+	if ( is_float( $value ) && is_finite( $value ) && $value >= 0 && floor( $value ) === $value ) {
+		return abs( (int) $value );
+	}
+
+	return null;
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
@@ -586,7 +616,7 @@ function register_clearance_badge_scale_setting(): void {
 			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
 			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
 			'default'           => 120,
-			'sanitize_callback' => 'absint',
+			'sanitize_callback' => 'WC_Clearance\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type'    => 'integer',
