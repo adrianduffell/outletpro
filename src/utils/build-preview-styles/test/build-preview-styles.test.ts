@@ -165,13 +165,9 @@ describe( 'buildPreviewStyles', () => {
 			bgColor: '#ff0000',
 		} );
 
-		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Sale";'
-		);
+		expect( result ).toContain( '--wc-clearance-badge-label: "Sale";' );
 
-		expect( result ).toContain(
-			'--wc-clearance-badge-bg-color: #ff0000;'
-		);
+		expect( result ).toContain( '--wc-clearance-badge-bg-color: #ff0000;' );
 	} );
 
 	test( 'does not append a trailing semicolon before the closing brace', () => {
