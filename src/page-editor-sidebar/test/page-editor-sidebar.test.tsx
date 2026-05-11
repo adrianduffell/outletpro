@@ -500,6 +500,27 @@ describe( 'page-editor-sidebar registration', () => {
 		);
 	} );
 
+	test( 'font scale control uses accepted range and step', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_scale: [ 120, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'min', '50' );
+		expect( input ).toHaveAttribute( 'max', '200' );
+		expect( input ).toHaveAttribute( 'step', '5' );
+	} );
+
 	test( 'font weight control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();

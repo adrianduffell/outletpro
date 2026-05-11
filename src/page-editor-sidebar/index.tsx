@@ -237,9 +237,9 @@ const ClearanceSectionSidebar = () => {
 							}
 							setScale( value );
 						} }
-						min={ 0 }
+						min={ 50 }
 						max={ 200 }
-						step={ 1 }
+						step={ 5 }
 						allowReset={ false }
 						withInputField={ false }
 						__next40pxDefaultSize
