@@ -20,11 +20,12 @@ export default function useUnsignedIntegerEntityProp(
 	key: string
 ): [ number | undefined, ( value: number | undefined ) => void ] {
 	const [ value, setValue ] = useEntityProp( 'root', 'site', key );
+	const normalizedValue = value === null ? undefined : value;
 
-	assertUnsignedIntegerValue( value, key );
+	assertUnsignedIntegerValue( normalizedValue, key );
 
 	return [
-		value,
+		normalizedValue,
 		( v: number | undefined ) => {
 			assertUnsignedIntegerValue( v, key );
 			setValue( v );
