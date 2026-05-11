@@ -161,9 +161,12 @@ function sanitize_css_value( $value ): string {
 }
 
 /**
- * Sanitize a value as an unsigned integer.
+ * Sanitize an unsigned integer value.
  *
- * Returns null when the input is null, a negative number, or cannot be cast to an int.
+ * Expects an integer > 0, or null, passed as an int, string, or float.
+ * All other values return null.
+ *
+ * Fractional floats are normalized to int.
  *
  * @internal
  *
