@@ -169,7 +169,7 @@ function enqueue_cart_styles_hook(): void {
 
 	wp_add_inline_style(
 		'wc-clearance-cart-badge',
-		':root { --wc-clearance-badge-label: ' . ( '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'normal' ) . '; }'
+		':root { --wc-clearance-badge-label: ' . ( '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'none' ) . '; }'
 	);
 }
 
