@@ -48,9 +48,6 @@
 		width: fit-content;
 		clear: both;
 		border-radius: var(--wc-clearance-badge-border-radius, unset);
-		border-color: var(--wc-clearance-badge-border-color, unset);
-		border-style: var(--wc-clearance-badge-border-style, unset);
-		border-width: var(--wc-clearance-badge-border-width, unset);
 		padding-top: var(--wc-clearance-badge-padding-top, unset);
 		padding-right: var(--wc-clearance-badge-padding-right, unset);
 		padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
