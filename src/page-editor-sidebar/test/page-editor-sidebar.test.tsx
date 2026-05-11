@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { registerPlugin } from '@wordpress/plugins';
 import useSettings from '../../use-settings';
+import type { Settings } from '../../use-settings';
 import { useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
 
@@ -271,49 +272,51 @@ const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
-type SettingValueProperty =
-	| 'label'
-	| 'textColor'
-	| 'bgColor'
-	| 'fontSize'
-	| 'fontWeight'
-	| 'borderColor'
-	| 'borderStyle'
-	| 'borderWidth'
-	| 'borderRadius'
-	| 'paddingTop'
-	| 'paddingRight'
-	| 'paddingBottom'
-	| 'paddingLeft'
-	| 'scale'
-	| 'message';
+type SettingSetterProperty = {
+	[ Key in keyof Settings ]: Settings[ Key ] extends (
+		...args: never[]
+	) => void
+		? Key
+		: never;
+}[ keyof Settings ];
 
-type SettingSetterProperty =
-	| 'setLabel'
-	| 'setTextColor'
-	| 'setBgColor'
-	| 'setFontSize'
-	| 'setFontWeight'
-	| 'setBorderColor'
-	| 'setBorderStyle'
-	| 'setBorderWidth'
-	| 'setBorderRadius'
-	| 'setPaddingTop'
-	| 'setPaddingRight'
-	| 'setPaddingBottom'
-	| 'setPaddingLeft'
-	| 'setScale'
-	| 'setMessage';
+type SettingsMock = Omit< Settings, SettingSetterProperty > & {
+	[ Key in SettingSetterProperty ]: jest.Mock<
+		void,
+		Parameters< Settings[ Key ] >
+	>;
+};
 
-type SettingsMock = Record<
-	SettingValueProperty,
-	string | number | undefined
-> &
-	Record< SettingSetterProperty, jest.Mock >;
+const settingKeyToPropertyMap = {
+	wc_clearance_badge_label: [ 'label', 'setLabel' ],
+	wc_clearance_badge_text_color: [ 'textColor', 'setTextColor' ],
+	wc_clearance_badge_bg_color: [ 'bgColor', 'setBgColor' ],
+	wc_clearance_badge_font_size: [ 'fontSize', 'setFontSize' ],
+	wc_clearance_badge_font_weight: [ 'fontWeight', 'setFontWeight' ],
+	wc_clearance_badge_border_color: [ 'borderColor', 'setBorderColor' ],
+	wc_clearance_badge_border_style: [ 'borderStyle', 'setBorderStyle' ],
+	wc_clearance_badge_border_width: [ 'borderWidth', 'setBorderWidth' ],
+	wc_clearance_badge_border_radius: [ 'borderRadius', 'setBorderRadius' ],
+	wc_clearance_badge_padding_top: [ 'paddingTop', 'setPaddingTop' ],
+	wc_clearance_badge_padding_right: [ 'paddingRight', 'setPaddingRight' ],
+	wc_clearance_badge_padding_bottom: [ 'paddingBottom', 'setPaddingBottom' ],
+	wc_clearance_badge_padding_left: [ 'paddingLeft', 'setPaddingLeft' ],
+	wc_clearance_badge_scale: [ 'scale', 'setScale' ],
+	wc_clearance_message: [ 'message', 'setMessage' ],
+} as const;
 
-function setupSettingsMock(
-	overrides: Record< string, [ string | number | undefined, jest.Mock ] > = {}
-) {
+type SettingKey = keyof typeof settingKeyToPropertyMap;
+type ValuePropertyFor< Key extends SettingKey > =
+	( typeof settingKeyToPropertyMap )[ Key ][ 0 ];
+
+type SettingsOverrides = Partial< {
+	[ Key in SettingKey ]: [
+		Settings[ ValuePropertyFor< Key > ],
+		jest.Mock< void, [ Settings[ ValuePropertyFor< Key > ] ] >,
+	];
+} >;
+
+function setupSettingsMock( overrides: SettingsOverrides = {} ) {
 	const settings: SettingsMock = {
 		label: undefined,
 		setLabel: jest.fn(),
@@ -347,40 +350,18 @@ function setupSettingsMock(
 		setMessage: jest.fn(),
 	};
 
-	const settingKeyToPropertyMap: Record<
-		string,
-		[ SettingValueProperty, SettingSetterProperty ]
-	> = {
-		wc_clearance_badge_label: [ 'label', 'setLabel' ],
-		wc_clearance_badge_text_color: [ 'textColor', 'setTextColor' ],
-		wc_clearance_badge_bg_color: [ 'bgColor', 'setBgColor' ],
-		wc_clearance_badge_font_size: [ 'fontSize', 'setFontSize' ],
-		wc_clearance_badge_font_weight: [ 'fontWeight', 'setFontWeight' ],
-		wc_clearance_badge_border_color: [ 'borderColor', 'setBorderColor' ],
-		wc_clearance_badge_border_style: [ 'borderStyle', 'setBorderStyle' ],
-		wc_clearance_badge_border_width: [ 'borderWidth', 'setBorderWidth' ],
-		wc_clearance_badge_border_radius: [ 'borderRadius', 'setBorderRadius' ],
-		wc_clearance_badge_padding_top: [ 'paddingTop', 'setPaddingTop' ],
-		wc_clearance_badge_padding_right: [ 'paddingRight', 'setPaddingRight' ],
-		wc_clearance_badge_padding_bottom: [
-			'paddingBottom',
-			'setPaddingBottom',
-		],
-		wc_clearance_badge_padding_left: [ 'paddingLeft', 'setPaddingLeft' ],
-		wc_clearance_badge_scale: [ 'scale', 'setScale' ],
-		wc_clearance_message: [ 'message', 'setMessage' ],
-	};
-
-	Object.entries( overrides ).forEach( ( [ key, [ value, setter ] ] ) => {
-		const settingProperties = settingKeyToPropertyMap[ key ];
-
-		if ( ! settingProperties ) {
+	Object.entries( overrides ).forEach( ( [ key, override ] ) => {
+		if ( ! override ) {
 			return;
 		}
 
-		const [ valueProperty, setterProperty ] = settingProperties;
-		settings[ valueProperty ] = value;
-		settings[ setterProperty ] = setter;
+		const [ value, setter ] = override;
+		const [ valueProperty, setterProperty ] =
+			settingKeyToPropertyMap[ key as SettingKey ];
+		Object.assign( settings, {
+			[ valueProperty ]: value,
+			[ setterProperty ]: setter,
+		} );
 	} );
 
 	mockUseSelect.mockReturnValue( true );
