@@ -8,9 +8,8 @@
 	color: var(--wc-clearance-badge-text-color, unset);
 	border-radius: var(--wc-clearance-badge-border-radius, unset);
 	font-weight: var(--wc-clearance-badge-font-weight, unset);
-	--wc-clearance-badge-base-size: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100);
-	font-size: calc(var(--wc-clearance-badge-base-size) * (100 - var(--wc-clearance-badge-density)) / 100 / (1cap / 1em));
-	padding: calc(var(--wc-clearance-badge-base-size) * var(--wc-clearance-badge-density) / 100 / 2);
+	font-size: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * (100 - var(--wc-clearance-badge-density)) / 100 / (1cap / 1em));
+	padding: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / 2);
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
