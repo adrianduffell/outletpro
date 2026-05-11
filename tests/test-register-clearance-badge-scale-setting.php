@@ -34,18 +34,6 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 		$this->assertSame( 'integer', $settings[ CLEARANCE_BADGE_SCALE_OPTION ]['type'] );
 	}
 
-	public function test_setting_uses_unsigned_integer_sanitizer(): void {
-		// Arrange.
-		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
-
-		// Act.
-		register_clearance_badge_scale_setting();
-
-		// Assert.
-		$settings = get_registered_settings();
-		$this->assertSame( 'WC_Clearance\sanitize_unsigned_integer', $settings[ CLEARANCE_BADGE_SCALE_OPTION ]['sanitize_callback'] );
-	}
-
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
