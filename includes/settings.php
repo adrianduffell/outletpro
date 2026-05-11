@@ -175,15 +175,19 @@ function sanitize_unsigned_integer( $value ): ?int {
 		return null;
 	}
 
+	if ( $value < 0 ) {
+		return null;
+	}
+
 	if ( is_int( $value ) ) {
-		return $value >= 0 ? $value : null;
+		return $value;
 	}
 
 	if ( is_string( $value ) && ctype_digit( $value ) ) {
 		return (int) $value;
 	}
 
-	if ( is_float( $value ) && is_finite( $value ) && $value >= 0 ) {
+	if ( is_float( $value ) && is_finite( $value )) {
 		return (int) $value;
 	}
 
