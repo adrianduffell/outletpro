@@ -16,12 +16,10 @@
 		display: inline-block;
 		width: fit-content;
 		border-radius: var(--wc-clearance-badge-border-radius, unset);
-		padding-top: var(--wc-clearance-badge-padding-top, unset);
-		padding-right: var(--wc-clearance-badge-padding-right, unset);
-		padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
-		padding-left: var(--wc-clearance-badge-padding-left, unset);
+		--wc-clearance-parent-font-size-override: var(--wp--preset--font-size--x-small, calc(var(--wp--preset--font-size--small, 14px) * 0.875));
+		font-size: calc((var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100) * (100 - var(--wc-clearance-badge-density)) / 100 / (1cap / 1em));
+		padding: calc((var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100) * var(--wc-clearance-badge-density) / 100 / 2);
 		font-weight: var(--wc-clearance-badge-font-weight, unset);
-		font-size: var(--wc-clearance-badge-font-size, unset);
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;

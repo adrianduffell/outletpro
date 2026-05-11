@@ -130,6 +130,28 @@ describe( 'useSettings', () => {
 		expect( result.current.scale ).toBe( 140 );
 	} );
 
+	test( 'returns density value from entity prop', () => {
+		// Arrange.
+		mockUseStringEntityProp.mockImplementation( () => [
+			undefined,
+			jest.fn(),
+		] );
+		mockUseUnsignedIntegerEntityProp.mockImplementation(
+			( key: string ) => {
+				if ( key === 'wc_clearance_badge_density' ) {
+					return [ 35, jest.fn() ];
+				}
+				return [ undefined, jest.fn() ];
+			}
+		);
+
+		// Act.
+		const { result } = renderHook( () => useSettings() );
+
+		// Assert.
+		expect( result.current.density ).toBe( 35 );
+	} );
+
 	test( 'exposes setLabel setter from entity prop', () => {
 		// Arrange.
 		const setLabel = jest.fn();
@@ -148,7 +170,7 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'exposes all 15 setters wired to the correct entity prop key', () => {
+	test( 'exposes all 16 setters wired to the correct entity prop key', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
@@ -175,10 +197,15 @@ describe( 'useSettings', () => {
 			setters[ key ] ?? jest.fn(),
 		] );
 		const scaleSetter = jest.fn();
-		mockUseUnsignedIntegerEntityProp.mockReturnValue( [
-			undefined,
-			scaleSetter,
-		] );
+		const densitySetter = jest.fn();
+		mockUseUnsignedIntegerEntityProp.mockImplementation(
+			( key: string ) => {
+				if ( key === 'wc_clearance_badge_density' ) {
+					return [ undefined, densitySetter ];
+				}
+				return [ undefined, scaleSetter ];
+			}
+		);
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -196,6 +223,7 @@ describe( 'useSettings', () => {
 		result.current.setPaddingBottom( 'l' );
 		result.current.setPaddingLeft( 'm' );
 		result.current.setScale( 140 );
+		result.current.setDensity( 35 );
 		result.current.setMessage( 'n' );
 
 		// Assert.
@@ -237,10 +265,11 @@ describe( 'useSettings', () => {
 			'm'
 		);
 		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
+		expect( densitySetter ).toHaveBeenCalledWith( 35 );
 		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'n' );
 	} );
 
-	test( 'calls useStringEntityProp for all 14 string settings and useUnsignedIntegerEntityProp for scale', () => {
+	test( 'calls useStringEntityProp for all 14 string settings and useUnsignedIntegerEntityProp for scale and density', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
 		mockUseUnsignedIntegerEntityProp.mockClear();
@@ -271,6 +300,9 @@ describe( 'useSettings', () => {
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledWith(
 			'wc_clearance_badge_scale'
 		);
-		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledTimes( 1 );
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledWith(
+			'wc_clearance_badge_density'
+		);
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledTimes( 2 );
 	} );
 } );

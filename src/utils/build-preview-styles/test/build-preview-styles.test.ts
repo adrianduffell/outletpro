@@ -15,6 +15,7 @@ describe( 'buildPreviewStyles', () => {
 		paddingBottom: '--wc-clearance-badge-padding-bottom',
 		paddingLeft: '--wc-clearance-badge-padding-left',
 		scale: '--wc-clearance-badge-scale',
+		density: '--wc-clearance-badge-density',
 	};
 
 	test( 'wraps declarations in a :root rule', () => {
@@ -63,6 +64,7 @@ describe( 'buildPreviewStyles', () => {
 		[ 'paddingBottom', '8px' ],
 		[ 'paddingLeft', '12px' ],
 		[ 'scale', 120 ],
+		[ 'density', 30 ],
 	] as const )( 'includes %s CSS var', ( key, value ) => {
 		const result = buildPreviewStyles( { [ key ]: value } );
 
@@ -85,6 +87,7 @@ describe( 'buildPreviewStyles', () => {
 			paddingBottom: '8px',
 			paddingLeft: '12px',
 			scale: 120,
+			density: 30,
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
@@ -113,6 +116,7 @@ describe( 'buildPreviewStyles', () => {
 		);
 		expect( result ).toContain( '--wc-clearance-badge-padding-left: 12px' );
 		expect( result ).toContain( '--wc-clearance-badge-scale: 120' );
+		expect( result ).toContain( '--wc-clearance-badge-density: 30' );
 	} );
 
 	test.each(
@@ -157,6 +161,14 @@ describe( 'buildPreviewStyles', () => {
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-scale: 0' );
+	} );
+
+	test( 'outputs 0 for zero density', () => {
+		const result = buildPreviewStyles( {
+			density: 0,
+		} );
+
+		expect( result ).toContain( '--wc-clearance-badge-density: 0' );
 	} );
 
 	test( 'joins declarations with semicolons', () => {
