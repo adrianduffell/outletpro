@@ -4,6 +4,7 @@
 
 .wc-clearance-badge {
 	display: inline-block;
+	width: fit-content;
 	background-color: var(--wc-clearance-badge-bg-color, unset);
 	color: var(--wc-clearance-badge-text-color, unset);
 	border-radius: var(--wc-clearance-badge-border-radius, unset);
