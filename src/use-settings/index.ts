@@ -1,4 +1,5 @@
 import useStringEntityProp from '../use-string-entity-prop';
+import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
 
 export type Settings = {
 	label: string | undefined;
@@ -27,6 +28,8 @@ export type Settings = {
 	setPaddingBottom: ( value: string | undefined ) => void;
 	paddingLeft: string | undefined;
 	setPaddingLeft: ( value: string | undefined ) => void;
+	scale: number | undefined;
+	setScale: ( value: number | undefined ) => void;
 	message: string | undefined;
 	setMessage: ( value: string | undefined ) => void;
 };
@@ -71,6 +74,9 @@ const useSettings = (): Settings => {
 	const [ paddingLeft, setPaddingLeft ] = useStringEntityProp(
 		'wc_clearance_badge_padding_left'
 	);
+	const [ scale, setScale ] = useUnsignedIntegerEntityProp(
+		'wc_clearance_badge_scale'
+	);
 	const [ message, setMessage ] = useStringEntityProp(
 		'wc_clearance_message'
 	);
@@ -102,6 +108,8 @@ const useSettings = (): Settings => {
 		setPaddingBottom,
 		paddingLeft,
 		setPaddingLeft,
+		scale,
+		setScale,
 		message,
 		setMessage,
 	};
