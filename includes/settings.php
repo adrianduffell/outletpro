@@ -161,6 +161,47 @@ function sanitize_css_value( $value ): string {
 }
 
 /**
+ * Sanitize an unsigned integer value.
+ *
+ * Expects an integer > 0, or null, passed as an int, string, or float.
+ * All other values return null.
+ *
+ * Fractional floats are normalized to int.
+ *
+ * @internal
+ *
+ * @param mixed $value The value to sanitize.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function sanitize_unsigned_integer( $value ): ?int {
+	if ( is_null( $value ) ) {
+		return null;
+	}
+
+	if ( ! is_scalar( $value ) ) {
+		return null;
+	}
+
+	if ( $value < 0 ) {
+		return null;
+	}
+
+	if ( is_int( $value ) ) {
+		return $value;
+	}
+
+	if ( is_string( $value ) && ctype_digit( $value ) ) {
+		return (int) $value;
+	}
+
+	if ( is_float( $value ) && is_finite( $value ) ) {
+		return (int) $value;
+	}
+
+	return null;
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
