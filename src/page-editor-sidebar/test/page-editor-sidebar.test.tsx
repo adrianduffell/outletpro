@@ -271,10 +271,50 @@ const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
+type SettingValueProperty =
+	| 'label'
+	| 'textColor'
+	| 'bgColor'
+	| 'fontSize'
+	| 'fontWeight'
+	| 'borderColor'
+	| 'borderStyle'
+	| 'borderWidth'
+	| 'borderRadius'
+	| 'paddingTop'
+	| 'paddingRight'
+	| 'paddingBottom'
+	| 'paddingLeft'
+	| 'scale'
+	| 'message';
+
+type SettingSetterProperty =
+	| 'setLabel'
+	| 'setTextColor'
+	| 'setBgColor'
+	| 'setFontSize'
+	| 'setFontWeight'
+	| 'setBorderColor'
+	| 'setBorderStyle'
+	| 'setBorderWidth'
+	| 'setBorderRadius'
+	| 'setPaddingTop'
+	| 'setPaddingRight'
+	| 'setPaddingBottom'
+	| 'setPaddingLeft'
+	| 'setScale'
+	| 'setMessage';
+
+type SettingsMock = Record<
+	SettingValueProperty,
+	string | number | undefined
+> &
+	Record< SettingSetterProperty, jest.Mock >;
+
 function setupSettingsMock(
 	overrides: Record< string, [ string | number | undefined, jest.Mock ] > = {}
 ) {
-	const settings = {
+	const settings: SettingsMock = {
 		label: undefined,
 		setLabel: jest.fn(),
 		textColor: undefined,
@@ -309,7 +349,7 @@ function setupSettingsMock(
 
 	const settingKeyToPropertyMap: Record<
 		string,
-		[ keyof typeof settings, keyof typeof settings ]
+		[ SettingValueProperty, SettingSetterProperty ]
 	> = {
 		wc_clearance_badge_label: [ 'label', 'setLabel' ],
 		wc_clearance_badge_text_color: [ 'textColor', 'setTextColor' ],
