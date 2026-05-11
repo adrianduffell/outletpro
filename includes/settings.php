@@ -180,11 +180,11 @@ function sanitize_unsigned_integer( $value ): ?int {
 	}
 
 	if ( is_string( $value ) && ctype_digit( $value ) ) {
-		return abs( (int) $value );
+		return (int) $value;
 	}
 
 	if ( is_float( $value ) && is_finite( $value ) && $value >= 0 && floor( $value ) === $value ) {
-		return abs( (int) $value );
+		return (int) $value;
 	}
 
 	return null;
