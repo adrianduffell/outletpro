@@ -282,7 +282,7 @@ function setupSettingsMock(
 		setMessage: jest.fn(),
 	};
 
-	const settingKeyMap: Record<
+	const settingKeyToPropertyMap: Record<
 		string,
 		[ keyof typeof settings, keyof typeof settings ]
 	> = {
@@ -307,13 +307,13 @@ function setupSettingsMock(
 	};
 
 	Object.entries( overrides ).forEach( ( [ key, [ value, setter ] ] ) => {
-		const mappedSetting = settingKeyMap[ key ];
+		const settingProperties = settingKeyToPropertyMap[ key ];
 
-		if ( ! mappedSetting ) {
+		if ( ! settingProperties ) {
 			return;
 		}
 
-		const [ valueProperty, setterProperty ] = mappedSetting;
+		const [ valueProperty, setterProperty ] = settingProperties;
 		settings[ valueProperty ] = value;
 		settings[ setterProperty ] = setter;
 	} );
