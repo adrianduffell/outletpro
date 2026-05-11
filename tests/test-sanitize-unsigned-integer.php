@@ -20,7 +20,7 @@ class Test_Sanitize_Unsigned_Integer extends WP_UnitTestCase {
 		$this->assertNull( $result );
 	}
 
-	public function test_returns_absolute_value_for_negative_integer(): void {
+	public function test_returns_null_for_negative_integer(): void {
 		// Arrange.
 		$value = -123;
 
