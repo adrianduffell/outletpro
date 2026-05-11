@@ -50,7 +50,7 @@ const FONT_SIZES = [
 	{ name: 'L', slug: 'm', size: '0.83em' },
 	{ name: 'XL', slug: 'l', size: '1em' },
 ];
-const DEFAULT_FONT_SCALE = 2;
+const DEFAULT_SCALE = 120;
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'wc-clearance' ), key: '' },
@@ -167,6 +167,12 @@ const ClearanceSectionSidebar = () => {
 		'wc_clearance_message'
 	) as EntityProp< string >;
 
+	const [ scale, setScale ] = useEntityProp(
+		'root',
+		'site',
+		'wc_clearance_badge_scale'
+	) as EntityProp< number >;
+
 	const border = {
 		color: borderColor || undefined,
 		style: borderStyle || undefined,
@@ -194,11 +200,7 @@ const ClearanceSectionSidebar = () => {
 			( option ) => option.key === ( fontWeight || '' )
 		) || fontWeightOptions[ 0 ];
 
-	const currentFontScale = FONT_SIZES.findIndex(
-		( option ) => option.size === fontSize
-	);
-	const selectedFontScale =
-		currentFontScale >= 0 ? currentFontScale : DEFAULT_FONT_SCALE;
+	const selectedFontScale = scale ?? DEFAULT_SCALE;
 
 	const renderBadgeSettings = () => (
 		<>
@@ -233,10 +235,10 @@ const ClearanceSectionSidebar = () => {
 							if ( typeof value !== 'number' ) {
 								return;
 							}
-							setFontSize( FONT_SIZES[ value ]?.size );
+							setScale( value );
 						} }
 						min={ 0 }
-						max={ FONT_SIZES.length - 1 }
+						max={ 200 }
 						step={ 1 }
 						allowReset={ false }
 						withInputField={ false }

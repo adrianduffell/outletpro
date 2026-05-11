@@ -98,15 +98,24 @@ jest.mock( '@wordpress/components', () => ( {
 		label,
 		value,
 		onChange,
+		min,
+		max,
+		step,
 	}: {
 		label: string;
 		value: number;
 		onChange: ( v: number | undefined ) => void;
+		min?: number;
+		max?: number;
+		step?: number;
 	} ) => (
 		<input
 			type="range"
 			aria-label={ label }
 			value={ value }
+			min={ min }
+			max={ max }
+			step={ step }
 			onChange={ ( e ) => onChange( Number( e.target.value ) ) }
 		/>
 	),
@@ -262,7 +271,7 @@ const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
 function setupEntityPropMock(
-	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}
+	overrides: Record< string, [ unknown, jest.Mock ] > = {}
 ) {
 	mockUseSelect.mockReturnValue( true );
 	mockUseEntityProp.mockImplementation(
@@ -471,11 +480,11 @@ describe( 'page-editor-sidebar registration', () => {
 		).toHaveValue( '1rem' );
 	} );
 
-	test( 'font scale control reflects stored font size', () => {
+	test( 'font scale control reflects stored scale value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		setupEntityPropMock( {
-			wc_clearance_badge_font_size: [ '1em', jest.fn() ],
+			wc_clearance_badge_scale: [ 140, jest.fn() ],
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -487,7 +496,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( screen.getByRole( 'slider', { name: 'Scale' } ) ).toHaveValue(
-			'3'
+			'140'
 		);
 	} );
 
@@ -626,12 +635,12 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( setFontSize ).toHaveBeenCalledWith( '1rem' );
 	} );
 
-	test( 'font scale control calls font size setter when changed', () => {
+	test( 'font scale control calls scale setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		const setFontSize = jest.fn();
+		const setScale = jest.fn();
 		setupEntityPropMock( {
-			wc_clearance_badge_font_size: [ '0.83em', setFontSize ],
+			wc_clearance_badge_scale: [ 120, setScale ],
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -641,10 +650,10 @@ describe( 'page-editor-sidebar registration', () => {
 		const input = screen.getByRole( 'slider', { name: 'Scale' } );
 
 		// Act.
-		fireEvent.change( input, { target: { value: '1' } } );
+		fireEvent.change( input, { target: { value: '130' } } );
 
 		// Assert.
-		expect( setFontSize ).toHaveBeenCalledWith( '0.75em' );
+		expect( setScale ).toHaveBeenCalledWith( 130 );
 	} );
 
 	test( 'text color control calls setter when changed', () => {
