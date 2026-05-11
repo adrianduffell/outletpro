@@ -39,7 +39,7 @@ describe( 'useStringEntityProp', () => {
 		expect( result.current[ 0 ] ).toBeUndefined();
 	} );
 
-	test( 'returns undefined when entity prop is null', () => {
+	test( 'normalizes null entity prop to undefined', () => {
 		// Arrange.
 		mockUseEntityProp.mockReturnValue( [ null, jest.fn(), undefined ] );
 
