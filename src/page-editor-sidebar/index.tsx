@@ -5,6 +5,7 @@ import {
 	CustomSelectControl,
 	FontSizePicker,
 	PanelBody,
+	RangeControl,
 	TabPanel,
 	TextareaControl,
 	TextControl,
@@ -103,6 +104,8 @@ const ClearanceSectionSidebar = () => {
 		setPaddingBottom,
 		paddingLeft,
 		setPaddingLeft,
+		scale,
+		setScale,
 		message,
 		setMessage,
 	} = useSettings();
@@ -207,6 +210,26 @@ const ClearanceSectionSidebar = () => {
 			/>
 
 			<PanelBody title={ __( 'Dimensions', 'wc-clearance' ) }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<RangeControl
+						label={ __( 'Scale', 'wc-clearance' ) }
+						value={ scale }
+						onChange={ ( value ) => {
+							if ( typeof value !== 'number' ) {
+								return;
+							}
+							setScale( value );
+						} }
+						min={ 50 }
+						max={ 200 }
+						step={ 5 }
+						allowReset={ true }
+						resetFallbackValue={ 140 }
+						withInputField={ false }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+
 				<BoxControl
 					values={ padding }
 					label={ __( 'Padding', 'wc-clearance' ) }

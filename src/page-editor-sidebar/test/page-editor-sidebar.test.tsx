@@ -95,6 +95,31 @@ jest.mock( '@wordpress/components', () => ( {
 			onChange={ ( e ) => onChange( e.target.value || undefined ) }
 		/>
 	),
+	RangeControl: ( {
+		label,
+		value,
+		onChange,
+		min,
+		max,
+		step,
+	}: {
+		label: string;
+		value?: number;
+		onChange: ( v: number | undefined ) => void;
+		min?: number;
+		max?: number;
+		step?: number;
+	} ) => (
+		<input
+			type="range"
+			aria-label={ label }
+			value={ value }
+			min={ min }
+			max={ max }
+			step={ step }
+			onChange={ ( e ) => onChange( Number( e.target.value ) ) }
+		/>
+	),
 	PanelBody: ( {
 		children,
 		title,
@@ -518,6 +543,89 @@ describe( 'page-editor-sidebar registration', () => {
 		).toHaveValue( '1rem' );
 	} );
 
+	test( 'font scale control reflects stored scale value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupSettingsMock( {
+			wc_clearance_badge_scale: [ 140, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect( screen.getByRole( 'slider', { name: 'Scale' } ) ).toHaveValue(
+			'140'
+		);
+	} );
+
+	test( 'font scale control allows undefined scale value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setScale = jest.fn();
+		setupSettingsMock( {
+			wc_clearance_badge_scale: [ undefined, setScale ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'value', '' );
+		expect( setScale ).not.toHaveBeenCalled();
+	} );
+
+	test( 'font scale control calls setter when changed from undefined', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setScale = jest.fn();
+		setupSettingsMock( {
+			wc_clearance_badge_scale: [ undefined, setScale ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '130' } } );
+
+		// Assert.
+		expect( setScale ).toHaveBeenCalledWith( 130 );
+	} );
+
+	test( 'font scale control uses accepted range and step', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupSettingsMock( {
+			wc_clearance_badge_scale: [ 120, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'min', '50' );
+		expect( input ).toHaveAttribute( 'max', '200' );
+		expect( input ).toHaveAttribute( 'step', '5' );
+	} );
+
 	test( 'font weight control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
@@ -651,6 +759,27 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( setFontSize ).toHaveBeenCalledWith( '1rem' );
+	} );
+
+	test( 'font scale control calls scale setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setScale = jest.fn();
+		setupSettingsMock( {
+			wc_clearance_badge_scale: [ 120, setScale ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '130' } } );
+
+		// Assert.
+		expect( setScale ).toHaveBeenCalledWith( 130 );
 	} );
 
 	test( 'text color control calls setter when changed', () => {
