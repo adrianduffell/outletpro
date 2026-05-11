@@ -64,7 +64,7 @@ class Test_Sanitize_Unsigned_Integer extends WP_UnitTestCase {
 		$this->assertSame( 140, $result );
 	}
 
-	public function test_returns_null_for_fractional_float(): void {
+	public function test_returns_integer_for_fractional_float(): void {
 		// Arrange.
 		$value = 140.5;
 
@@ -72,7 +72,7 @@ class Test_Sanitize_Unsigned_Integer extends WP_UnitTestCase {
 		$result = sanitize_unsigned_integer( $value );
 
 		// Assert.
-		$this->assertNull( $result );
+		$this->assertSame( 140, $result );
 	}
 
 	public function test_returns_null_for_negative_float(): void {

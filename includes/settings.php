@@ -183,7 +183,7 @@ function sanitize_unsigned_integer( $value ): ?int {
 		return (int) $value;
 	}
 
-	if ( is_float( $value ) && is_finite( $value ) && $value >= 0 && floor( $value ) === $value ) {
+	if ( is_float( $value ) && is_finite( $value ) && $value >= 0 ) {
 		return (int) $value;
 	}
 
