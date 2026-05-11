@@ -67,6 +67,7 @@ class Test_Render_Clearance_Badge_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'wc-clearance-badge', $result );
 		$this->assertStringContainsString( 'Clearance', $result );
+		$this->assertMatchesRegularExpression( '/<div[^>]+class="[^"]*wc-clearance-badge/', $result );
 	}
 
 	public function test_badge_uses_global_badge_label_option(): void {

@@ -5,6 +5,7 @@ import {
 	CustomSelectControl,
 	FontSizePicker,
 	PanelBody,
+	RangeControl,
 	TabPanel,
 	TextareaControl,
 	TextControl,
@@ -165,6 +166,12 @@ const ClearanceSectionSidebar = () => {
 		'wc_clearance_message'
 	) as EntityProp< string >;
 
+	const [ scale, setScale ] = useEntityProp(
+		'root',
+		'site',
+		'wc_clearance_badge_scale'
+	) as EntityProp< number >;
+
 	const border = {
 		color: borderColor || undefined,
 		style: borderStyle || undefined,
@@ -265,6 +272,26 @@ const ClearanceSectionSidebar = () => {
 			/>
 
 			<PanelBody title={ __( 'Dimensions', 'wc-clearance' ) }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<RangeControl
+						label={ __( 'Scale', 'wc-clearance' ) }
+						value={ scale }
+						onChange={ ( value ) => {
+							if ( typeof value !== 'number' ) {
+								return;
+							}
+							setScale( value );
+						} }
+						min={ 50 }
+						max={ 200 }
+						step={ 5 }
+						allowReset={ true }
+						resetFallbackValue={ 140 }
+						withInputField={ false }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+
 				<BoxControl
 					values={ padding }
 					label={ __( 'Padding', 'wc-clearance' ) }

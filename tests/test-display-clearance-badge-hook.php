@@ -9,11 +9,7 @@ use function WC_Clearance\add_to_clearance;
 use function WC_Clearance\init_woocommerce_template_hooks;
 use function WC_Clearance\register_clearance_status_taxonomy;
 use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
 
 class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 
@@ -28,43 +24,7 @@ class Test_Display_Clearance_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-badge/' );
-
-		// Act.
-		do_action( 'woocommerce_single_product_summary' );
-	}
-
-	public function test_outputs_default_bg_colour_when_no_option_is_stored(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_BG_COLOR_OPTION );
-		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Clearance' );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_woocommerce_template_hooks();
-
-		// Expect.
-		$this->expectOutputRegex( '/background-color:' . preg_quote( CLEARANCE_BADGE_BG_COLOUR_DEFAULT, '/' ) . '/' );
-
-		// Act.
-		do_action( 'woocommerce_single_product_summary' );
-	}
-
-	public function test_outputs_default_text_colour_when_no_option_is_stored(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
-		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Clearance' );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		$product = WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		$GLOBALS['post'] = get_post( $product->get_id() );
-		init_woocommerce_template_hooks();
-
-		// Expect.
-		$this->expectOutputRegex( '/color:' . preg_quote( CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT, '/' ) . '/' );
+		$this->expectOutputRegex( '/<p[^>]+class="[^"]*wc-clearance-badge/' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );

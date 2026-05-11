@@ -22,7 +22,7 @@ export function Edit(): JSX.Element {
 	return (
 		<RichText
 			{ ...blockProps }
-			tagName="span"
+			tagName="div"
 			value={ label || __( 'Clearance', 'wc-clearance' ) }
 			onChange={ ( value: string ) => setLabel( value ) }
 			allowedFormats={ [] }

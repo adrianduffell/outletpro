@@ -13,6 +13,7 @@ type BuildPreviewStylesParams = {
 	paddingBottom?: string;
 	paddingLeft?: string;
 	scale?: number;
+	density?: number;
 };
 
 export function buildPreviewStyles(
@@ -38,6 +39,7 @@ export function buildPreviewStyles(
 			settings.label ?? ''
 		) }`,
 		`--wc-clearance-badge-scale: ${ settings.scale ?? 'unset' }`,
+		`--wc-clearance-badge-density: ${ settings.density ?? 'unset' }`,
 		...Object.entries( entries ).map(
 			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
 		),
