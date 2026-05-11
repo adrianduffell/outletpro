@@ -231,7 +231,62 @@ class Test_Sanitize_Css_Value extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_for_non_string_value(): void {
 		// Arrange.
+		$value = true;
+
+		// Act.
+		$result = sanitize_css_value( $value );
+
+		// Assert.
+		$this->assertSame( '', $result );
+	}
+
+	public function test_returns_string_for_integer_value(): void {
+		// Arrange.
 		$value = 10;
+
+		// Act.
+		$result = sanitize_css_value( $value );
+
+		// Assert.
+		$this->assertSame( '10', $result );
+	}
+
+	public function test_returns_string_for_float_value(): void {
+		// Arrange.
+		$value = 1.5;
+
+		// Act.
+		$result = sanitize_css_value( $value );
+
+		// Assert.
+		$this->assertSame( '1.5', $result );
+	}
+
+	public function test_returns_empty_string_for_nan_value(): void {
+		// Arrange.
+		$value = NAN;
+
+		// Act.
+		$result = sanitize_css_value( $value );
+
+		// Assert.
+		$this->assertSame( '', $result );
+	}
+
+	public function test_returns_empty_string_for_infinite_value(): void {
+		// Arrange.
+		$value = INF;
+
+		// Act.
+		$result = sanitize_css_value( $value );
+
+		// Assert.
+		$this->assertSame( '', $result );
+	}
+
+	public function test_returns_empty_string_for_negative_infinite_value(): void {
+		// Arrange.
+		$value = -INF;
 
 		// Act.
 		$result = sanitize_css_value( $value );

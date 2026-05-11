@@ -9,7 +9,7 @@ jest.mock( '@wordpress/core-data', () => ( {
 const mockUseEntityProp = useEntityProp as jest.Mock;
 
 function setupEntityPropMock(
-	overrides: Record< string, [ string | undefined, jest.Mock ] > = {}
+	overrides: Record< string, [ string | number | undefined, jest.Mock ] > = {}
 ) {
 	mockUseEntityProp.mockImplementation(
 		( _kind: string, _name: string, key: string ) => {
@@ -46,6 +46,7 @@ describe( 'EditorPreview', () => {
 			wc_clearance_badge_label: [ 'Sale', jest.fn() ],
 			wc_clearance_badge_bg_color: [ '#ff0000', jest.fn() ],
 			wc_clearance_badge_text_color: [ '#ffffff', jest.fn() ],
+			wc_clearance_badge_scale: [ 140, jest.fn() ],
 		} );
 
 		// Act.
@@ -64,6 +65,9 @@ describe( 'EditorPreview', () => {
 		);
 		expect( styleEl?.textContent ).toContain(
 			'--wc-clearance-badge-text-color: #ffffff'
+		);
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-scale: 140'
 		);
 	} );
 

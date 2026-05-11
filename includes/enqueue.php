@@ -194,6 +194,7 @@ function output_badge_style_css_variables_hook(): void {
 		CLEARANCE_BADGE_PADDING_RIGHT_OPTION,
 		CLEARANCE_BADGE_PADDING_BOTTOM_OPTION,
 		CLEARANCE_BADGE_PADDING_LEFT_OPTION,
+		CLEARANCE_BADGE_SCALE_OPTION,
 	);
 
 	$declarations = array_map(

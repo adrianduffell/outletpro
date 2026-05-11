@@ -49,16 +49,21 @@ class Test_Register_Clearance_Badge_Text_Color_Setting extends WP_UnitTestCase {
 		$this->assertArrayHasKey( CLEARANCE_BADGE_TEXT_COLOR_OPTION, $response->get_data() );
 	}
 
-	public function test_setting_default_is_dark(): void {
+	public function test_setting_default_is_empty_string(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_TEXT_COLOR_OPTION );
+		delete_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION );
+		register_clearance_badge_text_color_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
 
 		// Act.
-		register_clearance_badge_text_color_setting();
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/settings' );
+		$response = rest_do_request( $request );
+		$data     = $response->get_data();
 
 		// Assert.
-		$settings = get_registered_settings();
-		$this->assertSame( '#222', $settings[ CLEARANCE_BADGE_TEXT_COLOR_OPTION ]['default'] );
+		$this->assertSame( '', $data[ CLEARANCE_BADGE_TEXT_COLOR_OPTION ] );
 	}
 
 	public function test_setting_can_be_updated_via_rest(): void {

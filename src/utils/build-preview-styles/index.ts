@@ -12,6 +12,7 @@ type BuildPreviewStylesParams = {
 	paddingRight?: string;
 	paddingBottom?: string;
 	paddingLeft?: string;
+	scale?: number;
 };
 
 export function buildPreviewStyles(
@@ -36,6 +37,7 @@ export function buildPreviewStyles(
 		`--wc-clearance-badge-label: ${ JSON.stringify(
 			settings.label ?? ''
 		) }`,
+		`--wc-clearance-badge-scale: ${ settings.scale ?? 'unset' }`,
 		...Object.entries( entries ).map(
 			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
 		),

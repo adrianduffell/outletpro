@@ -115,17 +115,34 @@ const CLEARANCE_BADGE_PADDING_BOTTOM_OPTION = 'wc_clearance_badge_padding_bottom
 const CLEARANCE_BADGE_PADDING_LEFT_OPTION = 'wc_clearance_badge_padding_left';
 
 /**
+ * WordPress option key used to store the badge scale.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_scale';
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
  * Intentionally light-weight as CSS is broad and evolving.
  *
+ * Accepts int and float in addition to string so that callers may pass numeric
+ * CSS values (e.g. a unitless scale factor) without first converting them.
+ * The numeric value is converted to its string representation before the
+ * remaining sanitization steps run.
+ *
  * @internal
  *
- * @param mixed $value The CSS property value to sanitize.
+ * @param mixed $value The CSS property value to sanitize. Accepts string, int, or float.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
 function sanitize_css_value( $value ): string {
+	if ( is_int( $value ) || ( is_float( $value ) && is_finite( $value ) ) ) {
+		// Convert numeric types to string for the CSS pipeline.
+		$value = (string) $value;
+	}
+
 	if ( ! is_string( $value ) ) {
 		return '';
 	}
@@ -141,6 +158,47 @@ function sanitize_css_value( $value ): string {
 	}
 
 	return $value;
+}
+
+/**
+ * Sanitize an unsigned integer value.
+ *
+ * Expects an integer > 0, or null, passed as an int, string, or float.
+ * All other values return null.
+ *
+ * Fractional floats are normalized to int.
+ *
+ * @internal
+ *
+ * @param mixed $value The value to sanitize.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function sanitize_unsigned_integer( $value ): ?int {
+	if ( is_null( $value ) ) {
+		return null;
+	}
+
+	if ( ! is_scalar( $value ) ) {
+		return null;
+	}
+
+	if ( $value < 0 ) {
+		return null;
+	}
+
+	if ( is_int( $value ) ) {
+		return $value;
+	}
+
+	if ( is_string( $value ) && ctype_digit( $value ) ) {
+		return (int) $value;
+	}
+
+	if ( is_float( $value ) && is_finite( $value ) ) {
+		return (int) $value;
+	}
+
+	return null;
 }
 
 /**
@@ -172,6 +230,7 @@ function init_settings(): void {
 	register_clearance_badge_padding_right_setting();
 	register_clearance_badge_padding_bottom_setting();
 	register_clearance_badge_padding_left_setting();
+	register_clearance_badge_scale_setting();
 	register_clearance_message_setting();
 }
 
@@ -217,6 +276,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
+	add_option( CLEARANCE_BADGE_SCALE_OPTION, 120 );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -254,7 +314,7 @@ function register_clearance_badge_label_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
-			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -278,7 +338,7 @@ function register_clearance_badge_text_color_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge text color', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge text color.', 'wc-clearance' ),
-			'default'           => '#222',
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -302,7 +362,7 @@ function register_clearance_badge_bg_color_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
-			'default'           => '#FFEE85',
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -547,6 +607,31 @@ function register_clearance_badge_padding_left_setting(): void {
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge scale setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_scale_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_SCALE_OPTION,
+		array(
+			'type'              => 'integer',
+			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
+			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
+			'default'           => null,
+			'sanitize_callback' => 'absint',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type'    => 'integer',
+					'minimum' => 0,
 				),
 			),
 		)
