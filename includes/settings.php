@@ -273,7 +273,7 @@ function register_clearance_badge_label_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
-			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -297,7 +297,7 @@ function register_clearance_badge_text_color_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge text color', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge text color.', 'wc-clearance' ),
-			'default'           => '#222',
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -321,7 +321,7 @@ function register_clearance_badge_bg_color_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
-			'default'           => '#FFEE85',
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
