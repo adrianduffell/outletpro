@@ -129,12 +129,14 @@ describe( 'buildPreviewStyles', () => {
 			borderWidth: '0',
 			borderRadius: '0',
 			paddingTop: '0',
+			scale: undefined,
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: unset' );
 		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
+		expect( result ).toContain( '--wc-clearance-badge-scale: unset' );
 	} );
 
 	test( 'outputs unset for undefined or empty alongside defined values', () => {
@@ -147,6 +149,14 @@ describe( 'buildPreviewStyles', () => {
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: #000' );
 		expect( result ).toContain( '--wc-clearance-badge-text-color: unset' );
 		expect( result ).toContain( '--wc-clearance-badge-font-size: unset' );
+	} );
+
+	test( 'outputs 0 for zero scale', () => {
+		const result = buildPreviewStyles( {
+			scale: 0,
+		} );
+
+		expect( result ).toContain( '--wc-clearance-badge-scale: 0' );
 	} );
 
 	test( 'joins declarations with semicolons', () => {
