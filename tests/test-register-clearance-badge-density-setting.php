@@ -34,7 +34,7 @@ class Test_Register_Clearance_Badge_Density_Setting extends WP_UnitTestCase {
 		$this->assertSame( 'integer', $settings[ CLEARANCE_BADGE_DENSITY_OPTION ]['type'] );
 	}
 
-	public function test_setting_default_is_null(): void {
+	public function test_setting_default_is_null_when_option_not_set(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_DENSITY_OPTION );
 		delete_option( CLEARANCE_BADGE_DENSITY_OPTION );

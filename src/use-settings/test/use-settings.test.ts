@@ -297,6 +297,7 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
 		expect( keys ).toHaveLength( 14 );
+		expect( keys ).not.toContain( 'wc_clearance_badge_density' );
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledWith(
 			'wc_clearance_badge_scale'
 		);
