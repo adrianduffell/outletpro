@@ -49,7 +49,7 @@ class Test_Register_Clearance_Badge_Label_Setting extends WP_UnitTestCase {
 		$this->assertArrayHasKey( CLEARANCE_BADGE_LABEL_OPTION, $response->get_data() );
 	}
 
-	public function test_setting_default_is_clearance(): void {
+	public function test_setting_default_is_empty_string(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_LABEL_OPTION );
 
@@ -58,7 +58,7 @@ class Test_Register_Clearance_Badge_Label_Setting extends WP_UnitTestCase {
 
 		// Assert.
 		$settings = get_registered_settings();
-		$this->assertSame( 'Clearance', $settings[ CLEARANCE_BADGE_LABEL_OPTION ]['default'] );
+		$this->assertSame( '', $settings[ CLEARANCE_BADGE_LABEL_OPTION ]['default'] );
 	}
 
 	public function test_setting_can_be_updated_via_rest_and_is_sanitized(): void {
