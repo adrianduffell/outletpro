@@ -161,6 +161,47 @@ function sanitize_css_value( $value ): string {
 }
 
 /**
+ * Sanitize an unsigned integer value.
+ *
+ * Expects an integer > 0, or null, passed as an int, string, or float.
+ * All other values return null.
+ *
+ * Fractional floats are normalized to int.
+ *
+ * @internal
+ *
+ * @param mixed $value The value to sanitize.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function sanitize_unsigned_integer( $value ): ?int {
+	if ( is_null( $value ) ) {
+		return null;
+	}
+
+	if ( ! is_scalar( $value ) ) {
+		return null;
+	}
+
+	if ( $value < 0 ) {
+		return null;
+	}
+
+	if ( is_int( $value ) ) {
+		return $value;
+	}
+
+	if ( is_string( $value ) && ctype_digit( $value ) ) {
+		return (int) $value;
+	}
+
+	if ( is_float( $value ) && is_finite( $value ) ) {
+		return (int) $value;
+	}
+
+	return null;
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
@@ -273,7 +314,7 @@ function register_clearance_badge_label_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
-			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -297,7 +338,7 @@ function register_clearance_badge_text_color_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge text color', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge text color.', 'wc-clearance' ),
-			'default'           => '#222',
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -321,7 +362,7 @@ function register_clearance_badge_bg_color_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
 			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
-			'default'           => '#FFEE85',
+			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
 				'schema' => array(
@@ -585,7 +626,7 @@ function register_clearance_badge_scale_setting(): void {
 			'type'              => 'integer',
 			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
 			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
-			'default'           => 120,
+			'default'           => null,
 			'sanitize_callback' => 'absint',
 			'show_in_rest'      => array(
 				'schema' => array(
