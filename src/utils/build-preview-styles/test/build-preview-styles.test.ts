@@ -156,7 +156,11 @@ describe( 'buildPreviewStyles', () => {
 		} );
 
 		expect( result ).toContain(
-			'--wc-clearance-badge-label: "Sale"; --wc-clearance-badge-bg-color: #ff0000'
+			'--wc-clearance-badge-label: "Sale";'
+		);
+
+		expect( result ).toContain(
+			'--wc-clearance-badge-bg-color: #ff0000;'
 		);
 	} );
 
