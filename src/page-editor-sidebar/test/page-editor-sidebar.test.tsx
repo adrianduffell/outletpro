@@ -503,8 +503,9 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'font scale control allows undefined scale value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		const setScale = jest.fn();
 		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ undefined, jest.fn() ],
+			wc_clearance_badge_scale: [ undefined, setScale ],
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -517,9 +518,10 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( input ).toHaveAttribute( 'value', '' );
+		expect( setScale ).not.toHaveBeenCalled();
 	} );
 
-	test( 'font scale control with undefined value calls scale setter when changed', () => {
+	test( 'font scale control calls setter when changed from undefined', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
