@@ -127,12 +127,22 @@ const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_scale';
  *
  * Intentionally light-weight as CSS is broad and evolving.
  *
+ * Accepts int and float in addition to string so that callers may pass numeric
+ * CSS values (e.g. a unitless scale factor) without first converting them.
+ * The numeric value is converted to its string representation before the
+ * remaining sanitization steps run.
+ *
  * @internal
  *
- * @param mixed $value The CSS property value to sanitize.
+ * @param mixed $value The CSS property value to sanitize. Accepts string, int, or float.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
 function sanitize_css_value( $value ): string {
+	if ( is_int( $value ) || ( is_float( $value ) && is_finite( $value ) ) ) {
+		// Convert numeric types to string for the CSS pipeline.
+		$value = (string) $value;
+	}
+
 	if ( ! is_string( $value ) ) {
 		return '';
 	}
