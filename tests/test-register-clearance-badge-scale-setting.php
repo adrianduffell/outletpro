@@ -37,13 +37,18 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 	public function test_setting_default_is_null(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
+		delete_option( CLEARANCE_BADGE_SCALE_OPTION );
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
 
 		// Act.
 		register_clearance_badge_scale_setting();
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/settings' );
+		$response = rest_do_request( $request );
+		$data     = $response->get_data();
 
 		// Assert.
-		$settings = get_registered_settings();
-		$this->assertNull( $settings[ CLEARANCE_BADGE_SCALE_OPTION ]['default'] );
+		$this->assertNull( $data[ CLEARANCE_BADGE_SCALE_OPTION ] );
 	}
 
 	public function test_setting_is_shown_in_rest(): void {
