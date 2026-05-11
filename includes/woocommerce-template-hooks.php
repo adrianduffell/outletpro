@@ -71,9 +71,7 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$bg_colour   = sanitize_hex_color( get_option( CLEARANCE_BADGE_BG_COLOR_OPTION, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
-	$text_colour = sanitize_hex_color( get_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
-	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
 
 	if ( ! is_string( $label ) || '' === $label ) {
 		return;
@@ -82,9 +80,7 @@ function display_clearance_badge_hook(): void {
 	wp_enqueue_style( 'wc-clearance-classic-badge' );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s;">%s</span></p>',
-		esc_attr( $bg_colour ),
-		esc_attr( $text_colour ),
+		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge">%s</span></p>',
 		esc_html( $label )
 	);
 }
