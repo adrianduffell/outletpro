@@ -659,7 +659,7 @@ function register_clearance_badge_density_setting(): void {
 		array(
 			'type'              => 'integer',
 			'label'             => __( 'Clearance badge density', 'wc-clearance' ),
-			'description'       => __( 'Allocation of font-size and padding for the badge. Lower density = more padding/whitespace. Higher density = larger font.', 'wc-clearance' ),
+			'description'       => __( 'Controls the ratio between font size and padding for the badge. A lower density results in more whitespace. A Higher density results in a larger font.', 'wc-clearance' ),
 			'default'           => null,
 			'sanitize_callback' => 'WC_Clearance\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
