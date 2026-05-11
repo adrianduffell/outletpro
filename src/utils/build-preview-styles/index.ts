@@ -31,13 +31,13 @@ export function buildPreviewStyles(
 		'--wc-clearance-badge-padding-right': settings.paddingRight,
 		'--wc-clearance-badge-padding-bottom': settings.paddingBottom,
 		'--wc-clearance-badge-padding-left': settings.paddingLeft,
-		'--wc-clearance-badge-scale': settings.scale,
 	};
 
 	const declarations = [
 		`--wc-clearance-badge-label: ${ JSON.stringify(
 			settings.label ?? ''
 		) }`,
+		`--wc-clearance-badge-scale: ${ settings.scale ?? 'unset' }`,
 		...Object.entries( entries ).map(
 			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
 		),
