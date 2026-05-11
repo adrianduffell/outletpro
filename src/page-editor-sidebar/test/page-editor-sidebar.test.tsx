@@ -272,7 +272,7 @@ const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
-type SettingSetterProperty = {
+type SettingSetterKeys = {
 	[ Key in keyof Settings ]: Settings[ Key ] extends (
 		...args: never[]
 	) => void
@@ -280,8 +280,8 @@ type SettingSetterProperty = {
 		: never;
 }[ keyof Settings ];
 
-type SettingsMock = Omit< Settings, SettingSetterProperty > & {
-	[ Key in SettingSetterProperty ]: jest.Mock<
+type SettingsMock = Omit< Settings, SettingSetterKeys > & {
+	[ Key in SettingSetterKeys ]: jest.Mock<
 		void,
 		Parameters< Settings[ Key ] >
 	>;
