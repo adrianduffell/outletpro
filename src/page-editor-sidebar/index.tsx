@@ -50,7 +50,6 @@ const FONT_SIZES = [
 	{ name: 'L', slug: 'm', size: '0.83em' },
 	{ name: 'XL', slug: 'l', size: '1em' },
 ];
-const DEFAULT_SCALE = 120;
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'wc-clearance' ), key: '' },
@@ -200,8 +199,6 @@ const ClearanceSectionSidebar = () => {
 			( option ) => option.key === ( fontWeight || '' )
 		) || fontWeightOptions[ 0 ];
 
-	const selectedFontScale = scale ?? DEFAULT_SCALE;
-
 	const renderBadgeSettings = () => (
 		<>
 			<PanelBody>
@@ -230,7 +227,7 @@ const ClearanceSectionSidebar = () => {
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<RangeControl
 						label={ __( 'Scale', 'wc-clearance' ) }
-						value={ selectedFontScale }
+						value={ scale }
 						onChange={ ( value ) => {
 							if ( typeof value !== 'number' ) {
 								return;

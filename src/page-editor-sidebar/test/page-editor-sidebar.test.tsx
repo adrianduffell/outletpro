@@ -103,7 +103,7 @@ jest.mock( '@wordpress/components', () => ( {
 		step,
 	}: {
 		label: string;
-		value: number;
+		value?: number;
 		onChange: ( v: number | undefined ) => void;
 		min?: number;
 		max?: number;
@@ -498,6 +498,25 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( screen.getByRole( 'slider', { name: 'Scale' } ) ).toHaveValue(
 			'140'
 		);
+	} );
+
+	test( 'font scale control allows undefined scale value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_scale: [ undefined, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Scale' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'value', '' );
 	} );
 
 	test( 'font scale control uses accepted range and step', () => {
