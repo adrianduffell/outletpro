@@ -176,7 +176,7 @@ function sanitize_unsigned_integer( $value ): ?int {
 	}
 
 	if ( is_int( $value ) ) {
-		return abs( $value );
+		return $value >= 0 ? $value : null;
 	}
 
 	if ( is_string( $value ) && ctype_digit( $value ) ) {

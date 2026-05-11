@@ -28,7 +28,7 @@ class Test_Sanitize_Unsigned_Integer extends WP_UnitTestCase {
 		$result = sanitize_unsigned_integer( $value );
 
 		// Assert.
-		$this->assertSame( 123, $result );
+		$this->assertNull( $result );
 	}
 
 	public function test_returns_integer_for_digit_string(): void {
