@@ -15,6 +15,7 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_BOTTOM_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_DENSITY_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_LEFT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_RIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_TOP_OPTION;
@@ -38,6 +39,7 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		update_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '3px' );
 		update_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '4px' );
 		update_option( CLEARANCE_BADGE_SCALE_OPTION, 140 );
+		update_option( CLEARANCE_BADGE_DENSITY_OPTION, 80 );
 
 		deinit_enqueue();
 		enqueue_init();
@@ -61,6 +63,7 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-bottom: 3px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-left: 4px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-scale: 140', $output );
+		$this->assertStringContainsString( '--wc-clearance-badge-density: 80', $output );
 	}
 
 	public function test_uses_unset_when_setting_value_is_empty(): void {
