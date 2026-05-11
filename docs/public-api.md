@@ -287,10 +287,6 @@ for custom styling.
 Applied to the clearance badge element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
-#### `.wc-clearance-badge-container`
-
-Wraps the badge in classic (non-block) themes. Added in 1.0.0.
-
 #### `.wc-clearance-message`
 
 Applied to the clearance message element. Used by both the block renderer and classic theme

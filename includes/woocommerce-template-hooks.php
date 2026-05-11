@@ -80,7 +80,7 @@ function display_clearance_badge_hook(): void {
 	wp_enqueue_style( 'wc-clearance-classic-badge' );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge">%s</span></p>',
+		'<p class="wc-clearance-badge">%s</p>',
 		esc_html( $label )
 	);
 }
