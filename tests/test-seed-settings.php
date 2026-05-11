@@ -11,6 +11,7 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_DENSITY_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
@@ -377,5 +378,27 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 999, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
+	}
+
+	public function test_sets_badge_density_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_DENSITY_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 60, get_option( CLEARANCE_BADGE_DENSITY_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_density_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_DENSITY_OPTION, 80 );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 80, get_option( CLEARANCE_BADGE_DENSITY_OPTION ) );
 	}
 }
