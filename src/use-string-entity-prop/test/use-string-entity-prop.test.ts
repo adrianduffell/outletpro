@@ -39,6 +39,19 @@ describe( 'useStringEntityProp', () => {
 		expect( result.current[ 0 ] ).toBeUndefined();
 	} );
 
+	test( 'normalizes null entity prop to undefined', () => {
+		// Arrange.
+		mockUseEntityProp.mockReturnValue( [ null, jest.fn(), undefined ] );
+
+		// Act.
+		const { result } = renderHook( () =>
+			useStringEntityProp( 'wc_clearance_badge_label' )
+		);
+
+		// Assert.
+		expect( result.current[ 0 ] ).toBeUndefined();
+	} );
+
 	test( 'calls useEntityProp with root, site, and the given key', () => {
 		// Arrange.
 		mockUseEntityProp.mockReturnValue( [
@@ -112,6 +125,18 @@ describe( 'useStringEntityProp', () => {
 		] );
 
 		// Act + Assert: no throw when value is undefined.
+		expect( () =>
+			renderHook( () =>
+				useStringEntityProp( 'wc_clearance_badge_label' )
+			)
+		).not.toThrow();
+	} );
+
+	test( 'does not throw when value is null', () => {
+		// Arrange.
+		mockUseEntityProp.mockReturnValue( [ null, jest.fn(), undefined ] );
+
+		// Act + Assert: no throw when value is null.
 		expect( () =>
 			renderHook( () =>
 				useStringEntityProp( 'wc_clearance_badge_label' )

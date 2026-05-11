@@ -52,6 +52,19 @@ describe( 'useUnsignedIntegerEntityProp', () => {
 		expect( result.current[ 0 ] ).toBeUndefined();
 	} );
 
+	test( 'normalizes null entity prop to undefined', () => {
+		// Arrange.
+		mockUseEntityProp.mockReturnValue( [ null, jest.fn(), undefined ] );
+
+		// Act.
+		const { result } = renderHook( () =>
+			useUnsignedIntegerEntityProp( 'wc_clearance_badge_scale' )
+		);
+
+		// Assert.
+		expect( result.current[ 0 ] ).toBeUndefined();
+	} );
+
 	test( 'calls useEntityProp with root, site, and the given key', () => {
 		// Arrange.
 		mockUseEntityProp.mockReturnValue( [
@@ -202,6 +215,18 @@ describe( 'useUnsignedIntegerEntityProp', () => {
 		] );
 
 		// Act + Assert: no throw when value is undefined.
+		expect( () =>
+			renderHook( () =>
+				useUnsignedIntegerEntityProp( 'wc_clearance_badge_scale' )
+			)
+		).not.toThrow();
+	} );
+
+	test( 'does not throw when value is null', () => {
+		// Arrange.
+		mockUseEntityProp.mockReturnValue( [ null, jest.fn(), undefined ] );
+
+		// Act + Assert: no throw when value is null.
 		expect( () =>
 			renderHook( () =>
 				useUnsignedIntegerEntityProp( 'wc_clearance_badge_scale' )
