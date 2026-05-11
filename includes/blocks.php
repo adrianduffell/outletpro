@@ -140,7 +140,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 	}
 
 	return sprintf(
-		'<span %1$s>%2$s</span>',
+		'<div %1$s>%2$s</div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
 	);
