@@ -178,6 +178,10 @@ function sanitize_unsigned_integer( $value ): ?int {
 		return null;
 	}
 
+	if ( ! is_scalar( $value ) ) {
+		return null;
+	}
+
 	if ( $value < 0 ) {
 		return null;
 	}
