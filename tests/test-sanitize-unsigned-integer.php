@@ -96,4 +96,26 @@ class Test_Sanitize_Unsigned_Integer extends WP_UnitTestCase {
 		// Assert.
 		$this->assertNull( $result );
 	}
+
+	public function test_returns_null_for_array(): void {
+		// Arrange.
+		$value = array();
+
+		// Act.
+		$result = sanitize_unsigned_integer( $value );
+
+		// Assert.
+		$this->assertNull( $result );
+	}
+
+	public function test_returns_null_for_object(): void {
+		// Arrange.
+		$value = new stdClass();
+
+		// Act.
+		$result = sanitize_unsigned_integer( $value );
+
+		// Assert.
+		$this->assertNull( $result );
+	}
 }
