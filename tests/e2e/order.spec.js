@@ -1,4 +1,31 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
+import badgeDimensions from './fixtures/badge-dimensions.js';
+
+/**
+ * Returns the active theme's stylesheet slug via the WordPress REST API.
+ *
+ * @param {Object} requestUtils - Playwright REST request utilities.
+ * @return {Promise<string>} The active theme slug.
+ */
+async function getActiveThemeSlug( requestUtils ) {
+	const [ activeTheme ] = await requestUtils.rest( {
+		method: 'GET',
+		path: '/wp/v2/themes',
+		params: { status: 'active' },
+	} );
+	return activeTheme.stylesheet;
+}
+
+/**
+ * Returns the current viewport as a `{width}x{height}` string.
+ *
+ * @param {import('@playwright/test').Page} aPage - The Playwright page object.
+ * @return {string} Viewport key, e.g. `'1280x720'`.
+ */
+function getViewportKey( aPage ) {
+	const { width, height } = aPage.viewportSize();
+	return `${ width }x${ height }`;
+}
 
 /**
  * Fills a WooCommerce checkout form (block or classic shortcode).
@@ -66,6 +93,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 } ) => {
 	// Arrange.
 	const runId = Date.now();
+	const themeSlug = await getActiveThemeSlug( requestUtils );
 
 	const product = await requestUtils.rest( {
 		method: 'POST',
@@ -85,6 +113,11 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
+
+	const productData = await requestUtils.rest( {
+		method: 'GET',
+		path: `/wc/v3/products/${ product.id }`,
+	} );
 
 	const wpSettings = await requestUtils.rest( {
 		method: 'GET',
@@ -106,29 +139,84 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	} );
 	const customerPage = await customerContext.newPage();
 
+	const viewportKey = getViewportKey( customerPage );
+	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
+
 	// Open the clearance page.
 	await customerPage.goto( clearancePage.link );
-
 	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
-	// Add a product in the clearance section to the cart.
-	await customerPage
-		.getByRole( 'button', { name: /add to cart/i } )
-		.first()
-		.click();
+	// Navigate to the product page and check badge dimensions.
+	await customerPage.goto( productData.permalink );
+	const badge = customerPage.locator( '.wc-clearance-badge' );
+	await expect.soft( badge ).toBeVisible();
+	if ( await badge.isVisible() ) {
+		const productFontSize = await badge.evaluate(
+			( el ) => window.getComputedStyle( el ).fontSize
+		);
+		const productPaddingTop = await badge.evaluate(
+			( el ) => window.getComputedStyle( el ).paddingTop
+		);
+		// eslint-disable-next-line no-console
+		console.log(
+			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ productFontSize }, padding-top: ${ productPaddingTop }`
+		);
+		if ( fixture ) {
+			await expect
+				.soft( badge )
+				.toHaveCSS( 'font-size', fixture.productPage.fontSize );
+			await expect
+				.soft( badge )
+				.toHaveCSS( 'padding-top', fixture.productPage.padding );
+		}
+	}
 
-	// Wait for the cart to update.
-	await expect
-		.poll( async () => {
-			const res = await customerPage.request.get(
-				'/?rest_route=/wc/store/v1/cart/items'
-			);
+	// Add the product to cart via Store API (avoids theme-specific UI).
+	const nonce = await customerPage.evaluate( () => window.wcStoreApiNonce );
+	await customerPage.request.post( '/wp-json/wc/store/v1/cart/add-item', {
+		headers: {
+			'Content-Type': 'application/json',
+			'X-WC-Store-API-Nonce': nonce,
+		},
+		data: JSON.stringify( { id: product.id, quantity: 1 } ),
+	} );
 
-			const items = await res.json();
-
-			return items.length;
-		} )
-		.toBeGreaterThan( 0 );
+	// Navigate to the cart page and check badge dimensions.
+	// The badge is rendered as CSS generated content on the cart page (see cart.css).
+	// Block cart: ::before on .wc-block-components-product-metadata
+	// Shortcode cart: ::after on td.product-name
+	await customerPage.goto( '/cart/' );
+	const blockBadgeHost = customerPage.locator(
+		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+	);
+	const isBlockCart = ( await blockBadgeHost.count() ) > 0;
+	const badgeHost = isBlockCart
+		? blockBadgeHost.first()
+		: customerPage
+				.locator(
+					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+				)
+				.first();
+	const pseudoElement = isBlockCart ? '::before' : '::after';
+	await expect.soft( badgeHost ).toBeVisible();
+	if ( await badgeHost.isVisible() ) {
+		const cartFontSize = await badgeHost.evaluate(
+			( el, pseudo ) => window.getComputedStyle( el, pseudo ).fontSize,
+			pseudoElement
+		);
+		const cartPaddingTop = await badgeHost.evaluate(
+			( el, pseudo ) => window.getComputedStyle( el, pseudo ).paddingTop,
+			pseudoElement
+		);
+		// eslint-disable-next-line no-console
+		console.log(
+			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, cart page — font-size: ${ cartFontSize }, padding-top: ${ cartPaddingTop }`
+		);
+		if ( fixture ) {
+			expect.soft( cartFontSize ).toBe( fixture.cartPage.fontSize );
+			expect.soft( cartPaddingTop ).toBe( fixture.cartPage.padding );
+		}
+	}
 
 	// Click the checkout link in the menu.
 	await customerPage
