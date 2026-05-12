@@ -28,6 +28,46 @@ function getViewportKey( page ) {
 }
 
 /**
+ * Reads computed badge dimensions from a CSS pseudo-element host, logs them
+ * to console, and emits soft assertions when fixture data is available.
+ *
+ * @param {import('@playwright/test').Locator}             locator     - Host element locator.
+ * @param {string}                                         pseudo      - CSS pseudo-element string, e.g. `'::before'`.
+ * @param {string}                                         label       - Human-readable label for console output.
+ * @param {string}                                         themeSlug   - Active theme slug.
+ * @param {string}                                         viewportKey - Viewport key string.
+ * @param {{fontSize: string, padding: string}|undefined}  fixtureData - Expected values or undefined when no fixture matches.
+ */
+async function checkPseudoBadgeDimensions(
+	locator,
+	pseudo,
+	label,
+	themeSlug,
+	viewportKey,
+	fixtureData
+) {
+	await expect.soft( locator ).toBeVisible();
+	if ( ! ( await locator.isVisible() ) ) {
+		return;
+	}
+	const { fontSize, paddingTop } = await locator.evaluate(
+		( el, pseudoArg ) => {
+			const style = window.getComputedStyle( el, pseudoArg );
+			return { fontSize: style.fontSize, paddingTop: style.paddingTop };
+		},
+		pseudo
+	);
+	// eslint-disable-next-line no-console
+	console.log(
+		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, ${ label } — font-size: ${ fontSize }, padding-top: ${ paddingTop }`
+	);
+	if ( fixtureData ) {
+		expect.soft( fontSize ).toBe( fixtureData.fontSize );
+		expect.soft( paddingTop ).toBe( fixtureData.padding );
+	}
+}
+
+/**
  * Fills a WooCommerce checkout form (block or classic shortcode).
  *
  * Detects which checkout variant is present and fills the billing fields
@@ -146,6 +186,44 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await customerPage.goto( clearancePage.link );
 	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
+	// Add a product in the clearance section to the cart.
+	await customerPage
+		.getByRole( 'button', { name: /add to cart/i } )
+		.first()
+		.click();
+
+	// Wait for the cart to update.
+	await expect
+		.poll( async () => {
+			const res = await customerPage.request.get(
+				'/?rest_route=/wc/store/v1/cart/items'
+			);
+			const items = await res.json();
+			return items.length;
+		} )
+		.toBeGreaterThan( 0 );
+
+	// Check badge in the mini-cart (block themes only).
+	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
+	const miniCartButton = customerPage.locator( '.wc-block-mini-cart__button' );
+	if ( ( await miniCartButton.count() ) > 0 ) {
+		await miniCartButton.click();
+		const miniCartBadgeHost = customerPage
+			.locator(
+				'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+			)
+			.first();
+		await checkPseudoBadgeDimensions(
+			miniCartBadgeHost,
+			'::before',
+			'mini-cart',
+			themeSlug,
+			viewportKey,
+			fixture?.cartPage
+		);
+		// Navigate away to close the mini-cart drawer before continuing.
+	}
+
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
 	const badge = customerPage.locator( '.wc-clearance-badge' );
@@ -170,49 +248,31 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		}
 	}
 
-	// Add the product to cart via Store API (avoids theme-specific UI).
-	const nonce = await customerPage.evaluate( () => window.wcStoreApiNonce );
-	await customerPage.request.post( '/wp-json/wc/store/v1/cart/add-item', {
-		headers: {
-			'Content-Type': 'application/json',
-			'X-WC-Store-API-Nonce': nonce,
-		},
-		data: JSON.stringify( { id: product.id, quantity: 1 } ),
-	} );
-
 	// Navigate to the cart page and check badge dimensions.
 	// The badge is rendered as CSS generated content on the cart page (see cart.css).
 	// Block cart: ::before on .wc-block-components-product-metadata
 	// Shortcode cart: ::after on td.product-name
 	await customerPage.goto( '/cart/' );
-	const blockBadgeHost = customerPage.locator(
+	const blockCartBadgeHost = customerPage.locator(
 		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
 	);
-	const isBlockCart = ( await blockBadgeHost.count() ) > 0;
-	const badgeHost = isBlockCart
-		? blockBadgeHost.first()
+	const isBlockCart = ( await blockCartBadgeHost.count() ) > 0;
+	const cartBadgeHost = isBlockCart
+		? blockCartBadgeHost.first()
 		: customerPage
 				.locator(
 					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
 				)
 				.first();
-	const pseudoElement = isBlockCart ? '::before' : '::after';
-	await expect.soft( badgeHost ).toBeVisible();
-	if ( await badgeHost.isVisible() ) {
-		const { fontSize: cartFontSize, paddingTop: cartPaddingTop } =
-			await badgeHost.evaluate( ( el, pseudo ) => {
-				const style = window.getComputedStyle( el, pseudo );
-				return { fontSize: style.fontSize, paddingTop: style.paddingTop };
-			}, pseudoElement );
-		// eslint-disable-next-line no-console
-		console.log(
-			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, cart page — font-size: ${ cartFontSize }, padding-top: ${ cartPaddingTop }`
-		);
-		if ( fixture ) {
-			expect.soft( cartFontSize ).toBe( fixture.cartPage.fontSize );
-			expect.soft( cartPaddingTop ).toBe( fixture.cartPage.padding );
-		}
-	}
+	const cartPseudo = isBlockCart ? '::before' : '::after';
+	await checkPseudoBadgeDimensions(
+		cartBadgeHost,
+		cartPseudo,
+		'cart page',
+		themeSlug,
+		viewportKey,
+		fixture?.cartPage
+	);
 
 	// Click the checkout link in the menu.
 	await customerPage
@@ -225,6 +285,30 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await customerPage
 		.getByLabel( /email address|billing email/i )
 		.waitFor( { state: 'visible' } );
+
+	// Check badge in the checkout order summary.
+	// Block checkout: ::before on .wc-block-components-product-metadata inside .wc-block-components-order-summary-item__description
+	// Shortcode checkout: ::after on .shop_table td.product-name (order review table)
+	const blockCheckoutBadgeHost = customerPage.locator(
+		'.wc-block-components-order-summary-item__description:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+	);
+	const isBlockCheckout = ( await blockCheckoutBadgeHost.count() ) > 0;
+	const checkoutBadgeHost = isBlockCheckout
+		? blockCheckoutBadgeHost.first()
+		: customerPage
+				.locator(
+					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+				)
+				.first();
+	const checkoutPseudo = isBlockCheckout ? '::before' : '::after';
+	await checkPseudoBadgeDimensions(
+		checkoutBadgeHost,
+		checkoutPseudo,
+		'checkout',
+		themeSlug,
+		viewportKey,
+		fixture?.checkoutPage
+	);
 
 	await fillCheckout( customerPage );
 

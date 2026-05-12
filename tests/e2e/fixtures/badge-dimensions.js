@@ -4,7 +4,11 @@
  * Top-level keys are WordPress theme slugs. Each theme entry is keyed by
  * viewport size (`{width}x{height}`). Each viewport entry contains the
  * expected `fontSize` and `padding` (top) for the badge on the single product
- * page and on the cart page.
+ * page, cart page, and checkout page.
+ *
+ * `cartPage` and `checkoutPage` use the same CSS source (cart.css) but are
+ * kept as separate keys so dimensions can be tuned independently if themes
+ * render the two pages at different sizes.
  *
  * Add a new top-level key for each additional theme, and a new viewport key
  * for each viewport size to exercise.
@@ -17,6 +21,10 @@ export default {
 				padding: '6.37166px',
 			},
 			cartPage: {
+				fontSize: '11.62px',
+				padding: '4.1832px',
+			},
+			checkoutPage: {
 				fontSize: '11.62px',
 				padding: '4.1832px',
 			},
