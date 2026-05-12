@@ -68,7 +68,7 @@ test( 'badge has correct font-size and padding on single product page', async ( 
 	);
 	// eslint-disable-next-line no-console
 	console.log(
-		`[badge-dimensions] product page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
+		`[badge-dimensions] theme: ${ themeSlug }, product page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
 	);
 
 	test.fail();
@@ -144,7 +144,7 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	);
 	// eslint-disable-next-line no-console
 	console.log(
-		`[badge-dimensions] cart page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
+		`[badge-dimensions] theme: ${ themeSlug }, cart page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
 	);
 
 	test.fail();
