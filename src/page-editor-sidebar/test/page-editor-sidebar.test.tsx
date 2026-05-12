@@ -734,7 +734,7 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect( screen.getByRole( 'slider', { name: 'Density' } ) ).toHaveValue(
+		expect( screen.getByRole( 'slider', { name: 'Font size' } ) ).toHaveValue(
 			'60'
 		);
 	} );
@@ -753,7 +753,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Act.
 		render( pluginConfig.render() );
-		const input = screen.getByRole( 'slider', { name: 'Density' } );
+		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Assert.
 		expect( input ).toHaveAttribute( 'value', '' );
@@ -772,7 +772,7 @@ describe( 'page-editor-sidebar registration', () => {
 		} );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
-		const input = screen.getByRole( 'slider', { name: 'Density' } );
+		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Act.
 		fireEvent.change( input, { target: { value: '75' } } );
@@ -794,7 +794,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Act.
 		render( pluginConfig.render() );
-		const input = screen.getByRole( 'slider', { name: 'Density' } );
+		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Assert.
 		expect( input ).toHaveAttribute( 'min', '1' );
