@@ -271,6 +271,7 @@ const ClearanceSectionSidebar = () => {
 							min={ 1 }
 							max={ 100 }
 							step={ 1 }
+							renderTooltipContent={ ( value ) => `${ value }%` }
 							allowReset={ false }
 							withInputField={ false }
 							__next40pxDefaultSize
