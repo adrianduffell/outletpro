@@ -258,23 +258,25 @@ const ClearanceSectionSidebar = () => {
 				</BaseControl>
 
 				<BaseControl __nextHasNoMarginBottom={ true }>
-					<RangeControl
-						label={ __( 'Density', 'wc-clearance' ) }
-						value={ density }
-						onChange={ ( value ) => {
-							if ( typeof value !== 'number' ) {
-								return;
-							}
-							setDensity( value );
-						} }
-						min={ 1 }
-						max={ 100 }
-						step={ 1 }
-						allowReset={ true }
-						resetFallbackValue={ 60 }
-						withInputField={ false }
-						__next40pxDefaultSize
-					/>
+					<div style={ { marginTop: '16px' } }>
+						<RangeControl
+							label={ __( 'Density', 'wc-clearance' ) }
+							value={ density }
+							onChange={ ( value ) => {
+								if ( typeof value !== 'number' ) {
+									return;
+								}
+								setDensity( value );
+							} }
+							min={ 1 }
+							max={ 100 }
+							step={ 1 }
+							allowReset={ true }
+							resetFallbackValue={ 60 }
+							withInputField={ false }
+							__next40pxDefaultSize
+						/>
+					</div>
 				</BaseControl>
 			</PanelBody>
 
