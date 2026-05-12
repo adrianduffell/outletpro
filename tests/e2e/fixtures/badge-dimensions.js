@@ -1,19 +1,25 @@
 /**
- * Expected badge computed dimensions per theme and page context.
+ * Expected badge computed dimensions per theme, viewport, and page context.
  *
- * Keys are WordPress theme slugs. Each entry contains the expected `fontSize`
- * and `padding` (top) for the badge on the single product page and on the
- * cart page. More themes and pages can be added to this fixture in the future.
+ * Top-level keys are WordPress theme slugs. Each theme entry is keyed by
+ * viewport size (`{width}x{height}`). Each viewport entry contains the
+ * expected `fontSize` and `padding` (top) for the badge on the single product
+ * page and on the cart page.
+ *
+ * Add a new top-level key for each additional theme, and a new viewport key
+ * for each viewport size to exercise.
  */
 export default {
 	twentytwentyfive: {
-		productPage: {
-			fontSize: '17.6991px',
-			padding: '6.37166px',
-		},
-		cartPage: {
-			fontSize: '11.62px',
-			padding: '4.1832px',
+		'1280x720': {
+			productPage: {
+				fontSize: '17.6991px',
+				padding: '6.37166px',
+			},
+			cartPage: {
+				fontSize: '11.62px',
+				padding: '4.1832px',
+			},
 		},
 	},
 };
