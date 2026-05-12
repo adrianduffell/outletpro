@@ -31,11 +31,11 @@ function getViewportKey( page ) {
  * Reads computed badge dimensions from a CSS pseudo-element host, logs them
  * to console, and emits soft assertions when fixture data is available.
  *
- * @param {import('@playwright/test').Locator} locator - Host element locator.
- * @param {string} pseudo - CSS pseudo-element string, e.g. `'::before'`.
- * @param {string} label - Human-readable label for console output.
- * @param {string} themeSlug - Active theme slug.
- * @param {string} viewportKey - Viewport key string.
+ * @param {import('@playwright/test').Locator}            locator     - Host element locator.
+ * @param {string}                                        pseudo      - CSS pseudo-element string, e.g. `'::before'`.
+ * @param {string}                                        label       - Human-readable label for console output.
+ * @param {string}                                        themeSlug   - Active theme slug.
+ * @param {string}                                        viewportKey - Viewport key string.
  * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
  */
 async function checkPseudoBadgeDimensions(
