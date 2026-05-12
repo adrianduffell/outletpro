@@ -84,8 +84,14 @@ test( 'badge has correct font-size and padding on single product page', async ( 
 	);
 
 	test.fail();
-	await expect( badge ).toHaveCSS( 'font-size', fixture.productPage.fontSize );
-	await expect( badge ).toHaveCSS( 'padding-top', fixture.productPage.padding );
+	await expect( badge ).toHaveCSS(
+		'font-size',
+		fixture.productPage.fontSize
+	);
+	await expect( badge ).toHaveCSS(
+		'padding-top',
+		fixture.productPage.padding
+	);
 } );
 
 test( 'badge has correct font-size and padding on cart page', async ( {
@@ -175,4 +181,3 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	expect( actualFontSize ).toBe( fixture.cartPage.fontSize );
 	expect( actualPaddingTop ).toBe( fixture.cartPage.padding );
 } );
-
