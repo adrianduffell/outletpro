@@ -19,11 +19,11 @@ async function getActiveThemeSlug( requestUtils ) {
 /**
  * Returns the current viewport as a `{width}x{height}` string.
  *
- * @param {import('@playwright/test').Page} aPage - The Playwright page object.
+ * @param {import('@playwright/test').Page} page - The Playwright page object.
  * @return {string} Viewport key, e.g. `'1280x720'`.
  */
-function getViewportKey( aPage ) {
-	const { width, height } = aPage.viewportSize();
+function getViewportKey( page ) {
+	const { width, height } = page.viewportSize();
 	return `${ width }x${ height }`;
 }
 
@@ -151,12 +151,11 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	const badge = customerPage.locator( '.wc-clearance-badge' );
 	await expect.soft( badge ).toBeVisible();
 	if ( await badge.isVisible() ) {
-		const productFontSize = await badge.evaluate(
-			( el ) => window.getComputedStyle( el ).fontSize
-		);
-		const productPaddingTop = await badge.evaluate(
-			( el ) => window.getComputedStyle( el ).paddingTop
-		);
+		const { fontSize: productFontSize, paddingTop: productPaddingTop } =
+			await badge.evaluate( ( el ) => {
+				const style = window.getComputedStyle( el );
+				return { fontSize: style.fontSize, paddingTop: style.paddingTop };
+			} );
 		// eslint-disable-next-line no-console
 		console.log(
 			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ productFontSize }, padding-top: ${ productPaddingTop }`
@@ -200,14 +199,11 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	const pseudoElement = isBlockCart ? '::before' : '::after';
 	await expect.soft( badgeHost ).toBeVisible();
 	if ( await badgeHost.isVisible() ) {
-		const cartFontSize = await badgeHost.evaluate(
-			( el, pseudo ) => window.getComputedStyle( el, pseudo ).fontSize,
-			pseudoElement
-		);
-		const cartPaddingTop = await badgeHost.evaluate(
-			( el, pseudo ) => window.getComputedStyle( el, pseudo ).paddingTop,
-			pseudoElement
-		);
+		const { fontSize: cartFontSize, paddingTop: cartPaddingTop } =
+			await badgeHost.evaluate( ( el, pseudo ) => {
+				const style = window.getComputedStyle( el, pseudo );
+				return { fontSize: style.fontSize, paddingTop: style.paddingTop };
+			}, pseudoElement );
 		// eslint-disable-next-line no-console
 		console.log(
 			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, cart page — font-size: ${ cartFontSize }, padding-top: ${ cartPaddingTop }`
