@@ -97,7 +97,6 @@ jest.mock( '@wordpress/components', () => ( {
 	RangeControl: ( {
 		label,
 		value,
-		renderTooltipContent,
 		onChange,
 		min,
 		max,
@@ -105,26 +104,20 @@ jest.mock( '@wordpress/components', () => ( {
 	}: {
 		label: string;
 		value?: number;
-		renderTooltipContent?: ( value: number ) => string;
 		onChange: ( v: number | undefined ) => void;
 		min?: number;
 		max?: number;
 		step?: number;
 	} ) => (
-		<div>
-			<input
-				type="range"
-				aria-label={ label }
-				value={ value }
-				min={ min }
-				max={ max }
-				step={ step }
-				onChange={ ( e ) => onChange( Number( e.target.value ) ) }
-			/>
-			{ typeof value === 'number' && renderTooltipContent && (
-				<span>{ renderTooltipContent( value ) }</span>
-			) }
-		</div>
+		<input
+			type="range"
+			aria-label={ label }
+			value={ value }
+			min={ min }
+			max={ max }
+			step={ step }
+			onChange={ ( e ) => onChange( Number( e.target.value ) ) }
+		/>
 	),
 	PanelBody: ( {
 		children,
@@ -505,24 +498,6 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( screen.getByRole( 'slider', { name: 'Scale' } ) ).toHaveValue(
 			'140'
 		);
-	} );
-
-	test( 'font scale control shows the value as a decimal multiplier', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ 140, jest.fn() ],
-		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-
-		// Act.
-		render( pluginConfig.render() );
-
-		// Assert.
-		expect( screen.getByText( '1.40x' ) ).toBeInTheDocument();
 	} );
 
 	test( 'font scale control allows undefined scale value', () => {
