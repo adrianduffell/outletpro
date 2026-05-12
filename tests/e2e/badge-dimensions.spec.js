@@ -16,16 +16,28 @@ async function getActiveThemeSlug( requestUtils ) {
 	return activeTheme.stylesheet;
 }
 
+/**
+ * Returns the current viewport as a `{width}x{height}` string.
+ *
+ * @param {import('@playwright/test').Page} page - The Playwright page object.
+ * @return {string} Viewport key, e.g. `'1280x720'`.
+ */
+function getViewportKey( page ) {
+	const { width, height } = page.viewportSize();
+	return `${ width }x${ height }`;
+}
+
 test( 'badge has correct font-size and padding on single product page', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
 	const themeSlug = await getActiveThemeSlug( requestUtils );
-	const themeFixture = badgeDimensions[ themeSlug ];
+	const viewportKey = getViewportKey( page );
+	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
 	test.skip(
-		! themeFixture,
-		`No badge dimension fixture for theme: ${ themeSlug }`
+		! fixture,
+		`No badge dimension fixture for theme: ${ themeSlug }, viewport: ${ viewportKey }`
 	);
 
 	// Arrange.
@@ -49,43 +61,31 @@ test( 'badge has correct font-size and padding on single product page', async ( 
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
+	// Act: navigate to the product's front-end page.
 	const productData = await requestUtils.rest( {
 		method: 'GET',
 		path: `/wc/v3/products/${ product.id }`,
 	} );
+	await page.goto( productData.permalink );
+
+	// Assert.
+	const badge = page.locator( '.wc-clearance-badge' );
+	await expect( badge ).toBeVisible();
+
+	const actualFontSize = await badge.evaluate(
+		( el ) => window.getComputedStyle( el ).fontSize
+	);
+	const actualPaddingTop = await badge.evaluate(
+		( el ) => window.getComputedStyle( el ).paddingTop
+	);
+	// eslint-disable-next-line no-console
+	console.log(
+		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
+	);
 
 	test.fail();
-	for ( const [ viewport, fixture ] of Object.entries( themeFixture ) ) {
-		const [ width, height ] = viewport.split( 'x' ).map( Number );
-		await page.setViewportSize( { width, height } );
-
-		// Act: navigate to the product's front-end page at this viewport.
-		await page.goto( productData.permalink );
-
-		// Assert.
-		const badge = page.locator( '.wc-clearance-badge' );
-		await expect( badge ).toBeVisible();
-
-		const actualFontSize = await badge.evaluate(
-			( el ) => window.getComputedStyle( el ).fontSize
-		);
-		const actualPaddingTop = await badge.evaluate(
-			( el ) => window.getComputedStyle( el ).paddingTop
-		);
-		// eslint-disable-next-line no-console
-		console.log(
-			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewport }, product page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
-		);
-
-		await expect( badge ).toHaveCSS(
-			'font-size',
-			fixture.productPage.fontSize
-		);
-		await expect( badge ).toHaveCSS(
-			'padding-top',
-			fixture.productPage.padding
-		);
-	}
+	await expect( badge ).toHaveCSS( 'font-size', fixture.productPage.fontSize );
+	await expect( badge ).toHaveCSS( 'padding-top', fixture.productPage.padding );
 } );
 
 test( 'badge has correct font-size and padding on cart page', async ( {
@@ -94,10 +94,11 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	requestUtils,
 } ) => {
 	const themeSlug = await getActiveThemeSlug( requestUtils );
-	const themeFixture = badgeDimensions[ themeSlug ];
+	const viewportKey = getViewportKey( page );
+	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
 	test.skip(
-		! themeFixture,
-		`No badge dimension fixture for theme: ${ themeSlug }`
+		! fixture,
+		`No badge dimension fixture for theme: ${ themeSlug }, viewport: ${ viewportKey }`
 	);
 
 	// Arrange.
@@ -121,7 +122,7 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
-	// Add the product to cart once via Store API (avoids theme-specific UI).
+	// Act: navigate to the product page, then add to cart via Store API.
 	const productData = await requestUtils.rest( {
 		method: 'GET',
 		path: `/wc/v3/products/${ product.id }`,
@@ -136,48 +137,42 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 		data: JSON.stringify( { id: product.id, quantity: 1 } ),
 	} );
 
+	await page.goto( '/cart/' );
+
+	// Assert.
+	// The badge is rendered as CSS generated content on the cart page (see cart.css).
+	// Block cart: ::before on .wc-block-components-product-metadata
+	// Shortcode cart: ::after on td.product-name
+	const blockBadgeHost = page.locator(
+		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+	);
+	const isBlockCart = ( await blockBadgeHost.count() ) > 0;
+	const badgeHost = isBlockCart
+		? blockBadgeHost.first()
+		: page
+				.locator(
+					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+				)
+				.first();
+	const pseudoElement = isBlockCart ? '::before' : '::after';
+
+	await expect( badgeHost ).toBeVisible();
+
+	const actualFontSize = await badgeHost.evaluate(
+		( el, pseudo ) => window.getComputedStyle( el, pseudo ).fontSize,
+		pseudoElement
+	);
+	const actualPaddingTop = await badgeHost.evaluate(
+		( el, pseudo ) => window.getComputedStyle( el, pseudo ).paddingTop,
+		pseudoElement
+	);
+	// eslint-disable-next-line no-console
+	console.log(
+		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, cart page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
+	);
+
 	test.fail();
-	for ( const [ viewport, fixture ] of Object.entries( themeFixture ) ) {
-		const [ width, height ] = viewport.split( 'x' ).map( Number );
-		await page.setViewportSize( { width, height } );
-
-		// Act: navigate to the cart at this viewport.
-		await page.goto( '/cart/' );
-
-		// Assert.
-		// The badge is rendered as CSS generated content on the cart page (see cart.css).
-		// Block cart: ::before on .wc-block-components-product-metadata
-		// Shortcode cart: ::after on td.product-name
-		const blockBadgeHost = page.locator(
-			'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
-		);
-		const isBlockCart = ( await blockBadgeHost.count() ) > 0;
-		const badgeHost = isBlockCart
-			? blockBadgeHost.first()
-			: page
-					.locator(
-						'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
-					)
-					.first();
-		const pseudoElement = isBlockCart ? '::before' : '::after';
-
-		await expect( badgeHost ).toBeVisible();
-
-		const actualFontSize = await badgeHost.evaluate(
-			( el, pseudo ) => window.getComputedStyle( el, pseudo ).fontSize,
-			pseudoElement
-		);
-		const actualPaddingTop = await badgeHost.evaluate(
-			( el, pseudo ) => window.getComputedStyle( el, pseudo ).paddingTop,
-			pseudoElement
-		);
-		// eslint-disable-next-line no-console
-		console.log(
-			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewport }, cart page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
-		);
-
-		expect( actualFontSize ).toBe( fixture.cartPage.fontSize );
-		expect( actualPaddingTop ).toBe( fixture.cartPage.padding );
-	}
+	expect( actualFontSize ).toBe( fixture.cartPage.fontSize );
+	expect( actualPaddingTop ).toBe( fixture.cartPage.padding );
 } );
 
