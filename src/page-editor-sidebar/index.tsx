@@ -232,6 +232,32 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody title={ __( 'Typography', 'wc-clearance' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginBottom: '16px' } }>
+						<RangeControl
+							label={ __( 'Font Size', 'wc-clearance' ) }
+							value={ density }
+							onChange={ ( value ) => {
+								if ( typeof value !== 'number' ) {
+									return;
+								}
+								setDensity( value );
+							} }
+							min={ 1 }
+							max={ 100 }
+							step={ 1 }
+							marks={ [
+								{ value: 50, label: '50%' },
+							] }
+							renderTooltipContent={ ( value ) => `${ value }%` }
+							allowReset={ false }
+							resetFallbackValue={ 60 }
+							withInputField={ false }
+							__next40pxDefaultSize
+						/>
+					</div>
+				</BaseControl>
+
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<div style={ { marginBottom: '16px' } }>
 						<FontSizePicker
 							fontSizes={ FONT_SIZES }
 							value={ fontSize || undefined }
@@ -255,31 +281,6 @@ const ClearanceSectionSidebar = () => {
 						} }
 						__next40pxDefaultSize
 					/>
-				</BaseControl>
-
-				<BaseControl __nextHasNoMarginBottom={ true }>
-					<div style={ { marginTop: '16px' } }>
-						<RangeControl
-							label={ __( 'Font Size', 'wc-clearance' ) }
-							value={ density }
-							onChange={ ( value ) => {
-								if ( typeof value !== 'number' ) {
-									return;
-								}
-								setDensity( value );
-							} }
-							min={ 1 }
-							max={ 100 }
-							step={ 1 }
-							marks={ [
-								{ value: 50, label: '50%' },
-							] }
-							renderTooltipContent={ ( value ) => `${ value }%` }
-							allowReset={ false }
-							withInputField={ false }
-							__next40pxDefaultSize
-						/>
-					</div>
 				</BaseControl>
 			</PanelBody>
 
