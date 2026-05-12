@@ -63,6 +63,71 @@ async function checkPseudoBadgeDimensions(
 }
 
 /**
+ * Opens the mini-cart drawer and returns the badge host locator and
+ * pseudo-element string. Returns null when no mini-cart button is present.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}|null>}
+ */
+async function getMiniCartBadge( page ) {
+	const miniCartButton = page.locator( '.wc-block-mini-cart__button' );
+	if ( ( await miniCartButton.count() ) === 0 ) {
+		return null;
+	}
+	await miniCartButton.click();
+	const locator = page
+		.locator(
+			'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+		)
+		.first();
+	return { locator, pseudo: '::before' };
+}
+
+/**
+ * Returns the cart badge host locator and pseudo-element for the cart page.
+ * Detects block vs shortcode cart automatically.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>}
+ */
+async function getCartBadge( page ) {
+	const blockHost = page.locator(
+		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+	);
+	const isBlock = ( await blockHost.count() ) > 0;
+	const locator = isBlock
+		? blockHost.first()
+		: page
+				.locator(
+					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+				)
+				.first();
+	return { locator, pseudo: isBlock ? '::before' : '::after' };
+}
+
+/**
+ * Returns the checkout badge host locator and pseudo-element for the checkout page.
+ * Detects block vs shortcode checkout automatically.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>}
+ */
+async function getCheckoutBadge( page ) {
+	const blockHost = page.locator(
+		'.wc-block-components-order-summary-item__description:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+	);
+	const isBlock = ( await blockHost.count() ) > 0;
+	const locator = isBlock
+		? blockHost.first()
+		: page
+				.locator(
+					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+				)
+				.first();
+	return { locator, pseudo: isBlock ? '::before' : '::after' };
+}
+
+/**
  * Fills a WooCommerce checkout form (block or classic shortcode).
  *
  * Detects which checkout variant is present and fills the billing fields
@@ -203,17 +268,11 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 
 	// Check badge in the mini-cart (block themes only).
 	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
-	const miniCartButton = customerPage.locator( '.wc-block-mini-cart__button' );
-	if ( ( await miniCartButton.count() ) > 0 ) {
-		await miniCartButton.click();
-		const miniCartBadgeHost = customerPage
-			.locator(
-				'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
-			)
-			.first();
+	const miniCartBadge = await getMiniCartBadge( customerPage );
+	if ( miniCartBadge ) {
 		await checkPseudoBadgeDimensions(
-			miniCartBadgeHost,
-			'::before',
+			miniCartBadge.locator,
+			miniCartBadge.pseudo,
 			'mini-cart',
 			themeSlug,
 			viewportKey,
@@ -243,18 +302,8 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	// Block cart: ::before on .wc-block-components-product-metadata
 	// Shortcode cart: ::after on td.product-name
 	await customerPage.goto( '/cart/' );
-	const blockCartBadgeHost = customerPage.locator(
-		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
-	);
-	const isBlockCart = ( await blockCartBadgeHost.count() ) > 0;
-	const cartBadgeHost = isBlockCart
-		? blockCartBadgeHost.first()
-		: customerPage
-				.locator(
-					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
-				)
-				.first();
-	const cartPseudo = isBlockCart ? '::before' : '::after';
+	const { locator: cartBadgeHost, pseudo: cartPseudo } =
+		await getCartBadge( customerPage );
 	await checkPseudoBadgeDimensions(
 		cartBadgeHost,
 		cartPseudo,
@@ -279,18 +328,8 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	// Check badge in the checkout order summary.
 	// Block checkout: ::before on .wc-block-components-product-metadata inside .wc-block-components-order-summary-item__description
 	// Shortcode checkout: ::after on .shop_table td.product-name (order review table)
-	const blockCheckoutBadgeHost = customerPage.locator(
-		'.wc-block-components-order-summary-item__description:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
-	);
-	const isBlockCheckout = ( await blockCheckoutBadgeHost.count() ) > 0;
-	const checkoutBadgeHost = isBlockCheckout
-		? blockCheckoutBadgeHost.first()
-		: customerPage
-				.locator(
-					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
-				)
-				.first();
-	const checkoutPseudo = isBlockCheckout ? '::before' : '::after';
+	const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
+		await getCheckoutBadge( customerPage );
 	await checkPseudoBadgeDimensions(
 		checkoutBadgeHost,
 		checkoutPseudo,
