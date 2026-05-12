@@ -260,7 +260,7 @@ const ClearanceSectionSidebar = () => {
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginTop: '16px' } }>
 						<RangeControl
-							label={ __( 'Density', 'wc-clearance' ) }
+							label={ __( 'Font Size', 'wc-clearance' ) }
 							value={ density }
 							onChange={ ( value ) => {
 								if ( typeof value !== 'number' ) {
