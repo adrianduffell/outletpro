@@ -133,14 +133,31 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	await page.goto( '/cart/' );
 
 	// Assert.
-	const badge = page.locator( '.wc-clearance-badge' );
-	await expect( badge ).toBeVisible();
-
-	const actualFontSize = await badge.evaluate(
-		( el ) => window.getComputedStyle( el ).fontSize
+	// The badge is rendered as CSS generated content on the cart page (see cart.css).
+	// Block cart: ::before on .wc-block-components-product-metadata
+	// Shortcode cart: ::after on td.product-name
+	const blockBadgeHost = page.locator(
+		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
 	);
-	const actualPaddingTop = await badge.evaluate(
-		( el ) => window.getComputedStyle( el ).paddingTop
+	const isBlockCart = ( await blockBadgeHost.count() ) > 0;
+	const badgeHost = isBlockCart
+		? blockBadgeHost.first()
+		: page
+				.locator(
+					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+				)
+				.first();
+	const pseudoElement = isBlockCart ? '::before' : '::after';
+
+	await expect( badgeHost ).toBeVisible();
+
+	const actualFontSize = await badgeHost.evaluate(
+		( el, pseudo ) => window.getComputedStyle( el, pseudo ).fontSize,
+		pseudoElement
+	);
+	const actualPaddingTop = await badgeHost.evaluate(
+		( el, pseudo ) => window.getComputedStyle( el, pseudo ).paddingTop,
+		pseudoElement
 	);
 	// eslint-disable-next-line no-console
 	console.log(
@@ -148,6 +165,6 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	);
 
 	test.fail();
-	await expect( badge ).toHaveCSS( 'font-size', fixture.cartPage.fontSize );
-	await expect( badge ).toHaveCSS( 'padding-top', fixture.cartPage.padding );
+	expect( actualFontSize ).toBe( fixture.cartPage.fontSize );
+	expect( actualPaddingTop ).toBe( fixture.cartPage.padding );
 } );
