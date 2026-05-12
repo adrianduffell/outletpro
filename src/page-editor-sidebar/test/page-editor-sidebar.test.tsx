@@ -734,9 +734,9 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect( screen.getByRole( 'slider', { name: 'Font size' } ) ).toHaveValue(
-			'60'
-		);
+		expect(
+			screen.getByRole( 'slider', { name: 'Font size' } )
+		).toHaveValue( '60' );
 	} );
 
 	test( 'density control allows undefined density value', () => {
