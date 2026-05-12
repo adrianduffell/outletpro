@@ -31,12 +31,12 @@ function getViewportKey( page ) {
  * Reads computed badge dimensions from a CSS pseudo-element host, logs them
  * to console, and emits soft assertions when fixture data is available.
  *
- * @param {import('@playwright/test').Locator}             locator     - Host element locator.
- * @param {string}                                         pseudo      - CSS pseudo-element string, e.g. `'::before'`.
- * @param {string}                                         label       - Human-readable label for console output.
- * @param {string}                                         themeSlug   - Active theme slug.
- * @param {string}                                         viewportKey - Viewport key string.
- * @param {{fontSize: string, padding: string}|undefined}  fixtureData - Expected values or undefined when no fixture matches.
+ * @param {import('@playwright/test').Locator} locator - Host element locator.
+ * @param {string} pseudo - CSS pseudo-element string, e.g. `'::before'`.
+ * @param {string} label - Human-readable label for console output.
+ * @param {string} themeSlug - Active theme slug.
+ * @param {string} viewportKey - Viewport key string.
+ * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
  */
 async function checkPseudoBadgeDimensions(
 	locator,
@@ -67,7 +67,7 @@ async function checkPseudoBadgeDimensions(
  * pseudo-element string. Returns null when no mini-cart button is present.
  *
  * @param {import('@playwright/test').Page} page
- * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}|null>}
+ * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}|null>} Badge locator and pseudo-element, or null when no mini-cart button is present.
  */
 async function getMiniCartBadge( page ) {
 	const miniCartButton = page.locator( '.wc-block-mini-cart__button' );
@@ -88,7 +88,7 @@ async function getMiniCartBadge( page ) {
  * Detects block vs shortcode cart automatically.
  *
  * @param {import('@playwright/test').Page} page
- * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>}
+ * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>} Badge locator and pseudo-element string.
  */
 async function getCartBadge( page ) {
 	const blockHost = page.locator(
@@ -110,7 +110,7 @@ async function getCartBadge( page ) {
  * Detects block vs shortcode checkout automatically.
  *
  * @param {import('@playwright/test').Page} page
- * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>}
+ * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>} Badge locator and pseudo-element string.
  */
 async function getCheckoutBadge( page ) {
 	const blockHost = page.locator(
@@ -294,8 +294,12 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	console.log(
 		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ productFontSize }, padding-top: ${ productPaddingTop }`
 	);
-	await expect.soft( badge ).toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
-	await expect.soft( badge ).toHaveCSS( 'padding-top', fixture?.productPage?.padding );
+	await expect
+		.soft( badge )
+		.toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
+	await expect
+		.soft( badge )
+		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
 
 	// Navigate to the cart page and check badge dimensions.
 	// The badge is rendered as CSS generated content on the cart page (see cart.css).
