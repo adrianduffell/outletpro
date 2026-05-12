@@ -719,6 +719,89 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( setScale ).toHaveBeenCalledWith( 130 );
 	} );
 
+	test( 'density control reflects stored density value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_density: [ 60, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect( screen.getByRole( 'slider', { name: 'Density' } ) ).toHaveValue(
+			'60'
+		);
+	} );
+
+	test( 'density control allows undefined density value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setDensity = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_density: [ undefined, setDensity ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Density' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'value', '' );
+		expect( setDensity ).not.toHaveBeenCalled();
+	} );
+
+	test( 'density control calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setDensity = jest.fn();
+		setupEntityPropMock( {
+			wc_clearance_badge_density: [ 60, setDensity ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Density' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '75' } } );
+
+		// Assert.
+		expect( setDensity ).toHaveBeenCalledWith( 75 );
+	} );
+
+	test( 'density control uses accepted range and step', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		setupEntityPropMock( {
+			wc_clearance_badge_density: [ 60, jest.fn() ],
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Density' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'min', '1' );
+		expect( input ).toHaveAttribute( 'max', '100' );
+		expect( input ).toHaveAttribute( 'step', '1' );
+	} );
+
 	test( 'text color control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();

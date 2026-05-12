@@ -172,6 +172,12 @@ const ClearanceSectionSidebar = () => {
 		'wc_clearance_badge_scale'
 	) as EntityProp< number >;
 
+	const [ density, setDensity ] = useEntityProp(
+		'root',
+		'site',
+		'wc_clearance_badge_density'
+	) as EntityProp< number >;
+
 	const border = {
 		color: borderColor || undefined,
 		style: borderStyle || undefined,
@@ -247,6 +253,26 @@ const ClearanceSectionSidebar = () => {
 						onChange={ ( { selectedItem } ) => {
 							setFontWeight( selectedItem?.key || '' );
 						} }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<RangeControl
+						label={ __( 'Density', 'wc-clearance' ) }
+						value={ density }
+						onChange={ ( value ) => {
+							if ( typeof value !== 'number' ) {
+								return;
+							}
+							setDensity( value );
+						} }
+						min={ 1 }
+						max={ 100 }
+						step={ 1 }
+						allowReset={ true }
+						resetFallbackValue={ 60 }
+						withInputField={ false }
 						__next40pxDefaultSize
 					/>
 				</BaseControl>
