@@ -272,15 +272,6 @@ const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
-type SettingSetterKeys = Extract< keyof Settings, `set${ string }` >;
-
-type SettingsMock = Omit< Settings, SettingSetterKeys > & {
-	[ Key in SettingSetterKeys ]: jest.Mock<
-		void,
-		Parameters< Settings[ Key ] >
-	>;
-};
-
 const settingKeyToPropertyMap = {
 	wc_clearance_badge_label: [ 'label', 'setLabel' ],
 	wc_clearance_badge_text_color: [ 'textColor', 'setTextColor' ],
@@ -311,7 +302,7 @@ type SettingsOverrides = Partial< {
 } >;
 
 function setupSettingsMock( overrides: SettingsOverrides = {} ) {
-	const settings: SettingsMock = {
+	const settings: Settings = {
 		label: undefined,
 		setLabel: jest.fn(),
 		textColor: undefined,
