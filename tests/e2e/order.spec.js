@@ -46,10 +46,7 @@ async function checkPseudoBadgeDimensions(
 	viewportKey,
 	fixtureData
 ) {
-	await expect.soft( locator ).toBeVisible();
-	if ( ! ( await locator.isVisible() ) ) {
-		return;
-	}
+	await expect( locator ).toBeVisible();
 	const { fontSize, paddingTop } = await locator.evaluate(
 		( el, pseudoArg ) => {
 			const style = window.getComputedStyle( el, pseudoArg );
@@ -61,10 +58,8 @@ async function checkPseudoBadgeDimensions(
 	console.log(
 		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, ${ label } — font-size: ${ fontSize }, padding-top: ${ paddingTop }`
 	);
-	if ( fixtureData ) {
-		expect.soft( fontSize ).toBe( fixtureData.fontSize );
-		expect.soft( paddingTop ).toBe( fixtureData.padding );
-	}
+	expect.soft( fontSize ).toBe( fixtureData?.fontSize );
+	expect.soft( paddingTop ).toBe( fixtureData?.padding );
 }
 
 /**
@@ -184,6 +179,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 
 	// Open the clearance page.
 	await customerPage.goto( clearancePage.link );
+
 	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
 	// Add a product in the clearance section to the cart.
@@ -198,7 +194,9 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 			const res = await customerPage.request.get(
 				'/?rest_route=/wc/store/v1/cart/items'
 			);
+
 			const items = await res.json();
+
 			return items.length;
 		} )
 		.toBeGreaterThan( 0 );
@@ -227,26 +225,18 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
 	const badge = customerPage.locator( '.wc-clearance-badge' );
-	await expect.soft( badge ).toBeVisible();
-	if ( await badge.isVisible() ) {
-		const { fontSize: productFontSize, paddingTop: productPaddingTop } =
-			await badge.evaluate( ( el ) => {
-				const style = window.getComputedStyle( el );
-				return { fontSize: style.fontSize, paddingTop: style.paddingTop };
-			} );
-		// eslint-disable-next-line no-console
-		console.log(
-			`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ productFontSize }, padding-top: ${ productPaddingTop }`
-		);
-		if ( fixture ) {
-			await expect
-				.soft( badge )
-				.toHaveCSS( 'font-size', fixture.productPage.fontSize );
-			await expect
-				.soft( badge )
-				.toHaveCSS( 'padding-top', fixture.productPage.padding );
-		}
-	}
+	await expect( badge ).toBeVisible();
+	const { fontSize: productFontSize, paddingTop: productPaddingTop } =
+		await badge.evaluate( ( el ) => {
+			const style = window.getComputedStyle( el );
+			return { fontSize: style.fontSize, paddingTop: style.paddingTop };
+		} );
+	// eslint-disable-next-line no-console
+	console.log(
+		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ productFontSize }, padding-top: ${ productPaddingTop }`
+	);
+	await expect.soft( badge ).toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
+	await expect.soft( badge ).toHaveCSS( 'padding-top', fixture?.productPage?.padding );
 
 	// Navigate to the cart page and check badge dimensions.
 	// The badge is rendered as CSS generated content on the cart page (see cart.css).
