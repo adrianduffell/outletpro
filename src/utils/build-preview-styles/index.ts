@@ -35,7 +35,7 @@ export function buildPreviewStyles(
 
 	const declarations = [
 		`--wc-clearance-badge-label: ${
-			settings.label ? JSON.stringify( settings.label ) : 'normal'
+			settings.label ? JSON.stringify( settings.label ) : 'none'
 		}`,
 		`--wc-clearance-badge-scale: ${ settings.scale ?? 'unset' }`,
 		...Object.entries( entries ).map(
