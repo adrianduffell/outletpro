@@ -8,13 +8,13 @@ test( 'badge has correct font-size and padding on single product page', async ( 
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange.
 	const fixture = themeSlug ? badgeDimensionFixtures[ themeSlug ] : undefined;
 	test.skip(
 		! fixture,
 		`No badge dimension fixture for theme: ${ themeSlug }`
 	);
 
+	// Arrange.
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
@@ -60,13 +60,13 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange.
 	const fixture = themeSlug ? badgeDimensionFixtures[ themeSlug ] : undefined;
 	test.skip(
 		! fixture,
 		`No badge dimension fixture for theme: ${ themeSlug }`
 	);
 
+	// Arrange.
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
