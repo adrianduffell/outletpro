@@ -59,6 +59,19 @@ test( 'badge has correct font-size and padding on single product page', async ( 
 	// Assert.
 	const badge = page.locator( '.wc-clearance-badge' );
 	await expect( badge ).toBeVisible();
+
+	const actualFontSize = await badge.evaluate(
+		( el ) => window.getComputedStyle( el ).fontSize
+	);
+	const actualPaddingTop = await badge.evaluate(
+		( el ) => window.getComputedStyle( el ).paddingTop
+	);
+	// eslint-disable-next-line no-console
+	console.log(
+		`[badge-dimensions] product page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
+	);
+
+	test.fail();
 	await expect( badge ).toHaveCSS(
 		'font-size',
 		fixture.productPage.fontSize
@@ -122,6 +135,19 @@ test( 'badge has correct font-size and padding on cart page', async ( {
 	// Assert.
 	const badge = page.locator( '.wc-clearance-badge' );
 	await expect( badge ).toBeVisible();
+
+	const actualFontSize = await badge.evaluate(
+		( el ) => window.getComputedStyle( el ).fontSize
+	);
+	const actualPaddingTop = await badge.evaluate(
+		( el ) => window.getComputedStyle( el ).paddingTop
+	);
+	// eslint-disable-next-line no-console
+	console.log(
+		`[badge-dimensions] cart page — font-size: ${ actualFontSize }, padding-top: ${ actualPaddingTop }`
+	);
+
+	test.fail();
 	await expect( badge ).toHaveCSS( 'font-size', fixture.cartPage.fontSize );
 	await expect( badge ).toHaveCSS( 'padding-top', fixture.cartPage.padding );
 } );
