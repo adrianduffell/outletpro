@@ -17,8 +17,8 @@ export default {
 	twentytwentyfive: {
 		'1280x720': {
 			productPage: {
-				fontSize: '17.6991px',
-				padding: '6.37166px',
+				fontSize: '18.0635px',
+				padding: '6.50284px',
 			},
 			cartPage: {
 				fontSize: '11.62px',
