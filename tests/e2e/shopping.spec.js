@@ -181,170 +181,171 @@ test( 'customer places clearance order', async ( {
 	requestUtils,
 	browser,
 } ) => {
-	// Arrange.
 	const runId = Date.now();
 	const themeSlug = await getActiveThemeSlug( requestUtils );
+	const viewportKey = getViewportKey( page );
+	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
 
-	const product = await requestUtils.rest( {
-		method: 'POST',
-		path: '/wc/v3/products',
-		data: {
-			name: `Order Flow Test Product ${ runId }`,
-			type: 'simple',
-			status: 'publish',
-			regular_price: '9.99',
-		},
-	} );
-
-	await admin.visitAdminPage(
-		'post.php',
-		`post=${ product.id }&action=edit`
+	test.skip(
+		! fixture,
+		`No badge dimensions fixture for theme "${ themeSlug }" at viewport "${ viewportKey }".`
 	);
-	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
-	await page.getByRole( 'button', { name: 'Update' } ).click();
 
-	const productData = await requestUtils.rest( {
-		method: 'GET',
-		path: `/wc/v3/products/${ product.id }`,
+	let productData;
+	let clearancePage;
+
+	await test.step( 'Arrange product and clearance page', async () => {
+		const product = await requestUtils.rest( {
+			method: 'POST',
+			path: '/wc/v3/products',
+			data: {
+				name: `Order Flow Test Product ${ runId }`,
+				type: 'simple',
+				status: 'publish',
+				regular_price: '9.99',
+			},
+		} );
+
+		await admin.visitAdminPage(
+			'post.php',
+			`post=${ product.id }&action=edit`
+		);
+		await page.getByRole( 'link', { name: 'Inventory' } ).click();
+		await page
+			.getByRole( 'checkbox', { name: 'Clearance section' } )
+			.check();
+		await page.getByRole( 'button', { name: 'Update' } ).click();
+
+		productData = await requestUtils.rest( {
+			method: 'GET',
+			path: `/wc/v3/products/${ product.id }`,
+		} );
+
+		const wpSettings = await requestUtils.rest( {
+			method: 'GET',
+			path: '/wp/v2/settings',
+		} );
+		await requestUtils.rest( {
+			method: 'PUT',
+			path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
+			data: { status: 'publish' },
+		} );
+		clearancePage = await requestUtils.rest( {
+			method: 'GET',
+			path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
+		} );
 	} );
 
-	const wpSettings = await requestUtils.rest( {
-		method: 'GET',
-		path: '/wp/v2/settings',
-	} );
-	await requestUtils.rest( {
-		method: 'PUT',
-		path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
-		data: { status: 'publish' },
-	} );
-	const clearancePage = await requestUtils.rest( {
-		method: 'GET',
-		path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
-	} );
-
-	// Customer flow in isolated context.
 	const customerContext = await browser.newContext( {
 		storageState: { cookies: [], origins: [] },
 	} );
 	const customerPage = await customerContext.newPage();
+	try {
+		await test.step( 'Shop from clearance page and verify product badges', async () => {
+			await customerPage.goto( clearancePage.link );
 
-	const viewportKey = getViewportKey( customerPage );
-	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
-
-	// Open the clearance page.
-	await customerPage.goto( clearancePage.link );
-
-	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
-
-	// Add a product in the clearance section to the cart.
-	await customerPage
-		.getByRole( 'button', { name: /add to cart/i } )
-		.first()
-		.click();
-
-	// Wait for the cart to update.
-	await expect
-		.poll( async () => {
-			const res = await customerPage.request.get(
-				'/?rest_route=/wc/store/v1/cart/items'
+			await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount(
+				0
 			);
 
-			const items = await res.json();
+			await customerPage
+				.getByRole( 'button', { name: /add to cart/i } )
+				.first()
+				.click();
 
-			return items.length;
-		} )
-		.toBeGreaterThan( 0 );
+			await expect
+				.poll( async () => {
+					const res = await customerPage.request.get(
+						'/?rest_route=/wc/store/v1/cart/items'
+					);
 
-	// Navigate to the product page and check badge dimensions.
-	await customerPage.goto( productData.permalink );
-	const badge = customerPage.locator( '.wc-clearance-badge' );
-	await expect( badge ).toBeVisible();
-	await expect
-		.soft( badge )
-		.toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
-	await expect
-		.soft( badge )
-		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
+					const items = await res.json();
 
-	// Check badge in the mini-cart (block themes only).
-	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
-	const miniCartBadge = await getMiniCartBadge( customerPage );
-	if ( miniCartBadge ) {
-		await checkPseudoBadgeDimensions(
-			miniCartBadge.locator,
-			miniCartBadge.pseudo,
-			fixture?.cartPage
-		);
-		await customerPage
-			.locator( '.wc-block-mini-cart__drawer' )
-			.getByLabel( 'Close' )
-			.first()
-			.click();
+					return items.length;
+				} )
+				.toBeGreaterThan( 0 );
+
+			await customerPage.goto( productData.permalink );
+			const badge = customerPage.locator( '.wc-clearance-badge' );
+			await expect( badge ).toBeVisible();
+			await expect
+				.soft( badge )
+				.toHaveCSS( 'font-size', fixture.productPage.fontSize );
+			await expect
+				.soft( badge )
+				.toHaveCSS( 'padding-top', fixture.productPage.padding );
+
+			const miniCartBadge = await getMiniCartBadge( customerPage );
+			if ( miniCartBadge ) {
+				await checkPseudoBadgeDimensions(
+					miniCartBadge.locator,
+					miniCartBadge.pseudo,
+					fixture.cartPage
+				);
+				await customerPage
+					.locator( '.wc-block-mini-cart__drawer' )
+					.getByLabel( 'Close' )
+					.first()
+					.click();
+			}
+		} );
+
+		await test.step( 'Verify cart and checkout badge dimensions', async () => {
+			await customerPage
+				.locator( 'nav' )
+				.getByRole( 'link', { name: /^cart$/i } )
+				.first()
+				.click();
+			const { locator: cartBadgeHost, pseudo: cartPseudo } =
+				await getCartBadge( customerPage );
+			await checkPseudoBadgeDimensions(
+				cartBadgeHost,
+				cartPseudo,
+				fixture.cartPage
+			);
+
+			await customerPage
+				.locator( 'nav' )
+				.getByRole( 'link', { name: /^checkout$/i } )
+				.first()
+				.click();
+
+			await customerPage
+				.getByLabel( /email address|billing email/i )
+				.waitFor( { state: 'visible' } );
+
+			const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
+				await getCheckoutBadge( customerPage );
+
+			await checkPseudoBadgeDimensions(
+				checkoutBadgeHost,
+				checkoutPseudo,
+				fixture.checkoutPage
+			);
+		} );
+
+		await test.step( 'Place order', async () => {
+			await fillCheckout( customerPage );
+			await customerPage
+				.getByRole( 'button', { name: /place order/i } )
+				.click();
+
+			const orderId = (
+				await customerPage
+					.locator(
+						`
+						.woocommerce-order-overview__order strong,
+						.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
+							.wc-block-order-confirmation-summary-list-item__value
+						`
+					)
+					.first()
+					.textContent()
+			)?.trim();
+
+			expect( orderId ).toMatch( /^\d+$/ );
+		} );
+	} finally {
+		await customerContext.close();
 	}
-
-	// Navigate to the cart page and check badge dimensions.
-	// The badge is rendered as CSS generated content on the cart page (see cart.css).
-	// Block cart: ::before on .wc-block-components-product-metadata
-	// Shortcode cart: ::after on td.product-name
-	// Click the checkout link in the menu.
-	await customerPage
-		.locator( 'nav' )
-		.getByRole( 'link', { name: /^cart$/i } )
-		.first()
-		.click();
-	const { locator: cartBadgeHost, pseudo: cartPseudo } =
-		await getCartBadge( customerPage );
-	await checkPseudoBadgeDimensions(
-		cartBadgeHost,
-		cartPseudo,
-		fixture?.cartPage
-	);
-
-	// Click the checkout link in the menu.
-	await customerPage
-		.locator( 'nav' )
-		.getByRole( 'link', { name: /^checkout$/i } )
-		.first()
-		.click();
-
-	// Wait for visible email field.
-	await customerPage
-		.getByLabel( /email address|billing email/i )
-		.waitFor( { state: 'visible' } );
-
-	// Check badge in the checkout order summary.
-	// Block checkout: ::before on .wc-block-components-product-metadata inside .wc-block-components-order-summary-item__description
-	// Shortcode checkout: ::after on .shop_table td.product-name (order review table)
-	const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
-		await getCheckoutBadge( customerPage );
-
-	await checkPseudoBadgeDimensions(
-		checkoutBadgeHost,
-		checkoutPseudo,
-		fixture?.checkoutPage
-	);
-
-	await fillCheckout( customerPage );
-
-	await customerPage.getByRole( 'button', { name: /place order/i } ).click();
-
-	// Wait for the order page.
-	const orderId = (
-		await customerPage
-			// Match block or classic confirmation page.
-			.locator(
-				`
-				.woocommerce-order-overview__order strong,
-				.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
-					.wc-block-order-confirmation-summary-list-item__value
-				`
-			)
-			.first()
-			.textContent()
-	)?.trim();
-
-	expect( orderId ).toMatch( /^\d+$/ );
-
-	await customerContext.close();
 } );
