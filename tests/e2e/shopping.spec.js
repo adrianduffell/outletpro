@@ -185,9 +185,11 @@ test( 'customer places clearance order', async ( {
 	const themeSlug = await getActiveThemeSlug( requestUtils );
 	const viewportKey = getViewportKey( page );
 	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
+	const hasFixture =
+		fixture?.productPage && fixture?.cartPage && fixture?.checkoutPage;
 
 	test.skip(
-		! fixture,
+		! hasFixture,
 		`No badge dimensions fixture for theme "${ themeSlug }" at viewport "${ viewportKey }".`
 	);
 
@@ -333,8 +335,10 @@ test( 'customer places clearance order', async ( {
 		await customerPage
 			.getByRole( 'button', { name: /place order/i } )
 			.click();
-		const orderSelector =
-			'.woocommerce-order-overview__order strong, .wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value';
+		const orderSelector = [
+			'.woocommerce-order-overview__order strong',
+			'.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value',
+		].join( ', ' );
 
 		const orderId = (
 			await customerPage.locator( orderSelector ).first().textContent()
