@@ -47,4 +47,16 @@ test( 'admin sees clearance badge on order item', async ( {
 	await expect(
 		page.locator( '.wc-clearance-admin-badge' ).first()
 	).toBeVisible();
+
+	// Cleanup.
+	await requestUtils.rest( {
+		method: 'DELETE',
+		path: `/wc/v3/orders/${ order.id }`,
+		params: { force: true },
+	} );
+	await requestUtils.rest( {
+		method: 'DELETE',
+		path: `/wc/v3/products/${ product.id }`,
+		params: { force: true },
+	} );
 } );
