@@ -1,5 +1,5 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import badgeDimensions from './fixtures/badge-dimensions.json';
+import badgeDimensions from './fixtures/badge-dimensions.json' with { type: 'json' };
 
 /**
  * Returns the active theme's stylesheet slug via the WordPress REST API.
