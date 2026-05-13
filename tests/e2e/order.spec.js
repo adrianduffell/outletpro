@@ -308,7 +308,12 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	// The badge is rendered as CSS generated content on the cart page (see cart.css).
 	// Block cart: ::before on .wc-block-components-product-metadata
 	// Shortcode cart: ::after on td.product-name
-	await customerPage.goto( '/cart/' );
+	// Click the checkout link in the menu.
+	await customerPage
+		.locator( 'nav' )
+		.getByRole( 'link', { name: /^cart$/i } )
+		.first()
+		.click();
 	const { locator: cartBadgeHost, pseudo: cartPseudo } =
 		await getCartBadge( customerPage );
 	await checkPseudoBadgeDimensions(
