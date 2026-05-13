@@ -247,7 +247,6 @@ const ClearanceSectionSidebar = () => {
 							marks={ [ { value: 50, label: '50%' } ] }
 							renderTooltipContent={ ( value ) => `${ value }%` }
 							allowReset={ false }
-							resetFallbackValue={ 60 }
 							withInputField={ false }
 							__next40pxDefaultSize
 						/>
