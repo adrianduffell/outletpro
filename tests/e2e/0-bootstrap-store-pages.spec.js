@@ -65,10 +65,7 @@ async function deletePage( requestUtils, pageId ) {
 }
 
 setup( 'install store pages with blocks', async ( { requestUtils } ) => {
-	setup.skip(
-		storePages !== 'block',
-		'STORE_PAGES is not set to block'
-	);
+	setup.skip( storePages !== 'block', 'STORE_PAGES is not set to block' );
 
 	const { cartPageId, checkoutPageId } =
 		await getStorePageIds( requestUtils );
