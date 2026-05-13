@@ -379,5 +379,5 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		'admin.php',
 		`page=wc-orders&action=edit&id=${ orderId }`
 	);
-	await expect( page.locator( '.wc-clearance-admin-badge' ) ).toBeVisible();
+	await expect( page.locator( '.wc-clearance-admin-badge' ).first() ).toBeVisible();
 } );
