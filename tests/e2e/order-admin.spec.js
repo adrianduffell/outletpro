@@ -17,7 +17,6 @@ test( 'admin sees clearance badge on order item', async ( {
 			regular_price: '9.99',
 		},
 	} );
-
 	const order = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/orders',
