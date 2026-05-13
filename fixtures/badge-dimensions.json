@@ -15,6 +15,22 @@
 			}
 		}
 	},
+	"twentytwentyfour": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "13.944px",
+				"padding": "5.01984px"
+			},
+			"cartPage": {
+				"fontSize": "11.952px",
+				"padding": "4.30272px"
+			},
+			"checkoutPage": {
+				"fontSize": "11.952px",
+				"padding": "4.30272px"
+			}
+		}
+	},
 	"twentytwentythree": {
 		"1280x720": {
 			"productPage": {
