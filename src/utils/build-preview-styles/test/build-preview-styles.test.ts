@@ -15,6 +15,7 @@ describe( 'buildPreviewStyles', () => {
 		paddingBottom: '--wc-clearance-badge-padding-bottom',
 		paddingLeft: '--wc-clearance-badge-padding-left',
 		scale: '--wc-clearance-badge-scale',
+		density: '--wc-clearance-badge-density',
 	};
 
 	test( 'wraps declarations in a :root rule', () => {
@@ -69,6 +70,7 @@ describe( 'buildPreviewStyles', () => {
 		[ 'paddingBottom', '8px' ],
 		[ 'paddingLeft', '12px' ],
 		[ 'scale', 120 ],
+		[ 'density', 60 ],
 	] as const )( 'includes %s CSS var', ( key, value ) => {
 		const result = buildPreviewStyles( { [ key ]: value } );
 
@@ -91,6 +93,7 @@ describe( 'buildPreviewStyles', () => {
 			paddingBottom: '8px',
 			paddingLeft: '12px',
 			scale: 120,
+			density: 60,
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
@@ -119,6 +122,7 @@ describe( 'buildPreviewStyles', () => {
 		);
 		expect( result ).toContain( '--wc-clearance-badge-padding-left: 12px' );
 		expect( result ).toContain( '--wc-clearance-badge-scale: 120' );
+		expect( result ).toContain( '--wc-clearance-badge-density: 60' );
 	} );
 
 	test.each(
@@ -136,6 +140,7 @@ describe( 'buildPreviewStyles', () => {
 			borderRadius: '0',
 			paddingTop: '0',
 			scale: undefined,
+			density: undefined,
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: unset' );
@@ -143,6 +148,7 @@ describe( 'buildPreviewStyles', () => {
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-scale: unset' );
+		expect( result ).toContain( '--wc-clearance-badge-density: unset' );
 	} );
 
 	test( 'outputs unset for undefined or empty alongside defined values', () => {
@@ -163,6 +169,14 @@ describe( 'buildPreviewStyles', () => {
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-scale: 0' );
+	} );
+
+	test( 'outputs 0 for zero density', () => {
+		const result = buildPreviewStyles( {
+			density: 0,
+		} );
+
+		expect( result ).toContain( '--wc-clearance-badge-density: 0' );
 	} );
 
 	test( 'joins declarations with semicolons', () => {

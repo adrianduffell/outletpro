@@ -13,7 +13,7 @@
 	.wc-block-components-order-summary-item__description:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata::before,
 	.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata::before {
 		content: var(--wc-clearance-badge-label, none);
-		display: inline-block;
+		display: block;
 		width: fit-content;
 		border-radius: var(--wc-clearance-badge-border-radius, unset);
 		padding-top: var(--wc-clearance-badge-padding-top, unset);

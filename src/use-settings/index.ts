@@ -30,6 +30,8 @@ export type Settings = {
 	setPaddingLeft: ( value: string | undefined ) => void;
 	scale: number | undefined;
 	setScale: ( value: number | undefined ) => void;
+	density: number | undefined;
+	setDensity: ( value: number | undefined ) => void;
 	message: string | undefined;
 	setMessage: ( value: string | undefined ) => void;
 };
@@ -77,6 +79,9 @@ const useSettings = (): Settings => {
 	const [ scale, setScale ] = useUnsignedIntegerEntityProp(
 		'wc_clearance_badge_scale'
 	);
+	const [ density, setDensity ] = useUnsignedIntegerEntityProp(
+		'wc_clearance_badge_density'
+	);
 	const [ message, setMessage ] = useStringEntityProp(
 		'wc_clearance_message'
 	);
@@ -110,6 +115,8 @@ const useSettings = (): Settings => {
 		setPaddingLeft,
 		scale,
 		setScale,
+		density,
+		setDensity,
 		message,
 		setMessage,
 	};

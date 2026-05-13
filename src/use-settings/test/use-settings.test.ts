@@ -12,14 +12,18 @@ const mockUseUnsignedIntegerEntityProp =
 
 function setupMock(
 	overrides: Record< string, string | undefined > = {},
-	scaleOverride?: [ number | undefined, jest.Mock ]
+	unsignedIntegerOverrides: Array< [ number | undefined, jest.Mock ] > = [
+		[ undefined, jest.fn() ],
+		[ undefined, jest.fn() ],
+	]
 ) {
 	mockUseStringEntityProp.mockImplementation( ( key: string ) => {
 		return [ overrides[ key ], jest.fn() ];
 	} );
-	mockUseUnsignedIntegerEntityProp.mockReturnValue(
-		scaleOverride ?? [ undefined, jest.fn() ]
-	);
+	mockUseUnsignedIntegerEntityProp.mockReset();
+	unsignedIntegerOverrides.forEach( ( value ) => {
+		mockUseUnsignedIntegerEntityProp.mockReturnValueOnce( value );
+	} );
 }
 
 describe( 'useSettings', () => {
@@ -121,13 +125,30 @@ describe( 'useSettings', () => {
 
 	test( 'returns scale value from entity prop', () => {
 		// Arrange.
-		setupMock( {}, [ 140, jest.fn() ] );
+		setupMock( {}, [
+			[ 140, jest.fn() ],
+			[ undefined, jest.fn() ],
+		] );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
 
 		// Assert.
 		expect( result.current.scale ).toBe( 140 );
+	} );
+
+	test( 'returns density value from entity prop', () => {
+		// Arrange.
+		setupMock( {}, [
+			[ undefined, jest.fn() ],
+			[ 80, jest.fn() ],
+		] );
+
+		// Act.
+		const { result } = renderHook( () => useSettings() );
+
+		// Assert.
+		expect( result.current.density ).toBe( 80 );
 	} );
 
 	test( 'exposes setLabel setter from entity prop', () => {
@@ -139,6 +160,9 @@ describe( 'useSettings', () => {
 			}
 			return [ undefined, jest.fn() ];
 		} );
+		mockUseUnsignedIntegerEntityProp
+			.mockReturnValueOnce( [ undefined, jest.fn() ] )
+			.mockReturnValueOnce( [ undefined, jest.fn() ] );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -148,7 +172,7 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'exposes all 15 setters wired to the correct entity prop key', () => {
+	test( 'exposes all 16 setters wired to the correct entity prop key', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
@@ -175,10 +199,10 @@ describe( 'useSettings', () => {
 			setters[ key ] ?? jest.fn(),
 		] );
 		const scaleSetter = jest.fn();
-		mockUseUnsignedIntegerEntityProp.mockReturnValue( [
-			undefined,
-			scaleSetter,
-		] );
+		const densitySetter = jest.fn();
+		mockUseUnsignedIntegerEntityProp
+			.mockReturnValueOnce( [ undefined, scaleSetter ] )
+			.mockReturnValueOnce( [ undefined, densitySetter ] );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -196,7 +220,8 @@ describe( 'useSettings', () => {
 		result.current.setPaddingBottom( 'l' );
 		result.current.setPaddingLeft( 'm' );
 		result.current.setScale( 140 );
-		result.current.setMessage( 'n' );
+		result.current.setDensity( 80 );
+		result.current.setMessage( 'o' );
 
 		// Assert.
 		expect( setters.wc_clearance_badge_label ).toHaveBeenCalledWith( 'a' );
@@ -237,10 +262,11 @@ describe( 'useSettings', () => {
 			'm'
 		);
 		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
-		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'n' );
+		expect( densitySetter ).toHaveBeenCalledWith( 80 );
+		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'o' );
 	} );
 
-	test( 'calls useStringEntityProp for all 14 string settings and useUnsignedIntegerEntityProp for scale', () => {
+	test( 'calls useStringEntityProp for all 14 string settings and useUnsignedIntegerEntityProp for scale and density', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
 		mockUseUnsignedIntegerEntityProp.mockClear();
@@ -268,9 +294,14 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
 		expect( keys ).toHaveLength( 14 );
-		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledWith(
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
+			1,
 			'wc_clearance_badge_scale'
 		);
-		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledTimes( 1 );
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
+			2,
+			'wc_clearance_badge_density'
+		);
+		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledTimes( 2 );
 	} );
 } );
