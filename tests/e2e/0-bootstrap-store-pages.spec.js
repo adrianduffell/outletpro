@@ -32,36 +32,17 @@ async function getStorePageIds( requestUtils ) {
 /**
  * Deletes a page by ID via the WordPress REST API.
  *
- * Ignores not-found errors so bootstrap can be rerun safely when settings
- * still reference pages that were already removed.
- *
  * @param {Object} requestUtils - Playwright request utilities.
  * @param {number} pageId       - The ID of the page to delete.
  */
 async function deletePage( requestUtils, pageId ) {
-	try {
-		await requestUtils.rest( {
-			method: 'DELETE',
-			path: `/wp/v2/pages/${ pageId }`,
-			params: {
-				force: true,
-			},
-		} );
-	} catch ( error ) {
-		// requestUtils.rest() may surface the HTTP status in different places
-		// depending on the error type (@wordpress/api-fetch vs raw fetch vs WP REST error body).
-		const statusCode =
-			error?.status ??
-			error?.response?.status ??
-			error?.data?.status ??
-			error?.code;
-
-		if ( statusCode === 404 || statusCode === 'rest_post_invalid_id' ) {
-			return;
-		}
-
-		throw error;
-	}
+	await requestUtils.rest( {
+		method: 'DELETE',
+		path: `/wp/v2/pages/${ pageId }`,
+		params: {
+			force: true,
+		},
+	} );
 }
 
 setup( 'install store pages with blocks', async ( { requestUtils } ) => {
