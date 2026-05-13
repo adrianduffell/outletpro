@@ -47,6 +47,7 @@ describe( 'EditorPreview', () => {
 			wc_clearance_badge_bg_color: [ '#ff0000', jest.fn() ],
 			wc_clearance_badge_text_color: [ '#ffffff', jest.fn() ],
 			wc_clearance_badge_scale: [ 140, jest.fn() ],
+			wc_clearance_badge_density: [ 80, jest.fn() ],
 		} );
 
 		// Act.
@@ -68,6 +69,9 @@ describe( 'EditorPreview', () => {
 		);
 		expect( styleEl?.textContent ).toContain(
 			'--wc-clearance-badge-scale: 140'
+		);
+		expect( styleEl?.textContent ).toContain(
+			'--wc-clearance-badge-density: 80'
 		);
 	} );
 

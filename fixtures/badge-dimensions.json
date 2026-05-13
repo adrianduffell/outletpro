@@ -1,0 +1,98 @@
+{
+	"twentytwentyfive": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "18.0635px",
+				"padding": "6.50284px"
+			},
+			"cartPage": {
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
+			},
+			"checkoutPage": {
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
+			}
+		}
+	},
+	"twentytwentyfour": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "13.944px",
+				"padding": "5.01984px"
+			},
+			"cartPage": {
+				"fontSize": "11.952px",
+				"padding": "4.30272px"
+			},
+			"checkoutPage": {
+				"fontSize": "11.952px",
+				"padding": "4.30272px"
+			}
+		}
+	},
+	"twentytwentythree": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "14.94px",
+				"padding": "5.3784px"
+			},
+			"cartPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			},
+			"checkoutPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			}
+		}
+	},
+	"twentytwenty": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "14.94px",
+				"padding": "5.3784px"
+			},
+			"cartPage": {
+				"fontSize": "14.94px",
+				"padding": "5.3784px"
+			},
+			"checkoutPage": {
+				"fontSize": "14.94px",
+				"padding": "5.3784px"
+			}
+		}
+	},
+	"astra": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			},
+			"cartPage": {
+				"fontSize": "10.79px",
+				"padding": "3.8844px"
+			},
+			"checkoutPage": {
+				"fontSize": "10.79px",
+				"padding": "3.8844px"
+			}
+		}
+	},
+	"storefront": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			},
+			"cartPage": {
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
+			},
+			"checkoutPage": {
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
+			}
+		}
+	}
+}
