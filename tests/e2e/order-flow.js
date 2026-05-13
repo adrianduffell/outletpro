@@ -1,5 +1,10 @@
 import { expect } from '@wordpress/e2e-test-utils-playwright';
 
+const orderIdSelector = [
+	'.woocommerce-order-overview__order strong',
+	'.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value',
+].join( ', ' );
+
 /**
  * Creates a clearance product and ensures the clearance page is published.
  *
@@ -127,6 +132,7 @@ export async function fillCheckout( checkoutPage ) {
 		await checkoutPage.getByLabel( 'First name' ).fill( 'Test' );
 		await checkoutPage.getByLabel( 'Last name' ).fill( 'Customer' );
 		await checkoutPage.getByLabel( /country/i ).selectOption( 'US' );
+		// Use .first() to target Address line 1, skipping the optional line 2.
 		await checkoutPage
 			.getByLabel( /^address/i )
 			.first()
@@ -135,11 +141,13 @@ export async function fillCheckout( checkoutPage ) {
 		await checkoutPage.getByLabel( /zip|postal/i ).fill( '10001' );
 		await checkoutPage.getByLabel( /^state/i ).selectOption( 'NY' );
 
+		// Phone is optional in block checkout — only fill if the field is present.
 		const blockPhone = checkoutPage.getByLabel( /phone/i );
 		if ( ( await blockPhone.count() ) > 0 ) {
 			await blockPhone.first().fill( '1234567890' );
 		}
 	} else {
+		// Classic shortcode checkout.
 		await checkoutPage
 			.getByLabel( /email address/i )
 			.fill( 'test@example.com' );
@@ -149,6 +157,7 @@ export async function fillCheckout( checkoutPage ) {
 			.getByLabel( /country/i )
 			.first()
 			.selectOption( 'US' );
+		// Use .first() to target "Street address" line 1, skipping the optional line 2.
 		await checkoutPage
 			.getByLabel( /street address/i )
 			.first()
@@ -201,16 +210,7 @@ export async function placeOrder( page, callbacks = {} ) {
 	await page.getByRole( 'button', { name: /place order/i } ).click();
 
 	const orderId = (
-		await page
-			.locator(
-				`
-				.woocommerce-order-overview__order strong,
-				.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
-					.wc-block-order-confirmation-summary-list-item__value
-				`
-			)
-			.first()
-			.textContent()
+		await page.locator( orderIdSelector ).first().textContent()
 	)?.trim();
 
 	expect( orderId ).toMatch( /^\d+$/ );
