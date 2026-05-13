@@ -247,112 +247,110 @@ test( 'customer places clearance order', async ( {
 			const newCustomerPage = await context.newPage();
 			return { customerContext: context, customerPage: newCustomerPage };
 		} );
-	try {
-		await test.step( 'Shop from clearance page and verify product badges', async () => {
-			await customerPage.goto( clearancePage.link );
+	await test.step( 'Shop from clearance page and verify product badges', async () => {
+		await customerPage.goto( clearancePage.link );
 
-			await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount(
-				0
-			);
+		await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
-			await customerPage
-				.getByRole( 'button', { name: /add to cart/i } )
-				.first()
-				.click();
+		await customerPage
+			.getByRole( 'button', { name: /add to cart/i } )
+			.first()
+			.click();
 
-			await expect
-				.poll( async () => {
-					const res = await customerPage.request.get(
-						'/?rest_route=/wc/store/v1/cart/items'
-					);
-
-					const items = await res.json();
-
-					return items.length;
-				} )
-				.toBeGreaterThan( 0 );
-
-			await customerPage.goto( productData.permalink );
-			const badge = customerPage.locator( '.wc-clearance-badge' );
-			await expect( badge ).toBeVisible();
-			await expect
-				.soft( badge )
-				.toHaveCSS( 'font-size', fixture.productPage.fontSize );
-			await expect
-				.soft( badge )
-				.toHaveCSS( 'padding-top', fixture.productPage.padding );
-
-			const miniCartBadge = await getMiniCartBadge( customerPage );
-			if ( miniCartBadge ) {
-				await checkPseudoBadgeDimensions(
-					miniCartBadge.locator,
-					miniCartBadge.pseudo,
-					fixture.cartPage
+		await expect
+			.poll( async () => {
+				const res = await customerPage.request.get(
+					'/?rest_route=/wc/store/v1/cart/items'
 				);
-				await customerPage
-					.locator( '.wc-block-mini-cart__drawer' )
-					.getByLabel( 'Close' )
-					.first()
-					.click();
-			}
-		} );
 
-		await test.step( 'Verify cart and checkout badge dimensions', async () => {
-			await customerPage
-				.locator( 'nav' )
-				.getByRole( 'link', { name: /^cart$/i } )
-				.first()
-				.click();
-			const { locator: cartBadgeHost, pseudo: cartPseudo } =
-				await getCartBadge( customerPage );
+				const items = await res.json();
+
+				return items.length;
+			} )
+			.toBeGreaterThan( 0 );
+
+		await customerPage.goto( productData.permalink );
+		const badge = customerPage.locator( '.wc-clearance-badge' );
+		await expect( badge ).toBeVisible();
+		await expect
+			.soft( badge )
+			.toHaveCSS( 'font-size', fixture.productPage.fontSize );
+		await expect
+			.soft( badge )
+			.toHaveCSS( 'padding-top', fixture.productPage.padding );
+
+		const miniCartBadge = await getMiniCartBadge( customerPage );
+		if ( miniCartBadge ) {
 			await checkPseudoBadgeDimensions(
-				cartBadgeHost,
-				cartPseudo,
+				miniCartBadge.locator,
+				miniCartBadge.pseudo,
 				fixture.cartPage
 			);
-
 			await customerPage
-				.locator( 'nav' )
-				.getByRole( 'link', { name: /^checkout$/i } )
+				.locator( '.wc-block-mini-cart__drawer' )
+				.getByLabel( 'Close' )
 				.first()
 				.click();
+		}
+	} );
 
+	await test.step( 'Verify cart and checkout badge dimensions', async () => {
+		await customerPage
+			.locator( 'nav' )
+			.getByRole( 'link', { name: /^cart$/i } )
+			.first()
+			.click();
+		const { locator: cartBadgeHost, pseudo: cartPseudo } =
+			await getCartBadge( customerPage );
+		await checkPseudoBadgeDimensions(
+			cartBadgeHost,
+			cartPseudo,
+			fixture.cartPage
+		);
+
+		await customerPage
+			.locator( 'nav' )
+			.getByRole( 'link', { name: /^checkout$/i } )
+			.first()
+			.click();
+
+		await customerPage
+			.getByLabel( /email address|billing email/i )
+			.waitFor( { state: 'visible' } );
+
+		const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
+			await getCheckoutBadge( customerPage );
+
+		await checkPseudoBadgeDimensions(
+			checkoutBadgeHost,
+			checkoutPseudo,
+			fixture.checkoutPage
+		);
+	} );
+
+	await test.step( 'Place order', async () => {
+		await fillCheckout( customerPage );
+		await customerPage
+			.getByRole( 'button', { name: /place order/i } )
+			.click();
+
+		const orderId = (
 			await customerPage
-				.getByLabel( /email address|billing email/i )
-				.waitFor( { state: 'visible' } );
+				.locator(
+					`
+					.woocommerce-order-overview__order strong,
+					.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
+						.wc-block-order-confirmation-summary-list-item__value
+					`
+				)
+				.first()
+				.textContent()
+		)?.trim();
 
-			const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
-				await getCheckoutBadge( customerPage );
+		expect( orderId ).toMatch( /^\d+$/ );
+	} );
 
-			await checkPseudoBadgeDimensions(
-				checkoutBadgeHost,
-				checkoutPseudo,
-				fixture.checkoutPage
-			);
-		} );
-
-		await test.step( 'Place order', async () => {
-			await fillCheckout( customerPage );
-			await customerPage
-				.getByRole( 'button', { name: /place order/i } )
-				.click();
-
-			const orderId = (
-				await customerPage
-					.locator(
-						`
-						.woocommerce-order-overview__order strong,
-						.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
-							.wc-block-order-confirmation-summary-list-item__value
-						`
-					)
-					.first()
-					.textContent()
-			)?.trim();
-
-			expect( orderId ).toMatch( /^\d+$/ );
-		} );
-	} finally {
+	await test.step( 'Close customer context', async () => {
 		await customerContext.close();
-	}
+	} );
 } );
