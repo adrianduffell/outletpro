@@ -20,6 +20,7 @@ import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import ClearanceIcon from './icon';
+import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
 
 type BoxValue = {
 	top?: string;
@@ -172,11 +173,9 @@ const ClearanceSectionSidebar = () => {
 		'wc_clearance_badge_scale'
 	) as EntityProp< number >;
 
-	const [ density, setDensity ] = useEntityProp(
-		'root',
-		'site',
+	const [ density, setDensity ] = useUnsignedIntegerEntityProp(
 		'wc_clearance_badge_density'
-	) as EntityProp< number >;
+	);
 
 	const border = {
 		color: borderColor || undefined,

@@ -797,7 +797,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Assert.
-		expect( input ).toHaveAttribute( 'min', '1' );
+		expect( input ).toHaveAttribute( 'min', '0' );
 		expect( input ).toHaveAttribute( 'max', '100' );
 		expect( input ).toHaveAttribute( 'step', '1' );
 	} );
