@@ -191,55 +191,62 @@ test( 'customer places clearance order', async ( {
 		`No badge dimensions fixture for theme "${ themeSlug }" at viewport "${ viewportKey }".`
 	);
 
-	let productData;
-	let clearancePage;
+	const { productData, clearancePage } =
+		await test.step( 'Arrange product and clearance page', async () => {
+			const product = await requestUtils.rest( {
+				method: 'POST',
+				path: '/wc/v3/products',
+				data: {
+					name: `Order Flow Test Product ${ runId }`,
+					type: 'simple',
+					status: 'publish',
+					regular_price: '9.99',
+				},
+			} );
 
-	await test.step( 'Arrange product and clearance page', async () => {
-		const product = await requestUtils.rest( {
-			method: 'POST',
-			path: '/wc/v3/products',
-			data: {
-				name: `Order Flow Test Product ${ runId }`,
-				type: 'simple',
-				status: 'publish',
-				regular_price: '9.99',
-			},
+			await admin.visitAdminPage(
+				'post.php',
+				`post=${ product.id }&action=edit`
+			);
+			await page.getByRole( 'link', { name: 'Inventory' } ).click();
+			await page
+				.getByRole( 'checkbox', { name: 'Clearance section' } )
+				.check();
+			await page.getByRole( 'button', { name: 'Update' } ).click();
+
+			const arrangedProductData = await requestUtils.rest( {
+				method: 'GET',
+				path: `/wc/v3/products/${ product.id }`,
+			} );
+
+			const wpSettings = await requestUtils.rest( {
+				method: 'GET',
+				path: '/wp/v2/settings',
+			} );
+			await requestUtils.rest( {
+				method: 'PUT',
+				path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
+				data: { status: 'publish' },
+			} );
+			const arrangedClearancePage = await requestUtils.rest( {
+				method: 'GET',
+				path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
+			} );
+
+			return {
+				productData: arrangedProductData,
+				clearancePage: arrangedClearancePage,
+			};
 		} );
 
-		await admin.visitAdminPage(
-			'post.php',
-			`post=${ product.id }&action=edit`
-		);
-		await page.getByRole( 'link', { name: 'Inventory' } ).click();
-		await page
-			.getByRole( 'checkbox', { name: 'Clearance section' } )
-			.check();
-		await page.getByRole( 'button', { name: 'Update' } ).click();
-
-		productData = await requestUtils.rest( {
-			method: 'GET',
-			path: `/wc/v3/products/${ product.id }`,
+	const { customerContext, customerPage } =
+		await test.step( 'Arrange customer context', async () => {
+			const context = await browser.newContext( {
+				storageState: { cookies: [], origins: [] },
+			} );
+			const newCustomerPage = await context.newPage();
+			return { customerContext: context, customerPage: newCustomerPage };
 		} );
-
-		const wpSettings = await requestUtils.rest( {
-			method: 'GET',
-			path: '/wp/v2/settings',
-		} );
-		await requestUtils.rest( {
-			method: 'PUT',
-			path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
-			data: { status: 'publish' },
-		} );
-		clearancePage = await requestUtils.rest( {
-			method: 'GET',
-			path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
-		} );
-	} );
-
-	const customerContext = await browser.newContext( {
-		storageState: { cookies: [], origins: [] },
-	} );
-	const customerPage = await customerContext.newPage();
 	try {
 		await test.step( 'Shop from clearance page and verify product badges', async () => {
 			await customerPage.goto( clearancePage.link );
