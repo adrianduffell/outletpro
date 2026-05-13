@@ -91,12 +91,15 @@ async function getMiniCartBadge( page ) {
  * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>} Badge locator and pseudo-element string.
  */
 async function getCartBadge( page ) {
-	const blockHost = page.locator(
-		'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
-	);
-	const isBlock = ( await blockHost.count() ) > 0;
+	const isBlock =
+		( await page.locator( '.wp-block-woocommerce-cart' ).count() ) >
+		0;
 	const locator = isBlock
-		? blockHost.first()
+		? page
+				.locator(
+					'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+				)
+				.first()
 		: page
 				.locator(
 					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
