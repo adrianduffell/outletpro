@@ -1,0 +1,18 @@
+{
+	"twentytwentyfive": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "18.0635px",
+				"padding": "6.50284px"
+			},
+			"cartPage": {
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
+			},
+			"checkoutPage": {
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
+			}
+		}
+	}
+}

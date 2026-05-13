@@ -1,5 +1,5 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
-import badgeDimensions from './fixtures/badge-dimensions.js';
+import badgeDimensions from './fixtures/badge-dimensions.json';
 
 /**
  * Returns the active theme's stylesheet slug via the WordPress REST API.
@@ -28,24 +28,14 @@ function getViewportKey( page ) {
 }
 
 /**
- * Reads computed badge dimensions from a CSS pseudo-element host, logs them
- * to console, and emits soft assertions when fixture data is available.
+ * Reads computed badge dimensions from a CSS pseudo-element host and emits
+ * soft assertions when fixture data is available.
  *
  * @param {import('@playwright/test').Locator}            locator     - Host element locator.
  * @param {string}                                        pseudo      - CSS pseudo-element string, e.g. `'::before'`.
- * @param {string}                                        label       - Human-readable label for console output.
- * @param {string}                                        themeSlug   - Active theme slug.
- * @param {string}                                        viewportKey - Viewport key string.
  * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
  */
-async function checkPseudoBadgeDimensions(
-	locator,
-	pseudo,
-	label,
-	themeSlug,
-	viewportKey,
-	fixtureData
-) {
+async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData ) {
 	await expect( locator ).toBeVisible();
 	const { fontSize, paddingTop } = await locator.evaluate(
 		( el, pseudoArg ) => {
@@ -53,10 +43,6 @@ async function checkPseudoBadgeDimensions(
 			return { fontSize: style.fontSize, paddingTop: style.paddingTop };
 		},
 		pseudo
-	);
-	// eslint-disable-next-line no-console
-	console.log(
-		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, ${ label } — font-size: ${ fontSize }, padding-top: ${ paddingTop }`
 	);
 	expect.soft( fontSize ).toBe( fixtureData?.fontSize );
 	expect.soft( paddingTop ).toBe( fixtureData?.padding );
@@ -92,8 +78,7 @@ async function getMiniCartBadge( page ) {
  */
 async function getCartBadge( page ) {
 	const isBlock =
-		( await page.locator( '.wp-block-woocommerce-cart' ).count() ) >
-		0;
+		( await page.locator( '.wp-block-woocommerce-cart' ).count() ) > 0;
 	const locator = isBlock
 		? page
 				.locator(
@@ -117,8 +102,7 @@ async function getCartBadge( page ) {
  */
 async function getCheckoutBadge( page ) {
 	const isBlock =
-		( await page.locator( '.wp-block-woocommerce-checkout' ).count() ) >
-		0;
+		( await page.locator( '.wp-block-woocommerce-checkout' ).count() ) > 0;
 	const locator = isBlock
 		? page
 				.locator(
@@ -276,15 +260,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await customerPage.goto( productData.permalink );
 	const badge = customerPage.locator( '.wc-clearance-badge' );
 	await expect( badge ).toBeVisible();
-	const { fontSize: productFontSize, paddingTop: productPaddingTop } =
-		await badge.evaluate( ( el ) => {
-			const style = window.getComputedStyle( el );
-			return { fontSize: style.fontSize, paddingTop: style.paddingTop };
-		} );
-	// eslint-disable-next-line no-console
-	console.log(
-		`[badge-dimensions] theme: ${ themeSlug }, viewport: ${ viewportKey }, product page — font-size: ${ productFontSize }, padding-top: ${ productPaddingTop }`
-	);
 	await expect
 		.soft( badge )
 		.toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
@@ -299,9 +274,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		await checkPseudoBadgeDimensions(
 			miniCartBadge.locator,
 			miniCartBadge.pseudo,
-			'mini-cart',
-			themeSlug,
-			viewportKey,
 			fixture?.cartPage
 		);
 		await customerPage
@@ -326,9 +298,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await checkPseudoBadgeDimensions(
 		cartBadgeHost,
 		cartPseudo,
-		'cart page',
-		themeSlug,
-		viewportKey,
 		fixture?.cartPage
 	);
 
@@ -353,9 +322,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await checkPseudoBadgeDimensions(
 		checkoutBadgeHost,
 		checkoutPseudo,
-		'checkout',
-		themeSlug,
-		viewportKey,
 		fixture?.checkoutPage
 	);
 
@@ -387,5 +353,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		'admin.php',
 		`page=wc-orders&action=edit&id=${ orderId }`
 	);
-	await expect( page.locator( '.wc-clearance-admin-badge' ).first() ).toBeVisible();
+	await expect(
+		page.locator( '.wc-clearance-admin-badge' ).first()
+	).toBeVisible();
 } );
