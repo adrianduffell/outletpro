@@ -14,5 +14,21 @@
 				"padding": "4.1832px"
 			}
 		}
+	},
+	"astra": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			},
+			"cartPage": {
+				"fontSize": "10.79px",
+				"padding": "3.8844px"
+			},
+			"checkoutPage": {
+				"fontSize": "10.79px",
+				"padding": "3.8844px"
+			}
+		}
 	}
 }
