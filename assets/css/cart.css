@@ -48,12 +48,9 @@
 		width: fit-content;
 		clear: both;
 		border-radius: var(--wc-clearance-badge-border-radius, unset);
-		padding-top: var(--wc-clearance-badge-padding-top, unset);
-		padding-right: var(--wc-clearance-badge-padding-right, unset);
-		padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
-		padding-left: var(--wc-clearance-badge-padding-left, unset);
+		padding: 0.36em;
 		font-weight: var(--wc-clearance-badge-font-weight, unset);
-		font-size: var(--wc-clearance-badge-font-size, unset);
+		font-size: 0.72em;
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;
