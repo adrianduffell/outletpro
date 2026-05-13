@@ -1,6 +1,6 @@
 import { expect } from '@wordpress/e2e-test-utils-playwright';
 
-const orderIdSelector = [
+const ORDER_ID_SELECTOR = [
 	'.woocommerce-order-overview__order strong',
 	'.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value',
 ].join( ', ' );
@@ -210,7 +210,7 @@ export async function placeOrder( page, callbacks = {} ) {
 	await page.getByRole( 'button', { name: /place order/i } ).click();
 
 	const orderId = (
-		await page.locator( orderIdSelector ).first().textContent()
+		await page.locator( ORDER_ID_SELECTOR ).first().textContent()
 	)?.trim();
 
 	expect( orderId ).toMatch( /^\d+$/ );
