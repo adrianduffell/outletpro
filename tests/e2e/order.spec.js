@@ -342,6 +342,7 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	// Shortcode checkout: ::after on .shop_table td.product-name (order review table)
 	const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
 		await getCheckoutBadge( customerPage );
+
 	await checkPseudoBadgeDimensions(
 		checkoutBadgeHost,
 		checkoutPseudo,
