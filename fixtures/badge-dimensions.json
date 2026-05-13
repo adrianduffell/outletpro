@@ -15,6 +15,22 @@
 			}
 		}
 	},
+	"twentytwentythree": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "14.94px",
+				"padding": "5.3784px"
+			},
+			"cartPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			},
+			"checkoutPage": {
+				"fontSize": "13.28px",
+				"padding": "4.7808px"
+			}
+		}
+	},
 	"astra": {
 		"1280x720": {
 			"productPage": {
