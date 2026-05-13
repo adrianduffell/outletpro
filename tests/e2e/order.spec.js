@@ -114,7 +114,7 @@ async function getCartBadge( page ) {
  */
 async function getCheckoutBadge( page ) {
 	const isBlock =
-		( await page.locator( 'body.woocommerce-uses-block-theme' ).count() ) >
+		( await page.locator( '.wp-block-woocommerce-checkout' ).count() ) >
 		0;
 	const locator = isBlock
 		? page
