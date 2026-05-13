@@ -48,6 +48,8 @@ async function deletePage( requestUtils, pageId ) {
 			},
 		} );
 	} catch ( error ) {
+		// requestUtils.rest() may surface the HTTP status in different places
+		// depending on the error type (@wordpress/api-fetch vs raw fetch vs WP REST error body).
 		const statusCode =
 			error?.status ??
 			error?.response?.status ??
