@@ -335,8 +335,8 @@ test( 'customer places clearance order', async ( {
 		await customerPage
 			.getByRole( 'button', { name: /place order/i } )
 			.click();
-		const orderSelector = `.woocommerce-order-overview__order strong,
-.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value`;
+		const orderSelector =
+			'.woocommerce-order-overview__order strong, .wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value';
 
 		const orderId = (
 			await customerPage.locator( orderSelector ).first().textContent()
