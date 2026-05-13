@@ -1,0 +1,24 @@
+/**
+ * Admin editor styles for cart and checkout templates.
+ */
+
+.wc-block-cart-items__row:first-child .wc-block-components-product-metadata::before,
+.wc-block-components-order-summary-item:first-child .wc-block-components-product-metadata::before {
+	content: var(--wc-clearance-badge-label, "");
+	width: fit-content;
+	line-height: 1;
+	text-box-trim: trim-both;
+	text-box-edge: cap alphabetic;
+	border-radius: var(--wc-clearance-badge-border-radius, unset);
+	border-color: var(--wc-clearance-badge-border-color, unset);
+	border-style: var(--wc-clearance-badge-border-style, unset);
+	border-width: var(--wc-clearance-badge-border-width, unset);
+	padding-top: var(--wc-clearance-badge-padding-top, unset);
+	padding-right: var(--wc-clearance-badge-padding-right, unset);
+	padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
+	padding-left: var(--wc-clearance-badge-padding-left, unset);
+	font-weight: var(--wc-clearance-badge-font-weight, unset);
+	font-size: var(--wc-clearance-badge-font-size, unset);
+	background-color: var(--wc-clearance-badge-bg-color, unset);
+	color: var(--wc-clearance-badge-text-color, unset);
+}

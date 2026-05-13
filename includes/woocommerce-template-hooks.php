@@ -71,16 +71,16 @@ function display_clearance_badge_hook(): void {
 		return;
 	}
 
-	$bg_colour   = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_BG_COLOUR_MOD, CLEARANCE_BADGE_BG_COLOUR_DEFAULT ) );
-	$text_colour = sanitize_hex_color( get_theme_mod( CLEARANCE_BADGE_TEXT_COLOUR_MOD, CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT ) );
-	$label       = get_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
+	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
 
-	wp_enqueue_style( 'wc-clearance' );
+	if ( ! is_string( $label ) || '' === $label ) {
+		return;
+	}
+
+	wp_enqueue_style( 'wc-clearance-classic-badge' );
 
 	printf(
-		'<p class="wc-clearance-badge-container"><span class="wc-clearance-badge" style="background-color:%s; color:%s;">%s</span></p>',
-		esc_attr( $bg_colour ),
-		esc_attr( $text_colour ),
+		'<p class="wc-clearance-badge">%s</p>',
 		esc_html( $label )
 	);
 }
@@ -107,7 +107,13 @@ function display_clearance_message_hook(): void {
 		return;
 	}
 
-	wp_enqueue_style( 'wc-clearance' );
+	$message = get_option( CLEARANCE_MESSAGE_OPTION );
 
-	echo '<p class="wc-clearance-message">' . esc_html( get_option( CLEARANCE_MESSAGE_OPTION, __( 'Not eligible for change of mind returns', 'wc-clearance' ) ) ) . '</p>';
+	if ( ! is_string( $message ) || '' === $message ) {
+		return;
+	}
+
+	wp_enqueue_style( 'wc-clearance-classic-message' );
+
+	echo '<p class="wc-clearance-message">' . esc_html( $message ) . '</p>';
 }

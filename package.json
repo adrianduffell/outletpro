@@ -3,12 +3,18 @@
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
+	"engines": {
+		"node": "^24"
+	},
 	"scripts": {
 		"build": "wp-scripts build",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
+		"lint:css:fix": "wp-scripts lint-style --fix",
 		"lint:js": "wp-scripts lint-js",
-		"lint:md:docs": "wp-scripts lint-md-docs",
+		"lint:js:fix": "wp-scripts lint-js --fix",
+		"lint:md-docs": "wp-scripts lint-md-docs",
+		"lint:md-docs:fix": "wp-scripts lint-md-docs --fix",
 		"lint:php": "vendor/bin/phpcs -s",
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip",
@@ -47,6 +53,7 @@
 		"@wordpress/core-data": "^7.42.0",
 		"@wordpress/data": "^10.42.0",
 		"@wordpress/e2e-test-utils-playwright": "^1.40.0",
+		"@wordpress/editor": "^14.44.0",
 		"@wordpress/element": "^6.42.0",
 		"@wordpress/env": "^10.39.0",
 		"@wordpress/i18n": "^6.15.0",

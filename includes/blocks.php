@@ -42,7 +42,7 @@ function deinit_blocks(): void {
 /**
  * Register the clearance badge block type.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_badge_block(): void {
 	register_block_type(
@@ -104,6 +104,7 @@ function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position,
 /**
  * Render callback for the clearance badge block.
  *
+ * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
@@ -135,11 +136,11 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
 
 	if ( ! is_string( $label ) || '' === $label ) {
-		$label = __( 'Clearance', 'wc-clearance' );
+		return '';
 	}
 
 	return sprintf(
-		'<span %1$s>%2$s</span>',
+		'<div %1$s>%2$s</div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
 	);
@@ -148,7 +149,7 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 /**
  * Register the clearance message block type.
  *
- * @since 1.0.0
+ * @internal
  */
 function register_clearance_message_block(): void {
 	register_block_type(
@@ -162,6 +163,7 @@ function register_clearance_message_block(): void {
 /**
  * Render callback for the clearance message block.
  *
+ * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
@@ -193,7 +195,7 @@ function render_clearance_message_callback( array $attributes, string $_content,
 	$message = get_option( CLEARANCE_MESSAGE_OPTION );
 
 	if ( ! is_string( $message ) || '' === $message ) {
-		$message = __( 'Not eligible for change of mind returns', 'wc-clearance' );
+		return '';
 	}
 
 	return sprintf(
