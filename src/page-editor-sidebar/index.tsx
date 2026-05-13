@@ -241,7 +241,7 @@ const ClearanceSectionSidebar = () => {
 								}
 								setDensity( value );
 							} }
-							min={ 1 }
+							min={ 0 }
 							max={ 100 }
 							step={ 1 }
 							marks={ [ { value: 50, label: '50%' } ] }
