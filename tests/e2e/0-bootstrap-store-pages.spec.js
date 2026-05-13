@@ -1,6 +1,6 @@
 import { test as setup, expect } from '@wordpress/e2e-test-utils-playwright';
 
-const storeContent = process.env.STORE_CONTENT;
+const storePages = process.env.STORE_PAGES;
 
 /**
  * Fetches the cart and checkout page IDs from the WooCommerce advanced settings.
@@ -66,8 +66,8 @@ async function deletePage( requestUtils, pageId ) {
 
 setup( 'install store pages with blocks', async ( { requestUtils } ) => {
 	setup.skip(
-		storeContent !== 'blocks',
-		'STORE_CONTENT is not set to blocks'
+		storePages !== 'block',
+		'STORE_PAGES is not set to block'
 	);
 
 	const { cartPageId, checkoutPageId } =
@@ -95,8 +95,8 @@ setup( 'install store pages with blocks', async ( { requestUtils } ) => {
 
 setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
 	setup.skip(
-		storeContent !== 'shortcodes',
-		'STORE_CONTENT is not set to shortcodes'
+		storePages !== 'shortcode',
+		'STORE_PAGES is not set to shortcode'
 	);
 
 	const { cartPageId, checkoutPageId } =
