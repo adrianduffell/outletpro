@@ -272,21 +272,6 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 		} )
 		.toBeGreaterThan( 0 );
 
-	// Check badge in the mini-cart (block themes only).
-	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
-	const miniCartBadge = await getMiniCartBadge( customerPage );
-	if ( miniCartBadge ) {
-		await checkPseudoBadgeDimensions(
-			miniCartBadge.locator,
-			miniCartBadge.pseudo,
-			'mini-cart',
-			themeSlug,
-			viewportKey,
-			fixture?.cartPage
-		);
-		// Navigate away to close the mini-cart drawer before continuing.
-	}
-
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
 	const badge = customerPage.locator( '.wc-clearance-badge' );
@@ -306,6 +291,25 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	await expect
 		.soft( badge )
 		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
+
+	// Check badge in the mini-cart (block themes only).
+	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
+	const miniCartBadge = await getMiniCartBadge( customerPage );
+	if ( miniCartBadge ) {
+		await checkPseudoBadgeDimensions(
+			miniCartBadge.locator,
+			miniCartBadge.pseudo,
+			'mini-cart',
+			themeSlug,
+			viewportKey,
+			fixture?.cartPage
+		);
+		await customerPage
+			.locator( '.wc-block-mini-cart__drawer' )
+			.getByLabel( 'Close' )
+			.first()
+			.click();
+	}
 
 	// Navigate to the cart page and check badge dimensions.
 	// The badge is rendered as CSS generated content on the cart page (see cart.css).
