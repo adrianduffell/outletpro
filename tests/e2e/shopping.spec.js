@@ -197,7 +197,7 @@ test( 'customer places clearance order', async ( {
 				method: 'POST',
 				path: '/wc/v3/products',
 				data: {
-					name: `Order Flow Test Product ${ runId }`,
+					name: `Shopping Flow Test Product ${ runId }`,
 					type: 'simple',
 					status: 'publish',
 					regular_price: '9.99',
@@ -214,7 +214,7 @@ test( 'customer places clearance order', async ( {
 				.check();
 			await page.getByRole( 'button', { name: 'Update' } ).click();
 
-			const arrangedProductData = await requestUtils.rest( {
+			const resolvedProductData = await requestUtils.rest( {
 				method: 'GET',
 				path: `/wc/v3/products/${ product.id }`,
 			} );
@@ -228,14 +228,14 @@ test( 'customer places clearance order', async ( {
 				path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
 				data: { status: 'publish' },
 			} );
-			const arrangedClearancePage = await requestUtils.rest( {
+			const resolvedClearancePage = await requestUtils.rest( {
 				method: 'GET',
 				path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
 			} );
 
 			return {
-				productData: arrangedProductData,
-				clearancePage: arrangedClearancePage,
+				productData: resolvedProductData,
+				clearancePage: resolvedClearancePage,
 			};
 		} );
 
