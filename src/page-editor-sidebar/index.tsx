@@ -305,6 +305,11 @@ const ClearanceSectionSidebar = () => {
 					<RangeControl
 						label={ __( 'Scale', 'wc-clearance' ) }
 						value={ scale }
+						renderTooltipContent={ ( value ) =>
+							typeof value === 'number'
+								? `${ ( value / 100 ).toFixed( 2 ) }x`
+								: ''
+						}
 						onChange={ ( value ) => {
 							if ( typeof value !== 'number' ) {
 								return;
