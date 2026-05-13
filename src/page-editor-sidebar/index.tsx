@@ -20,6 +20,7 @@ import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import ClearanceIcon from './icon';
+import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
 
 type BoxValue = {
 	top?: string;
@@ -172,6 +173,10 @@ const ClearanceSectionSidebar = () => {
 		'wc_clearance_badge_scale'
 	) as EntityProp< number >;
 
+	const [ density, setDensity ] = useUnsignedIntegerEntityProp(
+		'wc_clearance_badge_density'
+	);
+
 	const border = {
 		color: borderColor || undefined,
 		style: borderStyle || undefined,
@@ -224,6 +229,29 @@ const ClearanceSectionSidebar = () => {
 			</PanelBody>
 
 			<PanelBody title={ __( 'Typography', 'wc-clearance' ) }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<div style={ { marginBottom: '16px' } }>
+						<RangeControl
+							label={ __( 'Font size', 'wc-clearance' ) }
+							value={ density }
+							onChange={ ( value ) => {
+								if ( typeof value !== 'number' ) {
+									return;
+								}
+								setDensity( value );
+							} }
+							min={ 0 }
+							max={ 100 }
+							step={ 1 }
+							marks={ [ { value: 50, label: '50%' } ] }
+							renderTooltipContent={ ( value ) => `${ value }%` }
+							allowReset={ false }
+							withInputField={ false }
+							__next40pxDefaultSize
+						/>
+					</div>
+				</BaseControl>
+
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginBottom: '16px' } }>
 						<FontSizePicker
