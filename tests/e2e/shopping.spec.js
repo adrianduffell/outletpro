@@ -339,9 +339,8 @@ test( 'customer places clearance order', async ( {
 				.locator(
 					`
 					.woocommerce-order-overview__order strong,
-					.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order"))
-						.wc-block-order-confirmation-summary-list-item__value
-					`
+					.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value
+				`
 				)
 				.first()
 				.textContent()
