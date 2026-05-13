@@ -197,7 +197,7 @@ test( 'customer places clearance order', async ( {
 				method: 'POST',
 				path: '/wc/v3/products',
 				data: {
-					name: `Shopping Flow Test Product ${ runId }`,
+					name: `Order Flow Test Product ${ runId }`,
 					type: 'simple',
 					status: 'publish',
 					regular_price: '9.99',
@@ -333,17 +333,11 @@ test( 'customer places clearance order', async ( {
 		await customerPage
 			.getByRole( 'button', { name: /place order/i } )
 			.click();
+		const orderSelector =
+			'.woocommerce-order-overview__order strong, .wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value';
 
 		const orderId = (
-			await customerPage
-				.locator(
-					`
-					.woocommerce-order-overview__order strong,
-					.wc-block-order-confirmation-summary-list-item:has(.wc-block-order-confirmation-summary-list-item__key:text("Order")) .wc-block-order-confirmation-summary-list-item__value
-				`
-				)
-				.first()
-				.textContent()
+			await customerPage.locator( orderSelector ).first().textContent()
 		)?.trim();
 
 		expect( orderId ).toMatch( /^\d+$/ );
