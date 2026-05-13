@@ -8,7 +8,10 @@
 	background-color: var(--wc-clearance-badge-bg-color, unset);
 	color: var(--wc-clearance-badge-text-color, unset);
 	border-radius: var(--wc-clearance-badge-border-radius, unset);
-	padding: 0.36em;
+	padding-top: var(--wc-clearance-badge-padding-top, unset);
+	padding-right: var(--wc-clearance-badge-padding-right, unset);
+	padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
+	padding-left: var(--wc-clearance-badge-padding-left, unset);
 	font-weight: var(--wc-clearance-badge-font-weight, unset);
 	font-size: 0.83em;
 	line-height: 1;
