@@ -39,9 +39,6 @@ async function deletePage( requestUtils, pageId ) {
 	await requestUtils.rest( {
 		method: 'DELETE',
 		path: `/wp/v2/pages/${ pageId }`,
-		params: {
-			force: true,
-		},
 	} );
 }
 
