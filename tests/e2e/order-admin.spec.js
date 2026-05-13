@@ -38,11 +38,13 @@ test( 'admin sees clearance badge on order item', async ( {
 		},
 	} );
 
-	// Assert.
+	// Act.
 	await admin.visitAdminPage(
 		'admin.php',
 		`page=wc-orders&action=edit&id=${ order.id }`
 	);
+
+	// Assert.
 	await expect(
 		page.locator( '.wc-clearance-admin-badge' ).first()
 	).toBeVisible();
