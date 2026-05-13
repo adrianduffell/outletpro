@@ -32,17 +32,34 @@ async function getStorePageIds( requestUtils ) {
 /**
  * Deletes a page by ID via the WordPress REST API.
  *
+ * Ignores not-found errors so bootstrap can be rerun safely when settings
+ * still reference pages that were already removed.
+ *
  * @param {Object} requestUtils - Playwright request utilities.
  * @param {number} pageId       - The ID of the page to delete.
  */
 async function deletePage( requestUtils, pageId ) {
-	await requestUtils.rest( {
-		method: 'DELETE',
-		path: `/wp/v2/pages/${ pageId }`,
-		params: {
-			force: true,
-		},
-	} );
+	try {
+		await requestUtils.rest( {
+			method: 'DELETE',
+			path: `/wp/v2/pages/${ pageId }`,
+			params: {
+				force: true,
+			},
+		} );
+	} catch ( error ) {
+		const statusCode =
+			error?.status ??
+			error?.response?.status ??
+			error?.data?.status ??
+			error?.code;
+
+		if ( statusCode === 404 || statusCode === 'rest_post_invalid_id' ) {
+			return;
+		}
+
+		throw error;
+	}
 }
 
 setup( 'install store pages with blocks', async ( { requestUtils } ) => {
@@ -66,6 +83,12 @@ setup( 'install store pages with blocks', async ( { requestUtils } ) => {
 		method: 'POST',
 		path: '/wc/v3/system_status/tools/install_pages',
 	} );
+
+	const { cartPageId: newCartPageId, checkoutPageId: newCheckoutPageId } =
+		await getStorePageIds( requestUtils );
+
+	expect( newCartPageId ).toBeGreaterThan( 0 );
+	expect( newCheckoutPageId ).toBeGreaterThan( 0 );
 } );
 
 setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
@@ -125,4 +148,12 @@ setup( 'install store pages with shortcodes', async ( { requestUtils } ) => {
 
 	expect( cartPage.status ).toBe( 'publish' );
 	expect( checkoutPage.status ).toBe( 'publish' );
+
+	const {
+		cartPageId: updatedCartPageId,
+		checkoutPageId: updatedCheckoutPageId,
+	} = await getStorePageIds( requestUtils );
+
+	expect( updatedCartPageId ).toBe( cartPage.id );
+	expect( updatedCheckoutPageId ).toBe( checkoutPage.id );
 } );
