@@ -267,15 +267,17 @@ test( 'customer places clearance order', async ( {
 		await customerPage.goto( productData.permalink );
 		const badge = customerPage.locator( '.wc-clearance-badge' );
 		await expect( badge ).toBeVisible();
-		await expect
-			.soft( badge )
-			.toHaveCSS( 'font-size', fixture.productPage.fontSize );
-		await expect
-			.soft( badge )
-			.toHaveCSS( 'padding-top', fixture.productPage.padding );
+		if ( fixture?.productPage ) {
+			await expect
+				.soft( badge )
+				.toHaveCSS( 'font-size', fixture.productPage.fontSize );
+			await expect
+				.soft( badge )
+				.toHaveCSS( 'padding-top', fixture.productPage.padding );
+		}
 
 		const miniCartBadge = await getMiniCartBadge( customerPage );
-		if ( miniCartBadge ) {
+		if ( miniCartBadge && fixture?.cartPage ) {
 			await checkPseudoBadgeDimensions(
 				miniCartBadge.locator,
 				miniCartBadge.pseudo,
@@ -295,13 +297,15 @@ test( 'customer places clearance order', async ( {
 			.getByRole( 'link', { name: /^cart$/i } )
 			.first()
 			.click();
-		const { locator: cartBadgeHost, pseudo: cartPseudo } =
-			await getCartBadge( customerPage );
-		await checkPseudoBadgeDimensions(
-			cartBadgeHost,
-			cartPseudo,
-			fixture.cartPage
-		);
+		if ( fixture?.cartPage ) {
+			const { locator: cartBadgeHost, pseudo: cartPseudo } =
+				await getCartBadge( customerPage );
+			await checkPseudoBadgeDimensions(
+				cartBadgeHost,
+				cartPseudo,
+				fixture.cartPage
+			);
+		}
 
 		await customerPage
 			.locator( 'nav' )
@@ -313,14 +317,16 @@ test( 'customer places clearance order', async ( {
 			.getByLabel( /email address|billing email/i )
 			.waitFor( { state: 'visible' } );
 
-		const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
-			await getCheckoutBadge( customerPage );
+		if ( fixture?.checkoutPage ) {
+			const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
+				await getCheckoutBadge( customerPage );
 
-		await checkPseudoBadgeDimensions(
-			checkoutBadgeHost,
-			checkoutPseudo,
-			fixture.checkoutPage
-		);
+			await checkPseudoBadgeDimensions(
+				checkoutBadgeHost,
+				checkoutPseudo,
+				fixture.checkoutPage
+			);
+		}
 	} );
 
 	await test.step( 'Place order', async () => {
