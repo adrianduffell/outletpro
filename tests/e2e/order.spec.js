@@ -37,6 +37,9 @@ function getViewportKey( page ) {
  */
 async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData ) {
 	await expect( locator ).toBeVisible();
+	if ( ! fixtureData ) {
+		return;
+	}
 	const { fontSize, paddingTop } = await locator.evaluate(
 		( el, pseudoArg ) => {
 			const style = window.getComputedStyle( el, pseudoArg );
@@ -277,12 +280,14 @@ test( 'customer places clearance order', async ( {
 		}
 
 		const miniCartBadge = await getMiniCartBadge( customerPage );
-		if ( miniCartBadge && fixture?.cartPage ) {
-			await checkPseudoBadgeDimensions(
-				miniCartBadge.locator,
-				miniCartBadge.pseudo,
-				fixture.cartPage
-			);
+		if ( miniCartBadge ) {
+			if ( fixture?.cartPage ) {
+				await checkPseudoBadgeDimensions(
+					miniCartBadge.locator,
+					miniCartBadge.pseudo,
+					fixture.cartPage
+				);
+			}
 			await customerPage
 				.locator( '.wc-block-mini-cart__drawer' )
 				.getByLabel( 'Close' )
