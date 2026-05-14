@@ -175,12 +175,7 @@ async function fillCheckout( checkoutPage ) {
 	}
 }
 
-test( 'customer places clearance order', async ( {
-	page,
-	admin,
-	requestUtils,
-	browser,
-} ) => {
+test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	// Arrange.
 	const runId = Date.now();
 	const themeSlug = await getActiveThemeSlug( requestUtils );
