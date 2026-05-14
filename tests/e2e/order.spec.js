@@ -185,13 +185,6 @@ test( 'customer places clearance order', async ( {
 	const themeSlug = await getActiveThemeSlug( requestUtils );
 	const viewportKey = getViewportKey( page );
 	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
-	const hasFixture =
-		fixture?.productPage && fixture?.cartPage && fixture?.checkoutPage;
-
-	test.skip(
-		! hasFixture,
-		`No badge dimensions fixture for theme "${ themeSlug }" at viewport "${ viewportKey }".`
-	);
 
 	const { productData, clearancePage } =
 		await test.step( 'Arrange product and clearance page', async () => {
