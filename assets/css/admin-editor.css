@@ -15,7 +15,7 @@
 	border-width: var(--wc-clearance-badge-border-width, unset);
 	font-weight: var(--wc-clearance-badge-font-weight, unset);
 	font-size: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em));
-	padding: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * (100 - var(--wc-clearance-badge-density)) / 100 / 2);
+	padding: calc(1cap * (100 - var(--wc-clearance-badge-density)) / var(--wc-clearance-badge-density) / 2);
 	background-color: var(--wc-clearance-badge-bg-color, unset);
 	color: var(--wc-clearance-badge-text-color, unset);
 }

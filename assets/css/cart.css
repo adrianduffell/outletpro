@@ -21,7 +21,7 @@
 		border-radius: var(--wc-clearance-badge-border-radius, unset);
 		font-weight: var(--wc-clearance-badge-font-weight, unset);
 		font-size: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em));
-		padding: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * (100 - var(--wc-clearance-badge-density)) / 100 / 2);
+		padding: calc(1cap * (100 - var(--wc-clearance-badge-density)) / var(--wc-clearance-badge-density) / 2);
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;
@@ -50,7 +50,7 @@
 		border-radius: var(--wc-clearance-badge-border-radius, unset);
 		font-weight: var(--wc-clearance-badge-font-weight, unset);
 		font-size: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em));
-		padding: calc(var(--wc-clearance-parent-font-size-override, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * (100 - var(--wc-clearance-badge-density)) / 100 / 2);
+		padding: calc(1cap * (100 - var(--wc-clearance-badge-density)) / var(--wc-clearance-badge-density) / 2);
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;
