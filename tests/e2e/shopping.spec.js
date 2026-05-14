@@ -179,7 +179,6 @@ test( 'customer places clearance order', async ( {
 	page,
 	admin,
 	requestUtils,
-	browser,
 } ) => {
 	const runId = Date.now();
 	const themeSlug = await getActiveThemeSlug( requestUtils );
@@ -241,14 +240,12 @@ test( 'customer places clearance order', async ( {
 			};
 		} );
 
-	const { customerContext, customerPage } =
-		await test.step( 'Arrange customer context', async () => {
-			const context = await browser.newContext( {
-				storageState: { cookies: [], origins: [] },
-			} );
-			const newCustomerPage = await context.newPage();
-			return { customerContext: context, customerPage: newCustomerPage };
-		} );
+	const customerPage = page;
+
+	await test.step( 'Log out admin user in main context', async () => {
+		await customerPage.goto( '/wp-login.php?action=logout' );
+		await customerPage.getByRole( 'link', { name: /^log out$/i } ).click();
+	} );
 	await test.step( 'Shop from clearance page and verify product badges', async () => {
 		await customerPage.goto( clearancePage.link );
 
@@ -343,9 +340,5 @@ test( 'customer places clearance order', async ( {
 		)?.trim();
 
 		expect( orderId ).toMatch( /^\d+$/ );
-	} );
-
-	await test.step( 'Close customer context', async () => {
-		await customerContext.close();
 	} );
 } );
