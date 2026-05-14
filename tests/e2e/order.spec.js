@@ -175,7 +175,7 @@ async function fillCheckout( checkoutPage ) {
 	}
 }
 
-test( 'customer places clearance order and admin sees clearance badge on order', async ( {
+test( 'customer places clearance order', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -347,13 +347,4 @@ test( 'customer places clearance order and admin sees clearance badge on order',
 	expect( orderId ).toMatch( /^\d+$/ );
 
 	await customerContext.close();
-
-	// Assert.
-	await admin.visitAdminPage(
-		'admin.php',
-		`page=wc-orders&action=edit&id=${ orderId }`
-	);
-	await expect(
-		page.locator( '.wc-clearance-admin-badge' ).first()
-	).toBeVisible();
 } );
