@@ -19,6 +19,8 @@
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip",
 		"start": "wp-scripts start",
+		"e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
+		"e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:unit": "wp-scripts test-unit-js --config jest.config.cjs",
 		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit",
