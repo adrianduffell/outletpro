@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { registerPlugin } from '@wordpress/plugins';
-import { useEntityProp } from '@wordpress/core-data';
+import useSettings from '../../use-settings';
 import { useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
 
@@ -14,9 +14,10 @@ jest.mock( '@wordpress/data', () => ( {
 } ) );
 
 jest.mock( '@wordpress/core-data', () => ( {
-	useEntityProp: jest.fn(),
 	store: {},
 } ) );
+
+jest.mock( '../../use-settings', () => jest.fn() );
 
 jest.mock( '@wordpress/element', () => ( {
 	...jest.requireActual( '@wordpress/element' ),
@@ -266,29 +267,51 @@ jest.mock( '@wordpress/i18n', () => ( {
 } ) );
 
 const mockRegisterPlugin = registerPlugin as jest.Mock;
-const mockUseEntityProp = useEntityProp as jest.Mock;
+const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
-function setupEntityPropMock(
-	overrides: Record< string, [ unknown, jest.Mock ] > = {}
-) {
-	mockUseSelect.mockReturnValue( true );
-	mockUseEntityProp.mockImplementation(
-		( _kind: string, _name: string, key: string ) => {
-			if ( overrides[ key ] ) {
-				return [ ...overrides[ key ], undefined ];
-			}
-			return [ undefined, jest.fn(), undefined ];
-		}
-	);
-}
+const createInitialSettings = () => ( {
+	label: undefined,
+	setLabel: jest.fn(),
+	textColor: undefined,
+	setTextColor: jest.fn(),
+	bgColor: undefined,
+	setBgColor: jest.fn(),
+	fontSize: undefined,
+	setFontSize: jest.fn(),
+	fontWeight: undefined,
+	setFontWeight: jest.fn(),
+	borderColor: undefined,
+	setBorderColor: jest.fn(),
+	borderStyle: undefined,
+	setBorderStyle: jest.fn(),
+	borderWidth: undefined,
+	setBorderWidth: jest.fn(),
+	borderRadius: undefined,
+	setBorderRadius: jest.fn(),
+	paddingTop: undefined,
+	setPaddingTop: jest.fn(),
+	paddingRight: undefined,
+	setPaddingRight: jest.fn(),
+	paddingBottom: undefined,
+	setPaddingBottom: jest.fn(),
+	paddingLeft: undefined,
+	setPaddingLeft: jest.fn(),
+	scale: undefined,
+	setScale: jest.fn(),
+	density: undefined,
+	setDensity: jest.fn(),
+	message: undefined,
+	setMessage: jest.fn(),
+} );
 
 describe( 'page-editor-sidebar registration', () => {
 	test( 'registers the sidebar plugin with expected name and render function', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 
 		// Act.
 		jest.isolateModules( () => {
@@ -365,7 +388,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'render function outputs the sidebar title', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -381,7 +405,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'render function outputs all panel sections', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -402,8 +427,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setLabel = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_label: [ 'Sale', setLabel ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			label: 'Sale',
+			setLabel,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -422,8 +450,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'badge label control is empty when setting is empty', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_label: [ undefined, jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			label: undefined,
+			setLabel: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -443,8 +474,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setLabel = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_label: [ 'Clearance', setLabel ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			label: 'Clearance',
+			setLabel,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -463,8 +497,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'font size control shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_font_size: [ '1rem', jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			fontSize: '1rem',
+			setFontSize: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -483,8 +520,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'font scale control reflects stored scale value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ 140, jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			scale: 140,
+			setScale: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -504,8 +544,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ undefined, setScale ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			scale: undefined,
+			setScale,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -525,8 +568,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ undefined, setScale ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			scale: undefined,
+			setScale,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -545,8 +591,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'font scale control uses accepted range and step', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ 120, jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			scale: 120,
+			setScale: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -567,8 +616,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setFontWeight = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_font_weight: [ '', setFontWeight ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			fontWeight: '',
+			setFontWeight,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -587,8 +639,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'text color control shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_text_color: [ '#ff0000', jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			textColor: '#ff0000',
+			setTextColor: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -607,8 +662,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'background color control is empty when setting is empty', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_bg_color: [ undefined, jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			bgColor: undefined,
+			setBgColor: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -628,8 +686,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setBorderRadius = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_border_radius: [ '2px', setBorderRadius ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			borderRadius: '2px',
+			setBorderRadius,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -654,11 +715,17 @@ describe( 'page-editor-sidebar registration', () => {
 		const setPaddingRight = jest.fn();
 		const setPaddingBottom = jest.fn();
 		const setPaddingLeft = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_padding_top: [ '5px', setPaddingTop ],
-			wc_clearance_badge_padding_right: [ '5px', setPaddingRight ],
-			wc_clearance_badge_padding_bottom: [ '5px', setPaddingBottom ],
-			wc_clearance_badge_padding_left: [ '5px', setPaddingLeft ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			paddingTop: '5px',
+			setPaddingTop,
+			paddingRight: '5px',
+			setPaddingRight,
+			paddingBottom: '5px',
+			setPaddingBottom,
+			paddingLeft: '5px',
+			setPaddingLeft,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -681,8 +748,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setFontSize = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_font_size: [ '0.875rem', setFontSize ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			fontSize: '0.875rem',
+			setFontSize,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -702,8 +772,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_scale: [ 120, setScale ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			scale: 120,
+			setScale,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -719,12 +792,110 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( setScale ).toHaveBeenCalledWith( 130 );
 	} );
 
+	test( 'density control reflects stored density value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			density: 60,
+			setDensity: jest.fn(),
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByRole( 'slider', { name: 'Font size' } )
+		).toHaveValue( '60' );
+	} );
+
+	test( 'density control allows undefined density value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setDensity = jest.fn();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			density: undefined,
+			setDensity,
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Font size' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'value', '' );
+		expect( setDensity ).not.toHaveBeenCalled();
+	} );
+
+	test( 'density control calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setDensity = jest.fn();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			density: 60,
+			setDensity,
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Font size' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '75' } } );
+
+		// Assert.
+		expect( setDensity ).toHaveBeenCalledWith( 75 );
+	} );
+
+	test( 'density control uses accepted range and step', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			density: 60,
+			setDensity: jest.fn(),
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'slider', { name: 'Font size' } );
+
+		// Assert.
+		expect( input ).toHaveAttribute( 'min', '0' );
+		expect( input ).toHaveAttribute( 'max', '100' );
+		expect( input ).toHaveAttribute( 'step', '1' );
+	} );
+
 	test( 'text color control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setTextColor = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_text_color: [ '#222', setTextColor ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			textColor: '#222',
+			setTextColor,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -744,8 +915,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setBgColor = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_bg_color: [ '#FFEE85', setBgColor ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			bgColor: '#FFEE85',
+			setBgColor,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -767,10 +941,15 @@ describe( 'page-editor-sidebar registration', () => {
 		const setBorderColor = jest.fn();
 		const setBorderStyle = jest.fn();
 		const setBorderWidth = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_border_color: [ '', setBorderColor ],
-			wc_clearance_badge_border_style: [ 'none', setBorderStyle ],
-			wc_clearance_badge_border_width: [ '0', setBorderWidth ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			borderColor: '',
+			setBorderColor,
+			borderStyle: 'none',
+			setBorderStyle,
+			borderWidth: '0',
+			setBorderWidth,
 		} );
 		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
 		jest.isolateModules( () => {
@@ -792,9 +971,13 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setBorderStyle = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_border_style: [ '', setBorderStyle ],
-			wc_clearance_badge_border_width: [ '', jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			borderStyle: '',
+			setBorderStyle,
+			borderWidth: '',
+			setBorderWidth: jest.fn(),
 		} );
 		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
 		jest.isolateModules( () => {
@@ -816,9 +999,13 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setBorderStyle = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_badge_border_style: [ 'dashed', setBorderStyle ],
-			wc_clearance_badge_border_width: [ '', jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			borderStyle: 'dashed',
+			setBorderStyle,
+			borderWidth: '',
+			setBorderWidth: jest.fn(),
 		} );
 		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
 		jest.isolateModules( () => {
@@ -839,7 +1026,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'render function outputs the badge tab description', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -859,7 +1047,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'render function outputs the badge tab', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -875,7 +1064,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'border control is not visible when feature flag is disabled', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		// Do NOT set localStorage flag — bordersEnabled should be false.
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -894,8 +1084,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'border radius control shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_badge_border_radius: [ '4px', jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			borderRadius: '4px',
+			setBorderRadius: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -914,7 +1107,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'render function outputs the message tab', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -932,7 +1126,8 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'render function outputs the message tab description', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -971,8 +1166,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setMessage = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_message: [ 'Only while stocks last', setMessage ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			message: 'Only while stocks last',
+			setMessage,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -1011,8 +1209,11 @@ describe( 'page-editor-sidebar registration', () => {
 	test( 'message textarea is empty when setting is not set', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
-		setupEntityPropMock( {
-			wc_clearance_message: [ undefined, jest.fn() ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			message: undefined,
+			setMessage: jest.fn(),
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -1052,8 +1253,11 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		const setMessage = jest.fn();
-		setupEntityPropMock( {
-			wc_clearance_message: [ 'Only while stocks last', setMessage ],
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			message: 'Only while stocks last',
+			setMessage,
 		} );
 		jest.isolateModules( () => {
 			require( '../index' );

@@ -12,7 +12,7 @@
 
 	.wc-block-components-order-summary-item__description:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata::before,
 	.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata::before {
-		content: var(--wc-clearance-badge-label, "");
+		content: var(--wc-clearance-badge-label, none);
 		display: block;
 		width: fit-content;
 
@@ -43,7 +43,7 @@
 @supports selector(:has(*)) {
 
 	.shop_table td.product-name:has(.wc-clearance-cart-item-meta)::after {
-		content: var(--wc-clearance-badge-label, "");
+		content: var(--wc-clearance-badge-label, none);
 		display: block;
 		width: fit-content;
 		clear: both;

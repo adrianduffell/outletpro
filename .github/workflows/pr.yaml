@@ -140,6 +140,9 @@ jobs:
     - name: Run E2E tests
       run: npm run test:e2e
 
+    - name: Run classic theme shortcode E2E tests
+      run: THEME=storefront STORE_PAGES=shortcode npm run test:e2e -- tests/e2e/0-bootstrap-theme.spec.js tests/e2e/0-bootstrap-store-pages.spec.js tests/e2e/shopping.spec.js
+
     - name: Upload Playwright artifacts
       if: always()
       uses: actions/upload-artifact@v4
