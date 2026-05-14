@@ -53,7 +53,7 @@
 		padding-bottom: var(--wc-clearance-badge-padding-bottom, unset);
 		padding-left: var(--wc-clearance-badge-padding-left, unset);
 		font-weight: var(--wc-clearance-badge-font-weight, unset);
-		font-size: var(--wc-clearance-badge-font-size, unset);
+		font-size: 0.72em;
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;
