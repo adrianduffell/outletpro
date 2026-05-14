@@ -44,10 +44,16 @@ describe( 'buildPreviewStyles', () => {
 		);
 	} );
 
-	test( 'uses empty string for label when undefined', () => {
+	test( 'uses none for label when undefined', () => {
 		const result = buildPreviewStyles( {} );
 
-		expect( result ).toContain( '--wc-clearance-badge-label: ""' );
+		expect( result ).toContain( '--wc-clearance-badge-label: none' );
+	} );
+
+	test( 'uses none for label when empty string', () => {
+		const result = buildPreviewStyles( { label: '' } );
+
+		expect( result ).toContain( '--wc-clearance-badge-label: none' );
 	} );
 
 	test.each( [
