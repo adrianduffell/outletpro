@@ -86,12 +86,12 @@
 				"padding": "4.7808px"
 			},
 			"cartPage": {
-				"fontSize": "13.28px",
-				"padding": "4.7808px"
+				"fontSize": "11.52px",
+				"padding": "4.1472px"
 			},
 			"checkoutPage": {
-				"fontSize": "13.28px",
-				"padding": "4.7808px"
+				"fontSize": "11.52px",
+				"padding": "4.1472px"
 			}
 		}
 	}
