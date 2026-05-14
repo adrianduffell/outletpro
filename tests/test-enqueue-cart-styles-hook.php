@@ -23,6 +23,36 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		$this->assertTrue( wp_style_is( 'wc-clearance-cart-badge', 'enqueued' ) );
 	}
 
+	public function test_inline_css_label_outputs_none_when_empty(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		do_action( 'wp_enqueue_scripts' );
+
+		// Assert.
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
+		$this->assertStringContainsString( '--wc-clearance-badge-label: none', implode( '', (array) $after ) );
+	}
+
+	public function test_inline_css_label_outputs_none_when_set_to_empty_string(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_LABEL_OPTION, '' );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		do_action( 'wp_enqueue_scripts' );
+
+		// Assert.
+		$after = wp_styles()->get_data( 'wc-clearance-cart-badge', 'after' );
+		$this->assertStringContainsString( '--wc-clearance-badge-label: none', implode( '', (array) $after ) );
+
+		delete_option( CLEARANCE_BADGE_LABEL_OPTION );
+	}
+
 	public function test_inline_css_includes_label_from_settings(): void {
 		// Arrange.
 		update_option( CLEARANCE_BADGE_LABEL_OPTION, 'Sale' );
