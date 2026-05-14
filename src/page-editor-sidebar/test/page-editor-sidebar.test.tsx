@@ -271,7 +271,7 @@ const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
-const createDefaultSettings = () => ( {
+const createInitialSettings = () => ( {
 	label: undefined,
 	setLabel: jest.fn(),
 	textColor: undefined,
@@ -311,7 +311,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 
 		// Act.
 		jest.isolateModules( () => {
@@ -389,7 +389,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -406,7 +406,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -429,7 +429,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setLabel = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			label: 'Sale',
 			setLabel,
 		} );
@@ -452,7 +452,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			label: undefined,
 			setLabel: jest.fn(),
 		} );
@@ -476,7 +476,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setLabel = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			label: 'Clearance',
 			setLabel,
 		} );
@@ -499,7 +499,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			fontSize: '1rem',
 			setFontSize: jest.fn(),
 		} );
@@ -522,7 +522,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			scale: 140,
 			setScale: jest.fn(),
 		} );
@@ -546,7 +546,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setScale = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			scale: undefined,
 			setScale,
 		} );
@@ -570,7 +570,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setScale = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			scale: undefined,
 			setScale,
 		} );
@@ -593,7 +593,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			scale: 120,
 			setScale: jest.fn(),
 		} );
@@ -618,7 +618,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setFontWeight = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			fontWeight: '',
 			setFontWeight,
 		} );
@@ -641,7 +641,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			textColor: '#ff0000',
 			setTextColor: jest.fn(),
 		} );
@@ -664,7 +664,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			bgColor: undefined,
 			setBgColor: jest.fn(),
 		} );
@@ -688,7 +688,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setBorderRadius = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			borderRadius: '2px',
 			setBorderRadius,
 		} );
@@ -717,7 +717,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setPaddingLeft = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			paddingTop: '5px',
 			setPaddingTop,
 			paddingRight: '5px',
@@ -750,7 +750,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setFontSize = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			fontSize: '0.875rem',
 			setFontSize,
 		} );
@@ -774,7 +774,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setScale = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			scale: 120,
 			setScale,
 		} );
@@ -797,7 +797,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			density: 60,
 			setDensity: jest.fn(),
 		} );
@@ -821,7 +821,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setDensity = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			density: undefined,
 			setDensity,
 		} );
@@ -845,7 +845,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setDensity = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			density: 60,
 			setDensity,
 		} );
@@ -868,7 +868,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			density: 60,
 			setDensity: jest.fn(),
 		} );
@@ -893,7 +893,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setTextColor = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			textColor: '#222',
 			setTextColor,
 		} );
@@ -917,7 +917,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setBgColor = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			bgColor: '#FFEE85',
 			setBgColor,
 		} );
@@ -943,7 +943,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setBorderWidth = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			borderColor: '',
 			setBorderColor,
 			borderStyle: 'none',
@@ -973,7 +973,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setBorderStyle = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			borderStyle: '',
 			setBorderStyle,
 			borderWidth: '',
@@ -1001,7 +1001,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setBorderStyle = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			borderStyle: 'dashed',
 			setBorderStyle,
 			borderWidth: '',
@@ -1027,7 +1027,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -1048,7 +1048,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -1065,7 +1065,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		// Do NOT set localStorage flag — bordersEnabled should be false.
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -1086,7 +1086,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			borderRadius: '4px',
 			setBorderRadius: jest.fn(),
 		} );
@@ -1108,7 +1108,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -1127,7 +1127,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createDefaultSettings() } );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
@@ -1168,7 +1168,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setMessage = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			message: 'Only while stocks last',
 			setMessage,
 		} );
@@ -1211,7 +1211,7 @@ describe( 'page-editor-sidebar registration', () => {
 		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			message: undefined,
 			setMessage: jest.fn(),
 		} );
@@ -1255,7 +1255,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const setMessage = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
-			...createDefaultSettings(),
+			...createInitialSettings(),
 			message: 'Only while stocks last',
 			setMessage,
 		} );
