@@ -34,13 +34,13 @@ function getViewportKey( page ) {
  * @param {import('@playwright/test').Locator}            locator     - Host element locator.
  * @param {string}                                        pseudo      - CSS pseudo-element string, e.g. `'::before'`.
  * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
- * @param                                                 thing
+ * @param {string}                                        label       - Context label for assertion messages.
  */
 async function checkPseudoBadgeDimensions(
 	locator,
 	pseudo,
 	fixtureData,
-	thing
+	label
 ) {
 	await expect( locator ).toBeVisible();
 	const { fontSize, paddingTop } = await locator.evaluate(
@@ -51,10 +51,10 @@ async function checkPseudoBadgeDimensions(
 		pseudo
 	);
 	expect
-		.soft( fontSize, `${ thing } font-size` )
+		.soft( fontSize, `${ label } font-size` )
 		.toBe( fixtureData?.fontSize );
 	expect
-		.soft( paddingTop, `${ thing } padding` )
+		.soft( paddingTop, `${ label } padding` )
 		.toBe( fixtureData?.padding );
 }
 
