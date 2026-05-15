@@ -270,7 +270,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		.toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
 	await expect
 		.soft( badge, 'Product padding' )
-		.toHaveCSS( 'padding', fixture?.productPage?.padding );
+		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
 
 	// Check badge in the mini-cart (block themes only).
 	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
