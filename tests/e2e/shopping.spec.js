@@ -34,8 +34,14 @@ function getViewportKey( page ) {
  * @param {import('@playwright/test').Locator}            locator     - Host element locator.
  * @param {string}                                        pseudo      - CSS pseudo-element string, e.g. `'::before'`.
  * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
+ * @param {string}                                        label       - Context label for assertion messages.
  */
-async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData ) {
+async function checkPseudoBadgeDimensions(
+	locator,
+	pseudo,
+	fixtureData,
+	label
+) {
 	await expect( locator ).toBeVisible();
 	const { fontSize, paddingTop } = await locator.evaluate(
 		( el, pseudoArg ) => {
@@ -44,8 +50,12 @@ async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData ) {
 		},
 		pseudo
 	);
-	expect.soft( fontSize ).toBe( fixtureData?.fontSize );
-	expect.soft( paddingTop ).toBe( fixtureData?.padding );
+	expect
+		.soft( fontSize, `${ label } font-size` )
+		.toBe( fixtureData?.fontSize );
+	expect
+		.soft( paddingTop, `${ label } padding` )
+		.toBe( fixtureData?.padding );
 }
 
 /**
@@ -256,10 +266,10 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	const badge = customerPage.locator( '.wc-clearance-badge' );
 	await expect( badge ).toBeVisible();
 	await expect
-		.soft( badge )
+		.soft( badge, 'Product font-size' )
 		.toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
 	await expect
-		.soft( badge )
+		.soft( badge, 'Product padding' )
 		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
 
 	// Check badge in the mini-cart (block themes only).
@@ -269,7 +279,8 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		await checkPseudoBadgeDimensions(
 			miniCartBadge.locator,
 			miniCartBadge.pseudo,
-			fixture?.cartPage
+			fixture?.cartPage,
+			'Minicart'
 		);
 		await customerPage
 			.locator( '.wc-block-mini-cart__drawer' )
@@ -293,7 +304,8 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	await checkPseudoBadgeDimensions(
 		cartBadgeHost,
 		cartPseudo,
-		fixture?.cartPage
+		fixture?.cartPage,
+		'Cart'
 	);
 
 	// Click the checkout link in the menu.
@@ -317,7 +329,8 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	await checkPseudoBadgeDimensions(
 		checkoutBadgeHost,
 		checkoutPseudo,
-		fixture?.checkoutPage
+		fixture?.checkoutPage,
+		'Checkout'
 	);
 
 	await fillCheckout( customerPage );
