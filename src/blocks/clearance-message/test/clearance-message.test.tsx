@@ -3,22 +3,24 @@ import { Edit } from '../edit';
 
 jest.mock( '@wordpress/block-editor', () => ( {
 	useBlockProps: jest.fn( ( props ) => props ?? {} ),
-	RichText: ( {
-		value,
-		onChange,
-		placeholder,
-	}: {
-		value: string;
-		onChange: ( v: string ) => void;
-		placeholder?: string;
-		[ key: string ]: unknown;
-	} ) => (
-		<input
-			type="text"
-			value={ value }
-			placeholder={ placeholder }
-			onChange={ ( e ) => onChange( e.target.value ) }
-		/>
+	RichText: jest.fn(
+		( {
+			value,
+			onChange,
+			placeholder,
+		}: {
+			value: string;
+			onChange: ( v: string ) => void;
+			placeholder?: string;
+			[ key: string ]: unknown;
+		} ) => (
+			<input
+				type="text"
+				value={ value }
+				placeholder={ placeholder }
+				onChange={ ( e ) => onChange( e.target.value ) }
+			/>
+		)
 	),
 } ) );
 
@@ -31,8 +33,10 @@ jest.mock( '@wordpress/core-data', () => ( {
 } ) );
 
 import { useEntityProp } from '@wordpress/core-data';
+import { RichText } from '@wordpress/block-editor';
 
 const mockUseEntityProp = useEntityProp as jest.Mock;
+const mockRichText = RichText as jest.Mock;
 
 describe( 'Edit', () => {
 	test( 'renders empty message when setting is undefined', () => {
@@ -101,5 +105,23 @@ describe( 'Edit', () => {
 
 		// Assert.
 		expect( setMessage ).toHaveBeenCalledWith( 'Final sale — no returns.' );
+	} );
+
+	test( 'disables rich text formatting controls', () => {
+		// Arrange.
+		mockRichText.mockClear();
+		const setMessage = jest.fn();
+		mockUseEntityProp.mockReturnValue( [
+			'Final sale',
+			setMessage,
+			undefined,
+		] );
+
+		// Act.
+		render( <Edit /> );
+
+		// Assert.
+		const [ richTextProps ] = mockRichText.mock.calls[ 0 ];
+		expect( richTextProps.allowedFormats ).toEqual( [] );
 	} );
 } );
