@@ -366,7 +366,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 120, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
+		$this->assertSame( 166, get_option( CLEARANCE_BADGE_SCALE_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_scale_option(): void {
@@ -388,7 +388,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 60, get_option( CLEARANCE_BADGE_DENSITY_OPTION ) );
+		$this->assertSame( 50, get_option( CLEARANCE_BADGE_DENSITY_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_density_option(): void {
