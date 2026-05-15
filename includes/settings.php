@@ -284,8 +284,8 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
-	add_option( CLEARANCE_BADGE_SCALE_OPTION, 120 );
-	add_option( CLEARANCE_BADGE_DENSITY_OPTION, 60 );
+	add_option( CLEARANCE_BADGE_SCALE_OPTION, 166 );
+	add_option( CLEARANCE_BADGE_DENSITY_OPTION, 50 );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
