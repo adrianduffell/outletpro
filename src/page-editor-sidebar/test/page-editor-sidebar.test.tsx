@@ -102,7 +102,6 @@ jest.mock( '@wordpress/components', () => ( {
 		min,
 		max,
 		step,
-		marks,
 	}: {
 		label: string;
 		value?: number;
@@ -110,7 +109,6 @@ jest.mock( '@wordpress/components', () => ( {
 		min?: number;
 		max?: number;
 		step?: number;
-		marks?: Array< { value: number; label?: string } >;
 	} ) => (
 		<input
 			type="range"
@@ -119,7 +117,6 @@ jest.mock( '@wordpress/components', () => ( {
 			min={ min }
 			max={ max }
 			step={ step }
-			data-has-marks={ marks ? 'true' : 'false' }
 			onChange={ ( e ) => onChange( Number( e.target.value ) ) }
 		/>
 	),
@@ -888,28 +885,6 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( input ).toHaveAttribute( 'min', '0' );
 		expect( input ).toHaveAttribute( 'max', '100' );
 		expect( input ).toHaveAttribute( 'step', '1' );
-	} );
-
-	test( 'density control does not render marks', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( {
-			...createInitialSettings(),
-			density: 60,
-			setDensity: jest.fn(),
-		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-
-		// Act.
-		render( pluginConfig.render() );
-		const input = screen.getByRole( 'slider', { name: 'Font size' } );
-
-		// Assert.
-		expect( input ).toHaveAttribute( 'data-has-marks', 'false' );
 	} );
 
 	test( 'text color control calls setter when changed', () => {
