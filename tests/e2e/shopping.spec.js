@@ -35,7 +35,7 @@ function getViewportKey( page ) {
  * @param {string}                                        pseudo      - CSS pseudo-element string, e.g. `'::before'`.
  * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
  */
-async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData ) {
+async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData, thing ) {
 	await expect( locator ).toBeVisible();
 	const { fontSize, paddingTop } = await locator.evaluate(
 		( el, pseudoArg ) => {
@@ -44,8 +44,8 @@ async function checkPseudoBadgeDimensions( locator, pseudo, fixtureData ) {
 		},
 		pseudo
 	);
-	expect.soft( fontSize ).toBe( fixtureData?.fontSize );
-	expect.soft( paddingTop ).toBe( fixtureData?.padding );
+	expect.soft( fontSize, `${thing} font-size` ).toBe( fixtureData?.fontSize );
+	expect.soft( paddingTop, `${thing} padding` ).toBe( fixtureData?.padding );
 }
 
 /**
@@ -256,11 +256,11 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	const badge = customerPage.locator( '.wc-clearance-badge' );
 	await expect( badge ).toBeVisible();
 	await expect
-		.soft( badge )
+		.soft( badge, 'Product font-size' )
 		.toHaveCSS( 'font-size', fixture?.productPage?.fontSize );
 	await expect
-		.soft( badge )
-		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
+		.soft( badge, 'Product padding' )
+		.toHaveCSS( 'padding', fixture?.productPage?.padding );
 
 	// Check badge in the mini-cart (block themes only).
 	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
@@ -269,7 +269,8 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		await checkPseudoBadgeDimensions(
 			miniCartBadge.locator,
 			miniCartBadge.pseudo,
-			fixture?.cartPage
+			fixture?.cartPage,
+			'Minicart'
 		);
 		await customerPage
 			.locator( '.wc-block-mini-cart__drawer' )
@@ -293,7 +294,8 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	await checkPseudoBadgeDimensions(
 		cartBadgeHost,
 		cartPseudo,
-		fixture?.cartPage
+		fixture?.cartPage,
+		'Cart'
 	);
 
 	// Click the checkout link in the menu.
@@ -317,7 +319,8 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	await checkPseudoBadgeDimensions(
 		checkoutBadgeHost,
 		checkoutPseudo,
-		fixture?.checkoutPage
+		fixture?.checkoutPage,
+		'Checkout'
 	);
 
 	await fillCheckout( customerPage );
