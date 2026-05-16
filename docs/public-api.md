@@ -300,23 +300,22 @@ Displays a clearance badge when the product is in the clearance section. Automat
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
-| Attribute | Type     | Description                                                                                                                                                         |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `style`   | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding), typography (fontSize, fontWeight), and border (radius, width, color). |
+Styles are inherited from site-wide settings. Default style values:
 
-Default style values:
+| Property           | Default          |
+| ------------------ | ---------------- |
+| `width`            | `fit-content`    |
+| `line-height`      | `1`              |
+| `text-box-trim`    | `trim-both`      |
+| `text-box-edge`    | `cap alphabetic` |
+| `background-color` | `#FFEE85`        |
+| `color`            | `#222`           |
+| `padding`          | Calculated¹      |
+| `font-size`        | Calculated²      |
+| `font-weight`      | `600`            |
+| `border-radius`    | `2px`            |
 
-| Property                      | Default     |
-| ----------------------------- | ----------- |
-| `style.color.background`      | `#FFEE85`   |
-| `style.color.text`            | `#222`      |
-| `style.spacing.padding`       | Calculated¹ |
-| `style.typography.fontSize`   | Calculated² |
-| `style.typography.fontWeight` | `600`       |
-| `style.border.radius`         | `2px`       |
-
-The default height of the badge is 1.66x the contextual (surrounding text) capital
-letter height.
+The default height of the badge is 1.66x the capital letter height of surrounding text.
 
 1. The default padding on each side is 25% the height of the badge.
 2. The default font-size is 50% the height of the badge.
