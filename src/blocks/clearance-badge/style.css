@@ -13,7 +13,7 @@
 	border-width: var(--wc-clearance-badge-border-width, unset);
 	font-weight: var(--wc-clearance-badge-font-weight, unset);
 	font-size: max(var(--wc-clearance-badge-min-font-size, 0px), calc(var(--wc-clearance-context-font-size, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em)));
-	padding: calc(1cap * (100 - var(--wc-clearance-badge-density)) / max(1, var(--wc-clearance-badge-density)) / 2);
+	padding: max(0px, calc((var(--wc-clearance-context-font-size, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 - 1cap) / 2));
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
