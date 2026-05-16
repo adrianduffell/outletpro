@@ -880,7 +880,9 @@ describe( 'page-editor-sidebar registration', () => {
 		} );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
-		const input = screen.getByRole( 'textbox', { name: 'Minimum font size' } );
+		const input = screen.getByRole( 'textbox', {
+			name: 'Minimum font size',
+		} );
 
 		// Act.
 		fireEvent.change( input, { target: { value: '12px' } } );
