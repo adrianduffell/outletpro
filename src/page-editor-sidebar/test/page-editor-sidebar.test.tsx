@@ -576,7 +576,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Assert.
 		expect( input ).toHaveAttribute( 'min', '50' );
 		expect( input ).toHaveAttribute( 'max', '200' );
-		expect( input ).toHaveAttribute( 'step', '5' );
+		expect( input ).toHaveAttribute( 'step', '1' );
 	} );
 
 	test( 'font weight control calls setter when changed', () => {
