@@ -9,7 +9,7 @@
 	color: var(--wc-clearance-badge-text-color, unset);
 	border-radius: var(--wc-clearance-badge-border-radius, unset);
 	font-weight: var(--wc-clearance-badge-font-weight, unset);
-	font-size: calc(var(--wc-clearance-context-font-size, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em));
+	font-size: calc(var(--wc-clearance-badge-context-font-size, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em));
 	padding: calc(1cap * (100 - var(--wc-clearance-badge-density)) / var(--wc-clearance-badge-density) / 2);
 	line-height: 1;
 	text-box-trim: trim-both;
