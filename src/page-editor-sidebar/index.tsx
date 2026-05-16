@@ -205,7 +205,7 @@ const ClearanceSectionSidebar = () => {
 						max={ 200 }
 						step={ 5 }
 						allowReset={ true }
-						resetFallbackValue={ 140 }
+						resetFallbackValue={ 166 }
 						withInputField={ false }
 						__next40pxDefaultSize
 					/>
