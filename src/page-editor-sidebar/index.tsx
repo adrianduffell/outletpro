@@ -201,7 +201,7 @@ const ClearanceSectionSidebar = () => {
 							}
 							setScale( value );
 						} }
-						min={ 50 }
+						min={ 100 }
 						max={ 200 }
 						step={ 5 }
 						allowReset={ true }
