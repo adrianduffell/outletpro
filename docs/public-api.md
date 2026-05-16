@@ -320,7 +320,7 @@ Styles are inherited from site-wide settings. Default style values:
 -   The default padding on each side is 25% the height of the badge.
 -   The default font-size is 50% the height of the badge.
 
-Use the scale setting to control the height of the badge, and font-size to control the font-size/padding ratio.
+Use the scale setting to control the height of the badge, and density (called "font-size" in the UI) to control the font-size/padding ratio.
 
 \* Denotes modifiable in settings.
 
