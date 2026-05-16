@@ -305,20 +305,24 @@ Styles are inherited from site-wide settings. Default style values:
 | Property           | Default          |
 | ------------------ | ---------------- |
 | `width`            | `fit-content`    |
-| `line-height`      | `1`              |
 | `text-box-trim`    | `trim-both`      |
 | `text-box-edge`    | `cap alphabetic` |
-| `background-color` | `#FFEE85`        |
-| `color`            | `#222`           |
-| `padding`          | Calculated¹      |
-| `font-size`        | Calculated²      |
-| `font-weight`      | `600`            |
-| `border-radius`    | `2px`            |
+| `line-height`      | `1`              |
+| `background-color` | `#FFEE85`\*      |
+| `color`            | `#222`\*         |
+| `padding`          | Calculated\*¹    |
+| `font-size`        | Calculated\*¹    |
+| `font-weight`      | `600`\*          |
+| `border-radius`    | `2px`\*          |
 
-The default height of the badge is 1.66x the capital letter height of surrounding text.
+1. The default height of the badge is 1.66x the capital letter height of surrounding text.
 
-1. The default padding on each side is 25% the height of the badge.
-2. The default font-size is 50% the height of the badge.
+-   The default padding on each side is 25% the height of the badge.
+-   The default font-size is 50% the height of the badge.
+
+Use the scale setting to control the height of the badge, and font-size to control the font-size/padding ratio.
+
+\* Denotes modifiable in settings.
 
 ### `wc-clearance/clearance-message`
 
