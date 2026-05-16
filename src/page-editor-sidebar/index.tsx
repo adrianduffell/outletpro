@@ -130,6 +130,25 @@ const ClearanceSectionSidebar = () => {
 				</BaseControl>
 			</PanelBody>
 
+			<PanelColorSettings
+				title={ __( 'Color', 'wc-clearance' ) }
+				initialOpen={ false }
+				colorSettings={ [
+					{
+						value: textColor,
+						label: __( 'Text', 'wc-clearance' ),
+						onChange: ( color: string | undefined ) =>
+							setTextColor( color || undefined ),
+					},
+					{
+						value: bgColor,
+						label: __( 'Background', 'wc-clearance' ),
+						onChange: ( backgroundColor: string | undefined ) =>
+							setBgColor( backgroundColor || undefined ),
+					},
+				] }
+			/>
+
 			<PanelBody title={ __( 'Typography', 'wc-clearance' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginBottom: '16px' } }>
@@ -166,25 +185,6 @@ const ClearanceSectionSidebar = () => {
 					/>
 				</BaseControl>
 			</PanelBody>
-
-			<PanelColorSettings
-				title={ __( 'Color', 'wc-clearance' ) }
-				initialOpen={ false }
-				colorSettings={ [
-					{
-						value: textColor,
-						label: __( 'Text', 'wc-clearance' ),
-						onChange: ( color: string | undefined ) =>
-							setTextColor( color || undefined ),
-					},
-					{
-						value: bgColor,
-						label: __( 'Background', 'wc-clearance' ),
-						onChange: ( backgroundColor: string | undefined ) =>
-							setBgColor( backgroundColor || undefined ),
-					},
-				] }
-			/>
 
 			<PanelBody title={ __( 'Dimensions', 'wc-clearance' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
