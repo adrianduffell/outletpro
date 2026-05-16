@@ -140,6 +140,17 @@ describe( 'useSettings', () => {
 		expect( result.current.density ).toBe( 80 );
 	} );
 
+	test( 'returns minFontSize value from entity prop', () => {
+		// Arrange.
+		setupMock( { wc_clearance_badge_min_font_size: '10px' } );
+
+		// Act.
+		const { result } = renderHook( () => useSettings() );
+
+		// Assert.
+		expect( result.current.minFontSize ).toBe( '10px' );
+	} );
+
 	test( 'exposes setLabel setter from entity prop', () => {
 		// Arrange.
 		const setLabel = jest.fn();
@@ -177,6 +188,7 @@ describe( 'useSettings', () => {
 			wc_clearance_badge_padding_right: 'setPaddingRight',
 			wc_clearance_badge_padding_bottom: 'setPaddingBottom',
 			wc_clearance_badge_padding_left: 'setPaddingLeft',
+			wc_clearance_badge_min_font_size: 'setMinFontSize',
 			wc_clearance_message: 'setMessage',
 		};
 		for ( const key of Object.keys( keyToSetter ) ) {
@@ -206,6 +218,7 @@ describe( 'useSettings', () => {
 		result.current.setPaddingRight( 'k' );
 		result.current.setPaddingBottom( 'l' );
 		result.current.setPaddingLeft( 'm' );
+		result.current.setMinFontSize( 'n' );
 		result.current.setScale( 140 );
 		result.current.setDensity( 80 );
 		result.current.setMessage( 'o' );
@@ -245,6 +258,9 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_badge_padding_left ).toHaveBeenCalledWith(
 			'm'
 		);
+		expect( setters.wc_clearance_badge_min_font_size ).toHaveBeenCalledWith(
+			'n'
+		);
 		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
 		expect( densitySetter ).toHaveBeenCalledWith( 80 );
 		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'o' );
@@ -275,6 +291,7 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_right' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
+		expect( keys ).toContain( 'wc_clearance_badge_min_font_size' );
 		expect( keys ).toContain( 'wc_clearance_message' );
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
 			1,

@@ -30,6 +30,8 @@ export type Settings = {
 	setScale: ( value: number | undefined ) => void;
 	density: number | undefined;
 	setDensity: ( value: number | undefined ) => void;
+	minFontSize: string | undefined;
+	setMinFontSize: ( value: string | undefined ) => void;
 	message: string | undefined;
 	setMessage: ( value: string | undefined ) => void;
 };
@@ -77,6 +79,9 @@ const useSettings = (): Settings => {
 	const [ density, setDensity ] = useUnsignedIntegerEntityProp(
 		'wc_clearance_badge_density'
 	);
+	const [ minFontSize, setMinFontSize ] = useStringEntityProp(
+		'wc_clearance_badge_min_font_size'
+	);
 	const [ message, setMessage ] = useStringEntityProp(
 		'wc_clearance_message'
 	);
@@ -110,6 +115,8 @@ const useSettings = (): Settings => {
 		setScale,
 		density,
 		setDensity,
+		minFontSize,
+		setMinFontSize,
 		message,
 		setMessage,
 	};

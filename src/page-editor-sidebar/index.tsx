@@ -98,6 +98,8 @@ const ClearanceSectionSidebar = () => {
 		setScale,
 		density,
 		setDensity,
+		minFontSize,
+		setMinFontSize,
 		message,
 		setMessage,
 	} = useSettings();
@@ -174,6 +176,23 @@ const ClearanceSectionSidebar = () => {
 							__next40pxDefaultSize
 						/>
 					</div>
+				</BaseControl>
+
+				<BaseControl
+					id="wc-clearance-badge-min-font-size"
+					label={ __( 'Minimum font size', 'wc-clearance' ) }
+					__nextHasNoMarginBottom={ true }
+				>
+					<UnitControl
+						id="wc-clearance-badge-min-font-size"
+						aria-label={ __( 'Minimum font size', 'wc-clearance' ) }
+						value={ minFontSize || undefined }
+						onChange={ ( value: string | undefined ) =>
+							setMinFontSize( value || undefined )
+						}
+						min={ 0 }
+						__next40pxDefaultSize
+					/>
 				</BaseControl>
 
 				<BaseControl __nextHasNoMarginBottom={ true }>

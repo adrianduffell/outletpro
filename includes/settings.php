@@ -122,6 +122,13 @@ const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_scale';
 const CLEARANCE_BADGE_DENSITY_OPTION = 'wc_clearance_badge_density';
 
 /**
+ * WordPress option key used to store the badge minimum font size.
+ *
+ * @internal
+ */
+const CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION = 'wc_clearance_badge_min_font_size';
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
@@ -231,6 +238,7 @@ function init_settings(): void {
 	register_clearance_badge_padding_left_setting();
 	register_clearance_badge_scale_setting();
 	register_clearance_badge_density_setting();
+	register_clearance_badge_min_font_size_setting();
 	register_clearance_message_setting();
 }
 
@@ -277,6 +285,7 @@ function seed_settings(): void {
 	add_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '0.36em' );
 	add_option( CLEARANCE_BADGE_SCALE_OPTION, 166 );
 	add_option( CLEARANCE_BADGE_DENSITY_OPTION, 50 );
+	add_option( CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION, '' );
 	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
 }
 
@@ -634,6 +643,30 @@ function register_clearance_badge_density_setting(): void {
 					'type'    => 'integer',
 					'minimum' => 0,
 					'maximum' => 100,
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the clearance badge minimum font size setting.
+ *
+ * @internal
+ */
+function register_clearance_badge_min_font_size_setting(): void {
+	register_setting(
+		'wc_clearance',
+		CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'Clearance badge minimum font size', 'wc-clearance' ),
+			'description'       => __( 'Minimum font size of the clearance badge. When the computed font size falls below this value the badge enlarges to meet the floor.', 'wc-clearance' ),
+			'default'           => '',
+			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
 				),
 			),
 		)

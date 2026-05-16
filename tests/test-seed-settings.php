@@ -20,6 +20,7 @@ use const WC_Clearance\CLEARANCE_BADGE_PADDING_RIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_TOP_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_SCALE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
+use const WC_Clearance\CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
 
 class Test_Seed_Settings extends WP_UnitTestCase {
@@ -377,5 +378,27 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 80, get_option( CLEARANCE_BADGE_DENSITY_OPTION ) );
+	}
+
+	public function test_sets_badge_min_font_size_default_when_option_does_not_exist(): void {
+		// Arrange.
+		delete_option( CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '', get_option( CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION ) );
+	}
+
+	public function test_does_not_overwrite_existing_badge_min_font_size_option(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION, '12px' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( '12px', get_option( CLEARANCE_BADGE_MIN_FONT_SIZE_OPTION ) );
 	}
 }

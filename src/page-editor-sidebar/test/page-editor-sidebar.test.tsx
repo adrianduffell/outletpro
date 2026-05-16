@@ -207,12 +207,14 @@ jest.mock( '@wordpress/components', () => ( {
 	__experimentalUnitControl: ( {
 		value,
 		onChange,
+		'aria-label': ariaLabel,
 	}: {
 		value: string | undefined;
 		onChange: ( v: string | undefined ) => void;
+		'aria-label'?: string;
 	} ) => (
 		<input
-			aria-label="Radius"
+			aria-label={ ariaLabel ?? 'Radius' }
 			value={ value ?? '' }
 			onChange={ ( e ) => onChange( e.target.value || undefined ) }
 		/>
@@ -300,6 +302,8 @@ const createInitialSettings = () => ( {
 	setScale: jest.fn(),
 	density: undefined,
 	setDensity: jest.fn(),
+	minFontSize: undefined,
+	setMinFontSize: jest.fn(),
 	message: undefined,
 	setMessage: jest.fn(),
 } );
@@ -836,6 +840,53 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( input ).toHaveAttribute( 'min', '0' );
 		expect( input ).toHaveAttribute( 'max', '100' );
 		expect( input ).toHaveAttribute( 'step', '1' );
+	} );
+
+	test( 'minimum font size control reflects stored value', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			minFontSize: '10px',
+			setMinFontSize: jest.fn(),
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect(
+			screen.getByRole( 'textbox', { name: 'Minimum font size' } )
+		).toHaveValue( '10px' );
+	} );
+
+	test( 'minimum font size control calls setter when changed', () => {
+		// Arrange.
+		mockRegisterPlugin.mockClear();
+		const setMinFontSize = jest.fn();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( {
+			...createInitialSettings(),
+			minFontSize: '10px',
+			setMinFontSize,
+		} );
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		render( pluginConfig.render() );
+		const input = screen.getByRole( 'textbox', { name: 'Minimum font size' } );
+
+		// Act.
+		fireEvent.change( input, { target: { value: '12px' } } );
+
+		// Assert.
+		expect( setMinFontSize ).toHaveBeenCalledWith( '12px' );
 	} );
 
 	test( 'text color control calls setter when changed', () => {

@@ -13,6 +13,7 @@ describe( 'buildPreviewStyles', () => {
 		paddingRight: '--wc-clearance-badge-padding-right',
 		paddingBottom: '--wc-clearance-badge-padding-bottom',
 		paddingLeft: '--wc-clearance-badge-padding-left',
+		minFontSize: '--wc-clearance-badge-min-font-size',
 		scale: '--wc-clearance-badge-scale',
 		density: '--wc-clearance-badge-density',
 	};
@@ -67,6 +68,7 @@ describe( 'buildPreviewStyles', () => {
 		[ 'paddingRight', '12px' ],
 		[ 'paddingBottom', '8px' ],
 		[ 'paddingLeft', '12px' ],
+		[ 'minFontSize', '10px' ],
 		[ 'scale', 120 ],
 		[ 'density', 60 ],
 	] as const )( 'includes %s CSS var', ( key, value ) => {
@@ -89,6 +91,7 @@ describe( 'buildPreviewStyles', () => {
 			paddingRight: '12px',
 			paddingBottom: '8px',
 			paddingLeft: '12px',
+			minFontSize: '10px',
 			scale: 120,
 			density: 60,
 		} );
@@ -115,6 +118,9 @@ describe( 'buildPreviewStyles', () => {
 			'--wc-clearance-badge-padding-bottom: 8px'
 		);
 		expect( result ).toContain( '--wc-clearance-badge-padding-left: 12px' );
+		expect( result ).toContain(
+			'--wc-clearance-badge-min-font-size: 10px'
+		);
 		expect( result ).toContain( '--wc-clearance-badge-scale: 120' );
 		expect( result ).toContain( '--wc-clearance-badge-density: 60' );
 	} );

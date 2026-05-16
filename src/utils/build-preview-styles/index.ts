@@ -13,6 +13,7 @@ type BuildPreviewStylesParams = {
 	paddingLeft?: string;
 	scale?: number;
 	density?: number;
+	minFontSize?: string;
 };
 
 export function buildPreviewStyles(
@@ -30,6 +31,7 @@ export function buildPreviewStyles(
 		'--wc-clearance-badge-padding-right': settings.paddingRight,
 		'--wc-clearance-badge-padding-bottom': settings.paddingBottom,
 		'--wc-clearance-badge-padding-left': settings.paddingLeft,
+		'--wc-clearance-badge-min-font-size': settings.minFontSize,
 	};
 
 	const declarations = [
