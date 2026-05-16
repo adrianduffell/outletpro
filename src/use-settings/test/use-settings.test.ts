@@ -71,17 +71,6 @@ describe( 'useSettings', () => {
 		expect( result.current.textColor ).toBe( '#333333' );
 	} );
 
-	test( 'returns font size value from entity prop', () => {
-		// Arrange.
-		setupMock( { wc_clearance_badge_font_size: '0.875rem' } );
-
-		// Act.
-		const { result } = renderHook( () => useSettings() );
-
-		// Assert.
-		expect( result.current.fontSize ).toBe( '0.875rem' );
-	} );
-
 	test( 'returns font weight value from entity prop', () => {
 		// Arrange.
 		setupMock( { wc_clearance_badge_font_weight: '700' } );
@@ -172,14 +161,13 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'exposes all 16 setters wired to the correct entity prop key', () => {
+	test( 'exposes setters wired to the correct entity prop key', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
 			wc_clearance_badge_label: 'setLabel',
 			wc_clearance_badge_text_color: 'setTextColor',
 			wc_clearance_badge_bg_color: 'setBgColor',
-			wc_clearance_badge_font_size: 'setFontSize',
 			wc_clearance_badge_font_weight: 'setFontWeight',
 			wc_clearance_badge_border_color: 'setBorderColor',
 			wc_clearance_badge_border_style: 'setBorderStyle',
@@ -209,7 +197,6 @@ describe( 'useSettings', () => {
 		result.current.setLabel( 'a' );
 		result.current.setTextColor( 'b' );
 		result.current.setBgColor( 'c' );
-		result.current.setFontSize( 'd' );
 		result.current.setFontWeight( 'e' );
 		result.current.setBorderColor( 'f' );
 		result.current.setBorderStyle( 'g' );
@@ -230,9 +217,6 @@ describe( 'useSettings', () => {
 		);
 		expect( setters.wc_clearance_badge_bg_color ).toHaveBeenCalledWith(
 			'c'
-		);
-		expect( setters.wc_clearance_badge_font_size ).toHaveBeenCalledWith(
-			'd'
 		);
 		expect( setters.wc_clearance_badge_font_weight ).toHaveBeenCalledWith(
 			'e'
@@ -266,7 +250,7 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'o' );
 	} );
 
-	test( 'calls useStringEntityProp for all 14 string settings and useUnsignedIntegerEntityProp for scale and density', () => {
+	test( 'calls useStringEntityProp for string settings and useUnsignedIntegerEntityProp for scale and density', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
 		mockUseUnsignedIntegerEntityProp.mockClear();
@@ -282,7 +266,6 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_label' );
 		expect( keys ).toContain( 'wc_clearance_badge_text_color' );
 		expect( keys ).toContain( 'wc_clearance_badge_bg_color' );
-		expect( keys ).toContain( 'wc_clearance_badge_font_size' );
 		expect( keys ).toContain( 'wc_clearance_badge_font_weight' );
 		expect( keys ).toContain( 'wc_clearance_badge_border_color' );
 		expect( keys ).toContain( 'wc_clearance_badge_border_style' );
@@ -293,7 +276,6 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
-		expect( keys ).toHaveLength( 14 );
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
 			1,
 			'wc_clearance_badge_scale'

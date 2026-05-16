@@ -3,7 +3,6 @@ import {
 	BorderControl,
 	BoxControl,
 	CustomSelectControl,
-	FontSizePicker,
 	PanelBody,
 	RangeControl,
 	TabPanel,
@@ -38,13 +37,6 @@ type FontWeightOption = {
 };
 
 const SIDEBAR_NAME = 'wc-clearance-sidebar';
-
-const FONT_SIZES = [
-	{ name: 'S', slug: 'xs', size: '0.66em' },
-	{ name: 'M', slug: 's', size: '0.75em' },
-	{ name: 'L', slug: 'm', size: '0.83em' },
-	{ name: 'XL', slug: 'l', size: '1em' },
-];
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'wc-clearance' ), key: '' },
@@ -84,8 +76,6 @@ const ClearanceSectionSidebar = () => {
 		setTextColor,
 		bgColor,
 		setBgColor,
-		fontSize,
-		setFontSize,
 		fontWeight,
 		setFontWeight,
 		borderColor,
@@ -181,21 +171,6 @@ const ClearanceSectionSidebar = () => {
 							renderTooltipContent={ ( value ) => `${ value }%` }
 							allowReset={ false }
 							withInputField={ false }
-							__next40pxDefaultSize
-						/>
-					</div>
-				</BaseControl>
-
-				<BaseControl __nextHasNoMarginBottom={ true }>
-					<div style={ { marginBottom: '16px' } }>
-						<FontSizePicker
-							fontSizes={ FONT_SIZES }
-							value={ fontSize || undefined }
-							onChange={ ( value ) =>
-								setFontSize( value as string | undefined )
-							}
-							withReset={ false }
-							withSlider
 							__next40pxDefaultSize
 						/>
 					</div>

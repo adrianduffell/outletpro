@@ -13,7 +13,6 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_DENSITY_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_BOTTOM_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_LEFT_OPTION;
@@ -32,7 +31,6 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		update_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION, 'solid' );
 		update_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION, '2px' );
 		update_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '4px' );
-		update_option( CLEARANCE_BADGE_FONT_SIZE_OPTION, '1rem' );
 		update_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '700' );
 		update_option( CLEARANCE_BADGE_PADDING_TOP_OPTION, '1px' );
 		update_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '2px' );
@@ -56,7 +54,6 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( '--wc-clearance-badge-border-style: solid', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-border-width: 2px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-border-radius: 4px', $output );
-		$this->assertStringContainsString( '--wc-clearance-badge-font-size: 1rem', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-font-weight: 700', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-top: 1px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-padding-right: 2px', $output );

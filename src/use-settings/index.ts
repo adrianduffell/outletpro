@@ -8,8 +8,6 @@ export type Settings = {
 	setTextColor: ( value: string | undefined ) => void;
 	bgColor: string | undefined;
 	setBgColor: ( value: string | undefined ) => void;
-	fontSize: string | undefined;
-	setFontSize: ( value: string | undefined ) => void;
 	fontWeight: string | undefined;
 	setFontWeight: ( value: string | undefined ) => void;
 	borderColor: string | undefined;
@@ -45,9 +43,6 @@ const useSettings = (): Settings => {
 	);
 	const [ bgColor, setBgColor ] = useStringEntityProp(
 		'wc_clearance_badge_bg_color'
-	);
-	const [ fontSize, setFontSize ] = useStringEntityProp(
-		'wc_clearance_badge_font_size'
 	);
 	const [ fontWeight, setFontWeight ] = useStringEntityProp(
 		'wc_clearance_badge_font_weight'
@@ -93,8 +88,6 @@ const useSettings = (): Settings => {
 		setTextColor,
 		bgColor,
 		setBgColor,
-		fontSize,
-		setFontSize,
 		fontWeight,
 		setFontWeight,
 		borderColor,
