@@ -14,10 +14,6 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_DENSITY_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_BOTTOM_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_LEFT_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_RIGHT_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_TOP_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_SCALE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 
@@ -32,10 +28,6 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		update_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION, '2px' );
 		update_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '4px' );
 		update_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '700' );
-		update_option( CLEARANCE_BADGE_PADDING_TOP_OPTION, '1px' );
-		update_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, '2px' );
-		update_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, '3px' );
-		update_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, '4px' );
 		update_option( CLEARANCE_BADGE_SCALE_OPTION, 140 );
 		update_option( CLEARANCE_BADGE_DENSITY_OPTION, 80 );
 
@@ -55,10 +47,6 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( '--wc-clearance-badge-border-width: 2px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-border-radius: 4px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-font-weight: 700', $output );
-		$this->assertStringContainsString( '--wc-clearance-badge-padding-top: 1px', $output );
-		$this->assertStringContainsString( '--wc-clearance-badge-padding-right: 2px', $output );
-		$this->assertStringContainsString( '--wc-clearance-badge-padding-bottom: 3px', $output );
-		$this->assertStringContainsString( '--wc-clearance-badge-padding-left: 4px', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-scale: 140', $output );
 		$this->assertStringContainsString( '--wc-clearance-badge-density: 80', $output );
 	}

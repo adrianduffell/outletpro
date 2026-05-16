@@ -9,10 +9,6 @@ describe( 'buildPreviewStyles', () => {
 		borderStyle: '--wc-clearance-badge-border-style',
 		borderWidth: '--wc-clearance-badge-border-width',
 		borderRadius: '--wc-clearance-badge-border-radius',
-		paddingTop: '--wc-clearance-badge-padding-top',
-		paddingRight: '--wc-clearance-badge-padding-right',
-		paddingBottom: '--wc-clearance-badge-padding-bottom',
-		paddingLeft: '--wc-clearance-badge-padding-left',
 		scale: '--wc-clearance-badge-scale',
 		density: '--wc-clearance-badge-density',
 	};
@@ -63,10 +59,6 @@ describe( 'buildPreviewStyles', () => {
 		[ 'borderStyle', 'solid' ],
 		[ 'borderWidth', '1px' ],
 		[ 'borderRadius', '4px' ],
-		[ 'paddingTop', '8px' ],
-		[ 'paddingRight', '12px' ],
-		[ 'paddingBottom', '8px' ],
-		[ 'paddingLeft', '12px' ],
 		[ 'scale', 120 ],
 		[ 'density', 60 ],
 	] as const )( 'includes %s CSS var', ( key, value ) => {
@@ -85,10 +77,6 @@ describe( 'buildPreviewStyles', () => {
 			borderStyle: 'solid',
 			borderWidth: '1px',
 			borderRadius: '4px',
-			paddingTop: '8px',
-			paddingRight: '12px',
-			paddingBottom: '8px',
-			paddingLeft: '12px',
 			scale: 120,
 			density: 60,
 		} );
@@ -107,14 +95,6 @@ describe( 'buildPreviewStyles', () => {
 		);
 		expect( result ).toContain( '--wc-clearance-badge-border-width: 1px' );
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 4px' );
-		expect( result ).toContain( '--wc-clearance-badge-padding-top: 8px' );
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-right: 12px'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-padding-bottom: 8px'
-		);
-		expect( result ).toContain( '--wc-clearance-badge-padding-left: 12px' );
 		expect( result ).toContain( '--wc-clearance-badge-scale: 120' );
 		expect( result ).toContain( '--wc-clearance-badge-density: 60' );
 	} );
@@ -132,7 +112,6 @@ describe( 'buildPreviewStyles', () => {
 			bgColor: '',
 			borderWidth: '0',
 			borderRadius: '0',
-			paddingTop: '0',
 			scale: undefined,
 			density: undefined,
 		} );
@@ -140,7 +119,6 @@ describe( 'buildPreviewStyles', () => {
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: unset' );
 		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
-		expect( result ).toContain( '--wc-clearance-badge-padding-top: 0' );
 		expect( result ).toContain( '--wc-clearance-badge-scale: unset' );
 		expect( result ).toContain( '--wc-clearance-badge-density: unset' );
 	} );

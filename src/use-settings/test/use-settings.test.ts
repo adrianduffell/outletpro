@@ -93,25 +93,6 @@ describe( 'useSettings', () => {
 		expect( result.current.borderRadius ).toBe( '4px' );
 	} );
 
-	test( 'returns padding values from entity props', () => {
-		// Arrange.
-		setupMock( {
-			wc_clearance_badge_padding_top: '8px',
-			wc_clearance_badge_padding_right: '12px',
-			wc_clearance_badge_padding_bottom: '8px',
-			wc_clearance_badge_padding_left: '12px',
-		} );
-
-		// Act.
-		const { result } = renderHook( () => useSettings() );
-
-		// Assert.
-		expect( result.current.paddingTop ).toBe( '8px' );
-		expect( result.current.paddingRight ).toBe( '12px' );
-		expect( result.current.paddingBottom ).toBe( '8px' );
-		expect( result.current.paddingLeft ).toBe( '12px' );
-	} );
-
 	test( 'returns scale value from entity prop', () => {
 		// Arrange.
 		setupMock( {}, [
@@ -173,10 +154,6 @@ describe( 'useSettings', () => {
 			wc_clearance_badge_border_style: 'setBorderStyle',
 			wc_clearance_badge_border_width: 'setBorderWidth',
 			wc_clearance_badge_border_radius: 'setBorderRadius',
-			wc_clearance_badge_padding_top: 'setPaddingTop',
-			wc_clearance_badge_padding_right: 'setPaddingRight',
-			wc_clearance_badge_padding_bottom: 'setPaddingBottom',
-			wc_clearance_badge_padding_left: 'setPaddingLeft',
 			wc_clearance_message: 'setMessage',
 		};
 		for ( const key of Object.keys( keyToSetter ) ) {
@@ -202,10 +179,6 @@ describe( 'useSettings', () => {
 		result.current.setBorderStyle( 'g' );
 		result.current.setBorderWidth( 'h' );
 		result.current.setBorderRadius( 'i' );
-		result.current.setPaddingTop( 'j' );
-		result.current.setPaddingRight( 'k' );
-		result.current.setPaddingBottom( 'l' );
-		result.current.setPaddingLeft( 'm' );
 		result.current.setScale( 140 );
 		result.current.setDensity( 80 );
 		result.current.setMessage( 'o' );
@@ -233,18 +206,6 @@ describe( 'useSettings', () => {
 		expect( setters.wc_clearance_badge_border_radius ).toHaveBeenCalledWith(
 			'i'
 		);
-		expect( setters.wc_clearance_badge_padding_top ).toHaveBeenCalledWith(
-			'j'
-		);
-		expect( setters.wc_clearance_badge_padding_right ).toHaveBeenCalledWith(
-			'k'
-		);
-		expect(
-			setters.wc_clearance_badge_padding_bottom
-		).toHaveBeenCalledWith( 'l' );
-		expect( setters.wc_clearance_badge_padding_left ).toHaveBeenCalledWith(
-			'm'
-		);
 		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
 		expect( densitySetter ).toHaveBeenCalledWith( 80 );
 		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'o' );
@@ -271,10 +232,6 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_border_style' );
 		expect( keys ).toContain( 'wc_clearance_badge_border_width' );
 		expect( keys ).toContain( 'wc_clearance_badge_border_radius' );
-		expect( keys ).toContain( 'wc_clearance_badge_padding_top' );
-		expect( keys ).toContain( 'wc_clearance_badge_padding_right' );
-		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
-		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
 			1,
