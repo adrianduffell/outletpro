@@ -574,7 +574,7 @@ describe( 'page-editor-sidebar registration', () => {
 		const input = screen.getByRole( 'slider', { name: 'Scale' } );
 
 		// Assert.
-		expect( input ).toHaveAttribute( 'min', '50' );
+		expect( input ).toHaveAttribute( 'min', '100' );
 		expect( input ).toHaveAttribute( 'max', '200' );
 		expect( input ).toHaveAttribute( 'step', '5' );
 	} );
