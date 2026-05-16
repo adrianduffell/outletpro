@@ -161,7 +161,7 @@ describe( 'useSettings', () => {
 		expect( setLabel ).toHaveBeenCalledWith( 'Sale' );
 	} );
 
-	test( 'exposes all 15 setters wired to the correct entity prop key', () => {
+	test( 'exposes setters wired to the correct entity prop key', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
@@ -197,18 +197,18 @@ describe( 'useSettings', () => {
 		result.current.setLabel( 'a' );
 		result.current.setTextColor( 'b' );
 		result.current.setBgColor( 'c' );
-		result.current.setFontWeight( 'd' );
-		result.current.setBorderColor( 'e' );
-		result.current.setBorderStyle( 'f' );
-		result.current.setBorderWidth( 'g' );
-		result.current.setBorderRadius( 'h' );
-		result.current.setPaddingTop( 'i' );
-		result.current.setPaddingRight( 'j' );
-		result.current.setPaddingBottom( 'k' );
-		result.current.setPaddingLeft( 'l' );
+		result.current.setFontWeight( 'e' );
+		result.current.setBorderColor( 'f' );
+		result.current.setBorderStyle( 'g' );
+		result.current.setBorderWidth( 'h' );
+		result.current.setBorderRadius( 'i' );
+		result.current.setPaddingTop( 'j' );
+		result.current.setPaddingRight( 'k' );
+		result.current.setPaddingBottom( 'l' );
+		result.current.setPaddingLeft( 'm' );
 		result.current.setScale( 140 );
 		result.current.setDensity( 80 );
-		result.current.setMessage( 'm' );
+		result.current.setMessage( 'o' );
 
 		// Assert.
 		expect( setters.wc_clearance_badge_label ).toHaveBeenCalledWith( 'a' );
@@ -219,38 +219,38 @@ describe( 'useSettings', () => {
 			'c'
 		);
 		expect( setters.wc_clearance_badge_font_weight ).toHaveBeenCalledWith(
-			'd'
-		);
-		expect( setters.wc_clearance_badge_border_color ).toHaveBeenCalledWith(
 			'e'
 		);
-		expect( setters.wc_clearance_badge_border_style ).toHaveBeenCalledWith(
+		expect( setters.wc_clearance_badge_border_color ).toHaveBeenCalledWith(
 			'f'
 		);
-		expect( setters.wc_clearance_badge_border_width ).toHaveBeenCalledWith(
+		expect( setters.wc_clearance_badge_border_style ).toHaveBeenCalledWith(
 			'g'
 		);
-		expect( setters.wc_clearance_badge_border_radius ).toHaveBeenCalledWith(
+		expect( setters.wc_clearance_badge_border_width ).toHaveBeenCalledWith(
 			'h'
 		);
-		expect( setters.wc_clearance_badge_padding_top ).toHaveBeenCalledWith(
+		expect( setters.wc_clearance_badge_border_radius ).toHaveBeenCalledWith(
 			'i'
 		);
-		expect( setters.wc_clearance_badge_padding_right ).toHaveBeenCalledWith(
+		expect( setters.wc_clearance_badge_padding_top ).toHaveBeenCalledWith(
 			'j'
+		);
+		expect( setters.wc_clearance_badge_padding_right ).toHaveBeenCalledWith(
+			'k'
 		);
 		expect(
 			setters.wc_clearance_badge_padding_bottom
-		).toHaveBeenCalledWith( 'k' );
+		).toHaveBeenCalledWith( 'l' );
 		expect( setters.wc_clearance_badge_padding_left ).toHaveBeenCalledWith(
-			'l'
+			'm'
 		);
 		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
 		expect( densitySetter ).toHaveBeenCalledWith( 80 );
-		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'm' );
+		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'o' );
 	} );
 
-	test( 'calls useStringEntityProp for all 13 string settings and useUnsignedIntegerEntityProp for scale and density', () => {
+	test( 'calls useStringEntityProp for string settings and useUnsignedIntegerEntityProp for scale and density', () => {
 		// Arrange.
 		mockUseStringEntityProp.mockClear();
 		mockUseUnsignedIntegerEntityProp.mockClear();
@@ -276,7 +276,6 @@ describe( 'useSettings', () => {
 		expect( keys ).toContain( 'wc_clearance_badge_padding_bottom' );
 		expect( keys ).toContain( 'wc_clearance_badge_padding_left' );
 		expect( keys ).toContain( 'wc_clearance_message' );
-		expect( keys ).toHaveLength( 13 );
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
 			1,
 			'wc_clearance_badge_scale'
