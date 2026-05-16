@@ -3,15 +3,15 @@
 		"1280x720": {
 			"productPage": {
 				"fontSize": "18.0635px",
-				"padding": "6.50284px"
+				"padding": "6.5016px"
 			},
 			"cartPage": {
-				"fontSize": "11.62px",
-				"padding": "4.1832px"
+				"fontSize": "10.1675px",
+				"padding": "3.6576px"
 			},
 			"checkoutPage": {
-				"fontSize": "11.62px",
-				"padding": "4.1832px"
+				"fontSize": "10.1675px",
+				"padding": "3.6576px"
 			}
 		}
 	},
@@ -19,15 +19,15 @@
 		"1280x720": {
 			"productPage": {
 				"fontSize": "13.944px",
-				"padding": "5.01984px"
+				"padding": "5.06909px"
 			},
 			"cartPage": {
-				"fontSize": "11.952px",
-				"padding": "4.30272px"
+				"fontSize": "10.458px",
+				"padding": "3.8px"
 			},
 			"checkoutPage": {
-				"fontSize": "11.952px",
-				"padding": "4.30272px"
+				"fontSize": "10.458px",
+				"padding": "3.8px"
 			}
 		}
 	},
@@ -35,15 +35,15 @@
 		"1280x720": {
 			"productPage": {
 				"fontSize": "14.94px",
-				"padding": "5.3784px"
+				"padding": "5.26329px"
 			},
 			"cartPage": {
-				"fontSize": "13.28px",
-				"padding": "4.7808px"
+				"fontSize": "11.62px",
+				"padding": "4.09367px"
 			},
 			"checkoutPage": {
-				"fontSize": "13.28px",
-				"padding": "4.7808px"
+				"fontSize": "11.62px",
+				"padding": "4.09367px"
 			}
 		}
 	},
@@ -67,15 +67,15 @@
 		"1280x720": {
 			"productPage": {
 				"fontSize": "13.28px",
-				"padding": "4.7808px"
+				"padding": "4.67848px"
 			},
 			"cartPage": {
-				"fontSize": "10.79px",
-				"padding": "3.8844px"
+				"fontSize": "9.44125px",
+				"padding": "3.32566px"
 			},
 			"checkoutPage": {
-				"fontSize": "10.79px",
-				"padding": "3.8844px"
+				"fontSize": "9.44125px",
+				"padding": "3.32566px"
 			}
 		}
 	},
@@ -83,15 +83,15 @@
 		"1280x720": {
 			"productPage": {
 				"fontSize": "13.28px",
-				"padding": "4.7808px"
+				"padding": "4.3824px"
 			},
 			"cartPage": {
-				"fontSize": "11.52px",
-				"padding": "4.1472px"
+				"fontSize": "13.28px",
+				"padding": "4.3824px"
 			},
 			"checkoutPage": {
-				"fontSize": "11.52px",
-				"padding": "4.1472px"
+				"fontSize": "13.28px",
+				"padding": "4.3824px"
 			}
 		}
 	}

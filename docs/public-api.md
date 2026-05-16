@@ -300,20 +300,29 @@ Displays a clearance badge when the product is in the clearance section. Automat
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
-| Attribute | Type     | Description                                                                                                                                                         |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `style`   | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding), typography (fontSize, fontWeight), and border (radius, width, color). |
+Styles are inherited from site-wide settings. Default style values:
 
-Default style values:
+| Property           | Default          |
+| ------------------ | ---------------- |
+| `width`            | `fit-content`    |
+| `text-box-trim`    | `trim-both`      |
+| `text-box-edge`    | `cap alphabetic` |
+| `line-height`      | `1`              |
+| `background-color` | `#FFEE85`\*      |
+| `color`            | `#222`\*         |
+| `padding`          | Calculated\*¹    |
+| `font-size`        | Calculated\*¹    |
+| `font-weight`      | `600`\*          |
+| `border-radius`    | `2px`\*          |
 
-| Property                      | Default               |
-| ----------------------------- | --------------------- |
-| `style.color.background`      | `#FFEE85`             |
-| `style.color.text`            | `#222`                |
-| `style.spacing.padding`       | `0.36em` on all sides |
-| `style.typography.fontSize`   | `0.83em`              |
-| `style.typography.fontWeight` | `600`                 |
-| `style.border.radius`         | `2px`                 |
+1. The default height of the badge is 1.66x the capital letter height of surrounding text.
+
+-   The default padding on each side is 25% the height of the badge.
+-   The default font-size is 50% the height of the badge.
+
+Use the scale setting to control the height of the badge, and density (called "font-size" in the UI) to control the font-size/padding ratio.
+
+\* Denotes modifiable in settings.
 
 ### `wc-clearance/clearance-message`
 
