@@ -23,6 +23,7 @@ export function Edit(): JSX.Element {
 			tagName="p"
 			value={ message ?? '' }
 			onChange={ ( value: string ) => setMessage( value ) }
+			allowedFormats={ [] }
 			placeholder={ __(
 				'Enter clearance message text.',
 				'wc-clearance'
