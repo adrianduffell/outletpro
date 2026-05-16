@@ -321,6 +321,16 @@ letter height.
 1. The default padding on each side is 25% the height of the badge.
 2. The default font-size is 50% the height of the badge.
 
+### `wc-clearance/clearance-message`
+
+Displays the clearance message when the product is in the clearance section. Automatically
+inserted as the first child of the product meta block on the single product template (block
+themes). Added in 1.0.0.
+
+| Attribute  | Type     | Default | Description                                |
+| ---------- | -------- | ------- | ------------------------------------------ |
+| `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
+
 ### `wc-clearance/product-collection/clearance`
 
 A product collection variation that shows only clearance products. Available in the block
