@@ -12,8 +12,8 @@ Check if a product is in the clearance section.
 
 Throws exception on error. Added in 1.0.0.
 
-| Parameter | Type | Description |
-|---|---|---|
+| Parameter  | Type          | Description           |
+| ---------- | ------------- | --------------------- |
 | `$product` | `\WC_Product` | The product to check. |
 
 ```php
@@ -30,8 +30,8 @@ Add a product to the clearance section.
 
 Throws exception on error. Added in 1.0.0.
 
-| Parameter | Type | Description |
-|---|---|---|
+| Parameter  | Type          | Description         |
+| ---------- | ------------- | ------------------- |
 | `$product` | `\WC_Product` | The product to add. |
 
 ```php
@@ -48,8 +48,8 @@ Remove a product from the clearance section.
 
 Throws exception on error. Added in 1.0.0.
 
-| Parameter | Type | Description |
-|---|---|---|
+| Parameter  | Type          | Description            |
+| ---------- | ------------- | ---------------------- |
 | `$product` | `\WC_Product` | The product to remove. |
 
 ```php
@@ -68,10 +68,10 @@ Fires the `wc_clearance_status_changed` action on a status change.
 
 Throws exception on error. Added in 1.0.0.
 
-| Parameter | Type | Description |
-|---|---|---|
-| `$product` | `\WC_Product` | The product to update. |
-| `$new_value` | `bool` | `true` to add to clearance, `false` to remove. |
+| Parameter    | Type          | Description                                    |
+| ------------ | ------------- | ---------------------------------------------- |
+| `$product`   | `\WC_Product` | The product to update.                         |
+| `$new_value` | `bool`        | `true` to add to clearance, `false` to remove. |
 
 ```php
 try {
@@ -198,11 +198,11 @@ add_action( 'wc_clearance_status_changed', function ( $product_id, $old_value, $
 }, 10, 3 );
 ```
 
-| Parameter | Type | Description |
-|---|---|---|
-| `$product_id` | `int` | Product ID. |
-| `$old_value` | `bool` | Previous clearance status. |
-| `$new_value` | `bool` | New clearance status. |
+| Parameter     | Type   | Description                |
+| ------------- | ------ | -------------------------- |
+| `$product_id` | `int`  | Product ID.                |
+| `$old_value`  | `bool` | Previous clearance status. |
+| `$new_value`  | `bool` | New clearance status.      |
 
 Added in 1.0.0.
 
@@ -218,9 +218,9 @@ add_filter( 'wc_clearance_badge_single_product_hook', function ( $name ) {
 } );
 ```
 
-| Parameter | Type | Description |
-|---|---|---|
-| `$name` | `string` | Hook name. Default `woocommerce_single_product_summary`. |
+| Parameter | Type     | Description                                              |
+| --------- | -------- | -------------------------------------------------------- |
+| `$name`   | `string` | Hook name. Default `woocommerce_single_product_summary`. |
 
 Must return a non-empty string. Added in 1.0.0.
 
@@ -234,8 +234,8 @@ add_filter( 'wc_clearance_badge_single_product_priority', function ( $priority )
 } );
 ```
 
-| Parameter | Type | Description |
-|---|---|---|
+| Parameter   | Type  | Description                  |
+| ----------- | ----- | ---------------------------- |
 | `$priority` | `int` | Hook priority. Default `15`. |
 
 Must return an integer. Added in 1.0.0.
@@ -300,20 +300,20 @@ Displays a clearance badge when the product is in the clearance section. Automat
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
-| Attribute | Type | Description |
-|---|---|---|
-| `style` | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding), typography (fontSize, fontWeight), and border (radius, width, color). |
+| Attribute | Type     | Description                                                                                                                                                         |
+| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `style`   | `object` | Standard block style object. Controls color (background, text, gradients), spacing (padding), typography (fontSize, fontWeight), and border (radius, width, color). |
 
 Default style values:
 
-| Property | Default |
-|---|---|
-| `style.color.background` | `#FFEE85` |
-| `style.color.text` | `#222` |
-| `style.spacing.padding` | `0.36em` on all sides |
-| `style.typography.fontSize` | `0.83em` |
-| `style.typography.fontWeight` | `600` |
-| `style.border.radius` | `2px` |
+| Property                      | Default               |
+| ----------------------------- | --------------------- |
+| `style.color.background`      | `#FFEE85`             |
+| `style.color.text`            | `#222`                |
+| `style.spacing.padding`       | `0.36em` on all sides |
+| `style.typography.fontSize`   | `0.83em`              |
+| `style.typography.fontWeight` | `600`                 |
+| `style.border.radius`         | `2px`                 |
 
 ### `wc-clearance/clearance-message`
 
@@ -321,8 +321,8 @@ Displays the clearance message when the product is in the clearance section. Aut
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
 
-| Attribute | Type | Default | Description |
-|---|---|---|---|
+| Attribute  | Type     | Default | Description                                |
+| ---------- | -------- | ------- | ------------------------------------------ |
 | `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
 
 ### `wc-clearance/product-collection/clearance`
@@ -339,8 +339,8 @@ parameter.
 GET /wc/v3/products?wc_clearance=true
 ```
 
-| Parameter | Type | Description |
-|---|---|---|
+| Parameter      | Type      | Description                                                       |
+| -------------- | --------- | ----------------------------------------------------------------- |
 | `wc_clearance` | `boolean` | When `true`, limits results to products in the clearance section. |
 
 Added in 1.0.0.
@@ -353,8 +353,8 @@ The plugin extends the WooCommerce `[products]` shortcode with a `wc_clearance` 
 [products wc_clearance="true"]
 ```
 
-| Attribute | Type | Description |
-|---|---|---|
+| Attribute      | Type                       | Description                                                       |
+| -------------- | -------------------------- | ----------------------------------------------------------------- |
 | `wc_clearance` | `boolean` (`true`/`false`) | When `true`, limits results to products in the clearance section. |
 
 Added in 1.0.0.
@@ -364,18 +364,18 @@ Added in 1.0.0.
 The following items are intentionally excluded from the public API. They may change at any
 time without a MAJOR version bump. Do not rely on them in third-party code.
 
-* All code items tagged with `@internal` comment.
+-   All code items tagged with `@internal` comment.
 
-  These are intended only for use internally and are likely to change in refactors.
+    These are intended only for use internally and are likely to change in refactors.
 
-* File paths.
+-   File paths.
 
-  File paths are subject to change in future versions.
+    File paths are subject to change in future versions.
 
-* The taxonomy slug `wc_clearance_status` and term slug `clearance`.
+-   The taxonomy slug `wc_clearance_status` and term slug `clearance`.
 
-  The clearance status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the clearance status functions or REST API parameter for stable access to the clearance status.
+    The clearance status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the clearance status functions or REST API parameter for stable access to the clearance status.
 
-* Admin dashboard CSS.
+-   Admin dashboard CSS.
 
-  Admin dashboard-related selectors and HTML structures are subject to change.
+    Admin dashboard-related selectors and HTML structures are subject to change.
