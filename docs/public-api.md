@@ -306,24 +306,20 @@ in 1.0.0.
 
 Default style values:
 
-| Property                      | Default               |
-| ----------------------------- | --------------------- |
-| `style.color.background`      | `#FFEE85`             |
-| `style.color.text`            | `#222`                |
-| `style.spacing.padding`       | `0.36em` on all sides |
-| `style.typography.fontSize`   | `0.83em`              |
-| `style.typography.fontWeight` | `600`                 |
-| `style.border.radius`         | `2px`                 |
+| Property                      | Default     |
+| ----------------------------- | ----------- |
+| `style.color.background`      | `#FFEE85`   |
+| `style.color.text`            | `#222`      |
+| `style.spacing.padding`       | Calculated¹ |
+| `style.typography.fontSize`   | Calculated² |
+| `style.typography.fontWeight` | `600`       |
+| `style.border.radius`         | `2px`       |
 
-### `wc-clearance/clearance-message`
+The default height of the badge is 1.66x the contextual (surrounding text) capital
+letter height.
 
-Displays the clearance message when the product is in the clearance section. Automatically
-inserted as the first child of the product meta block on the single product template (block
-themes). Added in 1.0.0.
-
-| Attribute  | Type     | Default | Description                                |
-| ---------- | -------- | ------- | ------------------------------------------ |
-| `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
+1. The default padding on each side is 25% the height of the badge.
+2. The default font-size is 50% the height of the badge.
 
 ### `wc-clearance/product-collection/clearance`
 
