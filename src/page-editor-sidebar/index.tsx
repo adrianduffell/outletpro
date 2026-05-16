@@ -1,7 +1,6 @@
 import {
 	BaseControl,
 	BorderControl,
-	BoxControl,
 	CustomSelectControl,
 	PanelBody,
 	RangeControl,
@@ -20,13 +19,6 @@ import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import ClearanceIcon from './icon';
 import useSettings from '../use-settings';
-
-type BoxValue = {
-	top?: string;
-	right?: string;
-	bottom?: string;
-	left?: string;
-};
 
 type FontWeightOption = {
 	name: string;
@@ -86,14 +78,6 @@ const ClearanceSectionSidebar = () => {
 		setBorderWidth,
 		borderRadius,
 		setBorderRadius,
-		paddingTop,
-		setPaddingTop,
-		paddingRight,
-		setPaddingRight,
-		paddingBottom,
-		setPaddingBottom,
-		paddingLeft,
-		setPaddingLeft,
 		scale,
 		setScale,
 		density,
@@ -106,13 +90,6 @@ const ClearanceSectionSidebar = () => {
 		color: borderColor || undefined,
 		style: borderStyle || undefined,
 		width: borderWidth || undefined,
-	};
-
-	const padding: BoxValue = {
-		top: paddingTop || undefined,
-		right: paddingRight || undefined,
-		bottom: paddingBottom || undefined,
-		left: paddingLeft || undefined,
 	};
 
 	const fontWeightOptions = useMemo(
@@ -233,37 +210,6 @@ const ClearanceSectionSidebar = () => {
 						__next40pxDefaultSize
 					/>
 				</BaseControl>
-
-				<BoxControl
-					values={ padding }
-					label={ __( 'Padding', 'wc-clearance' ) }
-					onChange={ ( value: BoxValue ) => {
-						const nextTop = value?.top || undefined;
-						const nextRight = value?.right || undefined;
-						const nextBottom = value?.bottom || undefined;
-						const nextLeft = value?.left || undefined;
-
-						if ( nextTop !== padding.top ) {
-							setPaddingTop( nextTop );
-						}
-
-						if ( nextRight !== padding.right ) {
-							setPaddingRight( nextRight );
-						}
-
-						if ( nextBottom !== padding.bottom ) {
-							setPaddingBottom( nextBottom );
-						}
-
-						if ( nextLeft !== padding.left ) {
-							setPaddingLeft( nextLeft );
-						}
-					} }
-					sides={ [ 'vertical', 'horizontal' ] }
-					splitOnAxis
-					allowReset={ false }
-					__next40pxDefaultSize
-				/>
 			</PanelBody>
 
 			<PanelBody title={ __( 'Border', 'wc-clearance' ) }>

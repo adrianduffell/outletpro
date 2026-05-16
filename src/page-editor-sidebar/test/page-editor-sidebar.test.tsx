@@ -288,14 +288,6 @@ const createInitialSettings = () => ( {
 	setBorderWidth: jest.fn(),
 	borderRadius: undefined,
 	setBorderRadius: jest.fn(),
-	paddingTop: undefined,
-	setPaddingTop: jest.fn(),
-	paddingRight: undefined,
-	setPaddingRight: jest.fn(),
-	paddingBottom: undefined,
-	setPaddingBottom: jest.fn(),
-	paddingLeft: undefined,
-	setPaddingLeft: jest.fn(),
 	scale: undefined,
 	setScale: jest.fn(),
 	density: undefined,
@@ -681,42 +673,6 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( setBorderRadius ).toHaveBeenCalledWith( '8px' );
-	} );
-
-	test( 'padding control only calls setter for sides that changed', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		const setPaddingTop = jest.fn();
-		const setPaddingRight = jest.fn();
-		const setPaddingBottom = jest.fn();
-		const setPaddingLeft = jest.fn();
-		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( {
-			...createInitialSettings(),
-			paddingTop: '5px',
-			setPaddingTop,
-			paddingRight: '5px',
-			setPaddingRight,
-			paddingBottom: '5px',
-			setPaddingBottom,
-			paddingLeft: '5px',
-			setPaddingLeft,
-		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
-		const input = screen.getByRole( 'textbox', { name: 'Padding' } );
-
-		// Act.
-		fireEvent.change( input, { target: { value: '10px' } } );
-
-		// Assert: only top changed, the rest are unchanged and must not be called.
-		expect( setPaddingTop ).toHaveBeenCalledWith( '10px' );
-		expect( setPaddingRight ).not.toHaveBeenCalled();
-		expect( setPaddingBottom ).not.toHaveBeenCalled();
-		expect( setPaddingLeft ).not.toHaveBeenCalled();
 	} );
 
 	test( 'font scale control calls scale setter when changed', () => {

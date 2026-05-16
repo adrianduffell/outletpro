@@ -14,10 +14,6 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_DENSITY_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_BOTTOM_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_LEFT_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_RIGHT_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_PADDING_TOP_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_SCALE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
 use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
@@ -245,94 +241,6 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '400', get_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION ) );
-	}
-
-	public function test_sets_badge_padding_top_default_when_option_does_not_exist(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_PADDING_TOP_OPTION );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_TOP_OPTION ) );
-	}
-
-	public function test_does_not_overwrite_existing_badge_padding_top_option(): void {
-		// Arrange.
-		update_option( CLEARANCE_BADGE_PADDING_TOP_OPTION, 'var(--wp--preset--spacing--40)' );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( 'var(--wp--preset--spacing--40)', get_option( CLEARANCE_BADGE_PADDING_TOP_OPTION ) );
-	}
-
-	public function test_sets_badge_padding_right_default_when_option_does_not_exist(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION ) );
-	}
-
-	public function test_does_not_overwrite_existing_badge_padding_right_option(): void {
-		// Arrange.
-		update_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION, 'var(--wp--preset--spacing--40)' );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( 'var(--wp--preset--spacing--40)', get_option( CLEARANCE_BADGE_PADDING_RIGHT_OPTION ) );
-	}
-
-	public function test_sets_badge_padding_bottom_default_when_option_does_not_exist(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION ) );
-	}
-
-	public function test_does_not_overwrite_existing_badge_padding_bottom_option(): void {
-		// Arrange.
-		update_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION, 'var(--wp--preset--spacing--40)' );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( 'var(--wp--preset--spacing--40)', get_option( CLEARANCE_BADGE_PADDING_BOTTOM_OPTION ) );
-	}
-
-	public function test_sets_badge_padding_left_default_when_option_does_not_exist(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( '0.36em', get_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION ) );
-	}
-
-	public function test_does_not_overwrite_existing_badge_padding_left_option(): void {
-		// Arrange.
-		update_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION, 'var(--wp--preset--spacing--40)' );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( 'var(--wp--preset--spacing--40)', get_option( CLEARANCE_BADGE_PADDING_LEFT_OPTION ) );
 	}
 
 	public function test_sets_badge_scale_default_when_option_does_not_exist(): void {

@@ -7,10 +7,6 @@ type BuildPreviewStylesParams = {
 	borderStyle?: string;
 	borderWidth?: string;
 	borderRadius?: string;
-	paddingTop?: string;
-	paddingRight?: string;
-	paddingBottom?: string;
-	paddingLeft?: string;
 	scale?: number;
 	density?: number;
 };
@@ -26,10 +22,6 @@ export function buildPreviewStyles(
 		'--wc-clearance-badge-border-style': settings.borderStyle,
 		'--wc-clearance-badge-border-width': settings.borderWidth,
 		'--wc-clearance-badge-border-radius': settings.borderRadius,
-		'--wc-clearance-badge-padding-top': settings.paddingTop,
-		'--wc-clearance-badge-padding-right': settings.paddingRight,
-		'--wc-clearance-badge-padding-bottom': settings.paddingBottom,
-		'--wc-clearance-badge-padding-left': settings.paddingLeft,
 	};
 
 	const declarations = [

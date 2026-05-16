@@ -18,14 +18,6 @@ export type Settings = {
 	setBorderWidth: ( value: string | undefined ) => void;
 	borderRadius: string | undefined;
 	setBorderRadius: ( value: string | undefined ) => void;
-	paddingTop: string | undefined;
-	setPaddingTop: ( value: string | undefined ) => void;
-	paddingRight: string | undefined;
-	setPaddingRight: ( value: string | undefined ) => void;
-	paddingBottom: string | undefined;
-	setPaddingBottom: ( value: string | undefined ) => void;
-	paddingLeft: string | undefined;
-	setPaddingLeft: ( value: string | undefined ) => void;
 	scale: number | undefined;
 	setScale: ( value: number | undefined ) => void;
 	density: number | undefined;
@@ -59,18 +51,6 @@ const useSettings = (): Settings => {
 	const [ borderRadius, setBorderRadius ] = useStringEntityProp(
 		'wc_clearance_badge_border_radius'
 	);
-	const [ paddingTop, setPaddingTop ] = useStringEntityProp(
-		'wc_clearance_badge_padding_top'
-	);
-	const [ paddingRight, setPaddingRight ] = useStringEntityProp(
-		'wc_clearance_badge_padding_right'
-	);
-	const [ paddingBottom, setPaddingBottom ] = useStringEntityProp(
-		'wc_clearance_badge_padding_bottom'
-	);
-	const [ paddingLeft, setPaddingLeft ] = useStringEntityProp(
-		'wc_clearance_badge_padding_left'
-	);
 	const [ scale, setScale ] = useUnsignedIntegerEntityProp(
 		'wc_clearance_badge_scale'
 	);
@@ -98,14 +78,6 @@ const useSettings = (): Settings => {
 		setBorderWidth,
 		borderRadius,
 		setBorderRadius,
-		paddingTop,
-		setPaddingTop,
-		paddingRight,
-		setPaddingRight,
-		paddingBottom,
-		setPaddingBottom,
-		paddingLeft,
-		setPaddingLeft,
 		scale,
 		setScale,
 		density,
