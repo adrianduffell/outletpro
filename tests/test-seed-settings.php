@@ -12,7 +12,6 @@ use const WC_Clearance\CLEARANCE_BADGE_BORDER_RADIUS_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_STYLE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_BORDER_WIDTH_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_DENSITY_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_FONT_SIZE_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_FONT_WEIGHT_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
 use const WC_Clearance\CLEARANCE_BADGE_PADDING_BOTTOM_OPTION;
@@ -224,28 +223,6 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '50%', get_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION ) );
-	}
-
-	public function test_sets_badge_font_size_default_when_option_does_not_exist(): void {
-		// Arrange.
-		delete_option( CLEARANCE_BADGE_FONT_SIZE_OPTION );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( '0.83em', get_option( CLEARANCE_BADGE_FONT_SIZE_OPTION ) );
-	}
-
-	public function test_does_not_overwrite_existing_badge_font_size_option(): void {
-		// Arrange.
-		update_option( CLEARANCE_BADGE_FONT_SIZE_OPTION, '14px' );
-
-		// Act.
-		seed_settings();
-
-		// Assert.
-		$this->assertSame( '14px', get_option( CLEARANCE_BADGE_FONT_SIZE_OPTION ) );
 	}
 
 	public function test_sets_badge_font_weight_default_when_option_does_not_exist(): void {

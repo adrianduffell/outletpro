@@ -2,7 +2,6 @@ type BuildPreviewStylesParams = {
 	label?: string;
 	bgColor?: string;
 	textColor?: string;
-	fontSize?: string;
 	fontWeight?: string;
 	borderColor?: string;
 	borderStyle?: string;
@@ -22,7 +21,6 @@ export function buildPreviewStyles(
 	const entries = {
 		'--wc-clearance-badge-bg-color': settings.bgColor,
 		'--wc-clearance-badge-text-color': settings.textColor,
-		'--wc-clearance-badge-font-size': settings.fontSize,
 		'--wc-clearance-badge-font-weight': settings.fontWeight,
 		'--wc-clearance-badge-border-color': settings.borderColor,
 		'--wc-clearance-badge-border-style': settings.borderStyle,

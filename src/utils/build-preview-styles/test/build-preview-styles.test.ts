@@ -4,7 +4,6 @@ describe( 'buildPreviewStyles', () => {
 	const vars = {
 		bgColor: '--wc-clearance-badge-bg-color',
 		textColor: '--wc-clearance-badge-text-color',
-		fontSize: '--wc-clearance-badge-font-size',
 		fontWeight: '--wc-clearance-badge-font-weight',
 		borderColor: '--wc-clearance-badge-border-color',
 		borderStyle: '--wc-clearance-badge-border-style',
@@ -59,7 +58,6 @@ describe( 'buildPreviewStyles', () => {
 	test.each( [
 		[ 'bgColor', '#ff0000' ],
 		[ 'textColor', '#ffffff' ],
-		[ 'fontSize', '0.875rem' ],
 		[ 'fontWeight', '700' ],
 		[ 'borderColor', '#cccccc' ],
 		[ 'borderStyle', 'solid' ],
@@ -82,7 +80,6 @@ describe( 'buildPreviewStyles', () => {
 			label: 'Sale',
 			bgColor: '#ff0000',
 			textColor: '#ffffff',
-			fontSize: '0.875rem',
 			fontWeight: '700',
 			borderColor: '#cccccc',
 			borderStyle: 'solid',
@@ -100,9 +97,6 @@ describe( 'buildPreviewStyles', () => {
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: #ff0000' );
 		expect( result ).toContain(
 			'--wc-clearance-badge-text-color: #ffffff'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-font-size: 0.875rem'
 		);
 		expect( result ).toContain( '--wc-clearance-badge-font-weight: 700' );
 		expect( result ).toContain(
@@ -155,12 +149,10 @@ describe( 'buildPreviewStyles', () => {
 		const result = buildPreviewStyles( {
 			bgColor: '#000',
 			textColor: undefined,
-			fontSize: '',
 		} );
 
 		expect( result ).toContain( '--wc-clearance-badge-bg-color: #000' );
 		expect( result ).toContain( '--wc-clearance-badge-text-color: unset' );
-		expect( result ).toContain( '--wc-clearance-badge-font-size: unset' );
 	} );
 
 	test( 'outputs 0 for zero scale', () => {

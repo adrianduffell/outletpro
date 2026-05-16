@@ -278,8 +278,6 @@ const createInitialSettings = () => ( {
 	setTextColor: jest.fn(),
 	bgColor: undefined,
 	setBgColor: jest.fn(),
-	fontSize: undefined,
-	setFontSize: jest.fn(),
 	fontWeight: undefined,
 	setFontWeight: jest.fn(),
 	borderColor: undefined,
@@ -492,29 +490,6 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( setLabel ).toHaveBeenCalledWith( 'Discounts' );
-	} );
-
-	test( 'font size control shows stored value', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( {
-			...createInitialSettings(),
-			fontSize: '1rem',
-			setFontSize: jest.fn(),
-		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-
-		// Act.
-		render( pluginConfig.render() );
-
-		// Assert.
-		expect(
-			screen.getByRole( 'textbox', { name: 'Font size' } )
-		).toHaveValue( '1rem' );
 	} );
 
 	test( 'font scale control reflects stored scale value', () => {
@@ -742,30 +717,6 @@ describe( 'page-editor-sidebar registration', () => {
 		expect( setPaddingRight ).not.toHaveBeenCalled();
 		expect( setPaddingBottom ).not.toHaveBeenCalled();
 		expect( setPaddingLeft ).not.toHaveBeenCalled();
-	} );
-
-	test( 'font size control calls setter when changed', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		const setFontSize = jest.fn();
-		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( {
-			...createInitialSettings(),
-			fontSize: '0.875rem',
-			setFontSize,
-		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
-		const input = screen.getByRole( 'textbox', { name: 'Font size' } );
-
-		// Act.
-		fireEvent.change( input, { target: { value: '1rem' } } );
-
-		// Assert.
-		expect( setFontSize ).toHaveBeenCalledWith( '1rem' );
 	} );
 
 	test( 'font scale control calls scale setter when changed', () => {
