@@ -471,7 +471,7 @@ function register_clearance_badge_scale_setting(): void {
 			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
 			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
 			'default'           => null,
-			'sanitize_callback' => 'absint',
+			'sanitize_callback' => 'WC_Clearance\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type'    => 'integer',

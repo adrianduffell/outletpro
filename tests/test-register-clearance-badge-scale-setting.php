@@ -100,4 +100,36 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 400, $response->get_status() );
 	}
+
+	public function test_setting_allows_null_value_via_rest(): void {
+		// Arrange.
+		update_option( CLEARANCE_BADGE_SCALE_OPTION, 166 );
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Act.
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( CLEARANCE_BADGE_SCALE_OPTION, null );
+		$response = rest_do_request( $request );
+
+		// Assert.
+		$this->assertSame( 200, $response->get_status() );
+	}
+
+	public function test_setting_rejects_unexpected_value_via_rest(): void {
+		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
+		delete_option( CLEARANCE_BADGE_SCALE_OPTION );
+		register_clearance_badge_scale_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Act.
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( CLEARANCE_BADGE_SCALE_OPTION, 'unexpected' );
+		$response = rest_do_request( $request );
+
+		// Assert.
+		$this->assertSame( 400, $response->get_status() );
+	}
 }
