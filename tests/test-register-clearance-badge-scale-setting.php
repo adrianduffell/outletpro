@@ -34,19 +34,6 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 		$this->assertSame( 'integer', $settings[ CLEARANCE_BADGE_SCALE_OPTION ]['type'] );
 	}
 
-	public function test_setting_sanitize_callback_uses_unsigned_integer_sanitizer(): void {
-		// Arrange.
-		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
-
-		// Act.
-		register_clearance_badge_scale_setting();
-		$settings = get_registered_settings();
-		$callback = $settings[ CLEARANCE_BADGE_SCALE_OPTION ]['sanitize_callback'];
-
-		// Assert.
-		$this->assertSame( 'WC_Clearance\sanitize_unsigned_integer', $callback );
-	}
-
 	public function test_setting_default_is_null(): void {
 		// Arrange.
 		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
@@ -112,5 +99,49 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 400, $response->get_status() );
+	}
+
+	public function test_setting_rejects_null_value_via_rest(): void {
+		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
+		delete_option( CLEARANCE_BADGE_SCALE_OPTION );
+		register_clearance_badge_scale_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Act.
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( CLEARANCE_BADGE_SCALE_OPTION, null );
+		$response = rest_do_request( $request );
+
+		$get_request  = new WP_REST_Request( 'GET', '/wp/v2/settings' );
+		$get_response = rest_do_request( $get_request );
+		$data         = $get_response->get_data();
+
+		// Assert.
+		$this->assertSame( 400, $response->get_status() );
+		$this->assertNull( $data[ CLEARANCE_BADGE_SCALE_OPTION ] );
+	}
+
+	public function test_setting_rejects_unexpected_value_via_rest(): void {
+		// Arrange.
+		unregister_setting( 'wc_clearance', CLEARANCE_BADGE_SCALE_OPTION );
+		delete_option( CLEARANCE_BADGE_SCALE_OPTION );
+		register_clearance_badge_scale_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Act.
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( CLEARANCE_BADGE_SCALE_OPTION, 'unexpected' );
+		$response = rest_do_request( $request );
+
+		$get_request  = new WP_REST_Request( 'GET', '/wp/v2/settings' );
+		$get_response = rest_do_request( $get_request );
+		$data         = $get_response->get_data();
+
+		// Assert.
+		$this->assertSame( 400, $response->get_status() );
+		$this->assertNull( $data[ CLEARANCE_BADGE_SCALE_OPTION ] );
 	}
 }
