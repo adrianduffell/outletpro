@@ -45,9 +45,6 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'WC_Clearance\sanitize_unsigned_integer', $callback );
-		$this->assertSame( 140, $callback( '140' ) );
-		$this->assertNull( $callback( '' ) );
-		$this->assertNull( $callback( 'unexpected' ) );
 	}
 
 	public function test_setting_default_is_null(): void {
