@@ -122,4 +122,33 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 			'type'    => 'text',
 		)
 	);
+
+	$wp_customize->add_setting(
+		CLEARANCE_BADGE_SCALE_OPTION,
+		array(
+			'type'              => 'option',
+			'default'           => 166,
+			'sanitize_callback' => 'absint',
+		)
+	);
+
+	$wp_customize->add_control(
+		CLEARANCE_BADGE_SCALE_OPTION,
+		array(
+			'label'   => __( 'Badge scale', 'wc-clearance' ),
+			'section' => 'wc_clearance',
+			'type'    => 'select',
+			'choices' => array(
+				100 => '1.00x',
+				125 => '1.25x',
+				133 => '1.33x',
+				150 => '1.50x',
+				166 => '1.66x',
+				170 => '1.70x',
+				180 => '1.80x',
+				190 => '1.90x',
+				200 => '2.00x',
+			),
+		)
+	);
 }
