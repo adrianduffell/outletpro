@@ -474,7 +474,7 @@ function register_clearance_badge_scale_setting(): void {
 			'sanitize_callback' => 'WC_Clearance\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
 				'schema' => array(
-					'type'    => 'integer',
+					'type'    => array( 'integer', 'null' ),
 					'minimum' => 0,
 				),
 			),

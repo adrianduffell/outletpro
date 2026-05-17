@@ -119,7 +119,7 @@ class Test_Register_Clearance_Badge_Scale_Setting extends WP_UnitTestCase {
 		$data         = $get_response->get_data();
 
 		// Assert.
-		$this->assertSame( 500, $response->get_status() );
+		$this->assertSame( 200, $response->get_status() );
 		$this->assertNull( $data[ CLEARANCE_BADGE_SCALE_OPTION ] );
 	}
 
