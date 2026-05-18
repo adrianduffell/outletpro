@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'include products in clearance section setup task', async ( {
+test( 'include products in storesetup task', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -10,7 +10,7 @@ test( 'include products in clearance section setup task', async ( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Test Clearance Product',
+			name: 'Test Outlet Product',
 			type: 'simple',
 			status: 'publish',
 		},

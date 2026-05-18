@@ -74,7 +74,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_tax_query_is_added_for_clearance_collection(): void {
+	public function test_tax_query_is_added_for_outlet_collection(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );
 		init_product_collection();

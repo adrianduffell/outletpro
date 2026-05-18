@@ -1,5 +1,5 @@
 import { render, act } from '@testing-library/react';
-import { ClearanceSectionEmptyNotice } from '../index';
+import { OutletEmptyNotice } from '../index';
 import apiFetch from '@wordpress/api-fetch';
 import * as data from '@wordpress/data';
 
@@ -16,7 +16,7 @@ const mockApiFetch = apiFetch as unknown as jest.Mock;
 const mockDispatch = data.dispatch as unknown as jest.Mock;
 const mockSelect = data.select as unknown as jest.Mock;
 
-describe( 'ClearanceSectionEmptyNotice', () => {
+describe( 'OutletEmptyNotice', () => {
 	beforeEach( () => {
 		mockApiFetch.mockClear();
 		mockDispatch.mockClear();
@@ -30,42 +30,42 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <ClearanceSectionEmptyNotice /> );
+			render( <OutletEmptyNotice /> );
 		} );
 
 		// Assert.
 		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
-	test( 'does not create notice when current post is not the clearance page', async () => {
+	test( 'does not create notice when current post is not the outlet page', async () => {
 		// Arrange.
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 99 } );
 		mockApiFetch.mockResolvedValueOnce( { wc_outlet_page_id: 5 } );
 
 		// Act.
 		await act( async () => {
-			render( <ClearanceSectionEmptyNotice /> );
+			render( <OutletEmptyNotice /> );
 		} );
 
 		// Assert.
 		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
-	test( 'does not create notice when clearance page is not configured', async () => {
+	test( 'does not create notice when outlet page is not configured', async () => {
 		// Arrange.
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
 		await act( async () => {
-			render( <ClearanceSectionEmptyNotice /> );
+			render( <OutletEmptyNotice /> );
 		} );
 
 		// Assert.
 		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
-	test( 'does not create notice when clearance products exist', async () => {
+	test( 'does not create notice when outlet products exist', async () => {
 		// Arrange.
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch
@@ -74,14 +74,14 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <ClearanceSectionEmptyNotice /> );
+			render( <OutletEmptyNotice /> );
 		} );
 
 		// Assert.
 		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
 
-	test( 'creates warning notice when on clearance page with no products', async () => {
+	test( 'creates warning notice when on outlet page with no products', async () => {
 		// Arrange.
 		const mockCreateNotice = jest.fn();
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
@@ -92,7 +92,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <ClearanceSectionEmptyNotice /> );
+			render( <OutletEmptyNotice /> );
 		} );
 
 		// Assert.
@@ -111,7 +111,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 
 		// Act.
 		await act( async () => {
-			render( <ClearanceSectionEmptyNotice /> );
+			render( <OutletEmptyNotice /> );
 		} );
 
 		// Assert — the action is a primary button pointing to the product list screen.
@@ -141,7 +141,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
-		const { container } = render( <ClearanceSectionEmptyNotice /> );
+		const { container } = render( <OutletEmptyNotice /> );
 		await act( async () => {} );
 
 		// Assert.

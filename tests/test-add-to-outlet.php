@@ -25,7 +25,7 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 		add_to_outlet( $product );
 	}
 
-	public function test_assigns_clearance_term_to_single_product(): void {
+	public function test_assigns_outlet_term_to_single_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

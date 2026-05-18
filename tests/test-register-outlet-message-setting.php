@@ -10,7 +10,7 @@ use const WC_Outlet\OUTLET_MESSAGE_OPTION;
 
 class Test_Register_Outlet_Message_Setting extends WP_UnitTestCase {
 
-	public function test_registers_clearance_message_setting(): void {
+	public function test_registers_outlet_message_setting(): void {
 		// Arrange.
 		unregister_setting( 'wc_outlet', OUTLET_MESSAGE_OPTION );
 

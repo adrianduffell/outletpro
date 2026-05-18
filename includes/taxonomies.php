@@ -146,7 +146,7 @@ function is_outlet( \WC_Product $product ): bool {
  * Add a product to the outlet.
  *
  * @param \WC_Product $product Product to update.
- * @throws \RuntimeException If the outlet status taxonomy does not exist or the term assignment fails.
+ * @throws \RuntimeException If the store’s outlet status taxonomy does not exist or the term assignment fails.
  * @since 1.0.0
  */
 function add_to_outlet( \WC_Product $product ): void {
@@ -168,7 +168,7 @@ function add_to_outlet( \WC_Product $product ): void {
 }
 
 /**
- * Count the number of published products in the outlet.
+ * Count the number of published outlet products.
  *
  * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @since 1.0.0
@@ -205,11 +205,11 @@ function count_outlet(): int {
 }
 
 /**
- * Check if the outlet is empty.
+ * Check if the store’s outlet is empty.
  *
  * More performant than count_outlet() because it uses no_found_rows to skip the SQL row count.
  *
- * @throws \RuntimeException If the outlet status taxonomy does not exist.
+ * @throws \RuntimeException If the store’s outlet status taxonomy does not exist.
  * @since 1.0.0
  */
 function outlet_empty(): bool {
@@ -245,7 +245,7 @@ function outlet_empty(): bool {
 }
 
 /**
- * Remove a product from the outlet.
+ * Remove a product from the store’s outlet.
  *
  * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the outlet status taxonomy does not exist or term removal fails.
@@ -270,13 +270,13 @@ function remove_from_outlet( \WC_Product $product ): void {
 }
 
 /**
- * Sets the outlet status for a product.
+ * Sets the store’s outlet status for a product.
  *
  * For performance, this function checks the currently stored state and only updates the
  * outlet status when a change in value is required.
  *
  * @param \WC_Product $product The product to update.
- * @param bool        $new_value Whether to include the product in the outlet.
+ * @param bool        $new_value Whether to include the product in the store’s outlet.
  * @throws \RuntimeException If setting the status fails.
  * @since 1.0.0
  */

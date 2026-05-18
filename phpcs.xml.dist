@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<ruleset name="WC Clearance">
-	<description>PHP CodeSniffer ruleset for WC Clearance plugin.</description>
+<ruleset name="WC_Outlet">
+	<description>PHP CodeSniffer ruleset for Outlet plugin.</description>
 
 	<!-- Files to check -->
 	<file>.</file>

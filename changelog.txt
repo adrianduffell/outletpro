@@ -1,4 +1,4 @@
-*** Clearance Section Changelog ***
+*** Outlet Changelog ***
 
 2026-04-10 - version 1.0.0
 * Add - Initial release.

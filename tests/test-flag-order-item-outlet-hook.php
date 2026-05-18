@@ -13,7 +13,7 @@ use const WC_Outlet\ORDER_ITEM_OUTLET_META_KEY;
 
 class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
-	public function test_adds_clearance_meta_for_clearance_product(): void {
+	public function test_adds_outlet_meta_for_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -33,7 +33,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'yes', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, true ) );
 	}
 
-	public function test_does_not_add_clearance_meta_for_non_clearance_product(): void {
+	public function test_does_not_add_outlet_meta_for_non_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

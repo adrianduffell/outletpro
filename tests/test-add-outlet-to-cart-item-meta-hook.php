@@ -14,7 +14,7 @@ use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 
-	public function test_adds_clearance_meta_for_clearance_product(): void {
+	public function test_adds_outlet_meta_for_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -53,7 +53,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'wc-outlet-cart-item-meta', $result[0]['display'] );
 	}
 
-	public function test_does_not_add_clearance_meta_for_non_clearance_product(): void {
+	public function test_does_not_add_outlet_meta_for_non_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -126,7 +126,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$this->assertCount( 0, $result );
 	}
 
-	public function test_does_not_add_clearance_meta_when_label_is_empty(): void {
+	public function test_does_not_add_outlet_meta_when_label_is_empty(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

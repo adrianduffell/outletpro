@@ -13,7 +13,7 @@ use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Remove_From_Outlet extends WP_UnitTestCase {
 
-	public function test_removes_product_from_clearance(): void {
+	public function test_removes_product_from_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -28,7 +28,7 @@ class Test_Remove_From_Outlet extends WP_UnitTestCase {
 		$this->assertEmpty( $terms );
 	}
 
-	public function test_does_not_error_when_product_not_in_clearance(): void {
+	public function test_does_not_error_when_product_not_in_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

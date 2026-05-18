@@ -13,7 +13,7 @@ use function WC_Outlet\set_outlet;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Set_Outlet extends \WP_UnitTestCase {
-	public function test_adds_to_clearance_when_true(): void {
+	public function test_adds_to_outlet_when_true(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -26,7 +26,7 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 		$this->assertTrue( is_outlet( $product ) );
 	}
 
-	public function test_removes_from_clearance_when_false(): void {
+	public function test_removes_from_outlet_when_false(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

@@ -13,7 +13,7 @@ use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 
-	public function test_displays_badge_label_for_clearance_order_item(): void {
+	public function test_displays_badge_label_for_outlet_order_item(): void {
 		// Arrange.
 		update_option( OUTLET_BADGE_LABEL_OPTION, 'Last Chance' );
 		$item = new WC_Order_Item_Product();
@@ -39,7 +39,7 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		display_order_item_outlet_badge_hook( 1, $item, null );
 	}
 
-	public function test_displays_nothing_for_non_clearance_order_item(): void {
+	public function test_displays_nothing_for_non_outlet_order_item(): void {
 		// Arrange.
 		$item = new WC_Order_Item_Product();
 
@@ -50,7 +50,7 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		display_order_item_outlet_badge_hook( 1, $item, null );
 	}
 
-	public function test_hides_clearance_meta_key(): void {
+	public function test_hides_outlet_meta_key(): void {
 		// Arrange.
 		$hidden_keys = array( '_other_key' );
 

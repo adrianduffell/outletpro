@@ -24,7 +24,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'WC_Outlet\display_outlet_message_hook' ) );
 	}
 
-	public function test_displays_message_for_clearance_product(): void {
+	public function test_displays_message_for_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -41,7 +41,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_product_meta_start' );
 	}
 
-	public function test_message_contains_clearance_text(): void {
+	public function test_message_contains_outlet_text(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -92,7 +92,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_product_meta_start' );
 	}
 
-	public function test_does_not_display_message_for_non_clearance_product(): void {
+	public function test_does_not_display_message_for_non_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

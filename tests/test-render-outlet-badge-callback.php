@@ -16,7 +16,7 @@ use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 
-	public function test_returns_empty_string_when_product_not_in_clearance(): void {
+	public function test_returns_empty_string_when_product_not_in_outlet(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_badge_block();
@@ -41,7 +41,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		$this->assertSame( '', $result );
 	}
 
-	public function test_returns_badge_html_when_product_is_in_clearance(): void {
+	public function test_returns_badge_html_when_product_is_in_outlet(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_badge_block();

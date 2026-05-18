@@ -10,7 +10,7 @@ use const WC_Outlet\OUTLET_BADGE_BORDER_STYLE_OPTION;
 
 class Test_Register_Outlet_Badge_Border_Style_Setting extends WP_UnitTestCase {
 
-	public function test_registers_clearance_badge_border_style_setting(): void {
+	public function test_registers_outlet_ge_border_style_setting(): void {
 		// Arrange.
 		unregister_setting( 'wc_outlet', OUTLET_BADGE_BORDER_STYLE_OPTION );
 

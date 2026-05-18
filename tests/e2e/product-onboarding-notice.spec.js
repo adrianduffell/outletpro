@@ -3,7 +3,7 @@ import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 /**
  * Deletes all products via the WC REST API.
  *
- * Used to ensure no clearance products exist before tests that rely on the
+ * Used to ensure no outlet products exist before tests that rely on the
  * onboarding notice being visible.
  *
  * @param {Object} requestUtils - Playwright request utilities.
@@ -24,12 +24,12 @@ async function deleteAllProducts( requestUtils ) {
 	}
 }
 
-test( 'notice shows when there are no clearance products', async ( {
+test( 'notice shows when there are no outlet products', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: delete all products so no clearance products exist.
+	// Arrange: delete all products so no outlet products exist.
 	await deleteAllProducts( requestUtils );
 
 	// Act.
@@ -41,17 +41,17 @@ test( 'notice shows when there are no clearance products', async ( {
 	).toBeVisible();
 } );
 
-test( 'notice still shows when a clearance product exists but no page is configured', async ( {
+test( 'notice still shows when an outlet product exists but no page is configured', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: create a product and mark it as clearance via the admin UI.
+	// Arrange: create a product and add it to the store’s outlet via the admin UI.
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Test Clearance Product',
+			name: 'Test Outlet Product',
 			type: 'simple',
 			status: 'publish',
 		},
@@ -109,7 +109,7 @@ test( 'notice does not show again after being dismissed', async ( {
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: delete all products so no clearance products exist.
+	// Arrange: delete all products so no outlet products exist.
 	await deleteAllProducts( requestUtils );
 
 	// Arrange: visit the product list and confirm the notice is visible.

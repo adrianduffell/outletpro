@@ -17,7 +17,7 @@ use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
-	public function test_renders_notice_when_no_clearance_products(): void {
+	public function test_renders_notice_when_no_outlet_products(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -81,7 +81,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_does_not_render_when_clearance_products_exist(): void {
+	public function test_does_not_render_when_outlet_products_exist(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -114,7 +114,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_publish_page_notice_when_clearance_products_exist_and_page_is_draft(): void {
+	public function test_renders_publish_page_notice_when_outlet_products_exist_and_page_is_draft(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -169,7 +169,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_renders_onboarding_notice_when_clearance_section_is_empty_and_page_is_draft(): void {
+	public function test_renders_onboarding_notice_when_outlet_section_is_empty_and_page_is_draft(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -188,7 +188,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_does_not_render_publish_page_notice_when_clearance_page_is_not_registered(): void {
+	public function test_does_not_render_publish_page_notice_when_outlet_page_is_not_registered(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -305,7 +305,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_empty_state_notice_contains_clearance_section_is_empty_message(): void {
+	public function test_empty_state_notice_contains_outlet_section_is_empty_message(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -315,7 +315,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/Outlet is empty\./' );
+		$this->expectOutputRegex( '/The store’s outlet is empty\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -335,7 +335,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/Outlet has 1 product\./' );
+		$this->expectOutputRegex( '/The store’s outlet has 1 product\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -357,7 +357,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/Outlet has 2 products\./' );
+		$this->expectOutputRegex( '/The store’s outlet has 2 products\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -398,7 +398,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/Outlet is ready\./' );
+		$this->expectOutputRegex( '/The store’s outlet is ready\./' );
 
 		// Act.
 		do_action( 'admin_notices' );

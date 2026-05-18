@@ -46,7 +46,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		bulk_edit_field_hook();
 	}
 
-	public function test_save_bulk_edit_hook_adds_product_to_clearance(): void {
+	public function test_save_bulk_edit_hook_adds_product_to_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -64,7 +64,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		unset( $_GET['wc_outlet_bulk'] );
 	}
 
-	public function test_save_bulk_edit_hook_removes_product_from_clearance(): void {
+	public function test_save_bulk_edit_hook_removes_product_from_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

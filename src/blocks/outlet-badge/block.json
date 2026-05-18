@@ -4,7 +4,7 @@
 	"name": "wc-outlet/outlet-badge",
 	"title": "Outlet Badge",
 	"category": "woocommerce",
-	"description": "Displays a badge when a product is in the outlet.",
+	"description": "Displays a badge when a product is in the store’s outlet.",
 	"usesContext": [ "postId" ],
 	"supports": {
 		"html": false

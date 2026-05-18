@@ -18,9 +18,9 @@ This extension adds a dedicated outlet to your store to help you sell old stock,
 
 It gives you a simple, easy way to manage this:
 
-* Include products in the outlet with a single checkbox
-* A page listing the products in the outlet
-* A customizable badge on products belonging in the outlet
+* Include products in the stores’s outlet with a single checkbox
+* A page listing the products in the stores’s outlet
+* A customizable badge on products belonging in the stores’s outlet
 * Policy messaging (e.g. no change-of-mind returns)
 * Customize the name and messaging to suit your store (e.g. "Last chance", "Discontinued", "Reduced to clear")
 
@@ -28,7 +28,7 @@ Clear stock faster and help customers find it before it’s gone.
 
 = What is an outlet? =
 
-The outlet is a permanent area on your store to list the products you need to clear. It helps customers easily discover products they might want before they are gone. Products in the outlet display a badge and message, allowing you to apply special policies such as no change-of-mind returns.
+An outlet is a dedicated area to promote the products you need to clear. It helps customers easily discover products they might want before they are gone. Products in the stores’s outlet display a badge and message, allowing you to apply special policies such as no change-of-mind returns.
 
 = How do I add products to the outlet? =
 

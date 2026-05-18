@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'admin sees clearance badge on order item', async ( {
+test( 'admin sees outlet badge on order item', async ( {
 	page,
 	admin,
 	requestUtils,

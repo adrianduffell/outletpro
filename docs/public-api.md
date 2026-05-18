@@ -8,7 +8,7 @@ Outlet implements a stable public API intended for use by third-party code. All 
 
 #### `WC_Outlet\is_outlet( \WC_Product $product ): bool`
 
-Check if a product is in the outlet.
+Check if a product is in the store’s outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -26,7 +26,7 @@ try {
 
 #### `WC_Outlet\add_to_outlet( \WC_Product $product ): void`
 
-Add a product to the outlet.
+Add a product to the store’s outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -44,7 +44,7 @@ try {
 
 #### `WC_Outlet\remove_from_outlet( \WC_Product $product ): void`
 
-Remove a product from the outlet.
+Remove a product from the store’s outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -68,9 +68,9 @@ Fires the `wc_outlet_status_changed` action on a status change.
 
 Throws exception on error. Added in 1.0.0.
 
-| Parameter    | Type          | Description                                    |
-| ------------ | ------------- | ---------------------------------------------- |
-| `$product`   | `\WC_Product` | The product to update.                         |
+| Parameter    | Type          | Description                                 |
+| ------------ | ------------- | ------------------------------------------- |
+| `$product`   | `\WC_Product` | The product to update.                      |
 | `$new_value` | `bool`        | `true` to add to outlet, `false` to remove. |
 
 ```php
@@ -83,7 +83,7 @@ try {
 
 #### `WC_Outlet\count_outlet(): int`
 
-Count the number of published products in the outlet.
+Count the number of published products in the stores’s outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -97,7 +97,7 @@ try {
 
 #### `WC_Outlet\outlet_empty(): bool`
 
-Check if the outlet has no published products.
+Check if the store’s outlet has no published products.
 
 More performant than `count_outlet()` because it skips the SQL `COUNT(*)`.
 
@@ -198,9 +198,9 @@ add_action( 'wc_outlet_status_changed', function ( $product_id, $old_value, $new
 }, 10, 3 );
 ```
 
-| Parameter     | Type   | Description                |
-| ------------- | ------ | -------------------------- |
-| `$product_id` | `int`  | Product ID.                |
+| Parameter     | Type   | Description             |
+| ------------- | ------ | ----------------------- |
+| `$product_id` | `int`  | Product ID.             |
 | `$old_value`  | `bool` | Previous outlet status. |
 | `$new_value`  | `bool` | New outlet status.      |
 
@@ -296,7 +296,7 @@ template hooks. Added in 1.0.0.
 
 ### `wc-outlet/outlet-badge`
 
-Displays a outlet badge when the product is in the outlet. Automatically
+Displays a outlet badge when the product is in the stores’s outlet. Automatically
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
@@ -326,7 +326,7 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 ### `wc-outlet/outlet-message`
 
-Displays the outlet message when the product is in the outlet. Automatically
+Displays the outlet message when the product is in the stores’s outlet. Automatically
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
 
@@ -348,9 +348,9 @@ parameter.
 GET /wc/v3/products?wc_outlet=true
 ```
 
-| Parameter      | Type      | Description                                                       |
-| -------------- | --------- | ----------------------------------------------------------------- |
-| `wc_outlet` | `boolean` | When `true`, limits results to products in the outlet. |
+| Parameter   | Type      | Description                                                     |
+| ----------- | --------- | --------------------------------------------------------------- |
+| `wc_outlet` | `boolean` | When `true`, limits results to products in the stores’s outlet. |
 
 Added in 1.0.0.
 
@@ -362,9 +362,9 @@ The plugin extends the WooCommerce `[products]` shortcode with a `wc_outlet` att
 [products wc_outlet="true"]
 ```
 
-| Attribute      | Type                       | Description                                                       |
-| -------------- | -------------------------- | ----------------------------------------------------------------- |
-| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the outlet. |
+| Attribute   | Type                       | Description                                                     |
+| ----------- | -------------------------- | --------------------------------------------------------------- |
+| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the stores’s outlet. |
 
 Added in 1.0.0.
 

@@ -14,7 +14,7 @@ use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
-	public function test_creates_page_with_title_clearance(): void {
+	public function test_creates_page_with_title_outlet(): void {
 		// Arrange.
 		delete_option( OUTLET_PAGE_OPTION );
 
@@ -33,7 +33,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertSame( 'Outlet', $pages[0]->post_title );
 	}
 
-	public function test_creates_page_with_slug_clearance(): void {
+	public function test_creates_page_with_slug_outlet(): void {
 		// Arrange.
 		delete_option( OUTLET_PAGE_OPTION );
 
@@ -71,7 +71,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertSame( 'draft', $pages[0]->post_status );
 	}
 
-	public function test_creates_page_with_clearance_shortcode_on_classic_theme(): void {
+	public function test_creates_page_with_outlet_shortcode_on_classic_theme(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );

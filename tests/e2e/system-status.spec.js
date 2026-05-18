@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'system status shows clearance section info', async ( {
+test( 'system status shows outlet info', async ( {
 	page,
 	admin,
 } ) => {

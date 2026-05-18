@@ -52,7 +52,7 @@ class Test_Report_Page extends WP_UnitTestCase {
 			array(
 				'post_type'   => 'page',
 				'post_status' => 'draft',
-				'post_title'  => 'Clearance',
+				'post_title'  => 'Outlet',
 			)
 		);
 		update_option( OUTLET_PAGE_OPTION, $page_id );
@@ -71,7 +71,7 @@ class Test_Report_Page extends WP_UnitTestCase {
 			array(
 				'post_type'   => 'page',
 				'post_status' => 'publish',
-				'post_title'  => 'Clearance',
+				'post_title'  => 'Outlet',
 			)
 		);
 		update_option( OUTLET_PAGE_OPTION, $page_id );

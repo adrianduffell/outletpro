@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'outlet block shows clearance products in editor and on front end', async ( {
+test( 'outlet block shows outlet products in editor and on front end', async ( {
 	page,
 	admin,
 	editor,
@@ -14,7 +14,7 @@ test( 'outlet block shows clearance products in editor and on front end', async 
 				method: 'POST',
 				path: '/wc/v3/products',
 				data: {
-					name: `Clearance Block Test Product ${ productNumber } ${ runId }`,
+					name: `Outlet Block Test Product ${ productNumber } ${ runId }`,
 					type: 'simple',
 					status: 'publish',
 				},
@@ -60,19 +60,19 @@ test( 'outlet block shows clearance products in editor and on front end', async 
 		},
 	} );
 
-	// Assert: clearance products shown in editor; use .first() because the product
+	// Assert: outlet products shown in editor; use .first() because the product
 	// collection block renders the title as both a link and an image overlay link.
 	await expect(
 		editor.canvas
 			.getByRole( 'link', {
-				name: `Clearance Block Test Product 1 ${ runId }`,
+				name: `Outlet Block Test Product 1 ${ runId }`,
 			} )
 			.first()
 	).toBeVisible();
 	await expect(
 		editor.canvas
 			.getByRole( 'link', {
-				name: `Clearance Block Test Product 2 ${ runId }`,
+				name: `Outlet Block Test Product 2 ${ runId }`,
 			} )
 			.first()
 	).toBeVisible();
@@ -87,29 +87,29 @@ test( 'outlet block shows clearance products in editor and on front end', async 
 	} );
 	await page.goto( pageData.link );
 
-	// Assert: clearance products shown on front end.
+	// Assert: outlet products shown on front end.
 	await expect(
 		page
 			.getByRole( 'link', {
-				name: `Clearance Block Test Product 1 ${ runId }`,
+				name: `Outlet Block Test Product 1 ${ runId }`,
 			} )
 			.first()
 	).toBeVisible();
 	await expect(
 		page
 			.getByRole( 'link', {
-				name: `Clearance Block Test Product 2 ${ runId }`,
+				name: `Outlet Block Test Product 2 ${ runId }`,
 			} )
 			.first()
 	).toBeVisible();
 } );
 
-test( 'clearance badge has default black text and yellow background', async ( {
+test( 'Outlet badge has default black text and yellow background', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: create a clearance product.
+	// Arrange: create an outlet product.
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',

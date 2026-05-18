@@ -223,7 +223,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
 		data: { status: 'publish' },
 	} );
-	const clearancePage = await requestUtils.rest( {
+	const outletPage = await requestUtils.rest( {
 		method: 'GET',
 		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
 	} );
@@ -237,12 +237,12 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	const viewportKey = getViewportKey( customerPage );
 	const fixture = badgeDimensions?.[ themeSlug ]?.[ viewportKey ];
 
-	// Open the clearance page.
-	await customerPage.goto( clearancePage.link );
+	// Open the outlet page.
+	await customerPage.goto( outletPage.link );
 
 	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
-	// Add a product in the clearance section to the cart.
+	// Add an outlet product to the cart.
 	await customerPage
 		.getByRole( 'button', { name: /add to cart/i } )
 		.first()

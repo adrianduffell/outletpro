@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'plugin activation seeds clearance section data', async ( {
+test( 'plugin activation seeds outlet settings', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -14,7 +14,7 @@ test( 'plugin activation seeds clearance section data', async ( {
 		},
 	} );
 	await requestUtils.rest( {
-		path: '/wp/v2/plugins/wc-outlet/wc-outlet',
+		path: '/wp/v2/plugins/wc-clearance/wc-outlet',
 		method: 'PUT',
 		data: {
 			status: 'inactive',

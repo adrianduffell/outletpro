@@ -35,10 +35,10 @@ class Test_Is_Outlet extends WP_UnitTestCase {
 		$result = is_outlet( $product );
 
 		// Assert.
-		$this->assertTrue( $result, 'Should return true when product is on clearance' );
+		$this->assertTrue( $result, 'Should return true when product is in outlet' );
 	}
 
-	public function test_returns_false_when_product_not_on_clearance(): void {
+	public function test_returns_false_when_product_not_in_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -47,10 +47,10 @@ class Test_Is_Outlet extends WP_UnitTestCase {
 		$result = is_outlet( $product );
 
 		// Assert.
-		$this->assertFalse( $result, 'Should return false when product is not on clearance' );
+		$this->assertFalse( $result, 'Should return false when product is not in outlet' );
 	}
 
-	public function test_returns_false_after_removing_clearance_status(): void {
+	public function test_returns_false_after_removing_outlet_status(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -61,10 +61,10 @@ class Test_Is_Outlet extends WP_UnitTestCase {
 		$result = is_outlet( $product );
 
 		// Assert.
-		$this->assertFalse( $result, 'Should return false after removing clearance status' );
+		$this->assertFalse( $result, 'Should return false after removing outlet status' );
 	}
 
-	public function test_variation_inherits_clearance_from_parent(): void {
+	public function test_variation_inherits_outlet_from_parent(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$variable_product = \WC_Helper_Product::create_variation_product();
@@ -76,10 +76,10 @@ class Test_Is_Outlet extends WP_UnitTestCase {
 		$result = is_outlet( $variation );
 
 		// Assert.
-		$this->assertTrue( $result, 'Variation should inherit clearance status from its parent' );
+		$this->assertTrue( $result, 'Variation should inherit outlet status from its parent' );
 	}
 
-	public function test_variation_not_clearance_when_parent_not_clearance(): void {
+	public function test_variation_not_outlet_when_parent_not_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$variable_product = \WC_Helper_Product::create_variation_product();
@@ -90,6 +90,6 @@ class Test_Is_Outlet extends WP_UnitTestCase {
 		$result = is_outlet( $variation );
 
 		// Assert.
-		$this->assertFalse( $result, 'Variation should not be clearance when parent is not on clearance' );
+		$this->assertFalse( $result, 'Variation should not be outlet when parent is not in outlet' );
 	}
 }

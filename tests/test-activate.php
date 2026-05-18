@@ -11,7 +11,7 @@ use const WC_Outlet\OUTLET_PAGE_OPTION;
 
 class Test_Activate extends WP_UnitTestCase {
 
-	public function test_creates_clearance_page_on_activation(): void {
+	public function test_creates_outlet_page_on_activation(): void {
 		// Arrange.
 		delete_option( OUTLET_PAGE_OPTION );
 

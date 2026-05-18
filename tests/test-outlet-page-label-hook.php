@@ -10,7 +10,7 @@ use const WC_Outlet\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 
-	public function test_adds_clearance_page_label_when_post_is_clearance_page(): void {
+	public function test_adds_outlet_page_label_when_post_is_outlet_page(): void {
 		// Arrange.
 		init_admin_page_list_table();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
@@ -25,7 +25,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'Outlet Page', $result['wc_outlet_page'] );
 	}
 
-	public function test_does_not_add_label_when_post_is_not_clearance_page(): void {
+	public function test_does_not_add_label_when_post_is_not_outlet_page(): void {
 		// Arrange.
 		init_admin_page_list_table();
 		$outlet_page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
@@ -40,7 +40,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'wc_outlet_page', $result );
 	}
 
-	public function test_adds_clearance_page_label_when_option_is_string(): void {
+	public function test_adds_outlet_page_label_when_option_is_string(): void {
 		// Arrange.
 		init_admin_page_list_table();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
@@ -69,7 +69,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'wc_outlet_page', $result );
 	}
 
-	public function test_does_not_add_label_when_no_clearance_page_is_set(): void {
+	public function test_does_not_add_label_when_no_outlet_page_is_set(): void {
 		// Arrange.
 		init_admin_page_list_table();
 		delete_option( OUTLET_PAGE_OPTION );

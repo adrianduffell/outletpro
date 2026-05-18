@@ -83,7 +83,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$this->assertSame( 'Unknown', $result['outlet-product-count'][1] );
 	}
 
-	public function test_product_count_is_zero_when_no_products_in_clearance(): void {
+	public function test_product_count_is_zero_when_no_products_in_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -95,7 +95,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 		$this->assertSame( 0, $result['outlet-product-count'][1] );
 	}
 
-	public function test_product_count_matches_number_of_clearance_products(): void {
+	public function test_product_count_matches_number_of_outlet_products(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

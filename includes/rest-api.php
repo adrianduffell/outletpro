@@ -28,7 +28,7 @@ function init_rest_api(): void {
  */
 function add_wc_outlet_rest_param_hook( array $params ): array {
 	$params['wc_outlet'] = array(
-		'description'       => __( 'Limit results to products in the outlet.', 'wc-outlet' ),
+		'description'       => __( 'Limit results to outlet products.', 'wc-outlet' ),
 		'type'              => 'boolean',
 		'sanitize_callback' => 'rest_sanitize_boolean',
 		'validate_callback' => 'rest_validate_request_arg',

@@ -10,7 +10,7 @@ use const WC_Outlet\OUTLET_BADGE_FONT_WEIGHT_OPTION;
 
 class Test_Register_Outlet_Badge_Font_Weight_Setting extends WP_UnitTestCase {
 
-	public function test_registers_clearance_badge_font_weight_setting(): void {
+	public function test_registers_outlet_badge_font_weight_setting(): void {
 		// Arrange.
 		unregister_setting( 'wc_outlet', OUTLET_BADGE_FONT_WEIGHT_OPTION );
 

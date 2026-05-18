@@ -60,7 +60,7 @@ function add_product_checkbox_hook(): void {
 
 	printf(
 		'<div class="wc-outlet-status-help">%s%s</div><!-- .wc-outlet-status-help -->',
-		esc_html__( 'Sell remaining stock in the outlet. Included products display a badge and message.', 'wc-outlet' ),
+		esc_html__( 'Sell remaining stock in the store’s outlet. Included products display a badge and message.', 'wc-outlet' ),
 		wp_kses_post( $link )
 	);
 	echo '</div><!-- .wc-outlet-status-panel -->';

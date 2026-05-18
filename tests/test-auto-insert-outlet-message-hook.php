@@ -11,7 +11,7 @@ use function WC_Outlet\register_outlet_message_block;
 
 class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 
-	public function test_clearance_message_has_no_block_hooks_declaration(): void {
+	public function test_outlet_message_has_no_block_hooks_declaration(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_message_block();

@@ -13,7 +13,7 @@ use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
-	public function test_outputs_badge_html_for_clearance_product(): void {
+	public function test_outputs_badge_html_for_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -30,7 +30,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
-	public function test_outputs_nothing_for_non_clearance_product(): void {
+	public function test_outputs_nothing_for_non_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file.
  *
- * @package Clearance_Section_For_WooCommerce
+ * @package WC_Outlet
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );

@@ -35,7 +35,7 @@ class Test_Count_Outlet extends WP_UnitTestCase {
 		$this->assertSame( 0, $count );
 	}
 
-	public function test_returns_zero_when_no_products_in_clearance(): void {
+	public function test_returns_zero_when_no_products_in_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -47,7 +47,7 @@ class Test_Count_Outlet extends WP_UnitTestCase {
 		$this->assertSame( 0, $count );
 	}
 
-	public function test_returns_correct_count_of_clearance_products(): void {
+	public function test_returns_correct_count_of_outlet_products(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

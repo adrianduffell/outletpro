@@ -10,7 +10,7 @@ use const WC_Outlet\OUTLET_PAGE_OPTION;
 
 class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 
-	public function test_registers_clearance_page_id_setting(): void {
+	public function test_registers_outlet_page_id_setting(): void {
 		// Arrange.
 		unregister_setting( 'wc_outlet', OUTLET_PAGE_OPTION );
 

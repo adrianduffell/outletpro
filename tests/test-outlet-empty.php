@@ -35,7 +35,7 @@ class Test_Outlet_Empty extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_when_no_products_in_clearance(): void {
+	public function test_returns_true_when_no_products_in_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -47,7 +47,7 @@ class Test_Outlet_Empty extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_false_when_products_in_clearance(): void {
+	public function test_returns_false_when_products_in_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();

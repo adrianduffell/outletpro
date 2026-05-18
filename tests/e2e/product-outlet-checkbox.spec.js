@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'can mark a product as clearance using the checkbox', async ( {
+test( 'can mark a product as outlet using the checkbox', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -10,7 +10,7 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Test Clearance Product',
+			name: 'Test Outlet Product',
 			type: 'simple',
 			status: 'publish',
 		},
@@ -56,7 +56,7 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 	).toBeChecked();
 } );
 
-test( 'can unmark a product as clearance using the checkbox', async ( {
+test( 'can unmark a product as outlet using the checkbox', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -66,7 +66,7 @@ test( 'can unmark a product as clearance using the checkbox', async ( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Test Clearance Product',
+			name: 'Test Outlet Product',
 			type: 'simple',
 			status: 'publish',
 		},
@@ -103,7 +103,7 @@ test( 'can unmark a product as clearance using the checkbox', async ( {
 	).not.toBeChecked();
 } );
 
-test( 'can toggle the clearance checkbox by clicking its label text', async ( {
+test( 'can toggle the outlet checkbox by clicking its label text', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -113,7 +113,7 @@ test( 'can toggle the clearance checkbox by clicking its label text', async ( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Test Clearance Product',
+			name: 'Test Outlet Product',
 			type: 'simple',
 			status: 'publish',
 		},
@@ -144,7 +144,7 @@ test( 'can toggle the clearance checkbox by clicking its label text', async ( {
 	await expect( checkbox ).not.toBeChecked();
 } );
 
-test( 'clearance status panel has correct styles', async ( {
+test( 'outlet panel has correct styles', async ( {
 	page,
 	admin,
 	requestUtils,

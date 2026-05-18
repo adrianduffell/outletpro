@@ -10,7 +10,7 @@ use const WC_Outlet\OUTLET_BADGE_SCALE_OPTION;
 
 class Test_Register_Outlet_Badge_Scale_Setting extends WP_UnitTestCase {
 
-	public function test_registers_clearance_badge_scale_setting(): void {
+	public function test_registers_outlet_badge_scale_setting(): void {
 		// Arrange.
 		unregister_setting( 'wc_outlet', OUTLET_BADGE_SCALE_OPTION );
 

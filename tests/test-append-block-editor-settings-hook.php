@@ -13,7 +13,7 @@ use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
-	public function test_settings_contain_clearance_term_id(): void {
+	public function test_settings_contain_outlet_term_id(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
