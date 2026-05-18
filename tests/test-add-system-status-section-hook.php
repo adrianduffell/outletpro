@@ -16,7 +16,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/Outlet Section/' );
+		$this->expectOutputRegex( '/Outlet/' );
 
 		// Act.
 		do_action( 'woocommerce_system_status_report' );

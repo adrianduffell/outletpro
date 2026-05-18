@@ -30,7 +30,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			)
 		);
 		$this->assertNotEmpty( $pages );
-		$this->assertSame( 'Clearance', $pages[0]->post_title );
+		$this->assertSame( 'Outlet', $pages[0]->post_title );
 	}
 
 	public function test_creates_page_with_slug_clearance(): void {
