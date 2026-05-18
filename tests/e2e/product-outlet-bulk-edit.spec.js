@@ -38,9 +38,7 @@ test( 'can bulk edit products to include in clearance section', async ( {
 	await page.locator( '#doaction' ).click();
 
 	// Set the Clearance section field to "Include" and click Update.
-	await page
-		.locator( 'select[name="wc_outlet_bulk"]' )
-		.selectOption( 'yes' );
+	await page.locator( 'select[name="wc_outlet_bulk"]' ).selectOption( 'yes' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -92,9 +90,7 @@ test( 'can bulk edit products to remove from clearance section', async ( {
 	await page.locator( '#doaction' ).click();
 
 	// Set the Clearance section field to "Remove" and click Update.
-	await page
-		.locator( 'select[name="wc_outlet_bulk"]' )
-		.selectOption( 'no' );
+	await page.locator( 'select[name="wc_outlet_bulk"]' ).selectOption( 'no' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 

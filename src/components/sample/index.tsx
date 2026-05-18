@@ -12,5 +12,5 @@ export function Sample(): JSX.Element {
 		} );
 	}, [] );
 
-	return <p className="wc-clearance-sample">{ label }</p>;
+	return <p className="wc-outlet-sample">{ label }</p>;
 }

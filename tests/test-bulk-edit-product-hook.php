@@ -50,7 +50,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
-		$product                   = WC_Helper_Product::create_simple_product();
+		$product                = WC_Helper_Product::create_simple_product();
 		$_GET['wc_outlet_bulk'] = 'yes';
 
 		// Act.

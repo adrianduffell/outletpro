@@ -85,7 +85,7 @@ function save_product_checkbox_hook( \WC_Product $product ): void {
 			'Could not save outlet status for product ID ' . $product_id .
 			' with desired status ' . ( $is_outlet ? 'true' : 'false' ) . ': ' . $e->getMessage(),
 			array(
-				'product_id'        => $product_id,
+				'product_id'     => $product_id,
 				'desired_outlet' => $is_outlet,
 			)
 		);

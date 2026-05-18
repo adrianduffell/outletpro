@@ -42,8 +42,8 @@ function init_taxonomies(): void {
  * @return array<string, array{0: string, 1: int|string}>
  */
 function report_taxonomies(): array {
-	$taxonomy_exists         = taxonomy_exists( OUTLET_STATUS_TAXONOMY );
-	$canonical_term          = $taxonomy_exists ? get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY ) : null;
+	$taxonomy_exists      = taxonomy_exists( OUTLET_STATUS_TAXONOMY );
+	$canonical_term       = $taxonomy_exists ? get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY ) : null;
 	$outlet_product_count = $taxonomy_exists ? count_outlet() : null;
 
 	return array(

@@ -5,8 +5,8 @@
  * @package WC_Outlet
  */
 
-use function WC_Outlet\outlet_page_is_published;
 use function WC_Outlet\create_outlet_page;
+use function WC_Outlet\outlet_page_is_published;
 use const WC_Outlet\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {

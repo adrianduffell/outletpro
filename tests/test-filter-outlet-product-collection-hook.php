@@ -229,7 +229,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_wc_clearance_flag_is_injected_for_clearance_collection(): void {
+	public function test_wc_outlet_flag_is_injected_for_outlet_collection(): void {
 		// Arrange.
 		$parsed_block = array(
 			'blockName' => 'woocommerce/product-collection',
@@ -245,7 +245,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertTrue( $result['attrs']['query']['wc_outlet'] );
 	}
 
-	public function test_existing_query_keys_are_preserved_when_injecting_wc_clearance_flag(): void {
+	public function test_existing_query_keys_are_preserved_when_injecting_wc_outlet_flag(): void {
 		// Arrange.
 		$parsed_block = array(
 			'blockName' => 'woocommerce/product-collection',

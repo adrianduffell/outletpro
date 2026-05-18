@@ -36,7 +36,5 @@ test( 'plugin activation seeds clearance section data', async ( {
 	await expect(
 		page.getByTestId( 'outlet-canonical-term-id' )
 	).toContainText( /\d+/ );
-	await expect( page.getByTestId( 'outlet-page-id' ) ).toContainText(
-		/\d+/
-	);
+	await expect( page.getByTestId( 'outlet-page-id' ) ).toContainText( /\d+/ );
 } );

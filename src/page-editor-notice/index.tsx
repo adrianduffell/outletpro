@@ -15,11 +15,9 @@ export function ClearanceSectionEmptyNotice(): null {
 			// Fetch the clearance page ID from the WP settings REST API.
 			let settings: { wc_outlet_page_id?: number };
 			try {
-				settings = await apiFetch< { wc_outlet_page_id?: number } >(
-					{
-						path: '/wp/v2/settings',
-					}
-				);
+				settings = await apiFetch< { wc_outlet_page_id?: number } >( {
+					path: '/wp/v2/settings',
+				} );
 			} catch {
 				return;
 			}

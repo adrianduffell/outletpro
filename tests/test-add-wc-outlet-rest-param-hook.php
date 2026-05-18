@@ -9,7 +9,7 @@ use function WC_Outlet\register_outlet_status_taxonomy;
 
 class Test_Add_Wc_Outlet_Rest_Param_Hook extends WP_UnitTestCase {
 
-	public function test_wc_clearance_param_is_in_product_collection_schema(): void {
+	public function test_wc_outlet_param_is_in_product_collection_schema(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );

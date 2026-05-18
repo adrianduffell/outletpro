@@ -43,8 +43,7 @@ const FONT_WEIGHTS: FontWeightOption[] = [
 const bordersEnabled = ( () => {
 	try {
 		return (
-			window.localStorage.getItem( 'wc_outlet_borders_enabled' ) ===
-			'1'
+			window.localStorage.getItem( 'wc_outlet_borders_enabled' ) === '1'
 		);
 	} catch {
 		return false;

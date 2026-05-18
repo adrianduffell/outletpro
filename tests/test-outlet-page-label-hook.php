@@ -29,7 +29,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		// Arrange.
 		init_admin_page_list_table();
 		$outlet_page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
-		$other_page_id     = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		$other_page_id  = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $outlet_page_id );
 		$post = get_post( $other_page_id );
 

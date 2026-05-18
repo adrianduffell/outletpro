@@ -28,9 +28,7 @@ test( 'outlet block shows clearance products in editor and on front end', async 
 			`post=${ product.id }&action=edit`
 		);
 		await page.getByRole( 'link', { name: 'Inventory' } ).click();
-		await page
-			.getByRole( 'checkbox', { name: 'Outlet' } )
-			.check();
+		await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 		await page.getByRole( 'button', { name: 'Update' } ).click();
 		await page.waitForLoadState( 'networkidle' );
 	}

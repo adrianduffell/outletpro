@@ -83,16 +83,10 @@ describe( 'buildPreviewStyles', () => {
 
 		expect( result ).toContain( '--wc-outlet-badge-label: "Sale"' );
 		expect( result ).toContain( '--wc-outlet-badge-bg-color: #ff0000' );
-		expect( result ).toContain(
-			'--wc-outlet-badge-text-color: #ffffff'
-		);
+		expect( result ).toContain( '--wc-outlet-badge-text-color: #ffffff' );
 		expect( result ).toContain( '--wc-outlet-badge-font-weight: 700' );
-		expect( result ).toContain(
-			'--wc-outlet-badge-border-color: #cccccc'
-		);
-		expect( result ).toContain(
-			'--wc-outlet-badge-border-style: solid'
-		);
+		expect( result ).toContain( '--wc-outlet-badge-border-color: #cccccc' );
+		expect( result ).toContain( '--wc-outlet-badge-border-style: solid' );
 		expect( result ).toContain( '--wc-outlet-badge-border-width: 1px' );
 		expect( result ).toContain( '--wc-outlet-badge-border-radius: 4px' );
 		expect( result ).toContain( '--wc-outlet-badge-scale: 120' );

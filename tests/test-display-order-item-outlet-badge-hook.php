@@ -8,8 +8,8 @@
 use function WC_Outlet\display_order_item_outlet_badge_hook;
 use function WC_Outlet\hide_order_item_outlet_meta_hook;
 use function WC_Outlet\init_admin_order;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
 use const WC_Outlet\ORDER_ITEM_OUTLET_META_KEY;
+use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 

@@ -29,7 +29,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertContains( $non_outlet_product->get_id(), $ids );
 	}
 
-	public function test_wc_clearance_param_filters_to_clearance_products_only(): void {
+	public function test_wc_outlet_param_filters_to_outlet_products_only(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -49,7 +49,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertNotContains( $non_outlet_product->get_id(), $ids );
 	}
 
-	public function test_false_wc_clearance_param_returns_all_products(): void {
+	public function test_false_wc_outlet_param_returns_all_products(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );

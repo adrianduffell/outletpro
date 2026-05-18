@@ -188,9 +188,7 @@ describe( 'useSettings', () => {
 		expect( setters.wc_outlet_badge_text_color ).toHaveBeenCalledWith(
 			'b'
 		);
-		expect( setters.wc_outlet_badge_bg_color ).toHaveBeenCalledWith(
-			'c'
-		);
+		expect( setters.wc_outlet_badge_bg_color ).toHaveBeenCalledWith( 'c' );
 		expect( setters.wc_outlet_badge_font_weight ).toHaveBeenCalledWith(
 			'e'
 		);

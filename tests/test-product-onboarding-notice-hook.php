@@ -11,9 +11,9 @@ use function WC_Outlet\init_admin_product_list_table;
 use function WC_Outlet\register_outlet_status_taxonomy;
 use function WC_Outlet\seed_outlet_status_taxonomy;
 use const WC_Outlet\ACTIVATED_AT_OPTION;
+use const WC_Outlet\ONBOARDING_DISMISS_STORAGE_KEY;
 use const WC_Outlet\OUTLET_PAGE_OPTION;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
-use const WC_Outlet\ONBOARDING_DISMISS_STORAGE_KEY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 

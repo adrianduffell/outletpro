@@ -16,7 +16,7 @@ use const WC_Outlet\OUTLET_MESSAGE_OPTION;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 
-	public function test_registers_wc_clearance_section(): void {
+	public function test_registers_wc_outlet_section(): void {
 		// Arrange.
 		$wp_customize = new WP_Customize_Manager();
 

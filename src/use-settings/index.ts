@@ -27,9 +27,7 @@ export type Settings = {
 };
 
 const useSettings = (): Settings => {
-	const [ label, setLabel ] = useStringEntityProp(
-		'wc_outlet_badge_label'
-	);
+	const [ label, setLabel ] = useStringEntityProp( 'wc_outlet_badge_label' );
 	const [ textColor, setTextColor ] = useStringEntityProp(
 		'wc_outlet_badge_text_color'
 	);
@@ -57,9 +55,7 @@ const useSettings = (): Settings => {
 	const [ density, setDensity ] = useUnsignedIntegerEntityProp(
 		'wc_outlet_badge_density'
 	);
-	const [ message, setMessage ] = useStringEntityProp(
-		'wc_outlet_message'
-	);
+	const [ message, setMessage ] = useStringEntityProp( 'wc_outlet_message' );
 
 	return {
 		label,
