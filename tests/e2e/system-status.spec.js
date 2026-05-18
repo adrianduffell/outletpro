@@ -1,9 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'system status shows outlet info', async ( {
-	page,
-	admin,
-} ) => {
+test( 'system status shows outlet info', async ( { page, admin } ) => {
 	await admin.visitAdminPage( 'admin.php', 'page=wc-status' );
 
 	// Check section heading is visible.
