@@ -1,6 +1,6 @@
 import { createElement } from '@wordpress/element';
 
-const ClearanceIcon = createElement(
+const OutletIcon = createElement(
 	'svg',
 	{
 		viewBox: '0 0 24 24',
@@ -23,4 +23,4 @@ const ClearanceIcon = createElement(
 	} )
 );
 
-export default ClearanceIcon;
+export default OutletIcon;

@@ -17,14 +17,14 @@
 ( function () {
 	document.addEventListener( 'DOMContentLoaded', function () {
 		const span = document.querySelector(
-			'.wc-clearance-status_field span.description'
+			'.wc-outlet-status_field span.description'
 		);
 
 		if ( ! span ) {
 			return;
 		}
 
-		const checkbox = document.getElementById( 'wc-clearance-status' );
+		const checkbox = document.getElementById( 'wc-outlet-status' );
 
 		if ( ! checkbox ) {
 			return;

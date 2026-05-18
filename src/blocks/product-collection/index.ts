@@ -1,4 +1,4 @@
-import ClearanceIcon from './icon';
+import OutletIcon from './icon';
 export {};
 
 declare global {
@@ -17,8 +17,8 @@ declare global {
 }
 
 window.wc.wcBlocksRegistry.__experimentalRegisterProductCollection( {
-	name: 'wc-clearance/product-collection/clearance',
-	title: 'Clearance Section',
-	description: 'Show products in the clearance section.',
-	icon: ClearanceIcon,
+	name: 'wc-outlet/product-collection/outlet',
+	title: 'Outlet',
+	description: 'Show products in the outlet.',
+	icon: OutletIcon,
 } );

@@ -19,7 +19,7 @@
 
 		if ( isEditorCanvas && window.parent !== window ) {
 			window.parent.dispatchEvent(
-				new CustomEvent( 'wc-clearance-canvas-ready', {
+				new CustomEvent( 'wc-outlet-canvas-ready', {
 					detail: { document },
 				} )
 			);

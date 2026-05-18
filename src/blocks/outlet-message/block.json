@@ -1,10 +1,10 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "wc-clearance/clearance-message",
-	"title": "Clearance Message",
+	"name": "wc-outlet/outlet-message",
+	"title": "Outlet Message",
 	"category": "woocommerce",
-	"description": "Displays a message when a product is in the clearance section.",
+	"description": "Displays a message when a product is in the outlet.",
 	"usesContext": [ "postId" ],
 	"supports": {
 		"html": false,
@@ -24,5 +24,5 @@
 			"default": "small"
 		}
 	},
-	"textdomain": "wc-clearance"
+	"textdomain": "wc-outlet"
 }

@@ -12,21 +12,21 @@ export function Edit(): JSX.Element {
 	const [ label, setLabel ] = useEntityProp(
 		'root',
 		'site',
-		'wc_clearance_badge_label'
+		'wc_outlet_badge_label'
 	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
-		className: 'wc-clearance-badge',
+		className: 'wc-outlet-badge',
 	} );
 
 	return (
 		<RichText
 			{ ...blockProps }
 			tagName="div"
-			value={ label || __( 'Clearance', 'wc-clearance' ) }
+			value={ label || __( 'Clearance', 'wc-outlet' ) }
 			onChange={ ( value: string ) => setLabel( value ) }
 			allowedFormats={ [] }
-			placeholder={ __( 'Label', 'wc-clearance' ) }
+			placeholder={ __( 'Label', 'wc-outlet' ) }
 		/>
 	);
 }

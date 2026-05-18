@@ -5,16 +5,16 @@
  * @since 1.0.0
  */
 
-.wc-clearance-status-panel {
+.wc-outlet-status-panel {
 	margin-bottom: 1.5em;
 }
 
-.wc-clearance-status-panel .form-field {
+.wc-outlet-status-panel .form-field {
 	margin-bottom: 0;
 
 }
 
-.wc-clearance-status-panel .wc-clearance-status-help {
+.wc-outlet-status-panel .wc-outlet-status-help {
 	margin: 0 0 0 162px;
 	max-width: 290px;
 	font-size: 12px;
@@ -24,26 +24,26 @@
 
 @media (max-width: 500px) {
 
-	.wc-clearance-status-panel .wc-clearance-status-help {
+	.wc-outlet-status-panel .wc-outlet-status-help {
 		display: none;
 	}
 }
 
-.wc-clearance-onboarding-notice {
+.wc-outlet-onboarding-notice {
 	display: none;
 }
 
-.wc-clearance-onboarding-notice.is-visible {
+.wc-outlet-onboarding-notice.is-visible {
 	display: block;
 }
 
-.wc-clearance-checklist {
+.wc-outlet-checklist {
 	margin: 0 0 12px 0;
 	padding: 0;
 	list-style: none;
 }
 
-.wc-clearance-new {
+.wc-outlet-new {
 	display: inline-block;
 	background: #f2edff;
 	color: #2c045d;
@@ -59,15 +59,15 @@
 	margin-right: 0.25em;
 }
 
-.wc-clearance-button-link {
+.wc-outlet-button-link {
 	text-decoration: none;
 }
 
-.wc-clearance-bulk-edit-title {
+.wc-outlet-bulk-edit-title {
 	line-height: 1.3 !important;
 }
 
-.wc-clearance-admin-badge {
+.wc-outlet-admin-badge {
 	display: inline-block;
 	background-color: #f0f0f1;
 	color: var(--wp-admin-text-color);

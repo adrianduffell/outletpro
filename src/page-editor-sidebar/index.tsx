@@ -17,7 +17,7 @@ import { useMemo } from '@wordpress/element';
 import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
-import ClearanceIcon from './icon';
+import OutletIcon from './icon';
 import useSettings from '../use-settings';
 
 type FontWeightOption = {
@@ -28,22 +28,22 @@ type FontWeightOption = {
 	};
 };
 
-const SIDEBAR_NAME = 'wc-clearance-sidebar';
+const SIDEBAR_NAME = 'wc-outlet-sidebar';
 
 const FONT_WEIGHTS: FontWeightOption[] = [
-	{ name: __( 'Default', 'wc-clearance' ), key: '' },
-	{ name: __( 'Regular', 'wc-clearance' ), key: '400' },
-	{ name: __( 'Medium', 'wc-clearance' ), key: '500' },
-	{ name: __( 'Semi Bold', 'wc-clearance' ), key: '600' },
-	{ name: __( 'Bold', 'wc-clearance' ), key: '700' },
-	{ name: __( 'Extra Bold', 'wc-clearance' ), key: '800' },
-	{ name: __( 'Black', 'wc-clearance' ), key: '900' },
+	{ name: __( 'Default', 'wc-outlet' ), key: '' },
+	{ name: __( 'Regular', 'wc-outlet' ), key: '400' },
+	{ name: __( 'Medium', 'wc-outlet' ), key: '500' },
+	{ name: __( 'Semi Bold', 'wc-outlet' ), key: '600' },
+	{ name: __( 'Bold', 'wc-outlet' ), key: '700' },
+	{ name: __( 'Extra Bold', 'wc-outlet' ), key: '800' },
+	{ name: __( 'Black', 'wc-outlet' ), key: '900' },
 ];
 
 const bordersEnabled = ( () => {
 	try {
 		return (
-			window.localStorage.getItem( 'wc_clearance_borders_enabled' ) ===
+			window.localStorage.getItem( 'wc_outlet_borders_enabled' ) ===
 			'1'
 		);
 	} catch {
@@ -60,7 +60,7 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 	return hasSiteRecord ? <Component /> : null;
 };
 
-const ClearanceSectionSidebar = () => {
+const OutletSidebar = () => {
 	const {
 		label,
 		setLabel,
@@ -111,16 +111,16 @@ const ClearanceSectionSidebar = () => {
 			<PanelBody>
 				<p style={ { marginBottom: 0 } }>
 					{ __(
-						'Customize the appearance of the clearance badge. Changes apply to the whole site.',
-						'wc-clearance'
+						'Customize the appearance of the outlet badge. Changes apply to the whole site.',
+						'wc-outlet'
 					) }
 				</p>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Label', 'wc-clearance' ) } initialOpen>
+			<PanelBody title={ __( 'Label', 'wc-outlet' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextControl
-						label={ __( 'Label', 'wc-clearance' ) }
+						label={ __( 'Label', 'wc-outlet' ) }
 						value={ label ?? '' }
 						onChange={ ( value ) => setLabel( value ) }
 						hideLabelFromVision={ true }
@@ -131,29 +131,29 @@ const ClearanceSectionSidebar = () => {
 			</PanelBody>
 
 			<PanelColorSettings
-				title={ __( 'Color', 'wc-clearance' ) }
+				title={ __( 'Color', 'wc-outlet' ) }
 				initialOpen={ false }
 				colorSettings={ [
 					{
 						value: textColor,
-						label: __( 'Text', 'wc-clearance' ),
+						label: __( 'Text', 'wc-outlet' ),
 						onChange: ( color: string | undefined ) =>
 							setTextColor( color || undefined ),
 					},
 					{
 						value: bgColor,
-						label: __( 'Background', 'wc-clearance' ),
+						label: __( 'Background', 'wc-outlet' ),
 						onChange: ( backgroundColor: string | undefined ) =>
 							setBgColor( backgroundColor || undefined ),
 					},
 				] }
 			/>
 
-			<PanelBody title={ __( 'Typography', 'wc-clearance' ) }>
+			<PanelBody title={ __( 'Typography', 'wc-outlet' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginBottom: '16px' } }>
 						<RangeControl
-							label={ __( 'Font size', 'wc-clearance' ) }
+							label={ __( 'Font size', 'wc-outlet' ) }
 							value={ density }
 							onChange={ ( value ) => {
 								if ( typeof value !== 'number' ) {
@@ -175,7 +175,7 @@ const ClearanceSectionSidebar = () => {
 
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<CustomSelectControl
-						label={ __( 'Font weight', 'wc-clearance' ) }
+						label={ __( 'Font weight', 'wc-outlet' ) }
 						options={ fontWeightOptions }
 						value={ selectedFontWeight }
 						onChange={ ( { selectedItem } ) => {
@@ -186,10 +186,10 @@ const ClearanceSectionSidebar = () => {
 				</BaseControl>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Dimensions', 'wc-clearance' ) }>
+			<PanelBody title={ __( 'Dimensions', 'wc-outlet' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<RangeControl
-						label={ __( 'Scale', 'wc-clearance' ) }
+						label={ __( 'Scale', 'wc-outlet' ) }
 						value={ scale }
 						renderTooltipContent={ ( value ) =>
 							typeof value === 'number'
@@ -213,11 +213,11 @@ const ClearanceSectionSidebar = () => {
 				</BaseControl>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Border', 'wc-clearance' ) }>
+			<PanelBody title={ __( 'Border', 'wc-outlet' ) }>
 				{ bordersEnabled && (
 					<div style={ { marginBottom: 16 } }>
 						<BorderControl
-							label={ __( 'Border', 'wc-clearance' ) }
+							label={ __( 'Border', 'wc-outlet' ) }
 							hideLabelFromVision={ true }
 							value={ border }
 							onChange={ ( value ) => {
@@ -244,12 +244,12 @@ const ClearanceSectionSidebar = () => {
 				) }
 
 				<BaseControl
-					id="wc-clearance-border-radius"
-					label={ __( 'Radius', 'wc-clearance' ) }
+					id="wc-outlet-border-radius"
+					label={ __( 'Radius', 'wc-outlet' ) }
 					__nextHasNoMarginBottom={ true }
 				>
 					<UnitControl
-						id="wc-clearance-border-radius"
+						id="wc-outlet-border-radius"
 						value={ borderRadius || undefined }
 						onChange={ ( value: string | undefined ) =>
 							setBorderRadius( value || undefined )
@@ -266,28 +266,28 @@ const ClearanceSectionSidebar = () => {
 		<>
 			<PanelBody>
 				<p
-					data-testid="wc-clearance-message-tab-description"
+					data-testid="wc-outlet-message-tab-description"
 					style={ { marginBottom: 0 } }
 				>
 					{ __(
-						'Customize the clearance message. Changes apply to the whole site.',
-						'wc-clearance'
+						'Customize the outlet message. Changes apply to the whole site.',
+						'wc-outlet'
 					) }
 				</p>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Message', 'wc-clearance' ) } initialOpen>
+			<PanelBody title={ __( 'Message', 'wc-outlet' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextareaControl
-						label={ __( 'Message', 'wc-clearance' ) }
+						label={ __( 'Message', 'wc-outlet' ) }
 						hideLabelFromVision={ true }
 						value={ message ?? '' }
 						onChange={ ( value ) => setMessage( value ) }
 						rows={ 2 }
 						__nextHasNoMarginBottom={ true }
 						help={ __(
-							'Displayed for products included in the clearance section.',
-							'wc-clearance'
+							'Displayed for products included in the outlet.',
+							'wc-outlet'
 						) }
 					/>
 				</BaseControl>
@@ -298,24 +298,24 @@ const ClearanceSectionSidebar = () => {
 	return (
 		<PluginSidebar
 			name={ SIDEBAR_NAME }
-			title={ __( 'Clearance section', 'wc-clearance' ) }
+			title={ __( 'Outlet', 'wc-outlet' ) }
 			isPinnable={ true }
-			icon={ ClearanceIcon }
-			className="wc-clearance-sidebar"
+			icon={ OutletIcon }
+			className="wc-outlet-sidebar"
 		>
 			<TabPanel
-				className="wc-clearance-sidebar__tabs"
+				className="wc-outlet-sidebar__tabs"
 				activeClass="is-active"
 				tabs={ [
 					{
 						name: 'badge',
-						title: __( 'Badge', 'wc-clearance' ),
-						className: 'wc-clearance-sidebar__tab',
+						title: __( 'Badge', 'wc-outlet' ),
+						className: 'wc-outlet-sidebar__tab',
 					},
 					{
 						name: 'message',
-						title: __( 'Message', 'wc-clearance' ),
-						className: 'wc-clearance-sidebar__tab',
+						title: __( 'Message', 'wc-outlet' ),
+						className: 'wc-outlet-sidebar__tab',
 					},
 				] }
 			>
@@ -337,6 +337,6 @@ const isBlockEditor =
 // Exclude from the block editor (post/pages editor).
 if ( ! isBlockEditor ) {
 	registerPlugin( SIDEBAR_NAME, {
-		render: withSiteRecord( ClearanceSectionSidebar ),
+		render: withSiteRecord( OutletSidebar ),
 	} );
 }
