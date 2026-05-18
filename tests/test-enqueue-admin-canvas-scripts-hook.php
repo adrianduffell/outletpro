@@ -2,11 +2,11 @@
 /**
  * Tests for enqueue_admin_canvas_scripts_hook().
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\deinit_enqueue;
-use function WC_Clearance\enqueue_init;
+use function WC_Outlet\deinit_enqueue;
+use function WC_Outlet\enqueue_init;
 
 class Test_Enqueue_Admin_Canvas_Scripts_Hook extends WP_UnitTestCase {
 
@@ -20,7 +20,7 @@ class Test_Enqueue_Admin_Canvas_Scripts_Hook extends WP_UnitTestCase {
 		do_action( 'enqueue_block_assets' );
 
 		// Assert.
-		$this->assertTrue( wp_script_is( 'wc-clearance-admin-canvas-scripts', 'enqueued' ) );
+		$this->assertTrue( wp_script_is( 'wc-outlet-admin-canvas-scripts', 'enqueued' ) );
 	}
 
 	public function test_does_not_enqueue_admin_canvas_script_on_front_end(): void {
@@ -33,6 +33,6 @@ class Test_Enqueue_Admin_Canvas_Scripts_Hook extends WP_UnitTestCase {
 		do_action( 'enqueue_block_assets' );
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-clearance-admin-canvas-scripts', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'wc-outlet-admin-canvas-scripts', 'enqueued' ) );
 	}
 }

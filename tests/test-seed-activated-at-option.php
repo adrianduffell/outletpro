@@ -2,11 +2,11 @@
 /**
  * Test the seed_activated_at_option function.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\seed_activated_at_option;
-use const WC_Clearance\ACTIVATED_AT_OPTION;
+use function WC_Outlet\seed_activated_at_option;
+use const WC_Outlet\ACTIVATED_AT_OPTION;
 
 class Test_Seed_Activated_At_Option extends WP_UnitTestCase {
 

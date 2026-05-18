@@ -2,18 +2,18 @@
 /**
  * Test the product_onboarding_notice_hook function.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\add_to_clearance;
-use function WC_Clearance\create_clearance_page;
-use function WC_Clearance\init_admin_product_list_table;
-use function WC_Clearance\register_clearance_status_taxonomy;
-use function WC_Clearance\seed_clearance_status_taxonomy;
-use const WC_Clearance\ACTIVATED_AT_OPTION;
-use const WC_Clearance\CLEARANCE_PAGE_OPTION;
-use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
-use const WC_Clearance\ONBOARDING_DISMISS_STORAGE_KEY;
+use function WC_Outlet\add_to_outlet;
+use function WC_Outlet\create_outlet_page;
+use function WC_Outlet\init_admin_product_list_table;
+use function WC_Outlet\register_outlet_status_taxonomy;
+use function WC_Outlet\seed_outlet_status_taxonomy;
+use const WC_Outlet\ACTIVATED_AT_OPTION;
+use const WC_Outlet\OUTLET_PAGE_OPTION;
+use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use const WC_Outlet\ONBOARDING_DISMISS_STORAGE_KEY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
@@ -23,11 +23,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -39,11 +39,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -55,8 +55,8 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'dashboard' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 
 		// Expect.
 		$this->expectOutputString( '' );
@@ -71,8 +71,8 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 
 		// Expect.
 		$this->expectOutputString( '' );
@@ -87,13 +87,13 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
+		add_to_outlet( $product );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -105,7 +105,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		unregister_taxonomy( CLEARANCE_STATUS_TAXONOMY );
+		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
 
 		// Expect.
 		$this->expectOutputString( '' );
@@ -120,15 +120,15 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page(); // Creates page as draft.
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -140,12 +140,12 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page(); // Creates page as draft.
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
 		$this->expectOutputRegex( '/is-dismissible/' );
@@ -175,14 +175,14 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
-		// No products added to clearance.
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
+		// No products added to outlet.
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -194,36 +194,36 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION ); // No outlet page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
 	}
 
-	public function test_does_not_render_publish_page_notice_when_clearance_page_is_published(): void {
+	public function test_does_not_render_publish_page_notice_when_outlet_page_is_published(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page();
+		$page_id = get_option( OUTLET_PAGE_OPTION );
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -235,13 +235,13 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page(); // Creates page as draft.
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
+		$page_id = get_option( OUTLET_PAGE_OPTION );
 
 		// Expect.
 		$expected_url = esc_url( get_edit_post_link( $page_id ) );
@@ -257,11 +257,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION ); // No outlet page registered.
 
 		// Expect.
 		$this->expectOutputRegex( '/is-dismissible/' );
@@ -277,8 +277,8 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		update_option( ACTIVATED_AT_OPTION, time() - ( 15 * DAY_IN_SECONDS ) );
 
 		// Expect.
@@ -294,12 +294,12 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		update_option( ACTIVATED_AT_OPTION, time() - ( 13 * DAY_IN_SECONDS ) );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-clearance-onboarding-notice/' );
+		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -311,11 +311,11 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section is empty\./' );
+		$this->expectOutputRegex( '/Outlet is empty\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -327,15 +327,15 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page(); // Creates page as draft.
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section has 1 product\./' );
+		$this->expectOutputRegex( '/Outlet has 1 product\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -347,17 +347,17 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product1 = \WC_Helper_Product::create_simple_product();
 		$product2 = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product1 );
-		add_to_clearance( $product2 );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page(); // Creates page as draft.
+		add_to_outlet( $product1 );
+		add_to_outlet( $product2 );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section has 2 products\./' );
+		$this->expectOutputRegex( '/Outlet has 2 products\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -369,14 +369,14 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION ); // No clearance page registered.
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION ); // No outlet page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/Tip: add it to a page or post using the clearance section block\./' );
+		$this->expectOutputRegex( '/Tip: add it to a page or post using the outlet block\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -388,17 +388,17 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page();
+		$page_id = get_option( OUTLET_PAGE_OPTION );
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/Clearance section is ready\./' );
+		$this->expectOutputRegex( '/Outlet is ready\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -410,13 +410,13 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_clearance_status_taxonomy();
-		seed_clearance_status_taxonomy();
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
-		add_to_clearance( $product );
-		delete_option( CLEARANCE_PAGE_OPTION );
-		create_clearance_page();
-		$page_id = get_option( CLEARANCE_PAGE_OPTION );
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page();
+		$page_id = get_option( OUTLET_PAGE_OPTION );
 		wp_publish_post( $page_id );
 
 		// Expect.

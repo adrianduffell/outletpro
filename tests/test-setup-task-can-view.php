@@ -2,10 +2,10 @@
 /**
  * Test the setup_task_can_view function.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\setup_task_can_view;
+use function WC_Outlet\setup_task_can_view;
 
 class Test_Setup_Task_Can_View extends WP_UnitTestCase {
 
