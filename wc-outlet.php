@@ -1,21 +1,21 @@
 <?php
 /**
- * Plugin Name: Clearance Section
- * Description: Move old stock easily by adding a dedicated clearance section to WooCommerce.
+ * Plugin Name: Outlet
+ * Description: Move old stock easily by adding a dedicated outlet to WooCommerce.
  * Version: 1.0.0
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
- * Text Domain: wc-clearance
+ * Text Domain: wc-outlet
  * License: GNU General Public License v3.0
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Requires Plugins: woocommerce
  * Requires at least: 6.9
  * Requires PHP: 7.4
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -86,7 +86,7 @@ function init_hook(): void {
 }
 
 /**
- * Initialize the plugin’s wp-admin dashboard features.
+ * Initialize the plugin's wp-admin dashboard features.
  *
  * Fired by `admin_init`.
  *
@@ -110,11 +110,11 @@ function admin_init_hook(): void {
  * @internal WordPress action hook
  */
 function woocommerce_loaded_hook(): void {
-	add_action( 'init', 'WC_Clearance\init_hook', 20 );
-	add_action( 'admin_init', 'WC_Clearance\admin_init_hook' );
+	add_action( 'init', 'WC_Outlet\init_hook', 20 );
+	add_action( 'admin_init', 'WC_Outlet\admin_init_hook' );
 }
 
-add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
+add_action( 'woocommerce_loaded', 'WC_Outlet\woocommerce_loaded_hook' );
 
 /**
  * Plugin activation hook.
@@ -122,7 +122,7 @@ add_action( 'woocommerce_loaded', 'WC_Clearance\woocommerce_loaded_hook' );
  * @internal
  */
 function activate(): void {
-	\wc_get_logger()->info( 'Activating Clearance Section plugin.' );
+	\wc_get_logger()->info( 'Activating Outlet plugin.' );
 
 	try {
 		init_taxonomies(); // Needed since init hook does not run on activation.
