@@ -126,8 +126,8 @@ function activate(): void {
 
 	try {
 		init_taxonomies(); // Needed since init hook does not run on activation.
-		seed_clearance_status_taxonomy();
-		create_clearance_page();
+		seed_outlet_status_taxonomy();
+		create_outlet_page();
 		seed_activated_at_option();
 		seed_settings();
 	} catch ( \RuntimeException $e ) {
