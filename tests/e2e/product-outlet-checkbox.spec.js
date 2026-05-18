@@ -31,14 +31,14 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 
 	await expect(
-		page.getByRole( 'checkbox', { name: 'Clearance section' } )
+		page.getByRole( 'checkbox', { name: 'Outlet' } )
 	).toBeVisible();
 
 	await expect(
 		page.getByRole( 'button', { name: 'Update' } )
 	).toBeVisible();
 
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -49,10 +49,10 @@ test( 'can mark a product as clearance using the checkbox', async ( {
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await expect(
-		page.getByRole( 'checkbox', { name: 'Clearance section' } )
+		page.getByRole( 'checkbox', { name: 'Outlet' } )
 	).toBeVisible();
 	await expect(
-		page.getByRole( 'checkbox', { name: 'Clearance section' } )
+		page.getByRole( 'checkbox', { name: 'Outlet' } )
 	).toBeChecked();
 } );
 
@@ -85,21 +85,21 @@ test( 'can unmark a product as clearance using the checkbox', async ( {
 		`post=${ product.id }&action=edit`
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).uncheck();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).uncheck();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
 	// Assert.
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await expect(
-		page.getByRole( 'checkbox', { name: 'Clearance section' } )
+		page.getByRole( 'checkbox', { name: 'Outlet' } )
 	).toBeVisible();
 	await expect(
-		page.getByRole( 'checkbox', { name: 'Clearance section' } )
+		page.getByRole( 'checkbox', { name: 'Outlet' } )
 	).not.toBeChecked();
 } );
 
@@ -127,18 +127,18 @@ test( 'can toggle the clearance checkbox by clicking its label text', async ( {
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 
 	const checkbox = page.getByRole( 'checkbox', {
-		name: 'Clearance section',
+		name: 'Outlet',
 	} );
 	await expect( checkbox ).not.toBeChecked();
 
 	// Act - click the label text beside the checkbox rather than the checkbox itself.
-	await page.getByText( 'Include in clearance section' ).click();
+	await page.getByText( 'Include in outlet' ).click();
 
 	// Assert.
 	await expect( checkbox ).toBeChecked();
 
 	// Act - click the label text again to toggle the checkbox off.
-	await page.getByText( 'Include in clearance section' ).click();
+	await page.getByText( 'Include in outlet' ).click();
 
 	// Assert.
 	await expect( checkbox ).not.toBeChecked();
@@ -168,12 +168,12 @@ test( 'clearance status panel has correct styles', async ( {
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 
 	// Assert: help text has font-size 12px.
-	const helpText = page.locator( '.wc-clearance-status-help' );
+	const helpText = page.locator( '.wc-outlet-status-help' );
 	await expect( helpText ).toBeVisible();
 	await expect( helpText ).toHaveCSS( 'font-size', '12px' );
 
 	// Assert: panel has margin-bottom of 1.5em (verified against the element's own font-size).
-	const panel = page.locator( '.wc-clearance-status-panel' );
+	const panel = page.locator( '.wc-outlet-status-panel' );
 	await expect( panel ).toBeVisible();
 	const panelFontSizePx = await panel.evaluate( ( el ) =>
 		parseFloat( window.getComputedStyle( el ).fontSize )

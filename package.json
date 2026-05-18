@@ -1,5 +1,5 @@
 {
-	"name": "wc-clearance",
+	"name": "wc-outlet",
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
@@ -23,7 +23,7 @@
 		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
 		"test:e2e": "wp-scripts test-playwright",
 		"test:unit": "wp-scripts test-unit-js --config jest.config.cjs",
-		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit",
+		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-outlet vendor/bin/phpunit",
 		"typecheck": "tsc --noEmit",
 		"wp-env": "wp-env"
 	},
@@ -36,7 +36,7 @@
 		"assets",
 		"build",
 		"includes",
-		"wc-clearance.php",
+		"wc-outlet.php",
 		"readme.txt",
 		"LICENSE"
 	],

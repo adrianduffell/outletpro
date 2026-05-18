@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'clearance section block shows clearance products in editor and on front end', async ( {
+test( 'outlet block shows clearance products in editor and on front end', async ( {
 	page,
 	admin,
 	editor,
@@ -29,7 +29,7 @@ test( 'clearance section block shows clearance products in editor and on front e
 		);
 		await page.getByRole( 'link', { name: 'Inventory' } ).click();
 		await page
-			.getByRole( 'checkbox', { name: 'Clearance section' } )
+			.getByRole( 'checkbox', { name: 'Outlet' } )
 			.check();
 		await page.getByRole( 'button', { name: 'Update' } ).click();
 		await page.waitForLoadState( 'networkidle' );
@@ -54,11 +54,11 @@ test( 'clearance section block shows clearance products in editor and on front e
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
 
-	// Insert the clearance section block.
+	// Insert the outlet block.
 	await editor.insertBlock( {
 		name: 'woocommerce/product-collection',
 		attributes: {
-			collection: 'wc-clearance/product-collection/clearance',
+			collection: 'wc-outlet/product-collection/outlet',
 		},
 	} );
 
@@ -127,7 +127,7 @@ test( 'clearance badge has default black text and yellow background', async ( {
 		`post=${ product.id }&action=edit`
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -139,7 +139,7 @@ test( 'clearance badge has default black text and yellow background', async ( {
 	await page.goto( productData.permalink );
 
 	// Assert.
-	const badge = page.locator( '.wc-clearance-badge' );
+	const badge = page.locator( '.wc-outlet-badge' );
 	await expect( badge ).toBeVisible();
 	await expect( badge ).toHaveCSS( 'color', 'rgb(34, 34, 34)' );
 	await expect( badge ).toHaveCSS( 'background-color', 'rgb(255, 238, 133)' );

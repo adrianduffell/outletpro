@@ -1,14 +1,14 @@
 # Public API
 
-Clearance Section implements a stable public API intended for use by third-party code. All items listed here increment the plugin's MAJOR semver version when any known incompatible changes are made.
+Outlet implements a stable public API intended for use by third-party code. All items listed here increment the plugin's MAJOR semver version when any known incompatible changes are made.
 
 ## Functions
 
-### Clearance status
+### Outlet status
 
-#### `WC_Clearance\is_clearance( \WC_Product $product ): bool`
+#### `WC_Outlet\is_outlet( \WC_Product $product ): bool`
 
-Check if a product is in the clearance section.
+Check if a product is in the outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -18,15 +18,15 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $is_clearance = WC_Clearance\is_clearance( $product );
+    $is_outlet = WC_Outlet\is_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Clearance\add_to_clearance( \WC_Product $product ): void`
+#### `WC_Outlet\add_to_outlet( \WC_Product $product ): void`
 
-Add a product to the clearance section.
+Add a product to the outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -36,15 +36,15 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Clearance\add_to_clearance( $product );
+    WC_Outlet\add_to_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Clearance\remove_from_clearance( \WC_Product $product ): void`
+#### `WC_Outlet\remove_from_outlet( \WC_Product $product ): void`
 
-Remove a product from the clearance section.
+Remove a product from the outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -54,58 +54,58 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Clearance\remove_from_clearance( $product );
+    WC_Outlet\remove_from_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Clearance\set_clearance( \WC_Product $product, bool $new_value ): void`
+#### `WC_Outlet\set_outlet( \WC_Product $product, bool $new_value ): void`
 
-Set the clearance section status for a product.
+Set the outlet status for a product.
 
-Fires the `wc_clearance_status_changed` action on a status change.
+Fires the `wc_outlet_status_changed` action on a status change.
 
 Throws exception on error. Added in 1.0.0.
 
 | Parameter    | Type          | Description                                    |
 | ------------ | ------------- | ---------------------------------------------- |
 | `$product`   | `\WC_Product` | The product to update.                         |
-| `$new_value` | `bool`        | `true` to add to clearance, `false` to remove. |
+| `$new_value` | `bool`        | `true` to add to outlet, `false` to remove. |
 
 ```php
 try {
-    WC_Clearance\set_clearance( $product, true );
+    WC_Outlet\set_outlet( $product, true );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Clearance\count_clearance(): int`
+#### `WC_Outlet\count_outlet(): int`
 
-Count the number of published products in the clearance section.
+Count the number of published products in the outlet.
 
 Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $count = WC_Clearance\count_clearance();
+    $count = WC_Outlet\count_outlet();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Clearance\clearance_section_empty(): bool`
+#### `WC_Outlet\outlet_empty(): bool`
 
-Check if the clearance section has no published products.
+Check if the outlet has no published products.
 
-More performant than `count_clearance()` because it skips the SQL `COUNT(*)`.
+More performant than `count_outlet()` because it skips the SQL `COUNT(*)`.
 
 Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Clearance\clearance_section_empty() ) {
+    if ( WC_Outlet\outlet_empty() ) {
         // nothing to display
     }
 } catch ( \Throwable $e ) {
@@ -113,11 +113,11 @@ try {
 }
 ```
 
-### Clearance page
+### Outlet page
 
-#### `WC_Clearance\get_clearance_page_id(): ?int`
+#### `WC_Outlet\get_outlet_page_id(): ?int`
 
-Get the clearance section page ID from the `wc_clearance_page_id` option.
+Get the outlet page ID from the `wc_outlet_page_id` option.
 
 Returns the page ID as a normalised `int`, or `null` when the option does not exist.
 
@@ -125,24 +125,24 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $page_id = WC_Clearance\get_clearance_page_id();
+    $page_id = WC_Outlet\get_outlet_page_id();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Clearance\clearance_page_exists(): bool`
+#### `WC_Outlet\outlet_page_exists(): bool`
 
-Check if the clearance section page exists.
+Check if the outlet page exists.
 
-Uses heuristics on the `wc_clearance_page_id` option value. Returns `false` when the option
+Uses heuristics on the `wc_outlet_page_id` option value. Returns `false` when the option
 is missing. Trashed pages are not considered to exist.
 
 Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Clearance\clearance_page_exists() ) {
+    if ( WC_Outlet\outlet_page_exists() ) {
         // page is present
     }
 } catch ( \Throwable $e ) {
@@ -150,15 +150,15 @@ try {
 }
 ```
 
-#### `WC_Clearance\clearance_page_is_published(): bool`
+#### `WC_Outlet\outlet_page_is_published(): bool`
 
-Check whether the clearance section page exists and is published.
+Check whether the outlet page exists and is published.
 
 Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Clearance\clearance_page_is_published() ) {
+    if ( WC_Outlet\outlet_page_is_published() ) {
         // page is live
     }
 } catch ( \Throwable $e ) {
@@ -166,11 +166,11 @@ try {
 }
 ```
 
-#### `WC_Clearance\create_clearance_page(): void`
+#### `WC_Outlet\create_outlet_page(): void`
 
-Create the clearance section page.
+Create the outlet page.
 
-Does nothing when a clearance page is already registered, preventing duplicates.
+Does nothing when a outlet page is already registered, preventing duplicates.
 The created page is a draft. The page content varies depending on whether the active
 theme is a block theme or a classic theme.
 
@@ -178,7 +178,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Clearance\create_clearance_page();
+    WC_Outlet\create_outlet_page();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
@@ -188,32 +188,32 @@ try {
 
 ### Actions
 
-#### `wc_clearance_status_changed`
+#### `wc_outlet_status_changed`
 
-Fires when a product's clearance section status changes.
+Fires when a product's outlet status changes.
 
 ```php
-add_action( 'wc_clearance_status_changed', function ( $product_id, $old_value, $new_value ) {
-    // React to the clearance status change.
+add_action( 'wc_outlet_status_changed', function ( $product_id, $old_value, $new_value ) {
+    // React to the outlet status change.
 }, 10, 3 );
 ```
 
 | Parameter     | Type   | Description                |
 | ------------- | ------ | -------------------------- |
 | `$product_id` | `int`  | Product ID.                |
-| `$old_value`  | `bool` | Previous clearance status. |
-| `$new_value`  | `bool` | New clearance status.      |
+| `$old_value`  | `bool` | Previous outlet status. |
+| `$new_value`  | `bool` | New outlet status.      |
 
 Added in 1.0.0.
 
 ### Filters
 
-#### `wc_clearance_badge_single_product_hook`
+#### `wc_outlet_badge_single_product_hook`
 
-Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the clearance badge on.
+Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the outlet badge on.
 
 ```php
-add_filter( 'wc_clearance_badge_single_product_hook', function ( $name ) {
+add_filter( 'wc_outlet_badge_single_product_hook', function ( $name ) {
     return 'woocommerce_before_single_product';
 } );
 ```
@@ -224,12 +224,12 @@ add_filter( 'wc_clearance_badge_single_product_hook', function ( $name ) {
 
 Must return a non-empty string. Added in 1.0.0.
 
-#### `wc_clearance_badge_single_product_priority`
+#### `wc_outlet_badge_single_product_priority`
 
-Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the clearance badge to the `single-product` classic templates.
+Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the outlet badge to the `single-product` classic templates.
 
 ```php
-add_filter( 'wc_clearance_badge_single_product_priority', function ( $priority ) {
+add_filter( 'wc_outlet_badge_single_product_priority', function ( $priority ) {
     return 5;
 } );
 ```
@@ -247,30 +247,30 @@ enqueues.
 
 ### Styles
 
-#### `wc-clearance`
+#### `wc-outlet`
 
 Front-end stylesheet for classic (non-block) themes. Registered — but not automatically
-enqueued — on `wp_enqueue_scripts`. Use `wp_enqueue_style( 'wc-clearance' )` or declare
+enqueued — on `wp_enqueue_scripts`. Use `wp_enqueue_style( 'wc-outlet' )` or declare
 it as a dependency to load it on demand. Added in 1.0.0.
 
-#### `wc-clearance-block-styles`
+#### `wc-outlet-block-styles`
 
-Stylesheet for the clearance badge block. Registered via `wp_enqueue_block_style` so it
-is only loaded when the `wc-clearance/clearance-badge` block is rendered on the page.
+Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
+is only loaded when the `wc-outlet/outlet-badge` block is rendered on the page.
 Added in 1.0.0.
 
-#### `wc-clearance-admin-styles`
+#### `wc-outlet-admin-styles`
 
 Admin stylesheet enqueued on all `admin_enqueue_scripts` pages. Added in 1.0.0.
 
 ### Scripts
 
-#### `wc-clearance-build`
+#### `wc-outlet-build`
 
 Block editor JavaScript enqueued on `enqueue_block_editor_assets`. Contains the block
-editor integration for the clearance badge and clearance message blocks. Added in 1.0.0.
+editor integration for the outlet badge and outlet message blocks. Added in 1.0.0.
 
-#### `wc-clearance-admin-product`
+#### `wc-outlet-admin-product`
 
 Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
 Added in 1.0.0.
@@ -282,21 +282,21 @@ for custom styling.
 
 ### Front-end classes
 
-#### `.wc-clearance-badge`
+#### `.wc-outlet-badge`
 
-Applied to the clearance badge element. Used by both the block renderer and classic theme
+Applied to the outlet badge element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
-#### `.wc-clearance-message`
+#### `.wc-outlet-message`
 
-Applied to the clearance message element. Used by both the block renderer and classic theme
+Applied to the outlet message element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
 ## Blocks
 
-### `wc-clearance/clearance-badge`
+### `wc-outlet/outlet-badge`
 
-Displays a clearance badge when the product is in the clearance section. Automatically
+Displays a outlet badge when the product is in the outlet. Automatically
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
@@ -324,9 +324,9 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 \* Denotes modifiable in settings.
 
-### `wc-clearance/clearance-message`
+### `wc-outlet/outlet-message`
 
-Displays the clearance message when the product is in the clearance section. Automatically
+Displays the outlet message when the product is in the outlet. Automatically
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
 
@@ -334,37 +334,37 @@ themes). Added in 1.0.0.
 | ---------- | -------- | ------- | ------------------------------------------ |
 | `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
 
-### `wc-clearance/product-collection/clearance`
+### `wc-outlet/product-collection/outlet`
 
-A product collection variation that shows only clearance products. Available in the block
+A product collection variation that shows only outlet products. Available in the block
 editor when inserting a Product Collection block. Added in 1.0.0.
 
 ## REST API
 
-The plugin extends the WooCommerce products REST endpoint with a `wc_clearance` query
+The plugin extends the WooCommerce products REST endpoint with a `wc_outlet` query
 parameter.
 
 ```http
-GET /wc/v3/products?wc_clearance=true
+GET /wc/v3/products?wc_outlet=true
 ```
 
 | Parameter      | Type      | Description                                                       |
 | -------------- | --------- | ----------------------------------------------------------------- |
-| `wc_clearance` | `boolean` | When `true`, limits results to products in the clearance section. |
+| `wc_outlet` | `boolean` | When `true`, limits results to products in the outlet. |
 
 Added in 1.0.0.
 
 ## Shortcodes
 
-The plugin extends the WooCommerce `[products]` shortcode with a `wc_clearance` attribute.
+The plugin extends the WooCommerce `[products]` shortcode with a `wc_outlet` attribute.
 
 ```text
-[products wc_clearance="true"]
+[products wc_outlet="true"]
 ```
 
 | Attribute      | Type                       | Description                                                       |
 | -------------- | -------------------------- | ----------------------------------------------------------------- |
-| `wc_clearance` | `boolean` (`true`/`false`) | When `true`, limits results to products in the clearance section. |
+| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the outlet. |
 
 Added in 1.0.0.
 
@@ -381,9 +381,9 @@ time without a MAJOR version bump. Do not rely on them in third-party code.
 
     File paths are subject to change in future versions.
 
--   The taxonomy slug `wc_clearance_status` and term slug `clearance`.
+-   The taxonomy slug `wc_outlet_status` and term slug `outlet`.
 
-    The clearance status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the clearance status functions or REST API parameter for stable access to the clearance status.
+    The outlet status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the outlet status functions or REST API parameter for stable access to the outlet status.
 
 -   Admin dashboard CSS.
 

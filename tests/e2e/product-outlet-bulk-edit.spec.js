@@ -39,7 +39,7 @@ test( 'can bulk edit products to include in clearance section', async ( {
 
 	// Set the Clearance section field to "Include" and click Update.
 	await page
-		.locator( 'select[name="wc_clearance_bulk"]' )
+		.locator( 'select[name="wc_outlet_bulk"]' )
 		.selectOption( 'yes' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
@@ -52,7 +52,7 @@ test( 'can bulk edit products to include in clearance section', async ( {
 		);
 		await page.getByRole( 'link', { name: 'Inventory' } ).click();
 		await expect(
-			page.getByRole( 'checkbox', { name: 'Clearance section' } )
+			page.getByRole( 'checkbox', { name: 'Outlet' } )
 		).toBeChecked();
 	}
 } );
@@ -79,7 +79,7 @@ test( 'can bulk edit products to remove from clearance section', async ( {
 		`post=${ product.id }&action=edit`
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -93,7 +93,7 @@ test( 'can bulk edit products to remove from clearance section', async ( {
 
 	// Set the Clearance section field to "Remove" and click Update.
 	await page
-		.locator( 'select[name="wc_clearance_bulk"]' )
+		.locator( 'select[name="wc_outlet_bulk"]' )
 		.selectOption( 'no' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
@@ -105,6 +105,6 @@ test( 'can bulk edit products to remove from clearance section', async ( {
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 	await expect(
-		page.getByRole( 'checkbox', { name: 'Clearance section' } )
+		page.getByRole( 'checkbox', { name: 'Outlet' } )
 	).not.toBeChecked();
 } );

@@ -310,7 +310,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).toHaveBeenCalledWith(
-			'wc-clearance-sidebar',
+			'wc-outlet-sidebar',
 			expect.objectContaining( {
 				render: expect.any( Function ),
 			} )
@@ -346,7 +346,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'wc-clearance-sidebar',
+			'wc-outlet-sidebar',
 			expect.anything()
 		);
 
@@ -367,7 +367,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'wc-clearance-sidebar',
+			'wc-outlet-sidebar',
 			expect.anything()
 		);
 
@@ -389,7 +389,7 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect( screen.getByText( 'Clearance section' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Outlet' ) ).toBeInTheDocument();
 	} );
 
 	test( 'render function outputs all panel sections', () => {
@@ -858,11 +858,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '0',
 			setBorderWidth,
 		} );
-		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
+		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_clearance_borders_enabled' );
+		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -886,11 +886,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '',
 			setBorderWidth: jest.fn(),
 		} );
-		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
+		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_clearance_borders_enabled' );
+		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -914,11 +914,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '',
 			setBorderWidth: jest.fn(),
 		} );
-		window.localStorage.setItem( 'wc_clearance_borders_enabled', '1' );
+		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_clearance_borders_enabled' );
+		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -946,7 +946,7 @@ describe( 'page-editor-sidebar registration', () => {
 		// Assert.
 		expect(
 			screen.getByText(
-				'Customize the appearance of the clearance badge. Changes apply to the whole site.'
+				'Customize the appearance of the outlet badge. Changes apply to the whole site.'
 			)
 		).toBeInTheDocument();
 	} );
@@ -1065,7 +1065,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect(
-			screen.getByTestId( 'wc-clearance-message-tab-description' )
+			screen.getByTestId( 'wc-outlet-message-tab-description' )
 		).toBeInTheDocument();
 	} );
 

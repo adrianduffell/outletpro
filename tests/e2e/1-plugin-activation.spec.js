@@ -14,7 +14,7 @@ test( 'plugin activation seeds clearance section data', async ( {
 		},
 	} );
 	await requestUtils.rest( {
-		path: '/wp/v2/plugins/wc-clearance/wc-clearance',
+		path: '/wp/v2/plugins/wc-outlet/wc-outlet',
 		method: 'PUT',
 		data: {
 			status: 'inactive',
@@ -24,7 +24,7 @@ test( 'plugin activation seeds clearance section data', async ( {
 	// Act: activate the plugin from the WP plugins screen.
 	await admin.visitAdminPage( 'plugins.php' );
 	await page
-		.locator( 'tr[data-slug="clearance-section"]' )
+		.locator( 'tr[data-slug="outlet"]' )
 		.getByRole( 'link', { name: 'Activate' } )
 		.click();
 
@@ -34,9 +34,9 @@ test( 'plugin activation seeds clearance section data', async ( {
 	// Assert: WooCommerce Status screen shows seeded Canonical term ID and Page ID.
 	await admin.visitAdminPage( 'admin.php', 'page=wc-status' );
 	await expect(
-		page.getByTestId( 'clearance-canonical-term-id' )
+		page.getByTestId( 'outlet-canonical-term-id' )
 	).toContainText( /\d+/ );
-	await expect( page.getByTestId( 'clearance-page-id' ) ).toContainText(
+	await expect( page.getByTestId( 'outlet-page-id' ) ).toContainText(
 		/\d+/
 	);
 } );

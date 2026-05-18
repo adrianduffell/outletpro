@@ -40,7 +40,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 	test( 'does not create notice when current post is not the clearance page', async () => {
 		// Arrange.
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 99 } );
-		mockApiFetch.mockResolvedValueOnce( { wc_clearance_page_id: 5 } );
+		mockApiFetch.mockResolvedValueOnce( { wc_outlet_page_id: 5 } );
 
 		// Act.
 		await act( async () => {
@@ -69,7 +69,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		// Arrange.
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockApiFetch
-			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
+			.mockResolvedValueOnce( { wc_outlet_page_id: 5 } )
 			.mockResolvedValueOnce( [ { id: 1 } ] );
 
 		// Act.
@@ -87,7 +87,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockDispatch.mockReturnValue( { createNotice: mockCreateNotice } );
 		mockApiFetch
-			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
+			.mockResolvedValueOnce( { wc_outlet_page_id: 5 } )
 			.mockResolvedValueOnce( [] );
 
 		// Act.
@@ -106,7 +106,7 @@ describe( 'ClearanceSectionEmptyNotice', () => {
 		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
 		mockDispatch.mockReturnValue( { createNotice: mockCreateNotice } );
 		mockApiFetch
-			.mockResolvedValueOnce( { wc_clearance_page_id: 5 } )
+			.mockResolvedValueOnce( { wc_outlet_page_id: 5 } )
 			.mockResolvedValueOnce( [] );
 
 		// Act.

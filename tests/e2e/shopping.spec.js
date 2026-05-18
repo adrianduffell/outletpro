@@ -73,7 +73,7 @@ async function getMiniCartBadge( page ) {
 	await miniCartButton.click();
 	const locator = page
 		.locator(
-			'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+			'.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
 		)
 		.first();
 	return { locator, pseudo: '::before' };
@@ -92,12 +92,12 @@ async function getCartBadge( page ) {
 	const locator = isBlock
 		? page
 				.locator(
-					'.wc-block-cart-item__product:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+					'.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
 				)
 				.first()
 		: page
 				.locator(
-					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+					'.shop_table td.product-name:has(.wc-outlet-cart-item-meta)'
 				)
 				.first();
 	return { locator, pseudo: isBlock ? '::before' : '::after' };
@@ -116,12 +116,12 @@ async function getCheckoutBadge( page ) {
 	const locator = isBlock
 		? page
 				.locator(
-					'.wc-block-components-order-summary-item__description:has(.wc-clearance-cart-item-meta) .wc-block-components-product-metadata'
+					'.wc-block-components-order-summary-item__description:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
 				)
 				.first()
 		: page
 				.locator(
-					'.shop_table td.product-name:has(.wc-clearance-cart-item-meta)'
+					'.shop_table td.product-name:has(.wc-outlet-cart-item-meta)'
 				)
 				.first();
 	return { locator, pseudo: isBlock ? '::before' : '::after' };
@@ -206,7 +206,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		`post=${ product.id }&action=edit`
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 
 	const productData = await requestUtils.rest( {
@@ -220,12 +220,12 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	} );
 	await requestUtils.rest( {
 		method: 'PUT',
-		path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
+		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
 		data: { status: 'publish' },
 	} );
 	const clearancePage = await requestUtils.rest( {
 		method: 'GET',
-		path: `/wp/v2/pages/${ wpSettings.wc_clearance_page_id }`,
+		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
 	} );
 
 	// Customer flow in isolated context.
@@ -263,7 +263,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
-	const badge = customerPage.locator( '.wc-clearance-badge' );
+	const badge = customerPage.locator( '.wc-outlet-badge' );
 	await expect( badge ).toBeVisible();
 	await expect
 		.soft( badge, 'Product font-size' )

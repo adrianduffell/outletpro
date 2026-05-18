@@ -36,18 +36,18 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		expect(
-			document.head.querySelector( '#wc-clearance-preview-vars' )
+			document.head.querySelector( '#wc-outlet-preview-vars' )
 		).not.toBeNull();
 	} );
 
 	test( 'renders CSS vars from settings', () => {
 		// Arrange.
 		setupEntityPropMock( {
-			wc_clearance_badge_label: [ 'Sale', jest.fn() ],
-			wc_clearance_badge_bg_color: [ '#ff0000', jest.fn() ],
-			wc_clearance_badge_text_color: [ '#ffffff', jest.fn() ],
-			wc_clearance_badge_scale: [ 140, jest.fn() ],
-			wc_clearance_badge_density: [ 80, jest.fn() ],
+			wc_outlet_badge_label: [ 'Sale', jest.fn() ],
+			wc_outlet_badge_bg_color: [ '#ff0000', jest.fn() ],
+			wc_outlet_badge_text_color: [ '#ffffff', jest.fn() ],
+			wc_outlet_badge_scale: [ 140, jest.fn() ],
+			wc_outlet_badge_density: [ 80, jest.fn() ],
 		} );
 
 		// Act.
@@ -55,23 +55,23 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		const styleEl = document.head.querySelector(
-			'#wc-clearance-preview-vars'
+			'#wc-outlet-preview-vars'
 		);
 
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-label: "Sale"'
+			'--wc-outlet-badge-label: "Sale"'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-bg-color: #ff0000'
+			'--wc-outlet-badge-bg-color: #ff0000'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-text-color: #ffffff'
+			'--wc-outlet-badge-text-color: #ffffff'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-scale: 140'
+			'--wc-outlet-badge-scale: 140'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-density: 80'
+			'--wc-outlet-badge-density: 80'
 		);
 	} );
 
@@ -84,23 +84,23 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		const styleEl = document.head.querySelector(
-			'#wc-clearance-preview-vars'
+			'#wc-outlet-preview-vars'
 		);
 
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-bg-color: unset'
+			'--wc-outlet-badge-bg-color: unset'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-text-color: unset'
+			'--wc-outlet-badge-text-color: unset'
 		);
 	} );
 
 	test( 'falls back to unset for empty string style values', () => {
 		// Arrange.
 		setupEntityPropMock( {
-			wc_clearance_badge_bg_color: [ '', jest.fn() ],
-			wc_clearance_badge_border_style: [ '', jest.fn() ],
-			wc_clearance_badge_font_weight: [ '', jest.fn() ],
+			wc_outlet_badge_bg_color: [ '', jest.fn() ],
+			wc_outlet_badge_border_style: [ '', jest.fn() ],
+			wc_outlet_badge_font_weight: [ '', jest.fn() ],
 		} );
 
 		// Act.
@@ -108,17 +108,17 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		const styleEl = document.head.querySelector(
-			'#wc-clearance-preview-vars'
+			'#wc-outlet-preview-vars'
 		);
 
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-bg-color: unset'
+			'--wc-outlet-badge-bg-color: unset'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-border-style: unset'
+			'--wc-outlet-badge-border-style: unset'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-clearance-badge-font-weight: unset'
+			'--wc-outlet-badge-font-weight: unset'
 		);
 	} );
 
@@ -133,7 +133,7 @@ describe( 'EditorPreview', () => {
 			// Act.
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'wc-clearance-canvas-ready', {
+					new CustomEvent( 'wc-outlet-canvas-ready', {
 						detail: {
 							document: canvasDoc,
 						},
@@ -143,10 +143,10 @@ describe( 'EditorPreview', () => {
 
 			// Assert.
 			expect(
-				canvasDoc.head.querySelector( '#wc-clearance-preview-vars' )
+				canvasDoc.head.querySelector( '#wc-outlet-preview-vars' )
 			).not.toBeNull();
 			expect(
-				document.head.querySelector( '#wc-clearance-preview-vars' )
+				document.head.querySelector( '#wc-outlet-preview-vars' )
 			).toBeNull();
 		} );
 
@@ -160,7 +160,7 @@ describe( 'EditorPreview', () => {
 
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'wc-clearance-canvas-ready', {
+					new CustomEvent( 'wc-outlet-canvas-ready', {
 						detail: {
 							document: canvasDoc1,
 						},
@@ -169,13 +169,13 @@ describe( 'EditorPreview', () => {
 			} );
 
 			expect(
-				canvasDoc1.head.querySelector( '#wc-clearance-preview-vars' )
+				canvasDoc1.head.querySelector( '#wc-outlet-preview-vars' )
 			).not.toBeNull();
 
 			// Act.
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'wc-clearance-canvas-ready', {
+					new CustomEvent( 'wc-outlet-canvas-ready', {
 						detail: {
 							document: canvasDoc2,
 						},
@@ -185,10 +185,10 @@ describe( 'EditorPreview', () => {
 
 			// Assert.
 			expect(
-				canvasDoc2.head.querySelector( '#wc-clearance-preview-vars' )
+				canvasDoc2.head.querySelector( '#wc-outlet-preview-vars' )
 			).not.toBeNull();
 			expect(
-				canvasDoc1.head.querySelector( '#wc-clearance-preview-vars' )
+				canvasDoc1.head.querySelector( '#wc-outlet-preview-vars' )
 			).toBeNull();
 		} );
 	} );

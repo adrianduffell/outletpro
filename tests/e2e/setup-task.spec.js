@@ -18,7 +18,7 @@ test( 'include products in clearance section setup task', async ( {
 
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
 	const taskItem = page.locator( '.woocommerce-task-list__item', {
-		hasText: 'Include products in the clearance section',
+		hasText: 'Include products in the outlet',
 	} );
 	await expect( taskItem ).toBeVisible();
 	await expect( taskItem ).not.toHaveClass( /is-complete/ );
@@ -32,7 +32,7 @@ test( 'include products in clearance section setup task', async ( {
 		`post=${ product.id }&action=edit`
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 

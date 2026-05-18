@@ -8,22 +8,22 @@ test( 'system status shows clearance section info', async ( {
 
 	// Check section heading is visible.
 	await expect(
-		page.getByRole( 'heading', { name: 'Clearance Section' } )
+		page.getByRole( 'heading', { name: 'Outlet' } )
 	).toBeVisible();
 
 	// Check taxonomy is registered.
 	await expect(
-		page.getByTestId( 'clearance-taxonomy-registered' )
+		page.getByTestId( 'outlet-taxonomy-registered' )
 	).toContainText( 'Yes' );
 
 	// Check canonical term ID is shown (not a warning).
 	await expect(
-		page.getByTestId( 'clearance-canonical-term-id' )
+		page.getByTestId( 'outlet-canonical-term-id' )
 	).not.toContainText( 'Canonical term not found' );
 	await expect(
-		page.getByTestId( 'clearance-canonical-term-id' )
+		page.getByTestId( 'outlet-canonical-term-id' )
 	).toContainText( /\d+/ );
 
 	// Check total products count is shown.
-	await expect( page.getByTestId( 'clearance-product-count' ) ).toBeVisible();
+	await expect( page.getByTestId( 'outlet-product-count' ) ).toBeVisible();
 } );
