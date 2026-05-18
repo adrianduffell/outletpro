@@ -2,96 +2,96 @@
 /**
  * Settings functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress option key used to store the clearance message.
+ * WordPress option key used to store the outlet message.
  *
  * @internal
  */
-const CLEARANCE_MESSAGE_OPTION = 'wc_clearance_message';
+const OUTLET_MESSAGE_OPTION = 'wc_outlet_message';
 
 /**
- * WordPress option key used to store the clearance section page ID.
+ * WordPress option key used to store the outlet page ID.
  *
  * @internal
  */
-const CLEARANCE_PAGE_OPTION = 'wc_clearance_page_id';
+const OUTLET_PAGE_OPTION = 'wc_outlet_page_id';
 
 /**
  * WordPress option key used to store the badge label text.
  *
  * @internal
  */
-const CLEARANCE_BADGE_LABEL_OPTION = 'wc_clearance_badge_label';
+const OUTLET_BADGE_LABEL_OPTION = 'wc_outlet_badge_label';
 
 /**
  * WordPress option key used to store the badge text color.
  *
  * @internal
  */
-const CLEARANCE_BADGE_TEXT_COLOR_OPTION = 'wc_clearance_badge_text_color';
+const OUTLET_BADGE_TEXT_COLOR_OPTION = 'wc_outlet_badge_text_color';
 
 /**
  * WordPress option key used to store the badge background color.
  *
  * @internal
  */
-const CLEARANCE_BADGE_BG_COLOR_OPTION = 'wc_clearance_badge_bg_color';
+const OUTLET_BADGE_BG_COLOR_OPTION = 'wc_outlet_badge_bg_color';
 
 /**
  * WordPress option key used to store the badge border radius.
  *
  * @internal
  */
-const CLEARANCE_BADGE_BORDER_RADIUS_OPTION = 'wc_clearance_badge_border_radius';
+const OUTLET_BADGE_BORDER_RADIUS_OPTION = 'wc_outlet_badge_border_radius';
 
 /**
  * WordPress option key used to store the badge border color.
  *
  * @internal
  */
-const CLEARANCE_BADGE_BORDER_COLOR_OPTION = 'wc_clearance_badge_border_color';
+const OUTLET_BADGE_BORDER_COLOR_OPTION = 'wc_outlet_badge_border_color';
 
 /**
  * WordPress option key used to store the badge border style.
  *
  * @internal
  */
-const CLEARANCE_BADGE_BORDER_STYLE_OPTION = 'wc_clearance_badge_border_style';
+const OUTLET_BADGE_BORDER_STYLE_OPTION = 'wc_outlet_badge_border_style';
 
 /**
  * WordPress option key used to store the badge border width.
  *
  * @internal
  */
-const CLEARANCE_BADGE_BORDER_WIDTH_OPTION = 'wc_clearance_badge_border_width';
+const OUTLET_BADGE_BORDER_WIDTH_OPTION = 'wc_outlet_badge_border_width';
 
 /**
  * WordPress option key used to store the badge font weight.
  *
  * @internal
  */
-const CLEARANCE_BADGE_FONT_WEIGHT_OPTION = 'wc_clearance_badge_font_weight';
+const OUTLET_BADGE_FONT_WEIGHT_OPTION = 'wc_outlet_badge_font_weight';
 
 /**
  * WordPress option key used to store the badge scale.
  *
  * @internal
  */
-const CLEARANCE_BADGE_SCALE_OPTION = 'wc_clearance_badge_scale';
+const OUTLET_BADGE_SCALE_OPTION = 'wc_outlet_badge_scale';
 
 /**
  * WordPress option key used to store the badge density.
  *
  * @internal
  */
-const CLEARANCE_BADGE_DENSITY_OPTION = 'wc_clearance_badge_density';
+const OUTLET_BADGE_DENSITY_OPTION = 'wc_outlet_badge_density';
 
 /**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
@@ -179,7 +179,7 @@ function sanitize_unsigned_integer( $value ): ?int {
  * @internal
  */
 function settings_screen_enabled(): bool {
-	return (bool) apply_filters( 'wc_clearance_settings_screen_enabled', false );
+	return (bool) apply_filters( 'wc_outlet_settings_screen_enabled', false );
 }
 
 /**
@@ -188,37 +188,37 @@ function settings_screen_enabled(): bool {
  * @internal
  */
 function init_settings(): void {
-	register_clearance_page_setting();
-	register_clearance_badge_label_setting();
-	register_clearance_badge_text_color_setting();
-	register_clearance_badge_bg_color_setting();
-	register_clearance_badge_border_color_setting();
-	register_clearance_badge_border_style_setting();
-	register_clearance_badge_border_width_setting();
-	register_clearance_badge_border_radius_setting();
-	register_clearance_badge_font_weight_setting();
-	register_clearance_badge_scale_setting();
-	register_clearance_badge_density_setting();
-	register_clearance_message_setting();
+	register_outlet_page_setting();
+	register_outlet_badge_label_setting();
+	register_outlet_badge_text_color_setting();
+	register_outlet_badge_bg_color_setting();
+	register_outlet_badge_border_color_setting();
+	register_outlet_badge_border_style_setting();
+	register_outlet_badge_border_width_setting();
+	register_outlet_badge_border_radius_setting();
+	register_outlet_badge_font_weight_setting();
+	register_outlet_badge_scale_setting();
+	register_outlet_badge_density_setting();
+	register_outlet_message_setting();
 }
 
 /**
- * Get the default clearance message based on the store's country.
+ * Get the default outlet message based on the store's country.
  *
  * Returns "Only while supplies last" for US and Canada, and
  * "Only while stocks last" for all other countries.
  *
  * @since 1.0.0
  */
-function get_default_clearance_message(): string {
+function get_default_outlet_message(): string {
 	$base_location = (string) get_option( 'woocommerce_default_country', '' );
 	$country       = explode( ':', $base_location )[0];
 
 	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
-		return __( 'Only while supplies last', 'wc-clearance' );
+		return __( 'Only while supplies last', 'wc-outlet' );
 	}
 
-	return __( 'Only while stocks last', 'wc-clearance' );
+	return __( 'Only while stocks last', 'wc-outlet' );
 }
 
 /**
@@ -231,28 +231,28 @@ function get_default_clearance_message(): string {
  * @internal
  */
 function seed_settings(): void {
-	add_option( CLEARANCE_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-clearance' ) );
-	add_option( CLEARANCE_BADGE_TEXT_COLOR_OPTION, '#222' );
-	add_option( CLEARANCE_BADGE_BG_COLOR_OPTION, '#FFEE85' );
-	add_option( CLEARANCE_BADGE_BORDER_COLOR_OPTION, '' );
-	add_option( CLEARANCE_BADGE_BORDER_STYLE_OPTION, 'none' );
-	add_option( CLEARANCE_BADGE_BORDER_WIDTH_OPTION, '0' );
-	add_option( CLEARANCE_BADGE_BORDER_RADIUS_OPTION, '2px' );
-	add_option( CLEARANCE_BADGE_FONT_WEIGHT_OPTION, '600' );
-	add_option( CLEARANCE_BADGE_SCALE_OPTION, 166 );
-	add_option( CLEARANCE_BADGE_DENSITY_OPTION, 50 );
-	add_option( CLEARANCE_MESSAGE_OPTION, get_default_clearance_message() );
+	add_option( OUTLET_BADGE_LABEL_OPTION, __( 'Clearance', 'wc-outlet' ) );
+	add_option( OUTLET_BADGE_TEXT_COLOR_OPTION, '#222' );
+	add_option( OUTLET_BADGE_BG_COLOR_OPTION, '#FFEE85' );
+	add_option( OUTLET_BADGE_BORDER_COLOR_OPTION, '' );
+	add_option( OUTLET_BADGE_BORDER_STYLE_OPTION, 'none' );
+	add_option( OUTLET_BADGE_BORDER_WIDTH_OPTION, '0' );
+	add_option( OUTLET_BADGE_BORDER_RADIUS_OPTION, '2px' );
+	add_option( OUTLET_BADGE_FONT_WEIGHT_OPTION, '600' );
+	add_option( OUTLET_BADGE_SCALE_OPTION, 166 );
+	add_option( OUTLET_BADGE_DENSITY_OPTION, 50 );
+	add_option( OUTLET_MESSAGE_OPTION, get_default_outlet_message() );
 }
 
 /**
- * Register the clearance page ID setting.
+ * Register the outlet page ID setting.
  *
  * @internal
  */
-function register_clearance_page_setting(): void {
+function register_outlet_page_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_PAGE_OPTION,
+		'wc_outlet',
+		OUTLET_PAGE_OPTION,
 		array(
 			'type'         => 'integer',
 			'show_in_rest' => array(
@@ -266,18 +266,18 @@ function register_clearance_page_setting(): void {
 }
 
 /**
- * Register the clearance badge label setting.
+ * Register the outlet badge label setting.
  *
  * @internal
  */
-function register_clearance_badge_label_setting(): void {
+function register_outlet_badge_label_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_LABEL_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge label', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge label.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge label', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge label.', 'wc-outlet' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
@@ -290,18 +290,18 @@ function register_clearance_badge_label_setting(): void {
 }
 
 /**
- * Register the clearance badge text color setting.
+ * Register the outlet badge text color setting.
  *
  * @since 1.0.0
  */
-function register_clearance_badge_text_color_setting(): void {
+function register_outlet_badge_text_color_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_TEXT_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge text color', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge text color.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge text color', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge text color.', 'wc-outlet' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
@@ -314,18 +314,18 @@ function register_clearance_badge_text_color_setting(): void {
 }
 
 /**
- * Register the clearance badge background color setting.
+ * Register the outlet badge background color setting.
  *
  * @since 1.0.0
  */
-function register_clearance_badge_bg_color_setting(): void {
+function register_outlet_badge_bg_color_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_BG_COLOR_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_BG_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge background color', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge background color.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge background color', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge background color.', 'wc-outlet' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
@@ -338,20 +338,20 @@ function register_clearance_badge_bg_color_setting(): void {
 }
 
 /**
- * Register the clearance badge border radius setting.
+ * Register the outlet badge border radius setting.
  *
  * @internal
  */
-function register_clearance_badge_border_radius_setting(): void {
+function register_outlet_badge_border_radius_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_BORDER_RADIUS_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_BORDER_RADIUS_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge border radius', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge border radius.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge border radius', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge border radius.', 'wc-outlet' ),
 			'default'           => '',
-			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
@@ -362,20 +362,20 @@ function register_clearance_badge_border_radius_setting(): void {
 }
 
 /**
- * Register the clearance badge border color setting.
+ * Register the outlet badge border color setting.
  *
  * @internal
  */
-function register_clearance_badge_border_color_setting(): void {
+function register_outlet_badge_border_color_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_BORDER_COLOR_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_BORDER_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge border color', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge border color.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge border color', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge border color.', 'wc-outlet' ),
 			'default'           => '',
-			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
@@ -386,20 +386,20 @@ function register_clearance_badge_border_color_setting(): void {
 }
 
 /**
- * Register the clearance badge border style setting.
+ * Register the outlet badge border style setting.
  *
  * @internal
  */
-function register_clearance_badge_border_style_setting(): void {
+function register_outlet_badge_border_style_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_BORDER_STYLE_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_BORDER_STYLE_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge border style', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge border style.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge border style', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge border style.', 'wc-outlet' ),
 			'default'           => '',
-			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
@@ -410,20 +410,20 @@ function register_clearance_badge_border_style_setting(): void {
 }
 
 /**
- * Register the clearance badge border width setting.
+ * Register the outlet badge border width setting.
  *
  * @internal
  */
-function register_clearance_badge_border_width_setting(): void {
+function register_outlet_badge_border_width_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_BORDER_WIDTH_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_BORDER_WIDTH_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge border width', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge border width.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge border width', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge border width.', 'wc-outlet' ),
 			'default'           => '',
-			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
@@ -434,20 +434,20 @@ function register_clearance_badge_border_width_setting(): void {
 }
 
 /**
- * Register the clearance badge font weight setting.
+ * Register the outlet badge font weight setting.
  *
  * @internal
  */
-function register_clearance_badge_font_weight_setting(): void {
+function register_outlet_badge_font_weight_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_FONT_WEIGHT_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_FONT_WEIGHT_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance badge font weight', 'wc-clearance' ),
-			'description'       => __( 'Store-wide clearance badge font weight.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge font weight', 'wc-outlet' ),
+			'description'       => __( 'Store-wide outlet badge font weight.', 'wc-outlet' ),
 			'default'           => '',
-			'sanitize_callback' => 'WC_Clearance\sanitize_css_value',
+			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',
@@ -458,20 +458,20 @@ function register_clearance_badge_font_weight_setting(): void {
 }
 
 /**
- * Register the clearance badge scale setting.
+ * Register the outlet badge scale setting.
  *
  * @internal
  */
-function register_clearance_badge_scale_setting(): void {
+function register_outlet_badge_scale_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_SCALE_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_SCALE_OPTION,
 		array(
 			'type'              => 'integer',
-			'label'             => __( 'Clearance badge scale', 'wc-clearance' ),
-			'description'       => __( 'Percentage size of the clearance badge relative to the surrounding text cap-height.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge scale', 'wc-outlet' ),
+			'description'       => __( 'Percentage size of the outlet badge relative to the surrounding text cap-height.', 'wc-outlet' ),
 			'default'           => null,
-			'sanitize_callback' => 'WC_Clearance\sanitize_unsigned_integer',
+			'sanitize_callback' => 'WC_Outlet\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type'    => 'integer',
@@ -483,20 +483,20 @@ function register_clearance_badge_scale_setting(): void {
 }
 
 /**
- * Register the clearance badge density setting.
+ * Register the outlet badge density setting.
  *
  * @internal
  */
-function register_clearance_badge_density_setting(): void {
+function register_outlet_badge_density_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_BADGE_DENSITY_OPTION,
+		'wc_outlet',
+		OUTLET_BADGE_DENSITY_OPTION,
 		array(
 			'type'              => 'integer',
-			'label'             => __( 'Clearance badge density', 'wc-clearance' ),
-			'description'       => __( 'Controls the ratio between font size and padding for the badge. A lower density results in more whitespace. A Higher density results in a larger font.', 'wc-clearance' ),
+			'label'             => __( 'Outlet badge density', 'wc-outlet' ),
+			'description'       => __( 'Controls the ratio between font size and padding for the badge. A lower density results in more whitespace. A Higher density results in a larger font.', 'wc-outlet' ),
 			'default'           => null,
-			'sanitize_callback' => 'WC_Clearance\sanitize_unsigned_integer',
+			'sanitize_callback' => 'WC_Outlet\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type'    => 'integer',
@@ -509,18 +509,18 @@ function register_clearance_badge_density_setting(): void {
 }
 
 /**
- * Register the clearance message setting.
+ * Register the outlet message setting.
  *
  * @internal
  */
-function register_clearance_message_setting(): void {
+function register_outlet_message_setting(): void {
 	register_setting(
-		'wc_clearance',
-		CLEARANCE_MESSAGE_OPTION,
+		'wc_outlet',
+		OUTLET_MESSAGE_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Clearance message', 'wc-clearance' ),
-			'description'       => __( 'Message displayed on clearance products.', 'wc-clearance' ),
+			'label'             => __( 'Outlet message', 'wc-outlet' ),
+			'description'       => __( 'Message displayed on outlet products.', 'wc-outlet' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
@@ -533,7 +533,7 @@ function register_clearance_message_setting(): void {
 }
 
 /**
- * Get the clearance section page ID from the option.
+ * Get the outlet page ID from the option.
  *
  * Validates the page ID is a positive integer. Zero and non-digit values
  * indicate a corrupted state and exceptions are thrown in these cases.
@@ -544,15 +544,15 @@ function register_clearance_message_setting(): void {
  * @since 1.0.0
  * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
  */
-function get_clearance_page_id(): ?int {
-	$value = get_option( CLEARANCE_PAGE_OPTION );
+function get_outlet_page_id(): ?int {
+	$value = get_option( OUTLET_PAGE_OPTION );
 
 	if ( false === $value ) {
 		return null;
 	}
 
 	if ( ! is_scalar( $value ) ) {
-		throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
+		throw new \UnexpectedValueException( 'Invalid outlet page option value.' );
 	}
 
 	// Cast the value to a string for simpler validation.
@@ -561,7 +561,7 @@ function get_clearance_page_id(): ?int {
 
 	// Validate the value is a positive integer.
 	if ( ! ctype_digit( $as_string ) || '0' === $as_string ) {
-		throw new \UnexpectedValueException( 'Invalid clearance page option value.' );
+		throw new \UnexpectedValueException( 'Invalid outlet page option value.' );
 	}
 
 	// Return the original value in normalized form.

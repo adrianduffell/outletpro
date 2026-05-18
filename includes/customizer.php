@@ -2,10 +2,10 @@
 /**
  * Customizer integration functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT = '#222';
+const OUTLET_BADGE_TEXT_COLOUR_DEFAULT = '#222';
 
 /**
  * Default badge background colour (yellow).
  *
  * @internal
  */
-const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
+const OUTLET_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
 
 /**
  * Helper to initialize customizer integration.
@@ -29,47 +29,47 @@ const CLEARANCE_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
  * @internal
  */
 function init_customizer(): void {
-	add_action( 'customize_register', 'WC_Clearance\register_customizer_hook' );
+	add_action( 'customize_register', 'WC_Outlet\register_customizer_hook' );
 }
 
 /**
- * Register the clearance customizer section, settings and controls.
+ * Register the outlet customizer section, settings and controls.
  *
  * @param \WP_Customize_Manager $wp_customize Customizer manager instance.
  * @internal WordPress action hook
  */
 function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	$wp_customize->add_section(
-		'wc_clearance',
+		'wc_outlet',
 		array(
-			'title' => __( 'Clearance Section', 'wc-clearance' ),
+			'title' => __( 'Outlet', 'wc-outlet' ),
 			'panel' => 'woocommerce',
 		)
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_BADGE_LABEL_OPTION,
+		OUTLET_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => __( 'Clearance', 'wc-clearance' ),
+			'default'           => __( 'Clearance', 'wc-outlet' ),
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);
 
 	$wp_customize->add_control(
-		CLEARANCE_BADGE_LABEL_OPTION,
+		OUTLET_BADGE_LABEL_OPTION,
 		array(
-			'label'   => __( 'Badge label', 'wc-clearance' ),
-			'section' => 'wc_clearance',
+			'label'   => __( 'Badge label', 'wc-outlet' ),
+			'section' => 'wc_outlet',
 			'type'    => 'text',
 		)
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_BADGE_BG_COLOR_OPTION,
+		OUTLET_BADGE_BG_COLOR_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => CLEARANCE_BADGE_BG_COLOUR_DEFAULT,
+			'default'           => OUTLET_BADGE_BG_COLOUR_DEFAULT,
 			'sanitize_callback' => 'sanitize_hex_color',
 		)
 	);
@@ -77,19 +77,19 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	$wp_customize->add_control(
 		new \WP_Customize_Color_Control(
 			$wp_customize,
-			CLEARANCE_BADGE_BG_COLOR_OPTION,
+			OUTLET_BADGE_BG_COLOR_OPTION,
 			array(
-				'label'   => __( 'Badge background color', 'wc-clearance' ),
-				'section' => 'wc_clearance',
+				'label'   => __( 'Badge background color', 'wc-outlet' ),
+				'section' => 'wc_outlet',
 			)
 		)
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+		OUTLET_BADGE_TEXT_COLOR_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT,
+			'default'           => OUTLET_BADGE_TEXT_COLOUR_DEFAULT,
 			'sanitize_callback' => 'sanitize_hex_color',
 		)
 	);
@@ -97,16 +97,16 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	$wp_customize->add_control(
 		new \WP_Customize_Color_Control(
 			$wp_customize,
-			CLEARANCE_BADGE_TEXT_COLOR_OPTION,
+			OUTLET_BADGE_TEXT_COLOR_OPTION,
 			array(
-				'label'   => __( 'Badge text color', 'wc-clearance' ),
-				'section' => 'wc_clearance',
+				'label'   => __( 'Badge text color', 'wc-outlet' ),
+				'section' => 'wc_outlet',
 			)
 		)
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_MESSAGE_OPTION,
+		OUTLET_MESSAGE_OPTION,
 		array(
 			'type'              => 'option',
 			'default'           => '',
@@ -115,16 +115,16 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	);
 
 	$wp_customize->add_control(
-		CLEARANCE_MESSAGE_OPTION,
+		OUTLET_MESSAGE_OPTION,
 		array(
-			'label'   => __( 'Message', 'wc-clearance' ),
-			'section' => 'wc_clearance',
+			'label'   => __( 'Message', 'wc-outlet' ),
+			'section' => 'wc_outlet',
 			'type'    => 'text',
 		)
 	);
 
 	$wp_customize->add_setting(
-		CLEARANCE_BADGE_SCALE_OPTION,
+		OUTLET_BADGE_SCALE_OPTION,
 		array(
 			'type'              => 'option',
 			'default'           => 166,
@@ -133,10 +133,10 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	);
 
 	$wp_customize->add_control(
-		CLEARANCE_BADGE_SCALE_OPTION,
+		OUTLET_BADGE_SCALE_OPTION,
 		array(
-			'label'   => __( 'Badge scale', 'wc-clearance' ),
-			'section' => 'wc_clearance',
+			'label'   => __( 'Badge scale', 'wc-outlet' ),
+			'section' => 'wc_outlet',
 			'type'    => 'select',
 			'choices' => array(
 				100 => '1.00x',

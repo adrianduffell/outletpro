@@ -2,10 +2,10 @@
 /**
  * Setup task functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,7 +13,7 @@ use Automattic\WooCommerce\Admin\Features\OnboardingTasks\Task;
 use Automattic\WooCommerce\Admin\Features\OnboardingTasks\TaskLists;
 
 /**
- * Register the clearance section setup task with WooCommerce's onboarding task list.
+ * Register the outlet setup task with WooCommerce's onboarding task list.
  *
  * @internal
  * @throws \RuntimeException If the WooCommerce TaskLists class is not available.
@@ -28,15 +28,15 @@ function init_setup_task(): void {
 		'extended',
 		new class( TaskLists::get_list( 'extended' ) ) extends Task {
 			public function get_id(): string {
-				return 'wc-clearance-include-products';
+				return 'wc-outlet-include-products';
 			}
 
 			public function get_title(): string {
-				return __( 'Include products in the clearance section', 'wc-clearance' );
+				return __( 'Include products in the outlet', 'wc-outlet' );
 			}
 
 			public function get_content(): string {
-				return __( 'Include products in the clearance section to move old stock quickly.', 'wc-clearance' );
+				return __( 'Include products in the outlet to move old stock quickly.', 'wc-outlet' );
 			}
 
 			public function get_time(): string {
@@ -44,7 +44,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_action_label(): string {
-				return __( 'Manage products', 'wc-clearance' );
+				return __( 'Manage products', 'wc-outlet' );
 			}
 
 			public function get_action_url(): string {
@@ -64,7 +64,7 @@ function init_setup_task(): void {
 }
 
 /**
- * Returns the URL for the clearance section setup task action button.
+ * Returns the URL for the outlet setup task action button.
  *
  * @internal
  */
@@ -73,7 +73,7 @@ function setup_task_action_url(): string {
 }
 
 /**
- * Determine whether the clearance include products task should be visible.
+ * Determine whether the outlet include products task should be visible.
  *
  * @internal
  */
@@ -83,13 +83,13 @@ function setup_task_can_view(): bool {
 }
 
 /**
- * Determine whether the clearance include products task is complete.
+ * Determine whether the outlet include products task is complete.
  *
  * @internal
  */
 function setup_task_is_complete(): bool {
 	try {
-		return ! clearance_section_empty();
+		return ! outlet_empty();
 	} catch ( \Throwable $e ) {
 		return false;
 	}

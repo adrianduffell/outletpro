@@ -2,29 +2,29 @@
 /**
  * Taxonomy-related functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Non-public taxonomy used to represent the clearance status of products.
+ * Non-public taxonomy used to represent the outlet status of products.
  *
  * Used with a canonical term for internal flagging of products belonging
- * in the clearance section.
+ * in the outlet.
  *
  * @internal
  */
-const CLEARANCE_STATUS_TAXONOMY = 'wc_clearance_status';
+const OUTLET_STATUS_TAXONOMY = 'wc_outlet_status';
 
 /**
- * Canonical term for products belonging in the clearance section.
+ * Canonical term for products belonging in the outlet.
  *
  * @internal
  */
-const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
+const OUTLET_STATUS_CANONICAL_TERM = 'outlet';
 
 /**
  * Helper to initialize taxonomies.
@@ -32,7 +32,7 @@ const CLEARANCE_STATUS_CANONICAL_TERM = 'clearance';
  * @internal
  */
 function init_taxonomies(): void {
-	register_clearance_status_taxonomy();
+	register_outlet_status_taxonomy();
 }
 
 /**
@@ -42,34 +42,34 @@ function init_taxonomies(): void {
  * @return array<string, array{0: string, 1: int|string}>
  */
 function report_taxonomies(): array {
-	$taxonomy_exists         = taxonomy_exists( CLEARANCE_STATUS_TAXONOMY );
-	$canonical_term          = $taxonomy_exists ? get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY ) : null;
-	$clearance_product_count = $taxonomy_exists ? count_clearance() : null;
+	$taxonomy_exists         = taxonomy_exists( OUTLET_STATUS_TAXONOMY );
+	$canonical_term          = $taxonomy_exists ? get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY ) : null;
+	$outlet_product_count = $taxonomy_exists ? count_outlet() : null;
 
 	return array(
-		'clearance-taxonomy-registered' => array(
-			__( 'Clearance status taxonomy registered', 'wc-clearance' ),
-			$taxonomy_exists ? __( 'Yes', 'wc-clearance' ) : __( 'No', 'wc-clearance' ),
+		'outlet-taxonomy-registered' => array(
+			__( 'Outlet status taxonomy registered', 'wc-outlet' ),
+			$taxonomy_exists ? __( 'Yes', 'wc-outlet' ) : __( 'No', 'wc-outlet' ),
 		),
-		'clearance-canonical-term-id'   => array(
-			__( 'Canonical term ID', 'wc-clearance' ),
-			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-clearance' ),
+		'outlet-canonical-term-id'   => array(
+			__( 'Canonical term ID', 'wc-outlet' ),
+			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-outlet' ),
 		),
-		'clearance-product-count'       => array(
-			__( 'Total products in clearance section', 'wc-clearance' ),
-			$clearance_product_count ?? __( 'Unknown', 'wc-clearance' ),
+		'outlet-product-count'       => array(
+			__( 'Total products in outlet', 'wc-outlet' ),
+			$outlet_product_count ?? __( 'Unknown', 'wc-outlet' ),
 		),
 	);
 }
 
 /**
- * Register the clearance status taxonomy.
+ * Register the outlet status taxonomy.
  *
  * @internal
  */
-function register_clearance_status_taxonomy(): void {
+function register_outlet_status_taxonomy(): void {
 	$args = array(
-		'label'        => __( 'Clearance Status', 'wc-clearance' ),
+		'label'        => __( 'Outlet Status', 'wc-outlet' ),
 		'public'       => false,
 		'show_ui'      => false,
 		'show_in_rest' => false,
@@ -85,26 +85,26 @@ function register_clearance_status_taxonomy(): void {
 		'meta_box_cb'  => false,
 	);
 
-	register_taxonomy( CLEARANCE_STATUS_TAXONOMY, 'product', $args );
+	register_taxonomy( OUTLET_STATUS_TAXONOMY, 'product', $args );
 }
 
 /**
- * Seed the clearance status taxonomy with the canonical term.
+ * Seed the outlet status taxonomy with the canonical term.
  *
  * @internal
  * @throws \RuntimeException If the term seeding fails.
  */
-function seed_clearance_status_taxonomy(): void {
-	if ( term_exists( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY ) ) {
+function seed_outlet_status_taxonomy(): void {
+	if ( term_exists( OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY ) ) {
 		return;
 	}
 
-	$result = wp_insert_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	$result = wp_insert_term( OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException(
 			sprintf(
-				'Failed to seed clearance status taxonomy. %s',
+				'Failed to seed outlet status taxonomy. %s',
 				$result->get_error_message()
 			)
 		);
@@ -112,16 +112,16 @@ function seed_clearance_status_taxonomy(): void {
 }
 
 /**
- * Check if a product is in the clearance section.
+ * Check if a product is in the outlet.
  *
  * @param \WC_Product $product The product to check.
- * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @throws \RuntimeException If a variation's parent product cannot be found.
  * @since 1.0.0
  */
-function is_clearance( \WC_Product $product ): bool {
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+function is_outlet( \WC_Product $product ): bool {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet status taxonomy does not exist.' );
 	}
 
 	// Handle variations by checking the parent product.
@@ -136,30 +136,30 @@ function is_clearance( \WC_Product $product ): bool {
 				)
 			);
 		}
-		return is_clearance( $parent );
+		return is_outlet( $parent );
 	}
 
-	return has_term( CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY, $product->get_id() );
+	return has_term( OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY, $product->get_id() );
 }
 
 /**
- * Add a product to the clearance section.
+ * Add a product to the outlet.
  *
  * @param \WC_Product $product Product to update.
- * @throws \RuntimeException If the clearance status taxonomy does not exist or the term assignment fails.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist or the term assignment fails.
  * @since 1.0.0
  */
-function add_to_clearance( \WC_Product $product ): void {
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+function add_to_outlet( \WC_Product $product ): void {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet status taxonomy does not exist.' );
 	}
 
-	$result = wp_set_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	$result = wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException(
 			sprintf(
-				'Failed to assign clearance status term to product ID %d. %s',
+				'Failed to assign outlet status term to product ID %d. %s',
 				$product->get_id(),
 				$result->get_error_message()
 			)
@@ -168,17 +168,17 @@ function add_to_clearance( \WC_Product $product ): void {
 }
 
 /**
- * Count the number of published products in the clearance section.
+ * Count the number of published products in the outlet.
  *
- * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @since 1.0.0
  */
-function count_clearance(): int {
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+function count_outlet(): int {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet status taxonomy does not exist.' );
 	}
 
-	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( ! $canonical_term ) {
 		return 0;
@@ -193,7 +193,7 @@ function count_clearance(): int {
 			'update_post_term_cache' => false,
 			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				array(
-					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+					'taxonomy' => OUTLET_STATUS_TAXONOMY,
 					'field'    => 'term_id',
 					'terms'    => $canonical_term->term_id,
 				),
@@ -205,19 +205,19 @@ function count_clearance(): int {
 }
 
 /**
- * Check if the clearance section is empty.
+ * Check if the outlet is empty.
  *
- * More performant than count_clearance() because it uses no_found_rows to skip the SQL row count.
+ * More performant than count_outlet() because it uses no_found_rows to skip the SQL row count.
  *
- * @throws \RuntimeException If the clearance status taxonomy does not exist.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @since 1.0.0
  */
-function clearance_section_empty(): bool {
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+function outlet_empty(): bool {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet status taxonomy does not exist.' );
 	}
 
-	$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( ! $canonical_term ) {
 		return true;
@@ -233,7 +233,7 @@ function clearance_section_empty(): bool {
 			'update_post_term_cache' => false,
 			'tax_query'              => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				array(
-					'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+					'taxonomy' => OUTLET_STATUS_TAXONOMY,
 					'field'    => 'term_id',
 					'terms'    => $canonical_term->term_id,
 				),
@@ -245,23 +245,23 @@ function clearance_section_empty(): bool {
 }
 
 /**
- * Remove a product from the clearance section.
+ * Remove a product from the outlet.
  *
  * @param \WC_Product $product Product to update.
- * @throws \RuntimeException If the clearance status taxonomy does not exist or term removal fails.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist or term removal fails.
  * @since 1.0.0
  */
-function remove_from_clearance( \WC_Product $product ): void {
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) ) {
-		throw new \RuntimeException( 'Clearance status taxonomy does not exist.' );
+function remove_from_outlet( \WC_Product $product ): void {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet status taxonomy does not exist.' );
 	}
 
-	$result = wp_remove_object_terms( $product->get_id(), CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+	$result = wp_remove_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException(
 			sprintf(
-				'Failed to remove product %d from clearance. %s',
+				'Failed to remove product %d from outlet. %s',
 				$product->get_id(),
 				$result->get_error_message()
 			)
@@ -270,41 +270,41 @@ function remove_from_clearance( \WC_Product $product ): void {
 }
 
 /**
- * Sets the clearance section status for a product.
+ * Sets the outlet status for a product.
  *
  * For performance, this function checks the currently stored state and only updates the
- * clearance status when a change in value is required.
+ * outlet status when a change in value is required.
  *
  * @param \WC_Product $product The product to update.
- * @param bool        $new_value Whether to include the product in the clearance section.
+ * @param bool        $new_value Whether to include the product in the outlet.
  * @throws \RuntimeException If setting the status fails.
  * @since 1.0.0
  */
-function set_clearance( \WC_Product $product, bool $new_value ): void {
+function set_outlet( \WC_Product $product, bool $new_value ): void {
 	// The currently stored state.
-	$old_value = is_clearance( $product );
+	$old_value = is_outlet( $product );
 
 	if ( $old_value === $new_value ) {
 		return; // No change needed.
 	}
 
 	if ( $new_value ) {
-		add_to_clearance( $product );
+		add_to_outlet( $product );
 	} else {
-		remove_from_clearance( $product );
+		remove_from_outlet( $product );
 	}
 
 	/**
-	 * Fires when a product's clearance section status changes.
+	 * Fires when a product's outlet status changes.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param int  $product_id Product ID.
-	 * @param bool $old_value  Previous clearance section status.
-	 * @param bool $new_value  New clearance section status.
+	 * @param bool $old_value  Previous outlet status.
+	 * @param bool $new_value  New outlet status.
 	 */
 	do_action(
-		'wc_clearance_status_changed',
+		'wc_outlet_status_changed',
 		$product->get_id(),
 		$old_value,
 		$new_value

@@ -2,10 +2,10 @@
 /**
  * REST API integration functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,20 +15,20 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_rest_api(): void {
-	add_filter( 'rest_product_collection_params', 'WC_Clearance\add_wc_clearance_rest_param_hook' );
-	add_filter( 'woocommerce_rest_product_object_query', 'WC_Clearance\handle_wc_clearance_rest_param', 10, 2 );
+	add_filter( 'rest_product_collection_params', 'WC_Outlet\add_wc_outlet_rest_param_hook' );
+	add_filter( 'woocommerce_rest_product_object_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
 }
 
 /**
- * Add `wc_clearance` parameter to the products REST API collection params.
+ * Add `wc_outlet` parameter to the products REST API collection params.
  *
  * @internal WordPress filter hook
  * @param array<string, mixed> $params Existing collection parameters.
  * @return array<string, mixed> Modified collection parameters.
  */
-function add_wc_clearance_rest_param_hook( array $params ): array {
-	$params['wc_clearance'] = array(
-		'description'       => __( 'Limit results to products in the clearance section.', 'wc-clearance' ),
+function add_wc_outlet_rest_param_hook( array $params ): array {
+	$params['wc_outlet'] = array(
+		'description'       => __( 'Limit results to products in the outlet.', 'wc-outlet' ),
 		'type'              => 'boolean',
 		'sanitize_callback' => 'rest_sanitize_boolean',
 		'validate_callback' => 'rest_validate_request_arg',
@@ -38,15 +38,15 @@ function add_wc_clearance_rest_param_hook( array $params ): array {
 }
 
 /**
- * Filter the products REST API query to include only clearance products when requested.
+ * Filter the products REST API query to include only outlet products when requested.
  *
  * @internal WooCommerce filter hook
  * @param array<string, mixed> $args    WP_Query arguments.
  * @param \WP_REST_Request     $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
  */
-function handle_wc_clearance_rest_param( array $args, \WP_REST_Request $request ): array {
-	if ( empty( $request['wc_clearance'] ) ) {
+function handle_wc_outlet_rest_param( array $args, \WP_REST_Request $request ): array {
+	if ( empty( $request['wc_outlet'] ) ) {
 		return $args;
 	}
 
@@ -55,9 +55,9 @@ function handle_wc_clearance_rest_param( array $args, \WP_REST_Request $request 
 	}
 
 	$args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+		'taxonomy' => OUTLET_STATUS_TAXONOMY,
 		'field'    => 'slug',
-		'terms'    => array( CLEARANCE_STATUS_CANONICAL_TERM ),
+		'terms'    => array( OUTLET_STATUS_CANONICAL_TERM ),
 	);
 
 	return $args;
