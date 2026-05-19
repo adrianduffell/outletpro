@@ -33,7 +33,7 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$item->add_meta_data( ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( '<span class="wc-outlet-admin-badge">Clearance</span>' );
+		$this->expectOutputString( '<span class="wc-outlet-admin-badge">Last chance</span>' );
 
 		// Act.
 		display_order_item_outlet_badge_hook( 1, $item, null );
