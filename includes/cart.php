@@ -2,10 +2,10 @@
 /**
  * Cart functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_cart(): void {
-	add_filter( 'woocommerce_get_item_data', 'WC_Clearance\add_clearance_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
+	add_filter( 'woocommerce_get_item_data', 'WC_Outlet\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 }
 
 /**
@@ -24,11 +24,11 @@ function init_cart(): void {
  * @internal
  */
 function deinit_cart(): void {
-	remove_filter( 'woocommerce_get_item_data', 'WC_Clearance\add_clearance_to_cart_item_meta_hook', PHP_INT_MAX );
+	remove_filter( 'woocommerce_get_item_data', 'WC_Outlet\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
 }
 
 /**
- * Adds clearance status into the cart item meta.
+ * Adds outlet status into the cart item meta.
  *
  * Fired by `woocommerce_get_item_data`.
  *
@@ -38,7 +38,7 @@ function deinit_cart(): void {
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
-function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
+function add_outlet_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 	$product = $cart_item['data'] ?? null;
 
 	if ( ! $product instanceof \WC_Product ) {
@@ -46,28 +46,28 @@ function add_clearance_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 	}
 
 	try {
-		if ( ! is_clearance( $product ) ) {
+		if ( ! is_outlet( $product ) ) {
 			return $item_data;
 		}
 	} catch ( \Throwable $e ) {
 		return $item_data;
 	}
 
-	$clearance_label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+	$outlet_label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
-	if ( ! is_string( $clearance_label ) || '' === trim( $clearance_label ) ) {
+	if ( ! is_string( $outlet_label ) || '' === trim( $outlet_label ) ) {
 		return $item_data;
 	}
 
-	// Important: The CSS badge replacement expects clearance meta to be first.
+	// Important: The CSS badge replacement expects outlet meta to be first.
 	array_unshift(
 		$item_data,
 		array(
-			'key'     => $clearance_label,
-			'value'   => __( 'Yes', 'wc-clearance' ),
+			'key'     => $outlet_label,
+			'value'   => __( 'Yes', 'wc-outlet' ),
 			'display' => sprintf(
-				'<span class="wc-clearance-cart-item-meta">%s</span>',
-				esc_html__( 'Yes', 'wc-clearance' )
+				'<span class="wc-outlet-cart-item-meta">%s</span>',
+				esc_html__( 'Yes', 'wc-outlet' )
 			),
 		)
 	);

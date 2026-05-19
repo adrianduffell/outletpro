@@ -2,10 +2,10 @@
 /**
  * Tools functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_tools(): void {
-	add_filter( 'woocommerce_debug_tools', 'WC_Clearance\register_create_clearance_page_tool_hook' );
+	add_filter( 'woocommerce_debug_tools', 'WC_Outlet\register_create_outlet_page_tool_hook' );
 }
 
 /**
- * Register the create clearance page tool in WooCommerce > Status > Tools.
+ * Register the create outlet page tool in WooCommerce > Status > Tools.
  *
  * Fired by `woocommerce_debug_tools`.
  *
@@ -27,31 +27,31 @@ function init_tools(): void {
  * @return array<string, mixed> Modified tools.
  * @internal WordPress filter
  */
-function register_create_clearance_page_tool_hook( array $tools ): array {
-	$tools['create_clearance_page'] = array(
-		'name'     => __( 'Create clearance section page', 'wc-clearance' ),
-		'button'   => __( 'Create page', 'wc-clearance' ),
-		'desc'     => __( 'Creates a draft page with the clearance products shortcode.', 'wc-clearance' ),
-		'callback' => __NAMESPACE__ . '\run_create_clearance_page_tool',
+function register_create_outlet_page_tool_hook( array $tools ): array {
+	$tools['create_outlet_page'] = array(
+		'name'     => __( 'Create outlet page', 'wc-outlet' ),
+		'button'   => __( 'Create page', 'wc-outlet' ),
+		'desc'     => __( 'Creates a draft page with the outlet products shortcode.', 'wc-outlet' ),
+		'callback' => __NAMESPACE__ . '\run_create_outlet_page_tool',
 	);
 
 	return $tools;
 }
 
 /**
- * WooCommerce Status > Tools callback for the create clearance section page tool.
+ * WooCommerce Status > Tools callback for the create outlet page tool.
  *
  * @internal
  */
-function run_create_clearance_page_tool(): string {
+function run_create_outlet_page_tool(): string {
 	try {
-		if ( clearance_page_exists() ) {
-			return __( 'Clearance section page already exists.', 'wc-clearance' );
+		if ( outlet_page_exists() ) {
+			return __( 'Outlet page already exists.', 'wc-outlet' );
 		}
-		create_clearance_page();
+		create_outlet_page();
 	} catch ( \Throwable $e ) {
-		return __( 'Clearance section page could not be created.', 'wc-clearance' );
+		return __( 'Outlet page could not be created.', 'wc-outlet' );
 	}
 
-	return __( 'Clearance section page created.', 'wc-clearance' );
+	return __( 'Outlet page created.', 'wc-outlet' );
 }

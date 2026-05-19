@@ -2,11 +2,11 @@
 /**
  * Tests for product_collection_editor_query_hook().
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\init_product_collection;
-use const WC_Clearance\CLEARANCE_STATUS_TAXONOMY;
+use function WC_Outlet\init_product_collection;
+use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 
@@ -64,7 +64,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-clearance/product-collection/other' ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/other' ) );
 		$expected = $args;
 
 		// Act.
@@ -74,14 +74,14 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_tax_query_is_added_for_clearance_collection(): void {
+	public function test_tax_query_is_added_for_outlet_collection(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );
 		init_product_collection();
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-clearance/product-collection/clearance' ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/outlet' ) );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );
@@ -89,9 +89,9 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertArrayHasKey( 'tax_query', $result );
 		$this->assertCount( 1, $result['tax_query'] );
-		$this->assertSame( CLEARANCE_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
 		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
-		$this->assertSame( array( 'clearance' ), $result['tax_query'][0]['terms'] );
+		$this->assertSame( array( 'outlet' ), $result['tax_query'][0]['terms'] );
 	}
 
 	public function test_existing_tax_query_entries_are_preserved(): void {
@@ -109,7 +109,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		);
 		$request             = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-clearance/product-collection/clearance' ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/outlet' ) );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );
@@ -117,7 +117,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertCount( 2, $result['tax_query'] );
 		$this->assertSame( $existing_tax_clause, $result['tax_query'][0] );
-		$this->assertSame( CLEARANCE_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
 	}
 
 	public function test_filter_is_registered_by_init_product_collection(): void {
@@ -128,6 +128,6 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		init_product_collection();
 
 		// Assert.
-		$this->assertSame( 10, has_filter( 'rest_product_query', 'WC_Clearance\product_collection_editor_query_hook' ) );
+		$this->assertSame( 10, has_filter( 'rest_product_query', 'WC_Outlet\product_collection_editor_query_hook' ) );
 	}
 }

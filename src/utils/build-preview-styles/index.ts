@@ -15,21 +15,21 @@ export function buildPreviewStyles(
 	settings: BuildPreviewStylesParams
 ): string {
 	const entries = {
-		'--wc-clearance-badge-bg-color': settings.bgColor,
-		'--wc-clearance-badge-text-color': settings.textColor,
-		'--wc-clearance-badge-font-weight': settings.fontWeight,
-		'--wc-clearance-badge-border-color': settings.borderColor,
-		'--wc-clearance-badge-border-style': settings.borderStyle,
-		'--wc-clearance-badge-border-width': settings.borderWidth,
-		'--wc-clearance-badge-border-radius': settings.borderRadius,
+		'--wc-outlet-badge-bg-color': settings.bgColor,
+		'--wc-outlet-badge-text-color': settings.textColor,
+		'--wc-outlet-badge-font-weight': settings.fontWeight,
+		'--wc-outlet-badge-border-color': settings.borderColor,
+		'--wc-outlet-badge-border-style': settings.borderStyle,
+		'--wc-outlet-badge-border-width': settings.borderWidth,
+		'--wc-outlet-badge-border-radius': settings.borderRadius,
 	};
 
 	const declarations = [
-		`--wc-clearance-badge-label: ${
+		`--wc-outlet-badge-label: ${
 			settings.label ? JSON.stringify( settings.label ) : 'none'
 		}`,
-		`--wc-clearance-badge-scale: ${ settings.scale ?? 'unset' }`,
-		`--wc-clearance-badge-density: ${ settings.density ?? 'unset' }`,
+		`--wc-outlet-badge-scale: ${ settings.scale ?? 'unset' }`,
+		`--wc-outlet-badge-density: ${ settings.density ?? 'unset' }`,
 		...Object.entries( entries ).map(
 			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
 		),

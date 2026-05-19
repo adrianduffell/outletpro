@@ -2,10 +2,10 @@
 /**
  * Block registration and render callbacks.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,10 +15,10 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_blocks(): void {
-	register_clearance_badge_block();
-	register_clearance_message_block();
-	add_filter( 'hooked_block_types', 'WC_Clearance\auto_insert_clearance_badge_hook', 10, 4 );
-	add_filter( 'hooked_block_types', 'WC_Clearance\auto_insert_clearance_message_hook', 10, 4 );
+	register_outlet_badge_block();
+	register_outlet_message_block();
+	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
 }
 
 /**
@@ -29,9 +29,9 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
-	// Unregister all blocks in the wc-clearance namespace.
+	// Unregister all blocks in the wc-outlet namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
-		if ( 0 !== strpos( $block_name, 'wc-clearance/' ) ) {
+		if ( 0 !== strpos( $block_name, 'wc-outlet/' ) ) {
 			continue;
 		}
 
@@ -40,21 +40,21 @@ function deinit_blocks(): void {
 }
 
 /**
- * Register the clearance badge block type.
+ * Register the outlet badge block type.
  *
  * @internal
  */
-function register_clearance_badge_block(): void {
+function register_outlet_badge_block(): void {
 	register_block_type(
-		plugin_dir_path( __DIR__ ) . 'build/blocks/clearance-badge/',
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-badge/',
 		array(
-			'render_callback' => 'WC_Clearance\render_clearance_badge_callback',
+			'render_callback' => 'WC_Outlet\render_outlet_badge_callback',
 		)
 	);
 }
 
 /**
- * Auto-insert the clearance badge block after the product price on the single product template.
+ * Auto-insert the outlet badge block after the product price on the single product template.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -64,21 +64,21 @@ function register_clearance_badge_block(): void {
  * @param \WP_Block_Template|array|null $context Block template or post context, or null.
  * @return string[] Filtered hooked block names.
  */
-function auto_insert_clearance_badge_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
+function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
 	if ( 'woocommerce/product-price' !== $anchor_block || 'after' !== $relative_position ) {
 		return $hooked_blocks;
 	}
 
 	// Only auto-insert the badge on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-clearance/clearance-badge';
+		$hooked_blocks[] = 'wc-outlet/outlet-badge';
 	}
 
 	return $hooked_blocks;
 }
 
 /**
- * Auto-insert the clearance message block as the first child of the product meta block on the single product template.
+ * Auto-insert the outlet message block as the first child of the product meta block on the single product template.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -88,29 +88,29 @@ function auto_insert_clearance_badge_hook( $hooked_blocks, $relative_position, $
  * @param \WP_Block_Template|array|null $context Block template or post context, or null.
  * @return string[] Filtered hooked block names.
  */
-function auto_insert_clearance_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
+function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
 	if ( 'woocommerce/product-meta' !== $anchor_block || 'first_child' !== $relative_position ) {
 		return $hooked_blocks;
 	}
 
 	// Only auto-insert the message on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-clearance/clearance-message';
+		$hooked_blocks[] = 'wc-outlet/outlet-message';
 	}
 
 	return $hooked_blocks;
 }
 
 /**
- * Render callback for the clearance badge block.
+ * Render callback for the outlet badge block.
  *
  * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
- * @return string Rendered HTML, or empty string if the product is not in clearance.
+ * @return string Rendered HTML, or empty string if the product is not in outlet.
  */
-function render_clearance_badge_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function render_outlet_badge_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
 
 	if ( ! $product_id ) {
@@ -123,17 +123,17 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 		return '';
 	}
 
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) || ! is_clearance( $product ) ) {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) || ! is_outlet( $product ) ) {
 		return '';
 	}
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-clearance-badge',
+			'class' => 'wc-outlet-badge',
 		)
 	);
 
-	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
 	if ( ! is_string( $label ) || '' === $label ) {
 		return '';
@@ -147,29 +147,29 @@ function render_clearance_badge_callback( array $attributes, string $_content, \
 }
 
 /**
- * Register the clearance message block type.
+ * Register the outlet message block type.
  *
  * @internal
  */
-function register_clearance_message_block(): void {
+function register_outlet_message_block(): void {
 	register_block_type(
-		plugin_dir_path( __DIR__ ) . 'build/blocks/clearance-message/',
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
-			'render_callback' => 'WC_Clearance\render_clearance_message_callback',
+			'render_callback' => 'WC_Outlet\render_outlet_message_callback',
 		)
 	);
 }
 
 /**
- * Render callback for the clearance message block.
+ * Render callback for the outlet message block.
  *
  * @internal
  * @param array<string, mixed> $attributes Block attributes.
  * @param string               $_content   Block inner content (unused).
  * @param \WP_Block            $block      Block instance.
- * @return string Rendered HTML, or empty string if the product is not in clearance.
+ * @return string Rendered HTML, or empty string if the product is not in outlet.
  */
-function render_clearance_message_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function render_outlet_message_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
 
 	if ( ! $product_id ) {
@@ -182,17 +182,17 @@ function render_clearance_message_callback( array $attributes, string $_content,
 		return '';
 	}
 
-	if ( ! taxonomy_exists( CLEARANCE_STATUS_TAXONOMY ) || ! is_clearance( $product ) ) {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) || ! is_outlet( $product ) ) {
 		return '';
 	}
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-clearance-message',
+			'class' => 'wc-outlet-message',
 		)
 	);
 
-	$message = get_option( CLEARANCE_MESSAGE_OPTION );
+	$message = get_option( OUTLET_MESSAGE_OPTION );
 
 	if ( ! is_string( $message ) || '' === $message ) {
 		return '';

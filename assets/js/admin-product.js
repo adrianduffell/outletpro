@@ -5,7 +5,7 @@
  */
 
 /**
- * Make the description text next to the clearance checkbox clickable.
+ * Make the description text next to the outlet checkbox clickable.
  *
  * WooCommerce's woocommerce_wp_checkbox() API renders the description as a
  * <span> rather than a <label> — a limitation of the WooCommerce field
@@ -17,14 +17,14 @@
 ( function () {
 	document.addEventListener( 'DOMContentLoaded', function () {
 		const span = document.querySelector(
-			'.wc-clearance-status_field span.description'
+			'.wc-outlet-status_field span.description'
 		);
 
 		if ( ! span ) {
 			return;
 		}
 
-		const checkbox = document.getElementById( 'wc-clearance-status' );
+		const checkbox = document.getElementById( 'wc-outlet-status' );
 
 		if ( ! checkbox ) {
 			return;

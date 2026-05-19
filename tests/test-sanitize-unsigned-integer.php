@@ -2,10 +2,10 @@
 /**
  * Test the sanitize_unsigned_integer function.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\sanitize_unsigned_integer;
+use function WC_Outlet\sanitize_unsigned_integer;
 
 class Test_Sanitize_Unsigned_Integer extends WP_UnitTestCase {
 

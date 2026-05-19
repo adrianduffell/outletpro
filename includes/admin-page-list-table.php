@@ -2,10 +2,10 @@
 /**
  * Admin page list table functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_admin_page_list_table(): void {
-	add_filter( 'display_post_states', 'WC_Clearance\clearance_section_label_hook', 10, 2 );
+	add_filter( 'display_post_states', 'WC_Outlet\outlet_page_label_hook', 10, 2 );
 }
 
 /**
- * Add a "Clearance Section Page" label to the clearance page in the admin listing table.
+ * Add a "Outlet Page" label to the outlet page in the admin listing table.
  *
  * Fired by `display_post_states`.
  *
@@ -28,9 +28,9 @@ function init_admin_page_list_table(): void {
  * @return string[] Modified post display states.
  * @internal WordPress filter
  */
-function clearance_section_label_hook( array $post_states, \WP_Post $post ): array {
+function outlet_page_label_hook( array $post_states, \WP_Post $post ): array {
 	try {
-		$page_id = get_clearance_page_id();
+		$page_id = get_outlet_page_id();
 	} catch ( \UnexpectedValueException $e ) {
 		return $post_states;
 	}
@@ -40,7 +40,7 @@ function clearance_section_label_hook( array $post_states, \WP_Post $post ): arr
 	}
 
 	if ( $post->ID === $page_id ) {
-		$post_states['wc_clearance_page'] = __( 'Clearance Section Page', 'wc-clearance' );
+		$post_states['wc_outlet_page'] = __( 'Outlet Page', 'wc-outlet' );
 	}
 
 	return $post_states;

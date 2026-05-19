@@ -15,7 +15,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStringEntityProp( 'wc_clearance_badge_label' )
+			useStringEntityProp( 'wc_outlet_badge_label' )
 		);
 
 		// Assert.
@@ -32,7 +32,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStringEntityProp( 'wc_clearance_badge_label' )
+			useStringEntityProp( 'wc_outlet_badge_label' )
 		);
 
 		// Assert.
@@ -45,7 +45,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStringEntityProp( 'wc_clearance_badge_label' )
+			useStringEntityProp( 'wc_outlet_badge_label' )
 		);
 
 		// Assert.
@@ -61,13 +61,13 @@ describe( 'useStringEntityProp', () => {
 		] );
 
 		// Act.
-		renderHook( () => useStringEntityProp( 'wc_clearance_badge_label' ) );
+		renderHook( () => useStringEntityProp( 'wc_outlet_badge_label' ) );
 
 		// Assert.
 		expect( mockUseEntityProp ).toHaveBeenCalledWith(
 			'root',
 			'site',
-			'wc_clearance_badge_label'
+			'wc_outlet_badge_label'
 		);
 	} );
 
@@ -78,7 +78,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStringEntityProp( 'wc_clearance_badge_label' )
+			useStringEntityProp( 'wc_outlet_badge_label' )
 		);
 		result.current[ 1 ]( 'Clearance' );
 
@@ -93,7 +93,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act.
 		const { result } = renderHook( () =>
-			useStringEntityProp( 'wc_clearance_badge_label' )
+			useStringEntityProp( 'wc_outlet_badge_label' )
 		);
 		result.current[ 1 ]( undefined );
 
@@ -107,11 +107,9 @@ describe( 'useStringEntityProp', () => {
 
 		// Expect.
 		expect( () =>
-			renderHook( () =>
-				useStringEntityProp( 'wc_clearance_badge_label' )
-			)
+			renderHook( () => useStringEntityProp( 'wc_outlet_badge_label' ) )
 		).toThrow(
-			'wc_clearance setting "wc_clearance_badge_label" must be a string'
+			'wc_outlet setting "wc_outlet_badge_label" must be a string'
 		);
 		expect( console ).toHaveErrored();
 	} );
@@ -126,9 +124,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act + Assert: no throw when value is undefined.
 		expect( () =>
-			renderHook( () =>
-				useStringEntityProp( 'wc_clearance_badge_label' )
-			)
+			renderHook( () => useStringEntityProp( 'wc_outlet_badge_label' ) )
 		).not.toThrow();
 	} );
 
@@ -138,9 +134,7 @@ describe( 'useStringEntityProp', () => {
 
 		// Act + Assert: no throw when value is null.
 		expect( () =>
-			renderHook( () =>
-				useStringEntityProp( 'wc_clearance_badge_label' )
-			)
+			renderHook( () => useStringEntityProp( 'wc_outlet_badge_label' ) )
 		).not.toThrow();
 	} );
 } );

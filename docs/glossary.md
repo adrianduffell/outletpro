@@ -1,15 +1,16 @@
 # Glossary
 
-Clearance Section uses the following terminology:
+Outlet uses the following terminology:
 
-| Name              | Definition                                                           |
-| ----------------- | -------------------------------------------------------------------- |
-| Clearance section | Section on the site for discontinued or overstocked products         |
-| Clearance badge   | Visual mark displayed on products included in the clearance section  |
-| Clearance message | Optional message shown on products included in the clearance section |
+| Name            | Definition                                                   |
+| --------------- | ------------------------------------------------------------ |
+| Outlet          | Section on the site for discontinued or overstocked products |
+| Outlet products | Products included in the store’s outlet                      |
+| Outlet badge    | Visual mark displayed on outlet products                     |
+| Outlet message  | Optional message shown on outlet products                    |
 
-❌ Don’t use:
+❌ Don't use:
 
--   Clearance product(s)
--   Clearance section badge
--   Mark as clearance
+-   The outlet
+-   Outlet section
+-   Mark as outlet

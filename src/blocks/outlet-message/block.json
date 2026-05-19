@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wc-outlet/outlet-message",
+	"title": "Outlet Message",
+	"category": "woocommerce",
+	"description": "Displays a message when a product is in the store’s outlet.",
+	"usesContext": [ "postId" ],
+	"supports": {
+		"html": false,
+		"color": {
+			"background": true,
+			"text": true,
+			"gradients": true
+		},
+		"typography": {
+			"fontSize": true,
+			"__experimentalFontWeight": true
+		}
+	},
+	"attributes": {
+		"fontSize": {
+			"type": "string",
+			"default": "small"
+		}
+	},
+	"textdomain": "wc-outlet"
+}

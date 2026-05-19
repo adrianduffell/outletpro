@@ -3,39 +3,37 @@ import { useEffect } from '@wordpress/element';
 import { dispatch, select } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 
-const NOTICE_ID = 'wc-clearance-empty';
+const NOTICE_ID = 'wc-outlet-empty';
 
-export function ClearanceSectionEmptyNotice(): null {
+export function OutletEmptyNotice(): null {
 	useEffect( () => {
 		async function maybeShowNotice() {
 			const currentPostId = select(
 				'core/editor'
 			).getCurrentPostId() as number;
 
-			// Fetch the clearance page ID from the WP settings REST API.
-			let settings: { wc_clearance_page_id?: number };
+			// Fetch the outlet page ID from the WP settings REST API.
+			let settings: { wc_outlet_page_id?: number };
 			try {
-				settings = await apiFetch< { wc_clearance_page_id?: number } >(
-					{
-						path: '/wp/v2/settings',
-					}
-				);
+				settings = await apiFetch< { wc_outlet_page_id?: number } >( {
+					path: '/wp/v2/settings',
+				} );
 			} catch {
 				return;
 			}
 
 			if (
-				! settings.wc_clearance_page_id ||
-				currentPostId !== settings.wc_clearance_page_id
+				! settings.wc_outlet_page_id ||
+				currentPostId !== settings.wc_outlet_page_id
 			) {
 				return;
 			}
 
-			// Check if any clearance products exist via the REST API.
+			// Check if any outlet products exist via the REST API.
 			let products: unknown[];
 			try {
 				products = await apiFetch< unknown[] >( {
-					path: '/wc/v3/products?wc_clearance=true&per_page=1',
+					path: '/wc/v3/products?wc_outlet=true&per_page=1',
 				} );
 			} catch {
 				return;
@@ -51,7 +49,7 @@ export function ClearanceSectionEmptyNotice(): null {
 
 			( dispatch( 'core/notices' ) as any ).createNotice(
 				'warning',
-				'The clearance section is empty. Include products to see them on this page.',
+				'The store’s outlet is empty. Include products to see them on this page.',
 				{
 					id: NOTICE_ID,
 					isDismissible: false,
@@ -74,6 +72,6 @@ export function ClearanceSectionEmptyNotice(): null {
 	return null;
 }
 
-registerPlugin( 'wc-clearance-page-editor-notice', {
-	render: ClearanceSectionEmptyNotice,
+registerPlugin( 'wc-outlet-page-editor-notice', {
+	render: OutletEmptyNotice,
 } );

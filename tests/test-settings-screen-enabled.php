@@ -2,10 +2,10 @@
 /**
  * Tests for settings_screen_enabled().
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\settings_screen_enabled;
+use function WC_Outlet\settings_screen_enabled;
 
 class Test_Settings_Screen_Enabled extends WP_UnitTestCase {
 
@@ -19,7 +19,7 @@ class Test_Settings_Screen_Enabled extends WP_UnitTestCase {
 
 	public function test_settings_enabled_returns_true_when_filter_enables_it(): void {
 		// Arrange.
-		add_filter( 'wc_clearance_settings_screen_enabled', '__return_true' );
+		add_filter( 'wc_outlet_settings_screen_enabled', '__return_true' );
 
 		// Act.
 		$result = settings_screen_enabled();

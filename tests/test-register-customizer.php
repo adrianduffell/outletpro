@@ -2,21 +2,21 @@
 /**
  * Tests for the customizer integration functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\register_customizer_hook;
-use const WC_Clearance\CLEARANCE_BADGE_BG_COLOR_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_BG_COLOUR_DEFAULT;
-use const WC_Clearance\CLEARANCE_BADGE_LABEL_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_SCALE_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOR_OPTION;
-use const WC_Clearance\CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT;
-use const WC_Clearance\CLEARANCE_MESSAGE_OPTION;
+use function WC_Outlet\register_customizer_hook;
+use const WC_Outlet\OUTLET_BADGE_BG_COLOR_OPTION;
+use const WC_Outlet\OUTLET_BADGE_BG_COLOUR_DEFAULT;
+use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use const WC_Outlet\OUTLET_BADGE_SCALE_OPTION;
+use const WC_Outlet\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const WC_Outlet\OUTLET_BADGE_TEXT_COLOUR_DEFAULT;
+use const WC_Outlet\OUTLET_MESSAGE_OPTION;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 
-	public function test_registers_wc_clearance_section(): void {
+	public function test_registers_wc_outlet_section(): void {
 		// Arrange.
 		$wp_customize = new WP_Customize_Manager();
 
@@ -24,7 +24,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_section( 'wc_clearance' ) );
+		$this->assertNotNull( $wp_customize->get_section( 'wc_outlet' ) );
 	}
 
 	public function test_section_is_nested_in_woocommerce_panel(): void {
@@ -35,7 +35,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'woocommerce', $wp_customize->get_section( 'wc_clearance' )->panel );
+		$this->assertSame( 'woocommerce', $wp_customize->get_section( 'wc_outlet' )->panel );
 	}
 
 	public function test_registers_message_setting(): void {
@@ -46,7 +46,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION ) );
+		$this->assertNotNull( $wp_customize->get_setting( OUTLET_MESSAGE_OPTION ) );
 	}
 
 	public function test_message_setting_type_is_option(): void {
@@ -57,7 +57,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'option', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->type );
+		$this->assertSame( 'option', $wp_customize->get_setting( OUTLET_MESSAGE_OPTION )->type );
 	}
 
 	public function test_message_setting_default(): void {
@@ -68,7 +68,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( '', $wp_customize->get_setting( CLEARANCE_MESSAGE_OPTION )->default );
+		$this->assertSame( '', $wp_customize->get_setting( OUTLET_MESSAGE_OPTION )->default );
 	}
 
 	public function test_registers_badge_text_colour_setting(): void {
@@ -79,7 +79,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_setting( CLEARANCE_BADGE_TEXT_COLOR_OPTION ) );
+		$this->assertNotNull( $wp_customize->get_setting( OUTLET_BADGE_TEXT_COLOR_OPTION ) );
 	}
 
 	public function test_badge_text_colour_setting_type_is_option(): void {
@@ -90,7 +90,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'option', $wp_customize->get_setting( CLEARANCE_BADGE_TEXT_COLOR_OPTION )->type );
+		$this->assertSame( 'option', $wp_customize->get_setting( OUTLET_BADGE_TEXT_COLOR_OPTION )->type );
 	}
 
 	public function test_badge_text_colour_setting_default(): void {
@@ -101,7 +101,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( CLEARANCE_BADGE_TEXT_COLOUR_DEFAULT, $wp_customize->get_setting( CLEARANCE_BADGE_TEXT_COLOR_OPTION )->default );
+		$this->assertSame( OUTLET_BADGE_TEXT_COLOUR_DEFAULT, $wp_customize->get_setting( OUTLET_BADGE_TEXT_COLOR_OPTION )->default );
 	}
 
 	public function test_registers_badge_bg_colour_setting(): void {
@@ -112,7 +112,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_setting( CLEARANCE_BADGE_BG_COLOR_OPTION ) );
+		$this->assertNotNull( $wp_customize->get_setting( OUTLET_BADGE_BG_COLOR_OPTION ) );
 	}
 
 	public function test_badge_bg_colour_setting_type_is_option(): void {
@@ -123,7 +123,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'option', $wp_customize->get_setting( CLEARANCE_BADGE_BG_COLOR_OPTION )->type );
+		$this->assertSame( 'option', $wp_customize->get_setting( OUTLET_BADGE_BG_COLOR_OPTION )->type );
 	}
 
 	public function test_badge_bg_colour_setting_default(): void {
@@ -134,7 +134,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( CLEARANCE_BADGE_BG_COLOUR_DEFAULT, $wp_customize->get_setting( CLEARANCE_BADGE_BG_COLOR_OPTION )->default );
+		$this->assertSame( OUTLET_BADGE_BG_COLOUR_DEFAULT, $wp_customize->get_setting( OUTLET_BADGE_BG_COLOR_OPTION )->default );
 	}
 
 	public function test_registers_badge_label_setting(): void {
@@ -145,7 +145,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION ) );
+		$this->assertNotNull( $wp_customize->get_setting( OUTLET_BADGE_LABEL_OPTION ) );
 	}
 
 	public function test_badge_label_setting_type_is_option(): void {
@@ -156,7 +156,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'option', $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION )->type );
+		$this->assertSame( 'option', $wp_customize->get_setting( OUTLET_BADGE_LABEL_OPTION )->type );
 	}
 
 	public function test_badge_label_setting_default(): void {
@@ -167,7 +167,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'Clearance', $wp_customize->get_setting( CLEARANCE_BADGE_LABEL_OPTION )->default );
+		$this->assertSame( 'Clearance', $wp_customize->get_setting( OUTLET_BADGE_LABEL_OPTION )->default );
 	}
 
 	public function test_registers_badge_scale_setting(): void {
@@ -178,7 +178,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_setting( CLEARANCE_BADGE_SCALE_OPTION ) );
+		$this->assertNotNull( $wp_customize->get_setting( OUTLET_BADGE_SCALE_OPTION ) );
 	}
 
 	public function test_badge_scale_setting_type_is_option(): void {
@@ -189,7 +189,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'option', $wp_customize->get_setting( CLEARANCE_BADGE_SCALE_OPTION )->type );
+		$this->assertSame( 'option', $wp_customize->get_setting( OUTLET_BADGE_SCALE_OPTION )->type );
 	}
 
 	public function test_badge_scale_setting_default(): void {
@@ -200,7 +200,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 166, $wp_customize->get_setting( CLEARANCE_BADGE_SCALE_OPTION )->default );
+		$this->assertSame( 166, $wp_customize->get_setting( OUTLET_BADGE_SCALE_OPTION )->default );
 	}
 
 	public function test_registers_badge_scale_select_control_with_expected_choices(): void {
@@ -211,7 +211,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$control = $wp_customize->get_control( CLEARANCE_BADGE_SCALE_OPTION );
+		$control = $wp_customize->get_control( OUTLET_BADGE_SCALE_OPTION );
 
 		$this->assertNotNull( $control );
 		$this->assertSame( 'Badge scale', $control->label );

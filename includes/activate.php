@@ -2,10 +2,10 @@
 /**
  * Activation functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const ACTIVATED_AT_OPTION = 'wc_clearance_activated_at';
+const ACTIVATED_AT_OPTION = 'wc_outlet_activated_at';
 
 /**
  * Seed the activation timestamp option with the current time.

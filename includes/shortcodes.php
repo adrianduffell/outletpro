@@ -2,10 +2,10 @@
 /**
  * Shortcode-related functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,12 +15,12 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_shortcodes(): void {
-	add_filter( 'woocommerce_shortcode_products_query', 'WC_Clearance\filter_products_shortcode_query_hook', 10, 3 );
-	add_filter( 'shortcode_atts_products', 'WC_Clearance\add_products_shortcode_attribute_hook', 10, 3 );
+	add_filter( 'woocommerce_shortcode_products_query', 'WC_Outlet\filter_products_shortcode_query_hook', 10, 3 );
+	add_filter( 'shortcode_atts_products', 'WC_Outlet\add_products_shortcode_attribute_hook', 10, 3 );
 }
 
 /**
- * Filter the [products] shortcode query args to include only clearance products when wc_clearance is set.
+ * Filter the [products] shortcode query args to include only outlet products when wc_outlet is set.
  *
  * Fired by `woocommerce_shortcode_products_query`.
  *
@@ -32,11 +32,11 @@ function init_shortcodes(): void {
  */
 function filter_products_shortcode_query_hook( array $query_args, array $attributes, string $unused_type ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
-	if ( empty( $attributes['wc_clearance'] ) ) {
+	if ( empty( $attributes['wc_outlet'] ) ) {
 		return $query_args;
 	}
 
-	if ( ! \wc_string_to_bool( $attributes['wc_clearance'] ) ) {
+	if ( ! \wc_string_to_bool( $attributes['wc_outlet'] ) ) {
 		return $query_args;
 	}
 
@@ -45,16 +45,16 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 	}
 
 	$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		'taxonomy' => CLEARANCE_STATUS_TAXONOMY,
+		'taxonomy' => OUTLET_STATUS_TAXONOMY,
 		'field'    => 'name',
-		'terms'    => CLEARANCE_STATUS_CANONICAL_TERM,
+		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
 	);
 
 	return $query_args;
 }
 
 /**
- * Register the wc_clearance attribute for the [products] shortcode.
+ * Register the wc_outlet attribute for the [products] shortcode.
  *
  * Fired by `shortcode_atts_products`.
  *
@@ -66,8 +66,8 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
  */
 function add_products_shortcode_attribute_hook( array $out, array $unused_pairs, array $atts ): array {
 
-	if ( isset( $atts['wc_clearance'] ) ) {
-		$out['wc_clearance'] = \wc_string_to_bool( $atts['wc_clearance'] );
+	if ( isset( $atts['wc_outlet'] ) ) {
+		$out['wc_outlet'] = \wc_string_to_bool( $atts['wc_outlet'] );
 	}
 
 	return $out;

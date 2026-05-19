@@ -2,10 +2,10 @@
 /**
  * Test the sanitize_css_value function.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-use function WC_Clearance\sanitize_css_value;
+use function WC_Outlet\sanitize_css_value;
 
 class Test_Sanitize_Css_Value extends WP_UnitTestCase {
 

@@ -2,10 +2,10 @@
 /**
  * Order functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,11 +15,11 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_orders(): void {
-	add_action( 'woocommerce_new_order_item', 'WC_Clearance\flag_order_item_clearance_hook', 10, 3 );
+	add_action( 'woocommerce_new_order_item', 'WC_Outlet\flag_order_item_outlet_hook', 10, 3 );
 }
 
 /**
- * Flag the order item with clearance status at time of purchase.
+ * Flag the order item with outlet status at time of purchase.
  *
  * Fired by `woocommerce_new_order_item`.
  *
@@ -29,7 +29,7 @@ function init_orders(): void {
  * @internal WordPress action hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
-function flag_order_item_clearance_hook( $item_id, \WC_Order_Item $item, $_order_id ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function flag_order_item_outlet_hook( $item_id, \WC_Order_Item $item, $_order_id ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	if ( ! $item instanceof \WC_Order_Item_Product ) {
 		return;
 	}
@@ -47,12 +47,12 @@ function flag_order_item_clearance_hook( $item_id, \WC_Order_Item $item, $_order
 	}
 
 	try {
-		if ( ! is_clearance( $product ) ) {
+		if ( ! is_outlet( $product ) ) {
 			return;
 		}
 	} catch ( \Throwable $e ) {
 		return;
 	}
 
-	wc_add_order_item_meta( $item_id, ORDER_ITEM_CLEARANCE_META_KEY, 'yes', true );
+	wc_add_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
 }

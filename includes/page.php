@@ -2,22 +2,22 @@
 /**
  * Page functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Check if the clearance section page exists.
+ * Check if the outlet page exists.
  *
- * This performs heuristics on the {@see CLEARANCE_PAGE_OPTION} option value.
+ * This performs heuristics on the {@see OUTLET_PAGE_OPTION} option value.
  *
  * It is considered to exist when the option exists and contains the page ID
  * of a WordPress page.
  *
- * If the option is missing, the clearance page is considered not registered
+ * If the option is missing, the outlet page is considered not registered
  * and the function returns false.
  *
  * Zero and non-digit values indicate a corrupted state and the page existence cannot
@@ -28,8 +28,8 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  * @throws \UnexpectedValueException If the stored option value is not an integer greater than zero.
  */
-function clearance_page_exists(): bool {
-	$page_id = get_option( CLEARANCE_PAGE_OPTION, false );
+function outlet_page_exists(): bool {
+	$page_id = get_option( OUTLET_PAGE_OPTION, false );
 
 	// The option does not exist, therefore the page does not exist.
 	if ( false === $page_id ) {
@@ -38,7 +38,7 @@ function clearance_page_exists(): bool {
 
 	// Non-digit values are invalid and indicate a misconfiguration.
 	if ( ! ctype_digit( (string) $page_id ) ) {
-		throw new \UnexpectedValueException( 'Clearance page option is not a positive integer.' );
+		throw new \UnexpectedValueException( 'Outlet page option is not a positive integer.' );
 	}
 
 	// At this point the value can only be an integer >= 0.
@@ -47,7 +47,7 @@ function clearance_page_exists(): bool {
 
 	// Zero indicates a corrupted state.
 	if ( 0 === $page_id ) {
-		throw new \UnexpectedValueException( 'Clearance page option value is zero.' );
+		throw new \UnexpectedValueException( 'Outlet page option value is zero.' );
 	}
 
 	$page = get_post( $page_id );
@@ -59,62 +59,62 @@ function clearance_page_exists(): bool {
 }
 
 /**
- * Helper to report diagnostic info on the clearance section page.
+ * Helper to report diagnostic info on the outlet page.
  *
  * @internal
  * @return array<string, array{0: string, 1: string}>
  */
 function report_page(): array {
-	$label = __( 'Page ID', 'wc-clearance' );
+	$label = __( 'Page ID', 'wc-outlet' );
 	try {
-		$page_id = get_clearance_page_id();
+		$page_id = get_outlet_page_id();
 	} catch ( \UnexpectedValueException $e ) {
-		return array( 'clearance-page-id' => array( $label, __( 'Not found', 'wc-clearance' ) ) );
+		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'wc-outlet' ) ) );
 	}
-	$page_id = get_clearance_page_id();
+	$page_id = get_outlet_page_id();
 	$page    = $page_id ? get_post( $page_id ) : null;
 
 	if ( ! $page instanceof \WP_Post || 'page' !== $page->post_type ) {
-		return array( 'clearance-page-id' => array( $label, __( 'Not found', 'wc-clearance' ) ) );
+		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'wc-outlet' ) ) );
 	}
 
 	$status_object = get_post_status_object( $page->post_status );
 	$status_label  = $status_object ? $status_object->label : $page->post_status;
 
-	return array( 'clearance-page-id' => array( $label, sprintf( '%d (%s)', $page_id, $status_label ) ) );
+	return array( 'outlet-page-id' => array( $label, sprintf( '%d (%s)', $page_id, $status_label ) ) );
 }
 
 /**
- * Create the clearance section page.
+ * Create the outlet page.
  *
- * Does nothing if a clearance page is already registered via the
- * {@see CLEARANCE_PAGE_OPTION} option, preventing duplicates. If
+ * Does nothing if a outlet page is already registered via the
+ * {@see OUTLET_PAGE_OPTION} option, preventing duplicates. If
  * the option value is corrupted, an exception is thrown as page
  * creation cannot be safely performed.
  *
  * @since 1.0.0
- * @throws \RuntimeException If it cannot be determined whether the clearance page exists.
+ * @throws \RuntimeException If it cannot be determined whether the outlet page exists.
  * @throws \RuntimeException If the page could not be created.
  */
-function create_clearance_page(): void {
+function create_outlet_page(): void {
 	// Prevent duplicate pages from being created.
 	try {
-		if ( clearance_page_exists() ) {
+		if ( outlet_page_exists() ) {
 			return;
 		}
 	} catch ( \UnexpectedValueException $e ) {
 		throw new \RuntimeException(
-			'Could not determine whether the clearance page exists.',
+			'Could not determine whether the outlet page exists.',
 			0,
 			$e
 		);
 	}
 
 	if ( wp_is_block_theme() ) {
-		$canonical_term = get_term_by( 'name', CLEARANCE_STATUS_CANONICAL_TERM, CLEARANCE_STATUS_TAXONOMY );
+		$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 		if ( ! ( $canonical_term instanceof \WP_Term ) ) {
-			throw new \RuntimeException( 'Could not resolve the canonical clearance status term.' );
+			throw new \RuntimeException( 'Could not resolve the canonical outlet status term.' );
 		}
 
 		$term_id     = (string) $canonical_term->term_id;
@@ -132,7 +132,7 @@ function create_clearance_page(): void {
 					'exclude'                       => array(),
 					'inherit'                       => false,
 					'taxQuery'                      => array(
-						CLEARANCE_STATUS_TAXONOMY => array( $term_id ),
+						OUTLET_STATUS_TAXONOMY => array( $term_id ),
 					),
 					'isProductCollectionBlock'      => true,
 					'featured'                      => false,
@@ -155,7 +155,7 @@ function create_clearance_page(): void {
 				'dimensions'           => array(
 					'widthType' => 'fill',
 				),
-				'collection'           => 'wc-clearance/product-collection/clearance',
+				'collection'           => 'wc-outlet/product-collection/outlet',
 				'hideControls'         => array( 'inherit' ),
 				'queryContextIncludes' => array( 'collection' ),
 			)
@@ -189,14 +189,14 @@ function create_clearance_page(): void {
 		// phpcs:enable
 	} else {
 		$post_content = '<!-- wp:shortcode -->' . "\n" .
-			'[products wc_clearance="yes"]' . "\n" .
+			'[products wc_outlet="yes"]' . "\n" .
 			'<!-- /wp:shortcode -->';
 	}
 
 	$result = wp_insert_post(
 		array(
-			'post_title'   => __( 'Clearance', 'wc-clearance' ),
-			'post_name'    => 'clearance',
+			'post_title'   => __( 'Outlet', 'wc-outlet' ),
+			'post_name'    => 'outlet',
 			'post_status'  => 'draft',
 			'post_content' => $post_content,
 			'post_type'    => 'page',
@@ -208,29 +208,29 @@ function create_clearance_page(): void {
 		throw new \RuntimeException( $result->get_error_message() );
 	}
 
-	update_option( CLEARANCE_PAGE_OPTION, $result );
+	update_option( OUTLET_PAGE_OPTION, $result );
 }
 
 /**
- * Check whether the clearance section page exists and is published.
+ * Check whether the outlet page exists and is published.
  *
  * @since 1.0.0
- * @throws \RuntimeException If it cannot be determined whether the clearance page already exists.
+ * @throws \RuntimeException If it cannot be determined whether the outlet page already exists.
  */
-function clearance_page_is_published(): bool {
+function outlet_page_is_published(): bool {
 	try {
-		if ( ! clearance_page_exists() ) {
+		if ( ! outlet_page_exists() ) {
 			return false;
 		}
 	} catch ( \UnexpectedValueException $e ) {
 		throw new \RuntimeException(
-			'Could not determine whether the clearance page already exists.',
+			'Could not determine whether the outlet page already exists.',
 			0,
 			$e
 		);
 	}
 
-	$page_id = get_option( CLEARANCE_PAGE_OPTION );
+	$page_id = get_option( OUTLET_PAGE_OPTION );
 	$page    = get_post( $page_id );
 
 	return $page instanceof \WP_Post

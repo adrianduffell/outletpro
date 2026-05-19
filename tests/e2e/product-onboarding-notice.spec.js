@@ -3,7 +3,7 @@ import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 /**
  * Deletes all products via the WC REST API.
  *
- * Used to ensure no clearance products exist before tests that rely on the
+ * Used to ensure no outlet products exist before tests that rely on the
  * onboarding notice being visible.
  *
  * @param {Object} requestUtils - Playwright request utilities.
@@ -24,12 +24,12 @@ async function deleteAllProducts( requestUtils ) {
 	}
 }
 
-test( 'notice shows when there are no clearance products', async ( {
+test( 'notice shows when there are no outlet products', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: delete all products so no clearance products exist.
+	// Arrange: delete all products so no outlet products exist.
 	await deleteAllProducts( requestUtils );
 
 	// Act.
@@ -37,21 +37,21 @@ test( 'notice shows when there are no clearance products', async ( {
 
 	// Assert.
 	await expect(
-		page.locator( '.wc-clearance-onboarding-notice' )
+		page.locator( '.wc-outlet-onboarding-notice' )
 	).toBeVisible();
 } );
 
-test( 'notice still shows when a clearance product exists but no page is configured', async ( {
+test( 'notice still shows when an outlet product exists but no page is configured', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: create a product and mark it as clearance via the admin UI.
+	// Arrange: create a product and add it to the store’s outlet via the admin UI.
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
 		data: {
-			name: 'Test Clearance Product',
+			name: 'Test Outlet Product',
 			type: 'simple',
 			status: 'publish',
 		},
@@ -62,7 +62,7 @@ test( 'notice still shows when a clearance product exists but no page is configu
 		`post=${ product.id }&action=edit`
 	);
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
-	await page.getByRole( 'checkbox', { name: 'Clearance section' } ).check();
+	await page.getByRole( 'checkbox', { name: 'Outlet' } ).check();
 	await page.getByRole( 'button', { name: 'Update' } ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -71,7 +71,7 @@ test( 'notice still shows when a clearance product exists but no page is configu
 
 	// Assert: the notice is still shown in the "products added" state.
 	await expect(
-		page.locator( '.wc-clearance-onboarding-notice' )
+		page.locator( '.wc-outlet-onboarding-notice' )
 	).toBeVisible();
 
 	// Cleanup.
@@ -100,7 +100,7 @@ test( 'notice does not show when localStorage is unavailable', async ( {
 
 	// Assert: notice stays hidden because localStorage is inaccessible.
 	await expect(
-		page.locator( '.wc-clearance-onboarding-notice' )
+		page.locator( '.wc-outlet-onboarding-notice' )
 	).not.toBeVisible();
 } );
 
@@ -109,18 +109,18 @@ test( 'notice does not show again after being dismissed', async ( {
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: delete all products so no clearance products exist.
+	// Arrange: delete all products so no outlet products exist.
 	await deleteAllProducts( requestUtils );
 
 	// Arrange: visit the product list and confirm the notice is visible.
 	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
 	await expect(
-		page.locator( '.wc-clearance-onboarding-notice' )
+		page.locator( '.wc-outlet-onboarding-notice' )
 	).toBeVisible();
 
 	// Act: dismiss the notice.
 	await page
-		.locator( '.wc-clearance-onboarding-notice .notice-dismiss' )
+		.locator( '.wc-outlet-onboarding-notice .notice-dismiss' )
 		.click();
 
 	// Navigate away and back.
@@ -128,7 +128,7 @@ test( 'notice does not show again after being dismissed', async ( {
 
 	// Assert: notice is hidden because the dismissal key is in localStorage.
 	await expect(
-		page.locator( '.wc-clearance-onboarding-notice' )
+		page.locator( '.wc-outlet-onboarding-notice' )
 	).not.toBeVisible();
 } );
 
@@ -144,7 +144,7 @@ test( '"New" badge in notice title has light purple background and dark purple t
 	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
 
 	// Assert.
-	const newBadge = page.locator( '.wc-clearance-new' );
+	const newBadge = page.locator( '.wc-outlet-new' );
 	await expect( newBadge ).toBeVisible();
 	await expect( newBadge ).toHaveCSS(
 		'background-color',

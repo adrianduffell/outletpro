@@ -2,15 +2,15 @@ import { buildPreviewStyles } from '../index';
 
 describe( 'buildPreviewStyles', () => {
 	const vars = {
-		bgColor: '--wc-clearance-badge-bg-color',
-		textColor: '--wc-clearance-badge-text-color',
-		fontWeight: '--wc-clearance-badge-font-weight',
-		borderColor: '--wc-clearance-badge-border-color',
-		borderStyle: '--wc-clearance-badge-border-style',
-		borderWidth: '--wc-clearance-badge-border-width',
-		borderRadius: '--wc-clearance-badge-border-radius',
-		scale: '--wc-clearance-badge-scale',
-		density: '--wc-clearance-badge-density',
+		bgColor: '--wc-outlet-badge-bg-color',
+		textColor: '--wc-outlet-badge-text-color',
+		fontWeight: '--wc-outlet-badge-font-weight',
+		borderColor: '--wc-outlet-badge-border-color',
+		borderStyle: '--wc-outlet-badge-border-style',
+		borderWidth: '--wc-outlet-badge-border-width',
+		borderRadius: '--wc-outlet-badge-border-radius',
+		scale: '--wc-outlet-badge-scale',
+		density: '--wc-outlet-badge-density',
 	};
 
 	test( 'wraps declarations in a :root rule', () => {
@@ -22,7 +22,7 @@ describe( 'buildPreviewStyles', () => {
 	test( 'serializes label as a JSON string', () => {
 		const result = buildPreviewStyles( { label: 'Sale' } );
 
-		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
+		expect( result ).toContain( '--wc-outlet-badge-label: "Sale"' );
 	} );
 
 	test( 'escapes special characters in label', () => {
@@ -32,23 +32,23 @@ describe( 'buildPreviewStyles', () => {
 		} );
 
 		expect( resultQuote ).toContain(
-			'--wc-clearance-badge-label: "Bob\\"s Sale"'
+			'--wc-outlet-badge-label: "Bob\\"s Sale"'
 		);
 		expect( resultNewline ).toContain(
-			'--wc-clearance-badge-label: "A \\"quote\\"\\nand newline"'
+			'--wc-outlet-badge-label: "A \\"quote\\"\\nand newline"'
 		);
 	} );
 
 	test( 'uses none for label when undefined', () => {
 		const result = buildPreviewStyles( {} );
 
-		expect( result ).toContain( '--wc-clearance-badge-label: none' );
+		expect( result ).toContain( '--wc-outlet-badge-label: none' );
 	} );
 
 	test( 'uses none for label when empty string', () => {
 		const result = buildPreviewStyles( { label: '' } );
 
-		expect( result ).toContain( '--wc-clearance-badge-label: none' );
+		expect( result ).toContain( '--wc-outlet-badge-label: none' );
 	} );
 
 	test.each( [
@@ -81,22 +81,16 @@ describe( 'buildPreviewStyles', () => {
 			density: 60,
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-label: "Sale"' );
-		expect( result ).toContain( '--wc-clearance-badge-bg-color: #ff0000' );
-		expect( result ).toContain(
-			'--wc-clearance-badge-text-color: #ffffff'
-		);
-		expect( result ).toContain( '--wc-clearance-badge-font-weight: 700' );
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-color: #cccccc'
-		);
-		expect( result ).toContain(
-			'--wc-clearance-badge-border-style: solid'
-		);
-		expect( result ).toContain( '--wc-clearance-badge-border-width: 1px' );
-		expect( result ).toContain( '--wc-clearance-badge-border-radius: 4px' );
-		expect( result ).toContain( '--wc-clearance-badge-scale: 120' );
-		expect( result ).toContain( '--wc-clearance-badge-density: 60' );
+		expect( result ).toContain( '--wc-outlet-badge-label: "Sale"' );
+		expect( result ).toContain( '--wc-outlet-badge-bg-color: #ff0000' );
+		expect( result ).toContain( '--wc-outlet-badge-text-color: #ffffff' );
+		expect( result ).toContain( '--wc-outlet-badge-font-weight: 700' );
+		expect( result ).toContain( '--wc-outlet-badge-border-color: #cccccc' );
+		expect( result ).toContain( '--wc-outlet-badge-border-style: solid' );
+		expect( result ).toContain( '--wc-outlet-badge-border-width: 1px' );
+		expect( result ).toContain( '--wc-outlet-badge-border-radius: 4px' );
+		expect( result ).toContain( '--wc-outlet-badge-scale: 120' );
+		expect( result ).toContain( '--wc-outlet-badge-density: 60' );
 	} );
 
 	test.each(
@@ -116,11 +110,11 @@ describe( 'buildPreviewStyles', () => {
 			density: undefined,
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-bg-color: unset' );
-		expect( result ).toContain( '--wc-clearance-badge-border-width: 0' );
-		expect( result ).toContain( '--wc-clearance-badge-border-radius: 0' );
-		expect( result ).toContain( '--wc-clearance-badge-scale: unset' );
-		expect( result ).toContain( '--wc-clearance-badge-density: unset' );
+		expect( result ).toContain( '--wc-outlet-badge-bg-color: unset' );
+		expect( result ).toContain( '--wc-outlet-badge-border-width: 0' );
+		expect( result ).toContain( '--wc-outlet-badge-border-radius: 0' );
+		expect( result ).toContain( '--wc-outlet-badge-scale: unset' );
+		expect( result ).toContain( '--wc-outlet-badge-density: unset' );
 	} );
 
 	test( 'outputs unset for undefined or empty alongside defined values', () => {
@@ -129,8 +123,8 @@ describe( 'buildPreviewStyles', () => {
 			textColor: undefined,
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-bg-color: #000' );
-		expect( result ).toContain( '--wc-clearance-badge-text-color: unset' );
+		expect( result ).toContain( '--wc-outlet-badge-bg-color: #000' );
+		expect( result ).toContain( '--wc-outlet-badge-text-color: unset' );
 	} );
 
 	test( 'outputs 0 for zero scale', () => {
@@ -138,7 +132,7 @@ describe( 'buildPreviewStyles', () => {
 			scale: 0,
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-scale: 0' );
+		expect( result ).toContain( '--wc-outlet-badge-scale: 0' );
 	} );
 
 	test( 'outputs 0 for zero density', () => {
@@ -146,7 +140,7 @@ describe( 'buildPreviewStyles', () => {
 			density: 0,
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-density: 0' );
+		expect( result ).toContain( '--wc-outlet-badge-density: 0' );
 	} );
 
 	test( 'joins declarations with semicolons', () => {
@@ -155,9 +149,9 @@ describe( 'buildPreviewStyles', () => {
 			bgColor: '#ff0000',
 		} );
 
-		expect( result ).toContain( '--wc-clearance-badge-label: "Sale";' );
+		expect( result ).toContain( '--wc-outlet-badge-label: "Sale";' );
 
-		expect( result ).toContain( '--wc-clearance-badge-bg-color: #ff0000;' );
+		expect( result ).toContain( '--wc-outlet-badge-bg-color: #ff0000;' );
 	} );
 
 	test( 'does not append a trailing semicolon before the closing brace', () => {

@@ -4,18 +4,18 @@
 
 .wc-block-cart-items__row:first-child .wc-block-components-product-metadata::before,
 .wc-block-components-order-summary-item:first-child .wc-block-components-product-metadata::before {
-	content: var(--wc-clearance-badge-label, "");
+	content: var(--wc-outlet-badge-label, "");
 	width: fit-content;
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
-	border-radius: var(--wc-clearance-badge-border-radius, unset);
-	border-color: var(--wc-clearance-badge-border-color, unset);
-	border-style: var(--wc-clearance-badge-border-style, unset);
-	border-width: var(--wc-clearance-badge-border-width, unset);
-	font-weight: var(--wc-clearance-badge-font-weight, unset);
-	font-size: calc(var(--wc-clearance-context-font-size, 1em) * (1cap / 1em) * var(--wc-clearance-badge-scale) / 100 * var(--wc-clearance-badge-density) / 100 / (1cap / 1em));
-	padding: calc(1cap * (100 - var(--wc-clearance-badge-density)) / var(--wc-clearance-badge-density) / 2);
-	background-color: var(--wc-clearance-badge-bg-color, unset);
-	color: var(--wc-clearance-badge-text-color, unset);
+	border-radius: var(--wc-outlet-badge-border-radius, unset);
+	border-color: var(--wc-outlet-badge-border-color, unset);
+	border-style: var(--wc-outlet-badge-border-style, unset);
+	border-width: var(--wc-outlet-badge-border-width, unset);
+	font-weight: var(--wc-outlet-badge-font-weight, unset);
+	font-size: calc(var(--wc-outlet-context-font-size, 1em) * (1cap / 1em) * var(--wc-outlet-badge-scale) / 100 * var(--wc-outlet-badge-density) / 100 / (1cap / 1em));
+	padding: calc(1cap * (100 - var(--wc-outlet-badge-density)) / var(--wc-outlet-badge-density) / 2);
+	background-color: var(--wc-outlet-badge-bg-color, unset);
+	color: var(--wc-outlet-badge-text-color, unset);
 }

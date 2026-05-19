@@ -2,19 +2,19 @@
 /**
  * Admin order functions.
  *
- * @package WC_Clearance
+ * @package WC_Outlet
  */
 
-namespace WC_Clearance;
+namespace WC_Outlet;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Order item meta key used to store the clearance status at time of purchase.
+ * Order item meta key used to store the outlet status at time of purchase.
  *
  * @internal
  */
-const ORDER_ITEM_CLEARANCE_META_KEY = '_wc_clearance';
+const ORDER_ITEM_OUTLET_META_KEY = '_wc_outlet';
 
 /**
  * Helper to initialize admin order display hooks.
@@ -22,12 +22,12 @@ const ORDER_ITEM_CLEARANCE_META_KEY = '_wc_clearance';
  * @internal
  */
 function init_admin_order(): void {
-	add_action( 'woocommerce_after_order_itemmeta', 'WC_Clearance\display_order_item_clearance_badge_hook', 1, 3 );
-	add_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Clearance\hide_order_item_clearance_meta_hook' );
+	add_action( 'woocommerce_after_order_itemmeta', 'WC_Outlet\display_order_item_outlet_badge_hook', 1, 3 );
+	add_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Outlet\hide_order_item_outlet_meta_hook' );
 }
 
 /**
- * Hide the clearance meta key from the default order item meta display.
+ * Hide the outlet meta key from the default order item meta display.
  *
  * Fired by `woocommerce_hidden_order_itemmeta`.
  *
@@ -35,13 +35,13 @@ function init_admin_order(): void {
  * @return string[] The updated list.
  * @internal WordPress filter hook
  */
-function hide_order_item_clearance_meta_hook( array $hidden_meta_keys ): array {
-	$hidden_meta_keys[] = ORDER_ITEM_CLEARANCE_META_KEY;
+function hide_order_item_outlet_meta_hook( array $hidden_meta_keys ): array {
+	$hidden_meta_keys[] = ORDER_ITEM_OUTLET_META_KEY;
 	return $hidden_meta_keys;
 }
 
 /**
- * Display clearance badge text on the admin order screen.
+ * Display outlet badge text on the admin order screen.
  *
  * Fired by `woocommerce_before_order_itemmeta`.
  *
@@ -51,16 +51,16 @@ function hide_order_item_clearance_meta_hook( array $hidden_meta_keys ): array {
  * @internal WordPress action hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
-function display_order_item_clearance_badge_hook( $_item_id, \WC_Order_Item $item, $_product ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	if ( 'yes' !== $item->get_meta( ORDER_ITEM_CLEARANCE_META_KEY ) ) {
+function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, $_product ): void { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( 'yes' !== $item->get_meta( ORDER_ITEM_OUTLET_META_KEY ) ) {
 		return;
 	}
 
-	$label = get_option( CLEARANCE_BADGE_LABEL_OPTION );
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
 	if ( ! is_string( $label ) || '' === $label ) {
-		$label = __( 'Clearance', 'wc-clearance' );
+		$label = __( 'Clearance', 'wc-outlet' );
 	}
 
-	echo '<span class="wc-clearance-admin-badge">' . esc_html( $label ) . '</span>';
+	echo '<span class="wc-outlet-admin-badge">' . esc_html( $label ) . '</span>';
 }

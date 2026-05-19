@@ -29,7 +29,7 @@ function setupMock(
 describe( 'useSettings', () => {
 	test( 'returns label value from entity prop', () => {
 		// Arrange.
-		setupMock( { wc_clearance_badge_label: 'Sale' } );
+		setupMock( { wc_outlet_badge_label: 'Sale' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -51,7 +51,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns bg color value from entity prop', () => {
 		// Arrange.
-		setupMock( { wc_clearance_badge_bg_color: '#FFEE85' } );
+		setupMock( { wc_outlet_badge_bg_color: '#FFEE85' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -62,7 +62,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns text color value from entity prop', () => {
 		// Arrange.
-		setupMock( { wc_clearance_badge_text_color: '#333333' } );
+		setupMock( { wc_outlet_badge_text_color: '#333333' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -73,7 +73,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns font weight value from entity prop', () => {
 		// Arrange.
-		setupMock( { wc_clearance_badge_font_weight: '700' } );
+		setupMock( { wc_outlet_badge_font_weight: '700' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -84,7 +84,7 @@ describe( 'useSettings', () => {
 
 	test( 'returns border radius value from entity prop', () => {
 		// Arrange.
-		setupMock( { wc_clearance_badge_border_radius: '4px' } );
+		setupMock( { wc_outlet_badge_border_radius: '4px' } );
 
 		// Act.
 		const { result } = renderHook( () => useSettings() );
@@ -125,7 +125,7 @@ describe( 'useSettings', () => {
 		// Arrange.
 		const setLabel = jest.fn();
 		mockUseStringEntityProp.mockImplementation( ( key: string ) => {
-			if ( key === 'wc_clearance_badge_label' ) {
+			if ( key === 'wc_outlet_badge_label' ) {
 				return [ 'Clearance', setLabel ];
 			}
 			return [ undefined, jest.fn() ];
@@ -146,15 +146,15 @@ describe( 'useSettings', () => {
 		// Arrange.
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
-			wc_clearance_badge_label: 'setLabel',
-			wc_clearance_badge_text_color: 'setTextColor',
-			wc_clearance_badge_bg_color: 'setBgColor',
-			wc_clearance_badge_font_weight: 'setFontWeight',
-			wc_clearance_badge_border_color: 'setBorderColor',
-			wc_clearance_badge_border_style: 'setBorderStyle',
-			wc_clearance_badge_border_width: 'setBorderWidth',
-			wc_clearance_badge_border_radius: 'setBorderRadius',
-			wc_clearance_message: 'setMessage',
+			wc_outlet_badge_label: 'setLabel',
+			wc_outlet_badge_text_color: 'setTextColor',
+			wc_outlet_badge_bg_color: 'setBgColor',
+			wc_outlet_badge_font_weight: 'setFontWeight',
+			wc_outlet_badge_border_color: 'setBorderColor',
+			wc_outlet_badge_border_style: 'setBorderStyle',
+			wc_outlet_badge_border_width: 'setBorderWidth',
+			wc_outlet_badge_border_radius: 'setBorderRadius',
+			wc_outlet_message: 'setMessage',
 		};
 		for ( const key of Object.keys( keyToSetter ) ) {
 			setters[ key ] = jest.fn();
@@ -184,31 +184,29 @@ describe( 'useSettings', () => {
 		result.current.setMessage( 'o' );
 
 		// Assert.
-		expect( setters.wc_clearance_badge_label ).toHaveBeenCalledWith( 'a' );
-		expect( setters.wc_clearance_badge_text_color ).toHaveBeenCalledWith(
+		expect( setters.wc_outlet_badge_label ).toHaveBeenCalledWith( 'a' );
+		expect( setters.wc_outlet_badge_text_color ).toHaveBeenCalledWith(
 			'b'
 		);
-		expect( setters.wc_clearance_badge_bg_color ).toHaveBeenCalledWith(
-			'c'
-		);
-		expect( setters.wc_clearance_badge_font_weight ).toHaveBeenCalledWith(
+		expect( setters.wc_outlet_badge_bg_color ).toHaveBeenCalledWith( 'c' );
+		expect( setters.wc_outlet_badge_font_weight ).toHaveBeenCalledWith(
 			'e'
 		);
-		expect( setters.wc_clearance_badge_border_color ).toHaveBeenCalledWith(
+		expect( setters.wc_outlet_badge_border_color ).toHaveBeenCalledWith(
 			'f'
 		);
-		expect( setters.wc_clearance_badge_border_style ).toHaveBeenCalledWith(
+		expect( setters.wc_outlet_badge_border_style ).toHaveBeenCalledWith(
 			'g'
 		);
-		expect( setters.wc_clearance_badge_border_width ).toHaveBeenCalledWith(
+		expect( setters.wc_outlet_badge_border_width ).toHaveBeenCalledWith(
 			'h'
 		);
-		expect( setters.wc_clearance_badge_border_radius ).toHaveBeenCalledWith(
+		expect( setters.wc_outlet_badge_border_radius ).toHaveBeenCalledWith(
 			'i'
 		);
 		expect( scaleSetter ).toHaveBeenCalledWith( 140 );
 		expect( densitySetter ).toHaveBeenCalledWith( 80 );
-		expect( setters.wc_clearance_message ).toHaveBeenCalledWith( 'o' );
+		expect( setters.wc_outlet_message ).toHaveBeenCalledWith( 'o' );
 	} );
 
 	test( 'calls useStringEntityProp for string settings and useUnsignedIntegerEntityProp for scale and density', () => {
@@ -224,22 +222,22 @@ describe( 'useSettings', () => {
 		const keys = mockUseStringEntityProp.mock.calls.map(
 			( call: [ string ] ) => call[ 0 ]
 		);
-		expect( keys ).toContain( 'wc_clearance_badge_label' );
-		expect( keys ).toContain( 'wc_clearance_badge_text_color' );
-		expect( keys ).toContain( 'wc_clearance_badge_bg_color' );
-		expect( keys ).toContain( 'wc_clearance_badge_font_weight' );
-		expect( keys ).toContain( 'wc_clearance_badge_border_color' );
-		expect( keys ).toContain( 'wc_clearance_badge_border_style' );
-		expect( keys ).toContain( 'wc_clearance_badge_border_width' );
-		expect( keys ).toContain( 'wc_clearance_badge_border_radius' );
-		expect( keys ).toContain( 'wc_clearance_message' );
+		expect( keys ).toContain( 'wc_outlet_badge_label' );
+		expect( keys ).toContain( 'wc_outlet_badge_text_color' );
+		expect( keys ).toContain( 'wc_outlet_badge_bg_color' );
+		expect( keys ).toContain( 'wc_outlet_badge_font_weight' );
+		expect( keys ).toContain( 'wc_outlet_badge_border_color' );
+		expect( keys ).toContain( 'wc_outlet_badge_border_style' );
+		expect( keys ).toContain( 'wc_outlet_badge_border_width' );
+		expect( keys ).toContain( 'wc_outlet_badge_border_radius' );
+		expect( keys ).toContain( 'wc_outlet_message' );
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
 			1,
-			'wc_clearance_badge_scale'
+			'wc_outlet_badge_scale'
 		);
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenNthCalledWith(
 			2,
-			'wc_clearance_badge_density'
+			'wc_outlet_badge_density'
 		);
 		expect( mockUseUnsignedIntegerEntityProp ).toHaveBeenCalledTimes( 2 );
 	} );

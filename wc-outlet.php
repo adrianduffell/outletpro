@@ -1,0 +1,138 @@
+<?php
+/**
+ * Plugin Name: Outlet Pro
+ * Description: Move old stock easily with an outlet on WooCommerce stores.
+ * Version: 1.0.0
+ * Author: Adrian Duffell
+ * Author URI: https://adrianduffell.com
+ * Text Domain: wc-outlet
+ * License: GNU General Public License v3.0
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.html
+ * Requires Plugins: woocommerce
+ * Requires at least: 6.9
+ * Requires PHP: 7.4
+ *
+ * @package WC_Outlet
+ */
+
+namespace WC_Outlet;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Plugin version.
+ *
+ * @internal
+ */
+const VERSION = '1.0.0';
+
+/**
+ * Plugin file path.
+ *
+ * @internal
+ */
+const PLUGIN_FILE = __FILE__;
+
+require_once __DIR__ . '/includes/activate.php';
+require_once __DIR__ . '/includes/system-status.php';
+require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/rest-api.php';
+require_once __DIR__ . '/includes/admin-product-options.php';
+require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
+require_once __DIR__ . '/includes/admin-page-list-table.php';
+require_once __DIR__ . '/includes/shortcodes.php';
+require_once __DIR__ . '/includes/settings.php';
+require_once __DIR__ . '/includes/page.php';
+require_once __DIR__ . '/includes/tools.php';
+require_once __DIR__ . '/includes/setup-task.php';
+require_once __DIR__ . '/includes/admin-product-list-table.php';
+require_once __DIR__ . '/includes/block-editor.php';
+require_once __DIR__ . '/includes/blocks.php';
+require_once __DIR__ . '/includes/product-collection.php';
+require_once __DIR__ . '/includes/admin-order.php';
+require_once __DIR__ . '/includes/cart.php';
+require_once __DIR__ . '/includes/orders.php';
+require_once __DIR__ . '/includes/customizer.php';
+require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
+require_once __DIR__ . '/includes/enqueue.php';
+
+/**
+ * Initialize the plugin.
+ *
+ * Fired by `init`.
+ *
+ * @internal WordPress action hook
+ */
+function init_hook(): void {
+	init_settings();
+	init_taxonomies();
+	init_rest_api();
+	init_shortcodes();
+	init_blocks();
+	init_block_editor();
+	init_product_collection();
+	init_orders();
+	init_cart();
+	if ( ! wp_is_block_theme() ) {
+		init_customizer();
+		init_woocommerce_template_hooks();
+	}
+	enqueue_init();
+	try {
+		init_setup_task();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Could not initialize setup task: ' . $e->getMessage() );
+	}
+}
+
+/**
+ * Initialize the plugin's wp-admin dashboard features.
+ *
+ * Fired by `admin_init`.
+ *
+ * @internal WordPress action hook
+ */
+function admin_init_hook(): void {
+	init_admin_product_options();
+	init_admin_product_bulk_edit();
+	init_system_status();
+	init_tools();
+	init_admin_page_list_table();
+	init_admin_product_list_table();
+	init_admin_order();
+}
+
+/**
+ * Register the plugin's init hooks once WooCommerce is active.
+ *
+ * Fired by `woocommerce_loaded`.
+ *
+ * @internal WordPress action hook
+ */
+function woocommerce_loaded_hook(): void {
+	add_action( 'init', 'WC_Outlet\init_hook', 20 );
+	add_action( 'admin_init', 'WC_Outlet\admin_init_hook' );
+}
+
+add_action( 'woocommerce_loaded', 'WC_Outlet\woocommerce_loaded_hook' );
+
+/**
+ * Plugin activation hook.
+ *
+ * @internal
+ */
+function activate(): void {
+	\wc_get_logger()->info( 'Activating Outlet plugin.' );
+
+	try {
+		init_taxonomies(); // Needed since init hook does not run on activation.
+		seed_outlet_status_taxonomy();
+		create_outlet_page();
+		seed_activated_at_option();
+		seed_settings();
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( $e->getMessage() );
+	}
+}
+
+register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );

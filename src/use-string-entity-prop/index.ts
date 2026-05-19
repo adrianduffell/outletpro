@@ -10,7 +10,7 @@ export default function useStringEntityProp(
 		normalizedValue !== undefined &&
 		typeof normalizedValue !== 'string'
 	) {
-		throw new Error( `wc_clearance setting "${ key }" must be a string` );
+		throw new Error( `wc_outlet setting "${ key }" must be a string` );
 	}
 
 	return [ normalizedValue, ( v: string | undefined ) => setValue( v ) ];
