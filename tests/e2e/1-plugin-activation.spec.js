@@ -24,7 +24,7 @@ test( 'plugin activation seeds outlet settings', async ( {
 	// Act: activate the plugin from the WP plugins screen.
 	await admin.visitAdminPage( 'plugins.php' );
 	await page
-		.locator( 'tr[data-slug="outlet"]' )
+		.locator( 'tr[data-slug="outlet-pro"]' )
 		.getByRole( 'link', { name: 'Activate' } )
 		.click();
 
