@@ -28,7 +28,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 'Clearance', get_option( OUTLET_BADGE_LABEL_OPTION ) );
+		$this->assertSame( 'Last chance', get_option( OUTLET_BADGE_LABEL_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_label_option(): void {
@@ -97,7 +97,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '#222', get_option( OUTLET_BADGE_TEXT_COLOR_OPTION ) );
+		$this->assertSame( '#FFFFFF', get_option( OUTLET_BADGE_TEXT_COLOR_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_text_color_option(): void {
@@ -119,7 +119,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( '#FFEE85', get_option( OUTLET_BADGE_BG_COLOR_OPTION ) );
+		$this->assertSame( '#EA4040', get_option( OUTLET_BADGE_BG_COLOR_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_badge_bg_color_option(): void {
