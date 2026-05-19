@@ -1,4 +1,4 @@
-=== Outlet ===
+=== Outlet Pro ===
 Contributors: adrianduffell
 Tags: woocommerce, outlet, discontinued, stock, merchandising, products
 Requires at least: 6.9
