@@ -59,7 +59,7 @@ function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, 
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
 	if ( ! is_string( $label ) || '' === $label ) {
-		$label = __( 'Clearance', 'wc-outlet' );
+		$label = __( 'Last chance', 'wc-outlet' );
 	}
 
 	echo '<span class="wc-outlet-admin-badge">' . esc_html( $label ) . '</span>';
