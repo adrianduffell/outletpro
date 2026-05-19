@@ -297,7 +297,7 @@ const OutletSidebar = () => {
 	return (
 		<PluginSidebar
 			name={ SIDEBAR_NAME }
-			title={ __( 'Outlet', 'wc-outlet' ) }
+			title={ __( 'Outlet settings', 'wc-outlet' ) }
 			isPinnable={ true }
 			icon={ OutletIcon }
 			className="wc-outlet-sidebar"
