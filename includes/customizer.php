@@ -14,14 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const OUTLET_BADGE_TEXT_COLOUR_DEFAULT = '#222';
+const OUTLET_BADGE_TEXT_COLOUR_DEFAULT = '#FFFFFF';
 
 /**
  * Default badge background colour (yellow).
  *
  * @internal
  */
-const OUTLET_BADGE_BG_COLOUR_DEFAULT = '#FFEE85';
+const OUTLET_BADGE_BG_COLOUR_DEFAULT = '#F81240';
 
 /**
  * Helper to initialize customizer integration.
@@ -51,7 +51,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		OUTLET_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'option',
-			'default'           => __( 'Clearance', 'wc-outlet' ),
+			'default'           => __( 'Last chance', 'wc-outlet' ),
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);

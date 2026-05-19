@@ -72,7 +72,7 @@ describe( 'Edit', () => {
 		render( <Edit /> );
 
 		// Assert.
-		expect( screen.getByDisplayValue( 'Clearance' ) ).toBeInTheDocument();
+		expect( screen.getByDisplayValue( 'Last chance' ) ).toBeInTheDocument();
 	} );
 
 	test( 'renders badge with label from global setting', () => {
