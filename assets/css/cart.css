@@ -58,7 +58,7 @@
 		color: var(--wc-outlet-badge-text-color, unset);
 	}
 
-	/* Applies when clearance is the only definition. */
+	/* Applies when outlet is the only definition. */
 	.shop_table dl.variation:has(> dt:only-of-type):has(.wc-outlet-cart-item-meta) {
 		margin: 0;
 	}
