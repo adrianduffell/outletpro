@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'include products in store setup task', async ( {
+test( 'choose products in store setup task', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -18,7 +18,7 @@ test( 'include products in store setup task', async ( {
 
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
 	const taskItem = page.locator( '.woocommerce-task-list__item', {
-		hasText: 'Include products in the outlet',
+		hasText: 'Choose outlet products',
 	} );
 	await expect( taskItem ).toBeVisible();
 	await expect( taskItem ).not.toHaveClass( /is-complete/ );

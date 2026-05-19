@@ -32,11 +32,11 @@ function init_setup_task(): void {
 			}
 
 			public function get_title(): string {
-				return __( 'Include products in the outlet', 'wc-outlet' );
+				return __( ' Choose outlet products', 'wc-outlet' );
 			}
 
 			public function get_content(): string {
-				return __( 'Include products in the outlet to move old stock quickly.', 'wc-outlet' );
+				return __( 'Move old stock quickly with the store’s outlet.', 'wc-outlet' );
 			}
 
 			public function get_time(): string {
