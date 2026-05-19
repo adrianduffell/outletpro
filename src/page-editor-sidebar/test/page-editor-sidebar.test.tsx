@@ -389,7 +389,7 @@ describe( 'page-editor-sidebar registration', () => {
 		render( pluginConfig.render() );
 
 		// Assert.
-		expect( screen.getByText( 'Outlet' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Outlet settings' ) ).toBeInTheDocument();
 	} );
 
 	test( 'render function outputs all panel sections', () => {
