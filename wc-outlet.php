@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Outlet
+ * Plugin Name: Outlet Pro
  * Description: Move old stock easily by adding a dedicated outlet to WooCommerce.
  * Version: 1.0.0
  * Author: Adrian Duffell
