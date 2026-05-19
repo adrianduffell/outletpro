@@ -1,6 +1,6 @@
 === Outlet Pro ===
 Contributors: adrianduffell
-Tags: woocommerce, outlet, discontinued, stock, merchandising, products
+Tags: woocommerce, outlet, discontinued, stock, clearance, merchandising, products
 Requires at least: 6.9
 Tested up to: 6.9
 Requires PHP: 7.4
