@@ -233,7 +233,7 @@ function get_default_outlet_message(): string {
 function seed_settings(): void {
 	add_option( OUTLET_BADGE_LABEL_OPTION, __( 'Last chance', 'wc-outlet' ) );
 	add_option( OUTLET_BADGE_TEXT_COLOR_OPTION, '#FFFFFF' );
-	add_option( OUTLET_BADGE_BG_COLOR_OPTION, '#EA4040' );
+	add_option( OUTLET_BADGE_BG_COLOR_OPTION, '#F81240' );
 	add_option( OUTLET_BADGE_BORDER_COLOR_OPTION, '' );
 	add_option( OUTLET_BADGE_BORDER_STYLE_OPTION, 'none' );
 	add_option( OUTLET_BADGE_BORDER_WIDTH_OPTION, '0' );
