@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'include products in storesetup task', async ( {
+test( 'include products in store setup task', async ( {
 	page,
 	admin,
 	requestUtils,
