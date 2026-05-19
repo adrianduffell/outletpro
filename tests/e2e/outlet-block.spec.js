@@ -104,7 +104,7 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 	).toBeVisible();
 } );
 
-test( 'Outlet badge has default black text and yellow background', async ( {
+test( 'Outlet badge has default white text and red background', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -139,6 +139,6 @@ test( 'Outlet badge has default black text and yellow background', async ( {
 	// Assert.
 	const badge = page.locator( '.wc-outlet-badge' );
 	await expect( badge ).toBeVisible();
-	await expect( badge ).toHaveCSS( 'color', 'rgb(34, 34, 34)' );
-	await expect( badge ).toHaveCSS( 'background-color', 'rgb(255, 238, 133)' );
+	await expect( badge ).toHaveCSS( 'color', 'rgb(255, 255, 255)' );
+	await expect( badge ).toHaveCSS( 'background-color', 'rgb(248, 18, 64)' );
 } );

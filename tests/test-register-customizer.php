@@ -167,7 +167,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'Clearance', $wp_customize->get_setting( OUTLET_BADGE_LABEL_OPTION )->default );
+		$this->assertSame( 'Last chance', $wp_customize->get_setting( OUTLET_BADGE_LABEL_OPTION )->default );
 	}
 
 	public function test_registers_badge_scale_setting(): void {
