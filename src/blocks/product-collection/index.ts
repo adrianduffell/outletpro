@@ -18,7 +18,7 @@ declare global {
 
 window.wc.wcBlocksRegistry.__experimentalRegisterProductCollection( {
 	name: 'wc-outlet/product-collection/outlet',
-	title: 'Outlet',
+	title: 'Outlet Products',
 	description: 'Show outlet products.',
 	icon: OutletIcon,
 } );
