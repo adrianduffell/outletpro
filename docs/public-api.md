@@ -83,7 +83,7 @@ try {
 
 #### `WC_Outlet\count_outlet(): int`
 
-Count the number of published products in the stores’s outlet.
+Count the number of published products in the store’s outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -256,7 +256,7 @@ it as a dependency to load it on demand. Added in 1.0.0.
 #### `wc-outlet-block-styles`
 
 Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
-is only loaded when the `wc-outlet/outlet-badge` block is rendered on the page.
+is only loaded when the `outlet-pro/outlet-badge` block is rendered on the page.
 Added in 1.0.0.
 
 #### `wc-outlet-admin-styles`
@@ -296,7 +296,7 @@ template hooks. Added in 1.0.0.
 
 ### `wc-outlet/outlet-badge`
 
-Displays a outlet badge when the product is in the stores’s outlet. Automatically
+Displays a outlet badge when the product is in the store’s outlet. Automatically
 inserted after the product price on the single product template (block themes). Added
 in 1.0.0.
 
@@ -326,7 +326,7 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 ### `wc-outlet/outlet-message`
 
-Displays the outlet message when the product is in the stores’s outlet. Automatically
+Displays the outlet message when the product is in the store’s outlet. Automatically
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
 
@@ -348,9 +348,9 @@ parameter.
 GET /wc/v3/products?wc_outlet=true
 ```
 
-| Parameter   | Type      | Description                                                     |
-| ----------- | --------- | --------------------------------------------------------------- |
-| `wc_outlet` | `boolean` | When `true`, limits results to products in the stores’s outlet. |
+| Parameter   | Type      | Description                                                    |
+| ----------- | --------- | -------------------------------------------------------------- |
+| `wc_outlet` | `boolean` | When `true`, limits results to products in the store’s outlet. |
 
 Added in 1.0.0.
 
@@ -362,9 +362,9 @@ The plugin extends the WooCommerce `[products]` shortcode with a `wc_outlet` att
 [products wc_outlet="true"]
 ```
 
-| Attribute   | Type                       | Description                                                     |
-| ----------- | -------------------------- | --------------------------------------------------------------- |
-| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the stores’s outlet. |
+| Attribute   | Type                       | Description                                                    |
+| ----------- | -------------------------- | -------------------------------------------------------------- |
+| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the store’s outlet. |
 
 Added in 1.0.0.
 
