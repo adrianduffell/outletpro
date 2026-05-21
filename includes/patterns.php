@@ -1,0 +1,273 @@
+<?php
+/**
+ * Block pattern registration.
+ *
+ * @package WC_Outlet
+ */
+
+namespace WC_Outlet;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Helper to initialize block patterns.
+ *
+ * @internal
+ */
+function init_patterns(): void {
+	register_outlet_filter_tiles_pattern();
+}
+
+/**
+ * Get the price tiers for the outlet filter tiles pattern for a given currency.
+ *
+ * Returns an array of three ascending price values for the given currency code.
+ * Defaults to USD values for unrecognised currencies.
+ *
+ * @internal
+ * @param string $currency ISO 4217 currency code.
+ * @return array{0: int, 1: int, 2: int} Price tiers, lowest to highest.
+ */
+function get_outlet_filter_price_tiers( string $currency ): array {
+	$tiers = array(
+		'AED' => array( 25, 50, 100 ),
+		'AFN' => array( 500, 1000, 2500 ),
+		'ALL' => array( 1000, 2500, 5000 ),
+		'AMD' => array( 5000, 10000, 25000 ),
+		'ANG' => array( 25, 50, 100 ),
+		'AOA' => array( 10000, 25000, 50000 ),
+		'ARS' => array( 10000, 25000, 50000 ),
+		'AUD' => array( 15, 30, 50 ),
+		'AWG' => array( 25, 50, 100 ),
+		'AZN' => array( 25, 50, 100 ),
+		'BAM' => array( 25, 50, 100 ),
+		'BBD' => array( 25, 50, 100 ),
+		'BDT' => array( 1000, 2500, 5000 ),
+		'BGN' => array( 25, 50, 100 ),
+		'BHD' => array( 10, 25, 50 ),
+		'BIF' => array( 10000, 25000, 50000 ),
+		'BMD' => array( 10, 25, 50 ),
+		'BND' => array( 15, 30, 50 ),
+		'BOB' => array( 100, 250, 500 ),
+		'BRL' => array( 50, 100, 200 ),
+		'BSD' => array( 10, 25, 50 ),
+		'BTN' => array( 500, 1000, 2500 ),
+		'BWP' => array( 250, 500, 1000 ),
+		'BYN' => array( 25, 50, 100 ),
+		'BZD' => array( 25, 50, 100 ),
+		'CAD' => array( 15, 30, 50 ),
+		'CDF' => array( 10000, 25000, 50000 ),
+		'CHF' => array( 10, 20, 40 ),
+		'CLP' => array( 10000, 25000, 50000 ),
+		'CNY' => array( 100, 250, 500 ),
+		'COP' => array( 100000, 250000, 500000 ),
+		'CRC' => array( 10000, 25000, 50000 ),
+		'CUP' => array( 250, 500, 1000 ),
+		'CVE' => array( 1000, 2500, 5000 ),
+		'CZK' => array( 250, 500, 1000 ),
+		'DJF' => array( 1000, 3000, 5000 ),
+		'DKK' => array( 100, 250, 500 ),
+		'DOP' => array( 1000, 2500, 5000 ),
+		'DZD' => array( 1000, 2500, 5000 ),
+		'EGP' => array( 500, 1000, 2500 ),
+		'ERN' => array( 250, 500, 1000 ),
+		'ETB' => array( 1000, 2500, 5000 ),
+		'EUR' => array( 10, 25, 50 ),
+		'FJD' => array( 25, 50, 100 ),
+		'FKP' => array( 10, 20, 40 ),
+		'GBP' => array( 10, 20, 40 ),
+		'GEL' => array( 25, 50, 100 ),
+		'GHS' => array( 250, 500, 1000 ),
+		'GIP' => array( 10, 20, 40 ),
+		'GMD' => array( 1000, 2500, 5000 ),
+		'GNF' => array( 100000, 250000, 500000 ),
+		'GTQ' => array( 100, 250, 500 ),
+		'GYD' => array( 5000, 10000, 25000 ),
+		'HKD' => array( 100, 250, 500 ),
+		'HNL' => array( 500, 1000, 2500 ),
+		'HRK' => array( 100, 250, 500 ),
+		'HTG' => array( 1000, 2500, 5000 ),
+		'HUF' => array( 5000, 10000, 25000 ),
+		'IDR' => array( 100000, 250000, 500000 ),
+		'ILS' => array( 50, 100, 200 ),
+		'INR' => array( 500, 1000, 2500 ),
+		'IQD' => array( 10000, 25000, 50000 ),
+		'IRR' => array( 1000000, 2500000, 5000000 ),
+		'ISK' => array( 1000, 3000, 5000 ),
+		'JMD' => array( 5000, 10000, 25000 ),
+		'JOD' => array( 10, 25, 50 ),
+		'JPY' => array( 1000, 3000, 5000 ),
+		'KES' => array( 1000, 2500, 5000 ),
+		'KGS' => array( 1000, 2500, 5000 ),
+		'KHR' => array( 10000, 25000, 50000 ),
+		'KMF' => array( 1000, 3000, 5000 ),
+		'KRW' => array( 10000, 30000, 50000 ),
+		'KWD' => array( 10, 25, 50 ),
+		'KYD' => array( 10, 25, 50 ),
+		'KZT' => array( 5000, 10000, 25000 ),
+		'LAK' => array( 100000, 250000, 500000 ),
+		'LBP' => array( 1000000, 2500000, 5000000 ),
+		'LKR' => array( 5000, 10000, 25000 ),
+		'LRD' => array( 5000, 10000, 25000 ),
+		'LSL' => array( 250, 500, 1000 ),
+		'LYD' => array( 25, 50, 100 ),
+		'MAD' => array( 100, 250, 500 ),
+		'MDL' => array( 250, 500, 1000 ),
+		'MGA' => array( 10000, 25000, 50000 ),
+		'MKD' => array( 1000, 2500, 5000 ),
+		'MMK' => array( 10000, 25000, 50000 ),
+		'MNT' => array( 10000, 25000, 50000 ),
+		'MOP' => array( 100, 250, 500 ),
+		'MRU' => array( 1000, 2500, 5000 ),
+		'MUR' => array( 1000, 2500, 5000 ),
+		'MVR' => array( 250, 500, 1000 ),
+		'MWK' => array( 10000, 25000, 50000 ),
+		'MXN' => array( 200, 500, 1000 ),
+		'MYR' => array( 50, 100, 200 ),
+		'MZN' => array( 1000, 2500, 5000 ),
+		'NAD' => array( 250, 500, 1000 ),
+		'NGN' => array( 10000, 25000, 50000 ),
+		'NIO' => array( 1000, 2500, 5000 ),
+		'NOK' => array( 100, 250, 500 ),
+		'NPR' => array( 500, 1000, 2500 ),
+		'NZD' => array( 15, 30, 50 ),
+		'OMR' => array( 10, 25, 50 ),
+		'PAB' => array( 10, 25, 50 ),
+		'PEN' => array( 50, 100, 200 ),
+		'PGK' => array( 50, 100, 200 ),
+		'PHP' => array( 1000, 2500, 5000 ),
+		'PKR' => array( 10000, 25000, 50000 ),
+		'PLN' => array( 50, 100, 200 ),
+		'PYG' => array( 100000, 250000, 500000 ),
+		'QAR' => array( 50, 100, 200 ),
+		'RON' => array( 50, 100, 200 ),
+		'RSD' => array( 1000, 2500, 5000 ),
+		'RUB' => array( 1000, 2500, 5000 ),
+		'RWF' => array( 10000, 25000, 50000 ),
+		'SAR' => array( 50, 100, 200 ),
+		'SBD' => array( 100, 250, 500 ),
+		'SCR' => array( 250, 500, 1000 ),
+		'SEK' => array( 100, 250, 500 ),
+		'SGD' => array( 15, 30, 50 ),
+		'SHP' => array( 10, 20, 40 ),
+		'SLE' => array( 250, 500, 1000 ),
+		'SLL' => array( 10000, 25000, 50000 ),
+		'SOS' => array( 10000, 25000, 50000 ),
+		'SRD' => array( 1000, 2500, 5000 ),
+		'SSP' => array( 10000, 25000, 50000 ),
+		'STN' => array( 250, 500, 1000 ),
+		'SVC' => array( 10, 25, 50 ),
+		'SYP' => array( 100000, 250000, 500000 ),
+		'SZL' => array( 250, 500, 1000 ),
+		'THB' => array( 500, 1000, 2500 ),
+		'TJS' => array( 250, 500, 1000 ),
+		'TMT' => array( 50, 100, 200 ),
+		'TND' => array( 50, 100, 200 ),
+		'TOP' => array( 25, 50, 100 ),
+		'TRY' => array( 500, 1000, 2500 ),
+		'TTD' => array( 100, 250, 500 ),
+		'TWD' => array( 500, 1000, 2500 ),
+		'TZS' => array( 10000, 25000, 50000 ),
+		'UAH' => array( 1000, 2500, 5000 ),
+		'UGX' => array( 10000, 25000, 50000 ),
+		'USD' => array( 10, 25, 50 ),
+		'UYU' => array( 1000, 2500, 5000 ),
+		'UZS' => array( 10000, 25000, 50000 ),
+		'VES' => array( 500, 1000, 2500 ),
+		'VND' => array( 100000, 250000, 500000 ),
+		'VUV' => array( 1000, 3000, 5000 ),
+		'WST' => array( 25, 50, 100 ),
+		'XAF' => array( 10000, 25000, 50000 ),
+		'XCD' => array( 25, 50, 100 ),
+		'XOF' => array( 10000, 25000, 50000 ),
+		'XPF' => array( 10000, 25000, 50000 ),
+		'YER' => array( 10000, 25000, 50000 ),
+		'ZAR' => array( 250, 500, 1000 ),
+		'ZMW' => array( 250, 500, 1000 ),
+		'ZWL' => array( 10000, 25000, 50000 ),
+	);
+
+	return $tiers[ $currency ] ?? array( 10, 25, 50 );
+}
+
+/**
+ * Format a price value for use in a button label, respecting currency symbol position.
+ *
+ * @internal
+ * @param int    $price        The integer price value to format.
+ * @param string $symbol       The currency symbol (e.g. '$', '£').
+ * @param string $currency_pos The currency symbol position option value.
+ * @return string Formatted price string (e.g. '$10', '10 kr').
+ */
+function format_outlet_filter_price( int $price, string $symbol, string $currency_pos ): string {
+	$formatted = number_format_i18n( $price );
+	switch ( $currency_pos ) {
+		case 'right':
+			return $formatted . $symbol;
+		case 'left_space':
+			return $symbol . ' ' . $formatted;
+		case 'right_space':
+			return $formatted . ' ' . $symbol;
+		default: // 'left'
+			return $symbol . $formatted;
+	}
+}
+
+/**
+ * Get the block markup content for the outlet filter tiles pattern.
+ *
+ * @internal
+ * @return string Block markup string.
+ */
+function get_outlet_filter_tiles_content(): string {
+	$currency     = get_woocommerce_currency();
+	$tiers        = get_outlet_filter_price_tiers( $currency );
+	$symbol       = get_woocommerce_currency_symbol( $currency );
+	$currency_pos = get_option( 'woocommerce_currency_pos', 'left' );
+
+	/* translators: %s: formatted price amount with currency symbol, e.g. $10 */
+	$label_template = __( 'Under %s', 'wc-outlet' );
+	$label1         = esc_html( sprintf( $label_template, format_outlet_filter_price( $tiers[0], $symbol, $currency_pos ) ) );
+	$label2         = esc_html( sprintf( $label_template, format_outlet_filter_price( $tiers[1], $symbol, $currency_pos ) ) );
+	$label3         = esc_html( sprintf( $label_template, format_outlet_filter_price( $tiers[2], $symbol, $currency_pos ) ) );
+	$label_all      = esc_html( __( 'All outlet', 'wc-outlet' ) );
+
+	return sprintf(
+		'<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->' . "\n" .
+		'<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"base","width":25,"className":"is-style-outline"} -->' . "\n" .
+		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link has-base-background-color has-background wp-element-button" href="?max_price=%1$d">%2$s</a></div>' . "\n" .
+		'<!-- /wp:button -->' . "\n\n" .
+		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
+		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="?max_price=%3$d">%4$s</a></div>' . "\n" .
+		'<!-- /wp:button -->' . "\n\n" .
+		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
+		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="?max_price=%5$d">%6$s</a></div>' . "\n" .
+		'<!-- /wp:button -->' . "\n\n" .
+		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
+		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="./">%7$s</a></div>' . "\n" .
+		'<!-- /wp:button --></div>' . "\n" .
+		'<!-- /wp:buttons -->',
+		$tiers[0],
+		$label1,
+		$tiers[1],
+		$label2,
+		$tiers[2],
+		$label3,
+		$label_all
+	);
+}
+
+/**
+ * Register the outlet filter tiles block pattern.
+ *
+ * @internal
+ */
+function register_outlet_filter_tiles_pattern(): void {
+	register_block_pattern(
+		'wc-outlet/outlet-filter-tiles',
+		array(
+			'title'   => __( 'Outlet filter tiles', 'wc-outlet' ),
+			'content' => get_outlet_filter_tiles_content(),
+		)
+	);
+}
