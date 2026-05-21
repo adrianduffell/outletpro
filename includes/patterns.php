@@ -191,45 +191,20 @@ function get_outlet_filter_price_tiers( string $currency ): array {
 }
 
 /**
- * Format a price value for use in a button label, respecting currency symbol position.
- *
- * @internal
- * @param int    $price        The integer price value to format.
- * @param string $symbol       The currency symbol (e.g. '$', '£').
- * @param string $currency_pos The currency symbol position option value.
- * @return string Formatted price string (e.g. '$10', '10 kr').
- */
-function format_outlet_filter_price( int $price, string $symbol, string $currency_pos ): string {
-	$formatted = number_format_i18n( $price );
-	switch ( $currency_pos ) {
-		case 'right':
-			return $formatted . $symbol;
-		case 'left_space':
-			return $symbol . ' ' . $formatted;
-		case 'right_space':
-			return $formatted . ' ' . $symbol;
-		default: // 'left'
-			return $symbol . $formatted;
-	}
-}
-
-/**
  * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
  * @return string Block markup string.
  */
 function get_outlet_filter_tiles_content(): string {
-	$currency     = get_woocommerce_currency();
-	$tiers        = get_outlet_filter_price_tiers( $currency );
-	$symbol       = get_woocommerce_currency_symbol( $currency );
-	$currency_pos = get_option( 'woocommerce_currency_pos', 'left' );
+	$currency = get_woocommerce_currency();
+	$tiers    = get_outlet_filter_price_tiers( $currency );
 
 	/* translators: %s: formatted price amount with currency symbol, e.g. $10 */
 	$label_template = __( 'Under %s', 'wc-outlet' );
-	$label1         = esc_html( sprintf( $label_template, format_outlet_filter_price( $tiers[0], $symbol, $currency_pos ) ) );
-	$label2         = esc_html( sprintf( $label_template, format_outlet_filter_price( $tiers[1], $symbol, $currency_pos ) ) );
-	$label3         = esc_html( sprintf( $label_template, format_outlet_filter_price( $tiers[2], $symbol, $currency_pos ) ) );
+	$label1         = wp_kses_post( sprintf( $label_template, wc_price( $tiers[0], array( 'decimals' => 0 ) ) ) );
+	$label2         = wp_kses_post( sprintf( $label_template, wc_price( $tiers[1], array( 'decimals' => 0 ) ) ) );
+	$label3         = wp_kses_post( sprintf( $label_template, wc_price( $tiers[2], array( 'decimals' => 0 ) ) ) );
 	$label_all      = esc_html( __( 'All outlet', 'wc-outlet' ) );
 
 	return sprintf(

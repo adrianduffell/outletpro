@@ -5,7 +5,6 @@
  * @package WC_Outlet
  */
 
-use function WC_Outlet\format_outlet_filter_price;
 use function WC_Outlet\get_outlet_filter_price_tiers;
 use function WC_Outlet\get_outlet_filter_tiles_content;
 use function WC_Outlet\register_outlet_filter_tiles_pattern;
@@ -67,46 +66,6 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( array( 10, 25, 50 ), $tiers );
-	}
-
-	public function test_format_outlet_filter_price_places_symbol_on_left(): void {
-		// Arrange / Act.
-		$result = format_outlet_filter_price( 10, '$', 'left' );
-
-		// Assert.
-		$this->assertSame( '$10', $result );
-	}
-
-	public function test_format_outlet_filter_price_places_symbol_on_right(): void {
-		// Arrange / Act.
-		$result = format_outlet_filter_price( 10, 'kr', 'right' );
-
-		// Assert.
-		$this->assertSame( '10kr', $result );
-	}
-
-	public function test_format_outlet_filter_price_places_symbol_on_left_with_space(): void {
-		// Arrange / Act.
-		$result = format_outlet_filter_price( 10, '$', 'left_space' );
-
-		// Assert.
-		$this->assertSame( '$ 10', $result );
-	}
-
-	public function test_format_outlet_filter_price_places_symbol_on_right_with_space(): void {
-		// Arrange / Act.
-		$result = format_outlet_filter_price( 10, 'kr', 'right_space' );
-
-		// Assert.
-		$this->assertSame( '10 kr', $result );
-	}
-
-	public function test_format_outlet_filter_price_defaults_to_left_for_unknown_position(): void {
-		// Arrange / Act.
-		$result = format_outlet_filter_price( 10, '$', 'unknown' );
-
-		// Assert.
-		$this->assertSame( '$10', $result );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_usd_max_prices_by_default(): void {
