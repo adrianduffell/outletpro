@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'WC_Outlet\register_classic_styles_hook' );
+	add_action( 'wp_enqueue_scripts', 'WC_Outlet\register_core_button_active_style_hook' );
 	add_action( 'wp_enqueue_scripts', 'WC_Outlet\enqueue_cart_styles_hook' );
 	add_action( 'enqueue_block_assets', 'WC_Outlet\enqueue_admin_editor_styles_hook' );
 	add_action( 'enqueue_block_assets', 'WC_Outlet\enqueue_admin_canvas_scripts_hook' );
@@ -35,6 +36,7 @@ function enqueue_init(): void {
 function deinit_enqueue(): void {
 	remove_action( 'wp_enqueue_scripts', 'WC_Outlet\enqueue_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'WC_Outlet\register_classic_styles_hook' );
+	remove_action( 'wp_enqueue_scripts', 'WC_Outlet\register_core_button_active_style_hook' );
 	remove_action( 'enqueue_block_assets', 'WC_Outlet\enqueue_admin_editor_styles_hook' );
 	remove_action( 'enqueue_block_assets', 'WC_Outlet\enqueue_admin_canvas_scripts_hook' );
 	remove_action( 'wp_head', 'WC_Outlet\output_badge_style_css_variables_hook' );
@@ -43,6 +45,8 @@ function deinit_enqueue(): void {
 	remove_action( 'enqueue_block_editor_assets', 'WC_Outlet\enqueue_build_assets_hook' );
 	wp_deregister_style( 'wc-outlet-classic-badge' );
 	wp_deregister_style( 'wc-outlet-classic-message' );
+	wp_dequeue_style( 'wc-outlet-core-button-active' );
+	wp_deregister_style( 'wc-outlet-core-button-active' );
 	wp_dequeue_style( 'wc-outlet-cart-badge' );
 	wp_deregister_style( 'wc-outlet-cart-badge' );
 	wp_dequeue_style( 'wc-outlet-admin' );
@@ -141,6 +145,35 @@ function register_classic_styles_hook(): void {
 		array(),
 		VERSION
 	);
+}
+
+/**
+ * Register front-end core/button active-state stylesheet.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function register_core_button_active_style_hook(): void {
+	wp_register_style(
+		'wc-outlet-core-button-active',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/core-button-active.css',
+		array(),
+		VERSION
+	);
+}
+
+/**
+ * Enqueue front-end core/button active-state stylesheet.
+ *
+ * @internal
+ */
+function enqueue_core_button_active_style(): void {
+	if ( ! wp_style_is( 'wc-outlet-core-button-active', 'registered' ) ) {
+		register_core_button_active_style_hook();
+	}
+
+	wp_enqueue_style( 'wc-outlet-core-button-active' );
 }
 
 /**

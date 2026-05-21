@@ -19,6 +19,7 @@ function init_blocks(): void {
 	register_outlet_message_block();
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'render_block', 'WC_Outlet\add_core_button_active_class_hook', 10, 2 );
 }
 
 /**
@@ -99,6 +100,43 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 	}
 
 	return $hooked_blocks;
+}
+
+/**
+ * Add an active class to core/button links whose href exactly matches the current URL.
+ *
+ * Fired by `render_block`.
+ *
+ * @internal WordPress filter hook
+ * @param string               $block_content Rendered block content.
+ * @param array<string, mixed> $block         Parsed block.
+ * @return string Filtered block content.
+ */
+function add_core_button_active_class_hook( string $block_content, array $block ): string {
+	if ( 'core/button' !== ( $block['blockName'] ?? '' ) ) {
+		return $block_content;
+	}
+
+	$attributes = $block['attrs'] ?? array();
+
+	if ( ! is_array( $attributes ) || ! isset( $attributes['href'] ) || ! is_string( $attributes['href'] ) ) {
+		return $block_content;
+	}
+
+	if ( wp_get_current_url() !== $attributes['href'] ) {
+		return $block_content;
+	}
+
+	$processor = new \WP_HTML_Tag_Processor( $block_content );
+
+	if ( ! $processor->next_tag( array( 'class_name' => 'wp-block-button__link' ) ) ) {
+		return $block_content;
+	}
+
+	$processor->add_class( 'is-active' );
+	enqueue_core_button_active_style();
+
+	return $processor->get_updated_html();
 }
 
 /**

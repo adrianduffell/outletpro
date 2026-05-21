@@ -32,6 +32,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Outlet\enqueue_cart_styles_hook' ) );
 	}
 
+	public function test_removes_register_core_button_active_style_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Outlet\register_core_button_active_style_hook' ) );
+	}
+
 	public function test_removes_output_badge_style_css_variables_hook(): void {
 		// Arrange.
 		enqueue_init();
@@ -138,6 +149,27 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( wp_style_is( 'wc-outlet-cart-badge', 'registered' ) );
+	}
+
+	public function test_deregisters_core_button_active_style(): void {
+		// Arrange.
+		wp_register_style( 'wc-outlet-core-button-active', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-outlet-core-button-active', 'registered' ) );
+	}
+
+	public function test_safely_handles_core_button_active_style_not_registered(): void {
+		// Arrange - 'wc-outlet-core-button-active' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'wc-outlet-core-button-active', 'registered' ) );
 	}
 
 	public function test_deregisters_admin_styles(): void {

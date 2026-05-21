@@ -1,0 +1,3 @@
+.wp-block-button__link.is-active {
+	color: var(--wp--style--color--link, currentColor);
+}
