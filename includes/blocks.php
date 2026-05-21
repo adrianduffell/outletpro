@@ -117,9 +117,9 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 		return $block_content;
 	}
 
-	$attributes = $block['attrs'] ?? array();
+	$attributes = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
 
-	if ( ! is_array( $attributes ) || ! isset( $attributes['href'] ) || ! is_string( $attributes['href'] ) ) {
+	if ( ! isset( $attributes['href'] ) || ! is_string( $attributes['href'] ) ) {
 		return $block_content;
 	}
 
