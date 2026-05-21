@@ -113,6 +113,8 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
  * @return string Filtered block content.
  */
 function add_core_button_active_class_hook( string $block_content, array $block ): string {
+	static $active_style_enqueued = false;
+
 	if ( 'core/button' !== ( $block['blockName'] ?? '' ) ) {
 		return $block_content;
 	}
@@ -134,7 +136,11 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 	}
 
 	$processor->add_class( 'is-active' );
-	enqueue_core_button_active_style();
+
+	if ( ! $active_style_enqueued ) {
+		enqueue_core_button_active_style();
+		$active_style_enqueued = true;
+	}
 
 	return $processor->get_updated_html();
 }
