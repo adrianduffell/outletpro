@@ -207,6 +207,8 @@ function create_outlet_page(): void {
 		throw new \RuntimeException( $page_id->get_error_message() );
 	}
 
+	update_option( OUTLET_PAGE_OPTION, $page_id );
+
 	$result = wp_update_post(
 		array(
 			'ID'           => $page_id,
@@ -218,8 +220,6 @@ function create_outlet_page(): void {
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException( $result->get_error_message() );
 	}
-
-	update_option( OUTLET_PAGE_OPTION, $page_id );
 }
 
 /**
