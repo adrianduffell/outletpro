@@ -193,13 +193,24 @@ function create_outlet_page(): void {
 			'<!-- /wp:shortcode -->';
 	}
 
-	$result = wp_insert_post(
+	$page_id = wp_insert_post(
 		array(
-			'post_title'   => __( 'Outlet', 'wc-outlet' ),
-			'post_name'    => 'outlet',
-			'post_status'  => 'draft',
+			'post_title'  => __( 'Outlet', 'wc-outlet' ),
+			'post_name'   => 'outlet',
+			'post_status' => 'draft',
+			'post_type'   => 'page',
+		),
+		true
+	);
+
+	if ( is_wp_error( $page_id ) ) {
+		throw new \RuntimeException( $page_id->get_error_message() );
+	}
+
+	$result = wp_update_post(
+		array(
+			'ID'           => $page_id,
 			'post_content' => $post_content,
-			'post_type'    => 'page',
 		),
 		true
 	);
@@ -208,7 +219,7 @@ function create_outlet_page(): void {
 		throw new \RuntimeException( $result->get_error_message() );
 	}
 
-	update_option( OUTLET_PAGE_OPTION, $result );
+	update_option( OUTLET_PAGE_OPTION, $page_id );
 }
 
 /**
