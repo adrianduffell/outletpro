@@ -69,6 +69,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 	public function test_get_outlet_filter_tiles_content_contains_all_outlet_link(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
+		delete_option( 'wc_outlet_page_id' );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -76,6 +77,28 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'href="./"', $content );
 		$this->assertStringContainsString( 'All outlet', $content );
+	}
+
+	public function test_get_outlet_filter_tiles_content_uses_outlet_page_permalink(): void {
+		// Arrange.
+		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
+		$permalink = get_permalink( $page_id );
+
+		// Act.
+		$content = get_outlet_filter_tiles_content();
+
+		// Assert.
+		$this->assertStringContainsString( $permalink, $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_buttons_block_markup(): void {

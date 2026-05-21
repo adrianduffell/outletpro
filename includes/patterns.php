@@ -185,6 +185,17 @@ function get_outlet_filter_tiles_content(): string {
 	);
 	$tiers     = $tiers_map[ $currency ] ?? array( 10, 25, 50 );
 
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		$page_id = null;
+	}
+	$permalink = $page_id ? get_permalink( $page_id ) : false;
+	if ( ! $permalink ) {
+		$permalink = './';
+	}
+	$base_url = $permalink;
+
 	/* translators: %s: formatted price amount with currency symbol, e.g. $10 */
 	$label_template = __( 'Under %s', 'wc-outlet' );
 	$buttons        = array();
@@ -198,16 +209,18 @@ function get_outlet_filter_tiles_content(): string {
 		$link_class  = $is_first
 			? 'wp-block-button__link has-base-background-color has-background wp-element-button'
 			: 'wp-block-button__link wp-element-button';
+		$href        = esc_url( add_query_arg( 'max_price', $price, $base_url ) );
 		$buttons[]   =
 			'<!-- wp:button ' . $block_attrs . ' -->' . "\n" .
-			'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="' . $link_class . '" href="?max_price=' . $price . '">' . $label . '</a></div>' . "\n" .
+			'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="' . $link_class . '" href="' . $href . '">' . $label . '</a></div>' . "\n" .
 			'<!-- /wp:button -->';
 	}
 
 	$label_all = esc_html( __( 'All outlet', 'wc-outlet' ) );
+	$href_all  = esc_url( $base_url );
 	$buttons[] =
 		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
-		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="./">' . $label_all . '</a></div>' . "\n" .
+		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="' . $href_all . '">' . $label_all . '</a></div>' . "\n" .
 		'<!-- /wp:button -->';
 
 	return '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->' . "\n" .
