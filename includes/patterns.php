@@ -19,17 +19,14 @@ function init_patterns(): void {
 }
 
 /**
- * Get the price tiers for the outlet filter tiles pattern for a given currency.
- *
- * Returns an array of three ascending price values for the given currency code.
- * Defaults to USD values for unrecognised currencies.
+ * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
- * @param string $currency ISO 4217 currency code.
- * @return array{0: int, 1: int, 2: int} Price tiers, lowest to highest.
+ * @return string Block markup string.
  */
-function get_outlet_filter_price_tiers( string $currency ): array {
-	$tiers = array(
+function get_outlet_filter_tiles_content(): string {
+	$currency  = get_woocommerce_currency();
+	$tiers_map = array(
 		'AED' => array( 25, 50, 100 ),
 		'AFN' => array( 500, 1000, 2500 ),
 		'ALL' => array( 1000, 2500, 5000 ),
@@ -186,50 +183,36 @@ function get_outlet_filter_price_tiers( string $currency ): array {
 		'ZMW' => array( 250, 500, 1000 ),
 		'ZWL' => array( 10000, 25000, 50000 ),
 	);
-
-	return $tiers[ $currency ] ?? array( 10, 25, 50 );
-}
-
-/**
- * Get the block markup content for the outlet filter tiles pattern.
- *
- * @internal
- * @return string Block markup string.
- */
-function get_outlet_filter_tiles_content(): string {
-	$currency = get_woocommerce_currency();
-	$tiers    = get_outlet_filter_price_tiers( $currency );
+	$tiers     = $tiers_map[ $currency ] ?? array( 10, 25, 50 );
 
 	/* translators: %s: formatted price amount with currency symbol, e.g. $10 */
 	$label_template = __( 'Under %s', 'wc-outlet' );
-	$label1         = wp_kses_post( sprintf( $label_template, wc_price( $tiers[0], array( 'decimals' => 0 ) ) ) );
-	$label2         = wp_kses_post( sprintf( $label_template, wc_price( $tiers[1], array( 'decimals' => 0 ) ) ) );
-	$label3         = wp_kses_post( sprintf( $label_template, wc_price( $tiers[2], array( 'decimals' => 0 ) ) ) );
-	$label_all      = esc_html( __( 'All outlet', 'wc-outlet' ) );
+	$buttons        = array();
 
-	return sprintf(
-		'<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->' . "\n" .
-		'<div class="wp-block-buttons"><!-- wp:button {"backgroundColor":"base","width":25,"className":"is-style-outline"} -->' . "\n" .
-		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link has-base-background-color has-background wp-element-button" href="?max_price=%1$d">%2$s</a></div>' . "\n" .
-		'<!-- /wp:button -->' . "\n\n" .
+	foreach ( $tiers as $index => $price ) {
+		$label       = wp_kses_post( sprintf( $label_template, wc_price( $price, array( 'decimals' => 0 ) ) ) );
+		$is_first    = 0 === $index;
+		$block_attrs = $is_first
+			? '{"backgroundColor":"base","width":25,"className":"is-style-outline"}'
+			: '{"width":25,"className":"is-style-outline"}';
+		$link_class  = $is_first
+			? 'wp-block-button__link has-base-background-color has-background wp-element-button'
+			: 'wp-block-button__link wp-element-button';
+		$buttons[]   =
+			'<!-- wp:button ' . $block_attrs . ' -->' . "\n" .
+			'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="' . $link_class . '" href="?max_price=' . $price . '">' . $label . '</a></div>' . "\n" .
+			'<!-- /wp:button -->';
+	}
+
+	$label_all = esc_html( __( 'All outlet', 'wc-outlet' ) );
+	$buttons[] =
 		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
-		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="?max_price=%3$d">%4$s</a></div>' . "\n" .
-		'<!-- /wp:button -->' . "\n\n" .
-		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
-		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="?max_price=%5$d">%6$s</a></div>' . "\n" .
-		'<!-- /wp:button -->' . "\n\n" .
-		'<!-- wp:button {"width":25,"className":"is-style-outline"} -->' . "\n" .
-		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="./">%7$s</a></div>' . "\n" .
-		'<!-- /wp:button --></div>' . "\n" .
-		'<!-- /wp:buttons -->',
-		$tiers[0],
-		$label1,
-		$tiers[1],
-		$label2,
-		$tiers[2],
-		$label3,
-		$label_all
-	);
+		'<div class="wp-block-button has-custom-width wp-block-button__width-25 is-style-outline"><a class="wp-block-button__link wp-element-button" href="./">' . $label_all . '</a></div>' . "\n" .
+		'<!-- /wp:button -->';
+
+	return '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"center"}} -->' . "\n" .
+		'<div class="wp-block-buttons">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
+		'<!-- /wp:buttons -->';
 }
 
 /**
