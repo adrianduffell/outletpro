@@ -206,30 +206,30 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 	public function test_creates_page_then_updates_content_in_second_call(): void {
 		// Arrange.
 		delete_option( OUTLET_PAGE_OPTION );
-		$insert_events = array();
-		$capture_event = static function ( int $post_id, WP_Post $post, bool $is_update ) use ( &$insert_events ): void {
+		$post_events = array();
+		$capture_post_event_hook = static function ( int $post_id, WP_Post $post, bool $is_update ) use ( &$post_events ): void {
 			if ( 'page' !== $post->post_type || 'outlet' !== $post->post_name ) {
 				return;
 			}
 
-			$insert_events[] = array(
+			$post_events[] = array(
 				'post_id'      => $post_id,
 				'is_update'    => $is_update,
 				'post_content' => $post->post_content,
 			);
 		};
-		add_action( 'wp_insert_post', $capture_event, 10, 3 );
+		add_action( 'wp_insert_post', $capture_post_event_hook, 10, 3 );
 
 		// Act.
 		create_outlet_page();
-		remove_action( 'wp_insert_post', $capture_event, 10 );
+		remove_action( 'wp_insert_post', $capture_post_event_hook, 10 );
 
 		// Assert.
-		$this->assertCount( 2, $insert_events );
-		$this->assertFalse( $insert_events[0]['is_update'] );
-		$this->assertSame( '', $insert_events[0]['post_content'] );
-		$this->assertTrue( $insert_events[1]['is_update'] );
-		$this->assertNotSame( '', $insert_events[1]['post_content'] );
+		$this->assertCount( 2, $post_events );
+		$this->assertFalse( $post_events[0]['is_update'] );
+		$this->assertSame( '', $post_events[0]['post_content'] );
+		$this->assertTrue( $post_events[1]['is_update'] );
+		$this->assertNotSame( '', $post_events[1]['post_content'] );
 	}
 
 	public function test_returns_could_not_be_created_message_when_option_is_corrupted(): void {
