@@ -9,7 +9,7 @@ use function WC_Outlet\init_button_interactivity;
 
 class Test_Button_Interactivity_Hook extends WP_UnitTestCase {
 
-	public function test_filter_is_registered_by_init_button_interactivity(): void {
+	public function test_filter_is_registered(): void {
 		// Arrange.
 		remove_all_filters( 'render_block' );
 
@@ -18,6 +18,7 @@ class Test_Button_Interactivity_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 10, has_filter( 'render_block', 'WC_Outlet\inject_button_interactivity_attributes_hook' ) );
+		$this->assertSame( 10, has_action( 'wp_enqueue_scripts', 'WC_Outlet\enqueue_button_interactivity_module_hook' ) );
 	}
 
 	public function test_non_button_blocks_are_unchanged(): void {
@@ -48,9 +49,28 @@ class Test_Button_Interactivity_Hook extends WP_UnitTestCase {
 		// Act.
 		$result = apply_filters( 'render_block', $markup, $block );
 
+		$processor = new WP_HTML_Tag_Processor( $result );
+
 		// Assert.
-		$this->assertStringContainsString( 'data-wp-interactive="wc-outlet/button-interactivity"', $result );
-		$this->assertStringContainsString( 'data-wp-on--click="actions.logHello"', $result );
+		$this->assertTrue( $processor->next_tag() );
+		$this->assertSame( 'wc-outlet/button-interactivity', $processor->get_attribute( 'data-wp-interactive' ) );
+		$this->assertSame( 'actions.logHello', $processor->get_attribute( 'data-wp-on--click' ) );
 		$this->assertStringContainsString( 'wp-block-button', $result );
+	}
+
+	public function test_empty_button_block_markup_is_unchanged(): void {
+		// Arrange.
+		remove_all_filters( 'render_block' );
+		init_button_interactivity();
+		$markup = '';
+		$block  = array(
+			'blockName' => 'core/button',
+		);
+
+		// Act.
+		$result = apply_filters( 'render_block', $markup, $block );
+
+		// Assert.
+		$this->assertSame( '', $result );
 	}
 }
