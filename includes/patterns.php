@@ -187,12 +187,12 @@ function get_outlet_filter_tiles_content(): string {
 
 	try {
 		$page_id = get_outlet_page_id();
-	} catch ( \UnexpectedValueException $e ) {
-		$page_id = null;
+	} catch ( \Throwable $e ) {
+		return '';
 	}
 	$permalink = $page_id ? get_permalink( $page_id ) : false;
 	if ( ! $permalink ) {
-		$permalink = './';
+		return '';
 	}
 	$base_url = $permalink;
 
@@ -237,8 +237,9 @@ function register_outlet_filter_tiles_pattern(): void {
 	register_block_pattern(
 		'wc-outlet/outlet-filter-tiles',
 		array(
-			'title'   => __( 'Outlet filter tiles', 'wc-outlet' ),
-			'content' => get_outlet_filter_tiles_content(),
+			'title'       => __( 'Outlet filter tiles', 'wc-outlet' ),
+			'description' => __( 'Adds price range filters for the store\'s outlet. Requires an outlet page.', 'wc-outlet' ),
+			'content'     => get_outlet_filter_tiles_content(),
 		)
 	);
 }

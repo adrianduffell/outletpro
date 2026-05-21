@@ -30,6 +30,13 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 	public function test_get_outlet_filter_tiles_content_contains_usd_max_prices_by_default(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -38,11 +45,21 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=10', $content );
 		$this->assertStringContainsString( 'max_price=25', $content );
 		$this->assertStringContainsString( 'max_price=50', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_currency_specific_max_prices(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'JPY' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -51,11 +68,21 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=1000', $content );
 		$this->assertStringContainsString( 'max_price=3000', $content );
 		$this->assertStringContainsString( 'max_price=5000', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_defaults_to_usd_for_unknown_currency(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'XYZ' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -64,9 +91,12 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=10', $content );
 		$this->assertStringContainsString( 'max_price=25', $content );
 		$this->assertStringContainsString( 'max_price=50', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
 	}
 
-	public function test_get_outlet_filter_tiles_content_contains_all_outlet_link(): void {
+	public function test_get_outlet_filter_tiles_content_returns_empty_when_no_outlet_page(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
 		delete_option( 'wc_outlet_page_id' );
@@ -75,8 +105,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$content = get_outlet_filter_tiles_content();
 
 		// Assert.
-		$this->assertStringContainsString( 'href="./"', $content );
-		$this->assertStringContainsString( 'All outlet', $content );
+		$this->assertSame( '', $content );
 	}
 
 	public function test_get_outlet_filter_tiles_content_uses_outlet_page_permalink(): void {
@@ -104,6 +133,13 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 	public function test_get_outlet_filter_tiles_content_contains_buttons_block_markup(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -112,11 +148,21 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( '<!-- wp:buttons', $content );
 		$this->assertStringContainsString( '<!-- wp:button', $content );
 		$this->assertStringContainsString( '<!-- /wp:buttons -->', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_first_button_has_base_background(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -124,5 +170,8 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( '"backgroundColor":"base"', $content );
 		$this->assertStringContainsString( 'has-base-background-color', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
 	}
 }
