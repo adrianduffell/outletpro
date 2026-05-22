@@ -135,7 +135,9 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Start WordPress environment
-      run: npm run wp-env start
+      run: |
+        npm run wp-env start
+        npm run wp-env status
 
     - name: Run E2E tests
       run: npm run test:e2e
