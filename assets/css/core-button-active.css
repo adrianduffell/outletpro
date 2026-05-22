@@ -1,3 +1,5 @@
-.wp-block-button__link.is-active {
-	color: var(--wp--style--color--link, currentColor);
+.wp-block-button__link.wc-outlet-is-active:before {
+	content:"‣";
+	position: absolute;
+	margin-left: -0.75em;
 }
