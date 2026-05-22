@@ -94,6 +94,10 @@ jobs:
 
     - name: Install WordPress with WP-CLI
       run: |
+        wp core download \
+          --version=6.9.4 \
+          --path=/tmp/wordpress \
+          --force
         wp core install \
           --path=/tmp/wordpress \
           --url=http://local.wordpress.test \
