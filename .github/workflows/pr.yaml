@@ -70,7 +70,7 @@ jobs:
       run: sudo apt-get install -y subversion
 
     - name: Install WordPress test suite
-      run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
+      run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 6.9.4
 
     - name: Install WP-CLI
       run: |
@@ -94,6 +94,10 @@ jobs:
 
     - name: Install WordPress with WP-CLI
       run: |
+        wp core download \
+          --version=6.9.4 \
+          --path=/tmp/wordpress \
+          --force
         wp core install \
           --path=/tmp/wordpress \
           --url=http://local.wordpress.test \
