@@ -241,16 +241,12 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page(); // Creates page as draft.
-		// Act.
-		ob_start();
-		do_action( 'admin_notices' );
-		$output = (string) ob_get_clean();
 
-		// Assert.
-		$this->assertMatchesRegularExpression(
-			'/<a[^>]*>Edit page<\/a>/',
-			$output
-		);
+		// Expect.
+		$this->expectOutputRegex( '/<a[^>]*>Edit page<\/a>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
 	}
 
 	public function test_products_added_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
