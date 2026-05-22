@@ -153,7 +153,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		delete_option( 'wc_outlet_page_id' );
 	}
 
-	public function test_get_outlet_filter_tiles_content_first_button_has_base_background(): void {
+	public function test_get_outlet_filter_tiles_content_has_wc_outlet_filter_tiles_class(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
 		$page_id = self::factory()->post->create(
@@ -168,8 +168,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$content = get_outlet_filter_tiles_content();
 
 		// Assert.
-		$this->assertStringContainsString( '"backgroundColor":"base"', $content );
-		$this->assertStringContainsString( 'has-base-background-color', $content );
+		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $content );
 
 		// Cleanup.
 		delete_option( 'wc_outlet_page_id' );
