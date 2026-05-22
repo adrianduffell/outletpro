@@ -117,6 +117,14 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 		return $block_content;
 	}
 
+	$attributes = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
+	$class_name = $attributes['className'] ?? '';
+	$classes    = is_string( $class_name ) ? preg_split( '/\s+/', trim( $class_name ) ) : false;
+
+	if ( ! is_array( $classes ) || ! in_array( 'wc-outlet-filter-tiles', $classes, true ) ) {
+		return $block_content;
+	}
+
 	$processor = new \WP_HTML_Tag_Processor( $block_content );
 
 	if ( ! $processor->next_tag( array( 'class_name' => 'wp-block-button__link' ) ) ) {
