@@ -204,16 +204,16 @@ function get_outlet_filter_tiles_content(): string {
 		$label     = wp_kses_post( sprintf( $label_template, wc_price( $price, array( 'decimals' => 0 ) ) ) );
 		$href      = esc_url( add_query_arg( 'max_price', $price, $base_url ) );
 		$buttons[] =
-			'<!-- wp:button {"className":"is-style-outline"} -->' . "\n" .
-			'<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="' . $href . '">' . $label . '</a></div>' . "\n" .
+			'<!-- wp:button {"className":"is-style-outline wc-outlet-filter-tile"} -->' . "\n" .
+			'<div class="wp-block-button is-style-outline wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="' . $href . '">' . $label . '</a></div>' . "\n" .
 			'<!-- /wp:button -->';
 	}
 
 	$label_all = wp_kses_post( __( '<em>All</em><br/><em>outlet</em>', 'wc-outlet' ) );
 	$href_all  = esc_url( $base_url );
 	$buttons[] =
-		'<!-- wp:button {"className":"is-style-outline"} -->' . "\n" .
-		'<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="' . $href_all . '">' . $label_all . '</a></div>' . "\n" .
+		'<!-- wp:button {"className":"is-style-outline wc-outlet-filter-tile"} -->' . "\n" .
+		'<div class="wp-block-button is-style-outline wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="' . $href_all . '">' . $label_all . '</a></div>' . "\n" .
 		'<!-- /wp:button -->';
 
 	return '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
