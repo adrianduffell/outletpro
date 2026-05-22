@@ -1,5 +1,5 @@
-.wp-block-button__link.wc-outlet-is-active:before {
-	content:"‣";
+.wp-block-button__link.wc-outlet-is-active::before {
+	content: "‣";
 	position: absolute;
 	margin-left: -0.75em;
 }
