@@ -129,7 +129,7 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 		return $block_content;
 	}
 
-	$current_url = home_url( wp_unslash( $_SERVER['REQUEST_URI'] ?? '/' ) );
+	$current_url = home_url( wp_unslash( $_SERVER['REQUEST_URI'] ?? '/' ) ); //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	if ( trailingslashit( $current_url ) !== trailingslashit( $href ) ) {
 		return $block_content;
 	}
