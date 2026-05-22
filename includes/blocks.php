@@ -133,7 +133,7 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 		return $block_content;
 	}
 
-	$processor->add_class( 'is-active' );
+	$processor->add_class( 'wc-outlet-is-active' );
 
 	if ( ! wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) ) {
 		enqueue_core_button_active_style();
