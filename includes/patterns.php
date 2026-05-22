@@ -216,8 +216,8 @@ function get_outlet_filter_tiles_content(): string {
 		'<div class="wp-block-button is-style-outline wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="' . $href_all . '">' . $label_all . '</a></div>' . "\n" .
 		'<!-- /wp:button -->';
 
-	return '<!-- wp:buttons {"layout":{"type":"flex","justifyContent":"left"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
-		'<div class="wp-block-buttons wc-outlet-filter-tiles">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
+	return '<!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"left"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
+		'<div class="wp-block-buttons wc-outlet-filter-tiles" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
 		'<!-- /wp:buttons -->';
 }
 
