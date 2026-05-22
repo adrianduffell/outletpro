@@ -117,19 +117,20 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 		return $block_content;
 	}
 
-	$attributes = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
-
-	if ( ! isset( $attributes['href'] ) || ! is_string( $attributes['href'] ) ) {
-		return $block_content;
-	}
-
-	if ( wp_get_current_url() !== $attributes['href'] ) {
-		return $block_content;
-	}
-
 	$processor = new \WP_HTML_Tag_Processor( $block_content );
 
 	if ( ! $processor->next_tag( array( 'class_name' => 'wp-block-button__link' ) ) ) {
+		return $block_content;
+	}
+
+	$href = $processor->get_attribute( 'href' );
+
+	if ( ! is_string( $href ) ) {
+		return $block_content;
+	}
+
+	$current_url = home_url( wp_unslash( $_SERVER['REQUEST_URI'] ?? '/' ) );
+	if ( trailingslashit( $current_url ) !== trailingslashit( $href ) ) {
 		return $block_content;
 	}
 
