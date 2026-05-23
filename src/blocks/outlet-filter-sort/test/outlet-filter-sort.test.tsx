@@ -20,8 +20,8 @@ describe( 'Edit', () => {
 		const select = screen.getByRole( 'combobox' );
 		const option = screen.getByRole( 'option', {
 			name: 'Default sorting',
-		} );
+		} ) as HTMLOptionElement;
 		expect( select ).toBeDisabled();
-		expect( option ).toBeSelected();
+		expect( option.selected ).toBe( true );
 	} );
 } );

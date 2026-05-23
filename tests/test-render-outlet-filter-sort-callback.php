@@ -27,7 +27,7 @@ class Test_Render_Outlet_Filter_Sort_Callback extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_filter_sort_block();
-		$block = new WP_Block(
+		$block    = new WP_Block(
 			array(
 				'blockName'    => 'wc-outlet/outlet-filter-sort',
 				'attrs'        => array(),
