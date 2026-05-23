@@ -242,25 +242,3 @@ function render_outlet_filter_sort_callback( array $attributes, string $_content
 		)
 	);
 }
-
-
-
-add_filter(
-	'render_block_data',
-	function( array $parsed_block ): array {
-		if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? null ) ) {
-			return $parsed_block;
-		}
-
-		if ( strpos( $parsed_block['attrs']['className'] ?? '', 'wc-outlet-product-collection' ) === false ) {
-			return $parsed_block;
-		}
-
-		$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) );
-		if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
-			return $parsed_block;
-		}
-		$parsed_block['attrs']['query']['orderBy'] = $orderby;
-		return $parsed_block;
-	}
-);
