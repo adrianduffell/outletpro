@@ -1,0 +1,103 @@
+import type { ComponentType } from 'react';
+import { Fragment } from '@wordpress/element';
+import { InspectorControls } from '@wordpress/block-editor';
+import { CheckboxControl, PanelBody } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+
+type ProductCollectionAttributes = {
+	collection?: string;
+	query?: Record< string, unknown >;
+	queryContextIncludes?: string[];
+};
+
+type ProductCollectionEditProps = {
+	name: string;
+	attributes: ProductCollectionAttributes;
+	setAttributes: (
+		attributes: Partial< ProductCollectionAttributes >
+	) => void;
+};
+
+const PRODUCT_COLLECTION_BLOCK = 'woocommerce/product-collection';
+const OUTLET_PRODUCT_COLLECTION = 'wc-outlet/product-collection/outlet';
+
+declare global {
+	interface Window {
+		wp: {
+			hooks: {
+				addFilter: (
+					hookName: string,
+					namespace: string,
+					callback: typeof withOutletQueryInspector
+				) => void;
+			};
+		};
+	}
+}
+
+export function updateOutletQueryAttributes(
+	attributes: ProductCollectionAttributes,
+	isChecked: boolean
+): Partial< ProductCollectionAttributes > {
+	const nextQuery = { ...( attributes.query ?? {} ) };
+
+	if ( isChecked ) {
+		nextQuery.wc_outlet = true;
+	} else {
+		delete nextQuery.wc_outlet;
+	}
+
+	const queryContextIncludes = (
+		attributes.queryContextIncludes ?? []
+	).filter( ( value ) => 'query' !== value );
+
+	return {
+		query: nextQuery,
+		queryContextIncludes: isChecked
+			? [ ...queryContextIncludes, 'query' ]
+			: queryContextIncludes,
+	};
+}
+
+export const withOutletQueryInspector = (
+	BlockEdit: ComponentType< ProductCollectionEditProps >
+) =>
+	function OutletQueryInspector( props: ProductCollectionEditProps ) {
+		if ( PRODUCT_COLLECTION_BLOCK !== props.name ) {
+			return <BlockEdit { ...props } />;
+		}
+
+		if ( OUTLET_PRODUCT_COLLECTION === props.attributes.collection ) {
+			return <BlockEdit { ...props } />;
+		}
+
+		return (
+			<Fragment>
+				<BlockEdit { ...props } />
+				<InspectorControls>
+					<PanelBody title={ __( 'Outlet', 'wc-outlet' ) }>
+						<CheckboxControl
+							label={ __( 'Outlet', 'wc-outlet' ) }
+							checked={
+								true === props.attributes.query?.wc_outlet
+							}
+							onChange={ ( isChecked ) =>
+								props.setAttributes(
+									updateOutletQueryAttributes(
+										props.attributes,
+										isChecked
+									)
+								)
+							}
+						/>
+					</PanelBody>
+				</InspectorControls>
+			</Fragment>
+		);
+	};
+
+window.wp.hooks.addFilter(
+	'editor.BlockEdit',
+	'wc-outlet/product-collection/outlet-query-inspector',
+	withOutletQueryInspector
+);
