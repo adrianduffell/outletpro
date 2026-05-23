@@ -230,6 +230,8 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
  * @return string Rendered HTML.
  */
 function render_outlet_filter_sort_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	// Populate the global $wp_query with the correct count of outlet products for the sorting block to use.
+	wc_set_loop_prop( 'total', count_outlet() );
 	return render_block(
 		array(
 			'blockName'    => 'woocommerce/catalog-sorting',
@@ -240,3 +242,25 @@ function render_outlet_filter_sort_callback( array $attributes, string $_content
 		)
 	);
 }
+
+
+
+add_filter(
+	'render_block_data',
+	function( array $parsed_block ): array {
+		if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? null ) ) {
+			return $parsed_block;
+		}
+
+		if ( strpos( $parsed_block['attrs']['className'] ?? '', 'wc-outlet-product-collection' ) === false ) {
+			return $parsed_block;
+		}
+
+		$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) );
+		if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
+			return $parsed_block;
+		}
+		$parsed_block['attrs']['query']['orderBy'] = $orderby;
+		return $parsed_block;
+	}
+);
