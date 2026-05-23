@@ -28,36 +28,27 @@ function register_outlet_page_template(): void {
 		return;
 	}
 
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outletpage.html';
+
+	if ( ! is_readable( $template_path ) ) {
+		return;
+	}
+
+	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
+
+	if ( false === $template_content ) {
+		return;
+	}
+
 	register_block_template(
 		'wc-outlet//outlet-page',
 		array(
 			'title'       => __( 'Outlet page', 'wc-outlet' ),
 			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
 			'post_types'  => array( 'page' ),
-			'content'     => get_outlet_page_template_content(),
+			'content'     => $template_content,
 		)
 	);
-}
-
-/**
- * Get the outlet page template content.
- *
- * @internal
- */
-function get_outlet_page_template_content(): string {
-	$template_path = dirname( PLUGIN_FILE ) . '/templates/outletpage.html';
-
-	if ( ! is_readable( $template_path ) ) {
-		return '';
-	}
-
-	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
-
-	if ( false === $template_content ) {
-		return '';
-	}
-
-	return $template_content;
 }
 
 /**
