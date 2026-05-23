@@ -47,6 +47,7 @@ function register_outlet_page_template(): void {
 			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
 			'post_types'  => array( 'page' ),
 			'content'     => $template_content,
+			'plugin'      => 'wc-outlet',
 		)
 	);
 }
