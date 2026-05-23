@@ -34,7 +34,7 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 		$this->assertTrue( wp_style_is( 'wc-outlet-classic-message', 'registered' ) );
 	}
 
-	public function test_registers_core_button_active_style(): void {
+	public function test_registers_filter_tiles_style(): void {
 		// Arrange.
 		deinit_enqueue();
 		enqueue_init();
@@ -43,6 +43,6 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'wc-outlet-core-button-active', 'registered' ) );
+		$this->assertTrue( wp_style_is( 'wc-outlet-filter-tiles', 'registered' ) );
 	}
 }

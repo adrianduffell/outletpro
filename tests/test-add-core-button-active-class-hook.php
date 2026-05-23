@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for add_core_button_active_class_hook().
+ * Tests for filter_tiles_active_class_hook().
  *
  * @package WC_Outlet
  */
@@ -30,11 +30,12 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = apply_filters( 'render_block', $block_content, $block, new WP_Block( $block ) );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		$result = apply_filters( 'render_block_core/buttons', $block_content, $block );
 
 		// Assert.
 		$this->assertStringContainsString( 'is-active', $result );
-		$this->assertTrue( wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'wc-outlet-filter-tiles', 'enqueued' ) );
 	}
 
 	public function test_does_not_add_is_active_class_when_href_does_not_match_current_url(): void {
@@ -54,11 +55,12 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = apply_filters( 'render_block', $block_content, $block, new WP_Block( $block ) );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		$result = apply_filters( 'render_block_core/buttons', $block_content, $block );
 
 		// Assert.
 		$this->assertSame( $block_content, $result );
-		$this->assertFalse( wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) );
+		$this->assertFalse( wp_style_is( 'wc-outlet-filter-tiles', 'enqueued' ) );
 	}
 
 	public function test_does_not_add_is_active_class_when_class_name_is_missing(): void {
@@ -79,10 +81,11 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = apply_filters( 'render_block', $block_content, $block, new WP_Block( $block ) );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
+		$result = apply_filters( 'render_block_core/buttons', $block_content, $block );
 
 		// Assert.
 		$this->assertSame( $block_content, $result );
-		$this->assertFalse( wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) );
+		$this->assertFalse( wp_style_is( 'wc-outlet-filter-tiles', 'enqueued' ) );
 	}
 }

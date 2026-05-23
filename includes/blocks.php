@@ -19,7 +19,7 @@ function init_blocks(): void {
 	register_outlet_message_block();
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
-	add_filter( 'render_block', 'WC_Outlet\add_core_button_active_class_hook', 10, 2 );
+	add_filter( 'render_block_core/buttons', 'WC_Outlet\filter_tiles_active_class_hook', 10, 2 );
 }
 
 /**
@@ -103,20 +103,16 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 }
 
 /**
- * Add an active class to core/button links whose href exactly matches the current URL.
+ * Add an active class to filter tile links whose href exactly matches the current URL.
  *
- * Fired by `render_block`.
+ * Fired by `render_block_core/buttons`.
  *
  * @internal WordPress filter hook
  * @param string               $block_content Rendered block content.
  * @param array<string, mixed> $block         Parsed block.
  * @return string Filtered block content.
  */
-function add_core_button_active_class_hook( string $block_content, array $block ): string {
-	if ( 'core/buttons' !== ( $block['blockName'] ?? '' ) ) {
-		return $block_content;
-	}
-
+function filter_tiles_active_class_hook( string $block_content, array $block ): string {
 	$attributes = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
 	$class_name = $attributes['className'] ?? '';
 
@@ -146,8 +142,8 @@ function add_core_button_active_class_hook( string $block_content, array $block 
 		$matched = true;
 	}
 
-	if ( $matched && ! wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) ) {
-		enqueue_core_button_active_style();
+	if ( $matched && ! wp_style_is( 'wc-outlet-filter-tiles', 'enqueued' ) ) {
+		enqueue_filter_tiles_style();
 	}
 
 	return $matched ? $processor->get_updated_html() : $block_content;
