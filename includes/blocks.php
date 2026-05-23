@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function init_blocks(): void {
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_filter_sort_block();
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
 }
@@ -161,6 +162,20 @@ function register_outlet_message_block(): void {
 }
 
 /**
+ * Register the outlet filter sort block type.
+ *
+ * @internal
+ */
+function register_outlet_filter_sort_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-filter-sort/',
+		array(
+			'render_callback' => 'WC_Outlet\render_outlet_filter_sort_callback',
+		)
+	);
+}
+
+/**
  * Render callback for the outlet message block.
  *
  * @internal
@@ -202,5 +217,26 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 		'<p %1$s>%2$s</p>',
 		$wrapper_attributes,
 		wp_kses_post( $message )
+	);
+}
+
+/**
+ * Render callback for the outlet filter sort block.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ * @param string               $_content   Block inner content (unused).
+ * @param \WP_Block            $block      Block instance (unused).
+ * @return string Rendered HTML.
+ */
+function render_outlet_filter_sort_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	return render_block(
+		array(
+			'blockName'    => 'woocommerce/catalog-sorting',
+			'attrs'        => array(),
+			'innerBlocks'  => array(),
+			'innerHTML'    => '',
+			'innerContent' => array(),
+		)
 	);
 }

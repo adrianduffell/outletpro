@@ -6,6 +6,7 @@ import './page-editor-sidebar';
 import EditorPreview from './editor-preview';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
+import './blocks/outlet-filter-sort';
 import './blocks/product-collection';
 
 registerPlugin( 'wc-outlet-editor-preview', {

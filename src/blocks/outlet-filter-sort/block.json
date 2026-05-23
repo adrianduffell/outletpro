@@ -1,0 +1,12 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "wc-outlet/outlet-filter-sort",
+	"title": "Outlet filter sort",
+	"category": "woocommerce",
+	"description": "Displays product sorting controls on outlet templates.",
+	"supports": {
+		"html": false
+	},
+	"textdomain": "wc-outlet"
+}
