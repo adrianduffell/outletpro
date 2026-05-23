@@ -113,6 +113,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
 		$this->assertStringContainsString( (string) $canonical_term->term_id, $pages[0]->post_content );
+		$this->assertStringContainsString( '"className":"wc-outlet-product-collection"', $pages[0]->post_content );
 	}
 
 	public function test_throws_runtime_exception_on_block_theme_when_canonical_term_missing(): void {

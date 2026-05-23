@@ -156,6 +156,7 @@ function create_outlet_page(): void {
 					'widthType' => 'fill',
 				),
 				'collection'           => 'wc-outlet/product-collection/outlet',
+				'className'            => 'wc-outlet-product-collection',
 				'hideControls'         => array( 'inherit' ),
 				'queryContextIncludes' => array( 'collection' ),
 			)

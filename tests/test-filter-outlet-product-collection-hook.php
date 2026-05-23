@@ -9,6 +9,7 @@ use function WC_Outlet\init_product_collection;
 use function WC_Outlet\init_taxonomies;
 use function WC_Outlet\inject_outlet_query_flag_hook;
 use function WC_Outlet\seed_outlet_status_taxonomy;
+use function WC_Outlet\set_outlet_product_collection_orderby_hook;
 use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
@@ -245,6 +246,66 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertTrue( $result['attrs']['query']['wc_outlet'] );
 	}
 
+	public function test_orderby_is_set_for_outlet_product_collection_class_from_request(): void {
+		// Arrange.
+		$_GET['orderby'] = 'price-desc';
+		$parsed_block    = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'className' => 'foo wc-outlet-product-collection bar',
+				'query'     => array(
+					'perPage' => 9,
+				),
+			),
+		);
+
+		// Act.
+		$result = set_outlet_product_collection_orderby_hook( $parsed_block );
+
+		// Assert.
+		$this->assertSame( 'price-desc', $result['attrs']['query']['orderBy'] );
+		$this->assertSame( 9, $result['attrs']['query']['perPage'] );
+	}
+
+	public function test_orderby_is_not_set_when_request_orderby_is_not_allowed(): void {
+		// Arrange.
+		$_GET['orderby'] = 'title';
+		$parsed_block    = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'className' => 'wc-outlet-product-collection',
+				'query'     => array(
+					'orderBy' => 'menu_order',
+				),
+			),
+		);
+		$expected        = $parsed_block;
+
+		// Act.
+		$result = set_outlet_product_collection_orderby_hook( $parsed_block );
+
+		// Assert.
+		$this->assertSame( $expected, $result );
+	}
+
+	public function test_orderby_is_not_set_when_block_class_does_not_match(): void {
+		// Arrange.
+		$_GET['orderby'] = 'price';
+		$parsed_block    = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'className' => 'wc-outlet-other-collection',
+			),
+		);
+		$expected        = $parsed_block;
+
+		// Act.
+		$result = set_outlet_product_collection_orderby_hook( $parsed_block );
+
+		// Assert.
+		$this->assertSame( $expected, $result );
+	}
+
 	public function test_existing_query_keys_are_preserved_when_injecting_wc_outlet_flag(): void {
 		// Arrange.
 		$parsed_block = array(
@@ -265,5 +326,16 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertSame( 9, $result['attrs']['query']['perPage'] );
 		$this->assertSame( 'asc', $result['attrs']['query']['order'] );
 		$this->assertTrue( $result['attrs']['query']['wc_outlet'] );
+	}
+
+	public function test_render_block_data_orderby_filter_is_registered_by_init_product_collection(): void {
+		// Arrange.
+		remove_all_filters( 'render_block_data' );
+
+		// Act.
+		init_product_collection();
+
+		// Assert.
+		$this->assertSame( 10, has_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook' ) );
 	}
 }

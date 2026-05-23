@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_product_collection(): void {
 	add_filter( 'render_block_data', 'WC_Outlet\inject_outlet_query_flag_hook', 10, 3 );
+	add_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook' );
 	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
 	add_filter( 'rest_product_query', 'WC_Outlet\product_collection_editor_query_hook', 10, 2 );
 }
@@ -43,6 +44,42 @@ function inject_outlet_query_flag_hook( array $parsed_block, array $source_block
 	$collection = $parsed_block['attrs']['collection'] ?? '';
 
 	if ( 'wc-outlet/product-collection/outlet' !== $collection ) {
+		return $parsed_block;
+	}
+
+	/**
+	 * Set the orderBy attribute from request orderby for outlet product collections.
+	 *
+	 * Fired by `render_block_data`.
+	 *
+	 * @internal WordPress filter hook
+	 * @param array<string, mixed> $parsed_block The parsed block data.
+	 * @return array<string, mixed> Filtered parsed block data.
+	 */
+	function set_outlet_product_collection_orderby_hook( array $parsed_block ): array {
+		if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? '' ) ) {
+			return $parsed_block;
+		}
+
+		$class_name = $parsed_block['attrs']['className'] ?? '';
+
+		if ( false === strpos( $class_name, 'wc-outlet-product-collection' ) ) {
+			return $parsed_block;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) );
+
+		if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
+			return $parsed_block;
+		}
+
+		if ( ! isset( $parsed_block['attrs']['query'] ) || ! is_array( $parsed_block['attrs']['query'] ) ) {
+			$parsed_block['attrs']['query'] = array();
+		}
+
+		$parsed_block['attrs']['query']['orderBy'] = $orderby;
+
 		return $parsed_block;
 	}
 
