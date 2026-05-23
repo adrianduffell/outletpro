@@ -19,18 +19,19 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		deinit_enqueue();
 		enqueue_init();
 		do_action( 'wp_enqueue_scripts' );
-		$current_url   = wp_get_current_url();
-		$block_content = '<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="' . esc_url( $current_url ) . '">Shop</a></div>';
+		$_SERVER['REQUEST_URI'] = '/outlet?max_price=50';
+		$current_url   = home_url( '/outlet?max_price=50' );
+		$block_content = '<div class="wp-block-button wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="' . esc_url( $current_url ) . '">Shop</a></div>';
 		$block         = array(
 			'blockName' => 'core/button',
 			'attrs'     => array(
 				'href'      => $current_url,
-				'className' => 'wc-outlet-filter-tiles',
+				'className' => 'wc-outlet-filter-tile',
 			),
 		);
 
 		// Act.
-		$result = apply_filters( 'render_block', $block_content, $block );
+		$result = apply_filters( 'render_block', $block_content, $block, new WP_Block( $block ) );
 
 		// Assert.
 		$this->assertStringContainsString( 'is-active', $result );
@@ -44,31 +45,32 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		deinit_enqueue();
 		enqueue_init();
 		do_action( 'wp_enqueue_scripts' );
-		$block_content = '<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://example.com/other">Shop</a></div>';
+		$block_content = '<div class="wp-block-button wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="https://example.com/other">Shop</a></div>';
 		$block         = array(
 			'blockName' => 'core/button',
 			'attrs'     => array(
 				'href'      => 'https://example.com/other',
-				'className' => 'wc-outlet-filter-tiles',
+				'className' => 'wc-outlet-filter-tile',
 			),
 		);
 
 		// Act.
-		$result = apply_filters( 'render_block', $block_content, $block );
+		$result = apply_filters( 'render_block', $block_content, $block, new WP_Block( $block ) );
 
 		// Assert.
 		$this->assertSame( $block_content, $result );
 		$this->assertFalse( wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) );
 	}
 
-	public function test_does_not_add_is_active_class_when_filter_tiles_class_name_is_missing(): void {
+	public function test_does_not_add_is_active_class_when_class_name_is_missing(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
 		deinit_enqueue();
 		enqueue_init();
 		do_action( 'wp_enqueue_scripts' );
-		$current_url   = wp_get_current_url();
+		$_SERVER['REQUEST_URI'] = '/outlet?max_price=50';
+		$current_url   = home_url( '/outlet?max_price=50' );
 		$block_content = '<div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="' . esc_url( $current_url ) . '">Shop</a></div>';
 		$block         = array(
 			'blockName' => 'core/button',
@@ -78,7 +80,7 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = apply_filters( 'render_block', $block_content, $block );
+		$result = apply_filters( 'render_block', $block_content, $block, new WP_Block( $block ) );
 
 		// Assert.
 		$this->assertSame( $block_content, $result );
