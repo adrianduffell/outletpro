@@ -28,7 +28,7 @@ function register_outlet_page_template(): void {
 		return;
 	}
 
-	$template_path = dirname( PLUGIN_FILE ) . '/templates/outletpage.html';
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-page.html';
 
 	if ( ! is_readable( $template_path ) ) {
 		return;
