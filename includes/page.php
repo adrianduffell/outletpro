@@ -10,6 +10,63 @@ namespace WC_Outlet;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Helper to initialize page integrations.
+ *
+ * @internal
+ */
+function init_page(): void {
+	register_outlet_page_template();
+}
+
+/**
+ * Register the outlet page template.
+ *
+ * @internal
+ */
+function register_outlet_page_template(): void {
+	if ( ! function_exists( 'register_block_template' ) ) {
+		return;
+	}
+
+	register_block_template(
+		'wc-outlet//outlet-page',
+		array(
+			'title'       => __( 'Outlet page', 'wc-outlet' ),
+			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
+			'post_types'  => array( 'page' ),
+			'content'     => get_outlet_page_template_content(),
+		)
+	);
+}
+
+/**
+ * Get the outlet page template content.
+ *
+ * @internal
+ */
+function get_outlet_page_template_content(): string {
+	// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
+	return '<!-- wp:template-part {"slug":"header","area":"header","tagName":"header"} /-->' . "\n" .
+		'<!-- wp:woocommerce/catalog-sorting /-->' . "\n" .
+		'<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->' . "\n" .
+		'<main class="wp-block-group">' . "\n\n" .
+		'	<!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->' . "\n" .
+		'	<div class="wp-block-group alignfull">' . "\n" .
+		'		<!-- wp:group {"align":"wide","layout":{"type":"default"}} -->' . "\n" .
+		'		<div class="wp-block-group alignwide">' . "\n" .
+		'			<!-- wp:post-title {"level":1} /-->' . "\n" .
+		'		</div>' . "\n" .
+		'		<!-- /wp:group -->' . "\n" .
+		'	</div>' . "\n" .
+		'	<!-- /wp:group -->' . "\n\n" .
+		'	<!-- wp:post-content {"align":"wide"} /-->' . "\n\n" .
+		'</main>' . "\n" .
+		'<!-- /wp:group -->' . "\n\n" .
+		'<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->';
+	// phpcs:enable
+}
+
+/**
  * Check if the outlet page exists.
  *
  * This performs heuristics on the {@see OUTLET_PAGE_OPTION} option value.
