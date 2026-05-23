@@ -45,25 +45,19 @@ function register_outlet_page_template(): void {
  * @internal
  */
 function get_outlet_page_template_content(): string {
-	// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
-	return '<!-- wp:template-part {"slug":"header","area":"header","tagName":"header"} /-->' . "\n" .
-		'<!-- wp:woocommerce/catalog-sorting /-->' . "\n" .
-		'<!-- wp:group {"tagName":"main","layout":{"type":"constrained"}} -->' . "\n" .
-		'<main class="wp-block-group">' . "\n\n" .
-		'	<!-- wp:group {"align":"full","layout":{"type":"constrained"}} -->' . "\n" .
-		'	<div class="wp-block-group alignfull">' . "\n" .
-		'		<!-- wp:group {"align":"wide","layout":{"type":"default"}} -->' . "\n" .
-		'		<div class="wp-block-group alignwide">' . "\n" .
-		'			<!-- wp:post-title {"level":1} /-->' . "\n" .
-		'		</div>' . "\n" .
-		'		<!-- /wp:group -->' . "\n" .
-		'	</div>' . "\n" .
-		'	<!-- /wp:group -->' . "\n\n" .
-		'	<!-- wp:post-content {"align":"wide"} /-->' . "\n\n" .
-		'</main>' . "\n" .
-		'<!-- /wp:group -->' . "\n\n" .
-		'<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->';
-	// phpcs:enable
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outletpage.html';
+
+	if ( ! is_readable( $template_path ) ) {
+		return '';
+	}
+
+	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
+
+	if ( false === $template_content ) {
+		return '';
+	}
+
+	return $template_content;
 }
 
 /**
