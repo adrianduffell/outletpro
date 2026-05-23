@@ -21,12 +21,11 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 		$_SERVER['REQUEST_URI'] = '/outlet?max_price=50';
 		$current_url   = home_url( '/outlet?max_price=50' );
-		$block_content = '<div class="wp-block-button wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="' . esc_url( $current_url ) . '">Shop</a></div>';
+		$block_content = '<div class="wc-outlet-filter-tiles"><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="' . esc_url( $current_url ) . '">Shop</a></div>';
 		$block         = array(
-			'blockName' => 'core/button',
+			'blockName' => 'core/buttons',
 			'attrs'     => array(
-				'href'      => $current_url,
-				'className' => 'wc-outlet-filter-tile',
+				'className' => 'wc-outlet-filter-tiles',
 			),
 		);
 
@@ -45,12 +44,12 @@ class Test_Add_Core_Button_Active_Class_Hook extends WP_UnitTestCase {
 		deinit_enqueue();
 		enqueue_init();
 		do_action( 'wp_enqueue_scripts' );
-		$block_content = '<div class="wp-block-button wc-outlet-filter-tile"><a class="wp-block-button__link wp-element-button" href="https://example.com/other">Shop</a></div>';
+		$block_content = '<div class="wc-outlet-filter-tiles"><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="https://example.com/other">Shop</a></div></div>';
 		$block         = array(
 			'blockName' => 'core/button',
 			'attrs'     => array(
 				'href'      => 'https://example.com/other',
-				'className' => 'wc-outlet-filter-tile',
+				'className' => 'foo',
 			),
 		);
 

@@ -113,42 +113,44 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
  * @return string Filtered block content.
  */
 function add_core_button_active_class_hook( string $block_content, array $block ): string {
-	if ( 'core/button' !== ( $block['blockName'] ?? '' ) ) {
+	if ( 'core/buttons' !== ( $block['blockName'] ?? '' ) ) {
 		return $block_content;
 	}
 
 	$attributes = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : array();
 	$class_name = $attributes['className'] ?? '';
-	$classes    = is_string( $class_name ) ? preg_split( '/\s+/', trim( $class_name ) ) : false;
 
-	if ( ! is_array( $classes ) || ! in_array( 'wc-outlet-filter-tile', $classes, true ) ) {
+	if (
+		! is_string( $class_name ) ||
+		! in_array( 'wc-outlet-filter-tiles', preg_split( '/\s+/', trim( $class_name ) ), true )
+	) {
 		return $block_content;
 	}
 
-	$processor = new \WP_HTML_Tag_Processor( $block_content );
+	$current_url = home_url( wp_unslash( $_SERVER['REQUEST_URI'] ?? '/' ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	$processor   = new \WP_HTML_Tag_Processor( $block_content );
+	$matched     = false;
 
-	if ( ! $processor->next_tag( array( 'class_name' => 'wp-block-button__link' ) ) ) {
-		return $block_content;
+	while ( $processor->next_tag( 'a' ) ) {
+		$href = $processor->get_attribute( 'href' );
+
+		if ( ! is_string( $href ) ) {
+			continue;
+		}
+
+		if ( $current_url !== $href ) {
+			continue;
+		}
+
+		$processor->add_class( 'wc-outlet-is-active' );
+		$matched = true;
 	}
 
-	$href = $processor->get_attribute( 'href' );
-
-	if ( ! is_string( $href ) ) {
-		return $block_content;
-	}
-
-	$current_url = home_url( wp_unslash( $_SERVER['REQUEST_URI'] ?? '/' ) ); //phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-	if ( trailingslashit( $current_url ) !== trailingslashit( $href ) ) {
-		return $block_content;
-	}
-
-	$processor->add_class( 'wc-outlet-is-active' );
-
-	if ( ! wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) ) {
+	if ( $matched && ! wp_style_is( 'wc-outlet-core-button-active', 'enqueued' ) ) {
 		enqueue_core_button_active_style();
 	}
 
-	return $processor->get_updated_html();
+	return $matched ? $processor->get_updated_html() : $block_content;
 }
 
 /**
