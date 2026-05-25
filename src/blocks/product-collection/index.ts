@@ -1,5 +1,4 @@
 import OutletIcon from './icon';
-import './edit';
 export {};
 
 declare global {
