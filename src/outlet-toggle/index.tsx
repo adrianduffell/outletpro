@@ -53,7 +53,7 @@ export const withOutletQueryInspector = (
 		return (
 			<Fragment>
 				<BlockEdit { ...props } />
-				<InspectorControls>
+				<InspectorControls group="settings">
 					<PanelBody title={ __( 'Outlet', 'wc-outlet' ) }>
 						<ToggleControl
 							label={ __(
