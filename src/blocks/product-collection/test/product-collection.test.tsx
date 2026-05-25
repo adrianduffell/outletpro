@@ -4,6 +4,10 @@ import { fireEvent, render, screen } from '@testing-library/react';
 let addFilter: jest.Mock;
 let withOutletQueryInspector: any;
 
+jest.mock( '@wordpress/hooks', () => ( {
+	addFilter: jest.fn(),
+} ) );
+
 jest.mock( '@wordpress/block-editor', () => ( {
 	InspectorControls: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
@@ -43,13 +47,8 @@ jest.mock( '@wordpress/i18n', () => ( {
 describe( 'product collection outlet inspector', () => {
 	beforeEach( async () => {
 		jest.resetModules();
-		addFilter = jest.fn();
-		window.wp = {
-			hooks: {
-				addFilter:
-					addFilter as unknown as typeof window.wp.hooks.addFilter,
-			},
-		};
+		addFilter = ( await import( '@wordpress/hooks' ) )
+			.addFilter as unknown as jest.Mock;
 		( { withOutletQueryInspector } = await import( '../edit' ) );
 	} );
 
@@ -61,7 +60,7 @@ describe( 'product collection outlet inspector', () => {
 		);
 	} );
 
-	it( 'adds the outlet query flag and query context when checked', () => {
+	it( 'adds the outlet query flag when checked', () => {
 		const setAttributes = jest.fn();
 		const BlockEdit = () => <div>Base block edit</div>;
 		const WrappedBlockEdit: ComponentType< {
@@ -86,11 +85,10 @@ describe( 'product collection outlet inspector', () => {
 
 		expect( setAttributes ).toHaveBeenCalledWith( {
 			query: { wc_outlet: true },
-			queryContextIncludes: [ 'query' ],
 		} );
 	} );
 
-	it( 'removes the outlet query flag and query context when unchecked', () => {
+	it( 'removes the outlet query flag when unchecked', () => {
 		const setAttributes = jest.fn();
 		const BlockEdit = () => <div>Base block edit</div>;
 		const WrappedBlockEdit: ComponentType< {
@@ -107,7 +105,6 @@ describe( 'product collection outlet inspector', () => {
 						perPage: 9,
 						wc_outlet: true,
 					},
-					queryContextIncludes: [ 'collection', 'query' ],
 				} }
 				setAttributes={ setAttributes }
 			/>
@@ -121,7 +118,6 @@ describe( 'product collection outlet inspector', () => {
 
 		expect( setAttributes ).toHaveBeenCalledWith( {
 			query: { perPage: 9 },
-			queryContextIncludes: [ 'collection' ],
 		} );
 	} );
 

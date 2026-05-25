@@ -2,12 +2,12 @@ import type { ComponentType } from 'react';
 import { Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
+import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
 type ProductCollectionAttributes = {
 	collection?: string;
 	query?: Record< string, unknown >;
-	queryContextIncludes?: string[];
 };
 
 type ProductCollectionEditProps = {
@@ -21,20 +21,6 @@ type ProductCollectionEditProps = {
 const PRODUCT_COLLECTION_BLOCK = 'woocommerce/product-collection';
 const OUTLET_PRODUCT_COLLECTION = 'wc-outlet/product-collection/outlet';
 
-declare global {
-	interface Window {
-		wp: {
-			hooks: {
-				addFilter: (
-					hookName: string,
-					namespace: string,
-					callback: typeof withOutletQueryInspector
-				) => void;
-			};
-		};
-	}
-}
-
 function updateOutletQueryAttributes(
 	attributes: ProductCollectionAttributes,
 	isChecked: boolean
@@ -47,15 +33,8 @@ function updateOutletQueryAttributes(
 		delete nextQuery.wc_outlet;
 	}
 
-	const queryContextIncludes = (
-		attributes.queryContextIncludes ?? []
-	).filter( ( value ) => 'query' !== value );
-
 	return {
 		query: nextQuery,
-		queryContextIncludes: isChecked
-			? [ ...queryContextIncludes, 'query' ]
-			: queryContextIncludes,
 	};
 }
 
@@ -99,7 +78,7 @@ export const withOutletQueryInspector = (
 		);
 	};
 
-window.wp.hooks.addFilter(
+addFilter(
 	'editor.BlockEdit',
 	'wc-outlet/product-collection/outlet-query-inspector',
 	withOutletQueryInspector
