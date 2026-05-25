@@ -24,10 +24,6 @@ function init_page(): void {
  * @internal
  */
 function register_outlet_page_template(): void {
-	if ( ! function_exists( 'register_block_template' ) ) {
-		return;
-	}
-
 	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-page.html';
 
 	if ( ! is_readable( $template_path ) ) {
