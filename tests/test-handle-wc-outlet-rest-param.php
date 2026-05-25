@@ -101,8 +101,8 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 
 	public function test_rest_product_query_is_unchanged_when_wc_outlet_is_false(): void {
 		// Arrange.
-		$args     = array( 'post_type' => 'product' );
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/products' );
+		$args    = array( 'post_type' => 'product' );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
 		$request->set_param( 'wc_outlet', false );
 		$expected = $args;
 
