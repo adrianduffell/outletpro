@@ -10,6 +10,45 @@ namespace WC_Outlet;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Helper to initialize page integrations.
+ *
+ * @internal
+ */
+function init_page(): void {
+	register_outlet_page_template();
+}
+
+/**
+ * Register the outlet page template.
+ *
+ * @internal
+ */
+function register_outlet_page_template(): void {
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-page.html';
+
+	if ( ! is_readable( $template_path ) ) {
+		return;
+	}
+
+	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
+
+	if ( false === $template_content ) {
+		return;
+	}
+
+	register_block_template(
+		'wc-outlet//outlet-page',
+		array(
+			'title'       => __( 'Outlet page', 'wc-outlet' ),
+			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
+			'post_types'  => array( 'page' ),
+			'content'     => $template_content,
+			'plugin'      => 'wc-outlet',
+		)
+	);
+}
+
+/**
  * Check if the outlet page exists.
  *
  * This performs heuristics on the {@see OUTLET_PAGE_OPTION} option value.
