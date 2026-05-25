@@ -179,7 +179,7 @@ function create_outlet_page(): void {
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
 					'woocommerceAttributes'         => array(),
 					'woocommerceHandPickedProducts' => array(),
-					'filterable'                    => false,
+					'filterable'                    => true,
 					'relatedBy'                     => array(
 						'categories' => true,
 						'tags'       => true,
