@@ -94,33 +94,6 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( array( 'outlet' ), $result['tax_query'][0]['terms'] );
 	}
 
-	public function test_tax_query_is_added_for_outlet_query_flag(): void {
-		// Arrange.
-		remove_all_filters( 'rest_product_query' );
-		init_product_collection();
-		$args    = array( 'post_type' => 'product' );
-		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param(
-			'productCollectionQueryContext',
-			array(
-				'query' => array(
-					'wc_outlet' => true,
-				),
-			)
-		);
-
-		// Act.
-		$result = apply_filters( 'rest_product_query', $args, $request );
-
-		// Assert.
-		$this->assertArrayHasKey( 'tax_query', $result );
-		$this->assertCount( 1, $result['tax_query'] );
-		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
-		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
-		$this->assertSame( array( 'outlet' ), $result['tax_query'][0]['terms'] );
-	}
-
 	public function test_existing_tax_query_entries_are_preserved(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );

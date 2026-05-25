@@ -117,11 +117,9 @@ function product_collection_editor_query_hook( $args, $request ): array { // php
 		return $args;
 	}
 
-	$query           = $context['query'] ?? array();
-	$collection      = $context['collection'] ?? '';
-	$is_outlet_query = is_array( $query ) && ! empty( $query['wc_outlet'] );
+	$collection = $context['collection'] ?? '';
 
-	if ( 'wc-outlet/product-collection/outlet' !== $collection && ! $is_outlet_query ) {
+	if ( 'wc-outlet/product-collection/outlet' !== $collection ) {
 		return $args;
 	}
 

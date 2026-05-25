@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
-import { CheckboxControl, PanelBody } from '@wordpress/components';
+import { PanelBody, ToggleControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 type ProductCollectionAttributes = {
@@ -76,8 +76,11 @@ export const withOutletQueryInspector = (
 				<BlockEdit { ...props } />
 				<InspectorControls>
 					<PanelBody title={ __( 'Outlet', 'wc-outlet' ) }>
-						<CheckboxControl
-							label={ __( 'Outlet', 'wc-outlet' ) }
+						<ToggleControl
+							label={ __(
+								'Show only outlet products',
+								'wc-outlet'
+							) }
 							checked={
 								true === props.attributes.query?.wc_outlet
 							}

@@ -12,7 +12,7 @@ jest.mock( '@wordpress/block-editor', () => ( {
 } ) );
 
 jest.mock( '@wordpress/components', () => ( {
-	CheckboxControl: ( {
+	ToggleControl: ( {
 		label,
 		checked,
 		onChange,
@@ -23,13 +23,13 @@ jest.mock( '@wordpress/components', () => ( {
 	} ) => (
 		<>
 			<input
-				id="outlet-checkbox"
+				id="outlet-toggle"
 				type="checkbox"
 				aria-label={ label }
 				checked={ checked }
 				onChange={ ( event ) => onChange( event.target.checked ) }
 			/>
-			<label htmlFor="outlet-checkbox">{ label }</label>
+			<label htmlFor="outlet-toggle">{ label }</label>
 		</>
 	),
 	PanelBody: ( { children }: { children: ReactNode; title?: string } ) => (
@@ -80,7 +80,11 @@ describe( 'product collection outlet inspector', () => {
 			/>
 		);
 
-		fireEvent.click( screen.getByRole( 'checkbox', { name: 'Outlet' } ) );
+		fireEvent.click(
+			screen.getByRole( 'checkbox', {
+				name: 'Show only outlet products',
+			} )
+		);
 
 		expect( setAttributes ).toHaveBeenCalledWith( {
 			query: { wc_outlet: true },
@@ -106,7 +110,7 @@ describe( 'product collection outlet inspector', () => {
 		} );
 	} );
 
-	it( 'does not render the checkbox for the outlet collection variation', () => {
+	it( 'does not render the toggle for the outlet collection variation', () => {
 		const BlockEdit = () => <div>Base block edit</div>;
 		const WrappedBlockEdit: ComponentType< {
 			name: string;
@@ -125,7 +129,9 @@ describe( 'product collection outlet inspector', () => {
 		);
 
 		expect(
-			screen.queryByRole( 'checkbox', { name: 'Outlet' } )
+			screen.queryByRole( 'checkbox', {
+				name: 'Show only outlet products',
+			} )
 		).not.toBeInTheDocument();
 	} );
 } );
