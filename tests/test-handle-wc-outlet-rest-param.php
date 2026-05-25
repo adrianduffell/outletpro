@@ -7,6 +7,7 @@
 
 use function WC_Outlet\add_to_outlet;
 use function WC_Outlet\register_outlet_status_taxonomy;
+use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 
@@ -67,5 +68,48 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$ids = wp_list_pluck( $response->get_data(), 'id' );
 		$this->assertContains( $outlet_product->get_id(), $ids );
 		$this->assertContains( $non_outlet_product->get_id(), $ids );
+	}
+
+	public function test_rest_product_query_is_unchanged_when_wc_outlet_param_is_absent(): void {
+		// Arrange.
+		$args     = array( 'post_type' => 'product' );
+		$request  = new WP_REST_Request( 'GET', '/wp/v2/products' );
+		$expected = $args;
+
+		// Act.
+		$result = apply_filters( 'rest_product_query', $args, $request );
+
+		// Assert.
+		$this->assertSame( $expected, $result );
+	}
+
+	public function test_rest_product_query_adds_tax_query_when_wc_outlet_is_true(): void {
+		// Arrange.
+		$args    = array( 'post_type' => 'product' );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
+		$request->set_param( 'wc_outlet', true );
+
+		// Act.
+		$result = apply_filters( 'rest_product_query', $args, $request );
+
+		// Assert.
+		$this->assertArrayHasKey( 'tax_query', $result );
+		$this->assertCount( 1, $result['tax_query'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
+		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
+	}
+
+	public function test_rest_product_query_is_unchanged_when_wc_outlet_is_false(): void {
+		// Arrange.
+		$args    = array( 'post_type' => 'product' );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
+		$request->set_param( 'wc_outlet', false );
+		$expected = $args;
+
+		// Act.
+		$result = apply_filters( 'rest_product_query', $args, $request );
+
+		// Assert.
+		$this->assertSame( $expected, $result );
 	}
 }
