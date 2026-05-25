@@ -35,7 +35,7 @@ declare global {
 	}
 }
 
-export function updateOutletQueryAttributes(
+function updateOutletQueryAttributes(
 	attributes: ProductCollectionAttributes,
 	isChecked: boolean
 ): Partial< ProductCollectionAttributes > {

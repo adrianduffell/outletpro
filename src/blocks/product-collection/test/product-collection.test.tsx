@@ -2,7 +2,6 @@ import type { ComponentType, ReactNode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 let addFilter: jest.Mock;
-let updateOutletQueryAttributes: any;
 let withOutletQueryInspector: any;
 
 jest.mock( '@wordpress/block-editor', () => ( {
@@ -51,8 +50,7 @@ describe( 'product collection outlet inspector', () => {
 					addFilter as unknown as typeof window.wp.hooks.addFilter,
 			},
 		};
-		( { updateOutletQueryAttributes, withOutletQueryInspector } =
-			await import( '../edit' ) );
+		( { withOutletQueryInspector } = await import( '../edit' ) );
 	} );
 
 	it( 'registers the product collection block edit filter', () => {
@@ -93,18 +91,35 @@ describe( 'product collection outlet inspector', () => {
 	} );
 
 	it( 'removes the outlet query flag and query context when unchecked', () => {
-		expect(
-			updateOutletQueryAttributes(
-				{
+		const setAttributes = jest.fn();
+		const BlockEdit = () => <div>Base block edit</div>;
+		const WrappedBlockEdit: ComponentType< {
+			name: string;
+			attributes: Record< string, unknown >;
+			setAttributes: jest.Mock;
+		} > = withOutletQueryInspector( BlockEdit );
+
+		render(
+			<WrappedBlockEdit
+				name="woocommerce/product-collection"
+				attributes={ {
 					query: {
 						perPage: 9,
 						wc_outlet: true,
 					},
 					queryContextIncludes: [ 'collection', 'query' ],
-				},
-				false
-			)
-		).toEqual( {
+				} }
+				setAttributes={ setAttributes }
+			/>
+		);
+
+		fireEvent.click(
+			screen.getByRole( 'checkbox', {
+				name: 'Show only outlet products',
+			} )
+		);
+
+		expect( setAttributes ).toHaveBeenCalledWith( {
 			query: { perPage: 9 },
 			queryContextIncludes: [ 'collection' ],
 		} );
