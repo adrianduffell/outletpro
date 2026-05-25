@@ -36,6 +36,7 @@
 		"assets",
 		"build",
 		"includes",
+		"templates",
 		"wc-outlet.php",
 		"readme.txt",
 		"LICENSE"

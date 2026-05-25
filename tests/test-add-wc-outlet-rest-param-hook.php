@@ -25,4 +25,9 @@ class Test_Add_Wc_Outlet_Rest_Param_Hook extends WP_UnitTestCase {
 		$this->assertArrayHasKey( 'wc_outlet', $args );
 		$this->assertSame( 'boolean', $args['wc_outlet']['type'] );
 	}
+
+	public function test_rest_product_query_filter_is_registered(): void {
+		// Assert.
+		$this->assertSame( 10, has_filter( 'rest_product_query', 'WC_Outlet\handle_wc_outlet_rest_param' ) );
+	}
 }

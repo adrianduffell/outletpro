@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function init_rest_api(): void {
 	add_filter( 'rest_product_collection_params', 'WC_Outlet\add_wc_outlet_rest_param_hook' );
 	add_filter( 'woocommerce_rest_product_object_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
+	add_filter( 'rest_product_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
 }
 
 /**
@@ -40,7 +41,7 @@ function add_wc_outlet_rest_param_hook( array $params ): array {
 /**
  * Filter the products REST API query to include only outlet products when requested.
  *
- * @internal WooCommerce filter hook
+ * @internal WooCommerce filter hook, WordPress filter hook
  * @param array<string, mixed> $args    WP_Query arguments.
  * @param \WP_REST_Request     $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
