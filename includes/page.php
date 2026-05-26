@@ -174,7 +174,7 @@ function create_outlet_page(): void {
 						OUTLET_STATUS_TAXONOMY => array( $term_id ),
 					),
 					'isProductCollectionBlock'      => true,
-					'wc_query'                      => true,
+					'wc_outlet'                     => true,
 					'featured'                      => false,
 					'woocommerceOnSale'             => false,
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
