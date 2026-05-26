@@ -62,10 +62,6 @@ function filter_outlet_product_collection_hook( array $query, \WP_Block $block, 
 /**
  * Filter the REST API query for the product collection block in the editor.
  *
- * Applies the outlet tax query when `wc_outlet` is set in the product
- * collection block's query context, so the editor preview respects the
- * "Show outlet products only" toggle.
- *
  * Fired by `rest_product_query`.
  *
  * @internal WordPress filter hook
@@ -85,7 +81,9 @@ function product_collection_editor_query_hook( $args, $request ): array { // php
 		return $args;
 	}
 
-	if ( empty( $context['wc_outlet'] ) ) {
+	$collection = $context['collection'] ?? '';
+
+	if ( 'wc-outlet/product-collection/outlet' !== $collection ) {
 		return $args;
 	}
 
