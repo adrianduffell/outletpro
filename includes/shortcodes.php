@@ -50,6 +50,13 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
 	);
 
+	if ( isset( $_GET['max_price'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$max_price = \wc_format_decimal( \wp_unslash( $_GET['max_price'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( '' !== $max_price ) {
+			$query_args['max_price'] = $max_price;
+		}
+	}
+
 	return $query_args;
 }
 

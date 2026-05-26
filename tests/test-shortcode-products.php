@@ -76,6 +76,50 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
 	}
 
+	public function test_max_price_applied_when_url_param_present(): void {
+		// Arrange.
+		register_outlet_status_taxonomy();
+		$_GET['max_price'] = '50';
+		$query_args        = array( 'post_type' => 'product' );
+		$attributes        = array( 'wc_outlet' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+		unset( $_GET['max_price'] );
+
+		// Assert.
+		$this->assertArrayHasKey( 'max_price', $result );
+		$this->assertSame( '50', $result['max_price'] );
+	}
+
+	public function test_max_price_not_applied_when_wc_outlet_absent(): void {
+		// Arrange.
+		$_GET['max_price'] = '50';
+		$query_args        = array( 'post_type' => 'product' );
+		$attributes        = array();
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+		unset( $_GET['max_price'] );
+
+		// Assert.
+		$this->assertArrayNotHasKey( 'max_price', $result );
+	}
+
+	public function test_max_price_not_applied_when_url_param_absent(): void {
+		// Arrange.
+		register_outlet_status_taxonomy();
+		unset( $_GET['max_price'] );
+		$query_args = array( 'post_type' => 'product' );
+		$attributes = array( 'wc_outlet' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+
+		// Assert.
+		$this->assertArrayNotHasKey( 'max_price', $result );
+	}
+
 	public function test_add_products_shortcode_attribute_hook_adds_wc_outlet_when_present(): void {
 		// Arrange.
 		$out  = array();
