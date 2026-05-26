@@ -326,7 +326,7 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 ### `wc-outlet/outlet-message`
 
-Displays the outlet message when the product is in the store's outlet. Automatically
+Displays the outlet message when the product is in the store’s outlet. Automatically
 inserted as the first child of the product meta block on the single product template (block
 themes). Added in 1.0.0.
 
