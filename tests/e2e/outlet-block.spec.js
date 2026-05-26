@@ -52,7 +52,6 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
-	const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
 
 	// Insert a product collection block, then choose "create your own" so
 	// WooCommerce sets the default query attributes (filterable, Default query
