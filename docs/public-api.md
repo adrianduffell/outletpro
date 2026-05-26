@@ -348,9 +348,16 @@ parameter.
 GET /wc/v3/products?wc_outlet=true
 ```
 
+The plugin also extends the WordPress products REST endpoint (post type) with the same
+parameter.
+
+```http
+GET /wp/v2/products?wc_outlet=true
+```
+
 | Parameter   | Type      | Description                                                    |
 | ----------- | --------- | -------------------------------------------------------------- |
-| `wc_outlet` | `boolean` | When `true`, limits results to products in the store’s outlet. |
+| `wc_outlet` | `boolean` | When `true`, limits results to products in the store's outlet. |
 
 Added in 1.0.0.
 

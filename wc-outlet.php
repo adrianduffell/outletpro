@@ -69,6 +69,7 @@ function init_hook(): void {
 	init_taxonomies();
 	init_rest_api();
 	init_shortcodes();
+	init_page();
 	init_blocks();
 	init_patterns();
 	init_block_editor();

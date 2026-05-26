@@ -10,6 +10,45 @@ namespace WC_Outlet;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Helper to initialize page integrations.
+ *
+ * @internal
+ */
+function init_page(): void {
+	register_outlet_page_template();
+}
+
+/**
+ * Register the outlet page template.
+ *
+ * @internal
+ */
+function register_outlet_page_template(): void {
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-page.html';
+
+	if ( ! is_readable( $template_path ) ) {
+		return;
+	}
+
+	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
+
+	if ( false === $template_content ) {
+		return;
+	}
+
+	register_block_template(
+		'wc-outlet//outlet-page',
+		array(
+			'title'       => __( 'Outlet page', 'wc-outlet' ),
+			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
+			'post_types'  => array( 'page' ),
+			'content'     => $template_content,
+			'plugin'      => 'wc-outlet',
+		)
+	);
+}
+
+/**
  * Check if the outlet page exists.
  *
  * This performs heuristics on the {@see OUTLET_PAGE_OPTION} option value.
@@ -111,13 +150,6 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) {
-		$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-
-		if ( ! ( $canonical_term instanceof \WP_Term ) ) {
-			throw new \RuntimeException( 'Could not resolve the canonical outlet status term.' );
-		}
-
-		$term_id     = (string) $canonical_term->term_id;
 		$block_attrs = wp_json_encode(
 			array(
 				'queryId'              => 1,
@@ -131,16 +163,14 @@ function create_outlet_page(): void {
 					'search'                        => '',
 					'exclude'                       => array(),
 					'inherit'                       => false,
-					'taxQuery'                      => array(
-						OUTLET_STATUS_TAXONOMY => array( $term_id ),
-					),
 					'isProductCollectionBlock'      => true,
+					'wc_outlet'                     => true,
 					'featured'                      => false,
 					'woocommerceOnSale'             => false,
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
 					'woocommerceAttributes'         => array(),
 					'woocommerceHandPickedProducts' => array(),
-					'filterable'                    => false,
+					'filterable'                    => true,
 					'relatedBy'                     => array(
 						'categories' => true,
 						'tags'       => true,
@@ -155,7 +185,6 @@ function create_outlet_page(): void {
 				'dimensions'           => array(
 					'widthType' => 'fill',
 				),
-				'collection'           => 'wc-outlet/product-collection/outlet',
 				'hideControls'         => array( 'inherit' ),
 				'queryContextIncludes' => array( 'collection' ),
 			)

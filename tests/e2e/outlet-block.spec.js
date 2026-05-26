@@ -21,6 +21,7 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 		)
 	);
+	const nonOutletProductName = products[ 2 ].name;
 
 	for ( const product of [ products[ 0 ], products[ 1 ] ] ) {
 		await admin.visitAdminPage(
@@ -52,13 +53,27 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
 
-	// Insert the outlet block.
-	await editor.insertBlock( {
-		name: 'woocommerce/product-collection',
-		attributes: {
-			collection: 'wc-outlet/product-collection/outlet',
-		},
-	} );
+	// Insert a product collection block, then choose "create your own" so
+	// WooCommerce sets the default query attributes (filterable, Default query
+	// type), and finally enable the outlet toggle in the Advanced panel.
+	await editor.insertBlock( { name: 'woocommerce/product-collection' } );
+
+	// The block opens a pattern-picker modal; dismiss it by choosing "create your own".
+	await editor.canvas
+		.getByRole( 'button', { name: /create your own/i } )
+		.click();
+
+	// Open the Advanced inspector panel and enable the outlet toggle.
+	await page.getByRole( 'button', { name: 'Advanced' } ).click();
+	await page
+		.getByRole( 'checkbox', { name: 'Show outlet products only' } )
+		.check();
+
+	// Set products per page to 99.
+	const productsPerPageInput = page
+		.getByLabel( 'Products per page' )
+		.and( page.locator( 'input[type="number"]' ) );
+	await productsPerPageInput.fill( '99' );
 
 	// Assert: outlet products shown in editor; use .first() because the product
 	// collection block renders the title as both a link and an image overlay link.
@@ -76,6 +91,18 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 			.first()
 	).toBeVisible();
+	await expect(
+		editor.canvas.getByRole( 'link', {
+			name: nonOutletProductName,
+		} )
+	).toHaveCount( 0 );
+	const editorRenderedProductCount = await editor.canvas
+		.getByRole( 'link', {
+			name: new RegExp( `Outlet Block Test Product \\d+ ${ runId }` ),
+		} )
+		.count();
+	expect( editorRenderedProductCount ).toBeGreaterThanOrEqual( 1 );
+	expect( editorRenderedProductCount ).toBeLessThanOrEqual( 99 );
 
 	// Publish the page.
 	const pageId = await editor.publishPost();
@@ -102,6 +129,18 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 			.first()
 	).toBeVisible();
+	await expect(
+		page.getByRole( 'link', {
+			name: nonOutletProductName,
+		} )
+	).toHaveCount( 0 );
+	const frontEndRenderedProductCount = await page
+		.getByRole( 'link', {
+			name: new RegExp( `Outlet Block Test Product \\d+ ${ runId }` ),
+		} )
+		.count();
+	expect( frontEndRenderedProductCount ).toBeGreaterThanOrEqual( 1 );
+	expect( frontEndRenderedProductCount ).toBeLessThanOrEqual( 99 );
 } );
 
 test( 'Outlet badge has default white text and red background', async ( {
