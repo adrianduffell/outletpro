@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { Fragment } from '@wordpress/element';
 import { InspectorControls } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { ToggleControl } from '@wordpress/components';
 import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
@@ -55,17 +55,12 @@ export const withOutletQueryInspector = (
 				<BlockEdit { ...props } />
 				<InspectorControls group="advanced">
 					<ToggleControl
-						label={ __(
-							'Show outlet products only',
-							'wc-outlet'
-						) }
+						label={ __( 'Show outlet products only', 'wc-outlet' ) }
 						help={ __(
 							'Restrict this collection to products in the store’s outlet.',
 							'wc-outlet'
 						) }
-						checked={
-							true === props.attributes.query?.wc_outlet
-						}
+						checked={ true === props.attributes.query?.wc_outlet }
 						onChange={ ( isChecked ) =>
 							props.setAttributes(
 								updateOutletQueryAttributes(
