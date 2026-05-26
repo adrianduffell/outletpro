@@ -21,6 +21,16 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 		)
 	);
+	const nonOutletProductName = `Outlet Block Non-Outlet Product ${ runId }`;
+	await requestUtils.rest( {
+		method: 'POST',
+		path: '/wc/v3/products',
+		data: {
+			name: nonOutletProductName,
+			type: 'simple',
+			status: 'publish',
+		},
+	} );
 
 	for ( const product of [ products[ 0 ], products[ 1 ] ] ) {
 		await admin.visitAdminPage(
@@ -90,6 +100,11 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 			.first()
 	).toBeVisible();
+	await expect(
+		editor.canvas.getByRole( 'link', {
+			name: nonOutletProductName,
+		} )
+	).toHaveCount( 0 );
 
 	// Publish the page.
 	const pageId = await editor.publishPost();
@@ -116,6 +131,11 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 			.first()
 	).toBeVisible();
+	await expect(
+		page.getByRole( 'link', {
+			name: nonOutletProductName,
+		} )
+	).toHaveCount( 0 );
 } );
 
 test( 'Outlet badge has default white text and red background', async ( {
