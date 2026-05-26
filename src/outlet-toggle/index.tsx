@@ -53,26 +53,24 @@ export const withOutletQueryInspector = (
 		return (
 			<Fragment>
 				<BlockEdit { ...props } />
-				<InspectorControls group="settings">
-					<PanelBody title={ __( 'Outlet', 'wc-outlet' ) }>
-						<ToggleControl
-							label={ __(
-								'Show only outlet products',
-								'wc-outlet'
-							) }
-							checked={
-								true === props.attributes.query?.wc_outlet
-							}
-							onChange={ ( isChecked ) =>
-								props.setAttributes(
-									updateOutletQueryAttributes(
-										props.attributes,
-										isChecked
-									)
+				<InspectorControls group="advanced">
+					<ToggleControl
+						label={ __(
+							'Show only outlet products',
+							'wc-outlet'
+						) }
+						checked={
+							true === props.attributes.query?.wc_outlet
+						}
+						onChange={ ( isChecked ) =>
+							props.setAttributes(
+								updateOutletQueryAttributes(
+									props.attributes,
+									isChecked
 								)
-							}
-						/>
-					</PanelBody>
+							)
+						}
+					/>
 				</InspectorControls>
 			</Fragment>
 		);
