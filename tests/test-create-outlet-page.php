@@ -7,10 +7,7 @@
 
 use function WC_Outlet\create_outlet_page;
 use function WC_Outlet\run_create_outlet_page_tool;
-use function WC_Outlet\seed_outlet_status_taxonomy;
 use const WC_Outlet\OUTLET_PAGE_OPTION;
-use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
@@ -94,9 +91,6 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
-		seed_outlet_status_taxonomy();
-		$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		$this->assertInstanceOf( WP_Term::class, $canonical_term );
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -112,23 +106,30 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		);
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
-		$this->assertStringContainsString( (string) $canonical_term->term_id, $pages[0]->post_content );
+		$this->assertStringNotContainsString( '"taxQuery"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
 		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
 	}
 
-	public function test_throws_runtime_exception_on_block_theme_when_canonical_term_missing(): void {
+	public function test_creates_page_on_block_theme_when_canonical_term_missing(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 
-		// Expect.
-		$this->expectException( \RuntimeException::class );
-		$this->expectExceptionMessage( 'Could not resolve the canonical outlet status term.' );
-
 		// Act.
 		create_outlet_page();
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'outlet',
+			)
+		);
+		$this->assertNotEmpty( $pages );
+		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
 	}
 
 	public function test_returns_success_message(): void {
