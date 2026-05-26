@@ -174,6 +174,7 @@ function create_outlet_page(): void {
 						OUTLET_STATUS_TAXONOMY => array( $term_id ),
 					),
 					'isProductCollectionBlock'      => true,
+					'wc_query'                      => true,
 					'featured'                      => false,
 					'woocommerceOnSale'             => false,
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
@@ -194,7 +195,6 @@ function create_outlet_page(): void {
 				'dimensions'           => array(
 					'widthType' => 'fill',
 				),
-				'collection'           => 'wc-outlet/product-collection/outlet',
 				'hideControls'         => array( 'inherit' ),
 				'queryContextIncludes' => array( 'collection' ),
 			)
