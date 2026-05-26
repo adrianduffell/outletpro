@@ -159,8 +159,8 @@ function create_outlet_page(): void {
 		$term_id     = (string) $canonical_term->term_id;
 		$block_attrs = wp_json_encode(
 			array(
-				'queryId'              => 1,
-				'query'                => array(
+				'queryId'       => 1,
+				'query'         => array(
 					'perPage'                       => 9,
 					'pages'                         => 0,
 					'offset'                        => 0,
@@ -185,17 +185,17 @@ function create_outlet_page(): void {
 						'tags'       => true,
 					),
 				),
-				'tagName'              => 'div',
-				'displayLayout'        => array(
+				'tagName'       => 'div',
+				'displayLayout' => array(
 					'type'          => 'flex',
 					'columns'       => 3,
 					'shrinkColumns' => true,
 				),
-				'dimensions'           => array(
+				'dimensions'    => array(
 					'widthType' => 'fill',
 				),
-				'hideControls'         => array( 'inherit' ),
-				)
+				'hideControls'  => array( 'inherit' ),
+			)
 		);
 		// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
 		$post_content = '<!-- wp:woocommerce/product-collection ' . $block_attrs . ' -->' . "\n" .
