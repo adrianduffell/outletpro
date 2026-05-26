@@ -150,13 +150,6 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) {
-		$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-
-		if ( ! ( $canonical_term instanceof \WP_Term ) ) {
-			throw new \RuntimeException( 'Could not resolve the canonical outlet status term.' );
-		}
-
-		$term_id     = (string) $canonical_term->term_id;
 		$block_attrs = wp_json_encode(
 			array(
 				'queryId'       => 1,
@@ -170,10 +163,8 @@ function create_outlet_page(): void {
 					'search'                        => '',
 					'exclude'                       => array(),
 					'inherit'                       => false,
-					'taxQuery'                      => array(
-						OUTLET_STATUS_TAXONOMY => array( $term_id ),
-					),
 					'isProductCollectionBlock'      => true,
+					'wc_outlet'                     => true,
 					'featured'                      => false,
 					'woocommerceOnSale'             => false,
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
