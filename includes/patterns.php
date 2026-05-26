@@ -204,8 +204,8 @@ function get_outlet_filter_tiles_content(): string {
 		$label     = wp_kses_post( sprintf( $label_template, wp_strip_all_tags( wc_price( $price, array( 'decimals' => 0 ) ) ) ) );
 		$href      = esc_url( add_query_arg( 'max_price', $price, $base_url ) );
 		$buttons[] =
-			'<!-- wp:button {"className":"is-style-outline"} -->' . "\n" .
-			'<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="' . $href . '">' . $label . '</a></div>' . "\n" .
+			'<!-- wp:button {"className":"is-style-fill"} -->' . "\n" .
+			'<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="' . $href . '">' . $label . '</a></div>' . "\n" .
 			'<!-- /wp:button -->';
 	}
 
