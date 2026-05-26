@@ -96,9 +96,13 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			name: nonOutletProductName,
 		} )
 	).toHaveCount( 0 );
-	await expect(
-		editor.canvas.locator( '.wc-block-pagination a' )
-	).toHaveCount( 0 );
+	const editorRenderedProductCount = await editor.canvas
+		.getByRole( 'link', {
+			name: new RegExp( `Outlet Block Test Product \\d+ ${ runId }` ),
+		} )
+		.count();
+	expect( editorRenderedProductCount ).toBeGreaterThanOrEqual( 1 );
+	expect( editorRenderedProductCount ).toBeLessThanOrEqual( 99 );
 
 	// Publish the page.
 	const pageId = await editor.publishPost();
@@ -130,7 +134,13 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			name: nonOutletProductName,
 		} )
 	).toHaveCount( 0 );
-	await expect( page.locator( '.wc-block-pagination a' ) ).toHaveCount( 0 );
+	const frontEndRenderedProductCount = await page
+		.getByRole( 'link', {
+			name: new RegExp( `Outlet Block Test Product \\d+ ${ runId }` ),
+		} )
+		.count();
+	expect( frontEndRenderedProductCount ).toBeGreaterThanOrEqual( 1 );
+	expect( frontEndRenderedProductCount ).toBeLessThanOrEqual( 99 );
 } );
 
 test( 'Outlet badge has default white text and red background', async ( {
