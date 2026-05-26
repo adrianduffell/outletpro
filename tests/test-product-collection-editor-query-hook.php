@@ -57,14 +57,14 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_query_is_unchanged_when_collection_is_different(): void {
+	public function test_query_is_unchanged_when_wc_outlet_query_flag_is_not_set(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );
 		init_product_collection();
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/other' ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'query' => array( 'perPage' => 9 ) ) );
 		$expected = $args;
 
 		// Act.
@@ -74,14 +74,14 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_tax_query_is_added_for_outlet_collection(): void {
+	public function test_tax_query_is_added_for_wc_outlet_query_flag(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );
 		init_product_collection();
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/outlet' ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'query' => array( 'wc_outlet' => true ) ) );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );
@@ -109,7 +109,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		);
 		$request             = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/outlet' ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'query' => array( 'wc_outlet' => true ) ) );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );

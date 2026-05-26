@@ -15,44 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_product_collection(): void {
-	add_filter( 'render_block_data', 'WC_Outlet\inject_outlet_query_flag_hook', 10, 3 );
 	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
 	add_filter( 'rest_product_query', 'WC_Outlet\product_collection_editor_query_hook', 10, 2 );
-}
-
-/**
- * Inject the outlet query flag into the product collection block attributes.
- *
- * Ensures descendant pagination and total blocks inherit the outlet marker
- * through the normal query context propagation mechanism.
- *
- * Fired by `render_block_data`.
- *
- * @internal WordPress filter hook
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
- * @param array<string, mixed> $parsed_block The parsed block data.
- * @param array<string, mixed> $source_block The source block data.
- * @param \WP_Block|null       $parent_block The parent block instance.
- * @return array<string, mixed> Filtered parsed block data.
- */
-function inject_outlet_query_flag_hook( array $parsed_block, array $source_block, ?\WP_Block $parent_block ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? '' ) ) {
-		return $parsed_block;
-	}
-
-	$collection = $parsed_block['attrs']['collection'] ?? '';
-
-	if ( 'wc-outlet/product-collection/outlet' !== $collection ) {
-		return $parsed_block;
-	}
-
-	if ( ! isset( $parsed_block['attrs']['query'] ) || ! is_array( $parsed_block['attrs']['query'] ) ) {
-		$parsed_block['attrs']['query'] = array();
-	}
-
-	$parsed_block['attrs']['query']['wc_outlet'] = true;
-
-	return $parsed_block;
 }
 
 /**
@@ -117,9 +81,9 @@ function product_collection_editor_query_hook( $args, $request ): array { // php
 		return $args;
 	}
 
-	$collection = $context['collection'] ?? '';
+	$is_outlet_query = $context['query']['wc_outlet'] ?? false;
 
-	if ( 'wc-outlet/product-collection/outlet' !== $collection ) {
+	if ( ! $is_outlet_query ) {
 		return $args;
 	}
 
