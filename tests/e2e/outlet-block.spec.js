@@ -21,16 +21,7 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			} )
 		)
 	);
-	const nonOutletProductName = `Outlet Block Non-Outlet Product ${ runId }`;
-	await requestUtils.rest( {
-		method: 'POST',
-		path: '/wc/v3/products',
-		data: {
-			name: nonOutletProductName,
-			type: 'simple',
-			status: 'publish',
-		},
-	} );
+	const nonOutletProductName = products[ 2 ].name;
 
 	for ( const product of [ products[ 0 ], products[ 1 ] ] ) {
 		await admin.visitAdminPage(
