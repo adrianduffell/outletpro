@@ -6,7 +6,6 @@ import { addFilter } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 
 type ProductCollectionAttributes = {
-	collection?: string;
 	query?: Record< string, unknown >;
 };
 
