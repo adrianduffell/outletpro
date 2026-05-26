@@ -51,6 +51,7 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
+	const canvas = page.frameLocator( 'iframe[name="editor-canvas"]' );
 
 	// Insert a product collection block, then choose "create your own" so
 	// WooCommerce sets the default query attributes (filterable, Default query
@@ -58,13 +59,21 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 	await editor.insertBlock( { name: 'woocommerce/product-collection' } );
 
 	// The block opens a pattern-picker modal; dismiss it by choosing "create your own".
-	await page.getByRole( 'link', { name: 'create your own' } ).click();
+	await editor.canvas
+		.getByRole( 'button', { name: /create your own/i } )
+		.click();
 
 	// Open the Advanced inspector panel and enable the outlet toggle.
 	await page.getByRole( 'button', { name: 'Advanced' } ).click();
 	await page
 		.getByRole( 'checkbox', { name: 'Show outlet products only' } )
 		.check();
+
+	// Set products per page to 99.
+	const productsPerPageInput = page
+		.getByLabel( 'Products per page' )
+		.and( page.locator( 'input[type="number"]' ) );
+	await productsPerPageInput.fill( '99' );
 
 	// Assert: outlet products shown in editor; use .first() because the product
 	// collection block renders the title as both a link and an image overlay link.
