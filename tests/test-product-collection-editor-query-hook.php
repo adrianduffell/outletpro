@@ -57,14 +57,14 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_query_is_unchanged_when_wc_outlet_is_absent_from_context(): void {
+	public function test_query_is_unchanged_when_collection_is_different(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );
 		init_product_collection();
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'perPage' => 9 ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/other' ) );
 		$expected = $args;
 
 		// Act.
@@ -74,31 +74,14 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_query_is_unchanged_when_wc_outlet_is_false_in_context(): void {
+	public function test_tax_query_is_added_for_outlet_collection(): void {
 		// Arrange.
 		remove_all_filters( 'rest_product_query' );
 		init_product_collection();
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'wc_outlet' => false ) );
-		$expected = $args;
-
-		// Act.
-		$result = apply_filters( 'rest_product_query', $args, $request );
-
-		// Assert.
-		$this->assertSame( $expected, $result );
-	}
-
-	public function test_tax_query_is_added_when_wc_outlet_is_true_in_context(): void {
-		// Arrange.
-		remove_all_filters( 'rest_product_query' );
-		init_product_collection();
-		$args    = array( 'post_type' => 'product' );
-		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'wc_outlet' => true ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/outlet' ) );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );
@@ -126,7 +109,7 @@ class Test_Product_Collection_Editor_Query_Hook extends WP_UnitTestCase {
 		);
 		$request             = new WP_REST_Request( 'GET', '/wc/v3/products' );
 		$request->set_param( 'isProductCollectionBlock', true );
-		$request->set_param( 'productCollectionQueryContext', array( 'wc_outlet' => true ) );
+		$request->set_param( 'productCollectionQueryContext', array( 'collection' => 'wc-outlet/product-collection/outlet' ) );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );
