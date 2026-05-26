@@ -20,20 +20,6 @@ function init_page(): void {
 }
 
 /**
- * Register the outlet block pattern category.
- *
- * @internal
- */
-function register_outlet_block_pattern_category(): void {
-	register_block_pattern_category(
-		'wc-outlet',
-		array(
-			'label' => __( 'Outlet', 'wc-outlet' ),
-		)
-	);
-}
-
-/**
  * Register the outlet page template.
  *
  * @internal
