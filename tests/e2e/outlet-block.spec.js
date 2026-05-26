@@ -96,6 +96,9 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			name: nonOutletProductName,
 		} )
 	).toHaveCount( 0 );
+	await expect(
+		editor.canvas.locator( '.wc-block-pagination a' )
+	).toHaveCount( 0 );
 
 	// Publish the page.
 	const pageId = await editor.publishPost();
@@ -127,6 +130,7 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 			name: nonOutletProductName,
 		} )
 	).toHaveCount( 0 );
+	await expect( page.locator( '.wc-block-pagination a' ) ).toHaveCount( 0 );
 } );
 
 test( 'Outlet badge has default white text and red background', async ( {
