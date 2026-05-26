@@ -88,7 +88,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		// Arrange.
 		$args    = array(
 			'post_type' => 'product',
-			'tax_query' => array(),
+			'tax_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
 		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
 		$request->set_param( 'wc_outlet', true );
@@ -113,7 +113,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		// Arrange.
 		$args    = array(
 			'post_type' => 'product',
-			'tax_query' => array(),
+			'tax_query' => array(), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
 		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
 		$request->set_param( 'wc_outlet', false );
