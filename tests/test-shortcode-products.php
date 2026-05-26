@@ -88,8 +88,12 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		unset( $_GET['max_price'] );
 
 		// Assert.
-		$this->assertArrayHasKey( 'max_price', $result );
-		$this->assertSame( '50', $result['max_price'] );
+		$this->assertArrayHasKey( 'meta_query', $result );
+		$this->assertCount( 1, $result['meta_query'] );
+		$this->assertSame( '_price', $result['meta_query'][0]['key'] );
+		$this->assertSame( '50', $result['meta_query'][0]['value'] );
+		$this->assertSame( '<=', $result['meta_query'][0]['compare'] );
+		$this->assertSame( 'NUMERIC', $result['meta_query'][0]['type'] );
 	}
 
 	public function test_max_price_not_applied_when_wc_outlet_absent(): void {
@@ -103,7 +107,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		unset( $_GET['max_price'] );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'max_price', $result );
+		$this->assertArrayNotHasKey( 'meta_query', $result );
 	}
 
 	public function test_max_price_not_applied_when_url_param_absent(): void {
@@ -117,7 +121,22 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'max_price', $result );
+		$this->assertArrayNotHasKey( 'meta_query', $result );
+	}
+
+	public function test_max_price_not_applied_when_url_param_is_not_scalar(): void {
+		// Arrange.
+		register_outlet_status_taxonomy();
+		$_GET['max_price'] = array( '50' );
+		$query_args        = array( 'post_type' => 'product' );
+		$attributes        = array( 'wc_outlet' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+		unset( $_GET['max_price'] );
+
+		// Assert.
+		$this->assertArrayNotHasKey( 'meta_query', $result );
 	}
 
 	public function test_add_products_shortcode_attribute_hook_adds_wc_outlet_when_present(): void {

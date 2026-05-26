@@ -50,10 +50,19 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
 	);
 
-	if ( isset( $_GET['max_price'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		$max_price = \wc_format_decimal( \wp_unslash( $_GET['max_price'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	if ( isset( $_GET['max_price'] ) && is_scalar( $_GET['max_price'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$max_price = \wc_format_decimal( sanitize_text_field( $_GET['max_price'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		if ( '' !== $max_price ) {
-			$query_args['max_price'] = $max_price;
+			if ( empty( $query_args['meta_query'] ) || ! is_array( $query_args['meta_query'] ) ) {
+				$query_args['meta_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			}
+
+			$query_args['meta_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				'key'     => '_price',
+				'value'   => $max_price,
+				'compare' => '<=',
+				'type'    => 'NUMERIC',
+			);
 		}
 	}
 
