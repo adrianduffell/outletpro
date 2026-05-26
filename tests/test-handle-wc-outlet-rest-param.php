@@ -6,6 +6,7 @@
  */
 
 use function WC_Outlet\add_to_outlet;
+use function WC_Outlet\handle_wc_outlet_rest_param;
 use function WC_Outlet\register_outlet_status_taxonomy;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 
@@ -72,44 +73,56 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 
 	public function test_rest_product_query_is_unchanged_when_wc_outlet_param_is_absent(): void {
 		// Arrange.
-		$args     = array( 'post_type' => 'product' );
-		$request  = new WP_REST_Request( 'GET', '/wp/v2/products' );
-		$expected = $args;
+		$args    = array( 'post_type' => 'product' );
+		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
+		$this->assertArrayNotHasKey( 'tax_query', $args );
 
 		// Act.
-		$result = apply_filters( 'rest_product_query', $args, $request );
+		$result = handle_wc_outlet_rest_param( $args, $request );
 
 		// Assert.
-		$this->assertSame( $expected, $result );
+		$this->assertArrayNotHasKey( 'tax_query', $result );
 	}
 
 	public function test_rest_product_query_adds_tax_query_when_wc_outlet_is_true(): void {
 		// Arrange.
-		$args    = array( 'post_type' => 'product' );
+		$args    = array(
+			'post_type' => 'product',
+			'tax_query' => array(),
+		);
 		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
 		$request->set_param( 'wc_outlet', true );
+		$this->assertCount( 0, $args['tax_query'] );
 
 		// Act.
-		$result = apply_filters( 'rest_product_query', $args, $request );
+		$result = handle_wc_outlet_rest_param( $args, $request );
 
 		// Assert.
 		$this->assertArrayHasKey( 'tax_query', $result );
-		$this->assertCount( 1, $result['tax_query'] );
-		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
-		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
+		$this->assertContains(
+			array(
+				'taxonomy' => OUTLET_STATUS_TAXONOMY,
+				'field'    => 'slug',
+				'terms'    => array( 'outlet' ),
+			),
+			$result['tax_query']
+		);
 	}
 
 	public function test_rest_product_query_is_unchanged_when_wc_outlet_is_false(): void {
 		// Arrange.
-		$args    = array( 'post_type' => 'product' );
+		$args    = array(
+			'post_type' => 'product',
+			'tax_query' => array(),
+		);
 		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
 		$request->set_param( 'wc_outlet', false );
-		$expected = $args;
+		$this->assertCount( 0, $args['tax_query'] );
 
 		// Act.
-		$result = apply_filters( 'rest_product_query', $args, $request );
+		$result = handle_wc_outlet_rest_param( $args, $request );
 
 		// Assert.
-		$this->assertSame( $expected, $result );
+		$this->assertCount( 0, $result['tax_query'] );
 	}
 }
