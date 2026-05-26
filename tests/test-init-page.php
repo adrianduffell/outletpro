@@ -9,6 +9,20 @@ use function WC_Outlet\init_page;
 
 class Test_Init_Page extends WP_UnitTestCase {
 
+	public function test_registers_outlet_block_pattern_category(): void {
+		// Arrange.
+		unregister_block_pattern_category( 'wc-outlet' );
+		$this->assertArrayNotHasKey( 'wc-outlet', \WP_Block_Pattern_Categories_Registry::get_instance()->get_all_registered() );
+
+		// Act.
+		init_page();
+
+		// Assert.
+		$categories = \WP_Block_Pattern_Categories_Registry::get_instance()->get_all_registered();
+		$this->assertArrayHasKey( 'wc-outlet', $categories );
+		$this->assertSame( 'Outlet', $categories['wc-outlet']['label'] );
+	}
+
 	public function test_registers_outlet_page_template_when_template_api_is_available(): void {
 		// Arrange.
 		WP_Block_Templates_Registry::get_instance()->unregister( 'wc-outlet//outlet-page' );
