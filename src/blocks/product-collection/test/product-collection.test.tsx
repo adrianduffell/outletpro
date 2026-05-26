@@ -81,7 +81,7 @@ describe( 'product collection outlet inspector', () => {
 
 		fireEvent.click(
 			screen.getByRole( 'checkbox', {
-				name: 'Show only outlet products',
+				name: 'Show outlet products only',
 			} )
 		);
 
@@ -114,7 +114,7 @@ describe( 'product collection outlet inspector', () => {
 
 		fireEvent.click(
 			screen.getByRole( 'checkbox', {
-				name: 'Show only outlet products',
+				name: 'Show outlet products only',
 			} )
 		);
 
@@ -143,7 +143,7 @@ describe( 'product collection outlet inspector', () => {
 
 		expect(
 			screen.queryByRole( 'checkbox', {
-				name: 'Show only outlet products',
+				name: 'Show outlet products only',
 			} )
 		).not.toBeInTheDocument();
 	} );

@@ -56,7 +56,11 @@ export const withOutletQueryInspector = (
 				<InspectorControls group="advanced">
 					<ToggleControl
 						label={ __(
-							'Show only outlet products',
+							'Show outlet products only',
+							'wc-outlet'
+						) }
+						help={ __(
+							'Restrict this collection to products in the store’s outlet.',
 							'wc-outlet'
 						) }
 						checked={
