@@ -52,31 +52,19 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
 
-	// Insert a product collection block with the outlet query flag set.
-	await editor.insertBlock( {
-		name: 'woocommerce/product-collection',
-		attributes: {
-			query: {
-				wc_outlet: true,
-				isProductCollectionBlock: true,
-				perPage: 9,
-				pages: 0,
-				offset: 0,
-				postType: 'product',
-				order: 'asc',
-				orderBy: 'title',
-				search: '',
-				exclude: [],
-				inherit: false,
-				featured: false,
-				woocommerceOnSale: false,
-				woocommerceStockStatus: [ 'instock', 'outofstock', 'onbackorder' ],
-				woocommerceAttributes: [],
-				woocommerceHandPickedProducts: [],
-				filterable: true,
-			},
-		},
-	} );
+	// Insert a product collection block, then choose "create your own" so
+	// WooCommerce sets the default query attributes (filterable, Default query
+	// type), and finally enable the outlet toggle in the Advanced panel.
+	await editor.insertBlock( { name: 'woocommerce/product-collection' } );
+
+	// The block opens a pattern-picker modal; dismiss it by choosing "create your own".
+	await page.getByRole( 'link', { name: 'create your own' } ).click();
+
+	// Open the Advanced inspector panel and enable the outlet toggle.
+	await page.getByRole( 'button', { name: 'Advanced' } ).click();
+	await page
+		.getByRole( 'checkbox', { name: 'Show outlet products only' } )
+		.check();
 
 	// Assert: outlet products shown in editor; use .first() because the product
 	// collection block renders the title as both a link and an image overlay link.

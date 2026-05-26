@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_product_collection(): void {
 	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
+	add_filter( 'rest_product_query', 'WC_Outlet\product_collection_editor_query_hook', 10, 2 );
 }
 
 /**
@@ -56,4 +57,47 @@ function filter_outlet_product_collection_hook( array $query, \WP_Block $block, 
 	);
 
 	return $query;
+}
+
+/**
+ * Filter the REST API query for the product collection block in the editor.
+ *
+ * Applies the outlet tax query when `wc_outlet` is set in the product
+ * collection block's query context, so the editor preview respects the
+ * "Show outlet products only" toggle.
+ *
+ * Fired by `rest_product_query`.
+ *
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param array<string, mixed> $args    The query args.
+ * @param \WP_REST_Request     $request The REST request.
+ * @return array<string, mixed> Filtered query args.
+ */
+function product_collection_editor_query_hook( $args, $request ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+	if ( ! $request->get_param( 'isProductCollectionBlock' ) ) {
+		return $args;
+	}
+
+	$context = $request->get_param( 'productCollectionQueryContext' );
+
+	if ( ! is_array( $context ) ) {
+		return $args;
+	}
+
+	if ( empty( $context['wc_outlet'] ) ) {
+		return $args;
+	}
+
+	if ( ! isset( $args['tax_query'] ) || ! is_array( $args['tax_query'] ) ) {
+		$args['tax_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+	}
+
+	$args['tax_query'][] = array(
+		'taxonomy' => OUTLET_STATUS_TAXONOMY,
+		'field'    => 'slug',
+		'terms'    => array( OUTLET_STATUS_CANONICAL_TERM ),
+	);
+
+	return $args;
 }
