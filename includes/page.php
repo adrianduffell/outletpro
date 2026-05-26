@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_page(): void {
-	register_outlet_block_pattern_category();
 	register_outlet_page_template();
 }
 
