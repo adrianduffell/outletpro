@@ -42,6 +42,7 @@ require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
+require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
@@ -68,6 +69,7 @@ function init_hook(): void {
 	init_taxonomies();
 	init_rest_api();
 	init_shortcodes();
+	init_patterns();
 	init_page();
 	init_blocks();
 	init_block_editor();
