@@ -194,10 +194,8 @@ function create_outlet_page(): void {
 				'dimensions'           => array(
 					'widthType' => 'fill',
 				),
-				'collection'           => 'wc-outlet/product-collection/outlet',
 				'hideControls'         => array( 'inherit' ),
-				'queryContextIncludes' => array( 'collection' ),
-			)
+				)
 		);
 		// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
 		$post_content = '<!-- wp:woocommerce/product-collection ' . $block_attrs . ' -->' . "\n" .

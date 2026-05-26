@@ -52,11 +52,29 @@ test( 'outlet block shows outlet products in editor and on front end', async ( {
 	// Act: open a new page in the page editor.
 	await admin.createNewPost( { postType: 'page' } );
 
-	// Insert the outlet block.
+	// Insert a product collection block with the outlet query flag set.
 	await editor.insertBlock( {
 		name: 'woocommerce/product-collection',
 		attributes: {
-			collection: 'wc-outlet/product-collection/outlet',
+			query: {
+				wc_outlet: true,
+				isProductCollectionBlock: true,
+				perPage: 9,
+				pages: 0,
+				offset: 0,
+				postType: 'product',
+				order: 'asc',
+				orderBy: 'title',
+				search: '',
+				exclude: [],
+				inherit: false,
+				featured: false,
+				woocommerceOnSale: false,
+				woocommerceStockStatus: [ 'instock', 'outofstock', 'onbackorder' ],
+				woocommerceAttributes: [],
+				woocommerceHandPickedProducts: [],
+				filterable: true,
+			},
 		},
 	} );
 

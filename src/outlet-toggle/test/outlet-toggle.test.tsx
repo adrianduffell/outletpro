@@ -49,9 +49,7 @@ describe( 'product collection outlet inspector', () => {
 		jest.resetModules();
 		addFilter = ( await import( '@wordpress/hooks' ) )
 			.addFilter as unknown as jest.Mock;
-		( { withOutletQueryInspector } = await import(
-			'../../../outlet-toggle'
-		) );
+		( { withOutletQueryInspector } = await import( '../' ) );
 	} );
 
 	it( 'registers the product collection block edit filter', () => {
@@ -121,30 +119,5 @@ describe( 'product collection outlet inspector', () => {
 		expect( setAttributes ).toHaveBeenCalledWith( {
 			query: { perPage: 9 },
 		} );
-	} );
-
-	it( 'does not render the toggle for the outlet collection variation', () => {
-		const BlockEdit = () => <div>Base block edit</div>;
-		const WrappedBlockEdit: ComponentType< {
-			name: string;
-			attributes: Record< string, unknown >;
-			setAttributes: jest.Mock;
-		} > = withOutletQueryInspector( BlockEdit );
-
-		render(
-			<WrappedBlockEdit
-				name="woocommerce/product-collection"
-				attributes={ {
-					collection: 'wc-outlet/product-collection/outlet',
-				} }
-				setAttributes={ jest.fn() }
-			/>
-		);
-
-		expect(
-			screen.queryByRole( 'checkbox', {
-				name: 'Show outlet products only',
-			} )
-		).not.toBeInTheDocument();
 	} );
 } );
