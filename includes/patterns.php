@@ -223,9 +223,9 @@ function register_outlet_filter_tiles_pattern(): void {
 	register_block_pattern(
 		'wc-outlet/outlet-filter-tiles',
 		array(
-			'title'       => __( 'Outlet filter tiles', 'wc-outlet' ),
-			'description' => __( 'Adds tiled price range filters for the store\'s outlet page.', 'wc-outlet' ),
-			'content'     => get_outlet_filter_tiles_content(),
+			'title'         => __( 'Outlet filter tiles', 'wc-outlet' ),
+			'description'   => __( 'Adds tiled price range filters for the store\'s outlet page.', 'wc-outlet' ),
+			'content'       => get_outlet_filter_tiles_content(),
 			'categories'    => array( __( 'Outlet', 'wc-outlet' ) ),
 			'viewportWidth' => 400,
 		)
