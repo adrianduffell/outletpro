@@ -1,5 +1,8 @@
 import type { ReactNode } from 'react';
 
+let addFilter: jest.Mock;
+let withOutletQueryInspector: any;
+
 jest.mock( '@wordpress/hooks', () => ( {
 	addFilter: jest.fn(),
 } ) );
@@ -22,18 +25,16 @@ jest.mock( '@wordpress/i18n', () => ( {
 } ) );
 
 describe( 'product collection outlet inspector', () => {
-	it( '[NOT TOGGLE BEHAVIOUR] registers the product collection block edit filter', async () => {
-		// Arrange.
+	beforeEach( async () => {
 		jest.resetModules();
-		const addFilter = ( await import( '@wordpress/hooks' ) )
+		addFilter = ( await import( '@wordpress/hooks' ) )
 			.addFilter as unknown as jest.Mock;
-
-		// Act.
-		const { withOutletQueryInspector } = await import(
+		( { withOutletQueryInspector } = await import(
 			'../../../outlet-toggle'
-		);
+		) );
+	} );
 
-		// Assert.
+	it( '[NOT TOGGLE BEHAVIOUR] registers the product collection block edit filter', () => {
 		expect( addFilter ).toHaveBeenCalledWith(
 			'editor.BlockEdit',
 			'wc-outlet/product-collection/outlet-query-inspector',
