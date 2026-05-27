@@ -30,6 +30,8 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
+	remove_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11 );
+
 	// Unregister all blocks in the wc-outlet namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
 		if ( 0 !== strpos( $block_name, 'wc-outlet/' ) ) {
