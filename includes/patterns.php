@@ -210,9 +210,9 @@ function get_outlet_filter_tiles_content(): string {
 			'<!-- /wp:button -->';
 	}
 
-	return '<!-- wp:group {"layout":{"type":"constrained","justifyContent":"left"}} -->' . "\n" .
-		'<div class="wp-block-group"><!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"left"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
-		'<div class="wp-block-buttons wc-outlet-filter-tiles" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
+	return '<!-- wp:group {"layout":{"type":"constrained","justifyContent":"center"}} -->' . "\n" .
+		'<div class="wp-block-group"><!-- wp:buttons {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"left","flexWrap":"nowrap"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
+		'<div class="wp-block-buttons alignwide wc-outlet-filter-tiles" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
 		'<!-- /wp:buttons --></div>' . "\n" .
 		'<!-- /wp:group -->';
 }
