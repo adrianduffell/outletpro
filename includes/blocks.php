@@ -17,9 +17,9 @@ defined( 'ABSPATH' ) || exit;
 function init_blocks(): void {
 	register_outlet_badge_block();
 	register_outlet_message_block();
-	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
 }
 
 /**
@@ -29,6 +29,8 @@ function init_blocks(): void {
  */
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
+
+	remove_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11 );
 
 	// Unregister all blocks in the wc-outlet namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {

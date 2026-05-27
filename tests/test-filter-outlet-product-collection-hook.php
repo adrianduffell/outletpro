@@ -5,6 +5,7 @@
  * @package WC_Outlet
  */
 
+use function WC_Outlet\deinit_blocks;
 use function WC_Outlet\init_blocks;
 use function WC_Outlet\init_taxonomies;
 use function WC_Outlet\seed_outlet_status_taxonomy;
@@ -14,7 +15,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_not_product_collection_block(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 		init_blocks();
 		$query          = array( 'post_type' => 'product' );
 		$block          = new WP_Block(
@@ -38,7 +39,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_product_collection_block_flag_is_missing(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 		init_blocks();
 		$query          = array( 'post_type' => 'product' );
 		$block          = new WP_Block(
@@ -62,7 +63,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_different(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 		init_blocks();
 		$query          = array( 'post_type' => 'product' );
 		$block          = new WP_Block(
@@ -78,7 +79,8 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'query'      => array( 'isProductCollectionBlock' => true ),
 			'collection' => 'wc-outlet/product-collection/other',
 		);
-		$expected       = $query;
+		$expected       = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );  // Account for external filters added.
+		init_blocks();
 
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
@@ -89,7 +91,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_query_is_unchanged_when_collection_is_missing(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 		init_blocks();
 		$query          = array( 'post_type' => 'product' );
 		$block          = new WP_Block(
@@ -102,7 +104,8 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			)
 		);
 		$block->context = array( 'query' => array( 'isProductCollectionBlock' => true ) );
-		$expected       = $query;
+		$expected       = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 ); // Account for external filters added.
+		init_blocks();
 
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
@@ -113,7 +116,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_tax_query_is_added_when_canonical_term_exists(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 		init_blocks();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
@@ -145,7 +148,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_existing_tax_query_entries_are_preserved(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 		init_blocks();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
@@ -185,7 +188,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 	public function test_filter_is_registered_by_init_blocks(): void {
 		// Arrange.
-		remove_all_filters( 'query_loop_block_query_vars' );
+		deinit_blocks();
 
 		// Act.
 		init_blocks();
