@@ -236,10 +236,6 @@ function create_outlet_page(): void {
 		throw new \RuntimeException( $page_id->get_error_message() );
 	}
 
-	if ( wp_is_block_theme() ) {
-		update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
-	}
-
 	update_option( OUTLET_PAGE_OPTION, $page_id );
 
 	$result = wp_update_post(
@@ -252,6 +248,13 @@ function create_outlet_page(): void {
 
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException( $result->get_error_message() );
+	}
+
+	if ( wp_is_block_theme() ) {
+		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
+		if ( is_wp_error( $result ) ) {
+			throw new \RuntimeException( $result->get_error_message() );
+		}
 	}
 }
 
