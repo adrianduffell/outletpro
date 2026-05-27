@@ -8,7 +8,6 @@
 use function WC_Outlet\create_outlet_page;
 use function WC_Outlet\run_create_outlet_page_tool;
 use const WC_Outlet\OUTLET_PAGE_OPTION;
-use const WC_Outlet\OUTLET_PAGE_TEMPLATE;
 
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
@@ -151,7 +150,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		);
 		$this->assertNotEmpty( $pages );
 		$template = get_post_meta( $pages[0]->ID, '_wp_page_template', true );
-		$this->assertSame( OUTLET_PAGE_TEMPLATE, $template );
+		$this->assertSame( 'wc-outlet//outlet-page', $template );
 	}
 
 	public function test_returns_success_message(): void {
