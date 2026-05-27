@@ -64,7 +64,6 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 	public function test_query_is_unchanged_when_collection_is_different(): void {
 		// Arrange.
 		deinit_blocks();
-		init_blocks();
 		$query          = array( 'post_type' => 'product' );
 		$block          = new WP_Block(
 			array(
