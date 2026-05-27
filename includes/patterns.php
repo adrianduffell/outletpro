@@ -202,7 +202,7 @@ function get_outlet_filter_tiles_content(): string {
 	$buttons        = array();
 
 	foreach ( $tiers as $price ) {
-		$label     = wp_kses_post( sprintf( $label_template, wp_strip_all_tags( wc_price( $price, array( 'decimals' => 0 ) ) ) ) );
+		$label     = esc_html( sprintf( $label_template, wp_strip_all_tags( wc_price( $price, array( 'decimals' => 0 ) ) ) ) );
 		$href      = esc_url( add_query_arg( 'max_price', $price, $base_url ) );
 		$buttons[] =
 			'<!-- wp:button {"className":"is-style-outline","style":{"border":{"radius":{"topLeft":"0px","topRight":"0px","bottomLeft":"0px","bottomRight":"0px"}},"typography":{"lineHeight":"1.6"},"spacing":{"padding":{"left":"4vw","right":"4vw"}}}} -->' . "\n" .
