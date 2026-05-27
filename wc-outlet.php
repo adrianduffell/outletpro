@@ -49,7 +49,6 @@ require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';
 require_once __DIR__ . '/includes/block-editor.php';
 require_once __DIR__ . '/includes/blocks.php';
-require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/product-collection.php';
 require_once __DIR__ . '/includes/admin-order.php';
 require_once __DIR__ . '/includes/cart.php';
