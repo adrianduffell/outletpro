@@ -237,7 +237,7 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) {
-		update_post_meta( $page_id, '_wp_page_template', 'wc-outlet//outlet-page' );
+		update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
