@@ -228,7 +228,7 @@ function register_outlet_filter_tiles_pattern(): void {
 			'description'   => __( 'Adds tiled price range filters for the store\'s outlet page.', 'wc-outlet' ),
 			'content'       => get_outlet_filter_tiles_content(),
 			'categories'    => array( 'wc-outlet' ),
-			'viewportWidth' => 500,
+			'viewportWidth' => 320,
 		)
 	);
 }
