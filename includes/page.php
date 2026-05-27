@@ -10,6 +10,13 @@ namespace WC_Outlet;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Block template ID for the outlet page.
+ *
+ * @internal
+ */
+const OUTLET_PAGE_TEMPLATE = 'wc-outlet//outlet-page';
+
+/**
  * Helper to initialize page integrations.
  *
  * @internal
@@ -37,7 +44,7 @@ function register_outlet_page_template(): void {
 	}
 
 	register_block_template(
-		'wc-outlet//outlet-page',
+		OUTLET_PAGE_TEMPLATE,
 		array(
 			'title'       => __( 'Outlet page', 'wc-outlet' ),
 			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
@@ -149,11 +156,10 @@ function create_outlet_page(): void {
 		);
 	}
 
-	$page_template = null;
+	$is_block_theme = wp_is_block_theme();
 
-	if ( wp_is_block_theme() ) {
-		$page_template = 'wc-outlet//outlet-page';
-		$block_attrs   = wp_json_encode(
+	if ( $is_block_theme ) {
+		$block_attrs = wp_json_encode(
 			array(
 				'queryId'              => 1,
 				'query'                => array(
@@ -225,19 +231,21 @@ function create_outlet_page(): void {
 			'<!-- /wp:shortcode -->';
 	}
 
-	$page_id = wp_insert_post(
-		array(
-			'post_title'    => __( 'Outlet', 'wc-outlet' ),
-			'post_name'     => 'outlet',
-			'post_status'   => 'draft',
-			'post_type'     => 'page',
-			'page_template' => $page_template,
-		),
-		true
+	$post_args = array(
+		'post_title'  => __( 'Outlet', 'wc-outlet' ),
+		'post_name'   => 'outlet',
+		'post_status' => 'draft',
+		'post_type'   => 'page',
 	);
+
+	$page_id = wp_insert_post( $post_args, true );
 
 	if ( is_wp_error( $page_id ) ) {
 		throw new \RuntimeException( $page_id->get_error_message() );
+	}
+
+	if ( $is_block_theme ) {
+		update_post_meta( $page_id, '_wp_page_template', OUTLET_PAGE_TEMPLATE );
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
