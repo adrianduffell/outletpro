@@ -102,7 +102,10 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			)
 		);
 		$block->context = array( 'query' => array( 'isProductCollectionBlock' => true ) );
-		$expected       = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 ); // Account for external filters added.
+
+		$expected = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 ); // Account for external filters added.
+		init_blocks();
+
 		// Act.
 		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
 
