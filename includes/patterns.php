@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_patterns(): void {
+	register_outlet_block_pattern_category();
 	register_outlet_filter_tiles_pattern();
 }
 
@@ -228,6 +229,20 @@ function register_outlet_filter_tiles_pattern(): void {
 			'content'       => get_outlet_filter_tiles_content(),
 			'categories'    => array( __( 'Outlet', 'wc-outlet' ) ),
 			'viewportWidth' => 400,
+		)
+	);
+}
+
+/**
+ * Register the outlet block pattern category.
+ *
+ * @internal
+ */
+function register_outlet_block_pattern_category(): void {
+	register_block_pattern_category(
+		'wc-outlet',
+		array(
+			'label' => __( 'Outlet', 'wc-outlet' ),
 		)
 	);
 }
