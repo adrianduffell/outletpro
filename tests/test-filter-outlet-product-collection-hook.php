@@ -8,7 +8,6 @@
 use function WC_Outlet\deinit_blocks;
 use function WC_Outlet\init_blocks;
 use function WC_Outlet\init_taxonomies;
-use function WC_Outlet\inject_outlet_query_flag_hook;
 use function WC_Outlet\seed_outlet_status_taxonomy;
 use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
@@ -195,77 +194,5 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook' ) );
-	}
-
-	public function test_block_is_unchanged_when_not_product_collection_block(): void {
-		// Arrange.
-		$parsed_block = array(
-			'blockName' => 'core/query',
-			'attrs'     => array(
-				'collection' => 'wc-outlet/product-collection/outlet',
-			),
-		);
-		$expected     = $parsed_block;
-
-		// Act.
-		$result = inject_outlet_query_flag_hook( $parsed_block, $parsed_block, null );
-
-		// Assert.
-		$this->assertSame( $expected, $result );
-	}
-
-	public function test_block_is_unchanged_when_collection_is_different(): void {
-		// Arrange.
-		$parsed_block = array(
-			'blockName' => 'woocommerce/product-collection',
-			'attrs'     => array(
-				'collection' => 'wc-outlet/product-collection/other',
-			),
-		);
-		$expected     = $parsed_block;
-
-		// Act.
-		$result = inject_outlet_query_flag_hook( $parsed_block, $parsed_block, null );
-
-		// Assert.
-		$this->assertSame( $expected, $result );
-	}
-
-	public function test_wc_outlet_flag_is_injected_for_outlet_collection(): void {
-		// Arrange.
-		$parsed_block = array(
-			'blockName' => 'woocommerce/product-collection',
-			'attrs'     => array(
-				'collection' => 'wc-outlet/product-collection/outlet',
-			),
-		);
-
-		// Act.
-		$result = inject_outlet_query_flag_hook( $parsed_block, $parsed_block, null );
-
-		// Assert.
-		$this->assertTrue( $result['attrs']['query']['wc_outlet'] );
-	}
-
-	public function test_existing_query_keys_are_preserved_when_injecting_wc_outlet_flag(): void {
-		// Arrange.
-		$parsed_block = array(
-			'blockName' => 'woocommerce/product-collection',
-			'attrs'     => array(
-				'collection' => 'wc-outlet/product-collection/outlet',
-				'query'      => array(
-					'perPage' => 9,
-					'order'   => 'asc',
-				),
-			),
-		);
-
-		// Act.
-		$result = inject_outlet_query_flag_hook( $parsed_block, $parsed_block, null );
-
-		// Assert.
-		$this->assertSame( 9, $result['attrs']['query']['perPage'] );
-		$this->assertSame( 'asc', $result['attrs']['query']['order'] );
-		$this->assertTrue( $result['attrs']['query']['wc_outlet'] );
 	}
 }

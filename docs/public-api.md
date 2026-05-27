@@ -334,11 +334,6 @@ themes). Added in 1.0.0.
 | ---------- | -------- | ------- | ------------------------------------------ |
 | `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
 
-### `wc-outlet/product-collection/outlet`
-
-A product collection variation that shows only outlet products. Available in the block
-editor when inserting a Product Collection block. Added in 1.0.0.
-
 ## REST API
 
 The plugin extends the WooCommerce products REST endpoint with a `wc_outlet` query

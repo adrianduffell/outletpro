@@ -120,29 +120,4 @@ describe( 'product collection outlet inspector', () => {
 			query: { perPage: 9 },
 		} );
 	} );
-
-	it( 'does not render the toggle for the outlet collection variation', () => {
-		const BlockEdit = () => <div>Base block edit</div>;
-		const WrappedBlockEdit: ComponentType< {
-			name: string;
-			attributes: Record< string, unknown >;
-			setAttributes: jest.Mock;
-		} > = withOutletQueryInspector( BlockEdit );
-
-		render(
-			<WrappedBlockEdit
-				name="woocommerce/product-collection"
-				attributes={ {
-					collection: 'wc-outlet/product-collection/outlet',
-				} }
-				setAttributes={ jest.fn() }
-			/>
-		);
-
-		expect(
-			screen.queryByRole( 'checkbox', {
-				name: 'Show outlet products only',
-			} )
-		).not.toBeInTheDocument();
-	} );
 } );

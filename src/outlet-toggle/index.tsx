@@ -19,7 +19,6 @@ type ProductCollectionEditProps = {
 };
 
 const PRODUCT_COLLECTION_BLOCK = 'woocommerce/product-collection';
-const OUTLET_PRODUCT_COLLECTION = 'wc-outlet/product-collection/outlet';
 
 function updateOutletQueryAttributes(
 	attributes: ProductCollectionAttributes,
@@ -43,10 +42,6 @@ export const withOutletQueryInspector = (
 ) =>
 	function OutletQueryInspector( props: ProductCollectionEditProps ) {
 		if ( PRODUCT_COLLECTION_BLOCK !== props.name ) {
-			return <BlockEdit { ...props } />;
-		}
-
-		if ( OUTLET_PRODUCT_COLLECTION === props.attributes.collection ) {
 			return <BlockEdit { ...props } />;
 		}
 

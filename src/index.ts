@@ -7,7 +7,6 @@ import './outlet-toggle';
 import EditorPreview from './editor-preview';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
-import './blocks/product-collection';
 
 registerPlugin( 'wc-outlet-editor-preview', {
 	render: EditorPreview,
