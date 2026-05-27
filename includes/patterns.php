@@ -198,7 +198,7 @@ function get_outlet_filter_tiles_content(): string {
 	$base_url = $permalink;
 
 	/* translators: %s: formatted price amount with currency symbol, e.g. $10 */
-	$label_template = __( 'Under<br/>%s', 'wc-outlet' );
+	$label_template = __( 'Under %s', 'wc-outlet' );
 	$buttons        = array();
 
 	foreach ( $tiers as $price ) {
