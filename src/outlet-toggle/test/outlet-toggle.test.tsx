@@ -49,9 +49,7 @@ describe( 'product collection outlet inspector', () => {
 		jest.resetModules();
 		addFilter = ( await import( '@wordpress/hooks' ) )
 			.addFilter as unknown as jest.Mock;
-		( { withOutletQueryInspector } = await import(
-			'../../../outlet-toggle'
-		) );
+		( { withOutletQueryInspector } = await import( '../index' ) );
 	} );
 
 	it( 'registers the product collection block edit filter', () => {
