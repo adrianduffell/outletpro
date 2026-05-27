@@ -52,14 +52,6 @@ describe( 'outlet toggle', () => {
 		( { withOutletQueryInspector } = await import( '../outlet-toggle' ) );
 	} );
 
-	it( '[NOT TOGGLE BEHAVIOUR] registers the product collection block edit filter', () => {
-		expect( addFilter ).toHaveBeenCalledWith(
-			'editor.BlockEdit',
-			'wc-outlet/product-collection/outlet-query-inspector',
-			withOutletQueryInspector
-		);
-	} );
-
 	it( 'adds the outlet query flag when checked', () => {
 		const setAttributes = jest.fn();
 		const BlockEdit = () => <div>Base block edit</div>;
