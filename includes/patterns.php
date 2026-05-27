@@ -205,13 +205,13 @@ function get_outlet_filter_tiles_content(): string {
 		$label     = wp_kses_post( sprintf( $label_template, wp_strip_all_tags( wc_price( $price, array( 'decimals' => 0 ) ) ) ) );
 		$href      = esc_url( add_query_arg( 'max_price', $price, $base_url ) );
 		$buttons[] =
-			'<!-- wp:button {"className":"is-style-fill","style":{"border":{"radius":{"topLeft":"0px","topRight":"0px","bottomLeft":"0px","bottomRight":"0px"}},"typography":{"lineHeight":"1.6"}}} -->' . "\n" .
-			'<div class="wp-block-button is-style-fill"><a class="wp-block-button__link wp-element-button" href="' . $href . '" style="border-top-left-radius:0px;border-top-right-radius:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px;line-height:1.6">' . $label . '</a></div>' . "\n" .
+			'<!-- wp:button {"className":"is-style-outline","style":{"border":{"radius":{"topLeft":"0px","topRight":"0px","bottomLeft":"0px","bottomRight":"0px"}},"typography":{"lineHeight":"1.6"}}} -->' . "\n" .
+			'<div class="wp-block-button is-style-outline"><a class="wp-block-button__link wp-element-button" href="' . $href . '" style="border-top-left-radius:0px;border-top-right-radius:0px;border-bottom-left-radius:0px;border-bottom-right-radius:0px;line-height:1.6">' . $label . '</a></div>' . "\n" .
 			'<!-- /wp:button -->';
 	}
 
-	return '<!-- wp:group {"layout":{"type":"constrained","justifyContent":"center"}} -->' . "\n" .
-		'<div class="wp-block-group"><!-- wp:buttons {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"left","flexWrap":"nowrap"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
+	return '<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","bottom":"0","left":"0","right":"0"}}},"layout":{"type":"constrained","justifyContent":"center"}} -->' . "\n" .
+		'<div class="wp-block-group" style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"><!-- wp:buttons {"align":"wide","style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"left","flexWrap":"nowrap"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
 		'<div class="wp-block-buttons alignwide wc-outlet-filter-tiles" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
 		'<!-- /wp:buttons --></div>' . "\n" .
 		'<!-- /wp:group -->';
