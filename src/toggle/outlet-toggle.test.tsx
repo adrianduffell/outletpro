@@ -44,17 +44,15 @@ jest.mock( '@wordpress/i18n', () => ( {
 	__: ( value: string ) => value,
 } ) );
 
-describe( 'product collection outlet inspector', () => {
+describe( 'outlet toggle', () => {
 	beforeEach( async () => {
 		jest.resetModules();
 		addFilter = ( await import( '@wordpress/hooks' ) )
 			.addFilter as unknown as jest.Mock;
-		( { withOutletQueryInspector } = await import(
-			'../../../outlet-toggle'
-		) );
+		( { withOutletQueryInspector } = await import( '../outlet-toggle' ) );
 	} );
 
-	it( 'registers the product collection block edit filter', () => {
+	it( '[NOT TOGGLE BEHAVIOUR] registers the product collection block edit filter', () => {
 		expect( addFilter ).toHaveBeenCalledWith(
 			'editor.BlockEdit',
 			'wc-outlet/product-collection/outlet-query-inspector',
