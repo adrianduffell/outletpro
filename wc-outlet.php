@@ -73,7 +73,6 @@ function init_hook(): void {
 	init_patterns();
 	init_page();
 	init_blocks();
-	init_patterns();
 	init_block_editor();
 	init_product_collection();
 	init_orders();
