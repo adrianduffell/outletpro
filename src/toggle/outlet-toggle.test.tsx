@@ -1,7 +1,6 @@
 import type { ComponentType, ReactNode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-let addFilter: jest.Mock;
 let withOutletQueryInspector: any;
 
 jest.mock( '@wordpress/hooks', () => ( {
@@ -47,8 +46,6 @@ jest.mock( '@wordpress/i18n', () => ( {
 describe( 'outlet toggle', () => {
 	beforeEach( async () => {
 		jest.resetModules();
-		addFilter = ( await import( '@wordpress/hooks' ) )
-			.addFilter as unknown as jest.Mock;
 		( { withOutletQueryInspector } = await import( '../outlet-toggle' ) );
 	} );
 
