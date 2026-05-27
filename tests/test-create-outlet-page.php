@@ -132,6 +132,27 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
 	}
 
+	public function test_assigns_outlet_page_template_on_block_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		delete_option( OUTLET_PAGE_OPTION );
+
+		// Act.
+		create_outlet_page();
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'outlet',
+			)
+		);
+		$this->assertNotEmpty( $pages );
+		$template = get_post_meta( $pages[0]->ID, '_wp_page_template', true );
+		$this->assertMatchesRegularExpression( '/outlet-page$/', $template );
+	}
+
 	public function test_returns_success_message(): void {
 		// Arrange.
 		delete_option( OUTLET_PAGE_OPTION );

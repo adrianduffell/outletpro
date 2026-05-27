@@ -149,8 +149,11 @@ function create_outlet_page(): void {
 		);
 	}
 
+	$page_template = null;
+
 	if ( wp_is_block_theme() ) {
-		$block_attrs = wp_json_encode(
+		$page_template = 'wc-outlet//outlet-page';
+		$block_attrs   = wp_json_encode(
 			array(
 				'queryId'              => 1,
 				'query'                => array(
@@ -224,10 +227,11 @@ function create_outlet_page(): void {
 
 	$page_id = wp_insert_post(
 		array(
-			'post_title'  => __( 'Outlet', 'wc-outlet' ),
-			'post_name'   => 'outlet',
-			'post_status' => 'draft',
-			'post_type'   => 'page',
+			'post_title'    => __( 'Outlet', 'wc-outlet' ),
+			'post_name'     => 'outlet',
+			'post_status'   => 'draft',
+			'post_type'     => 'page',
+			'page_template' => $page_template,
 		),
 		true
 	);
