@@ -6,7 +6,6 @@
  */
 
 use function WC_Outlet\create_outlet_page;
-use function WC_Outlet\init_page;
 use function WC_Outlet\run_create_outlet_page_tool;
 use const WC_Outlet\OUTLET_PAGE_OPTION;
 
