@@ -14,7 +14,7 @@ test( 'plugin activation seeds outlet settings', async ( {
 		},
 	} );
 	await requestUtils.rest( {
-		path: '/wp/v2/plugins/wc-clearance/wc-outlet',
+		path: '/wp/v2/plugins/wc-clearance/outletpro',
 		method: 'PUT',
 		data: {
 			status: 'inactive',
