@@ -136,7 +136,8 @@ jobs:
       run: composer run test
 
     - name: Install Playwright browsers
-      run: npx playwright install --with-deps
+      timeout-minutes: 15
+      run: npx playwright install --with-deps --only-shell chromium
 
     - name: Start WordPress environment
       run: npm run wp-env start
