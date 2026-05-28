@@ -20,7 +20,7 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
@@ -37,7 +37,7 @@ jobs:
       run: composer run lint
 
     - name: Set up Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v5
       with:
         node-version-file: package.json
         cache: npm
@@ -149,7 +149,7 @@ jobs:
 
     - name: Upload Playwright artifacts
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: playwright
         path: artifacts/
