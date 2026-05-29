@@ -91,7 +91,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr create \
-            --dry-run \
             --base main \
             --head "${{ steps.branch.outputs.branch }}" \
             --title "Update node engine to ${{ steps.latest.outputs.version }}" \
