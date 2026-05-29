@@ -58,8 +58,10 @@ jobs:
 
       - name: Commit and push
         if: steps.changes.outputs.changed == 'true'
+        id: push
         run: |
           BRANCH="update-node-${{ steps.latest.outputs.version }}-${{ github.run_number }}"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
@@ -68,4 +70,16 @@ jobs:
 
           git add package.json package-lock.json
           git commit -m "Update Node engine to ${{ steps.latest.outputs.version }}"
+
           git push --set-upstream origin "$BRANCH"
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "${{ steps.push.outputs.branch }}" \
+            --title "Update Node engine to ${{ steps.latest.outputs.version }}" \
+            --body "Automated update of Node engine version."
