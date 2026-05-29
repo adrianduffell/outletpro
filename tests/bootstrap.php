@@ -54,7 +54,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/orders.php';
 	require_once __DIR__ . '/../includes/customizer.php';
 	require_once __DIR__ . '/../includes/enqueue.php';
-	require_once __DIR__ . '/../wc-outlet.php';
+	require_once __DIR__ . '/../outletpro.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
