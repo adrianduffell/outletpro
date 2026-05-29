@@ -37,13 +37,13 @@ function register_outlet_page_template(): void {
 	}
 
 	register_block_template(
-		'wc-outlet//outlet-page',
+		'outletpro//outlet-page',
 		array(
 			'title'       => __( 'Outlet page', 'wc-outlet' ),
 			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
 			'post_types'  => array( 'page' ),
 			'content'     => $template_content,
-			'plugin'      => 'wc-outlet',
+			'plugin'      => 'outletpro',
 		)
 	);
 }

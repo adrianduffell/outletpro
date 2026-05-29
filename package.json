@@ -1,5 +1,5 @@
 {
-	"name": "wc-outlet",
+	"name": "outletpro",
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
@@ -37,7 +37,7 @@
 		"build",
 		"includes",
 		"templates",
-		"wc-outlet.php",
+		"outletpro.php",
 		"readme.txt",
 		"LICENSE"
 	],
