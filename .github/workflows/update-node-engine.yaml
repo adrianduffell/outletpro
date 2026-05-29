@@ -1,7 +1,7 @@
 name: Update Node Engine
 
 on:
-  pr:
+  pull_request:
     branches:
       - main
   workflow_dispatch:
