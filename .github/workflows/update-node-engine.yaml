@@ -1,6 +1,9 @@
 name: Update Node Engine
 
 on:
+  pr:
+    branches:
+      - main
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * 1'
@@ -79,6 +82,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr create \
+            --dry-run \
             --base main \
             --head "${{ steps.push.outputs.branch }}" \
             --title "Update node engine to ${{ steps.latest.outputs.version }}" \
