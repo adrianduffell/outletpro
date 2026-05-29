@@ -220,7 +220,7 @@ function create_outlet_page(): void {
 		$products_per_row = wc_get_default_products_per_row();
 		$post_content     = '<!-- wp:shortcode -->' . "\n" .
 			sprintf(
-				'[products wc_outlet="yes" paginate="yes" limit="%d" columns="%d"]',
+				'[products wc_outlet="yes" paginate="yes" columns="%d" limit="%d"]',
 				$products_per_row * wc_get_default_product_rows_per_page(),
 				$products_per_row
 			) . "\n" .
