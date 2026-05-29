@@ -136,7 +136,7 @@ jobs:
       run: composer run test
 
     - name: Install Playwright browsers
-      run: DEBUG=pw:install npx playwright install chromium --with-deps
+      run: npx playwright install chromium --with-deps
 
     - name: Start WordPress environment
       run: npm run wp-env start
