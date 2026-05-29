@@ -57,7 +57,7 @@ jobs:
         if: steps.changes.outputs.changed == 'true'
         id: push
         run: |
-          BRANCH="update-node-${{ steps.latest.outputs.version }}-${{ github.run_number }}"
+          BRANCH="update-node-${{ steps.latest.outputs.version }}"
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
 
           git config user.name "github-actions"
