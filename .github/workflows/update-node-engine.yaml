@@ -69,7 +69,7 @@ jobs:
           git checkout -b "$BRANCH"
 
           git add package.json package-lock.json
-          git commit -m "Update Node engine to ${{ steps.latest.outputs.version }}"
+          git commit -m "Update node engine to ${{ steps.latest.outputs.version }}"
 
           git push --set-upstream origin "$BRANCH"
 
@@ -81,5 +81,5 @@ jobs:
           gh pr create \
             --base main \
             --head "${{ steps.push.outputs.branch }}" \
-            --title "Update Node engine to ${{ steps.latest.outputs.version }}" \
-            --body "Automated update of Node engine version."
+            --title "Update node engine to ${{ steps.latest.outputs.version }}" \
+            --body "Updates the node engine in `package.json` to ${{ steps.latest.outputs.version }} and regenerates `package-lock.json`." \
