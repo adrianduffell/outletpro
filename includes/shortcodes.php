@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function init_shortcodes(): void {
 	add_filter( 'woocommerce_shortcode_products_query', 'WC_Outlet\filter_products_shortcode_query_hook', 10, 3 );
 	add_filter( 'shortcode_atts_products', 'WC_Outlet\add_products_shortcode_attribute_hook', 10, 3 );
+	add_filter( 'posts_clauses', 'WC_Outlet\max_price_posts_clauses', 10, 2 );
 }
 
 /**
@@ -38,6 +39,11 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 
 	if ( ! \wc_string_to_bool( $attributes['wc_outlet'] ) ) {
 		return $query_args;
+	}
+
+	// Flag this query for max price filtering.
+	if ( isset( $_GET['max_price'] ) ) {
+		$query_args['wc_outlet_max_price'] = sanitize_unsigned_integer( $_GET['max_price'] );
 	}
 
 	if ( empty( $query_args['tax_query'] ) || ! is_array( $query_args['tax_query'] ) ) {
@@ -71,4 +77,30 @@ function add_products_shortcode_attribute_hook( array $out, array $unused_pairs,
 	}
 
 	return $out;
+}
+
+function max_price_posts_clauses( array $clauses, \WP_Query $query ): array {
+	global $wpdb;
+
+	// Bail if the wc_outlet_max_price var is not set.
+	if ( is_null( $query->get( 'wc_outlet_max_price', null ) ) ) {
+		return $clauses;
+	}
+
+	$max_price = sanitize_unsigned_integer( $query->get( 'wc_outlet_max_price' ) );
+
+	if ( is_null( $max_price ) ) {
+		return $clauses;
+	}
+
+	if ( false === strpos( $clauses['join'], 'wc_product_meta_lookup' ) ) {
+		$clauses['join'] .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON {$wpdb->posts}.ID = wc_product_meta_lookup.product_id ";
+	}
+
+	$clauses['where'] .= $wpdb->prepare(
+		' AND NOT ( %d < wc_product_meta_lookup.min_price ) ',
+		$max_price
+	);
+
+	return $clauses;
 }
