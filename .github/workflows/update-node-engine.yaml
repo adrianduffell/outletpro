@@ -86,4 +86,7 @@ jobs:
             --base main \
             --head "${{ steps.push.outputs.branch }}" \
             --title "Update node engine to ${{ steps.latest.outputs.version }}" \
-            --body "Updates the node engine in `package.json` to ${{ steps.latest.outputs.version }} and regenerates `package-lock.json`. https://nodejs.org/en/blog/release/v${{ steps.latest.outputs.version }}" \
+            --body 'Updates the node engine in `package.json` to ${{ steps.latest.outputs.version }} and regenerates `package-lock.json`.
+
+          Release notes:
+          https://nodejs.org/en/blog/release/v${{ steps.latest.outputs.version }}'
