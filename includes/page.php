@@ -217,8 +217,13 @@ function create_outlet_page(): void {
 			'<!-- /wp:woocommerce/product-collection -->';
 		// phpcs:enable
 	} else {
-		$post_content = '<!-- wp:shortcode -->' . "\n" .
-			'[products wc_outlet="yes"]' . "\n" .
+		$products_per_row = wc_get_default_products_per_row();
+		$post_content     = '<!-- wp:shortcode -->' . "\n" .
+			sprintf(
+				'[products wc_outlet="yes" paginate="yes" columns="%d" limit="%d"]',
+				$products_per_row * wc_get_default_product_rows_per_page(),
+				$products_per_row
+			) . "\n" .
 			'<!-- /wp:shortcode -->';
 	}
 
