@@ -37,7 +37,7 @@ jobs:
       - name: Read package engine version
         id: current
         run: |
-          echo "version=$(node -p "require('./package.json').engines.node")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p 'require("./package.json").engines.node')" >> "$GITHUB_OUTPUT"
 
       - name: Update package files
         if: steps.latest.outputs.version != steps.current.outputs.version
