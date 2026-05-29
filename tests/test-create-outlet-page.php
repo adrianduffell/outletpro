@@ -72,6 +72,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		// Arrange.
 		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
+		$products_per_page = wc_get_default_products_per_row() * wc_get_default_product_rows_per_page();
 
 		// Act.
 		create_outlet_page();
@@ -85,7 +86,13 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			)
 		);
 		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '[products wc_outlet="yes"]', $pages[0]->post_content );
+		$this->assertStringContainsString(
+			sprintf(
+				'[products wc_outlet="yes" paginate="yes" limit="%d"]',
+				$products_per_page
+			),
+			$pages[0]->post_content
+		);
 	}
 
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
