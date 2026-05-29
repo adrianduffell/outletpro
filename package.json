@@ -1,72 +1,72 @@
 {
-	"name": "outletpro",
-	"version": "1.0.0",
-	"private": true,
-	"type": "module",
-	"engines": {
-		"node": "24.15.0"
-	},
-	"scripts": {
-		"build": "wp-scripts build",
-		"format": "wp-scripts format",
-		"lint:css": "wp-scripts lint-style",
-		"lint:css:fix": "wp-scripts lint-style --fix",
-		"lint:js": "wp-scripts lint-js",
-		"lint:js:fix": "wp-scripts lint-js --fix",
-		"lint:md-docs": "wp-scripts lint-md-docs",
-		"lint:md-docs:fix": "wp-scripts lint-md-docs --fix",
-		"lint:php": "vendor/bin/phpcs -s",
-		"lint:php:fix": "vendor/bin/phpcbf",
-		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start",
-		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
-		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
-		"test:e2e": "wp-scripts test-playwright",
-		"test:unit": "wp-scripts test-unit-js --config jest.config.cjs",
-		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit",
-		"typecheck": "tsc --noEmit",
-		"wp-env": "wp-env"
-	},
-	"babel": {
-		"presets": [
-			"@wordpress/babel-preset-default"
-		]
-	},
-	"files": [
-		"assets",
-		"build",
-		"includes",
-		"templates",
-		"outletpro.php",
-		"readme.txt",
-		"LICENSE"
-	],
-	"devDependencies": {
-		"@playwright/test": "^1.58.2",
-		"@testing-library/jest-dom": "^6.9.1",
-		"@testing-library/react": "^16.3.2",
-		"@types/jest": "^29.5.14",
-		"@types/react": "^18.3.28",
-		"@types/react-dom": "^18.3.7",
-		"@wordpress/api-fetch": "^7.42.0",
-		"@wordpress/babel-preset-default": "^8.42.0",
-		"@wordpress/block-editor": "^15.15.0",
-		"@wordpress/blocks": "^15.15.0",
-		"@wordpress/components": "^32.4.0",
-		"@wordpress/core-data": "^7.42.0",
-		"@wordpress/data": "^10.42.0",
-		"@wordpress/e2e-test-utils-playwright": "^1.40.0",
-		"@wordpress/editor": "^14.44.0",
-		"@wordpress/element": "^6.42.0",
-		"@wordpress/env": "^10.39.0",
-		"@wordpress/hooks": "^4.44.0",
-		"@wordpress/i18n": "^6.15.0",
-		"@wordpress/jest-preset-default": "^12.42.0",
-		"@wordpress/plugins": "^7.42.0",
-		"@wordpress/prettier-config": "^4.43.0",
-		"@wordpress/scripts": "^31.5.0",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
-		"typescript": "^5.9.3"
-	}
+  "name": "outletpro",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.16.0"
+  },
+  "scripts": {
+    "build": "wp-scripts build",
+    "format": "wp-scripts format",
+    "lint:css": "wp-scripts lint-style",
+    "lint:css:fix": "wp-scripts lint-style --fix",
+    "lint:js": "wp-scripts lint-js",
+    "lint:js:fix": "wp-scripts lint-js --fix",
+    "lint:md-docs": "wp-scripts lint-md-docs",
+    "lint:md-docs:fix": "wp-scripts lint-md-docs --fix",
+    "lint:php": "vendor/bin/phpcs -s",
+    "lint:php:fix": "vendor/bin/phpcbf",
+    "plugin-zip": "wp-scripts plugin-zip",
+    "start": "wp-scripts start",
+    "test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
+    "test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
+    "test:e2e": "wp-scripts test-playwright",
+    "test:unit": "wp-scripts test-unit-js --config jest.config.cjs",
+    "test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/wc-clearance vendor/bin/phpunit",
+    "typecheck": "tsc --noEmit",
+    "wp-env": "wp-env"
+  },
+  "babel": {
+    "presets": [
+      "@wordpress/babel-preset-default"
+    ]
+  },
+  "files": [
+    "assets",
+    "build",
+    "includes",
+    "templates",
+    "outletpro.php",
+    "readme.txt",
+    "LICENSE"
+  ],
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^18.3.28",
+    "@types/react-dom": "^18.3.7",
+    "@wordpress/api-fetch": "^7.42.0",
+    "@wordpress/babel-preset-default": "^8.42.0",
+    "@wordpress/block-editor": "^15.15.0",
+    "@wordpress/blocks": "^15.15.0",
+    "@wordpress/components": "^32.4.0",
+    "@wordpress/core-data": "^7.42.0",
+    "@wordpress/data": "^10.42.0",
+    "@wordpress/e2e-test-utils-playwright": "^1.40.0",
+    "@wordpress/editor": "^14.44.0",
+    "@wordpress/element": "^6.42.0",
+    "@wordpress/env": "^10.39.0",
+    "@wordpress/hooks": "^4.44.0",
+    "@wordpress/i18n": "^6.15.0",
+    "@wordpress/jest-preset-default": "^12.42.0",
+    "@wordpress/plugins": "^7.42.0",
+    "@wordpress/prettier-config": "^4.43.0",
+    "@wordpress/scripts": "^31.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.9.3"
+  }
 }
