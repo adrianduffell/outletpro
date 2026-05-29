@@ -59,12 +59,24 @@ jobs:
         run: |
           git diff -- package.json package-lock.json
 
-      - name: Commit and push
+      - name: Check for existing update branch
         if: steps.changes.outputs.changed == 'true'
-        id: push
+        id: branch
         run: |
           BRANCH="update-node-${{ steps.latest.outputs.version }}"
           echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+          if git ls-remote --exit-code --heads origin "$BRANCH" > /dev/null; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Branch $BRANCH already exists; skipping."
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true' && steps.branch.outputs.exists == 'false'
+        run: |
+          BRANCH="${{ steps.branch.outputs.branch }}"
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
@@ -77,14 +89,14 @@ jobs:
           git push --set-upstream origin "$BRANCH"
 
       - name: Create pull request
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.changes.outputs.changed == 'true' && steps.branch.outputs.exists == 'false'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr create \
             --dry-run \
             --base main \
-            --head "${{ steps.push.outputs.branch }}" \
+            --head "${{ steps.branch.outputs.branch }}" \
             --title "Update node engine to ${{ steps.latest.outputs.version }}" \
             --body 'Updates the node engine in `package.json` to ${{ steps.latest.outputs.version }} and regenerates `package-lock.json`.
 
