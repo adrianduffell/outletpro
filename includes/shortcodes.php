@@ -42,9 +42,11 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 	}
 
 	// Flag this query for max price filtering.
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public URL parameter for filtering, not a form submission.
 	if ( isset( $_GET['max_price'] ) ) {
-		$query_args['wc_outlet_max_price'] = sanitize_unsigned_integer( $_GET['max_price'] );
+		$query_args['wc_outlet_max_price'] = sanitize_unsigned_integer( wp_unslash( $_GET['max_price'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized via sanitize_unsigned_integer().
 	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	if ( empty( $query_args['tax_query'] ) || ! is_array( $query_args['tax_query'] ) ) {
 		$query_args['tax_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
