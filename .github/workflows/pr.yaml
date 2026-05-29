@@ -143,21 +143,10 @@ jobs:
       run: npm run wp-env start
 
     - name: Run E2E tests
-      env:
-        DEBUG: pw:webserver,pw:api
       run: npm run test:e2e
 
     - name: Run classic theme shortcode E2E tests
-      env:
-        DEBUG: pw:webserver,pw:api
       run: THEME=storefront STORE_PAGES=shortcode npm run test:e2e -- tests/e2e/0-bootstrap-theme.spec.js tests/e2e/0-bootstrap-store-pages.spec.js tests/e2e/shopping.spec.js
-
-    - name: Debug E2E environment on failure
-      if: failure()
-      run: |
-        npm run wp-env status || true
-        npm run wp-env logs || true
-        docker ps -a || true
 
     - name: Upload Playwright artifacts
       if: always()
