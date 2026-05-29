@@ -217,11 +217,10 @@ function create_outlet_page(): void {
 			'<!-- /wp:woocommerce/product-collection -->';
 		// phpcs:enable
 	} else {
-		$products_per_page = wc_get_default_products_per_row() * wc_get_default_product_rows_per_page();
 		$post_content = '<!-- wp:shortcode -->' . "\n" .
 			sprintf(
 				'[products wc_outlet="yes" paginate="yes" limit="%d"]',
-				$products_per_page
+				wc_get_default_products_per_row() * wc_get_default_product_rows_per_page()
 			) . "\n" .
 			'<!-- /wp:shortcode -->';
 	}
