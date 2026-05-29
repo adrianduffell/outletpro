@@ -60,6 +60,11 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Output diff
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git diff -- package.json package-lock.json
+
       - name: Commit and push
         if: steps.changes.outputs.changed == 'true'
         run: |
@@ -73,9 +78,4 @@ jobs:
           git add package.json package-lock.json
           git commit -m "Update Node engine to ${{ steps.latest.outputs.version }}"
 
-          git push --set-upstream origin "$BRANCH"
-
-      - name: Output diff
-        if: steps.changes.outputs.changed == 'true'
-        run: |
-          git diff -- package.json
+          git push --set-upstream origin "$BRANCH
