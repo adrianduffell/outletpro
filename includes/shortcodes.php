@@ -79,6 +79,16 @@ function add_products_shortcode_attribute_hook( array $out, array $unused_pairs,
 	return $out;
 }
 
+/**
+ * Add a max price SQL clause for outlet-marked shortcode product queries.
+ *
+ * Fired by `posts_clauses`.
+ *
+ * @param array<string, string> $clauses The SQL clauses for the current query.
+ * @param \WP_Query             $query   The current query instance.
+ * @return array<string, string> The modified SQL clauses.
+ * @internal WordPress filter
+ */
 function max_price_posts_clauses( array $clauses, \WP_Query $query ): array {
 	global $wpdb;
 
