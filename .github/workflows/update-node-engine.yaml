@@ -49,7 +49,9 @@ jobs:
 
       - name: Update lockfile
         if: steps.current.outputs.version != steps.latest.outputs.version
-        run: npm install --package-lock-only
+        run: |
+          npm config set indent "\t"
+          npm install --package-lock-only
 
       - name: Check for changes
         id: changes
