@@ -294,20 +294,29 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 	public function test_max_price_posts_clauses_does_not_duplicate_join(): void {
 		// Arrange.
 		global $wpdb;
+
 		$clauses = array(
 			'where' => ' WHERE 1=1',
 			'join'  => " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON {$wpdb->posts}.ID = wc_product_meta_lookup.product_id ",
 		);
-		$query   = new WP_Query();
+
+		$query = new WP_Query();
 		$query->set( 'wc_outlet_max_price', 75 );
 
 		// Act.
 		$result = max_price_posts_clauses( $clauses, $query );
 
 		// Assert.
-		$join_count = substr_count( $result['join'], 'wc_product_meta_lookup' );
-		$this->assertSame( 1, $join_count, 'Join should only appear once' );
-		$this->assertStringContainsString( 'AND NOT ( 75 < wc_product_meta_lookup.min_price )', $result['where'] );
+		$this->assertSame(
+			$clauses['join'],
+			$result['join'],
+			'Existing join should not be modified'
+		);
+
+		$this->assertStringContainsString(
+			'AND NOT ( 75 < wc_product_meta_lookup.min_price )',
+			$result['where']
+		);
 	}
 
 	public function test_max_price_posts_clauses_unchanged_when_max_price_is_null(): void {
