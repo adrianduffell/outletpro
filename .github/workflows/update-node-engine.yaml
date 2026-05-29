@@ -19,44 +19,32 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Set up Node
+      - name: Set up latest Node 24
         uses: actions/setup-node@v4
         with:
-          node-version-file: package.json
+          node-version: 24
           cache: npm
 
-      - name: Get latest Node 24 release
+      - name: Get current Node version
         id: latest
         run: |
-          VERSION=$(curl -s https://nodejs.org/dist/index.json | jq -r '[.[] | select(.version | startswith("v24."))][0].version')
-          echo "version=${VERSION#v}" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p 'process.versions.node')" >> "$GITHUB_OUTPUT"
 
-      - name: Read current engine version
+      - name: Read package engine version
         id: current
         run: |
-          CURRENT=$(jq -r '.engines.node' package.json)
-          echo "version=$CURRENT" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').engines.node")" >> "$GITHUB_OUTPUT"
 
-      - name: Update package.json
-        if: steps.current.outputs.version != steps.latest.outputs.version
+      - name: Update package files
+        if: steps.latest.outputs.version != steps.current.outputs.version
         run: |
-          jq \
-            --arg version "${{ steps.latest.outputs.version }}" \
-            '.engines.node = $version' \
-            package.json > package.json.tmp
-
-          mv package.json.tmp package.json
-
-      - name: Update lockfile
-        if: steps.current.outputs.version != steps.latest.outputs.version
-        run: |
-          npm config set indent "\t"
+          npm pkg set engines.node="${{ steps.latest.outputs.version }}"
           npm install --package-lock-only
 
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet package.json; then
+          if git diff --quiet package.json package-lock.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -79,5 +67,4 @@ jobs:
 
           git add package.json package-lock.json
           git commit -m "Update Node engine to ${{ steps.latest.outputs.version }}"
-
           git push --set-upstream origin "$BRANCH"
