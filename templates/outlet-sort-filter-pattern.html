@@ -1,19 +1,21 @@
 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 <div class="wp-block-group"><!-- wp:html -->
 <style data-wp-block-html="css">
-#orderby { width: auto; }
+[data-wc-outlet-id="orderby"] {
+  width: auto;
+}
 </style>
 
 <script data-wp-block-html="js">
 document.addEventListener(
   'DOMContentLoaded',
   function() {
-    const select =
-      document.getElementById(
-        'orderby'
+    const selects =
+      document.querySelectorAll(
+        '[data-wc-outlet-id="orderby"]'
       );
 
-    if ( ! select ) {
+    if ( ! selects.length ) {
       return;
     }
 
@@ -61,51 +63,55 @@ document.addEventListener(
         'orderby'
       ) || '';
 
-    options.forEach(
-      function(
-        optionData
-      ) {
-        const option =
-          document.createElement(
-            'option'
-          );
+    selects.forEach(
+      function( select ) {
+        options.forEach(
+          function( optionData ) {
+            const option =
+              document.createElement(
+                'option'
+              );
 
-        option.value =
-          optionData.value;
+            option.value =
+              optionData.value;
 
-        option.textContent =
-          optionData.label;
+            option.textContent =
+              optionData.label;
 
-        option.selected =
-          optionData.value ===
-          currentOrderby;
+            option.selected =
+              optionData.value ===
+              currentOrderby;
 
-        select.appendChild(
-          option
-        );
-      }
-    );
-
-    select.addEventListener(
-      'change',
-      function() {
-        url.searchParams.set(
-          'orderby',
-          select.value
+            select.appendChild(
+              option
+            );
+          }
         );
 
-        url.searchParams.delete(
-          'paged'
-        );
+        select.addEventListener(
+          'change',
+          function() {
+            url.searchParams.set(
+              'orderby',
+              select.value
+            );
 
-        window.location.href =
-          url.toString();
+            url.searchParams.delete(
+              'paged'
+            );
+
+            window.location.href =
+              url.toString();
+          }
+        );
       }
     );
   }
 );
 </script>
 
-<select id="orderby" name="orderby"></select>
+<select
+  data-wc-outlet-id="orderby"
+></select>
 <!-- /wp:html --></div>
 <!-- /wp:group -->
