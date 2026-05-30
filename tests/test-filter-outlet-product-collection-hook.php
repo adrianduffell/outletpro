@@ -12,11 +12,6 @@ use function WC_Outlet\seed_outlet_status_taxonomy;
 use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
-	public function tearDown(): void {
-		unset( $_GET['orderby'] );
-		parent::tearDown();
-	}
-
 	public function test_orderby_price_sets_asc_order_for_outlet_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
@@ -39,6 +34,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'price', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'asc', $result['attrs']['query']['order'] );
+		unset( $_GET['orderby'] );
 	}
 
 	public function test_orderby_price_desc_sets_desc_order_for_outlet_product_collection_block(): void {
@@ -63,6 +59,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'price-desc', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'desc', $result['attrs']['query']['order'] );
+		unset( $_GET['orderby'] );
 	}
 
 	public function test_orderby_date_sets_desc_order_for_outlet_product_collection_block(): void {
@@ -87,6 +84,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'date', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'desc', $result['attrs']['query']['order'] );
+		unset( $_GET['orderby'] );
 	}
 
 	public function test_orderby_popularity_sets_desc_order_for_outlet_product_collection_block(): void {
@@ -111,6 +109,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'popularity', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'desc', $result['attrs']['query']['order'] );
+		unset( $_GET['orderby'] );
 	}
 
 	public function test_orderby_rating_sets_desc_order_for_outlet_product_collection_block(): void {
@@ -135,6 +134,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'rating', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'desc', $result['attrs']['query']['order'] );
+		unset( $_GET['orderby'] );
 	}
 
 	public function test_orderby_menu_order_sets_asc_order_for_outlet_product_collection_block(): void {
@@ -159,6 +159,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'asc', $result['attrs']['query']['order'] );
+		unset( $_GET['orderby'] );
 	}
 
 	public function test_orderby_is_not_applied_when_value_is_invalid(): void {
