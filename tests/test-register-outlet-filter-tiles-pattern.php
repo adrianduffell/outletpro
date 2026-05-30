@@ -173,4 +173,49 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		// Cleanup.
 		delete_option( 'wc_outlet_page_id' );
 	}
+
+	public function test_get_outlet_filter_tiles_content_does_not_include_metadata_by_default(): void {
+		// Arrange.
+		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
+
+		// Act.
+		$content = get_outlet_filter_tiles_content();
+
+		// Assert.
+		$this->assertStringNotContainsString( '"metadata"', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
+	}
+
+	public function test_get_outlet_filter_tiles_content_includes_metadata_when_include_metadata_is_true(): void {
+		// Arrange.
+		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'wc_outlet_page_id', $page_id );
+
+		// Act.
+		$content = get_outlet_filter_tiles_content( true );
+
+		// Assert.
+		$this->assertStringContainsString( '"metadata"', $content );
+		$this->assertStringContainsString( '"categories":["wc-outlet"]', $content );
+		$this->assertStringContainsString( '"patternName":"wc-outlet/outlet-filter-tiles"', $content );
+		$this->assertStringContainsString( '"name":"Outlet filter tiles"', $content );
+
+		// Cleanup.
+		delete_option( 'wc_outlet_page_id' );
+	}
 }
