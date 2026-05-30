@@ -8,6 +8,8 @@
  *
  * @phpcs:disable
  */
+
+$wc_outlet_orderby_id = uniqid('wc-outlet-orderby-');
 ?>
 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 <div class="wp-block-group"><!-- wp:html -->
@@ -21,12 +23,12 @@
 document.addEventListener(
   'DOMContentLoaded',
   function() {
-    const selects =
-      document.querySelectorAll(
-        '[data-wc-outlet-id="orderby"]'
+    const select =
+      document.getElementById(
+        '<?php echo esc_js( $wc_outlet_orderby_id ); ?>'
       );
 
-    if ( selects.length === 0 ) {
+    if ( select.length === 0 ) {
       return;
     }
 
@@ -39,33 +41,29 @@ document.addEventListener(
         'orderby'
       ) || '';
 
-    selects.forEach(
-      function( select ) {
-        select.value = currentOrderby;
-        select.addEventListener(
-          'change',
-          function() {
-            url.searchParams.set(
-              'orderby',
-              select.value
-            );
+		select.value = currentOrderby;
+		select.addEventListener(
+			'change',
+			function() {
+				url.searchParams.set(
+					'orderby',
+					select.value
+				);
 
-            url.searchParams.delete(
-              'paged'
-            );
+				url.searchParams.delete(
+					'paged'
+				);
 
-            window.location.href =
-              url.toString();
-          }
-        );
-      }
-    );
+				window.location.href =
+					url.toString();
+			}
+		);
   }
 );
 </script>
 
 <select
-  data-wc-outlet-id="orderby"
+  id="<?php echo esc_attr( $wc_outlet_orderby_id ); ?>"
   aria-label="<?php echo esc_html__( 'Sort', 'wc-outlet' ); ?>"
 >
   <option value="">
