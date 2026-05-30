@@ -17,6 +17,12 @@ defined( 'ABSPATH' ) || exit;
 function init_patterns(): void {
 	register_outlet_block_pattern_category();
 	register_outlet_filter_tiles_pattern();
+
+	if ( version_compare( get_bloginfo( 'version' ), '7.0', '<' ) ) {
+		return;
+	}
+
+	register_outlet_sort_filter_pattern();
 }
 
 /**
@@ -260,6 +266,45 @@ function register_outlet_filter_tiles_pattern(): void {
 			'content'       => get_outlet_filter_tiles_content(),
 			'categories'    => array( 'wc-outlet' ),
 			'viewportWidth' => 320,
+		)
+	);
+}
+
+/**
+ * Get the block markup content for the outlet sort filter pattern.
+ *
+ * @internal
+ * @return string Block markup string.
+ */
+function get_outlet_sort_filter_pattern_content(): string {
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-sort-filter-pattern.html';
+
+	if ( ! is_readable( $template_path ) ) {
+		return '';
+	}
+
+	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
+
+	if ( false === $template_content ) {
+		return '';
+	}
+
+	return $template_content;
+}
+
+/**
+ * Register the outlet sort filter block pattern.
+ *
+ * @internal
+ */
+function register_outlet_sort_filter_pattern(): void {
+	register_block_pattern(
+		'wc-outlet/outlet-sort-filter',
+		array(
+			'title'       => __( 'Outlet sort filter', 'wc-outlet' ),
+			'description' => __( 'Dropdown sort filter for the outlet page.', 'wc-outlet' ),
+			'content'     => get_outlet_sort_filter_pattern_content(),
+			'categories'  => array( 'wc-outlet' ),
 		)
 	);
 }
