@@ -152,11 +152,20 @@ function create_outlet_page(): void {
 	if ( wp_is_block_theme() ) {
 		$orderby = apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
 
-		$order_by = $orderby;
-		$order    = 'desc';
+		$parts    = explode( '-', $orderby );
+		$order_by = $parts[0] ?? 'menu_order';
 
-		if ( '-desc' === substr( $orderby, -5 ) ) {
-			$order_by = substr( $orderby, 0, -5 );
+		switch ( $order_by ) {
+			case 'popularity':
+			case 'rating':
+			case 'date':
+				$order = $parts[1] ?? 'desc';
+				break;
+
+			case 'menu_order':
+			default:
+				$order = $parts[1] ?? 'asc';
+				break;
 		}
 
 		$block_attrs = wp_json_encode(
