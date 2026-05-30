@@ -32,7 +32,7 @@ class Test_Init_Patterns extends WP_UnitTestCase {
 		! \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-sort-filter' )
 			|| \WP_Block_Patterns_Registry::get_instance()->unregister( 'wc-outlet/outlet-sort-filter' );
 
-		version_compare( get_bloginfo( 'version' ), '7.1', '<=' )
+		version_compare( get_bloginfo( 'version' ), '7.1', '<' )
 			|| $this->fail( 'With WP 7.1 released, remove the version gate in init_patterns().' );
 
 		// Act.
