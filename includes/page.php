@@ -150,6 +150,24 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) {
+		$orderby = apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
+
+		$parts    = explode( '-', $orderby );
+		$order_by = $parts[0] ?? 'menu_order';
+
+		switch ( $order_by ) {
+			case 'popularity':
+			case 'rating':
+			case 'date':
+				$order = $parts[1] ?? 'desc';
+				break;
+
+			case 'menu_order':
+			default:
+				$order = $parts[1] ?? 'asc';
+				break;
+		}
+
 		$block_attrs = wp_json_encode(
 			array(
 				'queryId'              => 1,
@@ -158,8 +176,8 @@ function create_outlet_page(): void {
 					'pages'                         => 0,
 					'offset'                        => 0,
 					'postType'                      => 'product',
-					'order'                         => 'asc',
-					'orderBy'                       => 'title',
+					'order'                         => $order,
+					'orderBy'                       => $order_by,
 					'search'                        => '',
 					'exclude'                       => array(),
 					'inherit'                       => false,
