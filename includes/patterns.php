@@ -25,20 +25,22 @@ function init_patterns(): void {
  * @internal
  */
 function deinit_patterns(): void {
-	$patterns_registry = \WP_Block_Patterns_Registry::get_instance();
+	$patterns = array_filter(
+		\WP_Block_Patterns_Registry::get_instance()->get_all_registered(),
+		fn( $pattern ) => 0 === strpos( $pattern['name'], 'wc-outlet' )
+	);
 
-	foreach ( $patterns_registry->get_all_registered() as $pattern ) {
-		if ( 0 === strpos( $pattern['name'], 'wc-outlet/' ) ) {
-			unregister_block_pattern( $pattern['name'] );
-		}
+	foreach ( $patterns as $pattern ) {
+		unregister_block_pattern( $pattern['name'] );
 	}
 
-	$categories_registry = \WP_Block_Pattern_Categories_Registry::get_instance();
+	$categories = array_filter(
+		\WP_Block_Pattern_Categories_Registry::get_instance()->get_all_registered(),
+		fn( $category ) => 0 === strpos( $category['name'], 'wc-outlet' )
+	);
 
-	foreach ( $categories_registry->get_all_registered() as $name => $category ) {
-		if ( 0 === strpos( $category['name'], 'wc-outlet' ) ) {
-			unregister_block_pattern_category( $category['name'] );
-		}
+	foreach ( $categories as $category ) {
+		unregister_block_pattern_category( $category['name'] );
 	}
 }
 
