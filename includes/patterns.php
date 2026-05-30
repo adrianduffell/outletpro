@@ -27,7 +27,7 @@ function init_patterns(): void {
 function deinit_patterns(): void {
 	$patterns = array_filter(
 		\WP_Block_Patterns_Registry::get_instance()->get_all_registered(),
-		fn( $pattern ) => 0 === strpos( $pattern['name'], 'wc-outlet' )
+		fn( $pattern ) => 0 === strpos( $pattern['name'], 'wc-outlet/' )
 	);
 
 	foreach ( $patterns as $pattern ) {
