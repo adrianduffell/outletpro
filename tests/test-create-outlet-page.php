@@ -12,7 +12,7 @@ use const WC_Outlet\OUTLET_PAGE_OPTION;
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function filter_default_catalog_orderby_for_test(): string {
-		return 'price-desc';
+		return 'date-desc';
 	}
 
 	public function test_creates_page_with_title_outlet(): void {
@@ -123,7 +123,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '"taxQuery"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
 		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
-		$this->assertStringContainsString( '"order":"asc"', $pages[0]->post_content );
+		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
 	}
@@ -171,7 +171,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		remove_filter( 'woocommerce_default_catalog_orderby', array( $this, 'filter_default_catalog_orderby_for_test' ) );
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"price"', $pages[0]->post_content );
+		$this->assertStringContainsString( '"orderBy":"date"', $pages[0]->post_content );
 	}
 
 	public function test_creates_page_on_block_theme_when_canonical_term_missing(): void {
