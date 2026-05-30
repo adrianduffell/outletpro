@@ -1,7 +1,7 @@
 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 <div class="wp-block-group"><!-- wp:html -->
 <style data-wp-block-html="css">
-#orderby { width: auto;  }
+#orderby { width: auto; }
 </style>
 
 <script data-wp-block-html="js">
@@ -53,7 +53,7 @@ document.addEventListener(
     ];
 
     const url = new URL(
-      window.location
+      window.location.href
     );
 
     const currentOrderby =
@@ -98,7 +98,7 @@ document.addEventListener(
           'paged'
         );
 
-        window.location =
+        window.location.href =
           url.toString();
       }
     );

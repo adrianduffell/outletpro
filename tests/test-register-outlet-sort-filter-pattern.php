@@ -12,6 +12,9 @@ use function WC_Outlet\register_outlet_sort_filter_pattern;
 class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 
 	public function test_pattern_is_registered_after_register_outlet_sort_filter_pattern(): void {
+		// Arrange.
+		unregister_block_pattern( 'wc-outlet/outlet-sort-filter' );
+
 		// Act.
 		register_outlet_sort_filter_pattern();
 
@@ -20,6 +23,9 @@ class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 	}
 
 	public function test_pattern_has_expected_title_and_description(): void {
+		// Arrange.
+		unregister_block_pattern( 'wc-outlet/outlet-sort-filter' );
+
 		// Act.
 		register_outlet_sort_filter_pattern();
 
