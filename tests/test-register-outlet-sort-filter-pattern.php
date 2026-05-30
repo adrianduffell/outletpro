@@ -6,7 +6,6 @@
  */
 
 use function WC_Outlet\get_outlet_sort_filter_pattern_content;
-use function WC_Outlet\init_patterns;
 use function WC_Outlet\register_outlet_sort_filter_pattern;
 
 class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
@@ -51,13 +50,15 @@ class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 	/**
 	 * Temporary function until one is added to patterns.php.
 	 */
-	private function deinit_patterns() {
+	private function deinit_patterns(): void {
 		$registry = \WP_Block_Patterns_Registry::get_instance();
 		if ( $registry->is_registered( 'wc-outlet/outlet-sort-filter' ) ) {
 			$registry->unregister( 'wc-outlet/outlet-sort-filter' );
 		}
-		if ( $registry->is_registered( 'wc-outlet/outlet-filter-tiles' ) ) {
-			$registry->unregister( 'wc-outlet/outlet-filter-tiles' );
+		if ( ! $registry->is_registered( 'wc-outlet/outlet-filter-tiles' ) ) {
+			return;
 		}
+
+		$registry->unregister( 'wc-outlet/outlet-filter-tiles' );
 	}
 }
