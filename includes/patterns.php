@@ -23,9 +23,10 @@ function init_patterns(): void {
  * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
+ * @param bool $for_outlet_page_seed Whether this content is being generated while seeding the outlet page.
  * @return string Block markup string.
  */
-function get_outlet_filter_tiles_content(): string {
+function get_outlet_filter_tiles_content( bool $for_outlet_page_seed = false ): string {
 	$currency  = get_woocommerce_currency();
 	$tiers_map = array(
 		'AED' => array( 25, 50, 100 ),
@@ -189,9 +190,15 @@ function get_outlet_filter_tiles_content(): string {
 	try {
 		$page_id = get_outlet_page_id();
 	} catch ( \Throwable $e ) {
-		return '';
+		$page_id = null;
 	}
 	$permalink = $page_id ? get_permalink( $page_id ) : false;
+	if ( ! $permalink && $for_outlet_page_seed ) {
+		$seed_page_id = get_option( OUTLET_PAGE_OPTION );
+		if ( is_scalar( $seed_page_id ) && ctype_digit( (string) $seed_page_id ) && '0' !== (string) $seed_page_id ) {
+			$permalink = get_permalink( (int) $seed_page_id );
+		}
+	}
 	if ( ! $permalink ) {
 		return '';
 	}

@@ -95,6 +95,11 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			),
 			$pages[0]->post_content
 		);
+		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $pages[0]->post_content );
+		$this->assertLessThan(
+			strpos( $pages[0]->post_content, '[products wc_outlet="yes"' ),
+			strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' )
+		);
 	}
 
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
@@ -119,6 +124,11 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
 		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
+		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $pages[0]->post_content );
+		$this->assertLessThan(
+			strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' ),
+			strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' )
+		);
 	}
 
 	public function test_creates_page_on_block_theme_when_canonical_term_missing(): void {
