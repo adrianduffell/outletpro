@@ -234,7 +234,7 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 				'metadata' => array(
 					'categories'  => array( 'wc-outlet' ),
 					'patternName' => 'wc-outlet/outlet-filter-tiles',
-'name'        => __( 'Outlet filter tiles', 'wc-outlet' ),
+					'name'        => __( 'Outlet filter tiles', 'wc-outlet' ),
 				),
 			),
 			$buttons_attrs
