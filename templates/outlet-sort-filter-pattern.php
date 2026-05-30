@@ -41,34 +41,34 @@ document.addEventListener(
         'orderby'
       ) || '';
 
-		select.value = currentOrderby;
-		select.addEventListener(
-			'change',
-			function() {
-				if ( select.value ) {
-					url.searchParams.set(
-						'orderby',
-						select.value
-					);
-				} else {
-					url.searchParams.delete(
-						'orderby'
-					);
-				}
+    select.value = currentOrderby;
+    select.addEventListener(
+      'change',
+      function() {
+        if ( select.value ) {
+          url.searchParams.set(
+            'orderby',
+            select.value
+          );
+        } else {
+          url.searchParams.delete(
+            'orderby'
+          );
+        }
 
-				Array.from( url.searchParams.keys() )
-					.filter(
-						( key ) =>
-							/^query-\d+-page$/.test( key )
-					)
-					.forEach(
-						( key ) => url.searchParams.delete( key )
-					);
+        Array.from( url.searchParams.keys() )
+          .filter(
+            ( key ) =>
+              /^query-\d+-page$/.test( key )
+          )
+          .forEach(
+            ( key ) => url.searchParams.delete( key )
+          );
 
-				window.location.href =
-					url.toString();
-			}
-		);
+        window.location.href =
+          url.toString();
+      }
+    );
   }
 );
 </script>
