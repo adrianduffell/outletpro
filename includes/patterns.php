@@ -284,7 +284,7 @@ function get_outlet_sort_filter_pattern_content(): string {
 	}
 
 	ob_start();
-	require_once $template_path;
+	include $template_path;
 	$template_content = ob_get_clean();
 
 	if ( false === $template_content ) {
