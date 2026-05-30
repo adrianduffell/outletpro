@@ -190,15 +190,16 @@ function get_outlet_filter_tiles_content( bool $for_outlet_page_seed = false ): 
 	try {
 		$page_id = get_outlet_page_id();
 	} catch ( \Throwable $e ) {
-		$page_id = null;
+		if ( ! $for_outlet_page_seed ) {
+			return '';
+		}
+		$seed_page_id = get_option( OUTLET_PAGE_OPTION );
+		if ( ! is_scalar( $seed_page_id ) || ! is_numeric( $seed_page_id ) || (int) $seed_page_id <= 0 ) {
+			return '';
+		}
+		$page_id = (int) $seed_page_id;
 	}
 	$permalink = $page_id ? get_permalink( $page_id ) : false;
-	if ( ! $permalink && $for_outlet_page_seed ) {
-		$seed_page_id = get_option( OUTLET_PAGE_OPTION );
-		if ( is_scalar( $seed_page_id ) && ctype_digit( (string) $seed_page_id ) && '0' !== (string) $seed_page_id ) {
-			$permalink = get_permalink( (int) $seed_page_id );
-		}
-	}
 	if ( ! $permalink ) {
 		return '';
 	}

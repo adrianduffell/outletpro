@@ -96,9 +96,13 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			$pages[0]->post_content
 		);
 		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $pages[0]->post_content );
+		$products_shortcode_position = strpos( $pages[0]->post_content, '[products wc_outlet="yes"' );
+		$filter_tiles_position       = strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' );
+		$this->assertNotFalse( $products_shortcode_position );
+		$this->assertNotFalse( $filter_tiles_position );
 		$this->assertLessThan(
-			strpos( $pages[0]->post_content, '[products wc_outlet="yes"' ),
-			strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' )
+			$products_shortcode_position,
+			$filter_tiles_position
 		);
 	}
 
@@ -125,9 +129,13 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
 		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $pages[0]->post_content );
+		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
+		$filter_tiles_position             = strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' );
+		$this->assertNotFalse( $product_collection_block_position );
+		$this->assertNotFalse( $filter_tiles_position );
 		$this->assertLessThan(
-			strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' ),
-			strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' )
+			$product_collection_block_position,
+			$filter_tiles_position
 		);
 	}
 
