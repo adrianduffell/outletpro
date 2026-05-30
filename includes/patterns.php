@@ -25,11 +25,13 @@ function init_patterns(): void {
  * @internal
  */
 function deinit_patterns(): void {
-	if ( ! \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-filter-tiles' ) ) {
-		return;
+	if ( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-filter-tiles' ) ) {
+		unregister_block_pattern( 'wc-outlet/outlet-filter-tiles' );
 	}
 
-	unregister_block_pattern( 'wc-outlet/outlet-filter-tiles' );
+	if ( \WP_Block_Pattern_Categories_Registry::get_instance()->is_registered( 'wc-outlet' ) ) {
+		unregister_block_pattern_category( 'wc-outlet' );
+	}
 }
 
 /**
