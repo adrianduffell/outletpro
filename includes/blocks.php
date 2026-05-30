@@ -131,6 +131,18 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
 	}
 
 	$parsed_block['attrs']['query']['orderBy'] = $orderby;
+	switch ( $orderby ) {
+		case 'price-desc':
+		case 'date':
+		case 'popularity':
+		case 'rating':
+			$parsed_block['attrs']['query']['order']   = 'desc';
+			break;
+		case 'price':
+		case 'menu_order':
+		default:
+			$parsed_block['attrs']['query']['order'] = 'asc';
+	}
 
 	return $parsed_block;
 }
