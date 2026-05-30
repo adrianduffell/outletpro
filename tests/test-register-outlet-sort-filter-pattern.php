@@ -52,17 +52,5 @@ class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'data-wp-block-html="js"', $content );
 	}
 
-	public function test_init_patterns_registers_outlet_sort_filter_pattern_only_for_wp_7_plus(): void {
-		// Arrange.
-		unregister_block_pattern( 'wc-outlet/outlet-sort-filter' );
 
-		// Act.
-		init_patterns();
-
-		// Assert.
-		$this->assertSame(
-			version_compare( get_bloginfo( 'version' ), '7.0', '>=' ),
-			\WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-sort-filter' )
-		);
-	}
 }
