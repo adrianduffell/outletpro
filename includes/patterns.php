@@ -263,7 +263,6 @@ function register_outlet_filter_tiles_pattern(): void {
 		)
 	);
 }
-add_filter( 'astra_gutenberg_patterns_compatibility', '__return_true' );
 /**
  * Register the outlet block pattern category.
  *
