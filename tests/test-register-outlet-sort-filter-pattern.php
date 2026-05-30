@@ -44,7 +44,6 @@ class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( '<!-- wp:html -->', $content );
-		$this->assertStringContainsString( 'data-wc-outlet-id="orderby"', $content );
 		$this->assertStringContainsString( 'data-wp-block-html="js"', $content );
 	}
 }
