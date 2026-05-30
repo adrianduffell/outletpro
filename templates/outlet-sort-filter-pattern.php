@@ -25,7 +25,7 @@ document.addEventListener(
         '<?php echo esc_js( $wc_outlet_orderby_id ); ?>'
       );
 
-    if ( select.length === 0 ) {
+    if ( ! select ) {
       return;
     }
 
