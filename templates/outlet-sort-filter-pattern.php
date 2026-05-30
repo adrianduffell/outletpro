@@ -56,9 +56,14 @@ document.addEventListener(
 					);
 				}
 
-				url.searchParams.delete(
-					'paged'
-				);
+				Array.from( url.searchParams.keys() )
+					.filter(
+						( key ) =>
+							/^query-\d+-page$/.test( key )
+					)
+					.forEach(
+						( key ) => url.searchParams.delete( key )
+					);
 
 				window.location.href =
 					url.toString();
