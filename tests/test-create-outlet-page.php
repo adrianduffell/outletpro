@@ -144,7 +144,6 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"price"', $pages[0]->post_content );
-		delete_option( 'woocommerce_default_catalog_orderby' );
 	}
 
 	public function test_creates_page_on_block_theme_when_canonical_term_missing(): void {
