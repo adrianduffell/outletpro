@@ -328,10 +328,10 @@ function register_outlet_sort_filter_pattern(): void {
 	register_block_pattern(
 		'wc-outlet/outlet-sort-filter',
 		array(
-			'title'       => __( 'Outlet sort filter', 'wc-outlet' ),
-			'description' => __( 'Dropdown sort filter for the outlet page.', 'wc-outlet' ),
-			'content'     => get_outlet_sort_filter_pattern_content(),
-			'categories'  => array( 'wc-outlet' ),
+			'title'         => __( 'Outlet sort filter', 'wc-outlet' ),
+			'description'   => __( 'Dropdown sort filter for the outlet page.', 'wc-outlet' ),
+			'content'       => get_outlet_sort_filter_pattern_content(),
+			'categories'    => array( 'wc-outlet' ),
 			'viewportWidth' => 180,
 		)
 	);
