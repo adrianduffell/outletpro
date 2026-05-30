@@ -11,13 +11,6 @@ use function WC_Outlet\register_outlet_sort_filter_pattern;
 
 class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 
-	public function set_up(): void {
-		parent::set_up();
-
-		version_compare( get_bloginfo( 'version' ), '7.0', '>=' )
-			|| $this->markTestSkipped( 'Outlet sort filter pattern tests require WordPress 7.0 or newer.' );
-	}
-
 	public function test_pattern_is_registered_after_register_outlet_sort_filter_pattern(): void {
 		// Arrange.
 		unregister_block_pattern( 'wc-outlet/outlet-sort-filter' );
