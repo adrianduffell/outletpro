@@ -115,6 +115,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		delete_option( 'woocommerce_default_catalog_orderby' );
+		$products_per_row  = wc_get_default_products_per_row();
+		$products_per_page = $products_per_row * wc_get_default_product_rows_per_page();
 
 		// Act.
 		create_outlet_page();
@@ -132,6 +134,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '"taxQuery"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
 		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
+		$this->assertStringContainsString( sprintf( '"perPage":%d', $products_per_page ), $pages[0]->post_content );
+		$this->assertStringContainsString( sprintf( '"columns":%d', $products_per_row ), $pages[0]->post_content );
 		$this->assertStringContainsString( '"order":"asc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );

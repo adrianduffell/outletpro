@@ -308,7 +308,7 @@ function register_outlet_sort_filter_pattern(): void {
 		)
 	);
 }
-add_filter( 'astra_gutenberg_patterns_compatibility', '__return_true' );
+
 /**
  * Register the outlet block pattern category.
  *

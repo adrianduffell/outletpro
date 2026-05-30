@@ -172,7 +172,7 @@ function create_outlet_page(): void {
 			array(
 				'queryId'              => 1,
 				'query'                => array(
-					'perPage'                       => 9,
+					'perPage'                       => wc_get_default_products_per_row() * wc_get_default_product_rows_per_page(),
 					'pages'                         => 0,
 					'offset'                        => 0,
 					'postType'                      => 'product',
@@ -197,7 +197,7 @@ function create_outlet_page(): void {
 				'tagName'              => 'div',
 				'displayLayout'        => array(
 					'type'          => 'flex',
-					'columns'       => 3,
+					'columns'       => wc_get_default_products_per_row(),
 					'shrinkColumns' => true,
 				),
 				'dimensions'           => array(
