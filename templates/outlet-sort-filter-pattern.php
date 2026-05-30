@@ -19,41 +19,6 @@ document.addEventListener(
       return;
     }
 
-    const options = [
-      {
-        value: '',
-        label:
-          'Default sorting',
-      },
-      {
-        value:
-          'popularity',
-        label:
-          'Sort by popularity',
-      },
-      {
-        value: 'rating',
-        label:
-          'Sort by average rating',
-      },
-      {
-        value: 'date',
-        label:
-          'Sort by latest',
-      },
-      {
-        value: 'price',
-        label:
-          'Sort by price: low to high',
-      },
-      {
-        value:
-          'price-desc',
-        label:
-          'Sort by price: high to low',
-      },
-    ];
-
     const url = new URL(
       window.location.href
     );
@@ -65,29 +30,7 @@ document.addEventListener(
 
     selects.forEach(
       function( select ) {
-        options.forEach(
-          function( optionData ) {
-            const option =
-              document.createElement(
-                'option'
-              );
-
-            option.value =
-              optionData.value;
-
-            option.textContent =
-              optionData.label;
-
-            option.selected =
-              optionData.value ===
-              currentOrderby;
-
-            select.appendChild(
-              option
-            );
-          }
-        );
-
+        select.value = currentOrderby;
         select.addEventListener(
           'change',
           function() {
@@ -113,6 +56,25 @@ document.addEventListener(
 <select
   data-wc-outlet-id="orderby"
   aria-label="Sort outlets"
-></select>
+>
+  <option value="">
+    <?php echo esc_html__( 'Default sorting', 'woocommerce' ); ?>
+  </option>
+  <option value="popularity">
+      <?php echo esc_html__( 'Sort by popularity', 'woocommerce' ); ?>
+  </option>
+  <option value="rating">
+    <?php echo esc_html__( 'Sort by average rating', 'woocommerce' ); ?>
+  </option>
+  <option value="date">
+    <?php echo esc_html__( 'Sort by latest', 'woocommerce' ); ?>
+  </option>
+  <option value="price">
+    <?php echo esc_html__( 'Sort by price: low to high', 'woocommerce' ); ?>
+   </option>
+   <option value="price-desc">
+    <?php echo esc_html__( 'Sort by price: high to low', 'woocommerce' ); ?>
+  </option>
+</select>
 <!-- /wp:html --></div>
 <!-- /wp:group -->
