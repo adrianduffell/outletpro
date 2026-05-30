@@ -25,12 +25,20 @@ function init_patterns(): void {
  * @internal
  */
 function deinit_patterns(): void {
-	if ( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-filter-tiles' ) ) {
-		unregister_block_pattern( 'wc-outlet/outlet-filter-tiles' );
+	$patterns_registry = \WP_Block_Patterns_Registry::get_instance();
+
+	foreach ( $patterns_registry->get_all_registered() as $pattern ) {
+		if ( 0 === strpos( $pattern['name'], 'wc-outlet/' ) ) {
+			unregister_block_pattern( $pattern['name'] );
+		}
 	}
 
-	if ( \WP_Block_Pattern_Categories_Registry::get_instance()->is_registered( 'wc-outlet' ) ) {
-		unregister_block_pattern_category( 'wc-outlet' );
+	$categories_registry = \WP_Block_Pattern_Categories_Registry::get_instance();
+
+	foreach ( $categories_registry->get_all_registered() as $name => $category ) {
+		if ( 0 === strpos( $category['name'], 'wc-outlet' ) ) {
+			unregister_block_pattern_category( $category['name'] );
+		}
 	}
 }
 
