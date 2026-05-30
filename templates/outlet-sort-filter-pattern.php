@@ -1,3 +1,14 @@
+<?php
+/**
+ * Content for wc-outlet/outlet-sort-filter pattern.
+ *
+ * Keep to 40 characters wide and 2-space indents for nice display in the block editor.
+ *
+ * @package WC_Outlet
+ *
+ * @phpcs:disable
+ */
+?>
 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 <div class="wp-block-group"><!-- wp:html -->
 <style data-wp-block-html="css">
