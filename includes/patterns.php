@@ -20,6 +20,31 @@ function init_patterns(): void {
 }
 
 /**
+ * Helper to de-initialize block patterns back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_patterns(): void {
+	$patterns = array_filter(
+		\WP_Block_Patterns_Registry::get_instance()->get_all_registered(),
+		fn( $pattern ) => 0 === strpos( $pattern['name'], 'wc-outlet/' )
+	);
+
+	foreach ( $patterns as $pattern ) {
+		unregister_block_pattern( $pattern['name'] );
+	}
+
+	$categories = array_filter(
+		\WP_Block_Pattern_Categories_Registry::get_instance()->get_all_registered(),
+		fn( $category ) => 0 === strpos( $category['name'], 'wc-outlet' )
+	);
+
+	foreach ( $categories as $category ) {
+		unregister_block_pattern_category( $category['name'] );
+	}
+}
+
+/**
  * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
