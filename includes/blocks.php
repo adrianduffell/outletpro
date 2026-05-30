@@ -19,6 +19,7 @@ function init_blocks(): void {
 	register_outlet_message_block();
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
 }
 
@@ -30,6 +31,7 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
+	remove_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11 );
 
 	// Unregister all blocks in the wc-outlet namespace.
@@ -102,6 +104,35 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 	}
 
 	return $hooked_blocks;
+}
+
+/**
+ * Set orderby for the outlet product collection block using the URL param.
+ *
+ * Fired by `render_block_data`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed> $parsed_block Parsed block data.
+ * @return array<string, mixed> Updated parsed block data.
+ */
+function set_outlet_product_collection_orderby_hook( array $parsed_block ): array {
+	if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? null ) ) {
+		return $parsed_block;
+	}
+
+	$is_outlet_query = $parsed_block['attrs']['query']['wc_outlet'] ?? false;
+	if ( ! $is_outlet_query ) {
+		return $parsed_block;
+	}
+
+	$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only query param used to adjust catalog sort order.
+	if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
+		return $parsed_block;
+	}
+
+	$parsed_block['attrs']['query']['orderBy'] = $orderby;
+
+	return $parsed_block;
 }
 
 /**

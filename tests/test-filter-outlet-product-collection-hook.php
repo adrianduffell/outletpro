@@ -12,6 +12,75 @@ use function WC_Outlet\seed_outlet_status_taxonomy;
 use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
+	public function test_orderby_is_applied_to_outlet_product_collection_block(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$parsed_block    = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'query' => array(
+					'wc_outlet' => true,
+					'orderBy'   => 'menu_order',
+				),
+			),
+		);
+		$_GET['orderby'] = 'price-desc';
+
+		// Act.
+		$result = apply_filters( 'render_block_data', $parsed_block );
+
+		// Assert.
+		$this->assertSame( 'price-desc', $result['attrs']['query']['orderBy'] );
+		unset( $_GET['orderby'] );
+	}
+
+	public function test_orderby_is_not_applied_when_value_is_invalid(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$parsed_block    = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'query' => array(
+					'wc_outlet' => true,
+					'orderBy'   => 'menu_order',
+				),
+			),
+		);
+		$_GET['orderby'] = 'invalid';
+
+		// Act.
+		$result = apply_filters( 'render_block_data', $parsed_block );
+
+		// Assert.
+		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
+		unset( $_GET['orderby'] );
+	}
+
+	public function test_orderby_is_not_applied_when_not_outlet_query(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$parsed_block    = array(
+			'blockName' => 'woocommerce/product-collection',
+			'attrs'     => array(
+				'query' => array(
+					'wc_outlet' => false,
+					'orderBy'   => 'menu_order',
+				),
+			),
+		);
+		$_GET['orderby'] = 'date';
+
+		// Act.
+		$result = apply_filters( 'render_block_data', $parsed_block );
+
+		// Assert.
+		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
+		unset( $_GET['orderby'] );
+	}
+
 
 	public function test_query_is_unchanged_when_not_product_collection_block(): void {
 		// Arrange.
@@ -194,5 +263,6 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook' ) );
+		$this->assertSame( 11, has_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook' ) );
 	}
 }
