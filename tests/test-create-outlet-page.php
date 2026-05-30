@@ -11,6 +11,10 @@ use const WC_Outlet\OUTLET_PAGE_OPTION;
 
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
+	public function filter_default_catalog_orderby_for_test(): string {
+		return 'price-desc';
+	}
+
 	public function test_creates_page_with_title_outlet(): void {
 		// Arrange.
 		delete_option( OUTLET_PAGE_OPTION );
@@ -141,6 +145,30 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 				'name'        => 'outlet',
 			)
 		);
+		$this->assertNotEmpty( $pages );
+		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
+		$this->assertStringContainsString( '"orderBy":"price"', $pages[0]->post_content );
+	}
+
+	public function test_creates_page_with_filtered_default_catalog_orderby_on_block_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		delete_option( OUTLET_PAGE_OPTION );
+		update_option( 'woocommerce_default_catalog_orderby', 'menu_order' );
+		add_filter( 'woocommerce_default_catalog_orderby', array( $this, 'filter_default_catalog_orderby_for_test' ) );
+
+		// Act.
+		create_outlet_page();
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'outlet',
+			)
+		);
+		remove_filter( 'woocommerce_default_catalog_orderby', array( $this, 'filter_default_catalog_orderby_for_test' ) );
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"price"', $pages[0]->post_content );

@@ -150,7 +150,7 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) {
-		$orderby = get_option( 'woocommerce_default_catalog_orderby', 'menu_order' );
+		$orderby = apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
 
 		if ( 'price-desc' === $orderby ) {
 			$order_by = 'price';
