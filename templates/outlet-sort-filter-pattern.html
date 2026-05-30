@@ -15,7 +15,7 @@ document.addEventListener(
         '[data-wc-outlet-id="orderby"]'
       );
 
-    if ( ! selects.length ) {
+    if ( selects.length === 0 ) {
       return;
     }
 
@@ -112,6 +112,7 @@ document.addEventListener(
 
 <select
   data-wc-outlet-id="orderby"
+  aria-label="Sort outlets"
 ></select>
 <!-- /wp:html --></div>
 <!-- /wp:group -->
