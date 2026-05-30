@@ -20,6 +20,19 @@ function init_patterns(): void {
 }
 
 /**
+ * Helper to de-initialize block patterns back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_patterns(): void {
+	if ( ! \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-sort-filter' ) ) {
+		return;
+	}
+
+	unregister_block_pattern( 'wc-outlet/outlet-sort-filter' );
+}
+
+/**
  * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
