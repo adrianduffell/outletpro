@@ -55,7 +55,7 @@ document.addEventListener(
 
 <select
   data-wc-outlet-id="orderby"
-  aria-label="Sort outlets"
+  aria-label="<?php echo esc_html__( 'Sort', 'wc-outlet' ); ?>"
 >
   <option value="">
     <?php echo esc_html__( 'Default sorting', 'woocommerce' ); ?>
