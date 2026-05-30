@@ -23,9 +23,10 @@ function init_patterns(): void {
  * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
+ * @param bool $include_metadata Whether to include pattern metadata on the wp:buttons block. Default false.
  * @return string Block markup string.
  */
-function get_outlet_filter_tiles_content(): string {
+function get_outlet_filter_tiles_content( bool $include_metadata = false ): string {
 	$currency  = get_woocommerce_currency();
 	$tiers_map = array(
 		'AED' => array( 25, 50, 100 ),
@@ -210,7 +211,37 @@ function get_outlet_filter_tiles_content(): string {
 			'<!-- /wp:button -->';
 	}
 
-	return '<!-- wp:buttons {"style":{"spacing":{"margin":{"top":"var:preset|spacing|30","bottom":"var:preset|spacing|30"}}},"layout":{"type":"flex","justifyContent":"left","flexWrap":"nowrap"},"className":"wc-outlet-filter-tiles"} -->' . "\n" .
+	$buttons_attrs = array(
+		'style'     => array(
+			'spacing' => array(
+				'margin' => array(
+					'top'    => 'var:preset|spacing|30',
+					'bottom' => 'var:preset|spacing|30',
+				),
+			),
+		),
+		'layout'    => array(
+			'type'           => 'flex',
+			'justifyContent' => 'left',
+			'flexWrap'       => 'nowrap',
+		),
+		'className' => 'wc-outlet-filter-tiles',
+	);
+
+	if ( $include_metadata ) {
+		$buttons_attrs = array_merge(
+			array(
+				'metadata' => array(
+					'categories'  => array( 'wc-outlet' ),
+					'patternName' => 'wc-outlet/outlet-filter-tiles',
+					'name'        => __( 'Outlet filter tiles', 'wc-outlet' ),
+				),
+			),
+			$buttons_attrs
+		);
+	}
+
+	return '<!-- wp:buttons ' . wp_json_encode( $buttons_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
 		'<div class="wp-block-buttons wc-outlet-filter-tiles" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
 		'<!-- /wp:buttons -->';
 }
