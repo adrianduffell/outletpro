@@ -57,7 +57,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
-		$this->assertSame( 'price-desc', $result['attrs']['query']['orderBy'] );
+		$this->assertSame( 'price', $result['attrs']['query']['orderBy'] );
 		$this->assertSame( 'desc', $result['attrs']['query']['order'] );
 		unset( $_GET['orderby'] );
 	}

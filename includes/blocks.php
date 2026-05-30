@@ -130,7 +130,7 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
 		return $parsed_block;
 	}
 
-	$parsed_block['attrs']['query']['orderBy'] = $orderby;
+	$parsed_block['attrs']['query']['orderBy'] = str_replace( '-desc', '', $orderby );
 	switch ( $orderby ) {
 		case 'price-desc':
 		case 'date':
