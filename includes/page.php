@@ -150,6 +150,16 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) {
+		$orderby = get_option( 'woocommerce_default_catalog_orderby', 'menu_order' );
+
+		if ( 'price-desc' === $orderby ) {
+			$order_by = 'price';
+			$order    = 'desc';
+		} else {
+			$order_by = $orderby;
+			$order    = 'asc';
+		}
+
 		$block_attrs = wp_json_encode(
 			array(
 				'queryId'              => 1,
@@ -158,8 +168,8 @@ function create_outlet_page(): void {
 					'pages'                         => 0,
 					'offset'                        => 0,
 					'postType'                      => 'product',
-					'order'                         => 'asc',
-					'orderBy'                       => 'title',
+					'order'                         => $order,
+					'orderBy'                       => $order_by,
 					'search'                        => '',
 					'exclude'                       => array(),
 					'inherit'                       => false,
