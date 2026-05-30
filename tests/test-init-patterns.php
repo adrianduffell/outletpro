@@ -5,13 +5,13 @@
  * @package WC_Outlet
  */
 
+use function WC_Outlet\deinit_patterns;
 use function WC_Outlet\init_patterns;
-
 class Test_Init_Patterns extends WP_UnitTestCase {
 
 	public function test_registers_outlet_block_pattern_category(): void {
 		// Arrange.
-		unregister_block_pattern_category( 'wc-outlet' );
+		deinit_patterns();
 
 		// Act.
 		init_patterns();
