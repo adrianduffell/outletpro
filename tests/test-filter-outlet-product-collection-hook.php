@@ -29,7 +29,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'price';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'price', $result['attrs']['query']['orderBy'] );
@@ -54,7 +54,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'price-desc';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'price-desc', $result['attrs']['query']['orderBy'] );
@@ -79,7 +79,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'date';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'date', $result['attrs']['query']['orderBy'] );
@@ -104,7 +104,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'popularity';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'popularity', $result['attrs']['query']['orderBy'] );
@@ -129,7 +129,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'rating';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'rating', $result['attrs']['query']['orderBy'] );
@@ -154,7 +154,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'menu_order';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
@@ -178,7 +178,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'invalid';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
@@ -200,7 +200,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$_GET['orderby'] = 'date';
 
 		// Act.
-		$result = apply_filters( 'render_block_data', $parsed_block );
+		$result = apply_filters( 'render_block_data', $parsed_block, $parsed_block, null );
 
 		// Assert.
 		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
