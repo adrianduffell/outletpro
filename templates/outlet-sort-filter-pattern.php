@@ -45,10 +45,16 @@ document.addEventListener(
 		select.addEventListener(
 			'change',
 			function() {
-				url.searchParams.set(
-					'orderby',
-					select.value
-				);
+				if ( select.value ) {
+					url.searchParams.set(
+						'orderby',
+						select.value
+					);
+				} else {
+					url.searchParams.delete(
+						'orderby'
+					);
+				}
 
 				url.searchParams.delete(
 					'paged'
