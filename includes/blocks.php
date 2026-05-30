@@ -136,7 +136,7 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
 		case 'date':
 		case 'popularity':
 		case 'rating':
-			$parsed_block['attrs']['query']['order']   = 'desc';
+			$parsed_block['attrs']['query']['order'] = 'desc';
 			break;
 		case 'price':
 		case 'menu_order':
