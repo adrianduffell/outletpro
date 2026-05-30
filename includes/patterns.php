@@ -277,13 +277,15 @@ function register_outlet_filter_tiles_pattern(): void {
  * @return string Block markup string.
  */
 function get_outlet_sort_filter_pattern_content(): string {
-	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-sort-filter-pattern.html';
+	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-sort-filter-pattern.php';
 
 	if ( ! is_readable( $template_path ) ) {
 		return '';
 	}
 
-	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
+	ob_start();
+	require_once $template_path;
+	$template_content = ob_get_clean();
 
 	if ( false === $template_content ) {
 		return '';
