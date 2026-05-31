@@ -16,6 +16,31 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_page(): void {
 	register_outlet_page_template();
+	add_filter( 'render_block_data', 'WC_Outlet\set_product_collection_orderby_hook', 12 );
+}
+
+/**
+ * Set orderby for product collection block from the URL param.
+ *
+ * Fired by `render_block_data`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed> $parsed_block Parsed block data.
+ * @return array<string, mixed> Updated parsed block data.
+ */
+function set_product_collection_orderby_hook( array $parsed_block ): array {
+	if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? null ) ) {
+		return $parsed_block;
+	}
+
+	$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only query param used to adjust catalog sort order.
+	if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
+		return $parsed_block;
+	}
+
+	$parsed_block['attrs']['query']['orderBy'] = $orderby;
+
+	return $parsed_block;
 }
 
 /**
