@@ -72,14 +72,20 @@ function get_pattern_content( string $pattern_name ): string {
 		);
 	}
 
+	$pattern_attributes = wp_json_encode(
+		array(
+			'slug' => $pattern_name,
+		)
+	);
+
+	if ( false === $pattern_attributes ) {
+		throw new \RuntimeException( 'Failed to encode block pattern attributes.' );
+	}
+
 	$parsed_blocks = parse_blocks(
 		sprintf(
 			'<!-- wp:pattern %s /-->',
-			wp_json_encode(
-				array(
-					'slug' => $pattern_name,
-				)
-			)
+			$pattern_attributes
 		)
 	);
 
