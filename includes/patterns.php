@@ -72,14 +72,14 @@ function get_pattern_content( string $pattern_name ): string {
 		);
 	}
 
-	if ( ! function_exists( 'resolve_pattern_blocks' ) ) {
-		throw new \RuntimeException( 'WordPress function resolve_pattern_blocks() is unavailable.' );
-	}
-
 	$parsed_blocks = parse_blocks(
 		sprintf(
-			'<!-- wp:pattern {"slug":"%s"} /-->',
-			esc_attr( $pattern_name )
+			'<!-- wp:pattern %s /-->',
+			wp_json_encode(
+				array(
+					'slug' => $pattern_name,
+				)
+			)
 		)
 	);
 
