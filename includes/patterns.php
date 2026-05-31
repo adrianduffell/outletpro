@@ -78,13 +78,8 @@ function get_pattern_content( string $pattern_name ): string {
 
 	$parsed_blocks = parse_blocks(
 		sprintf(
-			'<!-- wp:pattern %s /-->',
-			wp_json_encode(
-				array(
-					'slug' => $pattern_name,
-				),
-				JSON_INVALID_UTF8_SUBSTITUTE
-			)
+			'<!-- wp:pattern {"slug":"%s"} /-->',
+			$pattern_name
 		)
 	);
 
