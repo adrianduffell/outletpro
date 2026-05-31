@@ -264,7 +264,7 @@ function create_outlet_page(): void {
 		try {
 			$sort_filter_content = get_pattern_content( 'wc-outlet/outlet-sort-filter' );
 		} catch ( \InvalidArgumentException | \RuntimeException $e ) {
-			$sort_filter_content = get_outlet_sort_filter();
+			throw new \RuntimeException( 'Could not insert sort filter in outlet page.', 0, $e );
 		}
 		if ( '' !== $sort_filter_content ) {
 			$post_content = $sort_filter_content . "\n\n" . $post_content;
