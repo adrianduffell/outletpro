@@ -83,7 +83,7 @@ function get_pattern_content( string $pattern_name ): string {
 		throw new \RuntimeException(
 			sprintf(
 				'Failed to encode block pattern attributes for pattern "%s".',
-				sanitize_text_field( $pattern_name )
+				esc_html( $pattern_name )
 			)
 		);
 	}
