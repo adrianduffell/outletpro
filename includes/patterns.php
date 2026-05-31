@@ -51,6 +51,58 @@ function deinit_patterns(): void {
 }
 
 /**
+ * Get block content for a registered pattern, including editor metadata.
+ *
+ * @param string $pattern_name Pattern slug.
+ *
+ * @throws \InvalidArgumentException If the pattern name is empty or has unsupported characters.
+ * @throws \InvalidArgumentException If the pattern is not registered.
+ * @throws \RuntimeException If block parsing fails.
+ * @throws \RuntimeException If pattern resolution fails.
+ * @throws \RuntimeException If block serialization fails.
+ */
+function get_pattern_content( string $pattern_name ): string {
+	if ( '' === $pattern_name ) {
+		throw new \InvalidArgumentException( 'Pattern name cannot be empty.' );
+	}
+
+	if ( ! preg_match( '/^[a-z0-9\\/-]+$/', $pattern_name ) ) {
+		throw new \InvalidArgumentException( 'Pattern name contains unsupported characters.' );
+	}
+
+	if ( ! \WP_Block_Patterns_Registry::get_instance()->is_registered( $pattern_name ) ) {
+		throw new \InvalidArgumentException(
+			sprintf( 'Block pattern "%s" is not registered.', $pattern_name )
+		);
+	}
+
+	$parsed_blocks = parse_blocks(
+		sprintf(
+			'<!-- wp:pattern {"slug":"%s"} /-->',
+			$pattern_name
+		)
+	);
+
+	if ( empty( $parsed_blocks ) ) {
+		throw new \RuntimeException( 'Failed to parse block pattern markup.' );
+	}
+
+	$resolved_blocks = resolve_pattern_blocks( $parsed_blocks );
+
+	if ( empty( $resolved_blocks ) ) {
+		throw new \RuntimeException( 'Failed to resolve block pattern markup.' );
+	}
+
+	$content = serialize_blocks( $resolved_blocks );
+
+	if ( '' === $content ) {
+		throw new \RuntimeException( 'Failed to serialize resolved block pattern markup.' );
+	}
+
+	return $content;
+}
+
+/**
  * Get the block markup content for the outlet filter tiles pattern.
  *
  * @internal
