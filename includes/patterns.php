@@ -79,7 +79,9 @@ function get_pattern_content( string $pattern_name ): string {
 	);
 
 	if ( false === $pattern_attributes ) {
-		throw new \RuntimeException( 'Failed to encode block pattern attributes.' );
+		throw new \RuntimeException(
+			sprintf( 'Failed to encode block pattern attributes for pattern "%s".', $pattern_name )
+		);
 	}
 
 	$parsed_blocks = parse_blocks(
