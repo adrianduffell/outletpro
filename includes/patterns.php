@@ -299,9 +299,10 @@ function register_outlet_filter_tiles_pattern(): void {
  * Get the block markup content for the outlet sort filter pattern.
  *
  * @internal
+ * @param bool $include_metadata Whether to include pattern metadata on the wp:group block. Default false.
  * @return string Block markup string.
  */
-function get_outlet_sort_filter_pattern_content(): string {
+function get_outlet_sort_filter( bool $include_metadata = false ): string {
 	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-sort-filter-pattern.php';
 
 	if ( ! is_readable( $template_path ) ) {
@@ -315,6 +316,41 @@ function get_outlet_sort_filter_pattern_content(): string {
 	if ( false === $template_content ) {
 		return '';
 	}
+
+	if ( ! $include_metadata ) {
+		return $template_content;
+	}
+
+	$group_attrs = array(
+		'metadata' => array(
+			'categories'  => array( 'wc-outlet' ),
+			'patternName' => 'wc-outlet/outlet-sort-filter',
+			'name'        => __( 'Outlet sort filter', 'wc-outlet' ),
+		),
+		'layout'   => array(
+			'type'           => 'flex',
+			'flexWrap'       => 'nowrap',
+			'justifyContent' => 'right',
+		),
+	);
+
+	$pattern_group_block = '<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->';
+
+	return str_replace(
+		$pattern_group_block,
+		'<!-- wp:group ' . wp_json_encode( $group_attrs, JSON_UNESCAPED_SLASHES ) . ' -->',
+		$template_content
+	);
+}
+
+/**
+ * Get the block markup content for the outlet sort filter pattern.
+ *
+ * @internal
+ * @return string Block markup string.
+ */
+function get_outlet_sort_filter_pattern_content(): string {
+	$template_content = get_outlet_sort_filter();
 
 	return $template_content;
 }

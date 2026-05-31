@@ -140,14 +140,18 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
 		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $pages[0]->post_content );
+		$this->assertStringContainsString( '"patternName":"wc-outlet/outlet-sort-filter"', $pages[0]->post_content );
 		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
+		$sort_filter_position              = strpos( $pages[0]->post_content, 'wc-outlet/outlet-sort-filter' );
 		$filter_tiles_position             = strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' );
 		$this->assertNotFalse( $product_collection_block_position );
+		$this->assertNotFalse( $sort_filter_position );
 		$this->assertNotFalse( $filter_tiles_position );
 		$this->assertLessThan(
-			$product_collection_block_position,
+			$sort_filter_position,
 			$filter_tiles_position
 		);
+		$this->assertLessThan( $product_collection_block_position, $sort_filter_position );
 	}
 
 	public function test_creates_page_with_price_desc_sort_on_block_theme_when_store_default_is_price_desc(): void {
