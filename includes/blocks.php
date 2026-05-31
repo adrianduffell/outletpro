@@ -120,29 +120,13 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
 		return $parsed_block;
 	}
 
-	$is_outlet_query = $parsed_block['attrs']['query']['wc_outlet'] ?? false;
-	if ( ! $is_outlet_query ) {
-		return $parsed_block;
-	}
-
 	$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only query param used to adjust catalog sort order.
 	if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
 		return $parsed_block;
 	}
 
-	$parsed_block['attrs']['query']['orderBy'] = str_replace( '-desc', '', $orderby );
-	switch ( $orderby ) {
-		case 'price-desc':
-		case 'date':
-		case 'popularity':
-		case 'rating':
-			$parsed_block['attrs']['query']['order'] = 'desc';
-			break;
-		case 'price':
-		case 'menu_order':
-		default:
-			$parsed_block['attrs']['query']['order'] = 'asc';
-	}
+	// TODO: Remove this temporary workaround once https://core.trac.wordpress.org/ticket/62407 is resolved.
+	$parsed_block['attrs']['query']['orderBy'] = $orderby;
 
 	return $parsed_block;
 }
