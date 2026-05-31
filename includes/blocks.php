@@ -125,7 +125,7 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
 		return $parsed_block;
 	}
 
-	// TODO: Remove this temporary workaround once https://core.trac.wordpress.org/ticket/62407 is resolved.
+	// TODO: Remove this temporary workaround once https://core.trac.wordpress.org/ticket/62407 is resolved and core applies URL orderby without overriding block template inserter rendering.
 	$parsed_block['attrs']['query']['orderBy'] = $orderby;
 
 	return $parsed_block;

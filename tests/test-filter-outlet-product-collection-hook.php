@@ -12,7 +12,7 @@ use function WC_Outlet\seed_outlet_status_taxonomy;
 use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
 use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
 class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
-	public function test_orderby_price_sets_orderby_for_product_collection_block(): void {
+	public function test_orderby_price_sets_price_orderby_in_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -37,7 +37,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		unset( $_GET['orderby'] );
 	}
 
-	public function test_orderby_price_desc_sets_orderby_for_product_collection_block(): void {
+	public function test_orderby_price_desc_sets_price_desc_orderby_in_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -62,7 +62,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		unset( $_GET['orderby'] );
 	}
 
-	public function test_orderby_date_sets_orderby_for_product_collection_block(): void {
+	public function test_orderby_date_sets_date_orderby_in_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -87,7 +87,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		unset( $_GET['orderby'] );
 	}
 
-	public function test_orderby_popularity_sets_orderby_for_product_collection_block(): void {
+	public function test_orderby_popularity_sets_popularity_orderby_in_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -112,7 +112,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		unset( $_GET['orderby'] );
 	}
 
-	public function test_orderby_rating_sets_orderby_for_product_collection_block(): void {
+	public function test_orderby_rating_sets_rating_orderby_in_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -137,7 +137,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		unset( $_GET['orderby'] );
 	}
 
-	public function test_orderby_menu_order_sets_orderby_for_product_collection_block(): void {
+	public function test_orderby_menu_order_sets_menu_order_orderby_in_product_collection_block(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -184,7 +184,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'menu_order', $result['attrs']['query']['orderBy'] );
 	}
 
-	public function test_orderby_is_applied_when_not_outlet_query(): void {
+	public function test_orderby_applied_to_all_product_collection_blocks(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
