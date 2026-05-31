@@ -75,12 +75,16 @@ function get_pattern_content( string $pattern_name ): string {
 	$pattern_attributes = wp_json_encode(
 		array(
 			'slug' => $pattern_name,
-		)
+		),
+		JSON_INVALID_UTF8_SUBSTITUTE
 	);
 
 	if ( false === $pattern_attributes ) {
 		throw new \RuntimeException(
-			sprintf( 'Failed to encode block pattern attributes for pattern "%s".', $pattern_name )
+			sprintf(
+				'Failed to encode block pattern attributes for pattern "%s".',
+				sanitize_text_field( $pattern_name )
+			)
 		);
 	}
 
