@@ -260,7 +260,8 @@ function create_outlet_page(): void {
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
-	if ( wp_is_block_theme() ) {
+
+	if ( wp_is_block_theme() && version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
 		try {
 			$sort_filter_content = get_pattern_content( 'wc-outlet/outlet-sort-filter' );
 		} catch ( \InvalidArgumentException | \RuntimeException $e ) {
