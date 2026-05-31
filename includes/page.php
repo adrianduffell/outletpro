@@ -261,7 +261,11 @@ function create_outlet_page(): void {
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
 	if ( wp_is_block_theme() ) {
-		$sort_filter_content = get_outlet_sort_filter( true );
+		try {
+			$sort_filter_content = get_pattern_content( 'wc-outlet/outlet-sort-filter' );
+		} catch ( \Throwable $e ) {
+			$sort_filter_content = get_outlet_sort_filter();
+		}
 		if ( '' !== $sort_filter_content ) {
 			$post_content = $sort_filter_content . "\n\n" . $post_content;
 		}
