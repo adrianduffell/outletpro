@@ -66,7 +66,7 @@ function get_pattern_content( string $pattern_name ): string {
 		throw new \InvalidArgumentException( 'Pattern name cannot be empty.' );
 	}
 
-	if ( ! preg_match( '/^[a-z0-9/-]+$/', $pattern_name ) ) {
+	if ( ! preg_match( '/^[a-z0-9\\/-]+$/', $pattern_name ) ) {
 		throw new \InvalidArgumentException( 'Pattern name contains unsupported characters.' );
 	}
 
