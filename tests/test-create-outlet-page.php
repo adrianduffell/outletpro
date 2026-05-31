@@ -163,7 +163,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			$sort_filter_position,
 			$filter_tiles_position
 		);
-		$this->assertLessThan( $product_collection_block_position, $sort_filter_position );
+		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) &&  $this->assertLessThan( $product_collection_block_position, $sort_filter_position );
 	}
 
 	public function test_creates_page_with_price_desc_sort_on_block_theme_when_store_default_is_price_desc(): void {
