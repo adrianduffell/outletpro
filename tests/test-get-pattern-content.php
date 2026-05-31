@@ -11,13 +11,6 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 
 	private const TEST_PATTERN = 'wc-outlet/test-pattern-content';
 
-	public function tearDown(): void {
-		\WP_Block_Patterns_Registry::get_instance()->is_registered( self::TEST_PATTERN )
-			&& unregister_block_pattern( self::TEST_PATTERN );
-
-		parent::tearDown();
-	}
-
 	public function test_throws_when_pattern_name_is_empty(): void {
 		// Expect.
 		$this->expectException( \InvalidArgumentException::class );
@@ -56,5 +49,10 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 		$this->assertStringContainsString( '<!-- wp:paragraph -->', $content );
 		$this->assertStringContainsString( 'Pattern helper test content.', $content );
 		$this->assertStringNotContainsString( '"slug":"' . self::TEST_PATTERN . '"', $content );
+		version_compare( get_bloginfo( 'version' ), '7.0', '>=' )
+			&& $this->assertStringContainsString( '"metadata"', $content );
+
+		// Cleanup.
+		unregister_block_pattern( self::TEST_PATTERN );
 	}
 }

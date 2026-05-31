@@ -72,6 +72,10 @@ function get_pattern_content( string $pattern_name ): string {
 		);
 	}
 
+	if ( ! function_exists( 'resolve_pattern_blocks' ) ) {
+		throw new \RuntimeException( 'WordPress function resolve_pattern_blocks() is unavailable.' );
+	}
+
 	$parsed_blocks = parse_blocks(
 		sprintf(
 			'<!-- wp:pattern {"slug":"%s"} /-->',
@@ -79,19 +83,19 @@ function get_pattern_content( string $pattern_name ): string {
 		)
 	);
 
-	if ( ! is_array( $parsed_blocks ) ) {
+	if ( empty( $parsed_blocks ) ) {
 		throw new \RuntimeException( 'Failed to parse block pattern markup.' );
 	}
 
 	$resolved_blocks = resolve_pattern_blocks( $parsed_blocks );
 
-	if ( ! is_array( $resolved_blocks ) ) {
+	if ( empty( $resolved_blocks ) ) {
 		throw new \RuntimeException( 'Failed to resolve block pattern markup.' );
 	}
 
 	$content = serialize_blocks( $resolved_blocks );
 
-	if ( ! is_string( $content ) ) {
+	if ( '' === $content ) {
 		throw new \RuntimeException( 'Failed to serialize resolved block pattern markup.' );
 	}
 
