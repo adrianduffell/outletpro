@@ -20,6 +20,18 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 		get_pattern_content( '' );
 	}
 
+	public function test_throws_when_pattern_name_contains_unsupported_characters(): void {
+		// Arrange.
+		$pattern_name = 'wc-outlet/invalid_pattern';
+
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Pattern name contains unsupported characters.' );
+
+		// Act.
+		get_pattern_content( $pattern_name );
+	}
+
 	public function test_throws_when_pattern_is_not_registered(): void {
 		// Arrange.
 		$pattern_name = 'wc-outlet/not-registered';

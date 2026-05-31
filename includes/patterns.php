@@ -55,7 +55,7 @@ function deinit_patterns(): void {
  *
  * @param string $pattern_name Pattern slug.
  *
- * @throws \InvalidArgumentException If the pattern name is empty.
+ * @throws \InvalidArgumentException If the pattern name is empty or has unsupported characters.
  * @throws \InvalidArgumentException If the pattern is not registered.
  * @throws \RuntimeException If block parsing fails.
  * @throws \RuntimeException If pattern resolution fails.
@@ -64,6 +64,10 @@ function deinit_patterns(): void {
 function get_pattern_content( string $pattern_name ): string {
 	if ( '' === $pattern_name ) {
 		throw new \InvalidArgumentException( 'Pattern name cannot be empty.' );
+	}
+
+	if ( ! preg_match( '/^[a-z0-9\/-]+$/', $pattern_name ) ) {
+		throw new \InvalidArgumentException( 'Pattern name contains unsupported characters.' );
 	}
 
 	if ( ! \WP_Block_Patterns_Registry::get_instance()->is_registered( $pattern_name ) ) {
