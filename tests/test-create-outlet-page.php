@@ -6,6 +6,8 @@
  */
 
 use function WC_Outlet\create_outlet_page;
+use function WC_Outlet\deinit_patterns;
+use function WC_Outlet\init_patterns;
 use function WC_Outlet\run_create_outlet_page_tool;
 use const WC_Outlet\OUTLET_PAGE_OPTION;
 
@@ -17,6 +19,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_title_outlet(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -55,6 +59,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_draft_status(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -74,6 +80,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_outlet_shortcode_on_classic_theme(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$products_per_row  = wc_get_default_products_per_row();
@@ -112,6 +120,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		delete_option( 'woocommerce_default_catalog_orderby' );
@@ -140,14 +150,16 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
 		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $pages[0]->post_content );
-		$this->assertStringContainsString( '"patternName":"wc-outlet/outlet-sort-filter"', $pages[0]->post_content );
+		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertStringContainsString( '"patternName":"wc-outlet/outlet-sort-filter"', $pages[0]->post_content );
+		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertStringNotContainsString( '"patternName":"wc-outlet/outlet-sort-filter"', $pages[0]->post_content );
 		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
 		$sort_filter_position              = strpos( $pages[0]->post_content, 'wc-outlet/outlet-sort-filter' );
 		$filter_tiles_position             = strpos( $pages[0]->post_content, 'wc-outlet-filter-tiles' );
 		$this->assertNotFalse( $product_collection_block_position );
-		$this->assertNotFalse( $sort_filter_position );
+		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertNotFalse( $sort_filter_position );
+		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertFalse( $sort_filter_position );
 		$this->assertNotFalse( $filter_tiles_position );
-		$this->assertLessThan(
+		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertLessThan(
 			$sort_filter_position,
 			$filter_tiles_position
 		);
@@ -156,6 +168,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_price_desc_sort_on_block_theme_when_store_default_is_price_desc(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		update_option( 'woocommerce_default_catalog_orderby', 'price-desc' );
@@ -178,6 +192,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_date_desc_sort_on_block_theme_when_store_default_is_date_desc(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		update_option( 'woocommerce_default_catalog_orderby', 'date-desc' );
@@ -200,6 +216,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_desc_sort_on_block_theme_when_store_default_is_popularity(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		update_option( 'woocommerce_default_catalog_orderby', 'popularity' );
@@ -222,6 +240,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_desc_sort_on_block_theme_when_store_default_is_rating(): void {
 		// Arrange.
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		update_option( 'woocommerce_default_catalog_orderby', 'rating' );
