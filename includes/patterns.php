@@ -353,7 +353,7 @@ function register_outlet_filter_tiles_pattern(): void {
  * @internal
  * @return string Block markup string.
  */
-function get_outlet_sort_filter(): string {
+function get_outlet_sort_filter_pattern_content(): string {
 	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-sort-filter-pattern.php';
 
 	if ( ! is_readable( $template_path ) ) {
@@ -367,18 +367,6 @@ function get_outlet_sort_filter(): string {
 	if ( false === $template_content ) {
 		return '';
 	}
-
-	return $template_content;
-}
-
-/**
- * Get the block markup content for the outlet sort filter pattern.
- *
- * @internal
- * @return string Block markup string.
- */
-function get_outlet_sort_filter_pattern_content(): string {
-	$template_content = get_outlet_sort_filter();
 
 	return $template_content;
 }
