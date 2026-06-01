@@ -14,7 +14,7 @@ $wc_outlet_orderby_id = uniqid('wc-outlet-orderby-');
 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 <div class="wp-block-group"><!-- wp:html -->
 <style data-wp-block-html="css">
-body{
+body[data-resizable-iframe-connected]{
   text-align: right;
 }
 </style>
