@@ -58,20 +58,20 @@ function register_outlet_page_template(): void {
  * @return array<int, mixed> Filtered block templates.
  */
 function patch_wp_62407_get_block_templates_hook( array $templates, array $query ): array {
+	if (
+		! isset( $query['slug__in'] ) ||
+		! is_array( $query['slug__in'] ) ||
+		1 !== count( $query['slug__in'] ) ||
+		! in_array( 'outlet-page', $query['slug__in'], true )
+	) {
+		return $templates;
+	}
+
 	if ( ! apply_filters( 'wc_outlet_62407_patch_enabled', true ) ) {
 		return $templates;
 	}
 
-	if (
-		isset( $query['slug__in'] ) &&
-		is_array( $query['slug__in'] ) &&
-		1 === count( $query['slug__in'] ) &&
-		in_array( 'outlet-page', $query['slug__in'], true )
-	) {
-		return array_values( $templates );
-	}
-
-	return $templates;
+	return array_values( $templates );
 }
 
 /**
