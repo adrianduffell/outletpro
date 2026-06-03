@@ -16,19 +16,6 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_page(): void {
 	register_outlet_page_template();
-	register_wp_62407_patch();
-}
-
-/**
- * Register WordPress core ticket 62407 patch hooks.
- *
- * @internal
- */
-function register_wp_62407_patch(): void {
-	if ( ! apply_filters( 'wc_outlet_62407_patch_enabled', true ) ) {
-		return;
-	}
-
 	add_filter( 'get_block_templates', 'WC_Outlet\patch_wp_62407_get_block_templates_hook', 999, 2 );
 }
 
@@ -71,6 +58,10 @@ function register_outlet_page_template(): void {
  * @return array<int, mixed> Filtered block templates.
  */
 function patch_wp_62407_get_block_templates_hook( array $templates, array $query ): array {
+	if ( ! apply_filters( 'wc_outlet_62407_patch_enabled', true ) ) {
+		return $templates;
+	}
+
 	if (
 		isset( $query['slug__in'] ) &&
 		is_array( $query['slug__in'] ) &&
