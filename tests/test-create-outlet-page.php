@@ -102,8 +102,8 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString(
 			sprintf(
 				'[products wc_outlet="yes" paginate="yes" columns="%d" limit="%d"]',
-				$products_per_page,
-				$products_per_row
+				$products_per_row,
+				$products_per_page
 			),
 			$pages[0]->post_content
 		);
