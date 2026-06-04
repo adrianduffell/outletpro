@@ -38,7 +38,7 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( sprintf( 'Block pattern "%s" is not registered.', $pattern_name ) );
+		$this->expectExceptionMessage( 'Block pattern is not registered.' );
 
 		// Act.
 		get_pattern_content( $pattern_name );

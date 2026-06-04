@@ -256,7 +256,7 @@ function create_outlet_page(): void {
 	);
 
 	if ( is_wp_error( $page_id ) ) {
-		throw new \RuntimeException( $page_id->get_error_message() );
+		throw new \RuntimeException( 'Could not create outlet page.' );
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
@@ -286,13 +286,13 @@ function create_outlet_page(): void {
 	);
 
 	if ( is_wp_error( $result ) ) {
-		throw new \RuntimeException( $result->get_error_message() );
+		throw new \RuntimeException( 'Could not update outlet page content.' );
 	}
 
 	if ( wp_is_block_theme() ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
 		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
 		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( $result->get_error_message() );
+			throw new \RuntimeException( 'Could not set outlet page template.' );
 		}
 	}
 }
