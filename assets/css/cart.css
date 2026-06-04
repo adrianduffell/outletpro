@@ -12,18 +12,18 @@
 
 	.wc-block-components-order-summary-item__description:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata::before,
 	.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata::before {
-		content: var(--outletpro-badge-label, none);
+		content: var(--wc-outlet-badge-label, none);
 		display: block;
 		width: fit-content;
-		border-radius: var(--outletpro-badge-border-radius, unset);
-		font-weight: var(--outletpro-badge-font-weight, unset);
-		font-size: calc(var(--wc-outlet-context-font-size, 1em) * (1cap / 1em) * var(--outletpro-badge-scale) / 100 * var(--outletpro-badge-density) / 100 / (1cap / 1em));
-		padding: calc(1cap * (100 - var(--outletpro-badge-density)) / var(--outletpro-badge-density) / 2);
+		border-radius: var(--wc-outlet-badge-border-radius, unset);
+		font-weight: var(--wc-outlet-badge-font-weight, unset);
+		font-size: calc(var(--wc-outlet-context-font-size, 1em) * (1cap / 1em) * var(--wc-outlet-badge-scale) / 100 * var(--wc-outlet-badge-density) / 100 / (1cap / 1em));
+		padding: calc(1cap * (100 - var(--wc-outlet-badge-density)) / var(--wc-outlet-badge-density) / 2);
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;
-		background-color: var(--outletpro-badge-bg-color, unset);
-		color: var(--outletpro-badge-text-color, unset);
+		background-color: var(--wc-outlet-badge-bg-color, unset);
+		color: var(--wc-outlet-badge-text-color, unset);
 
 		/* Match summary font size set by WooCommerce core. */
 		--wc-outlet-context-font-size: var(--wp--preset--font-size--x-small, calc(var(--wp--preset--font-size--small, 14px) * 0.875));
@@ -43,19 +43,19 @@
 @supports selector(:has(*)) {
 
 	.shop_table td.product-name:has(.outletpro-cart-item-meta)::after {
-		content: var(--outletpro-badge-label, none);
+		content: var(--wc-outlet-badge-label, none);
 		display: block;
 		width: fit-content;
 		clear: both;
-		border-radius: var(--outletpro-badge-border-radius, unset);
-		font-weight: var(--outletpro-badge-font-weight, unset);
-		font-size: calc(var(--wc-outlet-context-font-size, 1em) * (1cap / 1em) * var(--outletpro-badge-scale) / 100 * var(--outletpro-badge-density) / 100 / (1cap / 1em));
-		padding: calc(1cap * (100 - var(--outletpro-badge-density)) / var(--outletpro-badge-density) / 2);
+		border-radius: var(--wc-outlet-badge-border-radius, unset);
+		font-weight: var(--wc-outlet-badge-font-weight, unset);
+		font-size: calc(var(--wc-outlet-context-font-size, 1em) * (1cap / 1em) * var(--wc-outlet-badge-scale) / 100 * var(--wc-outlet-badge-density) / 100 / (1cap / 1em));
+		padding: calc(1cap * (100 - var(--wc-outlet-badge-density)) / var(--wc-outlet-badge-density) / 2);
 		line-height: 1;
 		text-box-trim: trim-both;
 		text-box-edge: cap alphabetic;
-		background-color: var(--outletpro-badge-bg-color, unset);
-		color: var(--outletpro-badge-text-color, unset);
+		background-color: var(--wc-outlet-badge-bg-color, unset);
+		color: var(--wc-outlet-badge-text-color, unset);
 	}
 
 	/* Applies when outlet is the only definition. */
