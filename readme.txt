@@ -55,4 +55,4 @@ A PHP notice appears briefly in the page editor when WP_DEBUG mode is on due to 
 
 = Pattern inserter =
 
-The pattern inserter displays incorrect margins due to the same issue above. Use the same workaorund.
+The pattern inserter displays incorrect margins due to the same issue above. Use the same workaround.
