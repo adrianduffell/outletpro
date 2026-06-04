@@ -383,7 +383,7 @@ time without a MAJOR version bump. Do not rely on them in third-party code.
 
     File paths are subject to change in future versions.
 
--   The taxonomy slug `wc_outlet_status` and term slug `outlet`.
+-   The taxonomy slug `outletpro_status` and term slug `outlet`.
 
     The outlet status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the outlet status functions or REST API parameter for stable access to the outlet status.
 
