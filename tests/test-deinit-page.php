@@ -24,10 +24,10 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 		$this->assertNull( get_block_template( 'outletpro//outlet-page', 'wp_template' ) );
 	}
 
-	public function test_unregistered_all_templates_in_outletpro_namespace(): void {
+	public function test_unregisters_all_templates_in_outletpro_namespace(): void {
 		// Arrange.
-		deinit_page();
 		unregister_block_template( 'other-plugin//keep-template' );
+		deinit_page();
 
 		register_block_template(
 			'outletpro//secondary-template',
