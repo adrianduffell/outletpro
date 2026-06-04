@@ -20,6 +20,23 @@ function init_page(): void {
 }
 
 /**
+ * Helper to de-initialize page integrations back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_page(): void {
+	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
+
+	foreach ( $templates as $template_name => $template ) {
+		if ( 0 !== strpos( $template_name, 'outletpro//' ) ) {
+			continue;
+		}
+
+		unregister_block_template( $template_name );
+	}
+}
+
+/**
  * Register the outlet page template.
  *
  * @internal
@@ -265,8 +282,8 @@ function create_outlet_page(): void {
 		$post_content     = '<!-- wp:shortcode -->' . "\n" .
 			sprintf(
 				'[products wc_outlet="yes" paginate="yes" columns="%d" limit="%d"]',
-				$products_per_row * wc_get_default_product_rows_per_page(),
-				$products_per_row
+				$products_per_row,
+				$products_per_row * wc_get_default_product_rows_per_page()
 			) . "\n" .
 			'<!-- /wp:shortcode -->';
 	}
@@ -282,7 +299,7 @@ function create_outlet_page(): void {
 	);
 
 	if ( is_wp_error( $page_id ) ) {
-		throw new \RuntimeException( $page_id->get_error_message() );
+		throw new \RuntimeException( 'Could not create outlet page.' );
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
@@ -312,13 +329,13 @@ function create_outlet_page(): void {
 	);
 
 	if ( is_wp_error( $result ) ) {
-		throw new \RuntimeException( $result->get_error_message() );
+		throw new \RuntimeException( 'Could not update outlet page content.' );
 	}
 
 	if ( wp_is_block_theme() ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
 		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
 		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( $result->get_error_message() );
+			throw new \RuntimeException( 'Could not set outlet page template.' );
 		}
 	}
 }

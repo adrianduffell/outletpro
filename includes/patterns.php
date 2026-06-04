@@ -71,9 +71,7 @@ function get_pattern_content( string $pattern_name ): string {
 	}
 
 	if ( ! \WP_Block_Patterns_Registry::get_instance()->is_registered( $pattern_name ) ) {
-		throw new \InvalidArgumentException(
-			sprintf( 'Block pattern "%s" is not registered.', $pattern_name )
-		);
+		throw new \InvalidArgumentException( 'Block pattern is not registered.' );
 	}
 
 	$parsed_blocks = parse_blocks(
