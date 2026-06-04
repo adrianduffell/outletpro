@@ -24,11 +24,15 @@ function init_page(): void {
  * @internal
  */
 function deinit_page(): void {
-	if ( null === get_block_template( 'outletpro//outlet-page', 'wp_template' ) ) {
-		return;
-	}
+	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
-	unregister_block_template( 'outletpro//outlet-page' );
+	foreach ( $templates as $template_name => $template ) {
+		if ( 0 !== strpos( $template_name, 'outletpro//' ) ) {
+			continue;
+		}
+
+		unregister_block_template( $template_name );
+	}
 }
 
 /**
