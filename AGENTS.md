@@ -6,6 +6,13 @@
 * Ensure code passes lint checks, e.g with `npm run lint:css`, `npm run lint:js`, `npm run lint:md-docs`, `npm run lint:php`.
 * Write unit tests for new functions.
 * Don't cast variables, except in extreme circumstances (in which case the occurrence should be thoroughly documented). It is better to fail fast than coerce possibly corrupted values and land in an unknown state.
+* Fast-fail on error. Throw an exception when encountering an error instead of trying to recover with fallbacks or other means.
+
+## Logging
+
+* Exception messages should be plain strings. No dynamic strings. Don't include any debugging info beyond a meaningful message.
+* Log an error when catching a system-level failure in a try-catch block. Log: "Page ID could not be retrieved". Don't log: "Email address validation failed".
+* When a WP_Error is encountered, consider logging before throwing an exception as the context won't be transferred to the exception.
 
 ## Pull Requests
 
