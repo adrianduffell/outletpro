@@ -2,11 +2,11 @@
 /**
  * Test the register_outlet_badge_font_weight_setting function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_badge_font_weight_setting;
-use const WC_Outlet\OUTLET_BADGE_FONT_WEIGHT_OPTION;
+use function OutletPro\register_outlet_badge_font_weight_setting;
+use const OutletPro\OUTLET_BADGE_FONT_WEIGHT_OPTION;
 
 class Test_Register_Outlet_Badge_Font_Weight_Setting extends WP_UnitTestCase {
 

@@ -2,11 +2,11 @@
 /**
  * Test the init_patterns function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_patterns;
-use function WC_Outlet\init_patterns;
+use function OutletPro\deinit_patterns;
+use function OutletPro\init_patterns;
 class Test_Init_Patterns extends WP_UnitTestCase {
 
 	public function test_registers_outlet_block_pattern_category(): void {

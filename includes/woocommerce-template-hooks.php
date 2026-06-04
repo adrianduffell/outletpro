@@ -2,10 +2,10 @@
 /**
  * WooCommerce template hook functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -49,8 +49,8 @@ function init_woocommerce_template_hooks(): void {
 		throw new \InvalidArgumentException( 'The wc_outlet_badge_single_product_priority filter must return an integer.' );
 	}
 
-	add_action( $single_product_badge_hook, 'WC_Outlet\display_outlet_badge_hook', $single_product_badge_priority );
-	add_action( 'woocommerce_product_meta_start', 'WC_Outlet\display_outlet_message_hook', 1 );
+	add_action( $single_product_badge_hook, 'OutletPro\display_outlet_badge_hook', $single_product_badge_priority );
+	add_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook', 1 );
 }
 
 /**

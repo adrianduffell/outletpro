@@ -2,14 +2,14 @@
 /**
  * Tests for display_order_item_outlet_badge_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\display_order_item_outlet_badge_hook;
-use function WC_Outlet\hide_order_item_outlet_meta_hook;
-use function WC_Outlet\init_admin_order;
-use const WC_Outlet\ORDER_ITEM_OUTLET_META_KEY;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use function OutletPro\display_order_item_outlet_badge_hook;
+use function OutletPro\hide_order_item_outlet_meta_hook;
+use function OutletPro\init_admin_order;
+use const OutletPro\ORDER_ITEM_OUTLET_META_KEY;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 
@@ -66,6 +66,6 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_admin_order();
 
 		// Assert.
-		$this->assertSame( 10, has_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Outlet\hide_order_item_outlet_meta_hook' ) );
+		$this->assertSame( 10, has_filter( 'woocommerce_hidden_order_itemmeta', 'OutletPro\hide_order_item_outlet_meta_hook' ) );
 	}
 }

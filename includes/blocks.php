@@ -2,10 +2,10 @@
 /**
  * Block registration and render callbacks.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,10 +17,10 @@ defined( 'ABSPATH' ) || exit;
 function init_blocks(): void {
 	register_outlet_badge_block();
 	register_outlet_message_block();
-	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
-	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
-	add_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook', 11 );
-	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
+	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
 }
 
 /**
@@ -31,8 +31,8 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
-	remove_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook', 11 );
-	remove_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11 );
+	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
+	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
 	// Unregister all blocks in the wc-outlet namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
@@ -53,7 +53,7 @@ function register_outlet_badge_block(): void {
 	register_block_type(
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-badge/',
 		array(
-			'render_callback' => 'WC_Outlet\render_outlet_badge_callback',
+			'render_callback' => 'OutletPro\render_outlet_badge_callback',
 		)
 	);
 }
@@ -241,7 +241,7 @@ function register_outlet_message_block(): void {
 	register_block_type(
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
-			'render_callback' => 'WC_Outlet\render_outlet_message_callback',
+			'render_callback' => 'OutletPro\render_outlet_message_callback',
 		)
 	);
 }

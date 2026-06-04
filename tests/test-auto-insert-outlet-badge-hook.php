@@ -2,12 +2,12 @@
 /**
  * Tests for auto_insert_outlet_badge_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_blocks;
-use function WC_Outlet\init_blocks;
-use function WC_Outlet\register_outlet_badge_block;
+use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
+use function OutletPro\register_outlet_badge_block;
 
 class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 

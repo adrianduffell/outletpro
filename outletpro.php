@@ -12,10 +12,10 @@
  * Requires at least: 6.9
  * Requires PHP: 7.4
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -111,11 +111,11 @@ function admin_init_hook(): void {
  * @internal WordPress action hook
  */
 function woocommerce_loaded_hook(): void {
-	add_action( 'init', 'WC_Outlet\init_hook', 20 );
-	add_action( 'admin_init', 'WC_Outlet\admin_init_hook' );
+	add_action( 'init', 'OutletPro\init_hook', 20 );
+	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
 }
 
-add_action( 'woocommerce_loaded', 'WC_Outlet\woocommerce_loaded_hook' );
+add_action( 'woocommerce_loaded', 'OutletPro\woocommerce_loaded_hook' );
 
 /**
  * Plugin activation hook.

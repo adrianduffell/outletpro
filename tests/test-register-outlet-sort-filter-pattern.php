@@ -2,12 +2,12 @@
 /**
  * Tests for the outlet sort filter block pattern.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_patterns;
-use function WC_Outlet\get_outlet_sort_filter_pattern_content;
-use function WC_Outlet\register_outlet_sort_filter_pattern;
+use function OutletPro\deinit_patterns;
+use function OutletPro\get_outlet_sort_filter_pattern_content;
+use function OutletPro\register_outlet_sort_filter_pattern;
 
 class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 

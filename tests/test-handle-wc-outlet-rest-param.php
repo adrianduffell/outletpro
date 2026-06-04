@@ -2,12 +2,12 @@
 /**
  * Tests for handle_wc_outlet_rest_param().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_status_taxonomy;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 

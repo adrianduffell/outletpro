@@ -4,7 +4,7 @@
  *
  * Keep to 40 characters wide and 2-space indents for nice display in the block editor.
  *
- * @package WC_Outlet
+ * @package OutletPro
  *
  * @phpcs:disable
  */

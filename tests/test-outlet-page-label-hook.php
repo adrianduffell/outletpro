@@ -2,11 +2,11 @@
 /**
  * Test the outlet_page_label_hook function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\init_admin_page_list_table;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\init_admin_page_list_table;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 

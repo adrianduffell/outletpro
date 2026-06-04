@@ -2,10 +2,10 @@
 /**
  * Shortcode-related functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_shortcodes(): void {
-	add_filter( 'woocommerce_shortcode_products_query', 'WC_Outlet\filter_products_shortcode_query_hook', 10, 3 );
-	add_filter( 'shortcode_atts_products', 'WC_Outlet\add_products_shortcode_attribute_hook', 10, 3 );
-	add_filter( 'posts_clauses', 'WC_Outlet\max_price_posts_clauses', 10, 2 );
+	add_filter( 'woocommerce_shortcode_products_query', 'OutletPro\filter_products_shortcode_query_hook', 10, 3 );
+	add_filter( 'shortcode_atts_products', 'OutletPro\add_products_shortcode_attribute_hook', 10, 3 );
+	add_filter( 'posts_clauses', 'OutletPro\max_price_posts_clauses', 10, 2 );
 }
 
 /**

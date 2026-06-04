@@ -2,15 +2,15 @@
 /**
  * Test the report_taxonomies function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\report_taxonomies;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\report_taxonomies;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Report_Taxonomies extends WP_UnitTestCase {
 

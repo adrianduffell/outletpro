@@ -2,11 +2,11 @@
 /**
  * Tests for deinit_patterns().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_patterns;
-use function WC_Outlet\init_patterns;
+use function OutletPro\deinit_patterns;
+use function OutletPro\init_patterns;
 
 class Test_Deinit_Patterns extends WP_UnitTestCase {
 

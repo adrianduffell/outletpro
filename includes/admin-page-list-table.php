@@ -2,10 +2,10 @@
 /**
  * Admin page list table functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_admin_page_list_table(): void {
-	add_filter( 'display_post_states', 'WC_Outlet\outlet_page_label_hook', 10, 2 );
+	add_filter( 'display_post_states', 'OutletPro\outlet_page_label_hook', 10, 2 );
 }
 
 /**

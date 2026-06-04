@@ -2,12 +2,12 @@
 /**
  * Test the activate function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\activate;
-use const WC_Outlet\ACTIVATED_AT_OPTION;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\activate;
+use const OutletPro\ACTIVATED_AT_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Activate extends WP_UnitTestCase {
 

@@ -2,12 +2,12 @@
 /**
  * Tests for auto_insert_outlet_message_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_blocks;
-use function WC_Outlet\init_blocks;
-use function WC_Outlet\register_outlet_message_block;
+use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
+use function OutletPro\register_outlet_message_block;
 
 class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 

@@ -2,17 +2,17 @@
 /**
  * Tests for render_outlet_message_callback().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\deinit_blocks;
-use function WC_Outlet\init_blocks;
-use function WC_Outlet\register_outlet_message_block;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\render_outlet_message_callback;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_MESSAGE_OPTION;
+use function OutletPro\add_to_outlet;
+use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
+use function OutletPro\register_outlet_message_block;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\render_outlet_message_callback;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 

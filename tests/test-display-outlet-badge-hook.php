@@ -2,14 +2,14 @@
 /**
  * Tests for display_outlet_badge_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\init_woocommerce_template_hooks;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use function OutletPro\add_to_outlet;
+use function OutletPro\init_woocommerce_template_hooks;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 

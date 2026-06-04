@@ -2,11 +2,11 @@
 /**
  * Test the register_outlet_message_setting function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_message_setting;
-use const WC_Outlet\OUTLET_MESSAGE_OPTION;
+use function OutletPro\register_outlet_message_setting;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Register_Outlet_Message_Setting extends WP_UnitTestCase {
 

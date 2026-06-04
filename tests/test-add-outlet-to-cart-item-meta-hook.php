@@ -2,15 +2,15 @@
 /**
  * Tests for add_outlet_to_cart_item_meta_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\deinit_cart;
-use function WC_Outlet\init_cart;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use function OutletPro\add_to_outlet;
+use function OutletPro\deinit_cart;
+use function OutletPro\init_cart;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 

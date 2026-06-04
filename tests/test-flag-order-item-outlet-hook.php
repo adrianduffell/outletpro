@@ -2,14 +2,14 @@
 /**
  * Tests for flag_order_item_outlet_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\flag_order_item_outlet_hook;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\ORDER_ITEM_OUTLET_META_KEY;
+use function OutletPro\add_to_outlet;
+use function OutletPro\flag_order_item_outlet_hook;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\ORDER_ITEM_OUTLET_META_KEY;
 
 class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 

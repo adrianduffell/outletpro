@@ -2,10 +2,10 @@
 /**
  * Admin order functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,8 +22,8 @@ const ORDER_ITEM_OUTLET_META_KEY = '_wc_outlet';
  * @internal
  */
 function init_admin_order(): void {
-	add_action( 'woocommerce_after_order_itemmeta', 'WC_Outlet\display_order_item_outlet_badge_hook', 1, 3 );
-	add_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Outlet\hide_order_item_outlet_meta_hook' );
+	add_action( 'woocommerce_after_order_itemmeta', 'OutletPro\display_order_item_outlet_badge_hook', 1, 3 );
+	add_filter( 'woocommerce_hidden_order_itemmeta', 'OutletPro\hide_order_item_outlet_meta_hook' );
 }
 
 /**

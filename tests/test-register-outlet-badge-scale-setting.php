@@ -2,11 +2,11 @@
 /**
  * Test the register_outlet_badge_scale_setting function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_badge_scale_setting;
-use const WC_Outlet\OUTLET_BADGE_SCALE_OPTION;
+use function OutletPro\register_outlet_badge_scale_setting;
+use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
 
 class Test_Register_Outlet_Badge_Scale_Setting extends WP_UnitTestCase {
 

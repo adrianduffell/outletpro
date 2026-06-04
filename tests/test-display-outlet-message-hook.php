@@ -2,26 +2,26 @@
 /**
  * Tests for display_outlet_message_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\init_woocommerce_template_hooks;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_MESSAGE_OPTION;
+use function OutletPro\add_to_outlet;
+use function OutletPro\init_woocommerce_template_hooks;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
-		remove_action( 'woocommerce_product_meta_start', 'WC_Outlet\display_outlet_message_hook', 1 );
+		remove_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook', 1 );
 
 		// Act.
 		init_woocommerce_template_hooks();
 
 		// Assert.
-		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'WC_Outlet\display_outlet_message_hook' ) );
+		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook' ) );
 	}
 
 	public function test_displays_message_for_outlet_product(): void {

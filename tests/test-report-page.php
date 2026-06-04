@@ -2,11 +2,11 @@
 /**
  * Test the report_page function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\report_page;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\report_page;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Report_Page extends WP_UnitTestCase {
 

@@ -2,10 +2,10 @@
 /**
  * Tests for deinit_blocks().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_blocks;
+use function OutletPro\deinit_blocks;
 
 class Test_Deinit_Blocks extends WP_UnitTestCase {
 
