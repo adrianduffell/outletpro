@@ -24,6 +24,10 @@ function init_page(): void {
  * @internal
  */
 function deinit_page(): void {
+	if ( null === get_block_template( 'outletpro//outlet-page', 'wp_template' ) ) {
+		return;
+	}
+
 	unregister_block_template( 'outletpro//outlet-page' );
 }
 
