@@ -280,7 +280,7 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 	$base_url = $permalink;
 
 	/* translators: %s: formatted price amount with currency symbol, e.g. $10 */
-	$label_template = __( 'Under %s', 'wc-outlet' );
+	$label_template = __( 'Under %s', 'outletpro' );
 	$buttons        = array();
 
 	foreach ( $tiers as $price ) {
@@ -315,7 +315,7 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 				'metadata' => array(
 					'categories'  => array( 'wc-outlet' ),
 					'patternName' => 'wc-outlet/outlet-filter-tiles',
-					'name'        => __( 'Outlet filter tiles', 'wc-outlet' ),
+					'name'        => __( 'Outlet filter tiles', 'outletpro' ),
 				),
 			),
 			$buttons_attrs
@@ -336,8 +336,8 @@ function register_outlet_filter_tiles_pattern(): void {
 	register_block_pattern(
 		'wc-outlet/outlet-filter-tiles',
 		array(
-			'title'         => __( 'Outlet filter tiles', 'wc-outlet' ),
-			'description'   => __( 'Adds tiled price range filters for the store\'s outlet page.', 'wc-outlet' ),
+			'title'         => __( 'Outlet filter tiles', 'outletpro' ),
+			'description'   => __( 'Adds tiled price range filters for the store\'s outlet page.', 'outletpro' ),
 			'content'       => get_outlet_filter_tiles_content(),
 			'categories'    => array( 'wc-outlet' ),
 			'viewportWidth' => 320,
@@ -378,8 +378,8 @@ function register_outlet_sort_filter_pattern(): void {
 	register_block_pattern(
 		'wc-outlet/outlet-sort-filter',
 		array(
-			'title'         => __( 'Outlet sort filter', 'wc-outlet' ),
-			'description'   => __( 'Dropdown sort filter for the outlet page.', 'wc-outlet' ),
+			'title'         => __( 'Outlet sort filter', 'outletpro' ),
+			'description'   => __( 'Dropdown sort filter for the outlet page.', 'outletpro' ),
 			'content'       => get_outlet_sort_filter_pattern_content(),
 			'categories'    => array( 'wc-outlet' ),
 			'viewportWidth' => 180,
@@ -396,7 +396,7 @@ function register_outlet_block_pattern_category(): void {
 	register_block_pattern_category(
 		'wc-outlet',
 		array(
-			'label' => __( 'Outlet', 'wc-outlet' ),
+			'label' => __( 'Outlet', 'outletpro' ),
 		)
 	);
 }

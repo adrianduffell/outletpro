@@ -50,10 +50,10 @@ export const withOutletQueryInspector = (
 				<BlockEdit { ...props } />
 				<InspectorControls group="advanced">
 					<ToggleControl
-						label={ __( 'Show outlet products only', 'wc-outlet' ) }
+						label={ __( 'Show outlet products only', 'outletpro' ) }
 						help={ __(
 							'Restrict this collection to products in the store’s outlet.',
-							'wc-outlet'
+							'outletpro'
 						) }
 						checked={ true === props.attributes.query?.wc_outlet }
 						onChange={ ( isChecked ) =>

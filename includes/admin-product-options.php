@@ -40,8 +40,8 @@ function add_product_checkbox_hook(): void {
 	woocommerce_wp_checkbox(
 		array(
 			'id'          => 'wc-outlet-status',
-			'label'       => __( 'Outlet', 'wc-outlet' ),
-			'description' => __( 'Include in outlet', 'wc-outlet' ),
+			'label'       => __( 'Outlet', 'outletpro' ),
+			'description' => __( 'Include in outlet', 'outletpro' ),
 			'value'       => $is_outlet ? 'outlet' : '',
 			'cbvalue'     => 'outlet',
 		)
@@ -54,13 +54,13 @@ function add_product_checkbox_hook(): void {
 		? sprintf(
 			' <a href="%s" class="wc-outlet-button-link">%s</a>',
 			esc_url( $settings_url ),
-			esc_html__( 'Edit settings', 'wc-outlet' )
+			esc_html__( 'Edit settings', 'outletpro' )
 		)
 		: '';
 
 	printf(
 		'<div class="wc-outlet-status-help">%s%s</div><!-- .wc-outlet-status-help -->',
-		esc_html__( 'Sell remaining stock in the store’s outlet. Included products display a badge and message.', 'wc-outlet' ),
+		esc_html__( 'Sell remaining stock in the store’s outlet. Included products display a badge and message.', 'outletpro' ),
 		wp_kses_post( $link )
 	);
 	echo '</div><!-- .wc-outlet-status-panel -->';

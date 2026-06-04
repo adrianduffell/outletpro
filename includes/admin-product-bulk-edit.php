@@ -30,11 +30,11 @@ function bulk_edit_field_hook(): void {
 	?>
 	<div class="inline-edit-group">
 		<label class="alignleft">
-			<span class="title wc-outlet-bulk-edit-title"><?php esc_html_e( 'Outlet', 'wc-outlet' ); ?></span>
+			<span class="title wc-outlet-bulk-edit-title"><?php esc_html_e( 'Outlet', 'outletpro' ); ?></span>
 			<select name="wc_outlet_bulk">
-				<option value=""><?php esc_html_e( '— No change —', 'wc-outlet' ); ?></option>
-				<option value="yes"><?php esc_html_e( 'Include', 'wc-outlet' ); ?></option>
-				<option value="no"><?php esc_html_e( 'Remove', 'wc-outlet' ); ?></option>
+				<option value=""><?php esc_html_e( '— No change —', 'outletpro' ); ?></option>
+				<option value="yes"><?php esc_html_e( 'Include', 'outletpro' ); ?></option>
+				<option value="no"><?php esc_html_e( 'Remove', 'outletpro' ); ?></option>
 			</select>
 		</label>
 	</div>

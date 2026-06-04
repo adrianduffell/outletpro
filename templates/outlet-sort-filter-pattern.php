@@ -75,7 +75,7 @@ document.addEventListener(
 
 <select
   id="<?php echo esc_attr( $wc_outlet_orderby_id ); ?>"
-  aria-label="<?php echo esc_html__( 'Sort', 'wc-outlet' ); ?>"
+  aria-label="<?php echo esc_html__( 'Sort', 'outletpro' ); ?>"
 >
   <option value="">
     <?php echo esc_html__( 'Default sorting', 'woocommerce' ); ?>

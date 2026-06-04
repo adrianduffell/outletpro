@@ -5,7 +5,7 @@
  * Version: 1.0.0
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
- * Text Domain: wc-outlet
+ * Text Domain: outletpro
  * License: GNU General Public License v3.0
  * License URI: https://www.gnu.org/licenses/gpl-3.0.html
  * Requires Plugins: woocommerce
