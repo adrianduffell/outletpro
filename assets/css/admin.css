@@ -5,16 +5,16 @@
  * @since 1.0.0
  */
 
-.wc-outlet-status-panel {
+.outletpro-status-panel {
 	margin-bottom: 1.5em;
 }
 
-.wc-outlet-status-panel .form-field {
+.outletpro-status-panel .form-field {
 	margin-bottom: 0;
 
 }
 
-.wc-outlet-status-panel .wc-outlet-status-help {
+.outletpro-status-panel .outletpro-status-help {
 	margin: 0 0 0 162px;
 	max-width: 290px;
 	font-size: 12px;
@@ -24,26 +24,26 @@
 
 @media (max-width: 500px) {
 
-	.wc-outlet-status-panel .wc-outlet-status-help {
+	.outletpro-status-panel .outletpro-status-help {
 		display: none;
 	}
 }
 
-.wc-outlet-onboarding-notice {
+.outletpro-onboarding-notice {
 	display: none;
 }
 
-.wc-outlet-onboarding-notice.is-visible {
+.outletpro-onboarding-notice.is-visible {
 	display: block;
 }
 
-.wc-outlet-checklist {
+.outletpro-checklist {
 	margin: 0 0 12px 0;
 	padding: 0;
 	list-style: none;
 }
 
-.wc-outlet-new {
+.outletpro-new {
 	display: inline-block;
 	background: #f2edff;
 	color: #2c045d;
@@ -59,15 +59,15 @@
 	margin-right: 0.25em;
 }
 
-.wc-outlet-button-link {
+.outletpro-button-link {
 	text-decoration: none;
 }
 
-.wc-outlet-bulk-edit-title {
+.outletpro-bulk-edit-title {
 	line-height: 1.3 !important;
 }
 
-.wc-outlet-admin-badge {
+.outletpro-admin-badge {
 	display: inline-block;
 	background-color: #f0f0f1;
 	color: var(--wp-admin-text-color);

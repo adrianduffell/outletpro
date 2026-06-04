@@ -37,7 +37,7 @@ test( 'notice shows when there are no outlet products', async ( {
 
 	// Assert.
 	await expect(
-		page.locator( '.wc-outlet-onboarding-notice' )
+		page.locator( '.outletpro-onboarding-notice' )
 	).toBeVisible();
 } );
 
@@ -71,7 +71,7 @@ test( 'notice still shows when an outlet product exists but no page is configure
 
 	// Assert: the notice is still shown in the "products added" state.
 	await expect(
-		page.locator( '.wc-outlet-onboarding-notice' )
+		page.locator( '.outletpro-onboarding-notice' )
 	).toBeVisible();
 
 	// Cleanup.
@@ -100,7 +100,7 @@ test( 'notice does not show when localStorage is unavailable', async ( {
 
 	// Assert: notice stays hidden because localStorage is inaccessible.
 	await expect(
-		page.locator( '.wc-outlet-onboarding-notice' )
+		page.locator( '.outletpro-onboarding-notice' )
 	).not.toBeVisible();
 } );
 
@@ -115,12 +115,12 @@ test( 'notice does not show again after being dismissed', async ( {
 	// Arrange: visit the product list and confirm the notice is visible.
 	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
 	await expect(
-		page.locator( '.wc-outlet-onboarding-notice' )
+		page.locator( '.outletpro-onboarding-notice' )
 	).toBeVisible();
 
 	// Act: dismiss the notice.
 	await page
-		.locator( '.wc-outlet-onboarding-notice .notice-dismiss' )
+		.locator( '.outletpro-onboarding-notice .notice-dismiss' )
 		.click();
 
 	// Navigate away and back.
@@ -128,7 +128,7 @@ test( 'notice does not show again after being dismissed', async ( {
 
 	// Assert: notice is hidden because the dismissal key is in localStorage.
 	await expect(
-		page.locator( '.wc-outlet-onboarding-notice' )
+		page.locator( '.outletpro-onboarding-notice' )
 	).not.toBeVisible();
 } );
 
@@ -144,7 +144,7 @@ test( '"New" badge in notice title has light purple background and dark purple t
 	await admin.visitAdminPage( 'edit.php', 'post_type=product' );
 
 	// Assert.
-	const newBadge = page.locator( '.wc-outlet-new' );
+	const newBadge = page.locator( '.outletpro-new' );
 	await expect( newBadge ).toBeVisible();
 	await expect( newBadge ).toHaveCSS(
 		'background-color',

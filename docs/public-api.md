@@ -282,12 +282,12 @@ for custom styling.
 
 ### Front-end classes
 
-#### `.wc-outlet-badge`
+#### `.outletpro-badge`
 
 Applied to the outlet badge element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
-#### `.wc-outlet-message`
+#### `.outletpro-message`
 
 Applied to the outlet message element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.

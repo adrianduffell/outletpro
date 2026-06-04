@@ -80,7 +80,7 @@ function display_outlet_badge_hook(): void {
 	wp_enqueue_style( 'wc-outlet-classic-badge' );
 
 	printf(
-		'<p class="wc-outlet-badge">%s</p>',
+		'<p class="outletpro-badge">%s</p>',
 		esc_html( $label )
 	);
 }
@@ -115,5 +115,5 @@ function display_outlet_message_hook(): void {
 
 	wp_enqueue_style( 'wc-outlet-classic-message' );
 
-	echo '<p class="wc-outlet-message">' . esc_html( $message ) . '</p>';
+	echo '<p class="outletpro-message">' . esc_html( $message ) . '</p>';
 }

@@ -17,14 +17,14 @@
 ( function () {
 	document.addEventListener( 'DOMContentLoaded', function () {
 		const span = document.querySelector(
-			'.wc-outlet-status_field span.description'
+			'.outletpro-status_field span.description'
 		);
 
 		if ( ! span ) {
 			return;
 		}
 
-		const checkbox = document.getElementById( 'wc-outlet-status' );
+		const checkbox = document.getElementById( 'outletpro-status' );
 
 		if ( ! checkbox ) {
 			return;

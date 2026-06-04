@@ -300,21 +300,21 @@ const OutletSidebar = () => {
 			title={ __( 'Outlet settings', 'outletpro' ) }
 			isPinnable={ true }
 			icon={ OutletIcon }
-			className="wc-outlet-sidebar"
+			className="outletpro-sidebar"
 		>
 			<TabPanel
-				className="wc-outlet-sidebar__tabs"
+				className="outletpro-sidebar__tabs"
 				activeClass="is-active"
 				tabs={ [
 					{
 						name: 'badge',
 						title: __( 'Badge', 'outletpro' ),
-						className: 'wc-outlet-sidebar__tab',
+						className: 'outletpro-sidebar__tab',
 					},
 					{
 						name: 'message',
 						title: __( 'Message', 'outletpro' ),
-						className: 'wc-outlet-sidebar__tab',
+						className: 'outletpro-sidebar__tab',
 					},
 				] }
 			>

@@ -73,7 +73,7 @@ async function getMiniCartBadge( page ) {
 	await miniCartButton.click();
 	const locator = page
 		.locator(
-			'.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
+			'.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
 		)
 		.first();
 	return { locator, pseudo: '::before' };
@@ -92,12 +92,12 @@ async function getCartBadge( page ) {
 	const locator = isBlock
 		? page
 				.locator(
-					'.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
+					'.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
 				)
 				.first()
 		: page
 				.locator(
-					'.shop_table td.product-name:has(.wc-outlet-cart-item-meta)'
+					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
 				)
 				.first();
 	return { locator, pseudo: isBlock ? '::before' : '::after' };
@@ -116,12 +116,12 @@ async function getCheckoutBadge( page ) {
 	const locator = isBlock
 		? page
 				.locator(
-					'.wc-block-components-order-summary-item__description:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
+					'.wc-block-components-order-summary-item__description:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
 				)
 				.first()
 		: page
 				.locator(
-					'.shop_table td.product-name:has(.wc-outlet-cart-item-meta)'
+					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
 				)
 				.first();
 	return { locator, pseudo: isBlock ? '::before' : '::after' };
@@ -263,7 +263,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
-	const badge = customerPage.locator( '.wc-outlet-badge' );
+	const badge = customerPage.locator( '.outletpro-badge' );
 	await expect( badge ).toBeVisible();
 	await expect
 		.soft( badge, 'Product font-size' )

@@ -176,7 +176,7 @@ test( 'Outlet badge has default white text and red background', async ( {
 	await page.goto( productData.permalink );
 
 	// Assert.
-	const badge = page.locator( '.wc-outlet-badge' );
+	const badge = page.locator( '.outletpro-badge' );
 	await expect( badge ).toBeVisible();
 	await expect( badge ).toHaveCSS( 'color', 'rgb(255, 255, 255)' );
 	await expect( badge ).toHaveCSS( 'background-color', 'rgb(248, 18, 64)' );

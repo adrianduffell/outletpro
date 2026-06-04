@@ -16,7 +16,7 @@ export function Edit(): JSX.Element {
 	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {
-		className: 'wc-outlet-badge',
+		className: 'outletpro-badge',
 	} );
 
 	return (

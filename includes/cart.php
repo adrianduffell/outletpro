@@ -66,7 +66,7 @@ function add_outlet_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 			'key'     => $outlet_label,
 			'value'   => __( 'Yes', 'outletpro' ),
 			'display' => sprintf(
-				'<span class="wc-outlet-cart-item-meta">%s</span>',
+				'<span class="outletpro-cart-item-meta">%s</span>',
 				esc_html__( 'Yes', 'outletpro' )
 			),
 		)

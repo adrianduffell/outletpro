@@ -215,7 +215,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-outlet-badge',
+			'class' => 'outletpro-badge',
 		)
 	);
 
@@ -274,7 +274,7 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-outlet-message',
+			'class' => 'outletpro-message',
 		)
 	);
 
