@@ -24,12 +24,7 @@ function init_page(): void {
  * @internal
  */
 function deinit_page(): void {
-	if ( function_exists( 'unregister_block_template' ) ) {
-		unregister_block_template( 'outletpro//outlet-page' );
-		return;
-	}
-
-	\WP_Block_Templates_Registry::get_instance()->unregister( 'outletpro//outlet-page' );
+	unregister_block_template( 'outletpro//outlet-page' );
 }
 
 /**
