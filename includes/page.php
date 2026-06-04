@@ -19,6 +19,15 @@ function init_page(): void {
 }
 
 /**
+ * Helper to de-initialize page integrations back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_page(): void {
+	unregister_block_template( 'outletpro//outlet-page' );
+}
+
+/**
  * Register the outlet page template.
  *
  * @internal
