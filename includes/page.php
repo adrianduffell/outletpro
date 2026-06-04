@@ -162,7 +162,7 @@ function create_outlet_page(): void {
 		throw new \RuntimeException(
 			'Could not determine whether the outlet page exists.',
 			0,
-			$e //phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
 		);
 	}
 
@@ -282,7 +282,11 @@ function create_outlet_page(): void {
 		try {
 			$sort_filter_content = get_pattern_content( 'wc-outlet/outlet-sort-filter' );
 		} catch ( \InvalidArgumentException | \RuntimeException $e ) {
-			throw new \RuntimeException( 'Could not insert sort filter in outlet page.', 0, $e );  //phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			throw new \RuntimeException(
+				'Could not insert sort filter in outlet page.',
+				0,
+				$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
+			);
 		}
 		if ( '' !== $sort_filter_content ) {
 			$post_content = $sort_filter_content . "\n\n" . $post_content;
@@ -329,7 +333,7 @@ function outlet_page_is_published(): bool {
 		throw new \RuntimeException(
 			'Could not determine whether the outlet page already exists.',
 			0,
-			$e //phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+			$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
 		);
 	}
 
