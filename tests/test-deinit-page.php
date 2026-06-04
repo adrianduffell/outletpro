@@ -56,8 +56,6 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 		// Assert.
 		$this->assertNull( get_block_template( 'outletpro//secondary-template', 'wp_template' ) );
 		$this->assertNotNull( get_block_template( 'other-plugin//keep-template', 'wp_template' ) );
-
-		unregister_block_template( 'other-plugin//keep-template' );
 	}
 
 	public function test_safely_handles_template_not_registered(): void {
