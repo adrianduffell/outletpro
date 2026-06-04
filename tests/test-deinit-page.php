@@ -26,9 +26,6 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 
 	public function test_unregisters_all_templates_in_outletpro_namespace(): void {
 		// Arrange.
-		unregister_block_template( 'other-plugin//keep-template' );
-		deinit_page();
-
 		register_block_template(
 			'outletpro//secondary-template',
 			array(
