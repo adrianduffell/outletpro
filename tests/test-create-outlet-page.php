@@ -2,14 +2,14 @@
 /**
  * Test the create_outlet_page function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\create_outlet_page;
-use function WC_Outlet\deinit_patterns;
-use function WC_Outlet\init_patterns;
-use function WC_Outlet\run_create_outlet_page_tool;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\create_outlet_page;
+use function OutletPro\deinit_patterns;
+use function OutletPro\init_patterns;
+use function OutletPro\run_create_outlet_page_tool;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
 

@@ -2,15 +2,15 @@
 /**
  * Tests for filter_outlet_product_collection_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_blocks;
-use function WC_Outlet\init_blocks;
-use function WC_Outlet\init_taxonomies;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
+use function OutletPro\init_taxonomies;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 	public function test_orderby_price_sets_asc_order_for_outlet_product_collection_block(): void {
 		// Arrange.
@@ -387,7 +387,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		init_blocks();
 
 		// Assert.
-		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook' ) );
-		$this->assertSame( 11, has_filter( 'render_block_data', 'WC_Outlet\set_outlet_product_collection_orderby_hook' ) );
+		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook' ) );
+		$this->assertSame( 11, has_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook' ) );
 	}
 }

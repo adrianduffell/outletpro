@@ -2,11 +2,11 @@
 /**
  * Tests for enqueue_admin_editor_styles_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_enqueue;
-use function WC_Outlet\enqueue_init;
+use function OutletPro\deinit_enqueue;
+use function OutletPro\enqueue_init;
 
 class Test_Enqueue_Admin_Editor_Styles_Hook extends WP_UnitTestCase {
 

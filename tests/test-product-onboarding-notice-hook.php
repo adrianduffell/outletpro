@@ -2,18 +2,18 @@
 /**
  * Test the product_onboarding_notice_hook function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\create_outlet_page;
-use function WC_Outlet\init_admin_product_list_table;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\ACTIVATED_AT_OPTION;
-use const WC_Outlet\ONBOARDING_DISMISS_STORAGE_KEY;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\add_to_outlet;
+use function OutletPro\create_outlet_page;
+use function OutletPro\init_admin_product_list_table;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\ACTIVATED_AT_OPTION;
+use const OutletPro\ONBOARDING_DISMISS_STORAGE_KEY;
+use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 

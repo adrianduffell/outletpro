@@ -2,10 +2,10 @@
 /**
  * Tests for get_pattern_content().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\get_pattern_content;
+use function OutletPro\get_pattern_content;
 
 class Test_Get_Pattern_Content extends WP_UnitTestCase {
 

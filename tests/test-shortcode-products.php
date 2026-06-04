@@ -2,15 +2,15 @@
 /**
  * Tests for shortcode filter functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_products_shortcode_attribute_hook;
-use function WC_Outlet\filter_products_shortcode_query_hook;
-use function WC_Outlet\max_price_posts_clauses;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\add_products_shortcode_attribute_hook;
+use function OutletPro\filter_products_shortcode_query_hook;
+use function OutletPro\max_price_posts_clauses;
+use function OutletPro\register_outlet_status_taxonomy;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Shortcode_Products extends WP_UnitTestCase {
 

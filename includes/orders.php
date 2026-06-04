@@ -2,10 +2,10 @@
 /**
  * Order functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_orders(): void {
-	add_action( 'woocommerce_new_order_item', 'WC_Outlet\flag_order_item_outlet_hook', 10, 3 );
+	add_action( 'woocommerce_new_order_item', 'OutletPro\flag_order_item_outlet_hook', 10, 3 );
 }
 
 /**

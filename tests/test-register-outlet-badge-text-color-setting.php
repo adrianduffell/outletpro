@@ -2,11 +2,11 @@
 /**
  * Test the register_outlet_badge_text_color_setting function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_badge_text_color_setting;
-use const WC_Outlet\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use function OutletPro\register_outlet_badge_text_color_setting;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Register_Outlet_Badge_Text_Color_Setting extends WP_UnitTestCase {
 

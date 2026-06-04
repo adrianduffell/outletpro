@@ -2,12 +2,12 @@
 /**
  * Tests for add_product_checkbox_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_product_checkbox_hook;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
+use function OutletPro\add_product_checkbox_hook;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
 
 class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 

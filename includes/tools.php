@@ -2,10 +2,10 @@
 /**
  * Tools functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_tools(): void {
-	add_filter( 'woocommerce_debug_tools', 'WC_Outlet\register_create_outlet_page_tool_hook' );
+	add_filter( 'woocommerce_debug_tools', 'OutletPro\register_create_outlet_page_tool_hook' );
 }
 
 /**

@@ -6,7 +6,7 @@ Outlet implements a stable public API intended for use by third-party code. All 
 
 ### Outlet status
 
-#### `WC_Outlet\is_outlet( \WC_Product $product ): bool`
+#### `OutletPro\is_outlet( \WC_Product $product ): bool`
 
 Check if a product is in the store’s outlet.
 
@@ -18,13 +18,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $is_outlet = WC_Outlet\is_outlet( $product );
+    $is_outlet = OutletPro\is_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\add_to_outlet( \WC_Product $product ): void`
+#### `OutletPro\add_to_outlet( \WC_Product $product ): void`
 
 Add a product to the store’s outlet.
 
@@ -36,13 +36,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\add_to_outlet( $product );
+    OutletPro\add_to_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\remove_from_outlet( \WC_Product $product ): void`
+#### `OutletPro\remove_from_outlet( \WC_Product $product ): void`
 
 Remove a product from the store’s outlet.
 
@@ -54,13 +54,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\remove_from_outlet( $product );
+    OutletPro\remove_from_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\set_outlet( \WC_Product $product, bool $new_value ): void`
+#### `OutletPro\set_outlet( \WC_Product $product, bool $new_value ): void`
 
 Set the outlet status for a product.
 
@@ -75,13 +75,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\set_outlet( $product, true );
+    OutletPro\set_outlet( $product, true );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\count_outlet(): int`
+#### `OutletPro\count_outlet(): int`
 
 Count the number of published products in the store’s outlet.
 
@@ -89,13 +89,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $count = WC_Outlet\count_outlet();
+    $count = OutletPro\count_outlet();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\outlet_empty(): bool`
+#### `OutletPro\outlet_empty(): bool`
 
 Check if the store’s outlet has no published products.
 
@@ -105,7 +105,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Outlet\outlet_empty() ) {
+    if ( OutletPro\outlet_empty() ) {
         // nothing to display
     }
 } catch ( \Throwable $e ) {
@@ -115,7 +115,7 @@ try {
 
 ### Outlet page
 
-#### `WC_Outlet\get_outlet_page_id(): ?int`
+#### `OutletPro\get_outlet_page_id(): ?int`
 
 Get the outlet page ID from the `wc_outlet_page_id` option.
 
@@ -125,13 +125,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $page_id = WC_Outlet\get_outlet_page_id();
+    $page_id = OutletPro\get_outlet_page_id();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\outlet_page_exists(): bool`
+#### `OutletPro\outlet_page_exists(): bool`
 
 Check if the outlet page exists.
 
@@ -142,7 +142,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Outlet\outlet_page_exists() ) {
+    if ( OutletPro\outlet_page_exists() ) {
         // page is present
     }
 } catch ( \Throwable $e ) {
@@ -150,7 +150,7 @@ try {
 }
 ```
 
-#### `WC_Outlet\outlet_page_is_published(): bool`
+#### `OutletPro\outlet_page_is_published(): bool`
 
 Check whether the outlet page exists and is published.
 
@@ -158,7 +158,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Outlet\outlet_page_is_published() ) {
+    if ( OutletPro\outlet_page_is_published() ) {
         // page is live
     }
 } catch ( \Throwable $e ) {
@@ -166,7 +166,7 @@ try {
 }
 ```
 
-#### `WC_Outlet\create_outlet_page(): void`
+#### `OutletPro\create_outlet_page(): void`
 
 Create the outlet page.
 
@@ -178,7 +178,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\create_outlet_page();
+    OutletPro\create_outlet_page();
 } catch ( \Throwable $e ) {
     // Handle exception
 }

@@ -2,10 +2,10 @@
 /**
  * Admin product options.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_admin_product_options(): void {
-	add_action( 'woocommerce_product_options_inventory_product_data', 'WC_Outlet\add_product_checkbox_hook' );
-	add_action( 'woocommerce_admin_process_product_object', 'WC_Outlet\save_product_checkbox_hook' );
+	add_action( 'woocommerce_product_options_inventory_product_data', 'OutletPro\add_product_checkbox_hook' );
+	add_action( 'woocommerce_admin_process_product_object', 'OutletPro\save_product_checkbox_hook' );
 }
 
 /**

@@ -2,13 +2,13 @@
 /**
  * Test the setup_task_is_complete function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use function WC_Outlet\setup_task_is_complete;
+use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use function OutletPro\setup_task_is_complete;
 
 class Test_Setup_Task_Is_Complete extends WP_UnitTestCase {
 

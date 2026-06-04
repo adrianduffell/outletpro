@@ -2,11 +2,11 @@
 /**
  * Tests for deinit_enqueue().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_enqueue;
-use function WC_Outlet\enqueue_init;
+use function OutletPro\deinit_enqueue;
+use function OutletPro\enqueue_init;
 
 class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
@@ -18,7 +18,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Outlet\register_classic_styles_hook' ) );
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'OutletPro\register_classic_styles_hook' ) );
 	}
 
 	public function test_removes_enqueue_cart_styles_hook(): void {
@@ -29,7 +29,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'WC_Outlet\enqueue_cart_styles_hook' ) );
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'OutletPro\enqueue_cart_styles_hook' ) );
 	}
 
 	public function test_removes_output_badge_style_css_variables_hook(): void {
@@ -40,7 +40,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'wp_head', 'WC_Outlet\output_badge_style_css_variables_hook' ) );
+		$this->assertFalse( has_action( 'wp_head', 'OutletPro\output_badge_style_css_variables_hook' ) );
 	}
 
 	public function test_removes_enqueue_admin_editor_styles_hook(): void {
@@ -51,7 +51,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'enqueue_block_assets', 'WC_Outlet\enqueue_admin_editor_styles_hook' ) );
+		$this->assertFalse( has_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_editor_styles_hook' ) );
 	}
 
 	public function test_removes_enqueue_admin_canvas_scripts_hook(): void {
@@ -62,7 +62,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'enqueue_block_assets', 'WC_Outlet\enqueue_admin_canvas_scripts_hook' ) );
+		$this->assertFalse( has_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_canvas_scripts_hook' ) );
 	}
 
 	public function test_removes_admin_enqueue_scripts_styles_hook(): void {
@@ -73,7 +73,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'admin_enqueue_scripts', 'WC_Outlet\enqueue_admin_styles_hook' ) );
+		$this->assertFalse( has_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_styles_hook' ) );
 	}
 
 	public function test_removes_admin_enqueue_scripts_product_scripts_hook(): void {
@@ -84,7 +84,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'admin_enqueue_scripts', 'WC_Outlet\enqueue_admin_product_scripts_hook' ) );
+		$this->assertFalse( has_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' ) );
 	}
 
 	public function test_removes_enqueue_block_editor_assets_hook(): void {
@@ -95,7 +95,7 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( has_action( 'enqueue_block_editor_assets', 'WC_Outlet\enqueue_build_assets_hook' ) );
+		$this->assertFalse( has_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' ) );
 	}
 
 	public function test_deregisters_block_styles(): void {

@@ -2,10 +2,10 @@
 /**
  * Test the register_outlet_status_taxonomy function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_status_taxonomy;
+use function OutletPro\register_outlet_status_taxonomy;
 
 class Test_Register_Outlet_Status_Taxonomy extends \WP_UnitTestCase {
 

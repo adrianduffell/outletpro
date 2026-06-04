@@ -2,11 +2,11 @@
 /**
  * Test the add_system_status_section_hook function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\init_system_status;
-use function WC_Outlet\register_outlet_status_taxonomy;
+use function OutletPro\init_system_status;
+use function OutletPro\register_outlet_status_taxonomy;
 
 class Test_Add_System_Status_Section extends WP_UnitTestCase {
 

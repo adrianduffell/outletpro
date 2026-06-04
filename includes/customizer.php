@@ -2,10 +2,10 @@
 /**
  * Customizer integration functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ const OUTLET_BADGE_BG_COLOUR_DEFAULT = '#F81240';
  * @internal
  */
 function init_customizer(): void {
-	add_action( 'customize_register', 'WC_Outlet\register_customizer_hook' );
+	add_action( 'customize_register', 'OutletPro\register_customizer_hook' );
 }
 
 /**

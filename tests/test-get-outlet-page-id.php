@@ -2,11 +2,11 @@
 /**
  * Test the get_outlet_page_id function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\get_outlet_page_id;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\get_outlet_page_id;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Get_Outlet_Page_Id extends WP_UnitTestCase {
 

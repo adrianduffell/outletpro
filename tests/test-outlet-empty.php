@@ -2,14 +2,14 @@
 /**
  * Test the outlet_empty function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\outlet_empty;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\add_to_outlet;
+use function OutletPro\outlet_empty;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Outlet_Empty extends WP_UnitTestCase {
 

@@ -2,11 +2,11 @@
 /**
  * Test the register_outlet_page_setting function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_page_setting;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\register_outlet_page_setting;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 

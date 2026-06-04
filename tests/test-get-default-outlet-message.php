@@ -2,10 +2,10 @@
 /**
  * Tests for get_default_outlet_message().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\get_default_outlet_message;
+use function OutletPro\get_default_outlet_message;
 
 class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 

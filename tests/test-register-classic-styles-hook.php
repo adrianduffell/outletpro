@@ -2,11 +2,11 @@
 /**
  * Tests for register_classic_styles_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_enqueue;
-use function WC_Outlet\enqueue_init;
+use function OutletPro\deinit_enqueue;
+use function OutletPro\enqueue_init;
 
 class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 

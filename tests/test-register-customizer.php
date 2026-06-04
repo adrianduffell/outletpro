@@ -2,17 +2,17 @@
 /**
  * Tests for the customizer integration functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_customizer_hook;
-use const WC_Outlet\OUTLET_BADGE_BG_COLOR_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BG_COLOUR_DEFAULT;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
-use const WC_Outlet\OUTLET_BADGE_SCALE_OPTION;
-use const WC_Outlet\OUTLET_BADGE_TEXT_COLOR_OPTION;
-use const WC_Outlet\OUTLET_BADGE_TEXT_COLOUR_DEFAULT;
-use const WC_Outlet\OUTLET_MESSAGE_OPTION;
+use function OutletPro\register_customizer_hook;
+use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_BG_COLOUR_DEFAULT;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
+use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOUR_DEFAULT;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 

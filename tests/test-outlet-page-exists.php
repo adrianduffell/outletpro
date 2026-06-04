@@ -2,12 +2,12 @@
 /**
  * Test the outlet_page_exists function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\create_outlet_page;
-use function WC_Outlet\outlet_page_exists;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\create_outlet_page;
+use function OutletPro\outlet_page_exists;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Page_Exists extends WP_UnitTestCase {
 

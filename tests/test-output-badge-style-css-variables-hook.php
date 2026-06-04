@@ -2,20 +2,20 @@
 /**
  * Tests for output_badge_style_css_variables_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_enqueue;
-use function WC_Outlet\enqueue_init;
-use const WC_Outlet\OUTLET_BADGE_BG_COLOR_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_COLOR_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_RADIUS_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_STYLE_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_WIDTH_OPTION;
-use const WC_Outlet\OUTLET_BADGE_DENSITY_OPTION;
-use const WC_Outlet\OUTLET_BADGE_FONT_WEIGHT_OPTION;
-use const WC_Outlet\OUTLET_BADGE_SCALE_OPTION;
-use const WC_Outlet\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use function OutletPro\deinit_enqueue;
+use function OutletPro\enqueue_init;
+use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_RADIUS_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_STYLE_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_WIDTH_OPTION;
+use const OutletPro\OUTLET_BADGE_DENSITY_OPTION;
+use const OutletPro\OUTLET_BADGE_FONT_WEIGHT_OPTION;
+use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 

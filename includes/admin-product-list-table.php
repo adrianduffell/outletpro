@@ -2,10 +2,10 @@
 /**
  * Admin product list table functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ const ONBOARDING_DISMISS_STORAGE_KEY = 'wc_outlet_product_onboarding_dismissed';
  * @internal
  */
 function init_admin_product_list_table(): void {
-	add_action( 'admin_notices', 'WC_Outlet\product_onboarding_notice_hook' );
+	add_action( 'admin_notices', 'OutletPro\product_onboarding_notice_hook' );
 }
 
 /**

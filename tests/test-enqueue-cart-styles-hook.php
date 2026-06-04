@@ -2,12 +2,12 @@
 /**
  * Tests for enqueue_cart_styles_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_enqueue;
-use function WC_Outlet\enqueue_init;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use function OutletPro\deinit_enqueue;
+use function OutletPro\enqueue_init;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 

@@ -2,10 +2,10 @@
 /**
  * Tests for add_wc_outlet_rest_param_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_status_taxonomy;
+use function OutletPro\register_outlet_status_taxonomy;
 
 class Test_Add_Wc_Outlet_Rest_Param_Hook extends WP_UnitTestCase {
 
@@ -28,6 +28,6 @@ class Test_Add_Wc_Outlet_Rest_Param_Hook extends WP_UnitTestCase {
 
 	public function test_rest_product_query_filter_is_registered(): void {
 		// Assert.
-		$this->assertSame( 10, has_filter( 'rest_product_query', 'WC_Outlet\handle_wc_outlet_rest_param' ) );
+		$this->assertSame( 10, has_filter( 'rest_product_query', 'OutletPro\handle_wc_outlet_rest_param' ) );
 	}
 }

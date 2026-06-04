@@ -2,10 +2,10 @@
 /**
  * Admin product bulk edit functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,8 +15,8 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_admin_product_bulk_edit(): void {
-	add_action( 'woocommerce_product_bulk_edit_end', 'WC_Outlet\bulk_edit_field_hook' );
-	add_action( 'woocommerce_product_bulk_edit_save', 'WC_Outlet\save_bulk_edit_hook' );
+	add_action( 'woocommerce_product_bulk_edit_end', 'OutletPro\bulk_edit_field_hook' );
+	add_action( 'woocommerce_product_bulk_edit_save', 'OutletPro\save_bulk_edit_hook' );
 }
 
 /**

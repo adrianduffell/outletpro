@@ -2,11 +2,11 @@
 /**
  * Test the init_page function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_page;
-use function WC_Outlet\init_page;
+use function OutletPro\deinit_page;
+use function OutletPro\init_page;
 
 class Test_Init_Page extends WP_UnitTestCase {
 

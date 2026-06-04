@@ -2,10 +2,10 @@
 /**
  * Tests for settings_screen_enabled().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\settings_screen_enabled;
+use function OutletPro\settings_screen_enabled;
 
 class Test_Settings_Screen_Enabled extends WP_UnitTestCase {
 

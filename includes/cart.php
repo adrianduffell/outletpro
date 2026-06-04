@@ -2,10 +2,10 @@
 /**
  * Cart functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_cart(): void {
-	add_filter( 'woocommerce_get_item_data', 'WC_Outlet\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
+	add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 }
 
 /**
@@ -24,7 +24,7 @@ function init_cart(): void {
  * @internal
  */
 function deinit_cart(): void {
-	remove_filter( 'woocommerce_get_item_data', 'WC_Outlet\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
+	remove_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
 }
 
 /**

@@ -2,11 +2,11 @@
 /**
  * Tests for the outlet filter tiles block pattern.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\get_outlet_filter_tiles_content;
-use function WC_Outlet\register_outlet_filter_tiles_pattern;
+use function OutletPro\get_outlet_filter_tiles_content;
+use function OutletPro\register_outlet_filter_tiles_pattern;
 
 class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 

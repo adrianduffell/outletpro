@@ -2,10 +2,10 @@
 /**
  * REST API integration functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_rest_api(): void {
-	add_filter( 'rest_product_collection_params', 'WC_Outlet\add_wc_outlet_rest_param_hook' );
-	add_filter( 'woocommerce_rest_product_object_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
-	add_filter( 'rest_product_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
+	add_filter( 'rest_product_collection_params', 'OutletPro\add_wc_outlet_rest_param_hook' );
+	add_filter( 'woocommerce_rest_product_object_query', 'OutletPro\handle_wc_outlet_rest_param', 10, 2 );
+	add_filter( 'rest_product_query', 'OutletPro\handle_wc_outlet_rest_param', 10, 2 );
 }
 
 /**

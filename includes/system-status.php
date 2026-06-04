@@ -2,10 +2,10 @@
 /**
  * System status functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_system_status(): void {
-	add_action( 'woocommerce_system_status_report', 'WC_Outlet\add_system_status_section_hook', 99 );
+	add_action( 'woocommerce_system_status_report', 'OutletPro\add_system_status_section_hook', 99 );
 }
 
 /**
