@@ -51,7 +51,7 @@ A draft outlet page named "Outlet" is automatically created when the extension i
 
 = PHP notice =
 
-A PHP notice appears briefly in the page editor when WP_DEBUG mode is on due to a core WordPress issue. See https://core.trac.wordpress.org/ticket/62407. Workaround: disable WP_DEBUG mode https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/
+A PHP notice appears briefly in the page editor when WP_DEBUG is enabled due to a core WordPress issue. See https://core.trac.wordpress.org/ticket/62407. Workaround: disable WP_DEBUG (https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/).
 
 = Pattern inserter =
 
