@@ -19,6 +19,23 @@ function init_page(): void {
 }
 
 /**
+ * Helper to de-initialize page integrations back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_page(): void {
+	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
+
+	foreach ( $templates as $template_name => $template ) {
+		if ( 0 !== strpos( $template_name, 'outletpro//' ) ) {
+			continue;
+		}
+
+		unregister_block_template( $template_name );
+	}
+}
+
+/**
  * Register the outlet page template.
  *
  * @internal
