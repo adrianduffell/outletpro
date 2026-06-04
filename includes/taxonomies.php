@@ -48,16 +48,16 @@ function report_taxonomies(): array {
 
 	return array(
 		'outlet-taxonomy-registered' => array(
-			__( 'Outlet status taxonomy registered', 'wc-outlet' ),
-			$taxonomy_exists ? __( 'Yes', 'wc-outlet' ) : __( 'No', 'wc-outlet' ),
+			__( 'Outlet status taxonomy registered', 'outletpro' ),
+			$taxonomy_exists ? __( 'Yes', 'outletpro' ) : __( 'No', 'outletpro' ),
 		),
 		'outlet-canonical-term-id'   => array(
-			__( 'Canonical term ID', 'wc-outlet' ),
-			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-outlet' ),
+			__( 'Canonical term ID', 'outletpro' ),
+			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'outletpro' ),
 		),
 		'outlet-product-count'       => array(
-			__( 'Total products in outlet', 'wc-outlet' ),
-			$outlet_product_count ?? __( 'Unknown', 'wc-outlet' ),
+			__( 'Total products in outlet', 'outletpro' ),
+			$outlet_product_count ?? __( 'Unknown', 'outletpro' ),
 		),
 	);
 }
@@ -69,7 +69,7 @@ function report_taxonomies(): array {
  */
 function register_outlet_status_taxonomy(): void {
 	$args = array(
-		'label'        => __( 'Outlet Status', 'wc-outlet' ),
+		'label'        => __( 'Outlet Status', 'outletpro' ),
 		'public'       => false,
 		'show_ui'      => false,
 		'show_in_rest' => false,

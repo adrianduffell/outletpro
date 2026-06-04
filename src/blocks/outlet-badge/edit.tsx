@@ -23,10 +23,10 @@ export function Edit(): JSX.Element {
 		<RichText
 			{ ...blockProps }
 			tagName="div"
-			value={ label || __( 'Last chance', 'wc-outlet' ) }
+			value={ label || __( 'Last chance', 'outletpro' ) }
 			onChange={ ( value: string ) => setLabel( value ) }
 			allowedFormats={ [] }
-			placeholder={ __( 'Label', 'wc-outlet' ) }
+			placeholder={ __( 'Label', 'outletpro' ) }
 		/>
 	);
 }

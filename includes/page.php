@@ -56,8 +56,8 @@ function register_outlet_page_template(): void {
 	register_block_template(
 		'outletpro//outlet-page',
 		array(
-			'title'       => __( 'Outlet page', 'wc-outlet' ),
-			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
+			'title'       => __( 'Outlet page', 'outletpro' ),
+			'description' => __( 'Wide page template for the outlet page.', 'outletpro' ),
 			'post_types'  => array( 'page' ),
 			'content'     => $template_content,
 			'plugin'      => 'outletpro',
@@ -121,17 +121,17 @@ function outlet_page_exists(): bool {
  * @return array<string, array{0: string, 1: string}>
  */
 function report_page(): array {
-	$label = __( 'Page ID', 'wc-outlet' );
+	$label = __( 'Page ID', 'outletpro' );
 	try {
 		$page_id = get_outlet_page_id();
 	} catch ( \UnexpectedValueException $e ) {
-		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'wc-outlet' ) ) );
+		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'outletpro' ) ) );
 	}
 	$page_id = get_outlet_page_id();
 	$page    = $page_id ? get_post( $page_id ) : null;
 
 	if ( ! $page instanceof \WP_Post || 'page' !== $page->post_type ) {
-		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'wc-outlet' ) ) );
+		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'outletpro' ) ) );
 	}
 
 	$status_object = get_post_status_object( $page->post_status );
@@ -264,7 +264,7 @@ function create_outlet_page(): void {
 
 	$page_id = wp_insert_post(
 		array(
-			'post_title'  => __( 'Outlet', 'wc-outlet' ),
+			'post_title'  => __( 'Outlet', 'outletpro' ),
 			'post_name'   => 'outlet',
 			'post_status' => 'draft',
 			'post_type'   => 'page',

@@ -215,10 +215,10 @@ function get_default_outlet_message(): string {
 	$country       = explode( ':', $base_location )[0];
 
 	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
-		return __( 'Only while supplies last', 'wc-outlet' );
+		return __( 'Only while supplies last', 'outletpro' );
 	}
 
-	return __( 'Only while stocks last', 'wc-outlet' );
+	return __( 'Only while stocks last', 'outletpro' );
 }
 
 /**
@@ -231,7 +231,7 @@ function get_default_outlet_message(): string {
  * @internal
  */
 function seed_settings(): void {
-	add_option( OUTLET_BADGE_LABEL_OPTION, __( 'Last chance', 'wc-outlet' ) );
+	add_option( OUTLET_BADGE_LABEL_OPTION, __( 'Last chance', 'outletpro' ) );
 	add_option( OUTLET_BADGE_TEXT_COLOR_OPTION, '#FFFFFF' );
 	add_option( OUTLET_BADGE_BG_COLOR_OPTION, '#F81240' );
 	add_option( OUTLET_BADGE_BORDER_COLOR_OPTION, '' );
@@ -276,8 +276,8 @@ function register_outlet_badge_label_setting(): void {
 		OUTLET_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge label', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge label.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge label', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge label.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(
@@ -300,8 +300,8 @@ function register_outlet_badge_text_color_setting(): void {
 		OUTLET_BADGE_TEXT_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge text color', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge text color.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge text color', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge text color.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
@@ -324,8 +324,8 @@ function register_outlet_badge_bg_color_setting(): void {
 		OUTLET_BADGE_BG_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge background color', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge background color.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge background color', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge background color.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_hex_color',
 			'show_in_rest'      => array(
@@ -348,8 +348,8 @@ function register_outlet_badge_border_radius_setting(): void {
 		OUTLET_BADGE_BORDER_RADIUS_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge border radius', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge border radius.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge border radius', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge border radius.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
@@ -372,8 +372,8 @@ function register_outlet_badge_border_color_setting(): void {
 		OUTLET_BADGE_BORDER_COLOR_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge border color', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge border color.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge border color', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge border color.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
@@ -396,8 +396,8 @@ function register_outlet_badge_border_style_setting(): void {
 		OUTLET_BADGE_BORDER_STYLE_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge border style', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge border style.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge border style', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge border style.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
@@ -420,8 +420,8 @@ function register_outlet_badge_border_width_setting(): void {
 		OUTLET_BADGE_BORDER_WIDTH_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge border width', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge border width.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge border width', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge border width.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
@@ -444,8 +444,8 @@ function register_outlet_badge_font_weight_setting(): void {
 		OUTLET_BADGE_FONT_WEIGHT_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet badge font weight', 'wc-outlet' ),
-			'description'       => __( 'Store-wide outlet badge font weight.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge font weight', 'outletpro' ),
+			'description'       => __( 'Store-wide outlet badge font weight.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'WC_Outlet\sanitize_css_value',
 			'show_in_rest'      => array(
@@ -468,8 +468,8 @@ function register_outlet_badge_scale_setting(): void {
 		OUTLET_BADGE_SCALE_OPTION,
 		array(
 			'type'              => 'integer',
-			'label'             => __( 'Outlet badge scale', 'wc-outlet' ),
-			'description'       => __( 'Percentage size of the outlet badge relative to the surrounding text cap-height.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge scale', 'outletpro' ),
+			'description'       => __( 'Percentage size of the outlet badge relative to the surrounding text cap-height.', 'outletpro' ),
 			'default'           => null,
 			'sanitize_callback' => 'WC_Outlet\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
@@ -493,8 +493,8 @@ function register_outlet_badge_density_setting(): void {
 		OUTLET_BADGE_DENSITY_OPTION,
 		array(
 			'type'              => 'integer',
-			'label'             => __( 'Outlet badge density', 'wc-outlet' ),
-			'description'       => __( 'Controls the ratio between font size and padding for the badge. A lower density results in more whitespace. A Higher density results in a larger font.', 'wc-outlet' ),
+			'label'             => __( 'Outlet badge density', 'outletpro' ),
+			'description'       => __( 'Controls the ratio between font size and padding for the badge. A lower density results in more whitespace. A Higher density results in a larger font.', 'outletpro' ),
 			'default'           => null,
 			'sanitize_callback' => 'WC_Outlet\sanitize_unsigned_integer',
 			'show_in_rest'      => array(
@@ -519,8 +519,8 @@ function register_outlet_message_setting(): void {
 		OUTLET_MESSAGE_OPTION,
 		array(
 			'type'              => 'string',
-			'label'             => __( 'Outlet message', 'wc-outlet' ),
-			'description'       => __( 'Message displayed on outlet products.', 'wc-outlet' ),
+			'label'             => __( 'Outlet message', 'outletpro' ),
+			'description'       => __( 'Message displayed on outlet products.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(

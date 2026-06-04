@@ -32,11 +32,11 @@ function init_setup_task(): void {
 			}
 
 			public function get_title(): string {
-				return __( ' Choose outlet products', 'wc-outlet' );
+				return __( ' Choose outlet products', 'outletpro' );
 			}
 
 			public function get_content(): string {
-				return __( 'Move old stock quickly with the store’s outlet.', 'wc-outlet' );
+				return __( 'Move old stock quickly with the store’s outlet.', 'outletpro' );
 			}
 
 			public function get_time(): string {
@@ -44,7 +44,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_action_label(): string {
-				return __( 'Manage products', 'wc-outlet' );
+				return __( 'Manage products', 'outletpro' );
 			}
 
 			public function get_action_url(): string {

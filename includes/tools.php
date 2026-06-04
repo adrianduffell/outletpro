@@ -29,9 +29,9 @@ function init_tools(): void {
  */
 function register_create_outlet_page_tool_hook( array $tools ): array {
 	$tools['create_outlet_page'] = array(
-		'name'     => __( 'Create outlet page', 'wc-outlet' ),
-		'button'   => __( 'Create page', 'wc-outlet' ),
-		'desc'     => __( 'Creates a draft page with the outlet products shortcode.', 'wc-outlet' ),
+		'name'     => __( 'Create outlet page', 'outletpro' ),
+		'button'   => __( 'Create page', 'outletpro' ),
+		'desc'     => __( 'Creates a draft page with the outlet products shortcode.', 'outletpro' ),
 		'callback' => __NAMESPACE__ . '\run_create_outlet_page_tool',
 	);
 
@@ -46,12 +46,12 @@ function register_create_outlet_page_tool_hook( array $tools ): array {
 function run_create_outlet_page_tool(): string {
 	try {
 		if ( outlet_page_exists() ) {
-			return __( 'Outlet page already exists.', 'wc-outlet' );
+			return __( 'Outlet page already exists.', 'outletpro' );
 		}
 		create_outlet_page();
 	} catch ( \Throwable $e ) {
-		return __( 'Outlet page could not be created.', 'wc-outlet' );
+		return __( 'Outlet page could not be created.', 'outletpro' );
 	}
 
-	return __( 'Outlet page created.', 'wc-outlet' );
+	return __( 'Outlet page created.', 'outletpro' );
 }

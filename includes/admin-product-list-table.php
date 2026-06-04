@@ -69,34 +69,34 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	$status    = 'info';
-	$new_badge = '<span class="wc-outlet-new">' . esc_html__( 'New', 'wc-outlet' ) . '</span> ';
+	$new_badge = '<span class="wc-outlet-new">' . esc_html__( 'New', 'outletpro' ) . '</span> ';
 
 	if ( $is_empty ) {
 		$content = '<p>' . $new_badge .
-			'<strong>' . esc_html__( 'The store’s outlet is empty.', 'wc-outlet' ) . '</strong> ' .
-			esc_html__( 'Get started by including a product using the checkbox in the product’s inventory panel.', 'wc-outlet' ) . '</p>';
+			'<strong>' . esc_html__( 'The store’s outlet is empty.', 'outletpro' ) . '</strong> ' .
+			esc_html__( 'Get started by including a product using the checkbox in the product’s inventory panel.', 'outletpro' ) . '</p>';
 	} elseif ( null === $page_id || 'trash' === get_post_status( $page_id ) ) {
 		$count   = count_outlet();
 		$content = '<p>' . $new_badge .
 			/* translators: %d: number of outlet products */
-			'<strong>' . sprintf( _n( 'The store’s outlet has %d product.', 'The store’s outlet has %d products.', $count, 'wc-outlet' ), $count ) . '</strong> ' .
-			esc_html__( 'Tip: add it to a page or post using the outlet block.', 'wc-outlet' ) . '</p>';
+			'<strong>' . sprintf( _n( 'The store’s outlet has %d product.', 'The store’s outlet has %d products.', $count, 'outletpro' ), $count ) . '</strong> ' .
+			esc_html__( 'Tip: add it to a page or post using the outlet block.', 'outletpro' ) . '</p>';
 	} elseif ( 'publish' !== get_post_status( $page_id ) ) {
 		$count     = count_outlet();
 		$edit_url  = get_edit_post_link( $page_id );
-		$edit_link = $edit_url ? ' <a class="wc-outlet-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'wc-outlet' ) . '</a>' : '';
+		$edit_link = $edit_url ? ' <a class="wc-outlet-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'outletpro' ) . '</a>' : '';
 		$content   = '<p>' . $new_badge .
 			/* translators: %d: number of outlet products */
-			'<strong>' . sprintf( _n( 'The store’s outlet has %d product.', 'The store’s outlet has %d products.', $count, 'wc-outlet' ), $count ) . '</strong> ' .
-			esc_html__( 'Make it visible on the store by editing and publishing the outlet page.', 'wc-outlet' ) .
+			'<strong>' . sprintf( _n( 'The store’s outlet has %d product.', 'The store’s outlet has %d products.', $count, 'outletpro' ), $count ) . '</strong> ' .
+			esc_html__( 'Make it visible on the store by editing and publishing the outlet page.', 'outletpro' ) .
 			$edit_link . '</p>';
 	} else {
 		$status    = 'success';
 		$view_url  = get_permalink( $page_id );
-		$view_link = $view_url ? ' <a class="wc-outlet-button-link" href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'wc-outlet' ) . '</a>' : '';
-		$content   = '<p><span aria-hidden="true" style="font-size:1.1em; margin-right:0.25em">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'wc-outlet' ) . '</span> ' .
-			'<strong>' . esc_html__( 'The store’s outlet is ready.', 'wc-outlet' ) . '</strong> ' .
-			esc_html__( 'Tip: promote it in your store by creating a link to the outlet page or adding it to the navigation.', 'wc-outlet' ) .
+		$view_link = $view_url ? ' <a class="wc-outlet-button-link" href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'outletpro' ) . '</a>' : '';
+		$content   = '<p><span aria-hidden="true" style="font-size:1.1em; margin-right:0.25em">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'outletpro' ) . '</span> ' .
+			'<strong>' . esc_html__( 'The store’s outlet is ready.', 'outletpro' ) . '</strong> ' .
+			esc_html__( 'Tip: promote it in your store by creating a link to the outlet page or adding it to the navigation.', 'outletpro' ) .
 			$view_link . '</p>';
 	}
 
