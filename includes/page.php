@@ -290,9 +290,12 @@ function create_outlet_page(): void {
 	}
 
 	if ( wp_is_block_theme() ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
-		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
-		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( 'Could not set outlet page template.' );
+		$current_template = get_post_meta( $page_id, '_wp_page_template', true );
+		if ( 'outlet-page' !== $current_template ) {
+			$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
+			if ( false === $result ) {
+				throw new \RuntimeException( 'Could not set outlet page template.' );
+			}
 		}
 	}
 }
