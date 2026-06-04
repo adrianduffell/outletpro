@@ -37,10 +37,6 @@ No. This plugin introduces a dedicated outlet, which you can name anything you l
 
 A draft outlet page named "Outlet" is automatically created when the extension is installed. Update it as needed and publish it to make it visible on your store.
 
-= Where is the outlet on my store? =
-
-A draft outlet page named "Outlet" is automatically created when the extension is installed. Update it as needed and publish it to make it visible on your store.
-
 
 == Changelog ==
 
