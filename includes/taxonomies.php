@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const OUTLET_STATUS_TAXONOMY = 'wc_outlet_status';
+const OUTLET_STATUS_TAXONOMY = 'outletpro_status';
 
 /**
  * Canonical term for products belonging in the outlet.
