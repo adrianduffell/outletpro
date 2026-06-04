@@ -52,3 +52,7 @@ A PHP notice appears briefly in the page editor when WP_DEBUG is enabled due to 
 = Pattern inserter =
 
 The pattern inserter displays incorrect margins due to the same issue above. Use the same workaround.
+
+= Outlet sort filter pattern
+
+The outlet sort filter pattern is not registered on WordPress 6.9 installs due to an incompatability. Workaround: update to WordPress at least 7.0.
