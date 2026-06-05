@@ -280,7 +280,7 @@ function create_outlet_page(): void {
 
 	if ( wp_is_block_theme() && version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
 		try {
-			$sort_filter_content = get_pattern_content( 'wc-outlet/outlet-sort-filter' );
+			$sort_filter_content = get_pattern_content( 'outletpro/outlet-sort-filter' );
 		} catch ( \InvalidArgumentException | \RuntimeException $e ) {
 			throw new \RuntimeException(
 				'Could not insert sort filter in outlet page.',

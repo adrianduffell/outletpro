@@ -268,7 +268,7 @@ Cart badge stylesheet enqueued on `wp_enqueue_scripts`. Added in 1.0.0.
 #### `outletpro-badge-block`
 
 Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
-is only loaded when the `wc-outlet/outlet-badge` block is rendered on the page.
+is only loaded when the `outletpro/outlet-badge` block is rendered on the page.
 Added in 1.0.0.
 
 #### `outletpro-admin`
@@ -316,7 +316,7 @@ template hooks. Added in 1.0.0.
 
 ## Blocks
 
-### `wc-outlet/outlet-badge`
+### `outletpro/outlet-badge`
 
 Displays a outlet badge when the product is in the store’s outlet. Automatically
 inserted after the product price on the single product template (block themes). Added
@@ -346,7 +346,7 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 \* Denotes modifiable in settings.
 
-### `wc-outlet/outlet-message`
+### `outletpro/outlet-message`
 
 Displays the outlet message when the product is in the store’s outlet. Automatically
 inserted as the first child of the product meta block on the single product template (block

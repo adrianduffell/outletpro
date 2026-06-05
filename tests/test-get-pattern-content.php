@@ -9,7 +9,7 @@ use function OutletPro\get_pattern_content;
 
 class Test_Get_Pattern_Content extends WP_UnitTestCase {
 
-	private const TEST_PATTERN = 'wc-outlet/test-pattern-content';
+	private const TEST_PATTERN = 'outletpro/test-pattern-content';
 
 	public function test_throws_when_pattern_name_is_empty(): void {
 		// Expect.
@@ -22,7 +22,7 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 
 	public function test_throws_when_pattern_name_contains_unsupported_characters(): void {
 		// Arrange.
-		$pattern_name = 'wc-outlet/invalid_pattern';
+		$pattern_name = 'outletpro/invalid_pattern';
 
 		// Expect.
 		$this->expectException( \InvalidArgumentException::class );
@@ -34,7 +34,7 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 
 	public function test_throws_when_pattern_is_not_registered(): void {
 		// Arrange.
-		$pattern_name = 'wc-outlet/not-registered';
+		$pattern_name = 'outletpro/not-registered';
 
 		// Expect.
 		$this->expectException( \InvalidArgumentException::class );

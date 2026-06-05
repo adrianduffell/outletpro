@@ -72,6 +72,6 @@ export const withOutletQueryInspector = (
 
 addFilter(
 	'editor.BlockEdit',
-	'wc-outlet/product-collection/outlet-query-inspector',
+	'outletpro/product-collection/outlet-query-inspector',
 	withOutletQueryInspector
 );

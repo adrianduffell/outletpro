@@ -17,7 +17,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		register_outlet_badge_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-outlet/outlet-badge' );
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-badge' );
 
 		// Assert.
 		$this->assertEmpty( $block_type->block_hooks );
@@ -32,7 +32,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', array() );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-badge', $result );
+		$this->assertNotContains( 'outletpro/outlet-badge', $result );
 	}
 
 	public function test_badge_is_not_added_when_context_is_null(): void {
@@ -44,7 +44,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', null );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-badge', $result );
+		$this->assertNotContains( 'outletpro/outlet-badge', $result );
 	}
 
 	public function test_badge_is_not_added_when_template_is_not_single_product(): void {
@@ -58,7 +58,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', $template );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-badge', $result );
+		$this->assertNotContains( 'outletpro/outlet-badge', $result );
 	}
 
 	public function test_badge_is_added_when_template_is_single_product(): void {
@@ -72,7 +72,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', $template );
 
 		// Assert.
-		$this->assertContains( 'wc-outlet/outlet-badge', $result );
+		$this->assertContains( 'outletpro/outlet-badge', $result );
 	}
 
 	public function test_other_hooked_blocks_are_not_filtered(): void {
@@ -100,6 +100,6 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'after', 'core/heading', $template );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-badge', $result );
+		$this->assertNotContains( 'outletpro/outlet-badge', $result );
 	}
 }

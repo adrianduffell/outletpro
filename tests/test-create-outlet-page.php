@@ -148,12 +148,12 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( sprintf( '"columns":%d', $products_per_row ), $pages[0]->post_content );
 		$this->assertStringContainsString( '"order":"asc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
-		$this->assertStringNotContainsString( '"collection":"wc-outlet/product-collection/outlet"', $pages[0]->post_content );
+		$this->assertStringNotContainsString( '"collection":"outletpro/product-collection/outlet"', $pages[0]->post_content );
 		$this->assertStringContainsString( 'outletpro-filter-tiles', $pages[0]->post_content );
-		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertStringContainsString( '"patternName":"wc-outlet/outlet-sort-filter"', $pages[0]->post_content );
-		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertStringNotContainsString( '"patternName":"wc-outlet/outlet-sort-filter"', $pages[0]->post_content );
+		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertStringContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
+		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertStringNotContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
 		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
-		$sort_filter_position              = strpos( $pages[0]->post_content, 'wc-outlet/outlet-sort-filter' );
+		$sort_filter_position              = strpos( $pages[0]->post_content, 'outletpro/outlet-sort-filter' );
 		$filter_tiles_position             = strpos( $pages[0]->post_content, 'outletpro-filter-tiles' );
 		$this->assertNotFalse( $product_collection_block_position );
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertNotFalse( $sort_filter_position );

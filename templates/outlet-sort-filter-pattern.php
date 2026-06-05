@@ -1,6 +1,6 @@
 <?php
 /**
- * Content for wc-outlet/outlet-sort-filter pattern.
+ * Content for outletpro/outlet-sort-filter pattern.
  *
  * Keep to 40 characters wide and 2-space indents for nice display in the block editor.
  *

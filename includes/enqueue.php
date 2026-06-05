@@ -228,7 +228,7 @@ function register_block_styles(): void {
 	 * @internal
 	 */
 	wp_enqueue_block_style(
-		'wc-outlet/outlet-badge',
+		'outletpro/outlet-badge',
 		array(
 			'handle' => 'outletpro-badge-block',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',

@@ -15,7 +15,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		register_outlet_filter_tiles_pattern();
 
 		// Assert.
-		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-filter-tiles' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-filter-tiles' ) );
 	}
 
 	public function test_pattern_title_is_outlet_filter_tiles(): void {
@@ -23,7 +23,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		register_outlet_filter_tiles_pattern();
 
 		// Assert.
-		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'wc-outlet/outlet-filter-tiles' );
+		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-filter-tiles' );
 		$this->assertSame( 'Outlet filter tiles', $pattern['title'] );
 	}
 
@@ -211,8 +211,8 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( '"metadata"', $content );
-		$this->assertStringContainsString( '"categories":["wc-outlet"]', $content );
-		$this->assertStringContainsString( '"patternName":"wc-outlet/outlet-filter-tiles"', $content );
+		$this->assertStringContainsString( '"categories":["outletpro"]', $content );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-filter-tiles"', $content );
 		$this->assertStringContainsString( '"name":"Outlet filter tiles"', $content );
 
 		// Cleanup.

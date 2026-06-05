@@ -25,7 +25,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		$block   = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-badge',
+				'blockName'    => 'outletpro/outlet-badge',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -52,7 +52,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-badge',
+				'blockName'    => 'outletpro/outlet-badge',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -81,7 +81,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-badge',
+				'blockName'    => 'outletpro/outlet-badge',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -106,7 +106,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-badge',
+				'blockName'    => 'outletpro/outlet-badge',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -132,7 +132,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		init_blocks();
 
 		// Assert.
-		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-outlet/outlet-badge' ) );
+		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'outletpro/outlet-badge' ) );
 	}
 
 	public function test_returns_empty_string_when_label_is_empty(): void {
@@ -146,7 +146,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-badge',
+				'blockName'    => 'outletpro/outlet-badge',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
