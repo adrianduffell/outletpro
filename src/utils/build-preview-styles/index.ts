@@ -15,21 +15,21 @@ export function buildPreviewStyles(
 	settings: BuildPreviewStylesParams
 ): string {
 	const entries = {
-		'--wc-outlet-badge-bg-color': settings.bgColor,
-		'--wc-outlet-badge-text-color': settings.textColor,
-		'--wc-outlet-badge-font-weight': settings.fontWeight,
-		'--wc-outlet-badge-border-color': settings.borderColor,
-		'--wc-outlet-badge-border-style': settings.borderStyle,
-		'--wc-outlet-badge-border-width': settings.borderWidth,
-		'--wc-outlet-badge-border-radius': settings.borderRadius,
+		'--outletpro-badge-bg-color': settings.bgColor,
+		'--outletpro-badge-text-color': settings.textColor,
+		'--outletpro-badge-font-weight': settings.fontWeight,
+		'--outletpro-badge-border-color': settings.borderColor,
+		'--outletpro-badge-border-style': settings.borderStyle,
+		'--outletpro-badge-border-width': settings.borderWidth,
+		'--outletpro-badge-border-radius': settings.borderRadius,
 	};
 
 	const declarations = [
-		`--wc-outlet-badge-label: ${
+		`--outletpro-badge-label: ${
 			settings.label ? JSON.stringify( settings.label ) : 'none'
 		}`,
-		`--wc-outlet-badge-scale: ${ settings.scale ?? 'unset' }`,
-		`--wc-outlet-badge-density: ${ settings.density ?? 'unset' }`,
+		`--outletpro-badge-scale: ${ settings.scale ?? 'unset' }`,
+		`--outletpro-badge-density: ${ settings.density ?? 'unset' }`,
 		...Object.entries( entries ).map(
 			( [ key, value ] ) => `${ key }: ${ value || 'unset' }`
 		),

@@ -59,19 +59,19 @@ describe( 'EditorPreview', () => {
 		);
 
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-label: "Sale"'
+			'--outletpro-badge-label: "Sale"'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-bg-color: #ff0000'
+			'--outletpro-badge-bg-color: #ff0000'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-text-color: #ffffff'
+			'--outletpro-badge-text-color: #ffffff'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-scale: 140'
+			'--outletpro-badge-scale: 140'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-density: 80'
+			'--outletpro-badge-density: 80'
 		);
 	} );
 
@@ -88,10 +88,10 @@ describe( 'EditorPreview', () => {
 		);
 
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-bg-color: unset'
+			'--outletpro-badge-bg-color: unset'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-text-color: unset'
+			'--outletpro-badge-text-color: unset'
 		);
 	} );
 
@@ -112,13 +112,13 @@ describe( 'EditorPreview', () => {
 		);
 
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-bg-color: unset'
+			'--outletpro-badge-bg-color: unset'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-border-style: unset'
+			'--outletpro-badge-border-style: unset'
 		);
 		expect( styleEl?.textContent ).toContain(
-			'--wc-outlet-badge-font-weight: unset'
+			'--outletpro-badge-font-weight: unset'
 		);
 	} );
 

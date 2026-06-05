@@ -34,7 +34,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: none', implode( '', (array) $after ) );
+		$this->assertStringContainsString( '--outletpro-badge-label: none', implode( '', (array) $after ) );
 	}
 
 	public function test_inline_css_label_outputs_none_when_set_to_empty_string(): void {
@@ -48,7 +48,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: none', implode( '', (array) $after ) );
+		$this->assertStringContainsString( '--outletpro-badge-label: none', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
@@ -64,7 +64,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: "Sale"', implode( '', (array) $after ) );
+		$this->assertStringContainsString( '--outletpro-badge-label: "Sale"', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
@@ -80,7 +80,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: "Big \"Clearance\""', implode( '', (array) $after ) );
+		$this->assertStringContainsString( '--outletpro-badge-label: "Big \"Clearance\""', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
@@ -96,7 +96,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: "Sale \\\\ Today 🔥"', implode( '', (array) $after ) );
+		$this->assertStringContainsString( '--outletpro-badge-label: "Sale \\\\ Today 🔥"', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
