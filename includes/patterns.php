@@ -33,7 +33,7 @@ function init_patterns(): void {
 function deinit_patterns(): void {
 	$patterns = array_filter(
 		\WP_Block_Patterns_Registry::get_instance()->get_all_registered(),
-		fn( $pattern ) => 0 === strpos( $pattern['name'], 'wc-outlet/' )
+		fn( $pattern ) => 0 === strpos( $pattern['name'], 'outletpro/' )
 	);
 
 	foreach ( $patterns as $pattern ) {
@@ -42,7 +42,7 @@ function deinit_patterns(): void {
 
 	$categories = array_filter(
 		\WP_Block_Pattern_Categories_Registry::get_instance()->get_all_registered(),
-		fn( $category ) => 0 === strpos( $category['name'], 'wc-outlet' )
+		fn( $category ) => 0 === strpos( $category['name'], 'outletpro' )
 	);
 
 	foreach ( $categories as $category ) {
@@ -313,8 +313,8 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 		$buttons_attrs = array_merge(
 			array(
 				'metadata' => array(
-					'categories'  => array( 'wc-outlet' ),
-					'patternName' => 'wc-outlet/outlet-filter-tiles',
+					'categories'  => array( 'outletpro' ),
+					'patternName' => 'outletpro/outlet-filter-tiles',
 					'name'        => __( 'Outlet filter tiles', 'outletpro' ),
 				),
 			),
@@ -334,12 +334,12 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
  */
 function register_outlet_filter_tiles_pattern(): void {
 	register_block_pattern(
-		'wc-outlet/outlet-filter-tiles',
+		'outletpro/outlet-filter-tiles',
 		array(
 			'title'         => __( 'Outlet filter tiles', 'outletpro' ),
 			'description'   => __( 'Adds tiled price range filters for the store\'s outlet page.', 'outletpro' ),
 			'content'       => get_outlet_filter_tiles_content(),
-			'categories'    => array( 'wc-outlet' ),
+			'categories'    => array( 'outletpro' ),
 			'viewportWidth' => 320,
 		)
 	);
@@ -376,12 +376,12 @@ function get_outlet_sort_filter_pattern_content(): string {
  */
 function register_outlet_sort_filter_pattern(): void {
 	register_block_pattern(
-		'wc-outlet/outlet-sort-filter',
+		'outletpro/outlet-sort-filter',
 		array(
 			'title'         => __( 'Outlet sort filter', 'outletpro' ),
 			'description'   => __( 'Dropdown sort filter for the outlet page.', 'outletpro' ),
 			'content'       => get_outlet_sort_filter_pattern_content(),
-			'categories'    => array( 'wc-outlet' ),
+			'categories'    => array( 'outletpro' ),
 			'viewportWidth' => 180,
 		)
 	);
@@ -394,7 +394,7 @@ function register_outlet_sort_filter_pattern(): void {
  */
 function register_outlet_block_pattern_category(): void {
 	register_block_pattern_category(
-		'wc-outlet',
+		'outletpro',
 		array(
 			'label' => __( 'Outlet', 'outletpro' ),
 		)

@@ -34,9 +34,9 @@ function deinit_blocks(): void {
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
-	// Unregister all blocks in the wc-outlet namespace.
+	// Unregister all blocks in the outletpro namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
-		if ( 0 !== strpos( $block_name, 'wc-outlet/' ) ) {
+		if ( 0 !== strpos( $block_name, 'outletpro/' ) ) {
 			continue;
 		}
 
@@ -76,7 +76,7 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 
 	// Only auto-insert the badge on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-outlet/outlet-badge';
+		$hooked_blocks[] = 'outletpro/outlet-badge';
 	}
 
 	return $hooked_blocks;
@@ -100,7 +100,7 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 
 	// Only auto-insert the message on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-outlet/outlet-message';
+		$hooked_blocks[] = 'outletpro/outlet-message';
 	}
 
 	return $hooked_blocks;
