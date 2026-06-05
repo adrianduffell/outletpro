@@ -55,7 +55,7 @@ describe( 'product collection outlet inspector', () => {
 	it( 'registers the product collection block edit filter', () => {
 		expect( addFilter ).toHaveBeenCalledWith(
 			'editor.BlockEdit',
-			'wc-outlet/product-collection/outlet-query-inspector',
+			'outletpro/product-collection/outlet-query-inspector',
 			withOutletQueryInspector
 		);
 	} );

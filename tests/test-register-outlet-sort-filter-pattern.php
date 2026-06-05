@@ -19,7 +19,7 @@ class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 		register_outlet_sort_filter_pattern();
 
 		// Assert.
-		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-sort-filter' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-sort-filter' ) );
 	}
 
 	public function test_pattern_has_expected_title_and_description(): void {
@@ -30,7 +30,7 @@ class Test_Register_Outlet_Sort_Filter_Pattern extends WP_UnitTestCase {
 		register_outlet_sort_filter_pattern();
 
 		// Assert.
-		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'wc-outlet/outlet-sort-filter' );
+		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-sort-filter' );
 		$this->assertSame( 'Outlet sort filter', $pattern['title'] );
 		$this->assertSame( 'Dropdown sort filter for the outlet page.', $pattern['description'] );
 	}
