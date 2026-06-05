@@ -243,7 +243,6 @@ const OutletSidebar = () => {
 				) }
 
 				<BaseControl
-					id="wc-outlet-border-radius"
 					label={ __( 'Radius', 'outletpro' ) }
 					__nextHasNoMarginBottom={ true }
 				>
