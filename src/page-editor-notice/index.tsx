@@ -13,9 +13,9 @@ export function OutletEmptyNotice(): null {
 			).getCurrentPostId() as number;
 
 			// Fetch the outlet page ID from the WP settings REST API.
-			let settings: { wc_outlet_page_id?: number };
+			let settings: { outletpro_page_id?: number };
 			try {
-				settings = await apiFetch< { wc_outlet_page_id?: number } >( {
+				settings = await apiFetch< { outletpro_page_id?: number } >( {
 					path: '/wp/v2/settings',
 				} );
 			} catch {
@@ -23,8 +23,8 @@ export function OutletEmptyNotice(): null {
 			}
 
 			if (
-				! settings.wc_outlet_page_id ||
-				currentPostId !== settings.wc_outlet_page_id
+				! settings.outletpro_page_id ||
+				currentPostId !== settings.outletpro_page_id
 			) {
 				return;
 			}

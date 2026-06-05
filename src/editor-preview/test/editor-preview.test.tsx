@@ -43,11 +43,11 @@ describe( 'EditorPreview', () => {
 	test( 'renders CSS vars from settings', () => {
 		// Arrange.
 		setupEntityPropMock( {
-			wc_outlet_badge_label: [ 'Sale', jest.fn() ],
-			wc_outlet_badge_bg_color: [ '#ff0000', jest.fn() ],
-			wc_outlet_badge_text_color: [ '#ffffff', jest.fn() ],
-			wc_outlet_badge_scale: [ 140, jest.fn() ],
-			wc_outlet_badge_density: [ 80, jest.fn() ],
+			outletpro_badge_label: [ 'Sale', jest.fn() ],
+			outletpro_badge_bg_color: [ '#ff0000', jest.fn() ],
+			outletpro_badge_text_color: [ '#ffffff', jest.fn() ],
+			outletpro_badge_scale: [ 140, jest.fn() ],
+			outletpro_badge_density: [ 80, jest.fn() ],
 		} );
 
 		// Act.
@@ -98,9 +98,9 @@ describe( 'EditorPreview', () => {
 	test( 'falls back to unset for empty string style values', () => {
 		// Arrange.
 		setupEntityPropMock( {
-			wc_outlet_badge_bg_color: [ '', jest.fn() ],
-			wc_outlet_badge_border_style: [ '', jest.fn() ],
-			wc_outlet_badge_font_weight: [ '', jest.fn() ],
+			outletpro_badge_bg_color: [ '', jest.fn() ],
+			outletpro_badge_border_style: [ '', jest.fn() ],
+			outletpro_badge_font_weight: [ '', jest.fn() ],
 		} );
 
 		// Act.

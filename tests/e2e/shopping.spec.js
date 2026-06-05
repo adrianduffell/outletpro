@@ -220,12 +220,12 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	} );
 	await requestUtils.rest( {
 		method: 'PUT',
-		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
+		path: `/wp/v2/pages/${ wpSettings.outletpro_page_id }`,
 		data: { status: 'publish' },
 	} );
 	const outletPage = await requestUtils.rest( {
 		method: 'GET',
-		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
+		path: `/wp/v2/pages/${ wpSettings.outletpro_page_id }`,
 	} );
 
 	// Customer flow in isolated context.

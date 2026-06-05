@@ -12,7 +12,7 @@ export function Edit(): JSX.Element {
 	const [ label, setLabel ] = useEntityProp(
 		'root',
 		'site',
-		'wc_outlet_badge_label'
+		'outletpro_badge_label'
 	) as EntityProp< string >;
 
 	const blockProps = useBlockProps( {

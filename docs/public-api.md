@@ -117,7 +117,7 @@ try {
 
 #### `OutletPro\get_outlet_page_id(): ?int`
 
-Get the outlet page ID from the `wc_outlet_page_id` option.
+Get the outlet page ID from the `outletpro_page_id` option.
 
 Returns the page ID as a normalised `int`, or `null` when the option does not exist.
 
@@ -135,7 +135,7 @@ try {
 
 Check if the outlet page exists.
 
-Uses heuristics on the `wc_outlet_page_id` option value. Returns `false` when the option
+Uses heuristics on the `outletpro_page_id` option value. Returns `false` when the option
 is missing. Trashed pages are not considered to exist.
 
 Throws exception on error. Added in 1.0.0.

@@ -21,7 +21,7 @@ const ONBOARDING_TTL_DAYS = 14;
  *
  * @internal
  */
-const ONBOARDING_DISMISS_STORAGE_KEY = 'wc_outlet_product_onboarding_dismissed';
+const ONBOARDING_DISMISS_STORAGE_KEY = 'outletpro_product_onboarding_dismissed';
 
 /**
  * Helper to initialize admin product list table features.

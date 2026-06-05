@@ -858,11 +858,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '0',
 			setBorderWidth,
 		} );
-		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
+		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
+		window.localStorage.removeItem( 'outletpro_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -886,11 +886,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '',
 			setBorderWidth: jest.fn(),
 		} );
-		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
+		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
+		window.localStorage.removeItem( 'outletpro_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -914,11 +914,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '',
 			setBorderWidth: jest.fn(),
 		} );
-		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
+		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
+		window.localStorage.removeItem( 'outletpro_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );

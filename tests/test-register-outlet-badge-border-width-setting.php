@@ -12,7 +12,7 @@ class Test_Register_Outlet_Badge_Border_Width_Setting extends WP_UnitTestCase {
 
 	public function test_registers_outlet_badge_border_width_setting(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_BORDER_WIDTH_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_WIDTH_OPTION );
 
 		// Act.
 		register_outlet_badge_border_width_setting();
@@ -24,7 +24,7 @@ class Test_Register_Outlet_Badge_Border_Width_Setting extends WP_UnitTestCase {
 
 	public function test_setting_type_is_string(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_BORDER_WIDTH_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_WIDTH_OPTION );
 
 		// Act.
 		register_outlet_badge_border_width_setting();
@@ -36,7 +36,7 @@ class Test_Register_Outlet_Badge_Border_Width_Setting extends WP_UnitTestCase {
 
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_BORDER_WIDTH_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_WIDTH_OPTION );
 		register_outlet_badge_border_width_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -51,7 +51,7 @@ class Test_Register_Outlet_Badge_Border_Width_Setting extends WP_UnitTestCase {
 
 	public function test_setting_can_be_updated_via_rest(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_BORDER_WIDTH_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_WIDTH_OPTION );
 		register_outlet_badge_border_width_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
