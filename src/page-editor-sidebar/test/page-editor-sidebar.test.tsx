@@ -310,7 +310,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).toHaveBeenCalledWith(
-			'wc-outlet-sidebar',
+			'outletpro-sidebar',
 			expect.objectContaining( {
 				render: expect.any( Function ),
 			} )
@@ -346,7 +346,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'wc-outlet-sidebar',
+			'outletpro-sidebar',
 			expect.anything()
 		);
 
@@ -367,7 +367,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'wc-outlet-sidebar',
+			'outletpro-sidebar',
 			expect.anything()
 		);
 
@@ -1065,7 +1065,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect(
-			screen.getByTestId( 'wc-outlet-message-tab-description' )
+			screen.getByTestId( 'outletpro-message-tab-description' )
 		).toBeInTheDocument();
 	} );
 

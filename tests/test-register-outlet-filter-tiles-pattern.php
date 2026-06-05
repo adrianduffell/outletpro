@@ -153,7 +153,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		delete_option( 'outletpro_page_id' );
 	}
 
-	public function test_get_outlet_filter_tiles_content_has_wc_outlet_filter_tiles_class(): void {
+	public function test_get_outlet_filter_tiles_content_has_outletpro_filter_tiles_class(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
 		$page_id = self::factory()->post->create(

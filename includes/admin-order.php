@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const ORDER_ITEM_OUTLET_META_KEY = '_wc_outlet';
+const ORDER_ITEM_OUTLET_META_KEY = '_outletpro';
 
 /**
  * Helper to initialize admin order display hooks.

@@ -36,7 +36,7 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		expect(
-			document.head.querySelector( '#wc-outlet-preview-vars' )
+			document.head.querySelector( '#outletpro-preview-vars' )
 		).not.toBeNull();
 	} );
 
@@ -55,7 +55,7 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		const styleEl = document.head.querySelector(
-			'#wc-outlet-preview-vars'
+			'#outletpro-preview-vars'
 		);
 
 		expect( styleEl?.textContent ).toContain(
@@ -84,7 +84,7 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		const styleEl = document.head.querySelector(
-			'#wc-outlet-preview-vars'
+			'#outletpro-preview-vars'
 		);
 
 		expect( styleEl?.textContent ).toContain(
@@ -108,7 +108,7 @@ describe( 'EditorPreview', () => {
 
 		// Assert.
 		const styleEl = document.head.querySelector(
-			'#wc-outlet-preview-vars'
+			'#outletpro-preview-vars'
 		);
 
 		expect( styleEl?.textContent ).toContain(
@@ -133,7 +133,7 @@ describe( 'EditorPreview', () => {
 			// Act.
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'wc-outlet-canvas-ready', {
+					new CustomEvent( 'outletpro-canvas-ready', {
 						detail: {
 							document: canvasDoc,
 						},
@@ -143,10 +143,10 @@ describe( 'EditorPreview', () => {
 
 			// Assert.
 			expect(
-				canvasDoc.head.querySelector( '#wc-outlet-preview-vars' )
+				canvasDoc.head.querySelector( '#outletpro-preview-vars' )
 			).not.toBeNull();
 			expect(
-				document.head.querySelector( '#wc-outlet-preview-vars' )
+				document.head.querySelector( '#outletpro-preview-vars' )
 			).toBeNull();
 		} );
 
@@ -160,7 +160,7 @@ describe( 'EditorPreview', () => {
 
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'wc-outlet-canvas-ready', {
+					new CustomEvent( 'outletpro-canvas-ready', {
 						detail: {
 							document: canvasDoc1,
 						},
@@ -169,13 +169,13 @@ describe( 'EditorPreview', () => {
 			} );
 
 			expect(
-				canvasDoc1.head.querySelector( '#wc-outlet-preview-vars' )
+				canvasDoc1.head.querySelector( '#outletpro-preview-vars' )
 			).not.toBeNull();
 
 			// Act.
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'wc-outlet-canvas-ready', {
+					new CustomEvent( 'outletpro-canvas-ready', {
 						detail: {
 							document: canvasDoc2,
 						},
@@ -185,10 +185,10 @@ describe( 'EditorPreview', () => {
 
 			// Assert.
 			expect(
-				canvasDoc2.head.querySelector( '#wc-outlet-preview-vars' )
+				canvasDoc2.head.querySelector( '#outletpro-preview-vars' )
 			).not.toBeNull();
 			expect(
-				canvasDoc1.head.querySelector( '#wc-outlet-preview-vars' )
+				canvasDoc1.head.querySelector( '#outletpro-preview-vars' )
 			).toBeNull();
 		} );
 	} );

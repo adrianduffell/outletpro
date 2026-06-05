@@ -3,7 +3,7 @@ import { useEffect } from '@wordpress/element';
 import { dispatch, select } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 
-const NOTICE_ID = 'wc-outlet-empty';
+const NOTICE_ID = 'outletpro-empty';
 
 export function OutletEmptyNotice(): null {
 	useEffect( () => {
@@ -72,6 +72,6 @@ export function OutletEmptyNotice(): null {
 	return null;
 }
 
-registerPlugin( 'wc-outlet-page-editor-notice', {
+registerPlugin( 'outletpro-page-editor-notice', {
 	render: OutletEmptyNotice,
 } );

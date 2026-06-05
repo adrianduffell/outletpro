@@ -8,7 +8,7 @@ import EditorPreview from './editor-preview';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
 
-registerPlugin( 'wc-outlet-editor-preview', {
+registerPlugin( 'outletpro-editor-preview', {
 	render: EditorPreview,
 } );
 
