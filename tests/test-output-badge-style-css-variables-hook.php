@@ -40,15 +40,15 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		$output = ob_get_clean();
 
 		// Assert.
-		$this->assertStringContainsString( '--outletpro-badge-bg-color: #FF0000', $output );
-		$this->assertStringContainsString( '--outletpro-badge-text-color: #00FF00', $output );
-		$this->assertStringContainsString( '--outletpro-badge-border-color: #123456', $output );
-		$this->assertStringContainsString( '--outletpro-badge-border-style: solid', $output );
-		$this->assertStringContainsString( '--outletpro-badge-border-width: 2px', $output );
-		$this->assertStringContainsString( '--outletpro-badge-border-radius: 4px', $output );
-		$this->assertStringContainsString( '--outletpro-badge-font-weight: 700', $output );
-		$this->assertStringContainsString( '--outletpro-badge-scale: 140', $output );
-		$this->assertStringContainsString( '--outletpro-badge-density: 80', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-bg-color: #FF0000', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-text-color: #00FF00', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-border-color: #123456', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-border-style: solid', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-border-width: 2px', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-border-radius: 4px', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-font-weight: 700', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-scale: 140', $output );
+		$this->assertStringContainsString( '--wc-outlet-badge-density: 80', $output );
 	}
 
 	public function test_uses_unset_when_setting_value_is_empty(): void {
@@ -58,7 +58,7 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		enqueue_init();
 
 		// Assert.
-		$this->expectOutputRegex( '/--outletpro-badge-bg-color: unset/' );
+		$this->expectOutputRegex( '/--wc-outlet-badge-bg-color: unset/' );
 
 		// Act.
 		do_action( 'wp_head' );
