@@ -28,7 +28,7 @@ function init_setup_task(): void {
 		'extended',
 		new class( TaskLists::get_list( 'extended' ) ) extends Task {
 			public function get_id(): string {
-				return 'wc-outlet-include-products';
+				return 'outletpro-include-products';
 			}
 
 			public function get_title(): string {

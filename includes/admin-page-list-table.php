@@ -40,7 +40,7 @@ function outlet_page_label_hook( array $post_states, \WP_Post $post ): array {
 	}
 
 	if ( $post->ID === $page_id ) {
-		$post_states['wc_outlet_page'] = __( 'Outlet Page', 'outletpro' );
+		$post_states['outletpro_page'] = __( 'Outlet Page', 'outletpro' );
 	}
 
 	return $post_states;

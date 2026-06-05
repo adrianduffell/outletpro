@@ -49,7 +49,7 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( '--outletpro-badge-font-weight: 700', $output );
 		$this->assertStringContainsString( '--outletpro-badge-scale: 140', $output );
 		$this->assertStringContainsString( '--outletpro-badge-density: 80', $output );
-		$this->assertStringNotContainsString( 'id="wc-outlet-badge-vars"', $output );
+		$this->assertStringNotContainsString( 'id="outletpro-badge-vars"', $output );
 	}
 
 	public function test_uses_unset_when_setting_value_is_empty(): void {

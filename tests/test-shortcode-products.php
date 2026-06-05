@@ -129,8 +129,8 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_max_price', $result );
-		$this->assertSame( 100, $result['wc_outlet_max_price'] );
+		$this->assertArrayHasKey( 'outletpro_max_price', $result );
+		$this->assertSame( 100, $result['outletpro_max_price'] );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -146,7 +146,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wc_outlet_max_price', $result );
+		$this->assertArrayNotHasKey( 'outletpro_max_price', $result );
 	}
 
 	public function test_max_price_not_added_when_outletpro_not_enabled(): void {
@@ -159,7 +159,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wc_outlet_max_price', $result );
+		$this->assertArrayNotHasKey( 'outletpro_max_price', $result );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -176,8 +176,8 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_max_price', $result );
-		$this->assertNull( $result['wc_outlet_max_price'] );
+		$this->assertArrayHasKey( 'outletpro_max_price', $result );
+		$this->assertNull( $result['outletpro_max_price'] );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -194,8 +194,8 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_max_price', $result );
-		$this->assertNull( $result['wc_outlet_max_price'] );
+		$this->assertArrayHasKey( 'outletpro_max_price', $result );
+		$this->assertNull( $result['outletpro_max_price'] );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -212,8 +212,8 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_max_price', $result );
-		$this->assertNull( $result['wc_outlet_max_price'] );
+		$this->assertArrayHasKey( 'outletpro_max_price', $result );
+		$this->assertNull( $result['outletpro_max_price'] );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -230,8 +230,8 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_max_price', $result );
-		$this->assertSame( 0, $result['wc_outlet_max_price'] );
+		$this->assertArrayHasKey( 'outletpro_max_price', $result );
+		$this->assertSame( 0, $result['outletpro_max_price'] );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -248,8 +248,8 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_max_price', $result );
-		$this->assertSame( 999999, $result['wc_outlet_max_price'] );
+		$this->assertArrayHasKey( 'outletpro_max_price', $result );
+		$this->assertSame( 999999, $result['outletpro_max_price'] );
 
 		// Cleanup.
 		unset( $_GET['max_price'] );
@@ -280,7 +280,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 			'join'  => '',
 		);
 		$query   = new WP_Query();
-		$query->set( 'wc_outlet_max_price', 50 );
+		$query->set( 'outletpro_max_price', 50 );
 
 		// Act.
 		$result = max_price_posts_clauses( $clauses, $query );
@@ -301,7 +301,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		);
 
 		$query = new WP_Query();
-		$query->set( 'wc_outlet_max_price', 75 );
+		$query->set( 'outletpro_max_price', 75 );
 
 		// Act.
 		$result = max_price_posts_clauses( $clauses, $query );
@@ -326,7 +326,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 			'join'  => '',
 		);
 		$query   = new WP_Query();
-		$query->set( 'wc_outlet_max_price', null );
+		$query->set( 'outletpro_max_price', null );
 
 		// Act.
 		$result = max_price_posts_clauses( $clauses, $query );
@@ -343,7 +343,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 			'join'  => '',
 		);
 		$query   = new WP_Query();
-		$query->set( 'wc_outlet_max_price', 0 );
+		$query->set( 'outletpro_max_price', 0 );
 
 		// Act.
 		$result = max_price_posts_clauses( $clauses, $query );
@@ -361,7 +361,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 			'join'  => '',
 		);
 		$query   = new WP_Query();
-		$query->set( 'wc_outlet_max_price', 999999 );
+		$query->set( 'outletpro_max_price', 999999 );
 
 		// Act.
 		$result = max_price_posts_clauses( $clauses, $query );

@@ -9,7 +9,7 @@
  * @phpcs:disable
  */
 
-$wc_outlet_orderby_id = uniqid('wc-outlet-orderby-');
+$outletpro_orderby_id = uniqid('outletpro-orderby-');
 ?>
 <!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
 <div class="wp-block-group"><!-- wp:html -->
@@ -25,7 +25,7 @@ document.addEventListener(
   function() {
     const select =
       document.getElementById(
-        '<?php echo esc_js( $wc_outlet_orderby_id ); ?>'
+        '<?php echo esc_js( $outletpro_orderby_id ); ?>'
       );
 
     if ( ! select ) {
@@ -74,7 +74,7 @@ document.addEventListener(
 </script>
 
 <select
-  id="<?php echo esc_attr( $wc_outlet_orderby_id ); ?>"
+  id="<?php echo esc_attr( $outletpro_orderby_id ); ?>"
   aria-label="<?php echo esc_html__( 'Sort', 'outletpro' ); ?>"
 >
   <option value="">

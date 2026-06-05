@@ -28,7 +28,7 @@ type FontWeightOption = {
 	};
 };
 
-const SIDEBAR_NAME = 'wc-outlet-sidebar';
+const SIDEBAR_NAME = 'outletpro-sidebar';
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'outletpro' ), key: '' },
@@ -261,7 +261,7 @@ const OutletSidebar = () => {
 		<>
 			<PanelBody>
 				<p
-					data-testid="wc-outlet-message-tab-description"
+					data-testid="outletpro-message-tab-description"
 					style={ { marginBottom: 0 } }
 				>
 					{ __(

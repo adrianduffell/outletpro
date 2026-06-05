@@ -21,8 +21,8 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_page', $result );
-		$this->assertSame( 'Outlet Page', $result['wc_outlet_page'] );
+		$this->assertArrayHasKey( 'outletpro_page', $result );
+		$this->assertSame( 'Outlet Page', $result['outletpro_page'] );
 	}
 
 	public function test_does_not_add_label_when_post_is_not_outlet_page(): void {
@@ -37,7 +37,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wc_outlet_page', $result );
+		$this->assertArrayNotHasKey( 'outletpro_page', $result );
 	}
 
 	public function test_adds_outlet_page_label_when_option_is_string(): void {
@@ -51,8 +51,8 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet_page', $result );
-		$this->assertSame( 'Outlet Page', $result['wc_outlet_page'] );
+		$this->assertArrayHasKey( 'outletpro_page', $result );
+		$this->assertSame( 'Outlet Page', $result['outletpro_page'] );
 	}
 
 	public function test_does_not_add_label_when_option_is_corrupted(): void {
@@ -66,7 +66,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wc_outlet_page', $result );
+		$this->assertArrayNotHasKey( 'outletpro_page', $result );
 	}
 
 	public function test_does_not_add_label_when_no_outlet_page_is_set(): void {
@@ -80,7 +80,7 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'display_post_states', array(), $post );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wc_outlet_page', $result );
+		$this->assertArrayNotHasKey( 'outletpro_page', $result );
 	}
 
 	public function test_preserves_existing_post_states(): void {
@@ -96,6 +96,6 @@ class Test_Outlet_Page_Label_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayHasKey( 'existing_key', $result );
-		$this->assertArrayHasKey( 'wc_outlet_page', $result );
+		$this->assertArrayHasKey( 'outletpro_page', $result );
 	}
 }
