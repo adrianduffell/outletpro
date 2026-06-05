@@ -19,7 +19,7 @@ class Test_Settings_Screen_Enabled extends WP_UnitTestCase {
 
 	public function test_settings_enabled_returns_true_when_filter_enables_it(): void {
 		// Arrange.
-		add_filter( 'wc_outlet_settings_screen_enabled', '__return_true' );
+		add_filter( 'outletpro_settings_screen_enabled', '__return_true' );
 
 		// Act.
 		$result = settings_screen_enabled();

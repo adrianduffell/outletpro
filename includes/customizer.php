@@ -40,7 +40,7 @@ function init_customizer(): void {
  */
 function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	$wp_customize->add_section(
-		'wc_outlet',
+		'outletpro',
 		array(
 			'title' => __( 'Outlet', 'outletpro' ),
 			'panel' => 'woocommerce',
@@ -60,7 +60,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		OUTLET_BADGE_LABEL_OPTION,
 		array(
 			'label'   => __( 'Badge label', 'outletpro' ),
-			'section' => 'wc_outlet',
+			'section' => 'outletpro',
 			'type'    => 'text',
 		)
 	);
@@ -80,7 +80,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 			OUTLET_BADGE_BG_COLOR_OPTION,
 			array(
 				'label'   => __( 'Badge background color', 'outletpro' ),
-				'section' => 'wc_outlet',
+				'section' => 'outletpro',
 			)
 		)
 	);
@@ -100,7 +100,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 			OUTLET_BADGE_TEXT_COLOR_OPTION,
 			array(
 				'label'   => __( 'Badge text color', 'outletpro' ),
-				'section' => 'wc_outlet',
+				'section' => 'outletpro',
 			)
 		)
 	);
@@ -118,7 +118,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		OUTLET_MESSAGE_OPTION,
 		array(
 			'label'   => __( 'Message', 'outletpro' ),
-			'section' => 'wc_outlet',
+			'section' => 'outletpro',
 			'type'    => 'text',
 		)
 	);
@@ -136,7 +136,7 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 		OUTLET_BADGE_SCALE_OPTION,
 		array(
 			'label'   => __( 'Badge scale', 'outletpro' ),
-			'section' => 'wc_outlet',
+			'section' => 'outletpro',
 			'type'    => 'select',
 			'choices' => array(
 				100 => '1.00x',

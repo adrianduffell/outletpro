@@ -14,84 +14,84 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const OUTLET_MESSAGE_OPTION = 'wc_outlet_message';
+const OUTLET_MESSAGE_OPTION = 'outletpro_message';
 
 /**
  * WordPress option key used to store the outlet page ID.
  *
  * @internal
  */
-const OUTLET_PAGE_OPTION = 'wc_outlet_page_id';
+const OUTLET_PAGE_OPTION = 'outletpro_page_id';
 
 /**
  * WordPress option key used to store the badge label text.
  *
  * @internal
  */
-const OUTLET_BADGE_LABEL_OPTION = 'wc_outlet_badge_label';
+const OUTLET_BADGE_LABEL_OPTION = 'outletpro_badge_label';
 
 /**
  * WordPress option key used to store the badge text color.
  *
  * @internal
  */
-const OUTLET_BADGE_TEXT_COLOR_OPTION = 'wc_outlet_badge_text_color';
+const OUTLET_BADGE_TEXT_COLOR_OPTION = 'outletpro_badge_text_color';
 
 /**
  * WordPress option key used to store the badge background color.
  *
  * @internal
  */
-const OUTLET_BADGE_BG_COLOR_OPTION = 'wc_outlet_badge_bg_color';
+const OUTLET_BADGE_BG_COLOR_OPTION = 'outletpro_badge_bg_color';
 
 /**
  * WordPress option key used to store the badge border radius.
  *
  * @internal
  */
-const OUTLET_BADGE_BORDER_RADIUS_OPTION = 'wc_outlet_badge_border_radius';
+const OUTLET_BADGE_BORDER_RADIUS_OPTION = 'outletpro_badge_border_radius';
 
 /**
  * WordPress option key used to store the badge border color.
  *
  * @internal
  */
-const OUTLET_BADGE_BORDER_COLOR_OPTION = 'wc_outlet_badge_border_color';
+const OUTLET_BADGE_BORDER_COLOR_OPTION = 'outletpro_badge_border_color';
 
 /**
  * WordPress option key used to store the badge border style.
  *
  * @internal
  */
-const OUTLET_BADGE_BORDER_STYLE_OPTION = 'wc_outlet_badge_border_style';
+const OUTLET_BADGE_BORDER_STYLE_OPTION = 'outletpro_badge_border_style';
 
 /**
  * WordPress option key used to store the badge border width.
  *
  * @internal
  */
-const OUTLET_BADGE_BORDER_WIDTH_OPTION = 'wc_outlet_badge_border_width';
+const OUTLET_BADGE_BORDER_WIDTH_OPTION = 'outletpro_badge_border_width';
 
 /**
  * WordPress option key used to store the badge font weight.
  *
  * @internal
  */
-const OUTLET_BADGE_FONT_WEIGHT_OPTION = 'wc_outlet_badge_font_weight';
+const OUTLET_BADGE_FONT_WEIGHT_OPTION = 'outletpro_badge_font_weight';
 
 /**
  * WordPress option key used to store the badge scale.
  *
  * @internal
  */
-const OUTLET_BADGE_SCALE_OPTION = 'wc_outlet_badge_scale';
+const OUTLET_BADGE_SCALE_OPTION = 'outletpro_badge_scale';
 
 /**
  * WordPress option key used to store the badge density.
  *
  * @internal
  */
-const OUTLET_BADGE_DENSITY_OPTION = 'wc_outlet_badge_density';
+const OUTLET_BADGE_DENSITY_OPTION = 'outletpro_badge_density';
 
 /**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
@@ -179,7 +179,7 @@ function sanitize_unsigned_integer( $value ): ?int {
  * @internal
  */
 function settings_screen_enabled(): bool {
-	return (bool) apply_filters( 'wc_outlet_settings_screen_enabled', false );
+	return (bool) apply_filters( 'outletpro_settings_screen_enabled', false );
 }
 
 /**
@@ -251,7 +251,7 @@ function seed_settings(): void {
  */
 function register_outlet_page_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_PAGE_OPTION,
 		array(
 			'type'         => 'integer',
@@ -272,7 +272,7 @@ function register_outlet_page_setting(): void {
  */
 function register_outlet_badge_label_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_LABEL_OPTION,
 		array(
 			'type'              => 'string',
@@ -296,7 +296,7 @@ function register_outlet_badge_label_setting(): void {
  */
 function register_outlet_badge_text_color_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_TEXT_COLOR_OPTION,
 		array(
 			'type'              => 'string',
@@ -320,7 +320,7 @@ function register_outlet_badge_text_color_setting(): void {
  */
 function register_outlet_badge_bg_color_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_BG_COLOR_OPTION,
 		array(
 			'type'              => 'string',
@@ -344,7 +344,7 @@ function register_outlet_badge_bg_color_setting(): void {
  */
 function register_outlet_badge_border_radius_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_BORDER_RADIUS_OPTION,
 		array(
 			'type'              => 'string',
@@ -368,7 +368,7 @@ function register_outlet_badge_border_radius_setting(): void {
  */
 function register_outlet_badge_border_color_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_BORDER_COLOR_OPTION,
 		array(
 			'type'              => 'string',
@@ -392,7 +392,7 @@ function register_outlet_badge_border_color_setting(): void {
  */
 function register_outlet_badge_border_style_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_BORDER_STYLE_OPTION,
 		array(
 			'type'              => 'string',
@@ -416,7 +416,7 @@ function register_outlet_badge_border_style_setting(): void {
  */
 function register_outlet_badge_border_width_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_BORDER_WIDTH_OPTION,
 		array(
 			'type'              => 'string',
@@ -440,7 +440,7 @@ function register_outlet_badge_border_width_setting(): void {
  */
 function register_outlet_badge_font_weight_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_FONT_WEIGHT_OPTION,
 		array(
 			'type'              => 'string',
@@ -464,7 +464,7 @@ function register_outlet_badge_font_weight_setting(): void {
  */
 function register_outlet_badge_scale_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_SCALE_OPTION,
 		array(
 			'type'              => 'integer',
@@ -489,7 +489,7 @@ function register_outlet_badge_scale_setting(): void {
  */
 function register_outlet_badge_density_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_BADGE_DENSITY_OPTION,
 		array(
 			'type'              => 'integer',
@@ -515,7 +515,7 @@ function register_outlet_badge_density_setting(): void {
  */
 function register_outlet_message_setting(): void {
 	register_setting(
-		'wc_outlet',
+		'outletpro',
 		OUTLET_MESSAGE_OPTION,
 		array(
 			'type'              => 'string',

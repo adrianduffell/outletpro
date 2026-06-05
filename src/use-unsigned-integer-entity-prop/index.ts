@@ -11,7 +11,7 @@ function assertUnsignedIntegerValue(
 			value < 0 )
 	) {
 		throw new Error(
-			`wc_outlet setting "${ key }" must be an integer >= 0`
+			`outletpro setting "${ key }" must be an integer >= 0`
 		);
 	}
 }

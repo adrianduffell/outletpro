@@ -12,7 +12,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_registers_outlet_badge_density_setting(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 
 		// Act.
 		register_outlet_badge_density_setting();
@@ -24,7 +24,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_setting_type_is_integer(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 
 		// Act.
 		register_outlet_badge_density_setting();
@@ -36,7 +36,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_setting_default_is_null(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 		delete_option( OUTLET_BADGE_DENSITY_OPTION );
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -54,7 +54,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 		register_outlet_badge_density_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -69,7 +69,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_setting_can_be_updated_via_rest_with_valid_value(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 		register_outlet_badge_density_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -87,7 +87,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_setting_rest_schema_minimum_is_zero(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 		register_outlet_badge_density_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -103,7 +103,7 @@ class Test_Register_Outlet_Badge_Density_Setting extends WP_UnitTestCase {
 
 	public function test_setting_rest_schema_maximum_is_one_hundred(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_BADGE_DENSITY_OPTION );
+		unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
 		register_outlet_badge_density_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );

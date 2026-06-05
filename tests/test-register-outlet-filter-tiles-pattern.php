@@ -36,7 +36,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -47,7 +47,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=50', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_currency_specific_max_prices(): void {
@@ -59,7 +59,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -70,7 +70,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=5000', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_defaults_to_usd_for_unknown_currency(): void {
@@ -82,7 +82,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -93,13 +93,13 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=50', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_returns_empty_when_no_outlet_page(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -117,7 +117,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 		$permalink = get_permalink( $page_id );
 
 		// Act.
@@ -127,7 +127,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( $permalink, $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_buttons_block_markup(): void {
@@ -139,7 +139,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -150,7 +150,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( '<!-- /wp:buttons -->', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_has_wc_outlet_filter_tiles_class(): void {
@@ -162,7 +162,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -171,7 +171,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'outletpro-filter-tiles', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_does_not_include_metadata_by_default(): void {
@@ -183,7 +183,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -192,7 +192,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '"metadata"', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_includes_metadata_when_include_metadata_is_true(): void {
@@ -204,7 +204,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content( true );
@@ -216,6 +216,6 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"name":"Outlet filter tiles"', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 }

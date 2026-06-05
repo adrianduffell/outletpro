@@ -16,7 +16,7 @@ use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 
-	public function test_registers_wc_outlet_section(): void {
+	public function test_registers_outletpro_section(): void {
 		// Arrange.
 		$wp_customize = new WP_Customize_Manager();
 
@@ -24,7 +24,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertNotNull( $wp_customize->get_section( 'wc_outlet' ) );
+		$this->assertNotNull( $wp_customize->get_section( 'outletpro' ) );
 	}
 
 	public function test_section_is_nested_in_woocommerce_panel(): void {
@@ -35,7 +35,7 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 		register_customizer_hook( $wp_customize );
 
 		// Assert.
-		$this->assertSame( 'woocommerce', $wp_customize->get_section( 'wc_outlet' )->panel );
+		$this->assertSame( 'woocommerce', $wp_customize->get_section( 'outletpro' )->panel );
 	}
 
 	public function test_registers_message_setting(): void {
