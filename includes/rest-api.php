@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_rest_api(): void {
-	add_filter( 'rest_product_collection_params', 'OutletPro\add_wc_outlet_rest_param_hook' );
-	add_filter( 'woocommerce_rest_product_object_query', 'OutletPro\handle_wc_outlet_rest_param', 10, 2 );
-	add_filter( 'rest_product_query', 'OutletPro\handle_wc_outlet_rest_param', 10, 2 );
+	add_filter( 'rest_product_collection_params', 'OutletPro\add_outletpro_rest_param_hook' );
+	add_filter( 'woocommerce_rest_product_object_query', 'OutletPro\handle_outletpro_rest_param', 10, 2 );
+	add_filter( 'rest_product_query', 'OutletPro\handle_outletpro_rest_param', 10, 2 );
 }
 
 /**
@@ -27,7 +27,7 @@ function init_rest_api(): void {
  * @param array<string, mixed> $params Existing collection parameters.
  * @return array<string, mixed> Modified collection parameters.
  */
-function add_wc_outlet_rest_param_hook( array $params ): array {
+function add_outletpro_rest_param_hook( array $params ): array {
 	$params['outletpro'] = array(
 		'description'       => __( 'Limit results to outlet products.', 'outletpro' ),
 		'type'              => 'boolean',
@@ -46,7 +46,7 @@ function add_wc_outlet_rest_param_hook( array $params ): array {
  * @param \WP_REST_Request     $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
  */
-function handle_wc_outlet_rest_param( array $args, \WP_REST_Request $request ): array {
+function handle_outletpro_rest_param( array $args, \WP_REST_Request $request ): array {
 	if ( empty( $request['outletpro'] ) ) {
 		return $args;
 	}

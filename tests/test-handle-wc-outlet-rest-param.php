@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for handle_wc_outlet_rest_param().
+ * Tests for handle_outletpro_rest_param().
  *
  * @package OutletPro
  */
@@ -9,7 +9,7 @@ use function OutletPro\add_to_outlet;
 use function OutletPro\register_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
-class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
+class Test_Handle_Outletpro_Rest_Param extends WP_UnitTestCase {
 
 	public function test_unfiltered_request_returns_all_products(): void {
 		// Arrange.
