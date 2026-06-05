@@ -358,37 +358,37 @@ themes). Added in 1.0.0.
 
 ## REST API
 
-The plugin extends the WooCommerce products REST endpoint with a `wc_outlet` query
+The plugin extends the WooCommerce products REST endpoint with a `outletpro` query
 parameter.
 
 ```http
-GET /wc/v3/products?wc_outlet=true
+GET /wc/v3/products?outletpro=true
 ```
 
 The plugin also extends the WordPress products REST endpoint (post type) with the same
 parameter.
 
 ```http
-GET /wp/v2/products?wc_outlet=true
+GET /wp/v2/products?outletpro=true
 ```
 
 | Parameter   | Type      | Description                                                    |
 | ----------- | --------- | -------------------------------------------------------------- |
-| `wc_outlet` | `boolean` | When `true`, limits results to products in the store's outlet. |
+| `outletpro` | `boolean` | When `true`, limits results to products in the store's outlet. |
 
 Added in 1.0.0.
 
 ## Shortcodes
 
-The plugin extends the WooCommerce `[products]` shortcode with a `wc_outlet` attribute.
+The plugin extends the WooCommerce `[products]` shortcode with a `outletpro` attribute.
 
 ```text
-[products wc_outlet="true"]
+[products outletpro="true"]
 ```
 
 | Attribute   | Type                       | Description                                                    |
 | ----------- | -------------------------- | -------------------------------------------------------------- |
-| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the store’s outlet. |
+| `outletpro` | `boolean` (`true`/`false`) | When `true`, limits results to products in the store’s outlet. |
 
 Added in 1.0.0.
 

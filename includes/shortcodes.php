@@ -21,7 +21,7 @@ function init_shortcodes(): void {
 }
 
 /**
- * Filter the [products] shortcode query args to include only outlet products when wc_outlet is set.
+ * Filter the [products] shortcode query args to include only outlet products when outletpro is set.
  *
  * Fired by `woocommerce_shortcode_products_query`.
  *
@@ -33,11 +33,11 @@ function init_shortcodes(): void {
  */
 function filter_products_shortcode_query_hook( array $query_args, array $attributes, string $unused_type ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
-	if ( empty( $attributes['wc_outlet'] ) ) {
+	if ( empty( $attributes['outletpro'] ) ) {
 		return $query_args;
 	}
 
-	if ( ! \wc_string_to_bool( $attributes['wc_outlet'] ) ) {
+	if ( ! \wc_string_to_bool( $attributes['outletpro'] ) ) {
 		return $query_args;
 	}
 
@@ -62,7 +62,7 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 }
 
 /**
- * Register the wc_outlet attribute for the [products] shortcode.
+ * Register the outletpro attribute for the [products] shortcode.
  *
  * Fired by `shortcode_atts_products`.
  *
@@ -74,8 +74,8 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
  */
 function add_products_shortcode_attribute_hook( array $out, array $unused_pairs, array $atts ): array {
 
-	if ( isset( $atts['wc_outlet'] ) ) {
-		$out['wc_outlet'] = \wc_string_to_bool( $atts['wc_outlet'] );
+	if ( isset( $atts['outletpro'] ) ) {
+		$out['outletpro'] = \wc_string_to_bool( $atts['outletpro'] );
 	}
 
 	return $out;

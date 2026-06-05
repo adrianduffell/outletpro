@@ -20,7 +20,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'menu_order',
 					'order'     => 'desc',
 				),
@@ -45,7 +45,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'menu_order',
 					'order'     => 'asc',
 				),
@@ -70,7 +70,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'menu_order',
 					'order'     => 'asc',
 				),
@@ -95,7 +95,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'menu_order',
 					'order'     => 'asc',
 				),
@@ -120,7 +120,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'menu_order',
 					'order'     => 'asc',
 				),
@@ -145,7 +145,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'price-desc',
 					'order'     => 'desc',
 				),
@@ -170,7 +170,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => true,
+					'outletpro' => true,
 					'orderBy'   => 'menu_order',
 				),
 			),
@@ -192,7 +192,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			'blockName' => 'woocommerce/product-collection',
 			'attrs'     => array(
 				'query' => array(
-					'wc_outlet' => false,
+					'outletpro' => false,
 					'orderBy'   => 'menu_order',
 				),
 			),
@@ -325,7 +325,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 			)
 		);
 		$block->context = array(
-			'query' => array( 'wc_outlet' => true ),
+			'query' => array( 'outletpro' => true ),
 		);
 
 		// Act.
@@ -367,7 +367,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		);
 
 		$block->context = array(
-			'query' => array( 'wc_outlet' => true ),
+			'query' => array( 'outletpro' => true ),
 		);
 
 		// Act.

@@ -120,7 +120,7 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
 		return $parsed_block;
 	}
 
-	$is_outlet_query = $parsed_block['attrs']['query']['wc_outlet'] ?? false;
+	$is_outlet_query = $parsed_block['attrs']['query']['outletpro'] ?? false;
 	if ( ! $is_outlet_query ) {
 		return $parsed_block;
 	}
@@ -163,7 +163,7 @@ function set_outlet_product_collection_orderby_hook( array $parsed_block ): arra
  * @return array<string, mixed> Filtered query vars.
  */
 function filter_outlet_product_collection_hook( array $query, \WP_Block $block, int $page ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	$is_outlet_query = $block->context['query']['wc_outlet'] ?? false;
+	$is_outlet_query = $block->context['query']['outletpro'] ?? false;
 
 	if ( ! $is_outlet_query ) {
 		return $query;

@@ -14,7 +14,7 @@ use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Shortcode_Products extends WP_UnitTestCase {
 
-	public function test_query_unchanged_when_wc_outlet_attribute_absent(): void {
+	public function test_query_unchanged_when_outletpro_attribute_absent(): void {
 		// Arrange.
 		$query_args = array( 'post_type' => 'product' );
 		$attributes = array();
@@ -26,10 +26,10 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( $query_args, $result );
 	}
 
-	public function test_query_unchanged_when_wc_outlet_is_false(): void {
+	public function test_query_unchanged_when_outletpro_is_false(): void {
 		// Arrange.
 		$query_args = array( 'post_type' => 'product' );
-		$attributes = array( 'wc_outlet' => false );
+		$attributes = array( 'outletpro' => false );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -38,11 +38,11 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( $query_args, $result );
 	}
 
-	public function test_query_gets_tax_query_when_wc_outlet_is_true(): void {
+	public function test_query_gets_tax_query_when_outletpro_is_true(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$query_args = array( 'post_type' => 'product' );
-		$attributes = array( 'wc_outlet' => true );
+		$attributes = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -66,7 +66,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 			'post_type' => 'product',
 			'tax_query' => array( $existing_tax ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 		);
-		$attributes   = array( 'wc_outlet' => true );
+		$attributes   = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -77,33 +77,33 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
 	}
 
-	public function test_add_products_shortcode_attribute_hook_adds_wc_outlet_when_present(): void {
+	public function test_add_products_shortcode_attribute_hook_adds_outletpro_when_present(): void {
 		// Arrange.
 		$out  = array();
-		$atts = array( 'wc_outlet' => 'yes' );
+		$atts = array( 'outletpro' => 'yes' );
 
 		// Act.
 		$result = add_products_shortcode_attribute_hook( $out, array(), $atts );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet', $result );
-		$this->assertTrue( $result['wc_outlet'] );
+		$this->assertArrayHasKey( 'outletpro', $result );
+		$this->assertTrue( $result['outletpro'] );
 	}
 
 	public function test_add_products_shortcode_attribute_hook_converts_false_string(): void {
 		// Arrange.
 		$out  = array();
-		$atts = array( 'wc_outlet' => 'no' );
+		$atts = array( 'outletpro' => 'no' );
 
 		// Act.
 		$result = add_products_shortcode_attribute_hook( $out, array(), $atts );
 
 		// Assert.
-		$this->assertArrayHasKey( 'wc_outlet', $result );
-		$this->assertFalse( $result['wc_outlet'] );
+		$this->assertArrayHasKey( 'outletpro', $result );
+		$this->assertFalse( $result['outletpro'] );
 	}
 
-	public function test_add_products_shortcode_attribute_hook_unchanged_when_wc_outlet_absent(): void {
+	public function test_add_products_shortcode_attribute_hook_unchanged_when_outletpro_absent(): void {
 		// Arrange.
 		$out  = array( 'limit' => 12 );
 		$atts = array();
@@ -112,7 +112,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$result = add_products_shortcode_attribute_hook( $out, array(), $atts );
 
 		// Assert.
-		$this->assertArrayNotHasKey( 'wc_outlet', $result );
+		$this->assertArrayNotHasKey( 'outletpro', $result );
 		$this->assertSame( $out, $result );
 	}
 
@@ -123,7 +123,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		$_GET['max_price'] = '100';
 		$query_args        = array( 'post_type' => 'product' );
-		$attributes        = array( 'wc_outlet' => true );
+		$attributes        = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -140,7 +140,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$query_args = array( 'post_type' => 'product' );
-		$attributes = array( 'wc_outlet' => true );
+		$attributes = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -149,7 +149,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'wc_outlet_max_price', $result );
 	}
 
-	public function test_max_price_not_added_when_wc_outlet_not_enabled(): void {
+	public function test_max_price_not_added_when_outletpro_not_enabled(): void {
 		// Arrange.
 		$_GET['max_price'] = '100';
 		$query_args        = array( 'post_type' => 'product' );
@@ -170,7 +170,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		$_GET['max_price'] = 'invalid';
 		$query_args        = array( 'post_type' => 'product' );
-		$attributes        = array( 'wc_outlet' => true );
+		$attributes        = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -188,7 +188,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		$_GET['max_price'] = '-50';
 		$query_args        = array( 'post_type' => 'product' );
-		$attributes        = array( 'wc_outlet' => true );
+		$attributes        = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -206,7 +206,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		$_GET['max_price'] = '99.99';
 		$query_args        = array( 'post_type' => 'product' );
-		$attributes        = array( 'wc_outlet' => true );
+		$attributes        = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -224,7 +224,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		$_GET['max_price'] = '0';
 		$query_args        = array( 'post_type' => 'product' );
-		$attributes        = array( 'wc_outlet' => true );
+		$attributes        = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
@@ -242,7 +242,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		$_GET['max_price'] = '999999';
 		$query_args        = array( 'post_type' => 'product' );
-		$attributes        = array( 'wc_outlet' => true );
+		$attributes        = array( 'outletpro' => true );
 
 		// Act.
 		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );

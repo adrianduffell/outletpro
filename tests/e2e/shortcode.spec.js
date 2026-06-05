@@ -33,14 +33,14 @@ test( 'shortcode shows outlet products on front end', async ( {
 		await page.waitForLoadState( 'networkidle' );
 	}
 
-	// Act: create a page containing the [products wc_outlet="yes"] shortcode.
+	// Act: create a page containing the [products outletpro="yes"] shortcode.
 	const shortcodePage = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wp/v2/pages',
 		data: {
 			title: `Shortcode Test Page ${ runId }`,
 			content:
-				'<!-- wp:shortcode -->[products wc_outlet="yes" limit="99" columns="4"]<!-- /wp:shortcode -->',
+				'<!-- wp:shortcode -->[products outletpro="yes" limit="99" columns="4"]<!-- /wp:shortcode -->',
 			status: 'publish',
 		},
 	} );
