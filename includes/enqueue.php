@@ -203,7 +203,7 @@ function output_badge_style_css_variables_hook(): void {
 		$badge_style_options
 	);
 
-	echo '<style id="wc-outlet-badge-vars">:root { ' . esc_html( implode( '; ', $declarations ) ) . '; }</style>';
+	echo '<style>:root { ' . esc_html( implode( '; ', $declarations ) ) . '; }</style>';
 }
 
 /**
