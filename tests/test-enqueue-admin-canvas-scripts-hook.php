@@ -20,7 +20,7 @@ class Test_Enqueue_Admin_Canvas_Scripts_Hook extends WP_UnitTestCase {
 		do_action( 'enqueue_block_assets' );
 
 		// Assert.
-		$this->assertTrue( wp_script_is( 'wc-outlet-admin-canvas-scripts', 'enqueued' ) );
+		$this->assertTrue( wp_script_is( 'outletpro-admin-canvas-scripts', 'enqueued' ) );
 	}
 
 	public function test_does_not_enqueue_admin_canvas_script_on_front_end(): void {
@@ -33,6 +33,6 @@ class Test_Enqueue_Admin_Canvas_Scripts_Hook extends WP_UnitTestCase {
 		do_action( 'enqueue_block_assets' );
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-admin-canvas-scripts', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-admin-canvas-scripts', 'enqueued' ) );
 	}
 }

@@ -19,7 +19,7 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'wc-outlet-classic-badge', 'registered' ) );
+		$this->assertTrue( wp_style_is( 'outletpro-classic-badge', 'registered' ) );
 	}
 
 	public function test_registers_classic_message_style(): void {
@@ -31,6 +31,6 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'wc-outlet-classic-message', 'registered' ) );
+		$this->assertTrue( wp_style_is( 'outletpro-classic-message', 'registered' ) );
 	}
 }

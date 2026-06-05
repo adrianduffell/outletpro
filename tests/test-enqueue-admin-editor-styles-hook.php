@@ -20,7 +20,7 @@ class Test_Enqueue_Admin_Editor_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'enqueue_block_assets' );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'wc-outlet-admin-editor', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'outletpro-admin-editor', 'enqueued' ) );
 	}
 
 	public function test_does_not_enqueue_admin_editor_style_on_front_end(): void {
@@ -33,6 +33,6 @@ class Test_Enqueue_Admin_Editor_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'enqueue_block_assets' );
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-admin-editor', 'enqueued' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-admin-editor', 'enqueued' ) );
 	}
 }
