@@ -31,7 +31,7 @@ function bulk_edit_field_hook(): void {
 	<div class="inline-edit-group">
 		<label class="alignleft">
 			<span class="title outletpro-bulk-edit-title"><?php esc_html_e( 'Outlet', 'outletpro' ); ?></span>
-			<select name="wc_outlet_bulk">
+			<select name="outletpro_bulk">
 				<option value=""><?php esc_html_e( '— No change —', 'outletpro' ); ?></option>
 				<option value="yes"><?php esc_html_e( 'Include', 'outletpro' ); ?></option>
 				<option value="no"><?php esc_html_e( 'Remove', 'outletpro' ); ?></option>
@@ -51,12 +51,12 @@ function bulk_edit_field_hook(): void {
  */
 function save_bulk_edit_hook( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( ! isset( $_GET['wc_outlet_bulk'] ) ) {
+	if ( ! isset( $_GET['outletpro_bulk'] ) ) {
 		return;
 	}
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	$value = sanitize_text_field( wp_unslash( $_GET['wc_outlet_bulk'] ) );
+	$value = sanitize_text_field( wp_unslash( $_GET['outletpro_bulk'] ) );
 
 	try {
 		if ( 'yes' === $value ) {

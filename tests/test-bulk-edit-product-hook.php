@@ -16,7 +16,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 
 	public function test_bulk_edit_field_hook_renders_select(): void {
 		// Expect.
-		$this->expectOutputRegex( '/name="wc_outlet_bulk"/' );
+		$this->expectOutputRegex( '/name="outletpro_bulk"/' );
 
 		// Act.
 		bulk_edit_field_hook();
@@ -51,7 +51,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product                = WC_Helper_Product::create_simple_product();
-		$_GET['wc_outlet_bulk'] = 'yes';
+		$_GET['outletpro_bulk'] = 'yes';
 
 		// Act.
 		save_bulk_edit_hook( $product );
@@ -61,7 +61,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		$this->assertContains( OUTLET_STATUS_CANONICAL_TERM, $terms );
 
 		// Cleanup.
-		unset( $_GET['wc_outlet_bulk'] );
+		unset( $_GET['outletpro_bulk'] );
 	}
 
 	public function test_save_bulk_edit_hook_removes_product_from_outlet(): void {
@@ -70,7 +70,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		$_GET['wc_outlet_bulk'] = 'no';
+		$_GET['outletpro_bulk'] = 'no';
 
 		// Act.
 		save_bulk_edit_hook( $product );
@@ -80,7 +80,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( $terms );
 
 		// Cleanup.
-		unset( $_GET['wc_outlet_bulk'] );
+		unset( $_GET['outletpro_bulk'] );
 	}
 
 	public function test_save_bulk_edit_hook_does_nothing_when_value_is_empty(): void {
@@ -89,7 +89,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		$_GET['wc_outlet_bulk'] = '';
+		$_GET['outletpro_bulk'] = '';
 
 		// Act.
 		save_bulk_edit_hook( $product );
@@ -99,7 +99,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		$this->assertContains( OUTLET_STATUS_CANONICAL_TERM, $terms );
 
 		// Cleanup.
-		unset( $_GET['wc_outlet_bulk'] );
+		unset( $_GET['outletpro_bulk'] );
 	}
 
 	public function test_save_bulk_edit_hook_does_nothing_when_field_not_set(): void {
@@ -108,7 +108,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		unset( $_GET['wc_outlet_bulk'] );
+		unset( $_GET['outletpro_bulk'] );
 
 		// Act.
 		save_bulk_edit_hook( $product );
