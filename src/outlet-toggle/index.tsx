@@ -27,9 +27,9 @@ function updateOutletQueryAttributes(
 	const nextQuery = { ...( attributes.query ?? {} ) };
 
 	if ( isChecked ) {
-		nextQuery.wc_outlet = true;
+		nextQuery.outletpro = true;
 	} else {
-		delete nextQuery.wc_outlet;
+		delete nextQuery.outletpro;
 	}
 
 	return {
@@ -55,7 +55,7 @@ export const withOutletQueryInspector = (
 							'Restrict this collection to products in the store’s outlet.',
 							'outletpro'
 						) }
-						checked={ true === props.attributes.query?.wc_outlet }
+						checked={ true === props.attributes.query?.outletpro }
 						onChange={ ( isChecked ) =>
 							props.setAttributes(
 								updateOutletQueryAttributes(

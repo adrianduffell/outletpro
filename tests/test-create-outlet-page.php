@@ -101,14 +101,14 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString(
 			sprintf(
-				'[products wc_outlet="yes" paginate="yes" columns="%d" limit="%d"]',
+				'[products outletpro="yes" paginate="yes" columns="%d" limit="%d"]',
 				$products_per_row,
 				$products_per_page
 			),
 			$pages[0]->post_content
 		);
 		$this->assertStringContainsString( 'outletpro-filter-tiles', $pages[0]->post_content );
-		$products_shortcode_position = strpos( $pages[0]->post_content, '[products wc_outlet="yes"' );
+		$products_shortcode_position = strpos( $pages[0]->post_content, '[products outletpro="yes"' );
 		$filter_tiles_position       = strpos( $pages[0]->post_content, 'outletpro-filter-tiles' );
 		$this->assertNotFalse( $products_shortcode_position );
 		$this->assertNotFalse( $filter_tiles_position );
@@ -142,7 +142,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertNotEmpty( $pages );
 		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"taxQuery"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
+		$this->assertStringContainsString( '"outletpro":true', $pages[0]->post_content );
 		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
 		$this->assertStringContainsString( sprintf( '"perPage":%d', $products_per_page ), $pages[0]->post_content );
 		$this->assertStringContainsString( sprintf( '"columns":%d', $products_per_row ), $pages[0]->post_content );
@@ -303,7 +303,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			)
 		);
 		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"wc_outlet":true', $pages[0]->post_content );
+		$this->assertStringContainsString( '"outletpro":true', $pages[0]->post_content );
 	}
 
 	public function test_assigns_outlet_page_template_on_block_theme(): void {

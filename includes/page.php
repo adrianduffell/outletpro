@@ -199,7 +199,7 @@ function create_outlet_page(): void {
 					'exclude'                       => array(),
 					'inherit'                       => false,
 					'isProductCollectionBlock'      => true,
-					'wc_outlet'                     => true,
+					'outletpro'                     => true,
 					'featured'                      => false,
 					'woocommerceOnSale'             => false,
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
@@ -255,7 +255,7 @@ function create_outlet_page(): void {
 		$products_per_row = wc_get_default_products_per_row();
 		$post_content     = '<!-- wp:shortcode -->' . "\n" .
 			sprintf(
-				'[products wc_outlet="yes" paginate="yes" columns="%d" limit="%d"]',
+				'[products outletpro="yes" paginate="yes" columns="%d" limit="%d"]',
 				$products_per_row,
 				$products_per_row * wc_get_default_product_rows_per_page()
 			) . "\n" .

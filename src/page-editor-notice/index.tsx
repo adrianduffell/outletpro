@@ -33,7 +33,7 @@ export function OutletEmptyNotice(): null {
 			let products: unknown[];
 			try {
 				products = await apiFetch< unknown[] >( {
-					path: '/wc/v3/products?wc_outlet=true&per_page=1',
+					path: '/wc/v3/products?outletpro=true&per_page=1',
 				} );
 			} catch {
 				return;

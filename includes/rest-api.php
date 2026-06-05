@@ -21,14 +21,14 @@ function init_rest_api(): void {
 }
 
 /**
- * Add `wc_outlet` parameter to the products REST API collection params.
+ * Add `outletpro` parameter to the products REST API collection params.
  *
  * @internal WordPress filter hook
  * @param array<string, mixed> $params Existing collection parameters.
  * @return array<string, mixed> Modified collection parameters.
  */
 function add_wc_outlet_rest_param_hook( array $params ): array {
-	$params['wc_outlet'] = array(
+	$params['outletpro'] = array(
 		'description'       => __( 'Limit results to outlet products.', 'outletpro' ),
 		'type'              => 'boolean',
 		'sanitize_callback' => 'rest_sanitize_boolean',
@@ -47,7 +47,7 @@ function add_wc_outlet_rest_param_hook( array $params ): array {
  * @return array<string, mixed> Modified WP_Query arguments.
  */
 function handle_wc_outlet_rest_param( array $args, \WP_REST_Request $request ): array {
-	if ( empty( $request['wc_outlet'] ) ) {
+	if ( empty( $request['outletpro'] ) ) {
 		return $args;
 	}
 

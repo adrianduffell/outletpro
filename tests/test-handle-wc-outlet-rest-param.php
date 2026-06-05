@@ -30,7 +30,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertContains( $non_outlet_product->get_id(), $ids );
 	}
 
-	public function test_wc_outlet_param_filters_to_outlet_products_only(): void {
+	public function test_outletpro_param_filters_to_outlet_products_only(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -41,7 +41,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 
 		// Act.
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_param( 'wc_outlet', true );
+		$request->set_param( 'outletpro', true );
 		$response = rest_do_request( $request );
 
 		// Assert.
@@ -50,7 +50,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertNotContains( $non_outlet_product->get_id(), $ids );
 	}
 
-	public function test_false_wc_outlet_param_returns_all_products(): void {
+	public function test_false_outletpro_param_returns_all_products(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -61,7 +61,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 
 		// Act.
 		$request = new WP_REST_Request( 'GET', '/wc/v3/products' );
-		$request->set_param( 'wc_outlet', false );
+		$request->set_param( 'outletpro', false );
 		$response = rest_do_request( $request );
 
 		// Assert.
@@ -70,7 +70,7 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertContains( $non_outlet_product->get_id(), $ids );
 	}
 
-	public function test_rest_product_query_is_unchanged_when_wc_outlet_param_is_absent(): void {
+	public function test_rest_product_query_is_unchanged_when_outletpro_param_is_absent(): void {
 		// Arrange.
 		$args     = array( 'post_type' => 'product' );
 		$request  = new WP_REST_Request( 'GET', '/wp/v2/products' );
@@ -83,11 +83,11 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
-	public function test_rest_product_query_adds_tax_query_when_wc_outlet_is_true(): void {
+	public function test_rest_product_query_adds_tax_query_when_outletpro_is_true(): void {
 		// Arrange.
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
-		$request->set_param( 'wc_outlet', true );
+		$request->set_param( 'outletpro', true );
 
 		// Act.
 		$result = apply_filters( 'rest_product_query', $args, $request );
@@ -99,11 +99,11 @@ class Test_Handle_Wc_Outlet_Rest_Param extends WP_UnitTestCase {
 		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
 	}
 
-	public function test_rest_product_query_is_unchanged_when_wc_outlet_is_false(): void {
+	public function test_rest_product_query_is_unchanged_when_outletpro_is_false(): void {
 		// Arrange.
 		$args    = array( 'post_type' => 'product' );
 		$request = new WP_REST_Request( 'GET', '/wp/v2/products' );
-		$request->set_param( 'wc_outlet', false );
+		$request->set_param( 'outletpro', false );
 		$expected = $args;
 
 		// Act.

@@ -84,7 +84,7 @@ describe( 'product collection outlet inspector', () => {
 		);
 
 		expect( setAttributes ).toHaveBeenCalledWith( {
-			query: { wc_outlet: true },
+			query: { outletpro: true },
 		} );
 	} );
 
@@ -103,7 +103,7 @@ describe( 'product collection outlet inspector', () => {
 				attributes={ {
 					query: {
 						perPage: 9,
-						wc_outlet: true,
+						outletpro: true,
 					},
 				} }
 				setAttributes={ setAttributes }
