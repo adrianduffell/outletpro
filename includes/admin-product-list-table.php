@@ -69,7 +69,7 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	$status    = 'info';
-	$new_badge = '<span class="wc-outlet-new">' . esc_html__( 'New', 'outletpro' ) . '</span> ';
+	$new_badge = '<span class="outletpro-new">' . esc_html__( 'New', 'outletpro' ) . '</span> ';
 
 	if ( $is_empty ) {
 		$content = '<p>' . $new_badge .
@@ -84,7 +84,7 @@ function product_onboarding_notice_hook(): void {
 	} elseif ( 'publish' !== get_post_status( $page_id ) ) {
 		$count     = count_outlet();
 		$edit_url  = get_edit_post_link( $page_id );
-		$edit_link = $edit_url ? ' <a class="wc-outlet-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'outletpro' ) . '</a>' : '';
+		$edit_link = $edit_url ? ' <a class="outletpro-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'outletpro' ) . '</a>' : '';
 		$content   = '<p>' . $new_badge .
 			/* translators: %d: number of outlet products */
 			'<strong>' . sprintf( _n( 'The store’s outlet has %d product.', 'The store’s outlet has %d products.', $count, 'outletpro' ), $count ) . '</strong> ' .
@@ -93,7 +93,7 @@ function product_onboarding_notice_hook(): void {
 	} else {
 		$status    = 'success';
 		$view_url  = get_permalink( $page_id );
-		$view_link = $view_url ? ' <a class="wc-outlet-button-link" href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'outletpro' ) . '</a>' : '';
+		$view_link = $view_url ? ' <a class="outletpro-button-link" href="' . esc_url( $view_url ) . '">' . esc_html__( 'View page', 'outletpro' ) . '</a>' : '';
 		$content   = '<p><span aria-hidden="true" style="font-size:1.1em; margin-right:0.25em">✅</span><span class="screen-reader-text">' . esc_html__( '(complete)', 'outletpro' ) . '</span> ' .
 			'<strong>' . esc_html__( 'The store’s outlet is ready.', 'outletpro' ) . '</strong> ' .
 			esc_html__( 'Tip: promote it in your store by creating a link to the outlet page or adding it to the navigation.', 'outletpro' ) .
@@ -101,13 +101,13 @@ function product_onboarding_notice_hook(): void {
 	}
 
 	?>
-<div class="notice notice-<?php echo esc_attr( $status ); ?> is-dismissible wc-outlet-onboarding-notice">
+<div class="notice notice-<?php echo esc_attr( $status ); ?> is-dismissible outletpro-onboarding-notice">
 	<?php echo wp_kses_post( $content ); ?>
 </div>
 <script>
 ( function() {
 var storageKey = <?php echo wp_json_encode( ONBOARDING_DISMISS_STORAGE_KEY ); ?>;
-var noticeClass = 'wc-outlet-onboarding-notice';
+var noticeClass = 'outletpro-onboarding-notice';
 try {
 if ( localStorage.getItem( storageKey ) ) {
 // Notice has been dismissed, do not show.

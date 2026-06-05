@@ -35,7 +35,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-message/' );
+		$this->expectOutputRegex( '/outletpro-message/' );
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -69,7 +69,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-message).*/s' ); // Does not contain the outlet message.
+		$this->expectOutputRegex( '/^(?!.*outletpro-message).*/s' ); // Does not contain the outlet message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -86,7 +86,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-message).*/s' ); // Does not contain the outlet message.
+		$this->expectOutputRegex( '/^(?!.*outletpro-message).*/s' ); // Does not contain the outlet message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -101,7 +101,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-message).*/s' ); // Does not contain the outlet message.
+		$this->expectOutputRegex( '/^(?!.*outletpro-message).*/s' ); // Does not contain the outlet message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );
@@ -116,7 +116,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-message).*/s' ); // Does not contain the outlet message.
+		$this->expectOutputRegex( '/^(?!.*outletpro-message).*/s' ); // Does not contain the outlet message.
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );

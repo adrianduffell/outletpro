@@ -36,10 +36,10 @@ function add_product_checkbox_hook(): void {
 		return;
 	}
 
-	echo '<div class="wc-outlet-status-panel">';
+	echo '<div class="outletpro-status-panel">';
 	woocommerce_wp_checkbox(
 		array(
-			'id'          => 'wc-outlet-status',
+			'id'          => 'outletpro-status',
 			'label'       => __( 'Outlet', 'outletpro' ),
 			'description' => __( 'Include in outlet', 'outletpro' ),
 			'value'       => $is_outlet ? 'outlet' : '',
@@ -52,18 +52,18 @@ function add_product_checkbox_hook(): void {
 
 	$link = settings_screen_enabled()
 		? sprintf(
-			' <a href="%s" class="wc-outlet-button-link">%s</a>',
+			' <a href="%s" class="outletpro-button-link">%s</a>',
 			esc_url( $settings_url ),
 			esc_html__( 'Edit settings', 'outletpro' )
 		)
 		: '';
 
 	printf(
-		'<div class="wc-outlet-status-help">%s%s</div><!-- .wc-outlet-status-help -->',
+		'<div class="outletpro-status-help">%s%s</div><!-- .outletpro-status-help -->',
 		esc_html__( 'Sell remaining stock in the store’s outlet. Included products display a badge and message.', 'outletpro' ),
 		wp_kses_post( $link )
 	);
-	echo '</div><!-- .wc-outlet-status-panel -->';
+	echo '</div><!-- .outletpro-status-panel -->';
 }
 
 /**
@@ -76,7 +76,7 @@ function add_product_checkbox_hook(): void {
  */
 function save_product_checkbox_hook( \WC_Product $product ): void {
 	// phpcs:ignore WordPress.Security.NonceVerification.Missing
-	$is_outlet = isset( $_POST['wc-outlet-status'] );
+	$is_outlet = isset( $_POST['outletpro-status'] );
 	try {
 		set_outlet( $product, $is_outlet );
 	} catch ( \Throwable $e ) {

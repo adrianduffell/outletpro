@@ -45,6 +45,6 @@ test( 'admin sees outlet badge on order item', async ( {
 
 	// Assert.
 	await expect(
-		page.locator( '.wc-outlet-admin-badge' ).first()
+		page.locator( '.outletpro-admin-badge' ).first()
 	).toBeVisible();
 } );

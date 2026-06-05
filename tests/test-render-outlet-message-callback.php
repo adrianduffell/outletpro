@@ -65,7 +65,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'wc-outlet-message', $result );
+		$this->assertStringContainsString( 'outletpro-message', $result );
 		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
 
 		// Cleanup.

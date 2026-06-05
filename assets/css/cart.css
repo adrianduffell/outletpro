@@ -10,8 +10,8 @@
 /* Block styles. */
 @supports selector(:has(*)) {
 
-	.wc-block-components-order-summary-item__description:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata::before,
-	.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata::before {
+	.wc-block-components-order-summary-item__description:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata::before,
+	.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata::before {
 		content: var(--wc-outlet-badge-label, none);
 		display: block;
 		width: fit-content;
@@ -29,7 +29,7 @@
 		--wc-outlet-context-font-size: var(--wp--preset--font-size--x-small, calc(var(--wp--preset--font-size--small, 14px) * 0.875));
 	}
 
-	[class*="wc-block-components-product-details__"]:has(.wc-outlet-cart-item-meta) {
+	[class*="wc-block-components-product-details__"]:has(.outletpro-cart-item-meta) {
 		position: absolute;
 		left: -10000px;
 		top: auto;
@@ -42,7 +42,7 @@
 /* Shortcode styles. */
 @supports selector(:has(*)) {
 
-	.shop_table td.product-name:has(.wc-outlet-cart-item-meta)::after {
+	.shop_table td.product-name:has(.outletpro-cart-item-meta)::after {
 		content: var(--wc-outlet-badge-label, none);
 		display: block;
 		width: fit-content;
@@ -59,12 +59,12 @@
 	}
 
 	/* Applies when outlet is the only definition. */
-	.shop_table dl.variation:has(> dt:only-of-type):has(.wc-outlet-cart-item-meta) {
+	.shop_table dl.variation:has(> dt:only-of-type):has(.outletpro-cart-item-meta) {
 		margin: 0;
 	}
 
-	.shop_table dd:has(.wc-outlet-cart-item-meta),
-	.shop_table dt:has(+ dd .wc-outlet-cart-item-meta) {
+	.shop_table dd:has(.outletpro-cart-item-meta),
+	.shop_table dt:has(+ dd .outletpro-cart-item-meta) {
 		position: absolute;
 		left: -10000px;
 		top: auto;

@@ -50,7 +50,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayHasKey( 'display', $result[0] );
-		$this->assertStringContainsString( 'wc-outlet-cart-item-meta', $result[0]['display'] );
+		$this->assertStringContainsString( 'outletpro-cart-item-meta', $result[0]['display'] );
 	}
 
 	public function test_does_not_add_outlet_meta_for_non_outlet_product(): void {

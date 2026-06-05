@@ -27,7 +27,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -43,7 +43,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -93,7 +93,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		add_to_outlet( $product );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -128,7 +128,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -182,7 +182,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -201,7 +201,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		delete_option( OUTLET_PAGE_OPTION ); // No outlet page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -223,7 +223,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -297,7 +297,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		update_option( ACTIVATED_AT_OPTION, time() - ( 13 * DAY_IN_SECONDS ) );
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-onboarding-notice/' );
+		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
 
 		// Act.
 		do_action( 'admin_notices' );

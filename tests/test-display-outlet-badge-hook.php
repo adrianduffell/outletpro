@@ -24,7 +24,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/<p[^>]+class="[^"]*wc-outlet-badge/' );
+		$this->expectOutputRegex( '/<p[^>]+class="[^"]*outletpro-badge/' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -39,7 +39,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-badge).*/s' ); // Does not contain the outlet badge.
+		$this->expectOutputRegex( '/^(?!.*outletpro-badge).*/s' ); // Does not contain the outlet badge.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -60,7 +60,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-badge/' );
+		$this->expectOutputRegex( '/outletpro-badge/' );
 
 		// Act.
 		do_action( 'foo_hook' );
@@ -81,7 +81,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-badge(?=.*<h1)/s' ); // Badge appears before the product title.
+		$this->expectOutputRegex( '/outletpro-badge(?=.*<h1)/s' ); // Badge appears before the product title.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -146,7 +146,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-badge).*/s' ); // Does not contain the outlet badge.
+		$this->expectOutputRegex( '/^(?!.*outletpro-badge).*/s' ); // Does not contain the outlet badge.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );

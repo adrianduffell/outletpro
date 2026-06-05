@@ -62,5 +62,5 @@ function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, 
 		$label = __( 'Last chance', 'outletpro' );
 	}
 
-	echo '<span class="wc-outlet-admin-badge">' . esc_html( $label ) . '</span>';
+	echo '<span class="outletpro-admin-badge">' . esc_html( $label ) . '</span>';
 }

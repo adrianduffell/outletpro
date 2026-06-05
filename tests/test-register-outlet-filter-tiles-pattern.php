@@ -168,7 +168,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$content = get_outlet_filter_tiles_content();
 
 		// Assert.
-		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $content );
+		$this->assertStringContainsString( 'outletpro-filter-tiles', $content );
 
 		// Cleanup.
 		delete_option( 'wc_outlet_page_id' );

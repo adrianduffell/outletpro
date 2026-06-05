@@ -168,12 +168,12 @@ test( 'outlet panel has correct styles', async ( {
 	await page.getByRole( 'link', { name: 'Inventory' } ).click();
 
 	// Assert: help text has font-size 12px.
-	const helpText = page.locator( '.wc-outlet-status-help' );
+	const helpText = page.locator( '.outletpro-status-help' );
 	await expect( helpText ).toBeVisible();
 	await expect( helpText ).toHaveCSS( 'font-size', '12px' );
 
 	// Assert: panel has margin-bottom of 1.5em (verified against the element's own font-size).
-	const panel = page.locator( '.wc-outlet-status-panel' );
+	const panel = page.locator( '.outletpro-status-panel' );
 	await expect( panel ).toBeVisible();
 	const panelFontSizePx = await panel.evaluate( ( el ) =>
 		parseFloat( window.getComputedStyle( el ).fontSize )

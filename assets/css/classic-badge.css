@@ -2,7 +2,7 @@
  * Front-end badge styles for classic themes.
  */
 
-.wc-outlet-badge {
+.outletpro-badge {
 	display: block;
 	width: fit-content;
 	background-color: var(--wc-outlet-badge-bg-color, unset);
