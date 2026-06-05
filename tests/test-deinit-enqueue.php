@@ -100,13 +100,13 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 	public function test_deregisters_block_styles(): void {
 		// Arrange.
-		wp_register_style( 'wc-outlet-badge-block', false, array(), 'test' );
+		wp_register_style( 'outletpro-badge-block', false, array(), 'test' );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-badge-block', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-badge-block', 'registered' ) );
 	}
 
 	public function test_safely_handles_block_styles_not_registered(): void {
@@ -116,132 +116,132 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-badge-block', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-badge-block', 'registered' ) );
 	}
 
 	public function test_deregisters_cart_style(): void {
 		// Arrange.
-		wp_register_style( 'wc-outlet-cart-badge', false, array(), 'test' );
+		wp_register_style( 'outletpro-cart-badge', false, array(), 'test' );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-cart-badge', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-cart-badge', 'registered' ) );
 	}
 
 	public function test_safely_handles_cart_style_not_registered(): void {
-		// Arrange - 'wc-outlet-cart-badge' is not registered.
+		// Arrange - 'outletpro-cart-badge' is not registered.
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-cart-badge', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-cart-badge', 'registered' ) );
 	}
 
 	public function test_deregisters_admin_styles(): void {
 		// Arrange.
-		wp_register_style( 'wc-outlet-admin', false, array(), 'test' );
+		wp_register_style( 'outletpro-admin', false, array(), 'test' );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-admin', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-admin', 'registered' ) );
 	}
 
 	public function test_safely_handles_admin_styles_not_registered(): void {
-		// Arrange - 'wc-outlet-admin' is not registered.
+		// Arrange - 'outletpro-admin' is not registered.
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-admin', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-admin', 'registered' ) );
 	}
 
 	public function test_deregisters_admin_editor_styles(): void {
 		// Arrange.
-		wp_register_style( 'wc-outlet-admin-editor', false, array(), 'test' );
+		wp_register_style( 'outletpro-admin-editor', false, array(), 'test' );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-admin-editor', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-admin-editor', 'registered' ) );
 	}
 
 	public function test_safely_handles_admin_editor_styles_not_registered(): void {
-		// Arrange - 'wc-outlet-admin-editor' is not registered.
+		// Arrange - 'outletpro-admin-editor' is not registered.
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_style_is( 'wc-outlet-admin-editor', 'registered' ) );
+		$this->assertFalse( wp_style_is( 'outletpro-admin-editor', 'registered' ) );
 	}
 
 	public function test_deregisters_admin_product_script(): void {
 		// Arrange.
-		wp_register_script( 'wc-outlet-products-admin', false, array(), 'test', true );
+		wp_register_script( 'outletpro-products-admin', false, array(), 'test', true );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-products-admin', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-products-admin', 'registered' ) );
 	}
 
 	public function test_safely_handles_admin_product_script_not_registered(): void {
-		// Arrange - 'wc-outlet-products-admin' is not registered.
+		// Arrange - 'outletpro-products-admin' is not registered.
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-products-admin', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-products-admin', 'registered' ) );
 	}
 
 	public function test_deregisters_build_script(): void {
 		// Arrange.
-		wp_register_script( 'wc-outlet-editor', false, array(), 'test', true );
+		wp_register_script( 'outletpro-editor', false, array(), 'test', true );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-editor', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-editor', 'registered' ) );
 	}
 
 	public function test_safely_handles_build_script_not_registered(): void {
-		// Arrange - 'wc-outlet-editor' is not registered.
+		// Arrange - 'outletpro-editor' is not registered.
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-editor', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-editor', 'registered' ) );
 	}
 
 	public function test_deregisters_admin_canvas_script(): void {
 		// Arrange.
-		wp_register_script( 'wc-outlet-admin-canvas-scripts', false, array(), 'test', false );
+		wp_register_script( 'outletpro-admin-canvas-scripts', false, array(), 'test', false );
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-admin-canvas-scripts', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-admin-canvas-scripts', 'registered' ) );
 	}
 
 	public function test_safely_handles_admin_canvas_script_not_registered(): void {
-		// Arrange - 'wc-outlet-admin-canvas-scripts' is not registered.
+		// Arrange - 'outletpro-admin-canvas-scripts' is not registered.
 
 		// Act.
 		deinit_enqueue();
 
 		// Assert.
-		$this->assertFalse( wp_script_is( 'wc-outlet-admin-canvas-scripts', 'registered' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-admin-canvas-scripts', 'registered' ) );
 	}
 }

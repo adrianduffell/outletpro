@@ -41,22 +41,22 @@ function deinit_enqueue(): void {
 	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' );
-	wp_deregister_style( 'wc-outlet-classic-badge' );
-	wp_deregister_style( 'wc-outlet-classic-message' );
-	wp_dequeue_style( 'wc-outlet-cart-badge' );
-	wp_deregister_style( 'wc-outlet-cart-badge' );
-	wp_dequeue_style( 'wc-outlet-admin' );
-	wp_deregister_style( 'wc-outlet-admin' );
-	wp_dequeue_style( 'wc-outlet-admin-editor' );
-	wp_deregister_style( 'wc-outlet-admin-editor' );
-	wp_dequeue_script( 'wc-outlet-admin-canvas-scripts' );
-	wp_deregister_script( 'wc-outlet-admin-canvas-scripts' );
-	wp_dequeue_script( 'wc-outlet-products-admin' );
-	wp_deregister_script( 'wc-outlet-products-admin' );
-	wp_dequeue_script( 'wc-outlet-editor' );
-	wp_deregister_script( 'wc-outlet-editor' );
-	wp_dequeue_style( 'wc-outlet-badge-block' );
-	wp_deregister_style( 'wc-outlet-badge-block' );
+	wp_deregister_style( 'outletpro-classic-badge' );
+	wp_deregister_style( 'outletpro-classic-message' );
+	wp_dequeue_style( 'outletpro-cart-badge' );
+	wp_deregister_style( 'outletpro-cart-badge' );
+	wp_dequeue_style( 'outletpro-admin' );
+	wp_deregister_style( 'outletpro-admin' );
+	wp_dequeue_style( 'outletpro-admin-editor' );
+	wp_deregister_style( 'outletpro-admin-editor' );
+	wp_dequeue_script( 'outletpro-admin-canvas-scripts' );
+	wp_deregister_script( 'outletpro-admin-canvas-scripts' );
+	wp_dequeue_script( 'outletpro-products-admin' );
+	wp_deregister_script( 'outletpro-products-admin' );
+	wp_dequeue_script( 'outletpro-editor' );
+	wp_deregister_script( 'outletpro-editor' );
+	wp_dequeue_style( 'outletpro-badge-block' );
+	wp_deregister_style( 'outletpro-badge-block' );
 }
 
 /**
@@ -77,7 +77,7 @@ function enqueue_admin_canvas_scripts_hook(): void {
 	 * @internal
 	 */
 	wp_enqueue_script(
-		'wc-outlet-admin-canvas-scripts',
+		'outletpro-admin-canvas-scripts',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-canvas.js',
 		array(),
 		VERSION,
@@ -103,7 +103,7 @@ function enqueue_admin_editor_styles_hook(): void {
 	 * @internal
 	 */
 	wp_enqueue_style(
-		'wc-outlet-admin-editor',
+		'outletpro-admin-editor',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin-editor.css',
 		array(),
 		VERSION
@@ -124,7 +124,7 @@ function register_classic_styles_hook(): void {
 	 * @since 1.0.0
 	 */
 	wp_register_style(
-		'wc-outlet-classic-badge',
+		'outletpro-classic-badge',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-badge.css',
 		array(),
 		VERSION
@@ -136,7 +136,7 @@ function register_classic_styles_hook(): void {
 	 * @since 1.0.0
 	 */
 	wp_register_style(
-		'wc-outlet-classic-message',
+		'outletpro-classic-message',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-message.css',
 		array(),
 		VERSION
@@ -159,16 +159,16 @@ function enqueue_cart_styles_hook(): void {
 	 * @internal
 	 */
 	wp_register_style(
-		'wc-outlet-cart-badge',
+		'outletpro-cart-badge',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/cart.css',
 		array(),
 		VERSION
 	);
 
-	wp_enqueue_style( 'wc-outlet-cart-badge' );
+	wp_enqueue_style( 'outletpro-cart-badge' );
 
 	wp_add_inline_style(
-		'wc-outlet-cart-badge',
+		'outletpro-cart-badge',
 		':root { --outletpro-badge-label: ' . ( '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'none' ) . '; }'
 	);
 }
@@ -230,7 +230,7 @@ function register_block_styles(): void {
 	wp_enqueue_block_style(
 		'wc-outlet/outlet-badge',
 		array(
-			'handle' => 'wc-outlet-badge-block',
+			'handle' => 'outletpro-badge-block',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 			'deps'   => array(),
 			'ver'    => $asset['version'],
@@ -252,7 +252,7 @@ function enqueue_admin_styles_hook(): void {
 	 * @internal
 	 */
 	wp_enqueue_style(
-		'wc-outlet-admin',
+		'outletpro-admin',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin.css',
 		array(),
 		VERSION
@@ -279,7 +279,7 @@ function enqueue_admin_product_scripts_hook(): void {
 	 * @internal
 	 */
 	wp_enqueue_script(
-		'wc-outlet-products-admin',
+		'outletpro-products-admin',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-product.js',
 		array(),
 		VERSION,
@@ -309,7 +309,7 @@ function enqueue_build_assets_hook(): void {
 	 * @internal
 	 */
 	wp_enqueue_script(
-		'wc-outlet-editor',
+		'outletpro-editor',
 		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
 		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
 		$asset['version'],

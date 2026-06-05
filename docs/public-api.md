@@ -247,33 +247,55 @@ enqueues.
 
 ### Styles
 
-#### `wc-outlet`
+#### `outletpro-classic-badge`
 
-Front-end stylesheet for classic (non-block) themes. Registered — but not automatically
-enqueued — on `wp_enqueue_scripts`. Use `wp_enqueue_style( 'wc-outlet' )` or declare
-it as a dependency to load it on demand. Added in 1.0.0.
+Front-end badge stylesheet for classic (non-block) themes. Registered — but not
+automatically enqueued — on `wp_enqueue_scripts`. Use
+`wp_enqueue_style( 'outletpro-classic-badge' )` or declare it as a dependency to load
+it on demand. Added in 1.0.0.
 
-#### `wc-outlet-block-styles`
+#### `outletpro-classic-message`
+
+Front-end message stylesheet for classic (non-block) themes. Registered — but not
+automatically enqueued — on `wp_enqueue_scripts`. Use
+`wp_enqueue_style( 'outletpro-classic-message' )` or declare it as a dependency to load
+it on demand. Added in 1.0.0.
+
+#### `outletpro-cart-badge`
+
+Cart badge stylesheet enqueued on `wp_enqueue_scripts`. Added in 1.0.0.
+
+#### `outletpro-badge-block`
 
 Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
 is only loaded when the `outlet-pro/outlet-badge` block is rendered on the page.
 Added in 1.0.0.
 
-#### `wc-outlet-admin-styles`
+#### `outletpro-admin`
 
 Admin stylesheet enqueued on all `admin_enqueue_scripts` pages. Added in 1.0.0.
 
+#### `outletpro-admin-editor`
+
+Admin editor stylesheet enqueued on `enqueue_block_assets` in wp-admin for editor canvas
+previewing. Added in 1.0.0.
+
 ### Scripts
 
-#### `wc-outlet-build`
+#### `outletpro-editor`
 
 Block editor JavaScript enqueued on `enqueue_block_editor_assets`. Contains the block
 editor integration for the outlet badge and outlet message blocks. Added in 1.0.0.
 
-#### `wc-outlet-admin-product`
+#### `outletpro-products-admin`
 
 Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
 Added in 1.0.0.
+
+#### `outletpro-admin-canvas-scripts`
+
+Admin JavaScript enqueued on `enqueue_block_assets` in wp-admin for editor canvas
+previewing. Added in 1.0.0.
 
 ## CSS classes
 

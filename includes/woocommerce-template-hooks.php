@@ -77,7 +77,7 @@ function display_outlet_badge_hook(): void {
 		return;
 	}
 
-	wp_enqueue_style( 'wc-outlet-classic-badge' );
+	wp_enqueue_style( 'outletpro-classic-badge' );
 
 	printf(
 		'<p class="outletpro-badge">%s</p>',
@@ -113,7 +113,7 @@ function display_outlet_message_hook(): void {
 		return;
 	}
 
-	wp_enqueue_style( 'wc-outlet-classic-message' );
+	wp_enqueue_style( 'outletpro-classic-message' );
 
 	echo '<p class="outletpro-message">' . esc_html( $message ) . '</p>';
 }
