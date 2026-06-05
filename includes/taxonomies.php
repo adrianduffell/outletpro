@@ -281,7 +281,7 @@ function set_outlet( \WC_Product $product, bool $new_value ): void {
 	 * @param bool $new_value  New outlet status.
 	 */
 	do_action(
-		'wc_outlet_status_changed',
+		'outlet_pro_status_changed',
 		$product->get_id(),
 		$old_value,
 		$new_value

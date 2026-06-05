@@ -64,7 +64,7 @@ try {
 
 Set the outlet status for a product.
 
-Fires the `wc_outlet_status_changed` action on a status change.
+Fires the `outlet_pro_status_changed` action on a status change.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -188,12 +188,12 @@ try {
 
 ### Actions
 
-#### `wc_outlet_status_changed`
+#### `outlet_pro_status_changed`
 
 Fires when a product's outlet status changes.
 
 ```php
-add_action( 'wc_outlet_status_changed', function ( $product_id, $old_value, $new_value ) {
+add_action( 'outlet_pro_status_changed', function ( $product_id, $old_value, $new_value ) {
     // React to the outlet status change.
 }, 10, 3 );
 ```
@@ -208,12 +208,12 @@ Added in 1.0.0.
 
 ### Filters
 
-#### `wc_outlet_badge_single_product_hook`
+#### `outlet_pro_badge_single_product_hook`
 
 Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the outlet badge on.
 
 ```php
-add_filter( 'wc_outlet_badge_single_product_hook', function ( $name ) {
+add_filter( 'outlet_pro_badge_single_product_hook', function ( $name ) {
     return 'woocommerce_before_single_product';
 } );
 ```
@@ -224,12 +224,12 @@ add_filter( 'wc_outlet_badge_single_product_hook', function ( $name ) {
 
 Must return a non-empty string. Added in 1.0.0.
 
-#### `wc_outlet_badge_single_product_priority`
+#### `outlet_pro_badge_single_product_priority`
 
 Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the outlet badge to the `single-product` classic templates.
 
 ```php
-add_filter( 'wc_outlet_badge_single_product_priority', function ( $priority ) {
+add_filter( 'outlet_pro_badge_single_product_priority', function ( $priority ) {
     return 5;
 } );
 ```

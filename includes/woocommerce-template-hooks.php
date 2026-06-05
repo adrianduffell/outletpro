@@ -25,12 +25,12 @@ function init_woocommerce_template_hooks(): void {
 	 * @param string $name The template hook name to display the outlet badge.
 	 */
 	$single_product_badge_hook = apply_filters(
-		'wc_outlet_badge_single_product_hook',
+		'outlet_pro_badge_single_product_hook',
 		'woocommerce_single_product_summary'
 	);
 
 	if ( ! is_string( $single_product_badge_hook ) || '' === $single_product_badge_hook ) {
-		throw new \InvalidArgumentException( 'The wc_outlet_badge_single_product_hook filter must return a non-empty string.' );
+		throw new \InvalidArgumentException( 'The outlet_pro_badge_single_product_hook filter must return a non-empty string.' );
 	}
 
 	/**
@@ -41,12 +41,12 @@ function init_woocommerce_template_hooks(): void {
 	 * @param int $priority The priority to display the outlet badge.
 	 */
 	$single_product_badge_priority = apply_filters(
-		'wc_outlet_badge_single_product_priority',
+		'outlet_pro_badge_single_product_priority',
 		15
 	);
 
 	if ( ! is_int( $single_product_badge_priority ) ) {
-		throw new \InvalidArgumentException( 'The wc_outlet_badge_single_product_priority filter must return an integer.' );
+		throw new \InvalidArgumentException( 'The outlet_pro_badge_single_product_priority filter must return an integer.' );
 	}
 
 	add_action( $single_product_badge_hook, 'OutletPro\display_outlet_badge_hook', $single_product_badge_priority );

@@ -48,7 +48,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_display_badge_using_custom_single_product_hook_name(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_hook',
+			'outlet_pro_badge_single_product_hook',
 			static function () {
 				return 'foo_hook';
 			}
@@ -69,7 +69,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_display_badge_using_custom_single_product_hook_priority(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_priority',
+			'outlet_pro_badge_single_product_priority',
 			static function () {
 				return 1;
 			}
@@ -90,7 +90,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_single_product_hook_throws_on_non_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_hook',
+			'outlet_pro_badge_single_product_hook',
 			static function () {
 				return 123;
 			}
@@ -106,7 +106,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_single_product_hook_throws_on_empty_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_hook',
+			'outlet_pro_badge_single_product_hook',
 			static function () {
 				return '';
 			}
@@ -122,7 +122,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_single_product_priority_throws_on_non_integer(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_priority',
+			'outlet_pro_badge_single_product_priority',
 			static function () {
 				return '6';
 			}
