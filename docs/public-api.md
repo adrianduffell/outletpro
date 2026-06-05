@@ -268,7 +268,7 @@ Cart badge stylesheet enqueued on `wp_enqueue_scripts`. Added in 1.0.0.
 #### `outletpro-badge-block`
 
 Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
-is only loaded when the `outlet-pro/outlet-badge` block is rendered on the page.
+is only loaded when the `wc-outlet/outlet-badge` block is rendered on the page.
 Added in 1.0.0.
 
 #### `outletpro-admin`
