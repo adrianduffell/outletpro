@@ -248,7 +248,6 @@ const OutletSidebar = () => {
 					__nextHasNoMarginBottom={ true }
 				>
 					<UnitControl
-						id="wc-outlet-border-radius"
 						value={ borderRadius || undefined }
 						onChange={ ( value: string | undefined ) =>
 							setBorderRadius( value || undefined )
