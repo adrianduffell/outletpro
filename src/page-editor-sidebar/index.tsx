@@ -242,9 +242,7 @@ const OutletSidebar = () => {
 					</div>
 				) }
 
-				<BaseControl
-					__nextHasNoMarginBottom={ true }
-				>
+				<BaseControl __nextHasNoMarginBottom={ true }>
 					<UnitControl
 						label={ __( 'Radius', 'outletpro' ) }
 						value={ borderRadius || undefined }
