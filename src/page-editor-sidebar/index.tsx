@@ -242,9 +242,12 @@ const OutletSidebar = () => {
 					</div>
 				) }
 
-				<BaseControl __nextHasNoMarginBottom={ true }>
+				<BaseControl
+					id="wc-outlet-border-radius"
+					label={ __( 'Radius', 'outletpro' ) }
+					__nextHasNoMarginBottom={ true }
+				>
 					<UnitControl
-						label={ __( 'Radius', 'outletpro' ) }
 						value={ borderRadius || undefined }
 						onChange={ ( value: string | undefined ) =>
 							setBorderRadius( value || undefined )
