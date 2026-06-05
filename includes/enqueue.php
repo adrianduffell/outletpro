@@ -196,6 +196,7 @@ function output_badge_style_css_variables_hook(): void {
 	$declarations = array_map(
 		function ( string $option_name ): string {
 			$variable_name = '--' . str_replace( '_', '-', $option_name );
+			$variable_name = str_replace( 'outletpro-badge', 'wc-outlet-badge', $variable_name ); // For backward compatibility with existing CSS variables.
 			$option_value  = sanitize_css_value( get_option( $option_name, '' ) );
 
 			return $variable_name . ': ' . ( '' !== $option_value ? $option_value : 'unset' );
