@@ -16,7 +16,7 @@ const EditorPreview = () => {
 
 		// Watch for custom event signalling when canvas iframe is ready.
 		window.addEventListener(
-			'outletpro-canvas-ready',
+			'outletproCanvasReady',
 			handleCanvasReady,
 			true
 		);
@@ -24,7 +24,7 @@ const EditorPreview = () => {
 		// Cleanup listener on unmount.
 		return () => {
 			window.removeEventListener(
-				'outletpro-canvas-ready',
+				'outletproCanvasReady',
 				handleCanvasReady,
 				true
 			);

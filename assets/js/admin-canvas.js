@@ -19,7 +19,7 @@
 
 		if ( isEditorCanvas && window.parent !== window ) {
 			window.parent.dispatchEvent(
-				new CustomEvent( 'outletpro-canvas-ready', {
+				new CustomEvent( 'outletproCanvasReady', {
 					detail: { document },
 				} )
 			);
