@@ -249,6 +249,61 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
+	public function test_publish_page_notice_contains_site_editor_link_on_block_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
+		$page_id      = get_option( OUTLET_PAGE_OPTION );
+		$expected_url = esc_url(
+			add_query_arg(
+				array(
+					'postType' => 'page',
+					'postId'   => $page_id,
+					'canvas'   => 'edit',
+				),
+				admin_url( 'site-editor.php' )
+			)
+		);
+
+		// Expect.
+		$this->expectOutputRegex( '/href="' . preg_quote( $expected_url, '/' ) . '">Edit page<\/a>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_publish_page_notice_contains_classic_editor_link_on_classic_theme(): void {
+		// Arrange.
+		switch_theme( 'storefront' );
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page(); // Creates page as draft.
+		$page_id      = get_option( OUTLET_PAGE_OPTION );
+		$expected_url = esc_url( get_edit_post_link( $page_id ) );
+
+		// Expect.
+		$this->expectOutputRegex( '/href="' . preg_quote( $expected_url, '/' ) . '">Edit page<\/a>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
 	public function test_products_added_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
 		// Arrange.
 		init_admin_product_list_table();

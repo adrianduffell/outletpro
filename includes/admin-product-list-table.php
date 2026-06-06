@@ -83,7 +83,16 @@ function product_onboarding_notice_hook(): void {
 			esc_html__( 'Tip: add it to a page or post using the outlet block.', 'outletpro' ) . '</p>';
 	} elseif ( 'publish' !== get_post_status( $page_id ) ) {
 		$count     = count_outlet();
-		$edit_url  = get_edit_post_link( $page_id );
+		$edit_url  = wp_is_block_theme()
+			? add_query_arg(
+				array(
+					'postType' => 'page',
+					'postId'   => $page_id,
+					'canvas'   => 'edit',
+				),
+				admin_url( 'site-editor.php' )
+			)
+			: get_edit_post_link( $page_id );
 		$edit_link = $edit_url ? ' <a class="outletpro-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit page', 'outletpro' ) . '</a>' : '';
 		$content   = '<p>' . $new_badge .
 			/* translators: %d: number of outlet products */
