@@ -35,6 +35,7 @@
 	"files": [
 		"assets",
 		"build",
+		"changelog.txt",
 		"includes",
 		"templates",
 		"outletpro.php",
