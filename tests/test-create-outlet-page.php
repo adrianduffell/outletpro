@@ -107,9 +107,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			),
 			$pages[0]->post_content
 		);
-		$this->assertStringContainsString( 'outletpro-filter-tiles', $pages[0]->post_content );
+		$this->assertStringContainsString( 'max_price=', $pages[0]->post_content );
 		$products_shortcode_position = strpos( $pages[0]->post_content, '[products outletpro="yes"' );
-		$filter_tiles_position       = strpos( $pages[0]->post_content, 'outletpro-filter-tiles' );
+		$filter_tiles_position       = strpos( $pages[0]->post_content, 'max_price=' );
 		$this->assertNotFalse( $products_shortcode_position );
 		$this->assertNotFalse( $filter_tiles_position );
 		$this->assertLessThan(
@@ -149,12 +149,12 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"order":"asc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"outletpro/product-collection/outlet"', $pages[0]->post_content );
-		$this->assertStringContainsString( 'outletpro-filter-tiles', $pages[0]->post_content );
+		$this->assertStringContainsString( 'max_price=', $pages[0]->post_content );
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertStringContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
 		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertStringNotContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
 		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
 		$sort_filter_position              = strpos( $pages[0]->post_content, 'outletpro/outlet-sort-filter' );
-		$filter_tiles_position             = strpos( $pages[0]->post_content, 'outletpro-filter-tiles' );
+		$filter_tiles_position             = strpos( $pages[0]->post_content, 'max_price=' );
 		$this->assertNotFalse( $product_collection_block_position );
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertNotFalse( $sort_filter_position );
 		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertFalse( $sort_filter_position );
