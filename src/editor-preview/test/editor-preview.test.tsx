@@ -133,7 +133,7 @@ describe( 'EditorPreview', () => {
 			// Act.
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'outletpro-canvas-ready', {
+					new CustomEvent( 'outletproCanvasReady', {
 						detail: {
 							document: canvasDoc,
 						},
@@ -160,7 +160,7 @@ describe( 'EditorPreview', () => {
 
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'outletpro-canvas-ready', {
+					new CustomEvent( 'outletproCanvasReady', {
 						detail: {
 							document: canvasDoc1,
 						},
@@ -175,7 +175,7 @@ describe( 'EditorPreview', () => {
 			// Act.
 			act( () => {
 				window.dispatchEvent(
-					new CustomEvent( 'outletpro-canvas-ready', {
+					new CustomEvent( 'outletproCanvasReady', {
 						detail: {
 							document: canvasDoc2,
 						},
