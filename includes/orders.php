@@ -55,4 +55,12 @@ function flag_order_item_outlet_hook( $item_id, \WC_Order_Item $item, $_order_id
 	}
 
 	wc_add_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
+
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $label ) || '' === $label ) {
+		$label = __( 'Last chance', 'outletpro' );
+	}
+
+	wc_add_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, $label, true );
 }

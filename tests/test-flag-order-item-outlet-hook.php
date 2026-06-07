@@ -9,7 +9,9 @@ use function OutletPro\add_to_outlet;
 use function OutletPro\flag_order_item_outlet_hook;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY;
 use const OutletPro\ORDER_ITEM_OUTLET_META_KEY;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
@@ -17,6 +19,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Final Sale' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$order = wc_create_order();
@@ -31,6 +34,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'yes', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, true ) );
+		$this->assertSame( 'Final Sale', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, true ) );
 	}
 
 	public function test_does_not_add_outlet_meta_for_non_outlet_product(): void {
@@ -50,6 +54,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, true ) );
+		$this->assertSame( '', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, true ) );
 	}
 
 	public function test_uses_parent_id_for_variation(): void {
@@ -73,6 +78,27 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'yes', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, true ) );
+	}
+
+	public function test_adds_default_badge_label_meta_when_option_is_missing(): void {
+		// Arrange.
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$order = wc_create_order();
+		$item  = new WC_Order_Item_Product();
+		$item->set_product_id( $product->get_id() );
+		$item->set_order_id( $order->get_id() );
+		$item->save();
+		$item_id = $item->get_id();
+
+		// Act.
+		flag_order_item_outlet_hook( $item_id, $item, $order->get_id() );
+
+		// Assert.
+		$this->assertSame( 'Last chance', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, true ) );
 	}
 
 	public function test_does_not_add_meta_for_non_product_item(): void {

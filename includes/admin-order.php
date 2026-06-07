@@ -17,6 +17,13 @@ defined( 'ABSPATH' ) || exit;
 const ORDER_ITEM_OUTLET_META_KEY = '_outletpro';
 
 /**
+ * Order item meta key used to store the outlet badge label at time of purchase.
+ *
+ * @internal
+ */
+const ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY = 'wc_clearance_badge_label';
+
+/**
  * Helper to initialize admin order display hooks.
  *
  * @internal
@@ -37,6 +44,7 @@ function init_admin_order(): void {
  */
 function hide_order_item_outlet_meta_hook( array $hidden_meta_keys ): array {
 	$hidden_meta_keys[] = ORDER_ITEM_OUTLET_META_KEY;
+	$hidden_meta_keys[] = ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY;
 	return $hidden_meta_keys;
 }
 
@@ -56,7 +64,11 @@ function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, 
 		return;
 	}
 
-	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
+	$label = $item->get_meta( ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY );
+
+	if ( ! is_string( $label ) || '' === $label ) {
+		$label = get_option( OUTLET_BADGE_LABEL_OPTION );
+	}
 
 	if ( ! is_string( $label ) || '' === $label ) {
 		$label = __( 'Last chance', 'outletpro' );
