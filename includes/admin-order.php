@@ -21,7 +21,7 @@ const ORDER_ITEM_OUTLET_META_KEY = '_outletpro';
  *
  * @internal
  */
-const ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY = 'wc_clearance_badge_label';
+const ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY = '_outletpro_badge_label';
 
 /**
  * Helper to initialize admin order display hooks.
