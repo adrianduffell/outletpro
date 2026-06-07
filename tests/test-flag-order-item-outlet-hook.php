@@ -98,7 +98,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 		flag_order_item_outlet_hook( $item_id, $item, $order->get_id() );
 
 		// Assert.
-		$this->assertSame( 'Last chance', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, true ) );
+		$this->assertSame( '⚠️ Missing label', wc_get_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, true ) );
 	}
 
 	public function test_does_not_add_meta_for_non_product_item(): void {
