@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Outlet Pro
  * Description: Move old stock easily with an outlet on WooCommerce stores.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
  * Text Domain: outletpro
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 
 /**
  * Plugin file path.
