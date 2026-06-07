@@ -67,11 +67,7 @@ function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, 
 	$label = $item->get_meta( ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY );
 
 	if ( ! is_string( $label ) || '' === $label ) {
-		$label = get_option( OUTLET_BADGE_LABEL_OPTION );
-	}
-
-	if ( ! is_string( $label ) || '' === $label ) {
-		$label = __( 'Last chance', 'outletpro' );
+		$label = __( '⚠️ Missing label', 'outletpro' );
 	}
 
 	echo '<span class="outletpro-admin-badge">' . esc_html( $label ) . '</span>';
