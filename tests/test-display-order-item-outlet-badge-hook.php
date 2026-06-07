@@ -27,27 +27,27 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		display_order_item_outlet_badge_hook( 1, $item, null );
 	}
 
-	public function test_displays_option_label_when_order_label_meta_missing(): void {
+	public function test_displays_missing_label_indicator_when_order_label_meta_missing_even_if_option_stored(): void {
 		// Arrange.
 		update_option( OUTLET_BADGE_LABEL_OPTION, 'Last Chance' );
 		$item = new WC_Order_Item_Product();
 		$item->add_meta_data( ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( '<span class="outletpro-admin-badge">Last Chance</span>' );
+		$this->expectOutputString( '<span class="outletpro-admin-badge">⚠️ Missing label</span>' );
 
 		// Act.
 		display_order_item_outlet_badge_hook( 1, $item, null );
 	}
 
-	public function test_displays_default_label_when_no_order_label_meta_or_option_stored(): void {
+	public function test_displays_missing_label_indicator_when_no_order_label_meta_or_option_stored(): void {
 		// Arrange.
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 		$item = new WC_Order_Item_Product();
 		$item->add_meta_data( ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( '<span class="outletpro-admin-badge">Last chance</span>' );
+		$this->expectOutputString( '<span class="outletpro-admin-badge">⚠️ Missing label</span>' );
 
 		// Act.
 		display_order_item_outlet_badge_hook( 1, $item, null );
