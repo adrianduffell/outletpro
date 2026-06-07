@@ -1,4 +1,4 @@
 *** Outlet Pro Changelog ***
 
-2026-04-10 - version 1.0.0
-* Add - Initial release.
+2026-06-07 - version 1.0.0
+* Add - Initial release includes outlet page, badge, and message. Compatible with block and classic themes.
