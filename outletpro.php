@@ -141,5 +141,10 @@ register_activation_hook( __FILE__, __NAMESPACE__ . '\activate' );
 
 add_action(
 	'before_woocommerce_init',
-	fn() => \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true )
+	function (): void {
+		if ( ! class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
+			return;
+		}
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', PLUGIN_FILE, true );
+	}
 );
