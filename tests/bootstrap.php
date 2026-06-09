@@ -54,6 +54,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/orders.php';
 	require_once __DIR__ . '/../includes/customizer.php';
 	require_once __DIR__ . '/../includes/enqueue.php';
+	require_once __DIR__ . '/../includes/dev.php';
 	require_once __DIR__ . '/../outletpro.php';
 }
 

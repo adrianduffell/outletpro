@@ -59,6 +59,11 @@ require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
 require_once __DIR__ . '/includes/enqueue.php';
 
+$dev_include = __DIR__ . '/includes/dev.php';
+if ( file_exists( $dev_include ) ) {
+	require_once $dev_include;
+}
+
 /**
  * Initialize the plugin.
  *
