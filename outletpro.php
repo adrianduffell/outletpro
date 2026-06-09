@@ -62,6 +62,7 @@ require_once __DIR__ . '/includes/enqueue.php';
 $dev_include = __DIR__ . '/includes/dev.php';
 if ( file_exists( $dev_include ) ) {
 	require_once $dev_include;
+	add_action( 'init', 'OutletPro\init_dev', 20 );
 }
 
 /**

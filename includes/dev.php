@@ -102,5 +102,3 @@ function enqueue_dev_assets_hook(): void {
 		true
 	);
 }
-
-add_action( 'init', 'OutletPro\init_dev', 20 );
