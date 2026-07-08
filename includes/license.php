@@ -34,35 +34,6 @@ function init_license(): void {
 }
 
 /**
- * Sanitize a license key value.
- *
- * Accepts a 16-character alphanumeric string. Returns an empty string for
- * invalid or non-string values.
- *
- * @internal
- *
- * @param mixed $value The license key value to sanitize.
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
- */
-function sanitize_license_key( $value ): string {
-	if ( ! is_string( $value ) ) {
-		return '';
-	}
-
-	$value = sanitize_text_field( $value );
-
-	if ( '' === $value ) {
-		return '';
-	}
-
-	if ( ! preg_match( '/^[A-Za-z0-9]{16}$/', $value ) ) {
-		return '';
-	}
-
-	return $value;
-}
-
-/**
  * Register the license key setting.
  *
  * @internal
@@ -76,7 +47,7 @@ function register_license_key_setting(): void {
 			'label'             => __( 'License Key', 'outletpro' ),
 			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
 			'default'           => '',
-			'sanitize_callback' => 'OutletPro\sanitize_license_key',
+			'sanitize_callback' => 'sanitize_key',
 		)
 	);
 }

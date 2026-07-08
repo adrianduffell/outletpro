@@ -6,7 +6,6 @@
  */
 
 use function OutletPro\register_license_key_setting;
-use function OutletPro\sanitize_license_key;
 use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_PAGE_SLUG;
 
@@ -48,27 +47,15 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 		$this->assertSame( '', $settings[ LICENSE_KEY_OPTION ]['default'] );
 	}
 
-	public function test_sanitize_callback_rejects_invalid_key(): void {
+	public function test_sanitize_callback_is_sanitize_key(): void {
 		// Arrange.
 		unregister_setting( LICENSE_PAGE_SLUG, LICENSE_KEY_OPTION );
-		register_license_key_setting();
 
 		// Act.
-		$result = sanitize_license_key( 'invalid' );
-
-		// Assert.
-		$this->assertSame( '', $result );
-	}
-
-	public function test_sanitize_callback_accepts_valid_key(): void {
-		// Arrange.
-		unregister_setting( LICENSE_PAGE_SLUG, LICENSE_KEY_OPTION );
 		register_license_key_setting();
 
-		// Act.
-		$result = sanitize_license_key( 'ABCDEF1234567890' );
-
 		// Assert.
-		$this->assertSame( 'ABCDEF1234567890', $result );
+		$settings = get_registered_settings();
+		$this->assertSame( 'sanitize_key', $settings[ LICENSE_KEY_OPTION ]['sanitize_callback'] );
 	}
 }
