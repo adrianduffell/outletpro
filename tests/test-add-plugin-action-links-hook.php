@@ -45,7 +45,7 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Deactivate', $result[1] );
 	}
 
-	public function test_settings_link_contains_options_general_url(): void {
+	public function test_settings_link_contains_admin_url(): void {
 		// Arrange.
 		$links = array();
 
@@ -53,6 +53,6 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$result = add_plugin_action_links_hook( $links );
 
 		// Assert.
-		$this->assertStringContainsString( 'options-general.php', $result[0] );
+		$this->assertStringContainsString( 'admin.php', $result[0] );
 	}
 }

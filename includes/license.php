@@ -53,14 +53,15 @@ function register_license_key_setting(): void {
 }
 
 /**
- * Add the license settings page to the Settings menu.
+ * Register a hidden license settings admin page, not linked in any menu.
  *
  * Fired by `admin_menu`.
  *
  * @internal WordPress action hook
  */
 function add_license_menu_hook(): void {
-	add_options_page(
+	add_submenu_page(
+		null,
 		__( 'Outlet Pro License', 'outletpro' ),
 		__( 'Outlet Pro', 'outletpro' ),
 		'manage_options',
@@ -81,7 +82,7 @@ function add_license_menu_hook(): void {
 function add_plugin_action_links_hook( array $links ): array {
 	$settings_link = sprintf(
 		'<a href="%s">%s</a>',
-		esc_url( admin_url( 'options-general.php?page=' . LICENSE_PAGE_SLUG ) ),
+		esc_url( admin_url( 'admin.php?page=' . LICENSE_PAGE_SLUG ) ),
 		esc_html__( 'Settings', 'outletpro' )
 	);
 
@@ -116,9 +117,8 @@ function render_license_page(): void {
 							name="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"
 							value="<?php echo esc_attr( (string) get_option( LICENSE_KEY_OPTION, '' ) ); ?>"
 							class="regular-text"
-							maxlength="16"
 						/>
-						<p class="description"><?php esc_html_e( 'Enter your 16-character alphanumeric license key.', 'outletpro' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Enter your license key.', 'outletpro' ); ?></p>
 					</td>
 				</tr>
 			</table>
