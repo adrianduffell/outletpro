@@ -112,6 +112,7 @@ function render_license_page(): void {
 	?>
 	<div class="wrap">
 		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+		<p><?php esc_html_e( 'The Outlet Pro premium license enables automatic updates and email support.', 'outletpro' ); ?> <a href="https://outletpro.zip/"><?php esc_html_e( 'Learn more', 'outletpro' ); ?></a></p>
 		<form method="post" action="options.php">
 			<?php settings_fields( LICENSE_PAGE_SLUG ); ?>
 			<table class="form-table" role="presentation">
