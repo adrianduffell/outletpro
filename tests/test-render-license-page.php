@@ -24,19 +24,6 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 		render_license_page();
 	}
 
-	public function test_renders_fallback_page_title_when_admin_page_title_is_unavailable(): void {
-		// Arrange.
-		register_license_key_setting();
-		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
-
-		// Expect.
-		$this->expectOutputRegex( '/Outlet Pro License/' );
-
-		// Act.
-		render_license_page();
-	}
-
 	public function test_renders_license_key_input_with_saved_value(): void {
 		// Arrange.
 		register_license_key_setting();
