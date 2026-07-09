@@ -49,9 +49,6 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 
 		// Act.
 		render_license_page();
-
-		// Cleanup.
-		delete_option( LICENSE_KEY_OPTION );
 	}
 
 	public function test_does_not_render_for_non_admin_user(): void {
