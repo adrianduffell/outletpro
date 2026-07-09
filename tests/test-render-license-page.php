@@ -8,7 +8,6 @@
 use function OutletPro\register_license_key_setting;
 use function OutletPro\render_license_page;
 use const OutletPro\LICENSE_KEY_OPTION;
-use const OutletPro\LICENSE_PAGE_SLUG;
 
 class Test_Render_License_Page extends WP_UnitTestCase {
 
