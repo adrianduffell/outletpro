@@ -34,6 +34,16 @@ function init_license(): void {
 }
 
 /**
+ * Helper to de-initialize license features back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_license(): void {
+	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+}
+
+/**
  * Register the license key setting.
  *
  * @internal
