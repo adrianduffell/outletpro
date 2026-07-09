@@ -70,10 +70,9 @@ function register_license_key_setting(): void {
  * @internal WordPress action hook
  */
 function add_license_menu_hook(): void {
-	add_submenu_page(
-		'options.php',
+	add_options_page(
 		__( 'Outlet Pro License', 'outletpro' ),
-		__( 'Outlet Pro', 'outletpro' ),
+		__( 'Outlet Pro License', 'outletpro' ),
 		'manage_options',
 		LICENSE_PAGE_SLUG,
 		'OutletPro\render_license_page'
