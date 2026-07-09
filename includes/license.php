@@ -71,7 +71,7 @@ function register_license_key_setting(): void {
  */
 function add_license_menu_hook(): void {
 	add_submenu_page(
-		null,
+		'options.php',
 		__( 'Outlet Pro License', 'outletpro' ),
 		__( 'Outlet Pro', 'outletpro' ),
 		'manage_options',
