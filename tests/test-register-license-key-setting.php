@@ -47,7 +47,7 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 		$this->assertSame( '', $settings[ LICENSE_KEY_OPTION ]['default'] );
 	}
 
-	public function test_sanitize_callback_is_sanitize_key(): void {
+	public function test_sanitize_callback_is_sanitize_text_field(): void {
 		// Arrange.
 		unregister_setting( LICENSE_PAGE_SLUG, LICENSE_KEY_OPTION );
 
@@ -56,6 +56,6 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 		// Assert.
 		$settings = get_registered_settings();
-		$this->assertSame( 'sanitize_key', $settings[ LICENSE_KEY_OPTION ]['sanitize_callback'] );
+		$this->assertSame( 'sanitize_text_field', $settings[ LICENSE_KEY_OPTION ]['sanitize_callback'] );
 	}
 }

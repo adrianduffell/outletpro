@@ -47,7 +47,7 @@ function register_license_key_setting(): void {
 			'label'             => __( 'License Key', 'outletpro' ),
 			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
 			'default'           => '',
-			'sanitize_callback' => 'sanitize_key',
+			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);
 }
