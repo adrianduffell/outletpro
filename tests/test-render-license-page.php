@@ -5,7 +5,7 @@
  * @package OutletPro
  */
 
-use function OutletPro\register_license_key_setting;
+use function OutletPro\init_license;
 use function OutletPro\render_license_page;
 use const OutletPro\LICENSE_KEY_OPTION;
 
@@ -13,7 +13,7 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 
 	public function test_renders_license_key_field(): void {
 		// Arrange.
-		register_license_key_setting();
+		init_license();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
@@ -26,7 +26,7 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 
 	public function test_renders_license_key_input_with_saved_value(): void {
 		// Arrange.
-		register_license_key_setting();
+		init_license();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 		update_option( LICENSE_KEY_OPTION, 'ABCDEF1234567890' );
@@ -40,6 +40,7 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 
 	public function test_does_not_render_for_non_admin_user(): void {
 		// Arrange.
+		init_license();
 		$user_id = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 		wp_set_current_user( $user_id );
 
@@ -52,7 +53,7 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 
 	public function test_renders_form_with_options_php_action(): void {
 		// Arrange.
-		register_license_key_setting();
+		init_license();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
@@ -65,7 +66,7 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 
 	public function test_renders_license_key_input_field_name(): void {
 		// Arrange.
-		register_license_key_setting();
+		init_license();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
