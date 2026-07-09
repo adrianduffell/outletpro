@@ -93,7 +93,7 @@ function add_plugin_action_links_hook( array $links ): array {
 	$settings_link = sprintf(
 		'<a href="%s">%s</a>',
 		esc_url( admin_url( 'admin.php?page=' . LICENSE_PAGE_SLUG ) ),
-		esc_html__( 'Settings', 'outletpro' )
+		esc_html__( 'License', 'outletpro' )
 	);
 
 	array_unshift( $links, $settings_link );

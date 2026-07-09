@@ -21,7 +21,7 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), $links );
 
 		// Assert.
-		$this->assertStringContainsString( 'Settings', $result[0] );
+		$this->assertStringContainsString( 'License', $result[0] );
 
 		// Cleanup.
 		deinit_license();
@@ -52,7 +52,7 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertCount( 2, $result );
-		$this->assertStringContainsString( 'Settings', $result[0] );
+		$this->assertStringContainsString( 'License', $result[0] );
 		$this->assertStringContainsString( 'Deactivate', $result[1] );
 
 		// Cleanup.
