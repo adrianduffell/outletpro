@@ -18,7 +18,7 @@ class Test_Render_License_Page extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/License Key/' );
+		$this->expectOutputRegex( '/Premium license key/' );
 
 		// Act.
 		render_license_page();

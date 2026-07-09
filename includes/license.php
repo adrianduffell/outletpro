@@ -112,13 +112,13 @@ function render_license_page(): void {
 	?>
 	<div class="wrap">
 		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-		<p><?php esc_html_e( 'The Outlet Pro premium license enables automatic updates and email support.', 'outletpro' ); ?> <a href="https://outletpro.zip/"><?php esc_html_e( 'Learn more', 'outletpro' ); ?></a></p>
+		<p><?php esc_html_e( 'Outlet Pro is open source. A premium license provides automatic updates and email support.', 'outletpro' ); ?> <a href="https://outletpro.zip/"><?php esc_html_e( 'Learn more', 'outletpro' ); ?></a></p>
 		<form method="post" action="options.php">
 			<?php settings_fields( LICENSE_PAGE_SLUG ); ?>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
-						<label for="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"><?php esc_html_e( 'License Key', 'outletpro' ); ?></label>
+						<label for="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"><?php esc_html_e( 'Premium license key', 'outletpro' ); ?></label>
 					</th>
 					<td>
 						<input
@@ -126,9 +126,10 @@ function render_license_page(): void {
 							id="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"
 							name="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"
 							value="<?php echo esc_attr( (string) get_option( LICENSE_KEY_OPTION, '' ) ); ?>"
+							placeholder="XXXX-XXXX-XXXX-XXXX"
 							class="regular-text"
 						/>
-						<p class="description"><?php esc_html_e( 'Enter your license key.', 'outletpro' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Enter your premium license key.', 'outletpro' ); ?></p>
 					</td>
 				</tr>
 			</table>
