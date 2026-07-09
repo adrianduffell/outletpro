@@ -110,9 +110,15 @@ function render_license_page(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+
+	$page_title = get_admin_page_title();
+
+	if ( ! is_string( $page_title ) || '' === $page_title ) {
+		$page_title = __( 'Outlet Pro License', 'outletpro' );
+	}
 	?>
 	<div class="wrap">
-		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+		<h1><?php echo esc_html( $page_title ); ?></h1>
 		<form method="post" action="options.php">
 			<?php settings_fields( LICENSE_PAGE_SLUG ); ?>
 			<table class="form-table" role="presentation">
