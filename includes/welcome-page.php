@@ -71,7 +71,7 @@ function enqueue_welcome_page_scripts_hook(): void {
 		return;
 	}
 
-	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/welcome-page.asset.php';
+	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
 		return;
@@ -86,7 +86,7 @@ function enqueue_welcome_page_scripts_hook(): void {
 	 */
 	wp_enqueue_script(
 		'outletpro-welcome-page',
-		plugin_dir_url( PLUGIN_FILE ) . 'build/welcome-page.js',
+		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
 		$asset['dependencies'],
 		$asset['version'],
 		true
