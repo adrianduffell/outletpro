@@ -68,13 +68,33 @@ export function WelcomePage(): JSX.Element {
 		return (
 			<div className="outletpro-welcome-page-wrapper">
 				<div className="outletpro-welcome-page">
-					<h1 style={ {  fontSize: '2.8rem', fontWeight: 600, textAlign: 'center' } }>🎉 Success!</h1>
-					<p style={ { fontSize: '1.1rem', fontWeight:300, margin: '1rem auto', maxWidth:'90%', textAlign: 'center' } }>
+					<h1
+						style={ {
+							fontSize: '2.8rem',
+							fontWeight: 600,
+							textAlign: 'center',
+						} }
+					>
+						🎉 Success!
+					</h1>
+					<p
+						style={ {
+							fontSize: '1.1rem',
+							fontWeight: 300,
+							margin: '1rem auto',
+							maxWidth: '90%',
+							textAlign: 'center',
+						} }
+					>
 						{ __(
 							"Outlet Pro is now set up. Get started by including your first product in the store's outlet.",
 							'outletpro'
 						) }{ ' ' }
-						<a href="https://outletpro.zip/help/get-started/" target="_blank" rel="noopener">
+						<a
+							href="https://outletpro.zip/help/get-started/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							{ __( 'Learn More', 'outletpro' ) }
 						</a>
 					</p>
@@ -93,48 +113,70 @@ export function WelcomePage(): JSX.Element {
 
 	return (
 		<div className="outletpro-welcome-page-wrapper">
-		<div className="outletpro-welcome-page">
-			<h1 style={ {  fontSize: '2.8rem', fontWeight: 600, textAlign: 'center' } }>Welcome to Outlet Pro!</h1>
-			<p style={ { fontSize: '1.1rem', fontWeight:300, margin: '1rem auto', maxWidth:'80%', textAlign: 'center' } }>
-				{ __(
-					'Thank you for installing Outlet Pro. Please enter your premium license key to begin setup.',
-					'outletpro'
-				) }
-			</p>
-			<div style={ { margin: '2rem auto', maxWidth:'90%' } }>
-				<TextControl
-					label={ __( 'Premium license key', 'outletpro' ) }
-					hideLabelFromVision={ true }
-					value={ licenseKey }
-					help={ __( 'You can find your license key in the email sent after purchasing Outlet Pro.', 'outletpro' ) }
-					onChange={ setLicenseKey }
-					placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX"
-					// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
-					__next40pxDefaultSize
-				/>
-			</div>
-			{ errorMessage && (
-				<p className="outletpro-welcome-page__error">
-					{ errorMessage }
-				</p>
-			) }
-			<div style={ { marginTop: '2rem', textAlign: 'center' } }>
-
-				<p style={ { margin: '2rem', textAlign: 'center' } }><a href="https://outletpro.zip/help/license-key/" target="_blank" rel="noopener">
-					{ __( 'I don’t have a license key', 'outletpro' ) }
-				</a>
-				</p>
-				<Button
-					variant="primary"
-					onClick={ handleContinue }
-					isBusy={ isLoading }
-					disabled={ isLoading }
-					style={ { marginLeft: '1em' } }
+			<div className="outletpro-welcome-page">
+				<h1
+					style={ {
+						fontSize: '2.8rem',
+						fontWeight: 600,
+						textAlign: 'center',
+					} }
 				>
-					{ __( 'Continue', 'outletpro' ) }
-				</Button>
+					Welcome to Outlet Pro!
+				</h1>
+				<p
+					style={ {
+						fontSize: '1.1rem',
+						fontWeight: 300,
+						margin: '1rem auto',
+						maxWidth: '80%',
+						textAlign: 'center',
+					} }
+				>
+					{ __(
+						'Thank you for installing Outlet Pro. Please enter your premium license key to begin setup.',
+						'outletpro'
+					) }
+				</p>
+				<div style={ { margin: '2rem auto', maxWidth: '90%' } }>
+					<TextControl
+						label={ __( 'Premium license key', 'outletpro' ) }
+						hideLabelFromVision={ true }
+						value={ licenseKey }
+						help={ __(
+							'The license key can be found in the email receipt for purchasing Outlet Pro.',
+							'outletpro'
+						) }
+						onChange={ setLicenseKey }
+						placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX"
+						__next40pxDefaultSize
+					/>
+				</div>
+				{ errorMessage && (
+					<p className="outletpro-welcome-page__error">
+						{ errorMessage }
+					</p>
+				) }
+				<div style={ { marginTop: '2rem', textAlign: 'center' } }>
+					<p style={ { margin: '2rem', textAlign: 'center' } }>
+						<a
+							href="https://outletpro.zip/help/license-key/"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							{ __( 'I don’t have a license key', 'outletpro' ) }
+						</a>
+					</p>
+					<Button
+						variant="primary"
+						onClick={ handleContinue }
+						isBusy={ isLoading }
+						disabled={ isLoading }
+						style={ { marginLeft: '1em' } }
+					>
+						{ __( 'Continue', 'outletpro' ) }
+					</Button>
+				</div>
 			</div>
 		</div>
-	</div>
 	);
 }
