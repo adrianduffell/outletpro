@@ -114,7 +114,7 @@ function render_license_page(): void {
 	<div class="wrap">
 		<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 		<p>
-			<?php esc_html_e( 'Outlet Pro is open source. A premium license provides automatic updates and email support.', 'outletpro' ); ?>
+			<?php esc_html_e( 'Your premium license provides plugin updates and email support.', 'outletpro' ); ?>
 			<a href="<?php echo esc_url( 'https://outletpro.zip/' ); ?>">
 				<?php esc_html_e( 'Learn more', 'outletpro' ); ?>
 			</a>
