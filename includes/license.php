@@ -17,11 +17,56 @@ defined( 'ABSPATH' ) || exit;
 const LICENSE_KEY_OPTION = 'outletpro_license_key';
 
 /**
+ * WordPress transient key used to cache license validity.
+ *
+ * @internal
+ */
+const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
+
+/**
+ * Minimum length for a valid stub license key.
+ *
+ * @internal
+ */
+const MIN_LICENSE_KEY_LENGTH = 2;
+
+/**
  * Admin page slug for the license settings page.
  *
  * @internal
  */
 const LICENSE_PAGE_SLUG = 'outletpro-license';
+
+/**
+ * Validate a license key.
+ *
+ * @internal
+ *
+ * @param mixed $license_key The license key to validate.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function validate_license( $license_key ): bool {
+	return is_string( $license_key ) && strlen( $license_key ) >= MIN_LICENSE_KEY_LENGTH;
+}
+
+/**
+ * Check whether the current site has a valid license.
+ *
+ * @internal
+ */
+function has_license(): bool {
+	$cached_value = get_transient( HAS_LICENSE_TRANSIENT );
+
+	if ( false !== $cached_value ) {
+		return 'yes' === $cached_value;
+	}
+
+	$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+
+	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
+
+	return $license_is_valid;
+}
 
 /**
  * Helper to initialize license features.
