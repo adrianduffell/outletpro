@@ -13,6 +13,7 @@ class Test_Has_License extends WP_UnitTestCase {
 
 	public function test_returns_true_and_caches_valid_license(): void {
 		// Arrange.
+		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'ab' );
 
@@ -22,14 +23,11 @@ class Test_Has_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertTrue( $result );
 		$this->assertSame( 1, get_transient( HAS_LICENSE_TRANSIENT ) );
-
-		// Cleanup.
-		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
 	}
 
 	public function test_returns_false_and_caches_invalid_license(): void {
 		// Arrange.
+		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'a' );
 
@@ -39,14 +37,12 @@ class Test_Has_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result );
 		$this->assertSame( 0, get_transient( HAS_LICENSE_TRANSIENT ) );
-
-		// Cleanup.
-		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
 	}
 
 	public function test_returns_cached_true_value_without_revalidating(): void {
 		// Arrange.
+		delete_option( LICENSE_KEY_OPTION );
+		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'a' );
 		set_transient( HAS_LICENSE_TRANSIENT, 1, WEEK_IN_SECONDS );
 
@@ -55,14 +51,12 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-
-		// Cleanup.
-		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
 	}
 
 	public function test_returns_cached_false_value_without_revalidating(): void {
 		// Arrange.
+		delete_option( LICENSE_KEY_OPTION );
+		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'ab' );
 		set_transient( HAS_LICENSE_TRANSIENT, 0, WEEK_IN_SECONDS );
 
@@ -71,9 +65,5 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( $result );
-
-		// Cleanup.
-		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
 	}
 }

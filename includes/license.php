@@ -24,6 +24,13 @@ const LICENSE_KEY_OPTION = 'outletpro_license_key';
 const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
 
 /**
+ * Minimum length for a valid stub license key.
+ *
+ * @internal
+ */
+const MIN_LICENSE_KEY_LENGTH = 2;
+
+/**
  * Validate a license key.
  *
  * @internal
@@ -32,7 +39,7 @@ const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
 function validate_license( $license_key ): bool {
-	return is_string( $license_key ) && strlen( $license_key ) > 1;
+	return is_string( $license_key ) && strlen( $license_key ) >= MIN_LICENSE_KEY_LENGTH;
 }
 
 /**

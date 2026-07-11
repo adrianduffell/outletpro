@@ -31,6 +31,28 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertFalse( $result );
 	}
 
+	public function test_returns_false_for_empty_string(): void {
+		// Arrange.
+		$license_key = '';
+
+		// Act.
+		$result = validate_license( $license_key );
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
+
+	public function test_returns_false_for_null(): void {
+		// Arrange.
+		$license_key = null;
+
+		// Act.
+		$result = validate_license( $license_key );
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
+
 	public function test_returns_false_for_non_string_value(): void {
 		// Arrange.
 		$license_key = 123;
