@@ -31,7 +31,7 @@ export function WelcomePage(): JSX.Element {
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify( { license_key: licenseKey } ),
+					body: JSON.stringify( { license_key: licenseKey, product: 'outletpro' } ),
 				}
 			);
 			const data: ValidationResponse = await response.json();
