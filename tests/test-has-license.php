@@ -22,7 +22,7 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-		$this->assertSame( 1, get_transient( HAS_LICENSE_TRANSIENT ) );
+		$this->assertSame( 'yes', get_transient( HAS_LICENSE_TRANSIENT ) );
 	}
 
 	public function test_returns_false_and_caches_invalid_license(): void {
@@ -36,7 +36,7 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( $result );
-		$this->assertSame( 0, get_transient( HAS_LICENSE_TRANSIENT ) );
+		$this->assertSame( 'no', get_transient( HAS_LICENSE_TRANSIENT ) );
 	}
 
 	public function test_returns_cached_true_value_without_revalidating(): void {
@@ -44,7 +44,7 @@ class Test_Has_License extends WP_UnitTestCase {
 		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'a' );
-		set_transient( HAS_LICENSE_TRANSIENT, 1, WEEK_IN_SECONDS );
+		set_transient( HAS_LICENSE_TRANSIENT, 'yes', WEEK_IN_SECONDS );
 
 		// Act.
 		$result = has_license();
@@ -58,7 +58,7 @@ class Test_Has_License extends WP_UnitTestCase {
 		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'ab' );
-		set_transient( HAS_LICENSE_TRANSIENT, 0, WEEK_IN_SECONDS );
+		set_transient( HAS_LICENSE_TRANSIENT, 'no', WEEK_IN_SECONDS );
 
 		// Act.
 		$result = has_license();
