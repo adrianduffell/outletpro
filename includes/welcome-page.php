@@ -48,10 +48,12 @@ function add_welcome_menu_hook(): void {
 
 	add_menu_page(
 		__( 'Welcome to Outlet Pro', 'outletpro' ),
-		__( 'Set up Outlet Pro', 'outletpro' ),
+		__( 'Outlet Pro Setup', 'outletpro' ),
 		'manage_options',
 		WELCOME_PAGE_SLUG,
-		'OutletPro\render_welcome_page'
+		'OutletPro\render_welcome_page',
+		'dashicons-admin-generic',
+		0
 	);
 
 	add_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_welcome_page_scripts_hook' );
