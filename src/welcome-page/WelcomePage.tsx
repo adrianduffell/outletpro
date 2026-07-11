@@ -137,6 +137,7 @@ export function WelcomePage(): JSX.Element {
 						'outletpro'
 					) }
 				</p>
+
 				<div style={ { margin: '2rem auto', maxWidth: '90%' } }>
 					<TextControl
 						label={ __( 'Premium license key', 'outletpro' ) }
@@ -156,8 +157,13 @@ export function WelcomePage(): JSX.Element {
 						{ errorMessage }
 					</p>
 				) }
-				<div style={ { marginTop: '2rem', textAlign: 'center' } }>
-					<p style={ { margin: '2rem', textAlign: 'center' } }>
+				<div style={ { textAlign: 'center' } }>
+					<p
+						style={ {
+							margin: '0 auto 3em auto',
+							textAlign: 'center',
+						} }
+					>
 						<a
 							href="https://outletpro.zip/help/license-key/"
 							target="_blank"
