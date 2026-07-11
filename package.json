@@ -7,7 +7,7 @@
 		"node": "24.15.0"
 	},
 	"scripts": {
-		"build": "wp-scripts build",
+		"build": "wp-scripts build --config webpack.config.cjs",
 		"format": "wp-scripts format",
 		"lint:css": "wp-scripts lint-style",
 		"lint:css:fix": "wp-scripts lint-style --fix",
@@ -18,7 +18,7 @@
 		"lint:php": "vendor/bin/phpcs -s",
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip",
-		"start": "wp-scripts start",
+		"start": "wp-scripts start --config webpack.config.cjs",
 		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
 		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
 		"test:e2e": "wp-scripts test-playwright",

@@ -46,6 +46,7 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 require_once __DIR__ . '/includes/license.php';
+require_once __DIR__ . '/includes/welcome-page.php';
 require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
@@ -118,6 +119,7 @@ function woocommerce_loaded_hook(): void {
 	add_action( 'init', 'OutletPro\init_hook', 20 );
 	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
 	init_license();
+	init_welcome_page();
 }
 
 add_action( 'woocommerce_loaded', 'OutletPro\woocommerce_loaded_hook' );
