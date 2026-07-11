@@ -47,9 +47,9 @@ function has_license(): bool {
 		return 1 === $cached_value;
 	}
 
-	$has_license = validate_license( get_option( LICENSE_KEY_OPTION ) );
+	$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
 
-	set_transient( HAS_LICENSE_TRANSIENT, $has_license ? 1 : 0, WEEK_IN_SECONDS );
+	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 1 : 0, WEEK_IN_SECONDS );
 
-	return $has_license;
+	return $license_is_valid;
 }
