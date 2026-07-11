@@ -37,6 +37,7 @@ const VERSION = '1.0.1';
 const PLUGIN_FILE = __FILE__;
 
 require_once __DIR__ . '/includes/activate.php';
+require_once __DIR__ . '/includes/license.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
