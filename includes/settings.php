@@ -200,6 +200,7 @@ function init_settings(): void {
 	register_outlet_badge_scale_setting();
 	register_outlet_badge_density_setting();
 	register_outlet_message_setting();
+	register_license_key_setting();
 }
 
 /**
