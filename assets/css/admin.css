@@ -82,17 +82,21 @@
 
 body.toplevel_page_outletpro-welcome {
 	background-color: white;
+
 	h1 {
 		display: none;
 	}
+
 	.outletpro-welcome-page-wrapper {
 		display: grid;
 		place-items: center;
 		min-height: calc(100vh - 150px);
 
 	}
-	.outletpro-welcome-page{
+
+	.outletpro-welcome-page {
 		max-width: 480px;
+
 		h1 {
 			display: block;
 		}
