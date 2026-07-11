@@ -8,20 +8,22 @@ jest.mock( '@wordpress/api-fetch', () => ( {
 } ) );
 
 const mockApiFetch = apiFetch as unknown as jest.Mock;
-
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
 
-beforeEach( () => {
-	( window as any ).outletproWelcomePage = {
-		licenseKey: '',
-		productsUrl: '/wp-admin/edit.php?post_type=product',
-	};
-	mockApiFetch.mockClear();
-	mockFetch.mockClear();
-} );
+function arrangeGlobals( {
+	licenseKey = '',
+	productsUrl = '/wp-admin/edit.php?post_type=product',
+}: { licenseKey?: string; productsUrl?: string } = {} ) {
+	( window as any ).outletproWelcomePage = { licenseKey, productsUrl };
+	mockApiFetch.mockReset();
+	mockFetch.mockReset();
+}
 
 test( 'renders the welcome message', () => {
+	// Arrange.
+	arrangeGlobals();
+
 	// Act.
 	render( <WelcomePage /> );
 
@@ -32,6 +34,9 @@ test( 'renders the welcome message', () => {
 } );
 
 test( 'renders the license key input', () => {
+	// Arrange.
+	arrangeGlobals();
+
 	// Act.
 	render( <WelcomePage /> );
 
@@ -42,6 +47,9 @@ test( 'renders the license key input', () => {
 } );
 
 test( 'renders the Continue button', () => {
+	// Arrange.
+	arrangeGlobals();
+
 	// Act.
 	render( <WelcomePage /> );
 
@@ -53,7 +61,7 @@ test( 'renders the Continue button', () => {
 
 test( 'pre-fills license key from outletproWelcomePage global', () => {
 	// Arrange.
-	( window as any ).outletproWelcomePage.licenseKey = 'ABCD-1234';
+	arrangeGlobals( { licenseKey: 'ABCD-1234' } );
 
 	// Act.
 	render( <WelcomePage /> );
@@ -67,6 +75,7 @@ test( 'pre-fills license key from outletproWelcomePage global', () => {
 
 test( 'shows error message when server responds with success: false', async () => {
 	// Arrange.
+	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
 		json: () => Promise.resolve( { success: false } ),
 	} );
@@ -83,6 +92,7 @@ test( 'shows error message when server responds with success: false', async () =
 
 test( 'shows error message when server fetch throws', async () => {
 	// Arrange.
+	arrangeGlobals();
 	mockFetch.mockRejectedValue( new Error( 'Network error' ) );
 
 	// Act.
@@ -97,6 +107,7 @@ test( 'shows error message when server fetch throws', async () => {
 
 test( 'shows success message after valid license key is accepted and saved', async () => {
 	// Arrange.
+	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
 		json: () => Promise.resolve( { success: true } ),
 	} );
@@ -116,7 +127,7 @@ test( 'shows success message after valid license key is accepted and saved', asy
 
 test( 'saves license key via WP REST API when validation succeeds', async () => {
 	// Arrange.
-	( window as any ).outletproWelcomePage.licenseKey = 'MY-KEY';
+	arrangeGlobals( { licenseKey: 'MY-KEY' } );
 	mockFetch.mockResolvedValue( {
 		json: () => Promise.resolve( { success: true } ),
 	} );
@@ -140,6 +151,7 @@ test( 'saves license key via WP REST API when validation succeeds', async () => 
 
 test( 'shows error when REST API save fails after valid server response', async () => {
 	// Arrange.
+	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
 		json: () => Promise.resolve( { success: true } ),
 	} );
@@ -157,6 +169,7 @@ test( 'shows error when REST API save fails after valid server response', async 
 
 test( 'success view shows Products link', async () => {
 	// Arrange.
+	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
 		json: () => Promise.resolve( { success: true } ),
 	} );
