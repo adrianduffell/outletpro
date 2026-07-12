@@ -38,6 +38,26 @@ const MIN_LICENSE_KEY_LENGTH = 2;
 const LICENSE_PAGE_SLUG = 'outletpro-license';
 
 /**
+ * Helper to initialize license features.
+ *
+ * @internal
+ */
+function init_license(): void {
+	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+}
+
+/**
+ * Helper to de-initialize license features back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_license(): void {
+	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+}
+
+/**
  * Validate a license key.
  *
  * @internal
@@ -66,26 +86,6 @@ function has_license(): bool {
 	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
 
 	return $license_is_valid;
-}
-
-/**
- * Helper to initialize license features.
- *
- * @internal
- */
-function init_license(): void {
-	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
-	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
-}
-
-/**
- * Helper to de-initialize license features back to the uninitialized state.
- *
- * @internal
- */
-function deinit_license(): void {
-	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
-	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 }
 
 /**
