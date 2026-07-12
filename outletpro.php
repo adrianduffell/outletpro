@@ -81,7 +81,7 @@ function init_hook(): void {
 	init_cart();
 
 	if ( is_admin() ) {
-		// Admin initalizations that need to run before admin_init.
+		// Admin initializations that need to run before admin_init.
 		init_admin_menu();
 	}
 	if ( ! wp_is_block_theme() ) {
