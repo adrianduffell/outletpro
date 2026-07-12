@@ -98,6 +98,7 @@ function init_hook(): void {
  * @internal WordPress action hook
  */
 function admin_init_hook(): void {
+	init_license();
 	init_admin_product_options();
 	init_admin_product_bulk_edit();
 	init_system_status();
@@ -117,7 +118,6 @@ function admin_init_hook(): void {
 function woocommerce_loaded_hook(): void {
 	add_action( 'init', 'OutletPro\init_hook', 20 );
 	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
-	init_license();
 }
 
 add_action( 'woocommerce_loaded', 'OutletPro\woocommerce_loaded_hook' );
