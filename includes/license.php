@@ -103,6 +103,11 @@ function register_license_key_setting(): void {
 			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
 		)
 	);
 }
