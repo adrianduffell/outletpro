@@ -40,6 +40,7 @@ require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
+require_once __DIR__ . '/includes/admin-menu.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
@@ -79,6 +80,11 @@ function init_hook(): void {
 	init_block_editor();
 	init_orders();
 	init_cart();
+
+	if ( is_admin() ) {
+		// Admin initializations that need to run before admin_init.
+		init_admin_menu();
+	}
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
 		init_woocommerce_template_hooks();
@@ -99,6 +105,7 @@ function init_hook(): void {
  * @internal WordPress action hook
  */
 function admin_init_hook(): void {
+	init_license();
 	init_admin_product_options();
 	init_admin_product_bulk_edit();
 	init_system_status();
@@ -118,7 +125,6 @@ function admin_init_hook(): void {
 function woocommerce_loaded_hook(): void {
 	add_action( 'init', 'OutletPro\init_hook', 20 );
 	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
-	init_license();
 	init_welcome_page();
 }
 
