@@ -89,30 +89,6 @@ function has_license(): bool {
 }
 
 /**
- * Register the license key setting.
- *
- * @internal
- */
-function register_license_key_setting(): void {
-	register_setting(
-		LICENSE_PAGE_SLUG,
-		LICENSE_KEY_OPTION,
-		array(
-			'type'              => 'string',
-			'label'             => __( 'License Key', 'outletpro' ),
-			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
-			'default'           => '',
-			'sanitize_callback' => 'sanitize_text_field',
-			'show_in_rest'      => array(
-				'schema' => array(
-					'type' => 'string',
-				),
-			),
-		)
-	);
-}
-
-/**
  * Register a hidden license settings admin page, not linked in any menu.
  *
  * Fired by `admin_menu`.

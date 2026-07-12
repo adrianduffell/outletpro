@@ -534,6 +534,30 @@ function register_outlet_message_setting(): void {
 }
 
 /**
+ * Register the license key setting.
+ *
+ * @internal
+ */
+function register_license_key_setting(): void {
+	register_setting(
+		LICENSE_PAGE_SLUG,
+		LICENSE_KEY_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'License Key', 'outletpro' ),
+			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
  * Get the outlet page ID from the option.
  *
  * Validates the page ID is a positive integer. Zero and non-digit values
