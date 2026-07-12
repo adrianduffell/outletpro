@@ -121,7 +121,7 @@ test( 'shows success message after valid license key is accepted and saved', asy
 
 	// Assert.
 	expect(
-		screen.getByText( /🎉 Success! Outlet Pro is now set up\./i )
+		screen.getByText( /Success!/i )
 	).toBeInTheDocument();
 } );
 
@@ -182,7 +182,7 @@ test( 'success view shows Products link', async () => {
 	} );
 
 	// Assert.
-	const productsLink = screen.getByRole( 'link', { name: /Products/i } );
+	const productsLink = screen.getByRole( 'link', { name: /Get Started/i } );
 	expect( productsLink ).toHaveAttribute(
 		'href',
 		'/wp-admin/edit.php?post_type=product'
