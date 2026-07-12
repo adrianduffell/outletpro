@@ -9,7 +9,6 @@ use function OutletPro\deinit_admin_menu;
 use function OutletPro\init_admin_menu;
 use const OutletPro\HAS_LICENSE_TRANSIENT;
 use const OutletPro\LICENSE_KEY_OPTION;
-use const OutletPro\WELCOME_PAGE_SLUG;
 
 class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
