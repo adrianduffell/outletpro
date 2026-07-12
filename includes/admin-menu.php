@@ -1,6 +1,6 @@
 <?php
 /**
- * License functions.
+ * Admin menu functions for the license settings page.
  *
  * @package OutletPro
  */
