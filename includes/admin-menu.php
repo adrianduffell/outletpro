@@ -30,7 +30,9 @@ const WELCOME_PAGE_SLUG = 'outletpro-welcome';
  */
 function init_admin_menu(): void {
 	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
-	add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
+	if ( ! has_license() ) {
+		add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
+	}
 }
 
 /**
@@ -69,10 +71,6 @@ function add_license_menu_hook(): void {
  * @internal WordPress action hook
  */
 function add_welcome_menu_hook(): void {
-	if ( has_license() ) {
-		return;
-	}
-
 	add_menu_page(
 		__( 'Welcome to Outlet Pro', 'outletpro' ),
 		__( 'Outlet Pro Setup', 'outletpro' ),
