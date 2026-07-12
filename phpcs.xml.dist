@@ -72,7 +72,11 @@
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
 
 	<!-- Complexity checks -->
-	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
+	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit">
+		<properties>
+			<property name="ignoreStandaloneIfInScope" value="true" />
+		</properties>
+	</rule>
 
 	<!-- Disallow nesting in tests -->
 	<rule ref="Generic.Metrics.NestingLevel">
