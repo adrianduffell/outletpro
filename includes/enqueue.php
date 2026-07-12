@@ -22,6 +22,7 @@ function enqueue_init(): void {
 	add_action( 'wp_head', 'OutletPro\output_badge_style_css_variables_hook' );
 	add_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' );
+	add_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_welcome_page_scripts_hook' );
 	add_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' );
 
 	register_block_styles();
@@ -314,5 +315,50 @@ function enqueue_build_assets_hook(): void {
 		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
 		$asset['version'],
 		true
+	);
+}
+
+/**
+ * Enqueue admin scripts for the product edit page.
+ *
+ * Fired by `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_admin_welcome_page_scripts_hook(): void {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'toplevel_page_' . WELCOME_PAGE_SLUG !== $screen->id ) {
+		return;
+	}
+
+	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
+
+	if ( ! file_exists( $asset_file ) ) {
+		return;
+	}
+
+	$asset = require $asset_file;
+
+	/**
+	 * Admin welcome page script.
+	 *
+	 * @internal
+	 */
+	wp_enqueue_script(
+		'outletpro-welcome-page',
+		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
+		$asset['dependencies'],
+		$asset['version'],
+		true
+	);
+
+	wp_localize_script(
+		'outletpro-welcome-page',
+		'outletproWelcomePage',
+		array(
+			'licenseKey'  => (string) get_option( LICENSE_KEY_OPTION, '' ),
+			'productsUrl' => esc_url( admin_url( 'edit.php?post_type=product' ) ),
+		)
 	);
 }
