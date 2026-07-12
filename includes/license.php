@@ -31,19 +31,11 @@ const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
 const MIN_LICENSE_KEY_LENGTH = 2;
 
 /**
- * Admin page slug for the license settings page.
- *
- * @internal
- */
-const LICENSE_PAGE_SLUG = 'outletpro-license';
-
-/**
  * Helper to initialize license features.
  *
  * @internal
  */
 function init_license(): void {
-	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 }
 
@@ -53,7 +45,6 @@ function init_license(): void {
  * @internal
  */
 function deinit_license(): void {
-	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 }
 
@@ -86,24 +77,6 @@ function has_license(): bool {
 	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
 
 	return $license_is_valid;
-}
-
-/**
- * Register a hidden license settings admin page, not linked in any menu.
- *
- * Fired by `admin_menu`.
- *
- * @internal WordPress action hook
- */
-function add_license_menu_hook(): void {
-	add_submenu_page(
-		'options.php',
-		__( 'Outlet Pro License', 'outletpro' ),
-		__( 'Outlet Pro', 'outletpro' ),
-		'manage_options',
-		LICENSE_PAGE_SLUG,
-		'OutletPro\render_license_page'
-	);
 }
 
 /**
