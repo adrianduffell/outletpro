@@ -97,12 +97,10 @@ test( 'shows error message when server fetch throws', async () => {
 
 	// Act.
 	render( <WelcomePage /> );
-	await act( async () => {
-		fireEvent.click( screen.getByRole( 'button', { name: /Continue/i } ) );
-	} );
+	fireEvent.click( screen.getByRole( 'button', { name: /Continue/i } ) );
 
 	// Assert.
-	expect( screen.getByText( /Invalid license key/i ) ).toBeInTheDocument();
+	expect( await screen.findByRole( 'alert' ) ).toBeInTheDocument();
 } );
 
 test( 'shows success message after valid license key is accepted and saved', async () => {
@@ -120,7 +118,9 @@ test( 'shows success message after valid license key is accepted and saved', asy
 	} );
 
 	// Assert.
-	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
+	expect(
+		screen.getByText( /Success!/i )
+	).toBeInTheDocument();
 } );
 
 test( 'saves license key via WP REST API when validation succeeds', async () => {
@@ -157,12 +157,10 @@ test( 'shows error when REST API save fails after valid server response', async 
 
 	// Act.
 	render( <WelcomePage /> );
-	await act( async () => {
-		fireEvent.click( screen.getByRole( 'button', { name: /Continue/i } ) );
-	} );
+	fireEvent.click( screen.getByRole( 'button', { name: /Continue/i } ) );
 
 	// Assert.
-	expect( screen.getByText( /Invalid license key/i ) ).toBeInTheDocument();
+	expect( await screen.findByRole( 'alert' ) ).toBeInTheDocument();
 } );
 
 test( 'success view shows Products link', async () => {

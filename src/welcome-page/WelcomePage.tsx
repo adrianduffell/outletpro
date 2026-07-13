@@ -42,7 +42,7 @@ export function WelcomePage(): JSX.Element {
 		} catch {
 			setErrorMessage(
 				__(
-					'Unable to contact the server licensing server. Please try again.',
+					'Unable to contact the licensing service. Please try again.',
 					'outletpro'
 				)
 			);
@@ -156,7 +156,7 @@ export function WelcomePage(): JSX.Element {
 				</Button>
 			</div>
 			{ errorMessage && (
-				<p className="outletpro-welcome-page__error">
+				<p className="outletpro-welcome-page__error" role="alert">
 					{ errorMessage }
 				</p>
 			) }
