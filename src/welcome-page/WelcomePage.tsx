@@ -132,7 +132,6 @@ export function WelcomePage(): JSX.Element {
 						'outletpro'
 					) }
 					onChange={ setLicenseKey }
-					placeholder="XXXXXXXX-XXXXXXXX-XXXXXXXX-XXXXXXXX"
 					__next40pxDefaultSize
 				/>
 			</div>
