@@ -118,9 +118,7 @@ test( 'shows success message after valid license key is accepted and saved', asy
 	} );
 
 	// Assert.
-	expect(
-		screen.getByText( /Success!/i )
-	).toBeInTheDocument();
+	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
 } );
 
 test( 'shows error when REST API save fails after valid server response', async () => {
