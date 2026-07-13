@@ -136,11 +136,6 @@ export function WelcomePage(): JSX.Element {
 					__next40pxDefaultSize
 				/>
 			</div>
-			{ errorMessage && (
-				<p className="outletpro-welcome-page__error">
-					{ errorMessage }
-				</p>
-			) }
 			<div>
 				<p>
 					<a
@@ -160,6 +155,11 @@ export function WelcomePage(): JSX.Element {
 					{ __( 'Continue', 'outletpro' ) }
 				</Button>
 			</div>
+			{ errorMessage && (
+				<p className="outletpro-welcome-page__error">
+					{ errorMessage }
+				</p>
+			) }
 		</div>
 	);
 }

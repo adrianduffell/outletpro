@@ -122,8 +122,12 @@ body.toplevel_page_outletpro-welcome {
 	}
 
 	.outletpro-welcome-page__error {
+		left: 0;
+		width: 100%;
 		text-align: center;
 		color: #c00;
+		position: absolute;
+		margin-top: 2rem;
 	}
 
 }
