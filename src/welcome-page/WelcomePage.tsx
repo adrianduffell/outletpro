@@ -77,7 +77,7 @@ export function WelcomePage(): JSX.Element {
 						textAlign: 'center',
 					} }
 				>
-					🎉 Success!
+					{ __( '🎉 Success!', 'outletpro' ) }
 				</h1>
 				<p
 					style={ {
@@ -121,7 +121,7 @@ export function WelcomePage(): JSX.Element {
 					textAlign: 'center',
 				} }
 			>
-				Welcome to Outlet Pro!
+				{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }
 			</h1>
 			<p
 				style={ {
