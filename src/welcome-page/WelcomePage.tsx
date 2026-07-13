@@ -40,13 +40,23 @@ export function WelcomePage(): JSX.Element {
 			const data: ValidationResponse = await response.json();
 			isValid = data.success === true;
 		} catch {
-			setErrorMessage( __( 'Unable to contact the server licensing server. Please try again.', 'outletpro' ) );
+			setErrorMessage(
+				__(
+					'Unable to contact the server licensing server. Please try again.',
+					'outletpro'
+				)
+			);
 			setIsLoading( false );
 			return;
 		}
 
 		if ( ! isValid ) {
-			setErrorMessage( __( 'Invalid license key. Please check it and try again.', 'outletpro' ) );
+			setErrorMessage(
+				__(
+					'Invalid license key. Please check it and try again.',
+					'outletpro'
+				)
+			);
 			setIsLoading( false );
 			return;
 		}
@@ -58,7 +68,12 @@ export function WelcomePage(): JSX.Element {
 				data: { outletpro_license_key: licenseKey },
 			} );
 		} catch {
-			setErrorMessage( __( 'Unable to apply the license. Please try again.', 'outletpro' ) );
+			setErrorMessage(
+				__(
+					'Unable to apply the license. Please try again.',
+					'outletpro'
+				)
+			);
 			setIsLoading( false );
 			return;
 		}
@@ -70,24 +85,8 @@ export function WelcomePage(): JSX.Element {
 	if ( isSuccess ) {
 		return (
 			<div className="outletpro-welcome-page">
-				<h1
-					style={ {
-						fontSize: '2.8rem',
-						fontWeight: 600,
-						textAlign: 'center',
-					} }
-				>
-					{ __( '🎉 Success!', 'outletpro' ) }
-				</h1>
-				<p
-					style={ {
-						fontSize: '1.1rem',
-						fontWeight: 300,
-						margin: '1rem auto',
-						maxWidth: '90%',
-						textAlign: 'center',
-					} }
-				>
+				<h1>{ __( '🎉 Success!', 'outletpro' ) }</h1>
+				<p className="outletpro-welcome-page__description">
 					{ __(
 						"Outlet Pro is now set up. Get started by including your first product in the store's outlet.",
 						'outletpro'
@@ -100,7 +99,7 @@ export function WelcomePage(): JSX.Element {
 						{ __( 'Learn More', 'outletpro' ) }
 					</a>
 				</p>
-				<div style={ { marginTop: '2rem', textAlign: 'center' } }>
+				<div>
 					<Button
 						variant="primary"
 						href={ outletproWelcomePage.productsUrl }
@@ -114,31 +113,16 @@ export function WelcomePage(): JSX.Element {
 
 	return (
 		<div className="outletpro-welcome-page">
-			<h1
-				style={ {
-					fontSize: '2.8rem',
-					fontWeight: 600,
-					textAlign: 'center',
-				} }
-			>
-				{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }
-			</h1>
-			<p
-				style={ {
-					fontSize: '1.1rem',
-					fontWeight: 300,
-					margin: '1rem auto',
-					maxWidth: '80%',
-					textAlign: 'center',
-				} }
-			>
+			<h1>{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }</h1>
+
+			<p className="outletpro-welcome-page__description">
 				{ __(
 					'Thank you for installing Outlet Pro. Enter your premium license key to begin setup.',
 					'outletpro'
 				) }
 			</p>
 
-			<div style={ { margin: '2rem auto', maxWidth: '90%' } }>
+			<div className="outletpro-welcome-page__license-key-input">
 				<TextControl
 					label={ __( 'Premium license key', 'outletpro' ) }
 					hideLabelFromVision={ true }
@@ -157,13 +141,8 @@ export function WelcomePage(): JSX.Element {
 					{ errorMessage }
 				</p>
 			) }
-			<div style={ { textAlign: 'center' } }>
-				<p
-					style={ {
-						margin: '0 auto 3em auto',
-						textAlign: 'center',
-					} }
-				>
+			<div>
+				<p>
 					<a
 						href="https://outletpro.zip/help/license-key/"
 						target="_blank"
@@ -177,7 +156,6 @@ export function WelcomePage(): JSX.Element {
 					onClick={ handleContinue }
 					isBusy={ isLoading }
 					disabled={ isLoading }
-					style={ { marginLeft: '1em' } }
 				>
 					{ __( 'Continue', 'outletpro' ) }
 				</Button>
