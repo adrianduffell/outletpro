@@ -131,9 +131,9 @@ body.toplevel_page_outletpro-welcome {
 		margin: 2rem auto;
 
 		.components-text-control__input {
+			font-family: monospace;
 			font-size: 1.2rem;
-
-
+			font-weight: 500;
 		}
 	}
 
