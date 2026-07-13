@@ -110,7 +110,7 @@ body.toplevel_page_outletpro-welcome {
 		}
 
 		@media (max-width: 600px) {
-			margin: 24px 24px 24px 14px; /* Left margin accounts for 10px menu padding added by WordPress stylesheet. */
+			margin: 24px;
 		}
 	}
 
