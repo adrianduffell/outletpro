@@ -83,10 +83,6 @@
 body.toplevel_page_outletpro-welcome {
 	background-color: #fff;
 
-	h1 {
-		display: none;
-	}
-
 	.outletpro-welcome-page-wrapper {
 		display: grid;
 		place-items: center;
@@ -96,10 +92,6 @@ body.toplevel_page_outletpro-welcome {
 
 	.outletpro-welcome-page {
 		max-width: 480px;
-
-		h1 {
-			display: block;
-		}
 	}
 
 }
