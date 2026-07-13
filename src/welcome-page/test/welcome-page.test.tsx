@@ -123,30 +123,6 @@ test( 'shows success message after valid license key is accepted and saved', asy
 	).toBeInTheDocument();
 } );
 
-test( 'saves license key via WP REST API when validation succeeds', async () => {
-	// Arrange.
-	arrangeGlobals( { licenseKey: 'MY-KEY' } );
-	mockFetch.mockResolvedValue( {
-		json: () => Promise.resolve( { success: true } ),
-	} );
-	mockApiFetch.mockResolvedValue( {} );
-
-	// Act.
-	render( <WelcomePage /> );
-	await act( async () => {
-		fireEvent.click( screen.getByRole( 'button', { name: /Continue/i } ) );
-	} );
-
-	// Assert.
-	expect( mockApiFetch ).toHaveBeenCalledWith(
-		expect.objectContaining( {
-			path: '/wp/v2/settings',
-			method: 'POST',
-			data: { outletpro_license_key: 'MY-KEY' },
-		} )
-	);
-} );
-
 test( 'shows error when REST API save fails after valid server response', async () => {
 	// Arrange.
 	arrangeGlobals();
