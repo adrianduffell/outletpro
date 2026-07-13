@@ -94,4 +94,9 @@ body.toplevel_page_outletpro-welcome {
 		max-width: 480px;
 	}
 
+	.outletpro-welcome-page__error{
+		text-align: center;
+		color: #cc0000;
+	}
+
 }
