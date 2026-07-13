@@ -17,12 +17,24 @@ defined( 'ABSPATH' ) || exit;
 const LICENSE_PAGE_SLUG = 'outletpro-license';
 
 /**
+ * Admin page slug for the welcome page.
+ *
+ * @internal
+ */
+const WELCOME_PAGE_SLUG = 'outletpro-welcome';
+
+/**
  * Helper to initialize license features.
  *
  * @internal
  */
 function init_admin_menu(): void {
 	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+
+	// phpcs:ignore SlevomatCodingStandard
+	if ( ! has_license() ) {
+		add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
+	}
 }
 
 /**
@@ -32,6 +44,7 @@ function init_admin_menu(): void {
  */
 function deinit_admin_menu(): void {
 	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+	remove_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
 }
 
 /**
@@ -50,4 +63,39 @@ function add_license_menu_hook(): void {
 		LICENSE_PAGE_SLUG,
 		'OutletPro\render_license_page'
 	);
+}
+
+/**
+ * Register the welcome admin page when no valid license is active.
+ *
+ * Fired by `admin_menu`.
+ *
+ * @internal WordPress action hook
+ */
+function add_welcome_menu_hook(): void {
+	add_menu_page(
+		__( 'Welcome to Outlet Pro', 'outletpro' ),
+		__( 'Outlet Pro Setup', 'outletpro' ),
+		'manage_options',
+		WELCOME_PAGE_SLUG,
+		'OutletPro\render_welcome_page',
+		'dashicons-admin-generic',
+		0
+	);
+}
+
+/**
+ * Render the welcome page.
+ *
+ * @internal
+ */
+function render_welcome_page(): void {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	?>
+	<div class="wrap">
+		<div id="outletpro-welcome-page-root"></div>
+	</div>
+	<?php
 }

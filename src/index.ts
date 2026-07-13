@@ -1,6 +1,7 @@
 import { registerPlugin } from '@wordpress/plugins';
 
 import { Sample } from './components/sample';
+import './welcome-page';
 import './page-editor-notice';
 import './page-editor-sidebar';
 import './outlet-toggle';
