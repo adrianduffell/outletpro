@@ -37,6 +37,7 @@ const MIN_LICENSE_KEY_LENGTH = 2;
  */
 function init_license(): void {
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook' );
 }
 
 /**
@@ -46,6 +47,7 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook' );
 }
 
 /**
@@ -77,6 +79,17 @@ function has_license(): bool {
 	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
 
 	return $license_is_valid;
+}
+
+/**
+ * Invalidate the license cache when the license key option is updated.
+ *
+ * Fired by `update_option_{LICENSE_KEY_OPTION}`.
+ *
+ * @internal WordPress action hook
+ */
+function invalidate_license_cache_hook(): void {
+	delete_transient( HAS_LICENSE_TRANSIENT );
 }
 
 /**
