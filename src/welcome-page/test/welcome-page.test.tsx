@@ -120,9 +120,7 @@ test( 'shows success message after valid license key is accepted and saved', asy
 	} );
 
 	// Assert.
-	expect(
-		screen.getByText( /Success!/i )
-	).toBeInTheDocument();
+	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
 } );
 
 test( 'saves license key via WP REST API when validation succeeds', async () => {
