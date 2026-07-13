@@ -41,6 +41,7 @@ function deinit_enqueue(): void {
 	remove_action( 'wp_head', 'OutletPro\output_badge_style_css_variables_hook' );
 	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_styles_hook' );
 	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' );
+	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_welcome_page_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' );
 	wp_deregister_style( 'outletpro-classic-badge' );
 	wp_deregister_style( 'outletpro-classic-message' );
@@ -54,6 +55,8 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-admin-canvas-scripts' );
 	wp_dequeue_script( 'outletpro-products-admin' );
 	wp_deregister_script( 'outletpro-products-admin' );
+	wp_dequeue_script( 'outletpro-welcome-page' );
+	wp_deregister_script( 'outletpro-welcome-page' );
 	wp_dequeue_script( 'outletpro-editor' );
 	wp_deregister_script( 'outletpro-editor' );
 	wp_dequeue_style( 'outletpro-badge-block' );
