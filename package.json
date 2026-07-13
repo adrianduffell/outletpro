@@ -1,6 +1,6 @@
 {
 	"name": "outletpro",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"private": true,
 	"type": "module",
 	"engines": {
@@ -25,7 +25,8 @@
 		"test:unit": "wp-scripts test-unit-js --config jest.config.cjs",
 		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/outletpro vendor/bin/phpunit",
 		"typecheck": "tsc --noEmit",
-		"wp-env": "wp-env"
+		"wp-env": "wp-env",
+		"wp-scripts": "wp-scripts"
 	},
 	"babel": {
 		"presets": [
@@ -35,6 +36,7 @@
 	"files": [
 		"assets",
 		"build",
+		"changelog.txt",
 		"includes",
 		"templates",
 		"outletpro.php",

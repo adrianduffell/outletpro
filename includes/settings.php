@@ -200,6 +200,7 @@ function init_settings(): void {
 	register_outlet_badge_scale_setting();
 	register_outlet_badge_density_setting();
 	register_outlet_message_setting();
+	register_license_key_setting();
 }
 
 /**
@@ -521,6 +522,30 @@ function register_outlet_message_setting(): void {
 			'type'              => 'string',
 			'label'             => __( 'Outlet message', 'outletpro' ),
 			'description'       => __( 'Message displayed on outlet products.', 'outletpro' ),
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Register the license key setting.
+ *
+ * @internal
+ */
+function register_license_key_setting(): void {
+	register_setting(
+		LICENSE_PAGE_SLUG,
+		LICENSE_KEY_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'License Key', 'outletpro' ),
+			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
 			'default'           => '',
 			'sanitize_callback' => 'sanitize_text_field',
 			'show_in_rest'      => array(

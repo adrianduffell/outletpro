@@ -293,7 +293,7 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 	}
 
 	$buttons_attrs = array(
-		'style'     => array(
+		'style'  => array(
 			'spacing' => array(
 				'margin' => array(
 					'top'    => 'var:preset|spacing|30',
@@ -301,12 +301,11 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 				),
 			),
 		),
-		'layout'    => array(
+		'layout' => array(
 			'type'           => 'flex',
 			'justifyContent' => 'left',
 			'flexWrap'       => 'nowrap',
 		),
-		'className' => 'outletpro-filter-tiles',
 	);
 
 	if ( $include_metadata ) {
@@ -323,7 +322,7 @@ function get_outlet_filter_tiles_content( bool $include_metadata = false ): stri
 	}
 
 	return '<!-- wp:buttons ' . wp_json_encode( $buttons_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
-		'<div class="wp-block-buttons outletpro-filter-tiles" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
+		'<div class="wp-block-buttons" style="margin-top:var(--wp--preset--spacing--30);margin-bottom:var(--wp--preset--spacing--30)">' . implode( "\n\n", $buttons ) . '</div>' . "\n" .
 		'<!-- /wp:buttons -->';
 }
 
