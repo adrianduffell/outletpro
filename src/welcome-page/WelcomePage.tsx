@@ -26,7 +26,7 @@ export function WelcomePage(): JSX.Element {
 
 		let isValid = false;
 		try {
-			const response = await window.fetch(
+			const response = await fetch(
 				'https://my-first-worker.adrianduffell.workers.dev/v1/licenses/validate',
 				{
 					method: 'POST',
