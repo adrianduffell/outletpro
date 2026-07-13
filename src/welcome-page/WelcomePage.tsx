@@ -133,7 +133,7 @@ export function WelcomePage(): JSX.Element {
 				} }
 			>
 				{ __(
-					'Thank you for installing Outlet Pro. Please enter your premium license key to begin setup.',
+					'Thank you for installing Outlet Pro. Enter your premium license key to begin setup.',
 					'outletpro'
 				) }
 			</p>
