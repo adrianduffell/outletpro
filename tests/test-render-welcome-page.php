@@ -17,7 +17,7 @@ class Test_Render_Welcome_Page extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/id="outletpro-welcome-page"/' );
+		$this->expectOutputRegex( '/id="outletpro-welcome-page-root"/' );
 
 		// Act.
 		render_welcome_page();

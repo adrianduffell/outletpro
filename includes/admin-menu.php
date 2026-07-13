@@ -94,8 +94,6 @@ function render_welcome_page(): void {
 		return;
 	}
 	?>
-	<div class="wrap">
-		<div id="outletpro-welcome-page"></div>
-	</div>
+	<div id="outletpro-welcome-page-root"></div>
 	<?php
 }
