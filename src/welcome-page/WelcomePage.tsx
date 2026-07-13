@@ -40,13 +40,13 @@ export function WelcomePage(): JSX.Element {
 			const data: ValidationResponse = await response.json();
 			isValid = data.success === true;
 		} catch {
-			setErrorMessage( __( 'Could not contact licensing server. Please try again.', 'outletpro' ) );
+			setErrorMessage( __( 'Unable to contact the server licensing server. Please try again.', 'outletpro' ) );
 			setIsLoading( false );
 			return;
 		}
 
 		if ( ! isValid ) {
-			setErrorMessage( __( 'Invalid license key', 'outletpro' ) );
+			setErrorMessage( __( 'Invalid license key. Please check it and try again.', 'outletpro' ) );
 			setIsLoading( false );
 			return;
 		}
@@ -58,7 +58,7 @@ export function WelcomePage(): JSX.Element {
 				data: { outletpro_license_key: licenseKey },
 			} );
 		} catch {
-			setErrorMessage( __( 'Invalid license key', 'outletpro' ) );
+			setErrorMessage( __( 'Unable to apply the license. Please try again.', 'outletpro' ) );
 			setIsLoading( false );
 			return;
 		}
