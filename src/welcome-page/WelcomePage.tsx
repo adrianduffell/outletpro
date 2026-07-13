@@ -132,6 +132,10 @@ export function WelcomePage(): JSX.Element {
 						'outletpro'
 					) }
 					onChange={ setLicenseKey }
+					autoComplete="off"
+					spellCheck={ false }
+					autoCorrect="off"
+					autoCapitalize="off"
 					__next40pxDefaultSize
 				/>
 			</div>
