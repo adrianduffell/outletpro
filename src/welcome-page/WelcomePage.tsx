@@ -40,7 +40,7 @@ export function WelcomePage(): JSX.Element {
 			const data: ValidationResponse = await response.json();
 			isValid = data.success === true;
 		} catch {
-			setErrorMessage( __( 'Invalid license key', 'outletpro' ) );
+			setErrorMessage( __( 'Could not contact licensing server. Please try again.', 'outletpro' ) );
 			setIsLoading( false );
 			return;
 		}
