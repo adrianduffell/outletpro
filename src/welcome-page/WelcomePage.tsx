@@ -99,7 +99,7 @@ export function WelcomePage(): JSX.Element {
 						{ __( 'Learn More', 'outletpro' ) }
 					</a>
 				</p>
-				<div>
+				<div className="outletpro-welcome-page__button-row">
 					<Button
 						variant="primary"
 						href={ outletproWelcomePage.productsUrl }
@@ -136,16 +136,16 @@ export function WelcomePage(): JSX.Element {
 					__next40pxDefaultSize
 				/>
 			</div>
-			<div>
-				<p>
-					<a
-						href="https://outletpro.zip/help/license-key/"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						{ __( 'I don’t have a license key', 'outletpro' ) }
-					</a>
-				</p>
+			<p>
+				<a
+					href="https://outletpro.zip/help/license-key/"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					{ __( 'I don’t have a license key', 'outletpro' ) }
+				</a>
+			</p>
+			<div className="outletpro-welcome-page__button-row">
 				<Button
 					variant="primary"
 					onClick={ handleContinue }
