@@ -319,7 +319,7 @@ function enqueue_build_assets_hook(): void {
 }
 
 /**
- * Enqueue admin scripts for the product edit page.
+ * Enqueue admin scripts for the welcome/setup page.
  *
  * Fired by `admin_enqueue_scripts`.
  *
