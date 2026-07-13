@@ -158,3 +158,39 @@ test( 'success view shows Products link', async () => {
 		'/wp-admin/edit.php?post_type=product'
 	);
 } );
+
+test( 'normalizes the license key', () => {
+	// Arrange.
+	arrangeGlobals();
+	render( <WelcomePage /> );
+
+	const input = screen.getByLabelText(
+		/Premium license key/i
+	) as HTMLInputElement;
+
+	// Act.
+	fireEvent.change( input, {
+		target: { value: 'abcd-1234' },
+	} );
+
+	// Assert.
+	expect( input ).toHaveValue( 'ABCD-1234' );
+} );
+
+test( 'trims the license key', () => {
+	// Arrange.
+	arrangeGlobals();
+	render( <WelcomePage /> );
+
+	const input = screen.getByLabelText(
+		/Premium license key/i
+	) as HTMLInputElement;
+
+	// Act.
+	fireEvent.change( input, {
+		target: { value: '  ABCD-1234  ' },
+	} );
+
+	// Assert.
+	expect( input ).toHaveValue( 'ABCD-1234' );
+} );

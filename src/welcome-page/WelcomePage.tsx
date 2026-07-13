@@ -131,7 +131,9 @@ export function WelcomePage(): JSX.Element {
 						'The license key can be found in the email receipt for purchasing Outlet Pro.',
 						'outletpro'
 					) }
-					onChange={ setLicenseKey }
+					onChange={ ( value ) =>
+						setLicenseKey( value.trim().toUpperCase() )
+					}
 					autoComplete="off"
 					spellCheck={ false }
 					autoCorrect="off"
