@@ -84,9 +84,9 @@ function has_license(): bool {
 }
 
 /**
- * Invalidate the license cache when the license key option is updated.
+ * Invalidate the license cache when the license key option is added or updated.
  *
- * Fired by `update_option_{LICENSE_KEY_OPTION}`.
+ * Fired by `add_option_{LICENSE_KEY_OPTION}` and `update_option_{LICENSE_KEY_OPTION}`.
  *
  * @internal WordPress action hook
  */
