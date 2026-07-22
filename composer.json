@@ -33,6 +33,10 @@
 			"curl -L https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/plugins/woocommerce/tests/legacy/framework/helpers/class-wc-helper-product.php -o vendor/class-wc-helper-product.php"
 		],
 		"lint": "phpcs -s",
-		"test": "phpunit"
+		"test": "phpunit",
+		"strip-licensing": [
+			"vendor/bin/rector process --config bin/strip-licensing.php",
+			"bash bin/strip-licensing-cleanup.sh"
+		]
 	}
 }
