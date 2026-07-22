@@ -18,6 +18,7 @@ import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import OutletIcon from './icon';
+import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
 
 type FontWeightOption = {
@@ -295,7 +296,7 @@ const OutletSidebar = () => {
 			name={ SIDEBAR_NAME }
 			title={ __( 'Outlet settings', 'outletpro' ) }
 			isPinnable={ true }
-			icon={ OutletIcon }
+			icon={ settings }
 			className="outletpro-sidebar"
 		>
 			<TabPanel
