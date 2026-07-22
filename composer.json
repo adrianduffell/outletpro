@@ -16,7 +16,8 @@
 		"yoast/phpunit-polyfills": "^2.0",
 		"phpunit/phpunit": "^9.6",
 		"wp-coding-standards/wpcs": "^3.0",
-		"slevomat/coding-standard": "^8.22"
+		"slevomat/coding-standard": "^8.22",
+		"rector/rector": "^2.5"
 	},
 	"config": {
 		"optimize-autoloader": true,
