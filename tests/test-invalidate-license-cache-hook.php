@@ -7,35 +7,43 @@
 
 use function OutletPro\deinit_license;
 use function OutletPro\init_license;
+use function OutletPro\has_license;
 use const OutletPro\HAS_LICENSE_TRANSIENT;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 
-	public function test_deletes_transient_when_license_key_is_updated(): void {
+	public function test_invalidates_transient_when_license_key_is_added(): void {
 		// Arrange.
+		deinit_license();
 		init_license();
-		set_transient( HAS_LICENSE_TRANSIENT, 'yes', WEEK_IN_SECONDS );
+		delete_option( LICENSE_KEY_OPTION );
+		$this->assertFalse( has_license() );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
 
 		// Assert.
-		$this->assertFalse( get_transient( HAS_LICENSE_TRANSIENT ) );
+		$this->assertTrue( has_license() );
 
 		// Cleanup.
 		deinit_license();
 	}
 
-	public function test_does_not_delete_transient_when_hook_is_not_registered(): void {
+	public function test_invalidates_transient_when_license_key_is_updated(): void {
 		// Arrange.
 		deinit_license();
-		set_transient( HAS_LICENSE_TRANSIENT, 'yes', WEEK_IN_SECONDS );
+		init_license();
+		update_option( LICENSE_KEY_OPTION, '0' );
+		$this->assertFalse( has_license() );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
 
 		// Assert.
-		$this->assertSame( 'yes', get_transient( HAS_LICENSE_TRANSIENT ) );
+		$this->assertTrue( has_license() );
+
+		// Cleanup.
+		deinit_license();
 	}
 }
