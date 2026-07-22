@@ -36,6 +36,7 @@ const MIN_LICENSE_KEY_LENGTH = 2;
  * @internal
  */
 function init_license(): void {
+	register_license_key_setting();
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 }
 
@@ -98,6 +99,30 @@ function add_plugin_action_links_hook( array $links ): array {
 	array_unshift( $links, $settings_link );
 
 	return $links;
+}
+
+/**
+ * Register the license key setting.
+ *
+ * @internal
+ */
+function register_license_key_setting(): void {
+	register_setting(
+		LICENSE_PAGE_SLUG,
+		LICENSE_KEY_OPTION,
+		array(
+			'type'              => 'string',
+			'label'             => __( 'License Key', 'outletpro' ),
+			'description'       => __( 'Outlet Pro license key.', 'outletpro' ),
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type' => 'string',
+				),
+			),
+		)
+	);
 }
 
 /**
