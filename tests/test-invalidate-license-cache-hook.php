@@ -6,9 +6,8 @@
  */
 
 use function OutletPro\deinit_license;
-use function OutletPro\init_license;
 use function OutletPro\has_license;
-use const OutletPro\HAS_LICENSE_TRANSIENT;
+use function OutletPro\init_license;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
