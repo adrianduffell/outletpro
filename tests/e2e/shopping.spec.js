@@ -167,8 +167,14 @@ async function fillCheckout( checkoutPage ) {
 		await checkoutPage
 			.getByLabel( /email address/i )
 			.fill( 'test@example.com' );
-		await checkoutPage.getByLabel( /first name/i ).fill( 'Test' );
-		await checkoutPage.getByLabel( /last name/i ).fill( 'Customer' );
+		await checkoutPage
+			.getByLabel( /first name/i )
+			.first()
+			.fill( 'Test' );
+		await checkoutPage
+			.getByLabel( /last name/i )
+			.first()
+			.fill( 'Customer' );
 		await checkoutPage
 			.getByLabel( /country/i )
 			.first()
@@ -178,10 +184,20 @@ async function fillCheckout( checkoutPage ) {
 			.getByLabel( /street address/i )
 			.first()
 			.fill( '123 Test Street' );
-		await checkoutPage.getByLabel( /town|city/i ).fill( 'Test City' );
-		await checkoutPage.getByLabel( /zip|postcode/i ).fill( '10001' );
-		await checkoutPage.getByLabel( /state/i ).first().selectOption( 'NY' );
-		await checkoutPage.getByLabel( /phone/i ).fill( '1234567890' );
+		await checkoutPage
+			.getByLabel( /town|city/i )
+			.first()
+			.fill( 'Test City' );
+		await checkoutPage
+			.getByLabel( /zip|postcode/i )
+			.first()
+			.fill( '10001' );
+		await checkoutPage
+			.getByLabel( /state/i )
+			.first()
+			.first()
+			.selectOption( 'NY' );
+		await checkoutPage.getByLabel( /phone/i ).first().fill( '1234567890' );
 	}
 }
 
