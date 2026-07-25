@@ -8,9 +8,7 @@ test( 'skip core profiler', async ( { page, admin } ) => {
 	);
 
 	// Act.
-	await page
-		.getByRole( 'checkbox', { name: /share my data/i } )
-		.uncheck();
+	await page.getByRole( 'checkbox', { name: /share my data/i } ).uncheck();
 
 	await page.getByRole( 'button', { name: /skip guided setup/i } ).click();
 
