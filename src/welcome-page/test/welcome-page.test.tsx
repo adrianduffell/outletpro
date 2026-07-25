@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import apiFetch from '@wordpress/api-fetch';
 import { WelcomePage } from '../WelcomePage';
@@ -5,6 +6,41 @@ import { WelcomePage } from '../WelcomePage';
 jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
 	default: jest.fn(),
+} ) );
+
+jest.mock( '@wordpress/components', () => ( {
+	Button: ( {
+		children,
+		href,
+		onClick,
+	}: {
+		children: ReactNode;
+		href?: string;
+		onClick?: () => void;
+	} ) =>
+		href ? (
+			<a href={ href }>{ children }</a>
+		) : (
+			<button type="button" onClick={ onClick }>
+				{ children }
+			</button>
+		),
+
+	TextControl: ( {
+		label,
+		value,
+		onChange,
+	}: {
+		label: string;
+		value: string;
+		onChange: ( value: string ) => void;
+	} ) => (
+		<input
+			aria-label={ label }
+			value={ value }
+			onChange={ ( event ) => onChange( event.target.value ) }
+		/>
+	),
 } ) );
 
 const mockApiFetch = apiFetch as unknown as jest.Mock;
