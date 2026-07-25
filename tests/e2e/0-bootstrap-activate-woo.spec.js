@@ -1,6 +1,6 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-// These tests need to run before any other WooCommerce bootsrapping.
+// These tests need to run before any other WooCommerce bootstrapping.
 
 test( 'activate woocommerce', async ( { requestUtils } ) => {
 	await requestUtils.rest( {
