@@ -1,5 +1,17 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+// These tests need to run before any other WooCommerce bootsrapping.
+
+test( 'activate woocommerce', async ( { requestUtils } ) => {
+	await requestUtils.rest( {
+		path: '/wp/v2/plugins/woocommerce/woocommerce',
+		method: 'PUT',
+		data: {
+			status: 'active',
+		},
+	} );
+} );
+
 test( 'skip core profiler', async ( { page, admin } ) => {
 	// Arrange.
 	await admin.visitAdminPage(
@@ -12,14 +24,16 @@ test( 'skip core profiler', async ( { page, admin } ) => {
 
 	await page.getByRole( 'button', { name: /skip guided setup/i } ).click();
 
+	await page.getByLabel( /Select country\/region/i ).fill( 'California' );
+
 	await page
-		.getByRole( 'combobox', { name: /where is your store based/i } )
-		.selectOption( 'US:CA' );
+		.getByRole( 'option', { name: 'United States (US) — California' } )
+		.click();
 
-	await page.getByRole( 'button', { name: /continue/i } ).click();
-
-	await page.waitForLoadState( 'networkidle' );
+	await page.getByRole( 'button', { name: /Go to my store/i } ).click();
 
 	// Assert.
-	await expect( page ).not.toHaveURL( /setup-wizard/ );
+	await expect(
+		page.getByRole( 'heading', { name: /home/i } )
+	).toBeVisible();
 } );
