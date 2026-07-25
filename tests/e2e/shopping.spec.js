@@ -192,10 +192,7 @@ async function fillCheckout( checkoutPage ) {
 			.getByLabel( /zip|postcode/i )
 			.first()
 			.fill( '10001' );
-		await checkoutPage
-			.getByLabel( /state/i )
-			.first()
-			.selectOption( 'NY' );
+		await checkoutPage.getByLabel( /state/i ).first().selectOption( 'NY' );
 		await checkoutPage.getByLabel( /phone/i ).first().fill( '1234567890' );
 	}
 }
