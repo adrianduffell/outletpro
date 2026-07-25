@@ -94,6 +94,20 @@ const OUTLET_BADGE_SCALE_OPTION = 'outletpro_badge_scale';
 const OUTLET_BADGE_DENSITY_OPTION = 'outletpro_badge_density';
 
 /**
+ * WordPress option key used to store the license key.
+ *
+ * @internal
+ */
+const LICENSE_KEY_OPTION = 'outletpro_license_key';
+
+/**
+ * WordPress transient key used to cache license validity.
+ *
+ * @internal
+ */
+const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
+
+/**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
  *
@@ -201,6 +215,10 @@ function init_settings(): void {
 	register_outlet_badge_density_setting();
 	register_outlet_message_setting();
 	register_license_key_setting();
+
+	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
+	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
+	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 }
 
 /**
@@ -555,6 +573,17 @@ function register_license_key_setting(): void {
 			),
 		)
 	);
+}
+
+/**
+ * Invalidate the license cache when the license key option is added, updated, or deleted.
+ *
+ * Fired by `add_option_{LICENSE_KEY_OPTION}`, `update_option_{LICENSE_KEY_OPTION}`, and `delete_option_{LICENSE_KEY_OPTION}`.
+ *
+ * @internal WordPress action hook
+ */
+function invalidate_license_cache_hook(): void {
+	delete_transient( HAS_LICENSE_TRANSIENT );
 }
 
 /**

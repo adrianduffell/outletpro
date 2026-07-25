@@ -10,20 +10,6 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress option key used to store the license key.
- *
- * @internal
- */
-const LICENSE_KEY_OPTION = 'outletpro_license_key';
-
-/**
- * WordPress transient key used to cache license validity.
- *
- * @internal
- */
-const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
-
-/**
  * Minimum length for a valid stub license key.
  *
  * @internal
