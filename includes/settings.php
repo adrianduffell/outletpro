@@ -576,10 +576,9 @@ function register_license_key_setting(): void {
 }
 
 /**
- * Invalidate the license cache when the license key option is added or updated.
+ * Invalidate the license cache when the license key option is added, updated, or deleted.
  *
- * Fired by `add_option_{LICENSE_KEY_OPTION}` and `update_option_{LICENSE_KEY_OPTION}`.
- *
+ * Fired by `add_option_{LICENSE_KEY_OPTION}`, `update_option_{LICENSE_KEY_OPTION}`, and `delete_option_{LICENSE_KEY_OPTION}`.
  * @internal WordPress action hook
  */
 function invalidate_license_cache_hook(): void {
