@@ -73,7 +73,7 @@ async function getMiniCartBadge( page ) {
 	await miniCartButton.click();
 	const locator = page
 		.locator(
-			'.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
+			'.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
 		)
 		.first();
 	return { locator, pseudo: '::before' };
@@ -92,12 +92,12 @@ async function getCartBadge( page ) {
 	const locator = isBlock
 		? page
 				.locator(
-					'.wc-block-cart-item__product:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
+					'.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
 				)
 				.first()
 		: page
 				.locator(
-					'.shop_table td.product-name:has(.wc-outlet-cart-item-meta)'
+					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
 				)
 				.first();
 	return { locator, pseudo: isBlock ? '::before' : '::after' };
@@ -116,12 +116,12 @@ async function getCheckoutBadge( page ) {
 	const locator = isBlock
 		? page
 				.locator(
-					'.wc-block-components-order-summary-item__description:has(.wc-outlet-cart-item-meta) .wc-block-components-product-metadata'
+					'.wc-block-components-order-summary-item__description:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
 				)
 				.first()
 		: page
 				.locator(
-					'.shop_table td.product-name:has(.wc-outlet-cart-item-meta)'
+					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
 				)
 				.first();
 	return { locator, pseudo: isBlock ? '::before' : '::after' };
@@ -167,8 +167,14 @@ async function fillCheckout( checkoutPage ) {
 		await checkoutPage
 			.getByLabel( /email address/i )
 			.fill( 'test@example.com' );
-		await checkoutPage.getByLabel( /first name/i ).fill( 'Test' );
-		await checkoutPage.getByLabel( /last name/i ).fill( 'Customer' );
+		await checkoutPage
+			.getByLabel( /first name/i )
+			.first()
+			.fill( 'Test' );
+		await checkoutPage
+			.getByLabel( /last name/i )
+			.first()
+			.fill( 'Customer' );
 		await checkoutPage
 			.getByLabel( /country/i )
 			.first()
@@ -178,10 +184,16 @@ async function fillCheckout( checkoutPage ) {
 			.getByLabel( /street address/i )
 			.first()
 			.fill( '123 Test Street' );
-		await checkoutPage.getByLabel( /town|city/i ).fill( 'Test City' );
-		await checkoutPage.getByLabel( /zip|postcode/i ).fill( '10001' );
+		await checkoutPage
+			.getByLabel( /town|city/i )
+			.first()
+			.fill( 'Test City' );
+		await checkoutPage
+			.getByLabel( /zip|postcode/i )
+			.first()
+			.fill( '10001' );
 		await checkoutPage.getByLabel( /state/i ).first().selectOption( 'NY' );
-		await checkoutPage.getByLabel( /phone/i ).fill( '1234567890' );
+		await checkoutPage.getByLabel( /phone/i ).first().fill( '1234567890' );
 	}
 }
 
@@ -220,12 +232,12 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	} );
 	await requestUtils.rest( {
 		method: 'PUT',
-		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
+		path: `/wp/v2/pages/${ wpSettings.outletpro_page_id }`,
 		data: { status: 'publish' },
 	} );
 	const outletPage = await requestUtils.rest( {
 		method: 'GET',
-		path: `/wp/v2/pages/${ wpSettings.wc_outlet_page_id }`,
+		path: `/wp/v2/pages/${ wpSettings.outletpro_page_id }`,
 	} );
 
 	// Customer flow in isolated context.
@@ -263,7 +275,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
-	const badge = customerPage.locator( '.wc-outlet-badge' );
+	const badge = customerPage.locator( '.outletpro-badge' );
 	await expect( badge ).toBeVisible();
 	await expect
 		.soft( badge, 'Product font-size' )

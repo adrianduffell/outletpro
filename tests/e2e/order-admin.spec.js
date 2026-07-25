@@ -31,7 +31,7 @@ test( 'admin sees outlet badge on order item', async ( {
 				{
 					product_id: product.id,
 					quantity: 1,
-					meta_data: [ { key: '_wc_outlet', value: 'yes' } ],
+					meta_data: [ { key: '_outletpro', value: 'yes' } ],
 				},
 			],
 		},
@@ -45,6 +45,6 @@ test( 'admin sees outlet badge on order item', async ( {
 
 	// Assert.
 	await expect(
-		page.locator( '.wc-outlet-admin-badge' ).first()
+		page.locator( '.outletpro-admin-badge' ).first()
 	).toBeVisible();
 } );

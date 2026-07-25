@@ -38,7 +38,7 @@ test( 'can bulk add products to the store’s outlet', async ( {
 	await page.locator( '#doaction' ).click();
 
 	// Set the outlet field to "Include" and click Update.
-	await page.locator( 'select[name="wc_outlet_bulk"]' ).selectOption( 'yes' );
+	await page.locator( 'select[name="outletpro_bulk"]' ).selectOption( 'yes' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 
@@ -90,7 +90,7 @@ test( 'can bulk remove products from the store’s outlet', async ( {
 	await page.locator( '#doaction' ).click();
 
 	// Set the outlet field to "Remove" and click Update.
-	await page.locator( 'select[name="wc_outlet_bulk"]' ).selectOption( 'no' );
+	await page.locator( 'select[name="outletpro_bulk"]' ).selectOption( 'no' );
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 

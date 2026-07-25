@@ -22,8 +22,6 @@
 
 	<!-- Use WordPress Coding Standards -->
 	<rule ref="WordPress">
-		<!-- Exceptions do not need to be escaped. See https://github.com/WordPress/WordPress-Coding-Standards/issues/2374 -->
-		<exclude name="WordPress.Security.EscapeOutput.ExceptionNotEscaped" />
 	</rule>
 
 	<!-- Set minimum supported WordPress version for deprecation checks -->
@@ -45,7 +43,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="wc-outlet" />
+				<element value="outletpro" />
 			</property>
 		</properties>
 	</rule>

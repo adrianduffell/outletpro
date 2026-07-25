@@ -1,7 +1,7 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "wc-outlet/outlet-badge",
+	"name": "outletpro/outlet-badge",
 	"title": "Outlet Badge",
 	"category": "woocommerce",
 	"description": "Displays a badge when a product is in the store’s outlet.",
@@ -9,5 +9,5 @@
 	"supports": {
 		"html": false
 	},
-	"textdomain": "wc-outlet"
+	"textdomain": "outletpro"
 }

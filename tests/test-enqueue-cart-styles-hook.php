@@ -2,12 +2,12 @@
 /**
  * Tests for enqueue_cart_styles_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_enqueue;
-use function WC_Outlet\enqueue_init;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use function OutletPro\deinit_enqueue;
+use function OutletPro\enqueue_init;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 
@@ -20,7 +20,7 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'wc-outlet-cart-badge', 'enqueued' ) );
+		$this->assertTrue( wp_style_is( 'outletpro-cart-badge', 'enqueued' ) );
 	}
 
 	public function test_inline_css_label_outputs_none_when_empty(): void {
@@ -33,8 +33,8 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: none', implode( '', (array) $after ) );
+		$after = wp_styles()->get_data( 'outletpro-cart-badge', 'after' );
+		$this->assertStringContainsString( '--outletpro-badge-label: none', implode( '', (array) $after ) );
 	}
 
 	public function test_inline_css_label_outputs_none_when_set_to_empty_string(): void {
@@ -47,8 +47,8 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: none', implode( '', (array) $after ) );
+		$after = wp_styles()->get_data( 'outletpro-cart-badge', 'after' );
+		$this->assertStringContainsString( '--outletpro-badge-label: none', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
@@ -63,8 +63,8 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: "Sale"', implode( '', (array) $after ) );
+		$after = wp_styles()->get_data( 'outletpro-cart-badge', 'after' );
+		$this->assertStringContainsString( '--outletpro-badge-label: "Sale"', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
@@ -79,8 +79,8 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: "Big \"Clearance\""', implode( '', (array) $after ) );
+		$after = wp_styles()->get_data( 'outletpro-cart-badge', 'after' );
+		$this->assertStringContainsString( '--outletpro-badge-label: "Big \"Clearance\""', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
@@ -95,8 +95,8 @@ class Test_Enqueue_Cart_Styles_Hook extends WP_UnitTestCase {
 		do_action( 'wp_enqueue_scripts' );
 
 		// Assert.
-		$after = wp_styles()->get_data( 'wc-outlet-cart-badge', 'after' );
-		$this->assertStringContainsString( '--wc-outlet-badge-label: "Sale \\\\ Today 🔥"', implode( '', (array) $after ) );
+		$after = wp_styles()->get_data( 'outletpro-cart-badge', 'after' );
+		$this->assertStringContainsString( '--outletpro-badge-label: "Sale \\\\ Today 🔥"', implode( '', (array) $after ) );
 
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}

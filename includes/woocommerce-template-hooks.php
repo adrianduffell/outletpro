@@ -2,10 +2,10 @@
 /**
  * WooCommerce template hook functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -25,12 +25,12 @@ function init_woocommerce_template_hooks(): void {
 	 * @param string $name The template hook name to display the outlet badge.
 	 */
 	$single_product_badge_hook = apply_filters(
-		'wc_outlet_badge_single_product_hook',
+		'outletpro_badge_single_product_hook',
 		'woocommerce_single_product_summary'
 	);
 
 	if ( ! is_string( $single_product_badge_hook ) || '' === $single_product_badge_hook ) {
-		throw new \InvalidArgumentException( 'The wc_outlet_badge_single_product_hook filter must return a non-empty string.' );
+		throw new \InvalidArgumentException( 'The outletpro_badge_single_product_hook filter must return a non-empty string.' );
 	}
 
 	/**
@@ -41,16 +41,16 @@ function init_woocommerce_template_hooks(): void {
 	 * @param int $priority The priority to display the outlet badge.
 	 */
 	$single_product_badge_priority = apply_filters(
-		'wc_outlet_badge_single_product_priority',
+		'outletpro_badge_single_product_priority',
 		15
 	);
 
 	if ( ! is_int( $single_product_badge_priority ) ) {
-		throw new \InvalidArgumentException( 'The wc_outlet_badge_single_product_priority filter must return an integer.' );
+		throw new \InvalidArgumentException( 'The outletpro_badge_single_product_priority filter must return an integer.' );
 	}
 
-	add_action( $single_product_badge_hook, 'WC_Outlet\display_outlet_badge_hook', $single_product_badge_priority );
-	add_action( 'woocommerce_product_meta_start', 'WC_Outlet\display_outlet_message_hook', 1 );
+	add_action( $single_product_badge_hook, 'OutletPro\display_outlet_badge_hook', $single_product_badge_priority );
+	add_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook', 1 );
 }
 
 /**
@@ -77,10 +77,10 @@ function display_outlet_badge_hook(): void {
 		return;
 	}
 
-	wp_enqueue_style( 'wc-outlet-classic-badge' );
+	wp_enqueue_style( 'outletpro-classic-badge' );
 
 	printf(
-		'<p class="wc-outlet-badge">%s</p>',
+		'<p class="outletpro-badge">%s</p>',
 		esc_html( $label )
 	);
 }
@@ -113,7 +113,7 @@ function display_outlet_message_hook(): void {
 		return;
 	}
 
-	wp_enqueue_style( 'wc-outlet-classic-message' );
+	wp_enqueue_style( 'outletpro-classic-message' );
 
-	echo '<p class="wc-outlet-message">' . esc_html( $message ) . '</p>';
+	echo '<p class="outletpro-message">' . esc_html( $message ) . '</p>';
 }

@@ -55,7 +55,7 @@ describe( 'product collection outlet inspector', () => {
 	it( 'registers the product collection block edit filter', () => {
 		expect( addFilter ).toHaveBeenCalledWith(
 			'editor.BlockEdit',
-			'wc-outlet/product-collection/outlet-query-inspector',
+			'outletpro/product-collection/outlet-query-inspector',
 			withOutletQueryInspector
 		);
 	} );
@@ -84,7 +84,7 @@ describe( 'product collection outlet inspector', () => {
 		);
 
 		expect( setAttributes ).toHaveBeenCalledWith( {
-			query: { wc_outlet: true },
+			query: { outletpro: true },
 		} );
 	} );
 
@@ -103,7 +103,7 @@ describe( 'product collection outlet inspector', () => {
 				attributes={ {
 					query: {
 						perPage: 9,
-						wc_outlet: true,
+						outletpro: true,
 					},
 				} }
 				setAttributes={ setAttributes }

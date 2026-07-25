@@ -2,11 +2,11 @@
 /**
  * Test the seed_activated_at_option function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\seed_activated_at_option;
-use const WC_Outlet\ACTIVATED_AT_OPTION;
+use function OutletPro\seed_activated_at_option;
+use const OutletPro\ACTIVATED_AT_OPTION;
 
 class Test_Seed_Activated_At_Option extends WP_UnitTestCase {
 

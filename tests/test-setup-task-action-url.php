@@ -2,10 +2,10 @@
 /**
  * Test the setup_task_action_url function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\setup_task_action_url;
+use function OutletPro\setup_task_action_url;
 
 class Test_Setup_Task_Action_Url extends WP_UnitTestCase {
 

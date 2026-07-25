@@ -17,7 +17,7 @@ import { useMemo } from '@wordpress/element';
 import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
-import OutletIcon from './icon';
+import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
 
 type FontWeightOption = {
@@ -28,22 +28,22 @@ type FontWeightOption = {
 	};
 };
 
-const SIDEBAR_NAME = 'wc-outlet-sidebar';
+const SIDEBAR_NAME = 'outletpro-sidebar';
 
 const FONT_WEIGHTS: FontWeightOption[] = [
-	{ name: __( 'Default', 'wc-outlet' ), key: '' },
-	{ name: __( 'Regular', 'wc-outlet' ), key: '400' },
-	{ name: __( 'Medium', 'wc-outlet' ), key: '500' },
-	{ name: __( 'Semi Bold', 'wc-outlet' ), key: '600' },
-	{ name: __( 'Bold', 'wc-outlet' ), key: '700' },
-	{ name: __( 'Extra Bold', 'wc-outlet' ), key: '800' },
-	{ name: __( 'Black', 'wc-outlet' ), key: '900' },
+	{ name: __( 'Default', 'outletpro' ), key: '' },
+	{ name: __( 'Regular', 'outletpro' ), key: '400' },
+	{ name: __( 'Medium', 'outletpro' ), key: '500' },
+	{ name: __( 'Semi Bold', 'outletpro' ), key: '600' },
+	{ name: __( 'Bold', 'outletpro' ), key: '700' },
+	{ name: __( 'Extra Bold', 'outletpro' ), key: '800' },
+	{ name: __( 'Black', 'outletpro' ), key: '900' },
 ];
 
 const bordersEnabled = ( () => {
 	try {
 		return (
-			window.localStorage.getItem( 'wc_outlet_borders_enabled' ) === '1'
+			window.localStorage.getItem( 'outletpro_borders_enabled' ) === '1'
 		);
 	} catch {
 		return false;
@@ -111,15 +111,15 @@ const OutletSidebar = () => {
 				<p style={ { marginBottom: 0 } }>
 					{ __(
 						'Customize the appearance of the outlet badge. Changes apply to the whole site.',
-						'wc-outlet'
+						'outletpro'
 					) }
 				</p>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Label', 'wc-outlet' ) } initialOpen>
+			<PanelBody title={ __( 'Label', 'outletpro' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextControl
-						label={ __( 'Label', 'wc-outlet' ) }
+						label={ __( 'Label', 'outletpro' ) }
 						value={ label ?? '' }
 						onChange={ ( value ) => setLabel( value ) }
 						hideLabelFromVision={ true }
@@ -130,29 +130,29 @@ const OutletSidebar = () => {
 			</PanelBody>
 
 			<PanelColorSettings
-				title={ __( 'Color', 'wc-outlet' ) }
+				title={ __( 'Color', 'outletpro' ) }
 				initialOpen={ false }
 				colorSettings={ [
 					{
 						value: textColor,
-						label: __( 'Text', 'wc-outlet' ),
+						label: __( 'Text', 'outletpro' ),
 						onChange: ( color: string | undefined ) =>
 							setTextColor( color || undefined ),
 					},
 					{
 						value: bgColor,
-						label: __( 'Background', 'wc-outlet' ),
+						label: __( 'Background', 'outletpro' ),
 						onChange: ( backgroundColor: string | undefined ) =>
 							setBgColor( backgroundColor || undefined ),
 					},
 				] }
 			/>
 
-			<PanelBody title={ __( 'Typography', 'wc-outlet' ) }>
+			<PanelBody title={ __( 'Typography', 'outletpro' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<div style={ { marginBottom: '16px' } }>
 						<RangeControl
-							label={ __( 'Font size', 'wc-outlet' ) }
+							label={ __( 'Font size', 'outletpro' ) }
 							value={ density }
 							onChange={ ( value ) => {
 								if ( typeof value !== 'number' ) {
@@ -174,7 +174,7 @@ const OutletSidebar = () => {
 
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<CustomSelectControl
-						label={ __( 'Font weight', 'wc-outlet' ) }
+						label={ __( 'Font weight', 'outletpro' ) }
 						options={ fontWeightOptions }
 						value={ selectedFontWeight }
 						onChange={ ( { selectedItem } ) => {
@@ -185,10 +185,10 @@ const OutletSidebar = () => {
 				</BaseControl>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Dimensions', 'wc-outlet' ) }>
+			<PanelBody title={ __( 'Dimensions', 'outletpro' ) }>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<RangeControl
-						label={ __( 'Scale', 'wc-outlet' ) }
+						label={ __( 'Scale', 'outletpro' ) }
 						value={ scale }
 						renderTooltipContent={ ( value ) =>
 							typeof value === 'number'
@@ -212,11 +212,11 @@ const OutletSidebar = () => {
 				</BaseControl>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Border', 'wc-outlet' ) }>
+			<PanelBody title={ __( 'Border', 'outletpro' ) }>
 				{ bordersEnabled && (
 					<div style={ { marginBottom: 16 } }>
 						<BorderControl
-							label={ __( 'Border', 'wc-outlet' ) }
+							label={ __( 'Border', 'outletpro' ) }
 							hideLabelFromVision={ true }
 							value={ border }
 							onChange={ ( value ) => {
@@ -242,13 +242,9 @@ const OutletSidebar = () => {
 					</div>
 				) }
 
-				<BaseControl
-					id="wc-outlet-border-radius"
-					label={ __( 'Radius', 'wc-outlet' ) }
-					__nextHasNoMarginBottom={ true }
-				>
+				<BaseControl __nextHasNoMarginBottom={ true }>
 					<UnitControl
-						id="wc-outlet-border-radius"
+						label={ __( 'Radius', 'outletpro' ) }
 						value={ borderRadius || undefined }
 						onChange={ ( value: string | undefined ) =>
 							setBorderRadius( value || undefined )
@@ -265,20 +261,20 @@ const OutletSidebar = () => {
 		<>
 			<PanelBody>
 				<p
-					data-testid="wc-outlet-message-tab-description"
+					data-testid="outletpro-message-tab-description"
 					style={ { marginBottom: 0 } }
 				>
 					{ __(
 						'Customize the outlet message. Changes apply to the whole site.',
-						'wc-outlet'
+						'outletpro'
 					) }
 				</p>
 			</PanelBody>
 
-			<PanelBody title={ __( 'Message', 'wc-outlet' ) } initialOpen>
+			<PanelBody title={ __( 'Message', 'outletpro' ) } initialOpen>
 				<BaseControl __nextHasNoMarginBottom={ true }>
 					<TextareaControl
-						label={ __( 'Message', 'wc-outlet' ) }
+						label={ __( 'Message', 'outletpro' ) }
 						hideLabelFromVision={ true }
 						value={ message ?? '' }
 						onChange={ ( value ) => setMessage( value ) }
@@ -286,7 +282,7 @@ const OutletSidebar = () => {
 						__nextHasNoMarginBottom={ true }
 						help={ __(
 							'Displayed for products included in the outlet.',
-							'wc-outlet'
+							'outletpro'
 						) }
 					/>
 				</BaseControl>
@@ -297,24 +293,24 @@ const OutletSidebar = () => {
 	return (
 		<PluginSidebar
 			name={ SIDEBAR_NAME }
-			title={ __( 'Outlet settings', 'wc-outlet' ) }
+			title={ __( 'Outlet settings', 'outletpro' ) }
 			isPinnable={ true }
-			icon={ OutletIcon }
-			className="wc-outlet-sidebar"
+			icon={ settings }
+			className="outletpro-sidebar"
 		>
 			<TabPanel
-				className="wc-outlet-sidebar__tabs"
+				className="outletpro-sidebar__tabs"
 				activeClass="is-active"
 				tabs={ [
 					{
 						name: 'badge',
-						title: __( 'Badge', 'wc-outlet' ),
-						className: 'wc-outlet-sidebar__tab',
+						title: __( 'Badge', 'outletpro' ),
+						className: 'outletpro-sidebar__tab',
 					},
 					{
 						name: 'message',
-						title: __( 'Message', 'wc-outlet' ),
-						className: 'wc-outlet-sidebar__tab',
+						title: __( 'Message', 'outletpro' ),
+						className: 'outletpro-sidebar__tab',
 					},
 				] }
 			>

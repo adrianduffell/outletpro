@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
@@ -43,6 +43,7 @@ function _manually_load_plugin(): void {
 	require_once __DIR__ . '/../includes/taxonomies.php';
 	require_once __DIR__ . '/../includes/admin-product-options.php';
 	require_once __DIR__ . '/../includes/admin-product-bulk-edit.php';
+	require_once __DIR__ . '/../includes/admin-menu.php';
 	require_once __DIR__ . '/../includes/shortcodes.php';
 	require_once __DIR__ . '/../includes/settings.php';
 	require_once __DIR__ . '/../includes/page.php';

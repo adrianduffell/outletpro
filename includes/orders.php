@@ -2,10 +2,10 @@
 /**
  * Order functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_orders(): void {
-	add_action( 'woocommerce_new_order_item', 'WC_Outlet\flag_order_item_outlet_hook', 10, 3 );
+	add_action( 'woocommerce_new_order_item', 'OutletPro\flag_order_item_outlet_hook', 10, 3 );
 }
 
 /**
@@ -55,4 +55,12 @@ function flag_order_item_outlet_hook( $item_id, \WC_Order_Item $item, $_order_id
 	}
 
 	wc_add_order_item_meta( $item_id, ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
+
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $label ) || '' === $label ) {
+		return;
+	}
+
+	wc_add_order_item_meta( $item_id, ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, $label, true );
 }

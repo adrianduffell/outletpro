@@ -2,17 +2,17 @@
 /**
  * Tests for render_outlet_message_callback().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\deinit_blocks;
-use function WC_Outlet\init_blocks;
-use function WC_Outlet\register_outlet_message_block;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\render_outlet_message_callback;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_MESSAGE_OPTION;
+use function OutletPro\add_to_outlet;
+use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
+use function OutletPro\register_outlet_message_block;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\render_outlet_message_callback;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
@@ -25,7 +25,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		$block   = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -52,7 +52,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -65,7 +65,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		$result = $block->render();
 
 		// Assert.
-		$this->assertStringContainsString( 'wc-outlet-message', $result );
+		$this->assertStringContainsString( 'outletpro-message', $result );
 		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
 
 		// Cleanup.
@@ -83,7 +83,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -111,7 +111,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -137,7 +137,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		init_blocks();
 
 		// Assert.
-		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'wc-outlet/outlet-message' ) );
+		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'outletpro/outlet-message' ) );
 	}
 
 	public function test_empty_option_returns_empty_string(): void {
@@ -151,7 +151,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -181,7 +181,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
@@ -208,7 +208,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		$block = new WP_Block(
 			array(
-				'blockName'    => 'wc-outlet/outlet-message',
+				'blockName'    => 'outletpro/outlet-message',
 				'attrs'        => array(),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',

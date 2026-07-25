@@ -2,10 +2,10 @@
 /**
  * Cart functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_cart(): void {
-	add_filter( 'woocommerce_get_item_data', 'WC_Outlet\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
+	add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 }
 
 /**
@@ -24,7 +24,7 @@ function init_cart(): void {
  * @internal
  */
 function deinit_cart(): void {
-	remove_filter( 'woocommerce_get_item_data', 'WC_Outlet\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
+	remove_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
 }
 
 /**
@@ -64,10 +64,10 @@ function add_outlet_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 		$item_data,
 		array(
 			'key'     => $outlet_label,
-			'value'   => __( 'Yes', 'wc-outlet' ),
+			'value'   => __( 'Yes', 'outletpro' ),
 			'display' => sprintf(
-				'<span class="wc-outlet-cart-item-meta">%s</span>',
-				esc_html__( 'Yes', 'wc-outlet' )
+				'<span class="outletpro-cart-item-meta">%s</span>',
+				esc_html__( 'Yes', 'outletpro' )
 			),
 		)
 	);

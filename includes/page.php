@@ -2,10 +2,10 @@
 /**
  * Page functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -16,6 +16,23 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_page(): void {
 	register_outlet_page_template();
+}
+
+/**
+ * Helper to de-initialize page integrations back to the uninitialized state.
+ *
+ * @internal
+ */
+function deinit_page(): void {
+	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
+
+	foreach ( $templates as $template_name => $template ) {
+		if ( 0 !== strpos( $template_name, 'outletpro//' ) ) {
+			continue;
+		}
+
+		unregister_block_template( $template_name );
+	}
 }
 
 /**
@@ -39,8 +56,8 @@ function register_outlet_page_template(): void {
 	register_block_template(
 		'outletpro//outlet-page',
 		array(
-			'title'       => __( 'Outlet page', 'wc-outlet' ),
-			'description' => __( 'Wide page template for the outlet page.', 'wc-outlet' ),
+			'title'       => __( 'Outlet page', 'outletpro' ),
+			'description' => __( 'Wide page template for the outlet page.', 'outletpro' ),
 			'post_types'  => array( 'page' ),
 			'content'     => $template_content,
 			'plugin'      => 'outletpro',
@@ -104,17 +121,17 @@ function outlet_page_exists(): bool {
  * @return array<string, array{0: string, 1: string}>
  */
 function report_page(): array {
-	$label = __( 'Page ID', 'wc-outlet' );
+	$label = __( 'Page ID', 'outletpro' );
 	try {
 		$page_id = get_outlet_page_id();
 	} catch ( \UnexpectedValueException $e ) {
-		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'wc-outlet' ) ) );
+		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'outletpro' ) ) );
 	}
 	$page_id = get_outlet_page_id();
 	$page    = $page_id ? get_post( $page_id ) : null;
 
 	if ( ! $page instanceof \WP_Post || 'page' !== $page->post_type ) {
-		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'wc-outlet' ) ) );
+		return array( 'outlet-page-id' => array( $label, __( 'Not found', 'outletpro' ) ) );
 	}
 
 	$status_object = get_post_status_object( $page->post_status );
@@ -145,26 +162,44 @@ function create_outlet_page(): void {
 		throw new \RuntimeException(
 			'Could not determine whether the outlet page exists.',
 			0,
-			$e
+			$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
 		);
 	}
 
 	if ( wp_is_block_theme() ) {
+		$orderby = apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
+
+		$parts    = explode( '-', $orderby );
+		$order_by = $parts[0] ?? 'menu_order';
+
+		switch ( $order_by ) {
+			case 'popularity':
+			case 'rating':
+			case 'date':
+				$order = $parts[1] ?? 'desc';
+				break;
+
+			case 'menu_order':
+			default:
+				$order = $parts[1] ?? 'asc';
+				break;
+		}
+
 		$block_attrs = wp_json_encode(
 			array(
 				'queryId'              => 1,
 				'query'                => array(
-					'perPage'                       => 9,
+					'perPage'                       => wc_get_default_products_per_row() * wc_get_default_product_rows_per_page(),
 					'pages'                         => 0,
 					'offset'                        => 0,
 					'postType'                      => 'product',
-					'order'                         => 'asc',
-					'orderBy'                       => 'title',
+					'order'                         => $order,
+					'orderBy'                       => $order_by,
 					'search'                        => '',
 					'exclude'                       => array(),
 					'inherit'                       => false,
 					'isProductCollectionBlock'      => true,
-					'wc_outlet'                     => true,
+					'outletpro'                     => true,
 					'featured'                      => false,
 					'woocommerceOnSale'             => false,
 					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
@@ -179,7 +214,7 @@ function create_outlet_page(): void {
 				'tagName'              => 'div',
 				'displayLayout'        => array(
 					'type'          => 'flex',
-					'columns'       => 3,
+					'columns'       => wc_get_default_products_per_row(),
 					'shrinkColumns' => true,
 				),
 				'dimensions'           => array(
@@ -217,14 +252,19 @@ function create_outlet_page(): void {
 			'<!-- /wp:woocommerce/product-collection -->';
 		// phpcs:enable
 	} else {
-		$post_content = '<!-- wp:shortcode -->' . "\n" .
-			'[products wc_outlet="yes"]' . "\n" .
+		$products_per_row = wc_get_default_products_per_row();
+		$post_content     = '<!-- wp:shortcode -->' . "\n" .
+			sprintf(
+				'[products outletpro="yes" paginate="yes" columns="%d" limit="%d"]',
+				$products_per_row,
+				$products_per_row * wc_get_default_product_rows_per_page()
+			) . "\n" .
 			'<!-- /wp:shortcode -->';
 	}
 
 	$page_id = wp_insert_post(
 		array(
-			'post_title'  => __( 'Outlet', 'wc-outlet' ),
+			'post_title'  => __( 'Outlet', 'outletpro' ),
 			'post_name'   => 'outlet',
 			'post_status' => 'draft',
 			'post_type'   => 'page',
@@ -233,10 +273,30 @@ function create_outlet_page(): void {
 	);
 
 	if ( is_wp_error( $page_id ) ) {
-		throw new \RuntimeException( $page_id->get_error_message() );
+		throw new \RuntimeException( 'Could not create outlet page.' );
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
+
+	if ( wp_is_block_theme() && version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
+		try {
+			$sort_filter_content = get_pattern_content( 'outletpro/outlet-sort-filter' );
+		} catch ( \InvalidArgumentException | \RuntimeException $e ) {
+			throw new \RuntimeException(
+				'Could not insert sort filter in outlet page.',
+				0,
+				$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
+			);
+		}
+		if ( '' !== $sort_filter_content ) {
+			$post_content = $sort_filter_content . "\n\n" . $post_content;
+		}
+	}
+
+	$filter_tiles_content = get_outlet_filter_tiles_content();
+	if ( '' !== $filter_tiles_content ) {
+		$post_content = $filter_tiles_content . "\n\n" . $post_content;
+	}
 
 	$result = wp_update_post(
 		array(
@@ -247,13 +307,13 @@ function create_outlet_page(): void {
 	);
 
 	if ( is_wp_error( $result ) ) {
-		throw new \RuntimeException( $result->get_error_message() );
+		throw new \RuntimeException( 'Could not update outlet page content.' );
 	}
 
 	if ( wp_is_block_theme() ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
 		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
 		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( $result->get_error_message() );
+			throw new \RuntimeException( 'Could not set outlet page template.' );
 		}
 	}
 }
@@ -273,7 +333,7 @@ function outlet_page_is_published(): bool {
 		throw new \RuntimeException(
 			'Could not determine whether the outlet page already exists.',
 			0,
-			$e
+			$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
 		);
 	}
 

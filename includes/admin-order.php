@@ -2,10 +2,10 @@
 /**
  * Admin order functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -14,7 +14,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const ORDER_ITEM_OUTLET_META_KEY = '_wc_outlet';
+const ORDER_ITEM_OUTLET_META_KEY = '_outletpro';
+
+/**
+ * Order item meta key used to store the outlet badge label at time of purchase.
+ *
+ * @internal
+ */
+const ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY = '_outletpro_badge_label';
 
 /**
  * Helper to initialize admin order display hooks.
@@ -22,8 +29,8 @@ const ORDER_ITEM_OUTLET_META_KEY = '_wc_outlet';
  * @internal
  */
 function init_admin_order(): void {
-	add_action( 'woocommerce_after_order_itemmeta', 'WC_Outlet\display_order_item_outlet_badge_hook', 1, 3 );
-	add_filter( 'woocommerce_hidden_order_itemmeta', 'WC_Outlet\hide_order_item_outlet_meta_hook' );
+	add_action( 'woocommerce_after_order_itemmeta', 'OutletPro\display_order_item_outlet_badge_hook', 1, 3 );
+	add_filter( 'woocommerce_hidden_order_itemmeta', 'OutletPro\hide_order_item_outlet_meta_hook' );
 }
 
 /**
@@ -37,6 +44,7 @@ function init_admin_order(): void {
  */
 function hide_order_item_outlet_meta_hook( array $hidden_meta_keys ): array {
 	$hidden_meta_keys[] = ORDER_ITEM_OUTLET_META_KEY;
+	$hidden_meta_keys[] = ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY;
 	return $hidden_meta_keys;
 }
 
@@ -56,11 +64,11 @@ function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, 
 		return;
 	}
 
-	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
+	$label = $item->get_meta( ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY );
 
 	if ( ! is_string( $label ) || '' === $label ) {
-		$label = __( 'Last chance', 'wc-outlet' );
+		$label = __( '⚠️ Missing label', 'outletpro' );
 	}
 
-	echo '<span class="wc-outlet-admin-badge">' . esc_html( $label ) . '</span>';
+	echo '<span class="outletpro-admin-badge">' . esc_html( $label ) . '</span>';
 }

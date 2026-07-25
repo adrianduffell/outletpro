@@ -2,12 +2,12 @@
 /**
  * Test the outlet_page_is_published function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\create_outlet_page;
-use function WC_Outlet\outlet_page_is_published;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\create_outlet_page;
+use function OutletPro\outlet_page_is_published;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {
 

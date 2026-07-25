@@ -2,10 +2,10 @@
 /**
  * Taxonomy-related functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const OUTLET_STATUS_TAXONOMY = 'wc_outlet_status';
+const OUTLET_STATUS_TAXONOMY = 'outletpro_status';
 
 /**
  * Canonical term for products belonging in the outlet.
@@ -48,16 +48,16 @@ function report_taxonomies(): array {
 
 	return array(
 		'outlet-taxonomy-registered' => array(
-			__( 'Outlet status taxonomy registered', 'wc-outlet' ),
-			$taxonomy_exists ? __( 'Yes', 'wc-outlet' ) : __( 'No', 'wc-outlet' ),
+			__( 'Outlet status taxonomy registered', 'outletpro' ),
+			$taxonomy_exists ? __( 'Yes', 'outletpro' ) : __( 'No', 'outletpro' ),
 		),
 		'outlet-canonical-term-id'   => array(
-			__( 'Canonical term ID', 'wc-outlet' ),
-			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'wc-outlet' ),
+			__( 'Canonical term ID', 'outletpro' ),
+			$canonical_term instanceof \WP_Term ? $canonical_term->term_id : __( 'Not found', 'outletpro' ),
 		),
 		'outlet-product-count'       => array(
-			__( 'Total products in outlet', 'wc-outlet' ),
-			$outlet_product_count ?? __( 'Unknown', 'wc-outlet' ),
+			__( 'Total products in outlet', 'outletpro' ),
+			$outlet_product_count ?? __( 'Unknown', 'outletpro' ),
 		),
 	);
 }
@@ -69,7 +69,7 @@ function report_taxonomies(): array {
  */
 function register_outlet_status_taxonomy(): void {
 	$args = array(
-		'label'        => __( 'Outlet Status', 'wc-outlet' ),
+		'label'        => __( 'Outlet Status', 'outletpro' ),
 		'public'       => false,
 		'show_ui'      => false,
 		'show_in_rest' => false,
@@ -102,12 +102,7 @@ function seed_outlet_status_taxonomy(): void {
 	$result = wp_insert_term( OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( is_wp_error( $result ) ) {
-		throw new \RuntimeException(
-			sprintf(
-				'Failed to seed outlet status taxonomy. %s',
-				$result->get_error_message()
-			)
-		);
+		throw new \RuntimeException( 'Failed to seed outlet status taxonomy.' );
 	}
 }
 
@@ -128,13 +123,7 @@ function is_outlet( \WC_Product $product ): bool {
 	if ( $product->is_type( 'variation' ) ) {
 		$parent = wc_get_product( $product->get_parent_id() );
 		if ( ! $parent ) {
-			throw new \RuntimeException(
-				sprintf(
-					'Parent product (ID %d) for variation (ID %d) could not be found.',
-					$product->get_parent_id(),
-					$product->get_id()
-				)
-			);
+			throw new \RuntimeException( 'Parent product for variation could not be found.' );
 		}
 		return is_outlet( $parent );
 	}
@@ -157,13 +146,7 @@ function add_to_outlet( \WC_Product $product ): void {
 	$result = wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( is_wp_error( $result ) ) {
-		throw new \RuntimeException(
-			sprintf(
-				'Failed to assign outlet status term to product ID %d. %s',
-				$product->get_id(),
-				$result->get_error_message()
-			)
-		);
+		throw new \RuntimeException( 'Failed to assign outlet status term to product.' );
 	}
 }
 
@@ -259,13 +242,7 @@ function remove_from_outlet( \WC_Product $product ): void {
 	$result = wp_remove_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 	if ( is_wp_error( $result ) ) {
-		throw new \RuntimeException(
-			sprintf(
-				'Failed to remove product %d from outlet. %s',
-				$product->get_id(),
-				$result->get_error_message()
-			)
-		);
+		throw new \RuntimeException( 'Failed to remove product from outlet.' );
 	}
 }
 
@@ -304,7 +281,7 @@ function set_outlet( \WC_Product $product, bool $new_value ): void {
 	 * @param bool $new_value  New outlet status.
 	 */
 	do_action(
-		'wc_outlet_status_changed',
+		'outletpro_status_changed',
 		$product->get_id(),
 		$old_value,
 		$new_value

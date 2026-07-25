@@ -2,13 +2,13 @@
 /**
  * Test the seed_outlet_status_taxonomy function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_STATUS_CANONICAL_TERM;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Seed_Outlet_Status_Taxonomy extends WP_UnitTestCase {
 

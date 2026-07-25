@@ -2,10 +2,10 @@
 /**
  * Block registration and render callbacks.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -17,9 +17,10 @@ defined( 'ABSPATH' ) || exit;
 function init_blocks(): void {
 	register_outlet_badge_block();
 	register_outlet_message_block();
-	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_badge_hook', 10, 4 );
-	add_filter( 'hooked_block_types', 'WC_Outlet\auto_insert_outlet_message_hook', 10, 4 );
-	add_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11, 3 );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
+	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
 }
 
 /**
@@ -30,11 +31,12 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
-	remove_filter( 'query_loop_block_query_vars', 'WC_Outlet\filter_outlet_product_collection_hook', 11 );
+	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
+	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
-	// Unregister all blocks in the wc-outlet namespace.
+	// Unregister all blocks in the outletpro namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
-		if ( 0 !== strpos( $block_name, 'wc-outlet/' ) ) {
+		if ( 0 !== strpos( $block_name, 'outletpro/' ) ) {
 			continue;
 		}
 
@@ -51,7 +53,7 @@ function register_outlet_badge_block(): void {
 	register_block_type(
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-badge/',
 		array(
-			'render_callback' => 'WC_Outlet\render_outlet_badge_callback',
+			'render_callback' => 'OutletPro\render_outlet_badge_callback',
 		)
 	);
 }
@@ -74,7 +76,7 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 
 	// Only auto-insert the badge on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-outlet/outlet-badge';
+		$hooked_blocks[] = 'outletpro/outlet-badge';
 	}
 
 	return $hooked_blocks;
@@ -98,10 +100,51 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 
 	// Only auto-insert the message on the single product template.
 	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'wc-outlet/outlet-message';
+		$hooked_blocks[] = 'outletpro/outlet-message';
 	}
 
 	return $hooked_blocks;
+}
+
+/**
+ * Set orderby for the outlet product collection block using the URL param.
+ *
+ * Fired by `render_block_data`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed> $parsed_block Parsed block data.
+ * @return array<string, mixed> Updated parsed block data.
+ */
+function set_outlet_product_collection_orderby_hook( array $parsed_block ): array {
+	if ( 'woocommerce/product-collection' !== ( $parsed_block['blockName'] ?? null ) ) {
+		return $parsed_block;
+	}
+
+	$is_outlet_query = $parsed_block['attrs']['query']['outletpro'] ?? false;
+	if ( ! $is_outlet_query ) {
+		return $parsed_block;
+	}
+
+	$orderby = sanitize_key( wp_unslash( $_GET['orderby'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only query param used to adjust catalog sort order.
+	if ( ! in_array( $orderby, array( 'price', 'price-desc', 'date', 'popularity', 'rating', 'menu_order' ), true ) ) {
+		return $parsed_block;
+	}
+
+	$parsed_block['attrs']['query']['orderBy'] = str_replace( '-desc', '', $orderby );
+	switch ( $orderby ) {
+		case 'price-desc':
+		case 'date':
+		case 'popularity':
+		case 'rating':
+			$parsed_block['attrs']['query']['order'] = 'desc';
+			break;
+		case 'price':
+		case 'menu_order':
+		default:
+			$parsed_block['attrs']['query']['order'] = 'asc';
+	}
+
+	return $parsed_block;
 }
 
 /**
@@ -120,7 +163,7 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
  * @return array<string, mixed> Filtered query vars.
  */
 function filter_outlet_product_collection_hook( array $query, \WP_Block $block, int $page ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
-	$is_outlet_query = $block->context['query']['wc_outlet'] ?? false;
+	$is_outlet_query = $block->context['query']['outletpro'] ?? false;
 
 	if ( ! $is_outlet_query ) {
 		return $query;
@@ -172,7 +215,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-outlet-badge',
+			'class' => 'outletpro-badge',
 		)
 	);
 
@@ -198,7 +241,7 @@ function register_outlet_message_block(): void {
 	register_block_type(
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
-			'render_callback' => 'WC_Outlet\render_outlet_message_callback',
+			'render_callback' => 'OutletPro\render_outlet_message_callback',
 		)
 	);
 }
@@ -231,7 +274,7 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => 'wc-outlet-message',
+			'class' => 'outletpro-message',
 		)
 	);
 

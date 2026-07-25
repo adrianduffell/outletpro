@@ -2,11 +2,11 @@
 /**
  * Tests for the outlet filter tiles block pattern.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\get_outlet_filter_tiles_content;
-use function WC_Outlet\register_outlet_filter_tiles_pattern;
+use function OutletPro\get_outlet_filter_tiles_content;
+use function OutletPro\register_outlet_filter_tiles_pattern;
 
 class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 
@@ -15,7 +15,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		register_outlet_filter_tiles_pattern();
 
 		// Assert.
-		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'wc-outlet/outlet-filter-tiles' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-filter-tiles' ) );
 	}
 
 	public function test_pattern_title_is_outlet_filter_tiles(): void {
@@ -23,7 +23,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		register_outlet_filter_tiles_pattern();
 
 		// Assert.
-		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'wc-outlet/outlet-filter-tiles' );
+		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-filter-tiles' );
 		$this->assertSame( 'Outlet filter tiles', $pattern['title'] );
 	}
 
@@ -36,7 +36,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -47,7 +47,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=50', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_currency_specific_max_prices(): void {
@@ -59,7 +59,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -70,7 +70,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=5000', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_defaults_to_usd_for_unknown_currency(): void {
@@ -82,7 +82,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -93,13 +93,13 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'max_price=50', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_returns_empty_when_no_outlet_page(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -117,7 +117,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 		$permalink = get_permalink( $page_id );
 
 		// Act.
@@ -127,7 +127,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( $permalink, $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
 	public function test_get_outlet_filter_tiles_content_contains_buttons_block_markup(): void {
@@ -139,7 +139,7 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
@@ -150,10 +150,10 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertStringContainsString( '<!-- /wp:buttons -->', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
 	}
 
-	public function test_get_outlet_filter_tiles_content_has_wc_outlet_filter_tiles_class(): void {
+	public function test_get_outlet_filter_tiles_content_does_not_include_outletpro_filter_tiles_class(): void {
 		// Arrange.
 		update_option( 'woocommerce_currency', 'USD' );
 		$page_id = self::factory()->post->create(
@@ -162,15 +162,60 @@ class Test_Register_Outlet_Filter_Tiles_Pattern extends WP_UnitTestCase {
 				'post_status' => 'publish',
 			)
 		);
-		update_option( 'wc_outlet_page_id', $page_id );
+		update_option( 'outletpro_page_id', $page_id );
 
 		// Act.
 		$content = get_outlet_filter_tiles_content();
 
 		// Assert.
-		$this->assertStringContainsString( 'wc-outlet-filter-tiles', $content );
+		$this->assertStringNotContainsString( 'outletpro-filter-tiles', $content );
 
 		// Cleanup.
-		delete_option( 'wc_outlet_page_id' );
+		delete_option( 'outletpro_page_id' );
+	}
+
+	public function test_get_outlet_filter_tiles_content_does_not_include_metadata_by_default(): void {
+		// Arrange.
+		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'outletpro_page_id', $page_id );
+
+		// Act.
+		$content = get_outlet_filter_tiles_content();
+
+		// Assert.
+		$this->assertStringNotContainsString( '"metadata"', $content );
+
+		// Cleanup.
+		delete_option( 'outletpro_page_id' );
+	}
+
+	public function test_get_outlet_filter_tiles_content_includes_metadata_when_include_metadata_is_true(): void {
+		// Arrange.
+		update_option( 'woocommerce_currency', 'USD' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+			)
+		);
+		update_option( 'outletpro_page_id', $page_id );
+
+		// Act.
+		$content = get_outlet_filter_tiles_content( true );
+
+		// Assert.
+		$this->assertStringContainsString( '"metadata"', $content );
+		$this->assertStringContainsString( '"categories":["outletpro"]', $content );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-filter-tiles"', $content );
+		$this->assertStringContainsString( '"name":"Outlet filter tiles"', $content );
+
+		// Cleanup.
+		delete_option( 'outletpro_page_id' );
 	}
 }

@@ -6,7 +6,7 @@ Outlet implements a stable public API intended for use by third-party code. All 
 
 ### Outlet status
 
-#### `WC_Outlet\is_outlet( \WC_Product $product ): bool`
+#### `OutletPro\is_outlet( \WC_Product $product ): bool`
 
 Check if a product is in the store’s outlet.
 
@@ -18,13 +18,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $is_outlet = WC_Outlet\is_outlet( $product );
+    $is_outlet = OutletPro\is_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\add_to_outlet( \WC_Product $product ): void`
+#### `OutletPro\add_to_outlet( \WC_Product $product ): void`
 
 Add a product to the store’s outlet.
 
@@ -36,13 +36,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\add_to_outlet( $product );
+    OutletPro\add_to_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\remove_from_outlet( \WC_Product $product ): void`
+#### `OutletPro\remove_from_outlet( \WC_Product $product ): void`
 
 Remove a product from the store’s outlet.
 
@@ -54,17 +54,17 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\remove_from_outlet( $product );
+    OutletPro\remove_from_outlet( $product );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\set_outlet( \WC_Product $product, bool $new_value ): void`
+#### `OutletPro\set_outlet( \WC_Product $product, bool $new_value ): void`
 
 Set the outlet status for a product.
 
-Fires the `wc_outlet_status_changed` action on a status change.
+Fires the `outletpro_status_changed` action on a status change.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -75,13 +75,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\set_outlet( $product, true );
+    OutletPro\set_outlet( $product, true );
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\count_outlet(): int`
+#### `OutletPro\count_outlet(): int`
 
 Count the number of published products in the store’s outlet.
 
@@ -89,13 +89,13 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $count = WC_Outlet\count_outlet();
+    $count = OutletPro\count_outlet();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\outlet_empty(): bool`
+#### `OutletPro\outlet_empty(): bool`
 
 Check if the store’s outlet has no published products.
 
@@ -105,7 +105,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Outlet\outlet_empty() ) {
+    if ( OutletPro\outlet_empty() ) {
         // nothing to display
     }
 } catch ( \Throwable $e ) {
@@ -115,9 +115,9 @@ try {
 
 ### Outlet page
 
-#### `WC_Outlet\get_outlet_page_id(): ?int`
+#### `OutletPro\get_outlet_page_id(): ?int`
 
-Get the outlet page ID from the `wc_outlet_page_id` option.
+Get the outlet page ID from the `outletpro_page_id` option.
 
 Returns the page ID as a normalised `int`, or `null` when the option does not exist.
 
@@ -125,24 +125,24 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    $page_id = WC_Outlet\get_outlet_page_id();
+    $page_id = OutletPro\get_outlet_page_id();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
 ```
 
-#### `WC_Outlet\outlet_page_exists(): bool`
+#### `OutletPro\outlet_page_exists(): bool`
 
 Check if the outlet page exists.
 
-Uses heuristics on the `wc_outlet_page_id` option value. Returns `false` when the option
+Uses heuristics on the `outletpro_page_id` option value. Returns `false` when the option
 is missing. Trashed pages are not considered to exist.
 
 Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Outlet\outlet_page_exists() ) {
+    if ( OutletPro\outlet_page_exists() ) {
         // page is present
     }
 } catch ( \Throwable $e ) {
@@ -150,7 +150,7 @@ try {
 }
 ```
 
-#### `WC_Outlet\outlet_page_is_published(): bool`
+#### `OutletPro\outlet_page_is_published(): bool`
 
 Check whether the outlet page exists and is published.
 
@@ -158,7 +158,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    if ( WC_Outlet\outlet_page_is_published() ) {
+    if ( OutletPro\outlet_page_is_published() ) {
         // page is live
     }
 } catch ( \Throwable $e ) {
@@ -166,7 +166,7 @@ try {
 }
 ```
 
-#### `WC_Outlet\create_outlet_page(): void`
+#### `OutletPro\create_outlet_page(): void`
 
 Create the outlet page.
 
@@ -178,7 +178,7 @@ Throws exception on error. Added in 1.0.0.
 
 ```php
 try {
-    WC_Outlet\create_outlet_page();
+    OutletPro\create_outlet_page();
 } catch ( \Throwable $e ) {
     // Handle exception
 }
@@ -188,12 +188,12 @@ try {
 
 ### Actions
 
-#### `wc_outlet_status_changed`
+#### `outletpro_status_changed`
 
 Fires when a product's outlet status changes.
 
 ```php
-add_action( 'wc_outlet_status_changed', function ( $product_id, $old_value, $new_value ) {
+add_action( 'outletpro_status_changed', function ( $product_id, $old_value, $new_value ) {
     // React to the outlet status change.
 }, 10, 3 );
 ```
@@ -208,12 +208,12 @@ Added in 1.0.0.
 
 ### Filters
 
-#### `wc_outlet_badge_single_product_hook`
+#### `outletpro_badge_single_product_hook`
 
 Filter to modify which `single-product` [WooCommerce template hook](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) (or theme hook) to display the outlet badge on.
 
 ```php
-add_filter( 'wc_outlet_badge_single_product_hook', function ( $name ) {
+add_filter( 'outletpro_badge_single_product_hook', function ( $name ) {
     return 'woocommerce_before_single_product';
 } );
 ```
@@ -224,12 +224,12 @@ add_filter( 'wc_outlet_badge_single_product_hook', function ( $name ) {
 
 Must return a non-empty string. Added in 1.0.0.
 
-#### `wc_outlet_badge_single_product_priority`
+#### `outletpro_badge_single_product_priority`
 
 Filters the priority used for [hooking](https://developer.woocommerce.com/docs/theming/theme-development/template-structure/#changing-templates-via-hooks) the outlet badge to the `single-product` classic templates.
 
 ```php
-add_filter( 'wc_outlet_badge_single_product_priority', function ( $priority ) {
+add_filter( 'outletpro_badge_single_product_priority', function ( $priority ) {
     return 5;
 } );
 ```
@@ -247,33 +247,55 @@ enqueues.
 
 ### Styles
 
-#### `wc-outlet`
+#### `outletpro-classic-badge`
 
-Front-end stylesheet for classic (non-block) themes. Registered — but not automatically
-enqueued — on `wp_enqueue_scripts`. Use `wp_enqueue_style( 'wc-outlet' )` or declare
-it as a dependency to load it on demand. Added in 1.0.0.
+Front-end badge stylesheet for classic (non-block) themes. Registered — but not
+automatically enqueued — on `wp_enqueue_scripts`. Use
+`wp_enqueue_style( 'outletpro-classic-badge' )` or declare it as a dependency to load
+it on demand. Added in 1.0.0.
 
-#### `wc-outlet-block-styles`
+#### `outletpro-classic-message`
+
+Front-end message stylesheet for classic (non-block) themes. Registered — but not
+automatically enqueued — on `wp_enqueue_scripts`. Use
+`wp_enqueue_style( 'outletpro-classic-message' )` or declare it as a dependency to load
+it on demand. Added in 1.0.0.
+
+#### `outletpro-cart-badge`
+
+Cart badge stylesheet enqueued on `wp_enqueue_scripts`. Added in 1.0.0.
+
+#### `outletpro-badge-block`
 
 Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
-is only loaded when the `outlet-pro/outlet-badge` block is rendered on the page.
+is only loaded when the `outletpro/outlet-badge` block is rendered on the page.
 Added in 1.0.0.
 
-#### `wc-outlet-admin-styles`
+#### `outletpro-admin`
 
 Admin stylesheet enqueued on all `admin_enqueue_scripts` pages. Added in 1.0.0.
 
+#### `outletpro-admin-editor`
+
+Admin editor stylesheet enqueued on `enqueue_block_assets` in wp-admin for editor canvas
+previewing. Added in 1.0.0.
+
 ### Scripts
 
-#### `wc-outlet-build`
+#### `outletpro-editor`
 
 Block editor JavaScript enqueued on `enqueue_block_editor_assets`. Contains the block
 editor integration for the outlet badge and outlet message blocks. Added in 1.0.0.
 
-#### `wc-outlet-admin-product`
+#### `outletpro-products-admin`
 
 Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
 Added in 1.0.0.
+
+#### `outletpro-admin-canvas-scripts`
+
+Admin JavaScript enqueued on `enqueue_block_assets` in wp-admin for editor canvas
+previewing. Added in 1.0.0.
 
 ## CSS classes
 
@@ -282,19 +304,19 @@ for custom styling.
 
 ### Front-end classes
 
-#### `.wc-outlet-badge`
+#### `.outletpro-badge`
 
 Applied to the outlet badge element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
-#### `.wc-outlet-message`
+#### `.outletpro-message`
 
 Applied to the outlet message element. Used by both the block renderer and classic theme
 template hooks. Added in 1.0.0.
 
 ## Blocks
 
-### `wc-outlet/outlet-badge`
+### `outletpro/outlet-badge`
 
 Displays a outlet badge when the product is in the store’s outlet. Automatically
 inserted after the product price on the single product template (block themes). Added
@@ -324,7 +346,7 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 \* Denotes modifiable in settings.
 
-### `wc-outlet/outlet-message`
+### `outletpro/outlet-message`
 
 Displays the outlet message when the product is in the store’s outlet. Automatically
 inserted as the first child of the product meta block on the single product template (block
@@ -336,37 +358,37 @@ themes). Added in 1.0.0.
 
 ## REST API
 
-The plugin extends the WooCommerce products REST endpoint with a `wc_outlet` query
+The plugin extends the WooCommerce products REST endpoint with a `outletpro` query
 parameter.
 
 ```http
-GET /wc/v3/products?wc_outlet=true
+GET /wc/v3/products?outletpro=true
 ```
 
 The plugin also extends the WordPress products REST endpoint (post type) with the same
 parameter.
 
 ```http
-GET /wp/v2/products?wc_outlet=true
+GET /wp/v2/products?outletpro=true
 ```
 
 | Parameter   | Type      | Description                                                    |
 | ----------- | --------- | -------------------------------------------------------------- |
-| `wc_outlet` | `boolean` | When `true`, limits results to products in the store's outlet. |
+| `outletpro` | `boolean` | When `true`, limits results to products in the store's outlet. |
 
 Added in 1.0.0.
 
 ## Shortcodes
 
-The plugin extends the WooCommerce `[products]` shortcode with a `wc_outlet` attribute.
+The plugin extends the WooCommerce `[products]` shortcode with a `outletpro` attribute.
 
 ```text
-[products wc_outlet="true"]
+[products outletpro="true"]
 ```
 
 | Attribute   | Type                       | Description                                                    |
 | ----------- | -------------------------- | -------------------------------------------------------------- |
-| `wc_outlet` | `boolean` (`true`/`false`) | When `true`, limits results to products in the store’s outlet. |
+| `outletpro` | `boolean` (`true`/`false`) | When `true`, limits results to products in the store’s outlet. |
 
 Added in 1.0.0.
 
@@ -383,7 +405,7 @@ time without a MAJOR version bump. Do not rely on them in third-party code.
 
     File paths are subject to change in future versions.
 
--   The taxonomy slug `wc_outlet_status` and term slug `outlet`.
+-   The taxonomy slug `outletpro_status` and term slug `outlet`.
 
     The outlet status is powered by a non-public taxonomy for performance but is considered experimental and may change in the future. Instead, use the outlet status functions or REST API parameter for stable access to the outlet status.
 

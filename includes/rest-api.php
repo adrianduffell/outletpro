@@ -2,10 +2,10 @@
 /**
  * REST API integration functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,21 +15,21 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_rest_api(): void {
-	add_filter( 'rest_product_collection_params', 'WC_Outlet\add_wc_outlet_rest_param_hook' );
-	add_filter( 'woocommerce_rest_product_object_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
-	add_filter( 'rest_product_query', 'WC_Outlet\handle_wc_outlet_rest_param', 10, 2 );
+	add_filter( 'rest_product_collection_params', 'OutletPro\add_outletpro_rest_param_hook' );
+	add_filter( 'woocommerce_rest_product_object_query', 'OutletPro\handle_outletpro_rest_param', 10, 2 );
+	add_filter( 'rest_product_query', 'OutletPro\handle_outletpro_rest_param', 10, 2 );
 }
 
 /**
- * Add `wc_outlet` parameter to the products REST API collection params.
+ * Add `outletpro` parameter to the products REST API collection params.
  *
  * @internal WordPress filter hook
  * @param array<string, mixed> $params Existing collection parameters.
  * @return array<string, mixed> Modified collection parameters.
  */
-function add_wc_outlet_rest_param_hook( array $params ): array {
-	$params['wc_outlet'] = array(
-		'description'       => __( 'Limit results to outlet products.', 'wc-outlet' ),
+function add_outletpro_rest_param_hook( array $params ): array {
+	$params['outletpro'] = array(
+		'description'       => __( 'Limit results to outlet products.', 'outletpro' ),
 		'type'              => 'boolean',
 		'sanitize_callback' => 'rest_sanitize_boolean',
 		'validate_callback' => 'rest_validate_request_arg',
@@ -46,8 +46,8 @@ function add_wc_outlet_rest_param_hook( array $params ): array {
  * @param \WP_REST_Request     $request REST API request.
  * @return array<string, mixed> Modified WP_Query arguments.
  */
-function handle_wc_outlet_rest_param( array $args, \WP_REST_Request $request ): array {
-	if ( empty( $request['wc_outlet'] ) ) {
+function handle_outletpro_rest_param( array $args, \WP_REST_Request $request ): array {
+	if ( empty( $request['outletpro'] ) ) {
 		return $args;
 	}
 

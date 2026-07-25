@@ -27,9 +27,9 @@ function updateOutletQueryAttributes(
 	const nextQuery = { ...( attributes.query ?? {} ) };
 
 	if ( isChecked ) {
-		nextQuery.wc_outlet = true;
+		nextQuery.outletpro = true;
 	} else {
-		delete nextQuery.wc_outlet;
+		delete nextQuery.outletpro;
 	}
 
 	return {
@@ -50,12 +50,12 @@ export const withOutletQueryInspector = (
 				<BlockEdit { ...props } />
 				<InspectorControls group="advanced">
 					<ToggleControl
-						label={ __( 'Show outlet products only', 'wc-outlet' ) }
+						label={ __( 'Show outlet products only', 'outletpro' ) }
 						help={ __(
 							'Restrict this collection to products in the store’s outlet.',
-							'wc-outlet'
+							'outletpro'
 						) }
-						checked={ true === props.attributes.query?.wc_outlet }
+						checked={ true === props.attributes.query?.outletpro }
 						onChange={ ( isChecked ) =>
 							props.setAttributes(
 								updateOutletQueryAttributes(
@@ -72,6 +72,6 @@ export const withOutletQueryInspector = (
 
 addFilter(
 	'editor.BlockEdit',
-	'wc-outlet/product-collection/outlet-query-inspector',
+	'outletpro/product-collection/outlet-query-inspector',
 	withOutletQueryInspector
 );

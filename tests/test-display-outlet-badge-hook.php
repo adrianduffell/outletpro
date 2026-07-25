@@ -2,14 +2,14 @@
 /**
  * Tests for display_outlet_badge_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\init_woocommerce_template_hooks;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
+use function OutletPro\add_to_outlet;
+use function OutletPro\init_woocommerce_template_hooks;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
@@ -24,7 +24,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/<p[^>]+class="[^"]*wc-outlet-badge/' );
+		$this->expectOutputRegex( '/<p[^>]+class="[^"]*outletpro-badge/' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -39,7 +39,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-badge).*/s' ); // Does not contain the outlet badge.
+		$this->expectOutputRegex( '/^(?!.*outletpro-badge).*/s' ); // Does not contain the outlet badge.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -48,7 +48,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_display_badge_using_custom_single_product_hook_name(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_hook',
+			'outletpro_badge_single_product_hook',
 			static function () {
 				return 'foo_hook';
 			}
@@ -60,7 +60,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-badge/' );
+		$this->expectOutputRegex( '/outletpro-badge/' );
 
 		// Act.
 		do_action( 'foo_hook' );
@@ -69,7 +69,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_display_badge_using_custom_single_product_hook_priority(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_priority',
+			'outletpro_badge_single_product_priority',
 			static function () {
 				return 1;
 			}
@@ -81,7 +81,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/wc-outlet-badge(?=.*<h1)/s' ); // Badge appears before the product title.
+		$this->expectOutputRegex( '/outletpro-badge(?=.*<h1)/s' ); // Badge appears before the product title.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -90,7 +90,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_single_product_hook_throws_on_non_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_hook',
+			'outletpro_badge_single_product_hook',
 			static function () {
 				return 123;
 			}
@@ -106,7 +106,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_single_product_hook_throws_on_empty_string(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_hook',
+			'outletpro_badge_single_product_hook',
 			static function () {
 				return '';
 			}
@@ -122,7 +122,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 	public function test_badge_single_product_priority_throws_on_non_integer(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		add_filter(
-			'wc_outlet_badge_single_product_priority',
+			'outletpro_badge_single_product_priority',
 			static function () {
 				return '6';
 			}
@@ -146,7 +146,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/^(?!.*wc-outlet-badge).*/s' ); // Does not contain the outlet badge.
+		$this->expectOutputRegex( '/^(?!.*outletpro-badge).*/s' ); // Does not contain the outlet badge.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );

@@ -2,10 +2,10 @@
 /**
  * Shortcode-related functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,12 +15,13 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_shortcodes(): void {
-	add_filter( 'woocommerce_shortcode_products_query', 'WC_Outlet\filter_products_shortcode_query_hook', 10, 3 );
-	add_filter( 'shortcode_atts_products', 'WC_Outlet\add_products_shortcode_attribute_hook', 10, 3 );
+	add_filter( 'woocommerce_shortcode_products_query', 'OutletPro\filter_products_shortcode_query_hook', 10, 3 );
+	add_filter( 'shortcode_atts_products', 'OutletPro\add_products_shortcode_attribute_hook', 10, 3 );
+	add_filter( 'posts_clauses', 'OutletPro\max_price_posts_clauses', 10, 2 );
 }
 
 /**
- * Filter the [products] shortcode query args to include only outlet products when wc_outlet is set.
+ * Filter the [products] shortcode query args to include only outlet products when outletpro is set.
  *
  * Fired by `woocommerce_shortcode_products_query`.
  *
@@ -32,13 +33,20 @@ function init_shortcodes(): void {
  */
 function filter_products_shortcode_query_hook( array $query_args, array $attributes, string $unused_type ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 
-	if ( empty( $attributes['wc_outlet'] ) ) {
+	if ( empty( $attributes['outletpro'] ) ) {
 		return $query_args;
 	}
 
-	if ( ! \wc_string_to_bool( $attributes['wc_outlet'] ) ) {
+	if ( ! \wc_string_to_bool( $attributes['outletpro'] ) ) {
 		return $query_args;
 	}
+
+	// Flag this query for max price filtering.
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public URL parameter for filtering, not a form submission.
+	if ( isset( $_GET['max_price'] ) ) {
+		$query_args['outletpro_max_price'] = sanitize_unsigned_integer( wp_unslash( $_GET['max_price'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized via sanitize_unsigned_integer().
+	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	if ( empty( $query_args['tax_query'] ) || ! is_array( $query_args['tax_query'] ) ) {
 		$query_args['tax_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
@@ -54,7 +62,7 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 }
 
 /**
- * Register the wc_outlet attribute for the [products] shortcode.
+ * Register the outletpro attribute for the [products] shortcode.
  *
  * Fired by `shortcode_atts_products`.
  *
@@ -66,9 +74,45 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
  */
 function add_products_shortcode_attribute_hook( array $out, array $unused_pairs, array $atts ): array {
 
-	if ( isset( $atts['wc_outlet'] ) ) {
-		$out['wc_outlet'] = \wc_string_to_bool( $atts['wc_outlet'] );
+	if ( isset( $atts['outletpro'] ) ) {
+		$out['outletpro'] = \wc_string_to_bool( $atts['outletpro'] );
 	}
 
 	return $out;
+}
+
+/**
+ * Add a max price SQL clause for outlet-marked shortcode product queries.
+ *
+ * Fired by `posts_clauses`.
+ *
+ * @param array<string, string> $clauses The SQL clauses for the current query.
+ * @param \WP_Query             $query   The current query instance.
+ * @return array<string, string> The modified SQL clauses.
+ * @internal WordPress filter
+ */
+function max_price_posts_clauses( array $clauses, \WP_Query $query ): array {
+	global $wpdb;
+
+	// Bail if the outletpro_max_price var is not set.
+	if ( is_null( $query->get( 'outletpro_max_price', null ) ) ) {
+		return $clauses;
+	}
+
+	$max_price = sanitize_unsigned_integer( $query->get( 'outletpro_max_price' ) );
+
+	if ( is_null( $max_price ) ) {
+		return $clauses;
+	}
+
+	if ( false === strpos( $clauses['join'], 'wc_product_meta_lookup' ) ) {
+		$clauses['join'] .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON {$wpdb->posts}.ID = wc_product_meta_lookup.product_id ";
+	}
+
+	$clauses['where'] .= $wpdb->prepare(
+		' AND NOT ( %d < wc_product_meta_lookup.min_price ) ',
+		$max_price
+	);
+
+	return $clauses;
 }

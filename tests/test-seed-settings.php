@@ -2,21 +2,21 @@
 /**
  * Test the seed_settings function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\seed_settings;
-use const WC_Outlet\OUTLET_BADGE_BG_COLOR_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_COLOR_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_RADIUS_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_STYLE_OPTION;
-use const WC_Outlet\OUTLET_BADGE_BORDER_WIDTH_OPTION;
-use const WC_Outlet\OUTLET_BADGE_DENSITY_OPTION;
-use const WC_Outlet\OUTLET_BADGE_FONT_WEIGHT_OPTION;
-use const WC_Outlet\OUTLET_BADGE_LABEL_OPTION;
-use const WC_Outlet\OUTLET_BADGE_SCALE_OPTION;
-use const WC_Outlet\OUTLET_BADGE_TEXT_COLOR_OPTION;
-use const WC_Outlet\OUTLET_MESSAGE_OPTION;
+use function OutletPro\seed_settings;
+use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_RADIUS_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_STYLE_OPTION;
+use const OutletPro\OUTLET_BADGE_BORDER_WIDTH_OPTION;
+use const OutletPro\OUTLET_BADGE_DENSITY_OPTION;
+use const OutletPro\OUTLET_BADGE_FONT_WEIGHT_OPTION;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
+use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 
 class Test_Seed_Settings extends WP_UnitTestCase {
 

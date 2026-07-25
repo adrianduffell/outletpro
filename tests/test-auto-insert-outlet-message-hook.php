@@ -2,12 +2,12 @@
 /**
  * Tests for auto_insert_outlet_message_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\deinit_blocks;
-use function WC_Outlet\init_blocks;
-use function WC_Outlet\register_outlet_message_block;
+use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
+use function OutletPro\register_outlet_message_block;
 
 class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 
@@ -17,7 +17,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		register_outlet_message_block();
 
 		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'wc-outlet/outlet-message' );
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-message' );
 
 		// Assert.
 		$this->assertEmpty( $block_type->block_hooks );
@@ -32,7 +32,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', array() );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-message', $result );
+		$this->assertNotContains( 'outletpro/outlet-message', $result );
 	}
 
 	public function test_message_is_not_added_when_context_is_null(): void {
@@ -44,7 +44,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', null );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-message', $result );
+		$this->assertNotContains( 'outletpro/outlet-message', $result );
 	}
 
 	public function test_message_is_not_added_when_template_is_not_single_product(): void {
@@ -58,7 +58,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-message', $result );
+		$this->assertNotContains( 'outletpro/outlet-message', $result );
 	}
 
 	public function test_message_is_added_when_template_is_single_product(): void {
@@ -72,7 +72,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
-		$this->assertContains( 'wc-outlet/outlet-message', $result );
+		$this->assertContains( 'outletpro/outlet-message', $result );
 	}
 
 	public function test_existing_hooked_blocks_are_preserved(): void {
@@ -87,7 +87,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertContains( 'core/paragraph', $result );
-		$this->assertContains( 'wc-outlet/outlet-message', $result );
+		$this->assertContains( 'outletpro/outlet-message', $result );
 	}
 
 	public function test_message_is_not_added_for_different_anchor(): void {
@@ -101,7 +101,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'core/heading', $template );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-message', $result );
+		$this->assertNotContains( 'outletpro/outlet-message', $result );
 	}
 
 	public function test_message_is_not_added_for_last_child_position(): void {
@@ -115,6 +115,6 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'hooked_block_types', array(), 'last_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
-		$this->assertNotContains( 'wc-outlet/outlet-message', $result );
+		$this->assertNotContains( 'outletpro/outlet-message', $result );
 	}
 }

@@ -2,10 +2,10 @@
 /**
  * Block editor integration functions.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-namespace WC_Outlet;
+namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_block_editor(): void {
-	add_filter( 'block_editor_settings_all', 'WC_Outlet\append_block_editor_settings_hook', 10, 2 );
+	add_filter( 'block_editor_settings_all', 'OutletPro\append_block_editor_settings_hook', 10, 2 );
 }
 
 /**

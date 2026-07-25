@@ -2,16 +2,16 @@
 /**
  * Test the init_patterns function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\init_patterns;
-
+use function OutletPro\deinit_patterns;
+use function OutletPro\init_patterns;
 class Test_Init_Patterns extends WP_UnitTestCase {
 
 	public function test_registers_outlet_block_pattern_category(): void {
 		// Arrange.
-		unregister_block_pattern_category( 'wc-outlet' );
+		deinit_patterns();
 
 		// Act.
 		init_patterns();
@@ -20,10 +20,28 @@ class Test_Init_Patterns extends WP_UnitTestCase {
 		$categories = \WP_Block_Pattern_Categories_Registry::get_instance()->get_all_registered();
 		$this->assertContainsEquals(
 			array(
-				'name'  => 'wc-outlet',
+				'name'  => 'outletpro',
 				'label' => 'Outlet',
 			),
 			$categories,
+		);
+	}
+
+	public function test_registers_outlet_sort_filter_pattern_only_for_wp_7_plus(): void {
+		// Arrange.
+		! \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-sort-filter' )
+			|| \WP_Block_Patterns_Registry::get_instance()->unregister( 'outletpro/outlet-sort-filter' );
+
+		version_compare( get_bloginfo( 'version' ), '7.1', '<' )
+			|| $this->fail( 'With WP 7.1 released, remove the version gate in init_patterns().' );
+
+		// Act.
+		init_patterns();
+
+		// Assert.
+		$this->assertSame(
+			version_compare( get_bloginfo( 'version' ), '7.0', '>=' ),
+			\WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-sort-filter' )
 		);
 	}
 }

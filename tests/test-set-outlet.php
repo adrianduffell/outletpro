@@ -2,15 +2,15 @@
 /**
  * Test the set_outlet function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\add_to_outlet;
-use function WC_Outlet\is_outlet;
-use function WC_Outlet\register_outlet_status_taxonomy;
-use function WC_Outlet\seed_outlet_status_taxonomy;
-use function WC_Outlet\set_outlet;
-use const WC_Outlet\OUTLET_STATUS_TAXONOMY;
+use function OutletPro\add_to_outlet;
+use function OutletPro\is_outlet;
+use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
+use function OutletPro\set_outlet;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Set_Outlet extends \WP_UnitTestCase {
 	public function test_adds_to_outlet_when_true(): void {
@@ -59,13 +59,13 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 
-		$before = did_action( 'wc_outlet_status_changed' );
+		$before = did_action( 'outletpro_status_changed' );
 
 		// Act.
 		set_outlet( $product, true );
 
 		// Assert.
-		$after = did_action( 'wc_outlet_status_changed' );
+		$after = did_action( 'outletpro_status_changed' );
 		$this->assertSame( $before, $after );
 		$this->assertTrue( is_outlet( $product ) );
 	}
@@ -76,13 +76,13 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 
-		$before = did_action( 'wc_outlet_status_changed' );
+		$before = did_action( 'outletpro_status_changed' );
 
 		// Act.
 		set_outlet( $product, false );
 
 		// Assert.
-		$after = did_action( 'wc_outlet_status_changed' );
+		$after = did_action( 'outletpro_status_changed' );
 		$this->assertSame( $before, $after );
 		$this->assertFalse( is_outlet( $product ) );
 	}
@@ -99,7 +99,7 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 		$action_new_value  = null;
 
 		add_action(
-			'wc_outlet_status_changed',
+			'outletpro_status_changed',
 			function ( $product_id, $old_outlet, $new_outlet ) use ( &$action_product_id, &$action_old_value, &$action_new_value ): void {
 				$action_product_id = $product_id;
 				$action_old_value  = $old_outlet;

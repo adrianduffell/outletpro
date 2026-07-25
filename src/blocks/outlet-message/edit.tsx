@@ -12,7 +12,7 @@ export function Edit(): JSX.Element {
 	const [ message, setMessage ] = useEntityProp(
 		'root',
 		'site',
-		'wc_outlet_message'
+		'outletpro_message'
 	) as EntityProp< string >;
 
 	const blockProps = useBlockProps();
@@ -24,7 +24,7 @@ export function Edit(): JSX.Element {
 			value={ message ?? '' }
 			onChange={ ( value: string ) => setMessage( value ) }
 			allowedFormats={ [] }
-			placeholder={ __( 'Enter outlet message text.', 'wc-outlet' ) }
+			placeholder={ __( 'Enter outlet message text.', 'outletpro' ) }
 		/>
 	);
 }

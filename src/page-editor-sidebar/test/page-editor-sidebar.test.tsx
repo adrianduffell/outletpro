@@ -310,7 +310,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).toHaveBeenCalledWith(
-			'wc-outlet-sidebar',
+			'outletpro-sidebar',
 			expect.objectContaining( {
 				render: expect.any( Function ),
 			} )
@@ -346,7 +346,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'wc-outlet-sidebar',
+			'outletpro-sidebar',
 			expect.anything()
 		);
 
@@ -367,7 +367,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'wc-outlet-sidebar',
+			'outletpro-sidebar',
 			expect.anything()
 		);
 
@@ -858,11 +858,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '0',
 			setBorderWidth,
 		} );
-		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
+		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
+		window.localStorage.removeItem( 'outletpro_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -886,11 +886,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '',
 			setBorderWidth: jest.fn(),
 		} );
-		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
+		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
+		window.localStorage.removeItem( 'outletpro_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -914,11 +914,11 @@ describe( 'page-editor-sidebar registration', () => {
 			borderWidth: '',
 			setBorderWidth: jest.fn(),
 		} );
-		window.localStorage.setItem( 'wc_outlet_borders_enabled', '1' );
+		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
 		jest.isolateModules( () => {
 			require( '../index' );
 		} );
-		window.localStorage.removeItem( 'wc_outlet_borders_enabled' );
+		window.localStorage.removeItem( 'outletpro_borders_enabled' );
 		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
@@ -1065,7 +1065,7 @@ describe( 'page-editor-sidebar registration', () => {
 
 		// Assert.
 		expect(
-			screen.getByTestId( 'wc-outlet-message-tab-description' )
+			screen.getByTestId( 'outletpro-message-tab-description' )
 		).toBeInTheDocument();
 	} );
 

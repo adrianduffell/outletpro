@@ -2,17 +2,17 @@
 /**
  * Test the register_outlet_page_setting function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_page_setting;
-use const WC_Outlet\OUTLET_PAGE_OPTION;
+use function OutletPro\register_outlet_page_setting;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 
 	public function test_registers_outlet_page_id_setting(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_PAGE_OPTION );
+		unregister_setting( 'outletpro', OUTLET_PAGE_OPTION );
 
 		// Act.
 		register_outlet_page_setting();
@@ -24,7 +24,7 @@ class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_type_is_integer(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_PAGE_OPTION );
+		unregister_setting( 'outletpro', OUTLET_PAGE_OPTION );
 
 		// Act.
 		register_outlet_page_setting();
@@ -36,7 +36,7 @@ class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_PAGE_OPTION );
+		unregister_setting( 'outletpro', OUTLET_PAGE_OPTION );
 		register_outlet_page_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -51,7 +51,7 @@ class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_rest_schema_type_is_integer(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_PAGE_OPTION );
+		unregister_setting( 'outletpro', OUTLET_PAGE_OPTION );
 		register_outlet_page_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -73,7 +73,7 @@ class Test_Register_Outlet_Page_Setting extends WP_UnitTestCase {
 
 	public function test_setting_rest_schema_minimum_is_one(): void {
 		// Arrange.
-		unregister_setting( 'wc_outlet', OUTLET_PAGE_OPTION );
+		unregister_setting( 'outletpro', OUTLET_PAGE_OPTION );
 		register_outlet_page_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );

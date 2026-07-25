@@ -3,7 +3,7 @@ import { useEffect } from '@wordpress/element';
 import { dispatch, select } from '@wordpress/data';
 import { registerPlugin } from '@wordpress/plugins';
 
-const NOTICE_ID = 'wc-outlet-empty';
+const NOTICE_ID = 'outletpro-empty';
 
 export function OutletEmptyNotice(): null {
 	useEffect( () => {
@@ -13,9 +13,9 @@ export function OutletEmptyNotice(): null {
 			).getCurrentPostId() as number;
 
 			// Fetch the outlet page ID from the WP settings REST API.
-			let settings: { wc_outlet_page_id?: number };
+			let settings: { outletpro_page_id?: number };
 			try {
-				settings = await apiFetch< { wc_outlet_page_id?: number } >( {
+				settings = await apiFetch< { outletpro_page_id?: number } >( {
 					path: '/wp/v2/settings',
 				} );
 			} catch {
@@ -23,8 +23,8 @@ export function OutletEmptyNotice(): null {
 			}
 
 			if (
-				! settings.wc_outlet_page_id ||
-				currentPostId !== settings.wc_outlet_page_id
+				! settings.outletpro_page_id ||
+				currentPostId !== settings.outletpro_page_id
 			) {
 				return;
 			}
@@ -33,7 +33,7 @@ export function OutletEmptyNotice(): null {
 			let products: unknown[];
 			try {
 				products = await apiFetch< unknown[] >( {
-					path: '/wc/v3/products?wc_outlet=true&per_page=1',
+					path: '/wc/v3/products?outletpro=true&per_page=1',
 				} );
 			} catch {
 				return;
@@ -72,6 +72,6 @@ export function OutletEmptyNotice(): null {
 	return null;
 }
 
-registerPlugin( 'wc-outlet-page-editor-notice', {
+registerPlugin( 'outletpro-page-editor-notice', {
 	render: OutletEmptyNotice,
 } );

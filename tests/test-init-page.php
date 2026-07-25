@@ -2,16 +2,17 @@
 /**
  * Test the init_page function.
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\init_page;
+use function OutletPro\deinit_page;
+use function OutletPro\init_page;
 
 class Test_Init_Page extends WP_UnitTestCase {
 
 	public function test_registers_outlet_page_template_when_template_api_is_available(): void {
 		// Arrange.
-		WP_Block_Templates_Registry::get_instance()->unregister( 'outletpro//outlet-page' );
+		deinit_page();
 		$this->assertNull( get_block_template( 'outletpro//outlet-page', 'wp_template' ) );
 
 		// Act.

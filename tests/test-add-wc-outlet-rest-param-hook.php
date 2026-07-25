@@ -1,15 +1,15 @@
 <?php
 /**
- * Tests for add_wc_outlet_rest_param_hook().
+ * Tests for add_outletpro_rest_param_hook().
  *
- * @package WC_Outlet
+ * @package OutletPro
  */
 
-use function WC_Outlet\register_outlet_status_taxonomy;
+use function OutletPro\register_outlet_status_taxonomy;
 
-class Test_Add_Wc_Outlet_Rest_Param_Hook extends WP_UnitTestCase {
+class Test_Add_Outletpro_Rest_Param_Hook extends WP_UnitTestCase {
 
-	public function test_wc_outlet_param_is_in_product_collection_schema(): void {
+	public function test_outletpro_param_is_in_product_collection_schema(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
@@ -22,12 +22,12 @@ class Test_Add_Wc_Outlet_Rest_Param_Hook extends WP_UnitTestCase {
 		// Assert.
 		$data = $response->get_data();
 		$args = $data['endpoints'][0]['args'] ?? array();
-		$this->assertArrayHasKey( 'wc_outlet', $args );
-		$this->assertSame( 'boolean', $args['wc_outlet']['type'] );
+		$this->assertArrayHasKey( 'outletpro', $args );
+		$this->assertSame( 'boolean', $args['outletpro']['type'] );
 	}
 
 	public function test_rest_product_query_filter_is_registered(): void {
 		// Assert.
-		$this->assertSame( 10, has_filter( 'rest_product_query', 'WC_Outlet\handle_wc_outlet_rest_param' ) );
+		$this->assertSame( 10, has_filter( 'rest_product_query', 'OutletPro\handle_outletpro_rest_param' ) );
 	}
 }

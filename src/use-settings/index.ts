@@ -27,35 +27,35 @@ export type Settings = {
 };
 
 const useSettings = (): Settings => {
-	const [ label, setLabel ] = useStringEntityProp( 'wc_outlet_badge_label' );
+	const [ label, setLabel ] = useStringEntityProp( 'outletpro_badge_label' );
 	const [ textColor, setTextColor ] = useStringEntityProp(
-		'wc_outlet_badge_text_color'
+		'outletpro_badge_text_color'
 	);
 	const [ bgColor, setBgColor ] = useStringEntityProp(
-		'wc_outlet_badge_bg_color'
+		'outletpro_badge_bg_color'
 	);
 	const [ fontWeight, setFontWeight ] = useStringEntityProp(
-		'wc_outlet_badge_font_weight'
+		'outletpro_badge_font_weight'
 	);
 	const [ borderColor, setBorderColor ] = useStringEntityProp(
-		'wc_outlet_badge_border_color'
+		'outletpro_badge_border_color'
 	);
 	const [ borderStyle, setBorderStyle ] = useStringEntityProp(
-		'wc_outlet_badge_border_style'
+		'outletpro_badge_border_style'
 	);
 	const [ borderWidth, setBorderWidth ] = useStringEntityProp(
-		'wc_outlet_badge_border_width'
+		'outletpro_badge_border_width'
 	);
 	const [ borderRadius, setBorderRadius ] = useStringEntityProp(
-		'wc_outlet_badge_border_radius'
+		'outletpro_badge_border_radius'
 	);
 	const [ scale, setScale ] = useUnsignedIntegerEntityProp(
-		'wc_outlet_badge_scale'
+		'outletpro_badge_scale'
 	);
 	const [ density, setDensity ] = useUnsignedIntegerEntityProp(
-		'wc_outlet_badge_density'
+		'outletpro_badge_density'
 	);
-	const [ message, setMessage ] = useStringEntityProp( 'wc_outlet_message' );
+	const [ message, setMessage ] = useStringEntityProp( 'outletpro_message' );
 
 	return {
 		label,
