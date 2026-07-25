@@ -17,7 +17,6 @@ import { useMemo } from '@wordpress/element';
 import { PluginSidebar } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
-import OutletIcon from './icon';
 import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
 
