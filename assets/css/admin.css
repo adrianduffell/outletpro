@@ -79,3 +79,75 @@
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
 }
+
+body.toplevel_page_outletpro-welcome {
+	background-color: #fff;
+
+	h1 {
+		font-size: 2.8rem;
+		font-weight: 600;
+		text-align: center;
+
+		@media (max-width: 600px) {
+			font-size: 2rem;
+		}
+	}
+
+	input {
+		text-align: center;
+	}
+
+	p {
+		margin: 0.5em auto 3em auto;
+	}
+
+	#outletpro-welcome-page-root {
+		display: grid;
+
+		@media (min-width: 600px) {
+			place-items: center;
+			min-height: calc(100vh - 150px);
+		}
+
+		@media (max-width: 600px) {
+			margin: 24px;
+		}
+	}
+
+	.outletpro-welcome-page {
+		max-width: 480px;
+		text-align: center;
+	}
+
+	.outletpro-welcome-page__description {
+		font-size: 1.2rem;
+		font-weight: 300;
+		margin: 3rem auto 1rem;
+		max-width: 90%;
+		text-align: center;
+	}
+
+	.outletpro-welcome-page__license-key-input {
+		margin: 2rem auto;
+
+		.components-text-control__input {
+			font-family: monospace;
+			font-size: 1.2rem;
+			font-weight: 500;
+		}
+	}
+
+	.outletpro-welcome-page__button-row {
+		margin-top: 2rem;
+	}
+
+	.outletpro-welcome-page__error {
+		left: 0;
+		width: 100%;
+		text-align: center;
+		color: #c00;
+		position: absolute;
+		margin-top: 2rem;
+	}
+
+}

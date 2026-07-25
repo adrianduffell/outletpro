@@ -87,6 +87,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' ) );
 	}
 
+	public function test_removes_admin_enqueue_scripts_welcome_page_scripts_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_welcome_page_scripts_hook' ) );
+	}
+
 	public function test_removes_enqueue_block_editor_assets_hook(): void {
 		// Arrange.
 		enqueue_init();
@@ -201,6 +212,27 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( wp_script_is( 'outletpro-products-admin', 'registered' ) );
+	}
+
+	public function test_deregisters_welcome_page_script(): void {
+		// Arrange.
+		wp_register_script( 'outletpro-welcome-page', false, array(), 'test', true );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'outletpro-welcome-page', 'registered' ) );
+	}
+
+	public function test_safely_handles_welcome_page_script_not_registered(): void {
+		// Arrange - 'outletpro-welcome-page' is not registered.
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'outletpro-welcome-page', 'registered' ) );
 	}
 
 	public function test_deregisters_build_script(): void {
