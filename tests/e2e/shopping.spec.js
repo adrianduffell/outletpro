@@ -195,7 +195,6 @@ async function fillCheckout( checkoutPage ) {
 		await checkoutPage
 			.getByLabel( /state/i )
 			.first()
-			.first()
 			.selectOption( 'NY' );
 		await checkoutPage.getByLabel( /phone/i ).first().fill( '1234567890' );
 	}
