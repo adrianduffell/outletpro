@@ -10,20 +10,6 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WordPress option key used to store the license key.
- *
- * @internal
- */
-const LICENSE_KEY_OPTION = 'outletpro_license_key';
-
-/**
- * WordPress transient key used to cache license validity.
- *
- * @internal
- */
-const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
-
-/**
  * Minimum length for a valid stub license key.
  *
  * @internal
@@ -37,8 +23,6 @@ const MIN_LICENSE_KEY_LENGTH = 2;
  */
 function init_license(): void {
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
-	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 }
 
 /**
@@ -48,8 +32,6 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
-	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook' );
-	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook' );
 }
 
 /**
@@ -81,17 +63,6 @@ function has_license(): bool {
 	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
 
 	return $license_is_valid;
-}
-
-/**
- * Invalidate the license cache when the license key option is added or updated.
- *
- * Fired by `add_option_{LICENSE_KEY_OPTION}` and `update_option_{LICENSE_KEY_OPTION}`.
- *
- * @internal WordPress action hook
- */
-function invalidate_license_cache_hook(): void {
-	delete_transient( HAS_LICENSE_TRANSIENT );
 }
 
 /**
