@@ -7,13 +7,6 @@ test( 'plugin activation seeds outlet settings', async ( {
 } ) => {
 	// Arrange.
 	await requestUtils.rest( {
-		path: '/wp/v2/plugins/woocommerce/woocommerce',
-		method: 'PUT',
-		data: {
-			status: 'active',
-		},
-	} );
-	await requestUtils.rest( {
 		path: '/wp/v2/plugins/outletpro/outletpro',
 		method: 'PUT',
 		data: {
