@@ -197,6 +197,22 @@ async function fillCheckout( checkoutPage ) {
 	}
 }
 
+/**
+ * Places an order from the checkout page.
+ *
+ * Waits until the checkout is ready before clicking the Place order button.
+ *
+ * @param {import('@playwright/test').Page} page
+ */
+async function placeOrder( page ) {
+	const button = page.getByRole( 'button', {
+		name: /place order/i,
+	} );
+
+	await expect( button ).toBeEnabled();
+	await button.click();
+}
+
 test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	// Arrange.
 	const runId = Date.now();
@@ -346,8 +362,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	);
 
 	await fillCheckout( customerPage );
-
-	await customerPage.getByRole( 'button', { name: /place order/i } ).click();
+	await placeOrder( customerPage );
 
 	// Wait for the order page.
 	const orderId = (
