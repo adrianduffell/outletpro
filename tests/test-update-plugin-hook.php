@@ -1,6 +1,6 @@
 <?php
 /**
- * Test the check_for_update function.
+ * Test the update_plugin_hook function.
  *
  * @package OutletPro
  */
@@ -10,7 +10,7 @@ use function OutletPro\init_update_plugin;
 
 use const OutletPro\LICENSE_KEY_OPTION;
 
-class Test_Check_For_Update extends WP_UnitTestCase {
+class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_returns_false_when_license_key_is_missing(): void {
 		// Arrange.
