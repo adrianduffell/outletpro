@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_update_plugin(): void {
-	add_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin', 10, 3 );
+	add_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin_hook', 10, 3 );
 }
 
 /**
@@ -24,7 +24,7 @@ function init_update_plugin(): void {
  * @internal
  */
 function deinit_update_plugin(): void {
-	remove_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin', 10, 3 );
+	remove_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin_hook', 10, 3 );
 }
 
 
@@ -32,11 +32,14 @@ function deinit_update_plugin(): void {
 /**
  * Checks for an available Outlet Pro update.
  *
+ * Fired by `update_plugins_adrianduffell.store`.
+ *
  * @param array<string, mixed>|false $update Existing update information.
  * @param array<string, mixed>       $plugin_data Plugin header data.
  * @param string                     $plugin_file Plugin basename.
+ * @internal WordPress filter hook
  */
-function update_plugin( array|false $update, array $plugin_data, string $plugin_file ): array|false {
+function update_plugin_hook( array|false $update, array $plugin_data, string $plugin_file ): array|false {
 	if ( plugin_basename( PLUGIN_FILE ) !== $plugin_file ) {
 		return $update;
 	}
