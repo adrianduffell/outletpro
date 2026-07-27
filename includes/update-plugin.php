@@ -52,7 +52,7 @@ function update_plugin_hook( $update, array $plugin_data, string $plugin_file ):
 	$license_key = get_option( LICENSE_KEY_OPTION );
 
 	$response = wp_remote_get(
-		'https://api.adrianduffell.store/outletpro/v1/updates',
+		'https://api.adrianduffell.store/v1/outletpro/updates',
 		array(
 			'timeout' => 5,
 			'headers' => array(
