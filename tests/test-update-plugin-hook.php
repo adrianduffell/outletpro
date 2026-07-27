@@ -7,6 +7,7 @@
 
 use function OutletPro\deinit_update_plugin;
 use function OutletPro\init_update_plugin;
+use function OutletPro\init_settings;
 
 use const OutletPro\LICENSE_KEY_OPTION;
 
@@ -16,6 +17,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_update_plugin();
 		init_update_plugin();
+		init_settings();
 		delete_option( LICENSE_KEY_OPTION );
 
 		// Act.
@@ -34,6 +36,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_update_plugin();
 		init_update_plugin();
+		init_settings();
 		$previous = array(
 			'slug'    => 'foo',
 			'version' => '1.0.0',
@@ -57,6 +60,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_update_plugin();
 		init_update_plugin();
+		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		add_filter(
@@ -97,6 +101,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_update_plugin();
 		init_update_plugin();
+		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		$previous = false;
@@ -138,6 +143,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_update_plugin();
 		init_update_plugin();
+		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		add_filter(
