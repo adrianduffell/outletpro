@@ -11,6 +11,7 @@
  * Requires Plugins: woocommerce
  * Requires at least: 6.9
  * Requires PHP: 7.4
+ * Update URI: https://adrianduffell.store
  *
  * WC requires at least: 10.7
  * WC tested up to: 10.8
@@ -60,6 +61,7 @@ require_once __DIR__ . '/includes/orders.php';
 require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
 require_once __DIR__ . '/includes/enqueue.php';
+require_once __DIR__ . '/includes/update-plugin.php';
 
 /**
  * Initialize the plugin.
@@ -69,6 +71,7 @@ require_once __DIR__ . '/includes/enqueue.php';
  * @internal WordPress action hook
  */
 function init_hook(): void {
+	init_update_plugin();
 	init_settings();
 	init_taxonomies();
 	init_rest_api();
