@@ -39,8 +39,9 @@ function deinit_update_plugin(): void {
  * @param string                     $plugin_file Plugin basename.
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
  */
-function update_plugin_hook( $update, array $plugin_data, string $plugin_file ): array|false {
+function update_plugin_hook( $update, array $plugin_data, string $plugin_file ) {
 	if ( plugin_basename( PLUGIN_FILE ) !== $plugin_file ) {
 		return $update;
 	}
