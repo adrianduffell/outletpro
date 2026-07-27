@@ -65,6 +65,7 @@ function update_plugin_hook( array|false $update, array $plugin_data, string $pl
 		is_wp_error( $response )
 		|| 200 !== wp_remote_retrieve_response_code( $response )
 	) {
+		\wc_get_logger()->error( 'Could not connect to update server.' );
 		return $update;
 	}
 
@@ -74,6 +75,7 @@ function update_plugin_hook( array|false $update, array $plugin_data, string $pl
 		! is_array( $data )
 		|| ! isset( $data['version'], $data['url'], $data['package'] )
 	) {
+		\wc_get_logger()->error( 'Invalid response from update server.' );
 		return $update;
 	}
 
