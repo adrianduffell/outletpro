@@ -6,9 +6,8 @@
  */
 
 use function OutletPro\deinit_update_plugin;
-use function OutletPro\init_update_plugin;
 use function OutletPro\init_settings;
-
+use function OutletPro\init_update_plugin;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
