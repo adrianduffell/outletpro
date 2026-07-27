@@ -11,7 +11,7 @@
  * Requires Plugins: woocommerce
  * Requires at least: 6.9
  * Requires PHP: 7.4
- * Update URI: https://adrianduffell.store
+ * Update URI: https://adrianduffell.store/outletpro
  *
  * WC requires at least: 10.7
  * WC tested up to: 10.8
