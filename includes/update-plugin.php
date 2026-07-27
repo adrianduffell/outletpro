@@ -53,7 +53,7 @@ function update_plugin_hook( array|false $update, array $plugin_data, string $pl
 	$response = wp_remote_get(
 		'https://api.adrianduffell.store/outletpro/v1/updates',
 		array(
-			'timeout' => 10,
+			'timeout' => 5,
 			'headers' => array(
 				'Authorization' => 'Bearer ' . $license_key,
 				'Accept'        => 'application/json',
