@@ -23,8 +23,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			false,
-			array(),
-			'outletpro/outletpro.php',
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
 		);
 
 		// Assert.
@@ -46,9 +45,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			$previous,
-			array(),
-			'another-plugin/plugin.php',
-			array()
+			array( 'UpdateURI' => 'https://adrianduffell.store/foo-plugin' ),
 		);
 
 		// Assert.
@@ -88,8 +85,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			false,
-			array(),
-			'outletpro/outletpro.php',
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
 		);
 
 		// Assert.
@@ -132,8 +128,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			$previous,
-			array(),
-			'outletpro/outletpro.php'
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
 		);
 
 		// Assert.
@@ -181,8 +176,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			false,
-			array(),
-			'outletpro/outletpro.php'
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
 		);
 
 		// Assert.

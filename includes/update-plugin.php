@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_update_plugin(): void {
-	add_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin_hook', 10, 3 );
+	add_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin_hook', 10, 2 );
 }
 
 /**
@@ -24,7 +24,7 @@ function init_update_plugin(): void {
  * @internal
  */
 function deinit_update_plugin(): void {
-	remove_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin_hook', 10, 3 );
+	remove_filter( 'update_plugins_adrianduffell.store', 'OutletPro\update_plugin_hook', 10, 2 );
 }
 
 
@@ -36,13 +36,12 @@ function deinit_update_plugin(): void {
  *
  * @param array<string, mixed>|false $update Existing update information.
  * @param array<string, mixed>       $plugin_data Plugin header data.
- * @param string                     $plugin_file Plugin basename.
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingAnyTypeHint
  */
-function update_plugin_hook( $update, array $plugin_data, string $plugin_file ) {
-	if ( plugin_basename( PLUGIN_FILE ) !== $plugin_file ) {
+function update_plugin_hook( $update, array $plugin_data ) {
+	if ( 'https://adrianduffell.store/outletpro' !== $plugin_data['UpdateURI'] ) {
 		return $update;
 	}
 
