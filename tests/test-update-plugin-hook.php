@@ -94,6 +94,8 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( $result );
+
+		remove_all_filters( 'pre_http_request' );
 	}
 
 	public function test_returns_previous_value_when_response_is_invalid(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -136,6 +138,8 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( $previous, $result );
+
+		remove_all_filters( 'pre_http_request' );
 	}
 
 	public function test_returns_update_when_new_version_is_available(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -189,5 +193,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 			'https://example.com/outletpro.zip',
 			$result['package']
 		);
+
+		remove_all_filters( 'pre_http_request' );
 	}
 }
