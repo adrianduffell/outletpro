@@ -5,12 +5,17 @@
  * @package OutletPro
  */
 
+use function OutletPro\init_update_plugin;
+use function OutletPro\deinit_update_plugin;
+
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Check_For_Update extends WP_UnitTestCase {
 
 	public function test_returns_false_when_license_key_is_missing(): void {
 		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
 		delete_option( LICENSE_KEY_OPTION );
 
 		// Act.
@@ -27,6 +32,8 @@ class Test_Check_For_Update extends WP_UnitTestCase {
 
 	public function test_returns_previous_update_when_plugin_does_not_match(): void {
 		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
 		$previous = array(
 			'slug'    => 'foo',
 			'version' => '1.0.0',
@@ -48,6 +55,8 @@ class Test_Check_For_Update extends WP_UnitTestCase {
 
 	public function test_returns_false_when_remote_request_fails(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		add_filter(
@@ -86,6 +95,8 @@ class Test_Check_For_Update extends WP_UnitTestCase {
 
 	public function test_returns_previous_value_when_response_is_invalid(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		$previous = false;
@@ -125,6 +136,8 @@ class Test_Check_For_Update extends WP_UnitTestCase {
 
 	public function test_returns_update_when_new_version_is_available(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		add_filter(
