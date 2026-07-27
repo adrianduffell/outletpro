@@ -117,6 +117,10 @@ jobs:
     - name: Run Woo setup tasks
       run: wp cron event run --due-now --path=/tmp/wordpress
 
+    - name: Copy outletpro to plugin folder
+      run: |
+        cp -a  "$GITHUB_WORKSPACE" /tmp/wordpress/wp-content/plugins/outletpro
+
     - name: Set up PHP 7.4
       uses: shivammathur/setup-php@v2
       with:
