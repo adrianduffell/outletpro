@@ -48,7 +48,7 @@ function update_plugin( array|false $update, array $plugin_data, string $plugin_
 	$license_key = get_option( LICENSE_KEY_OPTION );
 
 	$response = wp_remote_get(
-		'http://host.docker.internal:8787/v1/outletpro/updates',
+		'https://api.adrianduffell.store/outletpro/v1/updates',
 		array(
 			'timeout' => 10,
 			'headers' => array(
