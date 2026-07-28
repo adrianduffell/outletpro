@@ -1,7 +1,9 @@
 import { registerPlugin } from '@wordpress/plugins';
 
 import { Sample } from './components/sample';
+// #ifdef LICENSE
 import './welcome-page';
+// #endif
 import './page-editor-notice';
 import './page-editor-sidebar';
 import './outlet-toggle';

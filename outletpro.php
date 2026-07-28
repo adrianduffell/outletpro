@@ -41,13 +41,17 @@ require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
+// #ifdef LICENSE
 require_once __DIR__ . '/includes/admin-menu.php';
+// #endif
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
+// #ifdef LICENSE
 require_once __DIR__ . '/includes/license.php';
+// #endif
 require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/tools.php';
@@ -61,7 +65,9 @@ require_once __DIR__ . '/includes/orders.php';
 require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
 require_once __DIR__ . '/includes/enqueue.php';
+// #ifdef UPDATES
 require_once __DIR__ . '/includes/update-plugin.php';
+// #endif
 
 /**
  * Initialize the plugin.
@@ -71,7 +77,9 @@ require_once __DIR__ . '/includes/update-plugin.php';
  * @internal WordPress action hook
  */
 function init_hook(): void {
+	// #ifdef UPDATES
 	init_update_plugin();
+	// #endif
 	init_settings();
 	init_taxonomies();
 	init_rest_api();
@@ -85,7 +93,10 @@ function init_hook(): void {
 
 	if ( is_admin() ) {
 		// Admin initializations that need to run before admin_init.
+
+		// #ifdef LICENSE
 		init_admin_menu();
+		// #endif
 	}
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
@@ -107,7 +118,9 @@ function init_hook(): void {
  * @internal WordPress action hook
  */
 function admin_init_hook(): void {
+	// #ifdef LICENSE
 	init_license();
+	// #endif
 	init_admin_product_options();
 	init_admin_product_bulk_edit();
 	init_system_status();
