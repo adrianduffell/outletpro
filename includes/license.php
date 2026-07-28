@@ -3,6 +3,7 @@
  * License functions.
  *
  * @package OutletPro
+ * @subpackage License
  */
 
 namespace OutletPro;
