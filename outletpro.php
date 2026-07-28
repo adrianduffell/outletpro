@@ -93,6 +93,7 @@ function init_hook(): void {
 
 	if ( is_admin() ) {
 		// Admin initializations that need to run before admin_init.
+
 		// #ifdef LICENSE
 		init_admin_menu();
 		// #endif
