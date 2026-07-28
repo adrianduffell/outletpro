@@ -41,7 +41,9 @@ require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
+// #ifdef LICENSE
 require_once __DIR__ . '/includes/admin-menu.php';
+// #endif
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
@@ -91,7 +93,9 @@ function init_hook(): void {
 
 	if ( is_admin() ) {
 		// Admin initializations that need to run before admin_init.
+		// #ifdef LICENSE
 		init_admin_menu();
+		// #endif
 	}
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
