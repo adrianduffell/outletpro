@@ -3,6 +3,7 @@
  * Plugin update functions.
  *
  * @package OutletPro
+ * @subpackage Updates
  */
 
 namespace OutletPro;

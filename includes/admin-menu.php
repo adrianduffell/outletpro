@@ -3,6 +3,7 @@
  * Admin menu functions for the license settings page.
  *
  * @package OutletPro
+ * @subpackage License
  */
 
 namespace OutletPro;
