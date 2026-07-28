@@ -9,7 +9,6 @@ namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
-// #ifdef LICENSE
 /**
  * Minimum length for a valid stub license key.
  *
@@ -130,4 +129,3 @@ function render_license_page(): void {
 	</div>
 	<?php
 }
-// #endif

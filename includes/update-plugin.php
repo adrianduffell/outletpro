@@ -9,7 +9,6 @@ namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
-// #ifdef UPDATES
 /**
  * Helper to initialize license features.
  *
@@ -93,4 +92,3 @@ function update_plugin_hook( $update, array $plugin_data ) {
 		'requires_php' => $data['requires_php'] ?? '',
 	);
 }
-// #endif

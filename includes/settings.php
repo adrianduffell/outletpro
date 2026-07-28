@@ -93,7 +93,6 @@ const OUTLET_BADGE_SCALE_OPTION = 'outletpro_badge_scale';
  */
 const OUTLET_BADGE_DENSITY_OPTION = 'outletpro_badge_density';
 
-// #ifdef LICENSE
 /**
  * WordPress option key used to store the license key.
  *
@@ -108,7 +107,6 @@ const LICENSE_KEY_OPTION = 'outletpro_license_key';
  */
 const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
 
-// #endif
 /**
  * Sanitize a CSS property value, rejecting values that contain CSS block delimiters or
  * values that fail sanitize_text_field().
@@ -216,13 +214,11 @@ function init_settings(): void {
 	register_outlet_badge_scale_setting();
 	register_outlet_badge_density_setting();
 	register_outlet_message_setting();
-	// #ifdef LICENSE
 	register_license_key_setting();
 
 	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	// #endif
 }
 
 /**
@@ -555,7 +551,6 @@ function register_outlet_message_setting(): void {
 	);
 }
 
-// #ifdef LICENSE
 /**
  * Register the license key setting.
  *
@@ -590,7 +585,6 @@ function register_license_key_setting(): void {
 function invalidate_license_cache_hook(): void {
 	delete_transient( HAS_LICENSE_TRANSIENT );
 }
-// #endif
 
 /**
  * Get the outlet page ID from the option.
