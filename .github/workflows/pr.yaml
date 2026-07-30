@@ -6,7 +6,7 @@ on:
 
 jobs:
   pr-checks:
-    name: PR checks - ${{ matrix.build.name }}
+    name: ${{ matrix.build.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
