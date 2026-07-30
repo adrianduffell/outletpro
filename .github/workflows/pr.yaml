@@ -36,6 +36,9 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
+    - name: Install system packages
+      run: sudo apt-get install -y unifdef subversion
+
     - name: Preprocess
       run: npm run ${{ matrix.build.preprocess }}
 
@@ -82,9 +85,6 @@ jobs:
 
     - name: Run Markdown docs lint
       run: npm run lint:md-docs
-
-    - name: Install SVN
-      run: sudo apt-get install -y subversion
 
     - name: Install WordPress test suite
       run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 6.9.4
