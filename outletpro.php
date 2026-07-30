@@ -91,13 +91,12 @@ function init_hook(): void {
 	init_orders();
 	init_cart();
 
+	// #ifdef LICENSE
 	if ( is_admin() ) {
-		// Admin initializations that need to run before admin_init.
-
-		// #ifdef LICENSE
+		// The admin menu hooks need to run before admin_init.
 		init_admin_menu();
-		// #endif
 	}
+	// #endif
 	if ( ! wp_is_block_theme() ) {
 		init_customizer();
 		init_woocommerce_template_hooks();
