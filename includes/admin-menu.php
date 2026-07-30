@@ -11,13 +11,6 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Admin page slug for the license settings page.
- *
- * @internal
- */
-const LICENSE_PAGE_SLUG = 'outletpro-license';
-
-/**
  * Admin page slug for the welcome page.
  *
  * @internal
@@ -61,7 +54,7 @@ function add_license_menu_hook(): void {
 		__( 'Outlet Pro License', 'outletpro' ),
 		__( 'Outlet Pro', 'outletpro' ),
 		'manage_options',
-		LICENSE_PAGE_SLUG,
+		LICENSE_OPTIONS_GROUP,
 		'OutletPro\render_license_page'
 	);
 }
