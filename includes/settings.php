@@ -94,6 +94,13 @@ const OUTLET_BADGE_SCALE_OPTION = 'outletpro_badge_scale';
 const OUTLET_BADGE_DENSITY_OPTION = 'outletpro_badge_density';
 
 /**
+ * WordPress option group used to store the license key.
+ *
+ * @internal
+ */
+const LICENSE_KEY_GROUP = 'outletpro_license';
+
+/**
  * WordPress option key used to store the license key.
  *
  * @internal
@@ -558,7 +565,7 @@ function register_outlet_message_setting(): void {
  */
 function register_license_key_setting(): void {
 	register_setting(
-		LICENSE_PAGE_SLUG,
+		LICENSE_KEY_GROUP,
 		LICENSE_KEY_OPTION,
 		array(
 			'type'              => 'string',
