@@ -1,3 +1,5 @@
+#!/bin/sh
+
 for file in outletpro.php src/index.ts; do
 	echo "Processing: $file"
 

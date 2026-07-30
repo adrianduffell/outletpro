@@ -1,3 +1,5 @@
+#!/bin/sh
+
 for file in outletpro.php src/index.ts; do
 	sed -E \
 		's@^([[:space:]]*)//[[:space:]]*(#(ifdef|endif).*)$@\1\2@' \
