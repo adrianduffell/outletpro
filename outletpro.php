@@ -93,7 +93,7 @@ function init_hook(): void {
 
 	// #ifdef LICENSE
 	if ( is_admin() ) {
-		// Admin menu hooks needs to run before admin_init.
+		// The admin menu hooks need to run before admin_init.
 		init_admin_menu();
 	}
 	// #endif
