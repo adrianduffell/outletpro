@@ -6,10 +6,23 @@ on:
 
 jobs:
   pr-checks:
+    name: PR checks: ${{ matrix.build.name }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+
     permissions:
       contents: read
+
+    strategy:
+      matrix:
+        build:
+          - name: Self-distributed build
+            id: self-dist
+            preprocess: preprocess
+
+          - name: Marketplace build
+            id: marketplace
+            preprocess: preprocess:marketplace
 
     services:
       mysql:
@@ -22,6 +35,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
+
+    - name: Preprocess
+      run: npm run ${{ matrix.build.preprocess }}
 
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
@@ -152,5 +168,5 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v6
       with:
-        name: playwright
+        name: playwright-${{ matrix.build.id }}
         path: artifacts/
