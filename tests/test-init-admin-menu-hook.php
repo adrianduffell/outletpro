@@ -3,6 +3,7 @@
  * Tests for add_welcome_menu_hook().
  *
  * @package OutletPro
+ * @group License
  */
 
 use function OutletPro\deinit_admin_menu;
