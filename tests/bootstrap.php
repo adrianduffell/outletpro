@@ -34,27 +34,7 @@ function _manually_load_plugin(): void {
 	// Load WooCommerce plugin dependency.
 	require_once WP_PLUGIN_DIR . '/woocommerce/woocommerce.php';
 
-	// Load composer dependencies.
-	require_once __DIR__ . '/../vendor/autoload.php';
-
-	// Load includes.
-	require_once __DIR__ . '/../includes/activate.php';
-	require_once __DIR__ . '/../includes/system-status.php';
-	require_once __DIR__ . '/../includes/taxonomies.php';
-	require_once __DIR__ . '/../includes/admin-product-options.php';
-	require_once __DIR__ . '/../includes/admin-product-bulk-edit.php';
-	require_once __DIR__ . '/../includes/admin-menu.php';
-	require_once __DIR__ . '/../includes/shortcodes.php';
-	require_once __DIR__ . '/../includes/settings.php';
-	require_once __DIR__ . '/../includes/page.php';
-	require_once __DIR__ . '/../includes/tools.php';
-	require_once __DIR__ . '/../includes/setup-task.php';
-	require_once __DIR__ . '/../includes/admin-product-list-table.php';
-	require_once __DIR__ . '/../includes/block-editor.php';
-	require_once __DIR__ . '/../includes/admin-order.php';
-	require_once __DIR__ . '/../includes/orders.php';
-	require_once __DIR__ . '/../includes/customizer.php';
-	require_once __DIR__ . '/../includes/enqueue.php';
+	// Load Outlet Pro.
 	require_once __DIR__ . '/../outletpro.php';
 }
 
