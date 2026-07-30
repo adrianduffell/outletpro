@@ -78,7 +78,7 @@ function has_license(): bool {
 function add_plugin_action_links_hook( array $links ): array {
 	$settings_link = sprintf(
 		'<a href="%s">%s</a>',
-		esc_url( admin_url( 'admin.php?page=' . LICENSE_PAGE_SLUG ) ),
+		esc_url( admin_url( 'admin.php?page=' . LICENSE_OPTIONS_GROUP ) ),
 		esc_html__( 'License', 'outletpro' )
 	);
 
@@ -106,7 +106,7 @@ function render_license_page(): void {
 			</a>
 		</p>
 		<form method="post" action="options.php">
-			<?php settings_fields( LICENSE_PAGE_SLUG ); ?>
+			<?php settings_fields( LICENSE_OPTIONS_GROUP ); ?>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row">
