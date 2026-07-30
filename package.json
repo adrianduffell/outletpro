@@ -18,6 +18,8 @@
 		"lint:php": "vendor/bin/phpcs -s",
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip",
+		"preprocess": "./bin/preprocess.sh",
+		"preprocess:marketplace": "./bin/preprocess-marketplace.sh",
 		"start": "wp-scripts start",
 		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
 		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
