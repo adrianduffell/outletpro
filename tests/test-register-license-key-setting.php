@@ -7,8 +7,8 @@
  */
 
 use function OutletPro\register_license_key_setting;
-use const OutletPro\LICENSE_OPTIONS_GROUP;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_OPTIONS_GROUP;
 
 class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
