@@ -45,6 +45,19 @@ function init_license_settings(): void {
 }
 
 /**
+ * Helper to deinitialize license settings.
+ *
+ * @internal
+ */
+function deinit_license_settings(): void {
+	unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
+	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
+	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
+}
+
+
+/**
  * Register the license key setting.
  *
  * @internal

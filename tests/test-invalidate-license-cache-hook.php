@@ -7,14 +7,16 @@
  */
 
 use function OutletPro\has_license;
-use function OutletPro\init_settings;
+use function OutletPro\init_license_settings;
+use function OutletPro\deinit_license_settings;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 
 	public function test_invalidates_transient_when_license_key_is_added(): void {
 		// Arrange.
-		init_settings();
+		deinit_license_settings();
+		init_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		$this->assertFalse( has_license() );
 
@@ -27,7 +29,8 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 
 	public function test_invalidates_transient_when_license_key_is_updated(): void {
 		// Arrange.
-		init_settings();
+		deinit_license_settings();
+		init_license_settings();
 		update_option( LICENSE_KEY_OPTION, '0' );
 		$this->assertFalse( has_license() );
 
