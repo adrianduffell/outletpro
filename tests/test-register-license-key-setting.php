@@ -3,7 +3,7 @@
  * Tests for register_license_key_setting().
  *
  * @package OutletPro
- * @group License
+ * @group license
  */
 
 use function OutletPro\register_license_key_setting;

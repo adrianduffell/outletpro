@@ -3,7 +3,7 @@
  * Test the validate_license function.
  *
  * @package OutletPro
- * @group License
+ * @group license
  */
 
 use function OutletPro\validate_license;

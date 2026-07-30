@@ -3,7 +3,7 @@
  * Test the has_license function.
  *
  * @package OutletPro
- * @group License
+ * @group license
  */
 
 use function OutletPro\has_license;

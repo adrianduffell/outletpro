@@ -3,7 +3,7 @@
  * Test the update_plugin_hook function.
  *
  * @package OutletPro
- * @group Updates
+ * @group updates
  */
 
 use function OutletPro\deinit_update_plugin;
