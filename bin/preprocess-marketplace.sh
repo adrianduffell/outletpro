@@ -9,7 +9,7 @@ for file in outletpro.php src/index.ts; do
 	mv "$file.tmp" "$file"
 done
 
-# Delete Licenese and Updates subpackage files.
+# Delete License and Updates subpackage files.
 grep -rEl --include='*.php' '@subpackage (License|Updates)' includes |
 while IFS= read -r file; do
 	rm "$file"
