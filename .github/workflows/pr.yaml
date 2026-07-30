@@ -19,10 +19,12 @@ jobs:
           - name: Self-distributed build
             id: self-dist
             preprocess: preprocess
+            phpunit_flags: ""
 
           - name: Marketplace build
             id: marketplace
             preprocess: preprocess:marketplace
+            phpunit_flags: "--exclude-group license,updates"
 
     services:
       mysql:
@@ -142,7 +144,7 @@ jobs:
       run: composer install --no-interaction --prefer-dist
 
     - name: Run PHPUnit (PHP 7.4)
-      run: composer run test
+      run: composer run test -- ${{ matrix.build.phpunit_flags }}
 
     - name: Set up PHP 8.5
       uses: shivammathur/setup-php@v2
@@ -150,7 +152,7 @@ jobs:
         php-version: '8.5'
 
     - name: Run PHPUnit (PHP 8.5)
-      run: composer run test
+      run: composer run test -- ${{ matrix.build.phpunit_flags }}
 
     - name: Install Playwright browsers
       run: npx playwright install chromium --with-deps
