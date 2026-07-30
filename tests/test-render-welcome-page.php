@@ -3,6 +3,7 @@
  * Tests for render_welcome_page().
  *
  * @package OutletPro
+ * @subpackage License
  */
 
 use function OutletPro\init_admin_menu;

@@ -3,6 +3,7 @@
  * Test the update_plugin_hook function.
  *
  * @package OutletPro
+ * @subpackage Updates
  */
 
 use function OutletPro\deinit_update_plugin;

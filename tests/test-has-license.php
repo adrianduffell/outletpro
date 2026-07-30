@@ -3,6 +3,7 @@
  * Test the has_license function.
  *
  * @package OutletPro
+ * @subpackage License
  */
 
 use function OutletPro\has_license;

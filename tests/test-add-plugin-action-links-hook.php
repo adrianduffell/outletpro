@@ -3,6 +3,7 @@
  * Tests for add_plugin_action_links_hook().
  *
  * @package OutletPro
+ * @subpackage License
  */
 
 use function OutletPro\deinit_license;
