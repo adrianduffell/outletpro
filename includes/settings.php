@@ -558,7 +558,7 @@ function register_outlet_message_setting(): void {
  */
 function register_license_key_setting(): void {
 	register_setting(
-		LICENSE_PAGE_SLUG,
+		'outletpro',
 		LICENSE_KEY_OPTION,
 		array(
 			'type'              => 'string',
