@@ -3,6 +3,7 @@
  * Test the init_license function.
  *
  * @package OutletPro
+ * @group license
  */
 
 use function OutletPro\deinit_license_settings;
