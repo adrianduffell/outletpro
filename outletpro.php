@@ -50,7 +50,9 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 // #ifdef LICENSE
+require_once __DIR__ . '/includes/settings-license.php';
 require_once __DIR__ . '/includes/license.php';
+require_once __DIR__ . '/includes/enqueue-license.php';
 // #endif
 require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
@@ -77,6 +79,9 @@ require_once __DIR__ . '/includes/update-plugin.php';
  * @internal WordPress action hook
  */
 function init_hook(): void {
+	// #ifdef LICENSE
+	init_license_settings();
+	// #endif
 	// #ifdef UPDATES
 	init_update_plugin();
 	// #endif
@@ -102,6 +107,9 @@ function init_hook(): void {
 		init_woocommerce_template_hooks();
 	}
 	enqueue_init();
+	// #ifdef LICENSE
+	license_enqueue_init();
+	// #endif
 	try {
 		init_setup_task();
 	} catch ( \Throwable $e ) {
