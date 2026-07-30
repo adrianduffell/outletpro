@@ -18,7 +18,7 @@ class Test_Plugin_File extends WP_UnitTestCase {
 		// Arrange.
 		$plugin_data = get_plugin_data( PLUGIN_FILE );
 
-		// Action.
+		// Act.
 
 		// Assert.
 		$this->assertSame( 'https://adrianduffell.store/outletpro', $plugin_data['UpdateURI'] );
@@ -28,7 +28,7 @@ class Test_Plugin_File extends WP_UnitTestCase {
 		// Arrange.
 		$plugin_data = get_plugin_data( PLUGIN_FILE );
 
-		// Action.
+		// Act.
 
 		// Assert.
 		$this->assertSame( 'woocommerce', $plugin_data['RequiresPlugins'] );
