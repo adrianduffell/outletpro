@@ -62,4 +62,16 @@ function enqueue_admin_welcome_page_scripts_hook(): void {
 			'productsUrl' => esc_url( admin_url( 'edit.php?post_type=product' ) ),
 		)
 	);
+
+	/**
+	 * Admin stylesheet.
+	 *
+	 * @internal
+	 */
+	wp_enqueue_style(
+		'outletpro-welcome-page-style',
+		plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+		array(),
+		$asset['version']
+	);
 }
