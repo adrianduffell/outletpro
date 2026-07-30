@@ -9,7 +9,12 @@ for file in outletpro.php src/index.ts; do
 	mv "$file.tmp" "$file"
 done
 
+# Delete Licenese and Updates subpackage files.
 grep -rEl --include='*.php' '@subpackage (License|Updates)' includes |
 while IFS= read -r file; do
 	rm "$file"
 done
+
+# Strip Update URI plugin header.
+sed '/^\* Update URI:/d' outletpro.php > outletpro.php.tmp &&
+	mv outletpro.php.tmp outletpro.php
