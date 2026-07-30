@@ -6,9 +6,9 @@
  * @group license
  */
 
+use function OutletPro\deinit_license_settings;
 use function OutletPro\has_license;
 use function OutletPro\init_license_settings;
-use function OutletPro\deinit_license_settings;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
