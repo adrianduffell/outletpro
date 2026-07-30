@@ -8,7 +8,7 @@
 
 use function OutletPro\deinit_license;
 use function OutletPro\init_license;
-use const OutletPro\LICENSE_PAGE_SLUG;
+use const OutletPro\LICENSE_OPTIONS_GROUP;
 use const OutletPro\PLUGIN_FILE;
 
 class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
@@ -37,7 +37,7 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), $links );
 
 		// Assert.
-		$this->assertStringContainsString( LICENSE_PAGE_SLUG, $result[0] );
+		$this->assertStringContainsString( LICENSE_OPTIONS_GROUP, $result[0] );
 
 		// Cleanup.
 		deinit_license();
