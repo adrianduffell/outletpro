@@ -1,5 +1,6 @@
 import { createRoot } from '@wordpress/element';
 import { WelcomePage } from './WelcomePage';
+import './style.css';
 
 const container = document.getElementById( 'outletpro-welcome-page-root' );
 
