@@ -3,7 +3,7 @@
  * Tests for invalidate_license_cache_hook().
  *
  * @package OutletPro
- * @group License
+ * @group license
  */
 
 use function OutletPro\has_license;
