@@ -16,5 +16,5 @@ while IFS= read -r file; do
 done
 
 # Strip Update URI plugin header.
-sed '/^\* Update URI:/d' outletpro.php > outletpro.php.tmp &&
+sed '/^[[:space:]]*\* Update URI:/d' outletpro.php > outletpro.php.tmp &&
 	mv outletpro.php.tmp outletpro.php
