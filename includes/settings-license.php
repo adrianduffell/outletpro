@@ -1,6 +1,6 @@
 <?php
 /**
- * Licese settings functions.
+ * License settings functions.
  *
  * @package OutletPro
  * @subpackage License
