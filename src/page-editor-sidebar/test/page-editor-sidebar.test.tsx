@@ -260,6 +260,8 @@ jest.mock( '@wordpress/editor', () => ( {
 			{ children }
 		</section>
 	),
+
+	PluginSidebarMoreMenuItem: () => null,
 } ) );
 
 jest.mock( '@wordpress/i18n', () => ( {
