@@ -14,7 +14,7 @@ import { PanelColorSettings } from '@wordpress/block-editor';
 import { store as coreStore } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
-import { PluginSidebar } from '@wordpress/editor';
+import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import { settings } from '@wordpress/icons';
@@ -291,37 +291,45 @@ const OutletSidebar = () => {
 	);
 
 	return (
-		<PluginSidebar
-			name={ SIDEBAR_NAME }
-			title={ __( 'Outlet settings', 'outletpro' ) }
-			isPinnable={ true }
-			icon={ settings }
-			className="outletpro-sidebar"
-		>
-			<TabPanel
-				className="outletpro-sidebar__tabs"
-				activeClass="is-active"
-				tabs={ [
-					{
-						name: 'badge',
-						title: __( 'Badge', 'outletpro' ),
-						className: 'outletpro-sidebar__tab',
-					},
-					{
-						name: 'message',
-						title: __( 'Message', 'outletpro' ),
-						className: 'outletpro-sidebar__tab',
-					},
-				] }
+		<>
+			<PluginSidebarMoreMenuItem
+				target={ SIDEBAR_NAME }
+				icon={ settings }
 			>
-				{ ( tab ) => {
-					if ( tab.name === 'message' ) {
-						return renderMessageSettings();
-					}
-					return renderBadgeSettings();
-				} }
-			</TabPanel>
-		</PluginSidebar>
+				{ __( 'Outlet settings', 'outletpro' ) }
+			</PluginSidebarMoreMenuItem>
+			<PluginSidebar
+				name={ SIDEBAR_NAME }
+				title={ __( 'Outlet settings', 'outletpro' ) }
+				isPinnable={ false }
+				icon={ settings }
+				className="outletpro-sidebar"
+			>
+				<TabPanel
+					className="outletpro-sidebar__tabs"
+					activeClass="is-active"
+					tabs={ [
+						{
+							name: 'badge',
+							title: __( 'Badge', 'outletpro' ),
+							className: 'outletpro-sidebar__tab',
+						},
+						{
+							name: 'message',
+							title: __( 'Message', 'outletpro' ),
+							className: 'outletpro-sidebar__tab',
+						},
+					] }
+				>
+					{ ( tab ) => {
+						if ( tab.name === 'message' ) {
+							return renderMessageSettings();
+						}
+						return renderBadgeSettings();
+					} }
+				</TabPanel>
+			</PluginSidebar>
+		</>
 	);
 };
 
