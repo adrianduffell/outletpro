@@ -1,4 +1,4 @@
-name: Update supported WooCommerce versions
+name: Supported WooCommerce versions
 
 on:
   pull_request:
