@@ -1,0 +1,53 @@
+name: Supported WooCommerce versions
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-woocommerce-versions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update WooCommerce versions
+        run: |
+          ./bin/bump-wc-tested-up-to.sh "${{ vars.WOOCOMMERCE_MAX }}"
+          ./bin/bump-wc-requires-at-least.sh "${{ vars.WOOCOMMERCE_MIN }}"
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          branch="update-woocommerce-versions"
+          title="Update supported WooCommerce versions to ${{ vars.WOOCOMMERCE_MIN }}-${{ vars.WOOCOMMERCE_MAX }}"
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git switch -C "$branch"
+          git add -u
+          git commit -m "$title"
+          git push --force --set-upstream origin "$branch"
+
+          gh pr view "$branch" >/dev/null 2>&1 || \
+            gh pr create \
+              --title "$title" \
+              --body "Updates the supported WooCommerce version headers." \
+              --base main \
+              --head "$branch"
