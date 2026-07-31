@@ -306,6 +306,12 @@ function enqueue_build_assets_hook(): void {
 
 	$asset = require $asset_file;
 
+	// Remove wp-editor because it causes a conflict in non-block-editor
+	// contexts (e.g. widgets screen) where wp-editor is not normally loaded,
+	// and is guaranteed to be loaded in the block editor context anyway.
+	$deps = array_diff( $asset['dependencies'], array( 'wp-editor' ) );
+
+
 	/**
 	 * Block editor script.
 	 *
@@ -314,7 +320,7 @@ function enqueue_build_assets_hook(): void {
 	wp_enqueue_script(
 		'outletpro-editor',
 		plugin_dir_url( PLUGIN_FILE ) . 'build/index.js',
-		array_merge( $asset['dependencies'], array( 'wc-blocks-registry' ) ),
+		array_merge( $deps, array( 'wc-blocks-registry' ) ),
 		$asset['version'],
 		true
 	);
