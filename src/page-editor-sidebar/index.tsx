@@ -327,7 +327,7 @@ const OutletSidebar = () => {
 
 const isSiteEditor = window.location.pathname.includes( 'site-editor.php' );
 
-// Exclude from the post editor and other admin pages.
+// Only register the sidebar in the Site Editor (site-editor.php).
 if ( isSiteEditor ) {
 	registerPlugin( SIDEBAR_NAME, {
 		render: withSiteRecord( OutletSidebar ),
