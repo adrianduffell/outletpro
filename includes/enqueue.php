@@ -298,6 +298,12 @@ function enqueue_admin_product_scripts_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_build_assets_hook(): void {
+	$screen = get_current_screen();
+
+	if ( $screen && 'widgets' === $screen->base ) {
+		return;
+	}
+
 	$asset_file = plugin_dir_path( PLUGIN_FILE ) . 'build/index.asset.php';
 
 	if ( ! file_exists( $asset_file ) ) {
