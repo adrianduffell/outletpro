@@ -325,12 +325,10 @@ const OutletSidebar = () => {
 	);
 };
 
-const isBlockEditor =
-	window.location.pathname.includes( 'post.php' ) ||
-	window.location.pathname.includes( 'post-new.php' );
+const isSiteEditor = window.location.pathname.includes( 'site-editor.php' );
 
-// Exclude from the block editor (post/pages editor).
-if ( ! isBlockEditor ) {
+// Exclude from the post editor and other admin pages.
+if ( isSiteEditor ) {
 	registerPlugin( SIDEBAR_NAME, {
 		render: withSiteRecord( OutletSidebar ),
 	} );
