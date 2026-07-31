@@ -24,8 +24,8 @@ jobs:
 
       - name: Update WooCommerce versions
         run: |
-          ./bin/bump-wc-tested.sh "${{ vars.WOOCOMMERCE_MAX }}"
-          ./bin/bump-wc-requires.sh "${{ vars.WOOCOMMERCE_MIN }}"
+          ./bin/bump-wc-tested-up-to.sh "${{ vars.WOOCOMMERCE_MAX }}"
+          ./bin/bump-wc-requires-at-least.sh "${{ vars.WOOCOMMERCE_MIN }}"
 
       - name: Create pull request
         env:
