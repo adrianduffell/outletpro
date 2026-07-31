@@ -1,0 +1,55 @@
+name: Update supported WooCommerce versions
+
+on:
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Daily at 00:17 AWST (16:17 UTC).
+    - cron: '17 16 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-woocommerce-versions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Update WooCommerce versions
+        run: |
+          ./bin/bump-wc-tested.sh "${{ vars.WOOCOMMERCE_MAX }}"
+          ./bin/bump-wc-requires.sh "${{ vars.WOOCOMMERCE_MIN }}"
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          branch="update-woocommerce-versions"
+          title="Update supported WooCommerce versions to ${{ vars.WOOCOMMERCE_MIN }} - ${{ vars.WOOCOMMERCE_MAX }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git switch -C "$branch"
+          git add outletpro.php
+          git commit -m "$title"
+          git push --force --set-upstream origin "$branch"
+
+          gh pr view "$branch" >/dev/null 2>&1 || \
+            gh pr create \
+              --title "$title" \
+              --body "Updates the supported WooCommerce version headers." \
+              --base main \
+              --head "$branch"
