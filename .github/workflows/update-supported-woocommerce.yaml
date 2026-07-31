@@ -50,7 +50,6 @@ jobs:
 
           gh pr view "$branch" >/dev/null 2>&1 || \
             gh pr create \
-              --dry-run \
               --title "$title" \
               --body "Updates the supported WooCommerce version headers." \
               --base main \
