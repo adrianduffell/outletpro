@@ -311,7 +311,6 @@ function enqueue_build_assets_hook(): void {
 	// and is guaranteed to be loaded in the block editor context anyway.
 	$deps = array_diff( $asset['dependencies'], array( 'wp-editor' ) );
 
-
 	/**
 	 * Block editor script.
 	 *
