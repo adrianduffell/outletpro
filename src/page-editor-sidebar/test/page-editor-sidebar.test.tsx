@@ -5,6 +5,15 @@ import useSettings from '../../use-settings';
 import { useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
 
+beforeEach( () => {
+	mockRegisterPlugin.mockClear();
+	window.history.replaceState( {}, '', '/wp-admin/site-editor.php' );
+} );
+
+afterEach( () => {
+	window.history.replaceState( {}, '', '/' );
+} );
+
 jest.mock( '@wordpress/plugins', () => ( {
 	registerPlugin: jest.fn(),
 } ) );
