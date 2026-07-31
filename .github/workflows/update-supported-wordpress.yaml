@@ -45,7 +45,7 @@ jobs:
           git switch -C "$branch"
           git add -u
           git commit -m "$title"
-          git push --force --set-upstream origin "$branch"
+          git push --force-with-lease --set-upstream origin "$branch"
 
           gh pr view "$branch" >/dev/null 2>&1 || \
             gh pr create \
