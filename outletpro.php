@@ -14,7 +14,7 @@
  * Update URI: https://adrianduffell.store/outletpro
  *
  * WC requires at least: 10.7
- * WC tested up to: 10.8
+ * WC tested up to: 10.9
  *
  * @package OutletPro
  */
