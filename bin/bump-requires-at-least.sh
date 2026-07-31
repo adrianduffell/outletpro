@@ -8,7 +8,7 @@ if [ -z "$version" ]; then
 fi
 
 sed -i.bak -E \
-	"s/^(Requires at least:).*/\1 $version/" \
-	readme.txt
+	"s/^([[:space:]]*\*[[:space:]]*Requires at least:).*/\1 $version/" \
+	outletpro.php
 
-rm readme.txt.bak
+rm outletpro.php.bak
