@@ -37,7 +37,7 @@ jobs:
           fi
 
           branch="update-woocommerce-versions"
-          title="Update supported WooCommerce versions to ${{ vars.WOOCOMMERCE_MIN }} - ${{ vars.WOOCOMMERCE_MAX }}"
+          title="Update supported WooCommerce versions to ${{ vars.WOOCOMMERCE_MIN }}-${{ vars.WOOCOMMERCE_MAX }}"
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
