@@ -1,8 +1,6 @@
 name: Supported WooCommerce versions
 
 on:
-  pull_request:
-    branches: [ main ]
   schedule:
     # Daily at 00:17 AWST (16:17 UTC).
     - cron: '17 16 * * *'
