@@ -1,0 +1,53 @@
+name: Supported WordPress versions
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-wordpress-versions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Update WordPress versions
+        run: |
+          ./bin/bump-tested-up-to.sh "${{ vars.WORDPRESS_MAX }}"
+          ./bin/bump-requires-at-least.sh "${{ vars.WORDPRESS_MIN }}"
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          branch="update-wordpress-versions"
+          title="Update supported WordPress versions to ${{ vars.WORDPRESS_MIN }}-${{ vars.WORDPRESS_MAX }}"
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git switch -C "$branch"
+          git add -u
+          git commit -m "$title"
+          git push --force-with-lease --set-upstream origin "$branch"
+
+          gh pr view "$branch" >/dev/null 2>&1 || \
+            gh pr create \
+              --title "$title" \
+              --body "Updates the supported WordPress version headers." \
+              --base main \
+              --head "$branch"
