@@ -75,6 +75,21 @@ describe( 'Edit', () => {
 		expect( screen.getByDisplayValue( 'Last chance' ) ).toBeInTheDocument();
 	} );
 
+	test( 'shows placeholder when label is an empty string', () => {
+		// Arrange.
+		const setLabel = jest.fn();
+		mockUseEntityProp.mockReturnValue( [ '', setLabel, undefined ] );
+
+		// Act.
+		render( <Edit /> );
+
+		// Assert.
+		expect( screen.getByPlaceholderText( 'Label' ) ).toHaveValue( '' );
+		expect(
+			screen.queryByDisplayValue( 'Last chance' )
+		).not.toBeInTheDocument();
+	} );
+
 	test( 'renders badge with label from global setting', () => {
 		// Arrange.
 		const setLabel = jest.fn();
