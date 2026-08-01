@@ -154,8 +154,6 @@ function register_classic_styles_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_cart_styles_hook(): void {
-	$label = sanitize_text_field( get_option( OUTLET_BADGE_LABEL_OPTION, '' ) );
-
 	/**
 	 * Front-end cart badge stylesheet.
 	 *
@@ -169,11 +167,6 @@ function enqueue_cart_styles_hook(): void {
 	);
 
 	wp_enqueue_style( 'outletpro-cart-badge' );
-
-	wp_add_inline_style(
-		'outletpro-cart-badge',
-		':root { --outletpro-badge-label: ' . ( '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'none' ) . '; }'
-	);
 }
 
 /**
@@ -206,7 +199,10 @@ function output_badge_style_css_variables_hook(): void {
 		$badge_style_options
 	);
 
-	echo '<style>:root { ' . esc_html( implode( '; ', $declarations ) ) . '; }</style>';
+	$label       = sanitize_text_field( get_option( OUTLET_BADGE_LABEL_OPTION, '' ) );
+	$label_value = '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'none';
+
+	echo '<style>:root { ' . esc_html( implode( '; ', $declarations ) ) . '; --outletpro-badge-label: ' . $label_value . '; }</style>';
 }
 
 /**

@@ -14,6 +14,7 @@ use const OutletPro\OUTLET_BADGE_BORDER_STYLE_OPTION;
 use const OutletPro\OUTLET_BADGE_BORDER_WIDTH_OPTION;
 use const OutletPro\OUTLET_BADGE_DENSITY_OPTION;
 use const OutletPro\OUTLET_BADGE_FONT_WEIGHT_OPTION;
+use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 
@@ -62,5 +63,88 @@ class Test_Output_Badge_Style_Css_Variables_Hook extends WP_UnitTestCase {
 
 		// Act.
 		do_action( 'wp_head' );
+	}
+
+	public function test_outputs_badge_label_css_variable_in_wp_head(): void {
+		// Arrange.
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Sale' );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		ob_start();
+		do_action( 'wp_head' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringContainsString( '--outletpro-badge-label: "Sale"', $output );
+
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
+	}
+
+	public function test_outputs_badge_label_none_when_empty(): void {
+		// Arrange.
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		ob_start();
+		do_action( 'wp_head' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringContainsString( '--outletpro-badge-label: none', $output );
+	}
+
+	public function test_outputs_badge_label_none_when_set_to_empty_string(): void {
+		// Arrange.
+		update_option( OUTLET_BADGE_LABEL_OPTION, '' );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		ob_start();
+		do_action( 'wp_head' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringContainsString( '--outletpro-badge-label: none', $output );
+
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
+	}
+
+	public function test_outputs_badge_label_escapes_double_quotes(): void {
+		// Arrange.
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Big "Clearance"' );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		ob_start();
+		do_action( 'wp_head' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringContainsString( '--outletpro-badge-label: "Big \"Clearance\""', $output );
+
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
+	}
+
+	public function test_outputs_badge_label_escapes_backslashes_and_preserves_emoji(): void {
+		// Arrange.
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Sale \ Today 🔥' );
+		deinit_enqueue();
+		enqueue_init();
+
+		// Act.
+		ob_start();
+		do_action( 'wp_head' );
+		$output = ob_get_clean();
+
+		// Assert.
+		$this->assertStringContainsString( '--outletpro-badge-label: "Sale \\\\ Today 🔥"', $output );
+
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
 	}
 }
