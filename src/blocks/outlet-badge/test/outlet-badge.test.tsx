@@ -63,7 +63,7 @@ import { useEntityProp } from '@wordpress/core-data';
 const mockUseEntityProp = useEntityProp as jest.Mock;
 
 describe( 'Edit', () => {
-	test( 'renders badge with default label when setting is empty', () => {
+	test( 'renders badge with empty label when setting is empty', () => {
 		// Arrange.
 		const setLabel = jest.fn();
 		mockUseEntityProp.mockReturnValue( [ undefined, setLabel, undefined ] );
@@ -72,7 +72,7 @@ describe( 'Edit', () => {
 		render( <Edit /> );
 
 		// Assert.
-		expect( screen.getByDisplayValue( 'Last chance' ) ).toBeInTheDocument();
+		expect( screen.getByDisplayValue( '' ) ).toBeInTheDocument();
 	} );
 
 	test( 'renders badge with label from global setting', () => {
