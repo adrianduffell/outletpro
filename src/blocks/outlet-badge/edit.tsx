@@ -23,7 +23,7 @@ export function Edit(): JSX.Element {
 		<RichText
 			{ ...blockProps }
 			tagName="div"
-			value={ label ?? ''}
+			value={ label ?? '' }
 			onChange={ ( value: string ) => setLabel( value ) }
 			allowedFormats={ [] }
 			placeholder={ __( 'Outlet badge', 'outletpro' ) }
