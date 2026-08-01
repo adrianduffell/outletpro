@@ -307,7 +307,7 @@ const createInitialSettings = () => ( {
 	setMessage: jest.fn(),
 } );
 
-describe( 'page-editor-sidebar registration', () => {
+describe( 'settings-sidebar registration', () => {
 	test( 'registers the sidebar plugin with expected name and render function', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();

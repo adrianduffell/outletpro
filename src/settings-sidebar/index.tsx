@@ -59,7 +59,7 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 	return hasSiteRecord ? <Component /> : null;
 };
 
-const OutletSidebar = () => {
+const SettingsSidebar = () => {
 	const {
 		label,
 		setLabel,
@@ -338,6 +338,6 @@ const isSiteEditor = window.location.pathname.includes( 'site-editor.php' );
 // Only register the sidebar in the Site Editor (site-editor.php).
 if ( isSiteEditor ) {
 	registerPlugin( SIDEBAR_NAME, {
-		render: withSiteRecord( OutletSidebar ),
+		render: withSiteRecord( SettingsSidebar ),
 	} );
 }
