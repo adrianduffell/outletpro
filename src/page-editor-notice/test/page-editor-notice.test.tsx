@@ -3,10 +3,6 @@ import { OutletEmptyNotice } from '../index';
 import apiFetch from '@wordpress/api-fetch';
 import * as data from '@wordpress/data';
 
-jest.mock( '@wordpress/plugins', () => ( {
-	registerPlugin: jest.fn(),
-} ) );
-
 jest.mock( '@wordpress/data' );
 
 jest.mock( '@wordpress/api-fetch', () => jest.fn() );

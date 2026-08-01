@@ -16,7 +16,6 @@ import { useSelect } from '@wordpress/data';
 import { useMemo } from '@wordpress/element';
 import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
-import { registerPlugin } from '@wordpress/plugins';
 import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
 
@@ -28,7 +27,7 @@ type FontWeightOption = {
 	};
 };
 
-const SIDEBAR_NAME = 'outletpro-sidebar';
+export const SIDEBAR_NAME = 'outletpro-sidebar';
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'outletpro' ), key: '' },
@@ -40,7 +39,7 @@ const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Black', 'outletpro' ), key: '900' },
 ];
 
-const bordersEnabled = ( () => {
+const getBordersEnabled = () => {
 	try {
 		return (
 			window.localStorage.getItem( 'outletpro_borders_enabled' ) === '1'
@@ -48,9 +47,9 @@ const bordersEnabled = ( () => {
 	} catch {
 		return false;
 	}
-} )();
+};
 
-const withSiteRecord = ( Component: React.ComponentType ) => () => {
+export const withSiteRecord = ( Component: React.ComponentType ) => () => {
 	const hasSiteRecord = useSelect(
 		( select ) => !! select( coreStore ).getEntityRecord( 'root', 'site' ),
 		[]
@@ -59,7 +58,7 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 	return hasSiteRecord ? <Component /> : null;
 };
 
-const SettingsSidebar = () => {
+export const SettingsSidebar = () => {
 	const {
 		label,
 		setLabel,
@@ -213,7 +212,7 @@ const SettingsSidebar = () => {
 			</PanelBody>
 
 			<PanelBody title={ __( 'Border', 'outletpro' ) }>
-				{ bordersEnabled && (
+				{ getBordersEnabled() && (
 					<div style={ { marginBottom: 16 } }>
 						<BorderControl
 							label={ __( 'Border', 'outletpro' ) }
@@ -332,12 +331,3 @@ const SettingsSidebar = () => {
 		</>
 	);
 };
-
-const isSiteEditor = window.location.pathname.includes( 'site-editor.php' );
-
-// Only register the sidebar in the Site Editor (site-editor.php).
-if ( isSiteEditor ) {
-	registerPlugin( SIDEBAR_NAME, {
-		render: withSiteRecord( SettingsSidebar ),
-	} );
-}

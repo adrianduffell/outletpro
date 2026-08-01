@@ -1,7 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect } from '@wordpress/element';
 import { dispatch, select } from '@wordpress/data';
-import { registerPlugin } from '@wordpress/plugins';
 
 const NOTICE_ID = 'outletpro-empty';
 
@@ -71,7 +70,3 @@ export function OutletEmptyNotice(): null {
 
 	return null;
 }
-
-registerPlugin( 'outletpro-page-editor-notice', {
-	render: OutletEmptyNotice,
-} );

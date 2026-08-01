@@ -1,22 +1,9 @@
 import type { ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { registerPlugin } from '@wordpress/plugins';
+import { SettingsSidebar, withSiteRecord } from '../index';
 import useSettings from '../../use-settings';
 import { useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
-
-beforeEach( () => {
-	mockRegisterPlugin.mockClear();
-	window.history.replaceState( {}, '', '/wp-admin/site-editor.php' );
-} );
-
-afterEach( () => {
-	window.history.replaceState( {}, '', '/' );
-} );
-
-jest.mock( '@wordpress/plugins', () => ( {
-	registerPlugin: jest.fn(),
-} ) );
 
 jest.mock( '@wordpress/data', () => ( {
 	useSelect: jest.fn(),
@@ -277,7 +264,6 @@ jest.mock( '@wordpress/i18n', () => ( {
 	__: jest.fn( ( text: string ) => text ),
 } ) );
 
-const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseSettings = useSettings as jest.Mock;
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
@@ -308,96 +294,24 @@ const createInitialSettings = () => ( {
 } );
 
 describe( 'settings-sidebar registration', () => {
-	test( 'registers the sidebar plugin with expected name and render function', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
-		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-
-		// Act.
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-
-		// Assert.
-		expect( mockRegisterPlugin ).toHaveBeenCalledWith(
-			'outletpro-sidebar',
-			expect.objectContaining( {
-				render: expect.any( Function ),
-			} )
-		);
-	} );
-
 	test( 'render function renders nothing when site record is not available', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		mockUseSelect.mockReturnValue( false );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+		const WrappedSidebar = withSiteRecord( SettingsSidebar );
 
 		// Act.
-		const { container } = render( pluginConfig.render() );
+		const { container } = render( <WrappedSidebar /> );
 
 		// Assert.
 		expect( container ).toBeEmptyDOMElement();
 	} );
 
-	test( 'does not register plugin on post.php', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		const originalPathname = window.location.pathname;
-		window.history.pushState( {}, '', '/wp-admin/post.php' );
-
-		// Act.
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-
-		// Assert.
-		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'outletpro-sidebar',
-			expect.anything()
-		);
-
-		// Cleanup.
-		window.history.pushState( {}, '', originalPathname );
-	} );
-
-	test( 'does not register plugin on post-new.php', () => {
-		// Arrange.
-		mockRegisterPlugin.mockClear();
-		const originalPathname = window.location.pathname;
-		window.history.pushState( {}, '', '/wp-admin/post-new.php' );
-
-		// Act.
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-
-		// Assert.
-		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'outletpro-sidebar',
-			expect.anything()
-		);
-
-		// Cleanup.
-		window.history.pushState( {}, '', originalPathname );
-	} );
-
 	test( 'render function outputs the sidebar title', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByText( 'Outlet settings' ) ).toBeInTheDocument();
@@ -405,16 +319,10 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'render function outputs all panel sections', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByText( 'Label' ) ).toBeInTheDocument();
@@ -426,21 +334,15 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'badge label control shows stored value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setLabel = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			label: 'Sale',
 			setLabel,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByRole( 'textbox', { name: 'Label' } ) ).toHaveValue(
@@ -450,20 +352,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'badge label control is empty when setting is empty', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			label: undefined,
 			setLabel: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByRole( 'textbox', { name: 'Label' } ) ).toHaveValue(
@@ -473,19 +369,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'badge label control calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setLabel = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			label: 'Clearance',
 			setLabel,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'textbox', { name: 'Label' } );
 
 		// Act.
@@ -497,20 +387,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'font scale control reflects stored scale value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			scale: 140,
 			setScale: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByRole( 'slider', { name: 'Scale' } ) ).toHaveValue(
@@ -520,21 +404,15 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'font scale control allows undefined scale value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			scale: undefined,
 			setScale,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Scale' } );
 
 		// Assert.
@@ -544,19 +422,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'font scale control calls setter when changed from undefined', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			scale: undefined,
 			setScale,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Scale' } );
 
 		// Act.
@@ -568,20 +440,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'font scale control uses accepted range and step', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			scale: 120,
 			setScale: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Scale' } );
 
 		// Assert.
@@ -592,19 +458,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'font weight control calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setFontWeight = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			fontWeight: '',
 			setFontWeight,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const select = screen.getByRole( 'combobox', { name: 'Font weight' } );
 
 		// Act.
@@ -616,20 +476,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'text color control shows stored value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			textColor: '#ff0000',
 			setTextColor: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByRole( 'textbox', { name: 'Text' } ) ).toHaveValue(
@@ -639,20 +493,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'background color control is empty when setting is empty', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			bgColor: undefined,
 			setBgColor: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -662,19 +510,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'border radius control calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setBorderRadius = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			borderRadius: '2px',
 			setBorderRadius,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'textbox', {
 			name: 'Radius',
 		} );
@@ -688,19 +530,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'font scale control calls scale setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setScale = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			scale: 120,
 			setScale,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Scale' } );
 
 		// Act.
@@ -712,20 +548,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'density control reflects stored density value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			density: 60,
 			setDensity: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -735,21 +565,15 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'density control allows undefined density value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setDensity = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			density: undefined,
 			setDensity,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Assert.
@@ -759,19 +583,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'density control calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setDensity = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			density: 60,
 			setDensity,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Act.
@@ -783,20 +601,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'density control uses accepted range and step', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			density: 60,
 			setDensity: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'slider', { name: 'Font size' } );
 
 		// Assert.
@@ -807,19 +619,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'text color control calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setTextColor = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			textColor: '#222',
 			setTextColor,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'textbox', { name: 'Text' } );
 
 		// Act.
@@ -831,19 +637,13 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'background color control calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setBgColor = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			bgColor: '#FFEE85',
 			setBgColor,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const input = screen.getByRole( 'textbox', { name: 'Background' } );
 
 		// Act.
@@ -855,11 +655,9 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'border control calls setters when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setBorderColor = jest.fn();
 		const setBorderStyle = jest.fn();
 		const setBorderWidth = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			borderColor: '',
@@ -870,12 +668,8 @@ describe( 'settings-sidebar registration', () => {
 			setBorderWidth,
 		} );
 		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
+		render( <SettingsSidebar /> );
 		window.localStorage.removeItem( 'outletpro_borders_enabled' );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
 
 		// Act.
@@ -887,9 +681,7 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'border control auto-applies solid style when width > 1 and style is not set', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setBorderStyle = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			borderStyle: '',
@@ -898,12 +690,8 @@ describe( 'settings-sidebar registration', () => {
 			setBorderWidth: jest.fn(),
 		} );
 		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
+		render( <SettingsSidebar /> );
 		window.localStorage.removeItem( 'outletpro_borders_enabled' );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
 
 		// Act.
@@ -915,9 +703,7 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'border control does not overwrite user-set style when width > 1', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setBorderStyle = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			borderStyle: 'dashed',
@@ -926,12 +712,8 @@ describe( 'settings-sidebar registration', () => {
 			setBorderWidth: jest.fn(),
 		} );
 		window.localStorage.setItem( 'outletpro_borders_enabled', '1' );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
+		render( <SettingsSidebar /> );
 		window.localStorage.removeItem( 'outletpro_borders_enabled' );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
-		render( pluginConfig.render() );
 		const input = screen.getByRole( 'textbox', { name: 'Border' } );
 
 		// Act.
@@ -943,16 +725,10 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'render function outputs the badge tab description', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -964,16 +740,10 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'render function outputs the badge tab', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByText( 'Badge' ) ).toBeInTheDocument();
@@ -981,17 +751,11 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'border control is not visible when feature flag is disabled', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		// Do NOT set localStorage flag — bordersEnabled should be false.
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -1001,20 +765,14 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'border radius control shows stored value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			borderRadius: '4px',
 			setBorderRadius: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect( screen.getByRole( 'textbox', { name: 'Radius' } ) ).toHaveValue(
@@ -1024,16 +782,10 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'render function outputs the message tab', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -1043,13 +795,7 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'render function outputs the message tab description', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		mockTabPanel.mockImplementationOnce(
 			( {
 				children,
@@ -1072,7 +818,7 @@ describe( 'settings-sidebar registration', () => {
 		);
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -1082,18 +828,12 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'message textarea shows stored value', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setMessage = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			message: 'Only while stocks last',
 			setMessage,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		mockTabPanel.mockImplementationOnce(
 			( {
 				children,
@@ -1116,7 +856,7 @@ describe( 'settings-sidebar registration', () => {
 		);
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -1126,17 +866,11 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'message textarea is empty when setting is not set', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			message: undefined,
 			setMessage: jest.fn(),
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		mockTabPanel.mockImplementationOnce(
 			( {
 				children,
@@ -1159,7 +893,7 @@ describe( 'settings-sidebar registration', () => {
 		);
 
 		// Act.
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 
 		// Assert.
 		expect(
@@ -1169,18 +903,12 @@ describe( 'settings-sidebar registration', () => {
 
 	test( 'message textarea calls setter when changed', () => {
 		// Arrange.
-		mockRegisterPlugin.mockClear();
 		const setMessage = jest.fn();
-		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
 			message: 'Only while stocks last',
 			setMessage,
 		} );
-		jest.isolateModules( () => {
-			require( '../index' );
-		} );
-		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
 		mockTabPanel.mockImplementationOnce(
 			( {
 				children,
@@ -1201,7 +929,7 @@ describe( 'settings-sidebar registration', () => {
 				</section>
 			)
 		);
-		render( pluginConfig.render() );
+		render( <SettingsSidebar /> );
 		const textarea = screen.getByRole( 'textbox', { name: 'Message' } );
 
 		// Act.
