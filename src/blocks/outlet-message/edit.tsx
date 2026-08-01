@@ -24,7 +24,7 @@ export function Edit(): JSX.Element {
 			value={ message ?? '' }
 			onChange={ ( value: string ) => setMessage( value ) }
 			allowedFormats={ [] }
-			placeholder={ __( 'Outlet message', 'outletpro' ) }
+			placeholder={ __( 'Write outlet message…', 'outletpro' ) }
 		/>
 	);
 }
