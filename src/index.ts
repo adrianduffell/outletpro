@@ -1,6 +1,5 @@
 import { registerPlugin } from '@wordpress/plugins';
 
-import { Sample } from './components/sample';
 // #ifdef LICENSE
 import './welcome-page';
 // #endif
@@ -14,5 +13,3 @@ import './blocks/outlet-message';
 registerPlugin( 'outletpro-editor-preview', {
 	render: EditorPreview,
 } );
-
-export { Sample };
