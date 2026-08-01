@@ -32,7 +32,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_title(): string {
-				return __( ' Choose outlet products', 'outletpro' );
+				return __( 'Choose outlet products', 'outletpro' );
 			}
 
 			public function get_content(): string {
