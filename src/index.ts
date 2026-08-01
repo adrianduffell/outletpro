@@ -4,7 +4,7 @@ import { registerPlugin } from '@wordpress/plugins';
 import './welcome-page';
 // #endif
 import './page-editor-notice';
-import './page-editor-sidebar';
+import './settings-sidebar';
 import './outlet-toggle';
 import EditorPreview from './editor-preview';
 import './blocks/outlet-badge';
