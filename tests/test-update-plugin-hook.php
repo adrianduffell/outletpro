@@ -185,18 +185,4 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 			$result['package']
 		);
 	}
-
-	//phpcs:ignore
-	public function tear_down(): void { //phpcs:ignore
-		if ( ! $this->hasFailed() ) {
-			$log_dir = WC_LOG_DIR;
-			foreach ( glob( $log_dir . '*.log' ) as $file ) {
-				fwrite( //phpcs:ignore
-					STDERR,
-					"\n===== {$file} =====\n" . file_get_contents( $file ) . "\n" //phpcs:ignore
-				);
-			}
-		}
-		parent::tear_down();
-	}
 }
