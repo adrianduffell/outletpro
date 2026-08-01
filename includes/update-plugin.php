@@ -62,7 +62,6 @@ function update_plugin_hook( $update, array $plugin_data ) {
 			),
 		)
 	);
-	var_dump($response); //phpcs:ignore
 
 	if (
 		is_wp_error( $response )
