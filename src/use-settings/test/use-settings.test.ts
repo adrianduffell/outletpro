@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
+ */
+
 import useStringEntityProp from '../../use-string-entity-prop';
 import useUnsignedIntegerEntityProp from '../../use-unsigned-integer-entity-prop';
 import { renderHook } from '@testing-library/react';

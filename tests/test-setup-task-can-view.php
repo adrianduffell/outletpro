@@ -3,6 +3,8 @@
  * Test the setup_task_can_view function.
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 use function OutletPro\setup_task_can_view;

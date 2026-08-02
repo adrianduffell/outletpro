@@ -17,6 +17,8 @@
  * WC tested up to: 11.0.0
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 namespace OutletPro;

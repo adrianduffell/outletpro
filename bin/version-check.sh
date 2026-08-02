@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Copyright 2026 Adrian Duffell
+# Licensed under the GNU General Public License v2.0 or later.
 set -e
 
 HEADER_VERSION=$(awk '/^[ \t]*\*[ \t]*Version:/{gsub(/\r/, "", $NF); print $NF; exit}' outletpro.php)

@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
+ */
+
 import { useEntityProp } from '@wordpress/core-data';
 import { renderHook } from '@testing-library/react';
 import useStringEntityProp from '../';
