@@ -11,9 +11,17 @@ adding an outlet page to stores, along with badges and messages for outlet produ
 
 ## Getting started
 
+### Prerequistes
+
+-   Node.JS: The project uses the latest v24 release.
+-   Docker Desktop (if using wp-env).
+
 ```sh
-npm run wp-env start
+npm i
 npm run start
+
+# Optional dev environment using wp-env
+npm run wp-env start
 ```
 
 ## Bugs
