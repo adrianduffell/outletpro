@@ -2,6 +2,7 @@
 	"name": "outletpro",
 	"version": "1.0.1",
 	"private": true,
+	"license": "GPL-2.0-or-later",
 	"type": "module",
 	"engines": {
 		"node": "24.18.0"
