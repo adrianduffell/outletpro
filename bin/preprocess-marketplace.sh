@@ -18,3 +18,7 @@ done
 # Strip Update URI plugin header.
 sed '/^[[:space:]]*\* Update URI:/d' outletpro.php > outletpro.php.tmp &&
 	mv outletpro.php.tmp outletpro.php
+
+## Use WooCommerce Marketplace changelog format.
+rm CHANGELOG.md
+cp .marketplace/changelog.txt changelog.txt
