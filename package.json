@@ -18,7 +18,7 @@
 		"lint:md-docs:fix": "wp-scripts lint-md-docs --fix",
 		"lint:php": "vendor/bin/phpcs -s",
 		"lint:php:fix": "vendor/bin/phpcbf",
-		"plugin-zip": "wp-scripts plugin-zip",
+		"plugin-zip": "wp-scripts plugin-zip && zip -d outletpro.zip outletpro/package.json outletpro/README.md",
 		"preprocess": "./bin/preprocess.sh",
 		"preprocess:marketplace": "./bin/preprocess-marketplace.sh",
 		"start": "wp-scripts start",
