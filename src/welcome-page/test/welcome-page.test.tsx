@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
+ */
+
 import type { ReactNode } from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import apiFetch from '@wordpress/api-fetch';
