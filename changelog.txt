@@ -1,6 +1,6 @@
 *** Outlet Pro Changelog ***
 
-2026-07-04 - version 1.0.2
+2026-08-04 - version 1.0.2
 * Fixed - The field label was mis-aligned in the bulk editor.
 * Fixed - The outlet badge block’s label was reverting to the default value when empty.
 * Fixed - A PHP notice was displaying on the widget editor.
