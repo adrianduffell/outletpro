@@ -4,7 +4,7 @@ Tags: outlet, clearance, final sale, discontinued products, offers
 Requires at least: 6.9
 Tested up to: 7.0.2
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,6 +39,15 @@ A draft outlet page named "Outlet" is automatically created when the extension i
 
 
 == Changelog ==
+
+= 1.0.2 =
+* Fixed: The field label was mis-aligned in the bulk editor.
+* Fixed: The outlet badge block’s label was reverting to the default value when empty.
+* Fixed: A PHP notice was displaying on the widget editor.
+* The settings sidebar no longer adds an icon to the full site editor toolbar.
+
+= 1.0.1 =
+* Add HPOS compatibility declaration
 
 = 1.0.0 =
 * Initial release.
