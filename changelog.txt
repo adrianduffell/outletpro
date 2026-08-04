@@ -1,5 +1,11 @@
 *** Outlet Pro Changelog ***
 
+2026-08-04 - version 1.0.2
+* Fixed - The field label was mis-aligned in the bulk editor.
+* Fixed - The outlet badge block’s label was reverting to the default value when empty.
+* Fixed - A PHP notice was displaying on the widget editor.
+* Remove - The settings sidebar no longer adds an icon to the full site editor toolbar.
+
 2026-06-07 - version 1.0.1
 * Added - WooCommerce declarations
 	* "WC requires at least" plugin header
