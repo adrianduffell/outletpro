@@ -1,3 +1,8 @@
+/**
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
+ */
+
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 import badgeDimensions from '../../fixtures/badge-dimensions.json' with { type: 'json' };
 
