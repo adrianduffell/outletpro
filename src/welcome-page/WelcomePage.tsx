@@ -27,7 +27,7 @@ export function WelcomePage(): JSX.Element {
 		let isValid = false;
 		try {
 			const response = await fetch(
-				'https://my-first-worker.adrianduffell.workers.dev/v1/licenses/validate',
+				'https://api.adrianduffell.store/v1/licenses/validate',
 				{
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
