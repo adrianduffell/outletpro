@@ -5,7 +5,6 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-
 /**
  * Make the description text next to the outlet checkbox clickable.
  *
