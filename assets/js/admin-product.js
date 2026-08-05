@@ -2,8 +2,8 @@
  * Admin product editor scripts.
  *
  * @since 1.0.0
- * @copyright 2026 Adrian Duffell
- * @license GNU General Public License v2.0 or later
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
  */
 
 /**
