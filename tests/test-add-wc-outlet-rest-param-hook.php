@@ -3,6 +3,8 @@
  * Tests for add_outletpro_rest_param_hook().
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 use function OutletPro\register_outlet_status_taxonomy;

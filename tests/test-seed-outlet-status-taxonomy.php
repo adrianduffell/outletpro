@@ -3,6 +3,8 @@
  * Test the seed_outlet_status_taxonomy function.
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 use function OutletPro\register_outlet_status_taxonomy;

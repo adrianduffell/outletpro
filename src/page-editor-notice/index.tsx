@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
 import apiFetch from '@wordpress/api-fetch';
 import { useEffect } from '@wordpress/element';
 import { dispatch, select } from '@wordpress/data';

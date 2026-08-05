@@ -3,6 +3,8 @@
  * Tests the plugin file.
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 use const OutletPro\PLUGIN_FILE;

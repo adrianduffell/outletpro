@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
 import { render, act } from '@testing-library/react';
 import { useEntityProp } from '@wordpress/core-data';
 import EditorPreview from '../index';
