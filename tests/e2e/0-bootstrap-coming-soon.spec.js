@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
 import { test } from '@wordpress/e2e-test-utils-playwright';
 
 test( 'set store to live mode', async ( { page, admin } ) => {

@@ -3,6 +3,8 @@
  * Tests for bulk_edit_field_hook() and save_bulk_edit_hook().
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 use function OutletPro\bulk_edit_field_hook;

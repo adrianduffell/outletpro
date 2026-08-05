@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
 import { test as setup, expect } from '@wordpress/e2e-test-utils-playwright';
 
 const themeSlug = process.env.THEME;

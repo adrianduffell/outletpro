@@ -5,6 +5,8 @@
  * Keep to 40 characters wide and 2-space indents for nice display in the block editor.
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  *
  * @phpcs:disable
  */

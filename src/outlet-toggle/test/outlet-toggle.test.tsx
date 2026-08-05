@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
 import type { ComponentType, ReactNode } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 

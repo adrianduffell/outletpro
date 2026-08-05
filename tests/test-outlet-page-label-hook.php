@@ -3,6 +3,8 @@
  * Test the outlet_page_label_hook function.
  *
  * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
  */
 
 use function OutletPro\init_admin_page_list_table;

@@ -39,7 +39,7 @@
 	"files": [
 		"assets",
 		"build",
-		"changelog.txt",
+		"CHANGELOG.md",
 		"includes",
 		"templates",
 		"outletpro.php",

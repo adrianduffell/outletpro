@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
 const OutletMessageIcon = (
 	<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 		<path
