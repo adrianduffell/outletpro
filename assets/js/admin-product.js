@@ -1,7 +1,5 @@
 /**
  * Admin product editor scripts.
- *
- * @since 1.0.0
  */
 
 /**
