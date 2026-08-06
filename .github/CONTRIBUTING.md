@@ -8,7 +8,7 @@ Thanks for your interest in Outlet Pro!
 
 ## Linting
 
-Outlet Pro lints against the [WordPress coding standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/) and other conventions found in [AGENTS.md](AGENTS.md).
+Outlet Pro lints against the [WordPress coding standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/) and other conventions found in [AGENTS.md](../AGENTS.md).
 
 | Script             | Description            |
 | ------------------ | ---------------------- |
