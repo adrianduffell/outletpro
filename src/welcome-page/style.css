@@ -21,7 +21,7 @@ body.toplevel_page_outletpro-welcome {
 	}
 
 	p {
-		margin: 0.5em auto 3em auto;
+		margin: 2em auto 2em auto;
 	}
 
 	#outletpro-welcome-page-root {
@@ -51,13 +51,18 @@ body.toplevel_page_outletpro-welcome {
 	}
 
 	.outletpro-welcome-page__license-key-input {
-		margin: 2rem auto;
+		margin: 4em auto;
 
 		.components-text-control__input {
 			font-family: monospace;
 			font-size: 1.2rem;
 			font-weight: 500;
 		}
+	}
+
+	.outletpro-welcome-page__notice {
+		max-width: 300px;
+		margin-top: 3em;
 	}
 
 	.outletpro-welcome-page__button-row {
