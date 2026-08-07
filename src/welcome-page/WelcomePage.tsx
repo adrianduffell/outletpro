@@ -132,10 +132,6 @@ export function WelcomePage(): JSX.Element {
 					label={ __( 'Premium license key', 'outletpro' ) }
 					hideLabelFromVision={ true }
 					value={ licenseKey }
-					help={ __(
-						'The license key can be found in the email receipt for purchasing Outlet Pro.',
-						'outletpro'
-					) }
 					onChange={ ( value ) =>
 						setLicenseKey( value.trim().toUpperCase() )
 					}
