@@ -65,6 +65,7 @@ function validate_license( $license_key ): bool {
 			'timeout' => 5,
 			'headers' => array(
 				'Content-Type' => 'application/json',
+				'Accept'       => 'application/json',
 			),
 			'body'    => wp_json_encode(
 				array(
