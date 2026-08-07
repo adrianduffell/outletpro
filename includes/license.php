@@ -43,7 +43,7 @@ function deinit_license(): void {
  * @internal
  *
  * @param mixed $license_key The license key to validate.
- * @throws \RuntimeException If the license validation request fails.
+ * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
 function validate_license( $license_key ): bool {
