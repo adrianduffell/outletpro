@@ -5,7 +5,7 @@
 
 import apiFetch from '@wordpress/api-fetch';
 import { Button, TextControl } from '@wordpress/components';
-import { useState } from '@wordpress/element';
+import { useState, createInterpolateElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
 declare const outletproWelcomePage: {
@@ -132,10 +132,6 @@ export function WelcomePage(): JSX.Element {
 					label={ __( 'Premium license key', 'outletpro' ) }
 					hideLabelFromVision={ true }
 					value={ licenseKey }
-					help={ __(
-						'The license key can be found in the email receipt for purchasing Outlet Pro.',
-						'outletpro'
-					) }
 					onChange={ ( value ) =>
 						setLicenseKey( value.trim().toUpperCase() )
 					}
@@ -154,6 +150,34 @@ export function WelcomePage(): JSX.Element {
 				>
 					{ __( 'I don’t have a license key', 'outletpro' ) }
 				</a>
+			</p>
+			<p className="outletpro-welcome-page__notice">
+				{ createInterpolateElement(
+					__(
+						'By continuing, you agree to the <tos>terms of service</tos> and have read the <privacy>privacy policy</privacy>.',
+						'outletpro'
+					),
+					{
+						tos: (
+							<a
+								href="https://adrianduffell.com/tos.html"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								terms of service
+							</a>
+						),
+						privacy: (
+							<a
+								href="https://adrianduffell.com/privacy.html"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								privacy policy
+							</a>
+						),
+					}
+				) }
 			</p>
 			<div className="outletpro-welcome-page__button-row">
 				<Button
