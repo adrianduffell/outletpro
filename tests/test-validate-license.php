@@ -74,7 +74,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_when_license_is_invalid(): void {
+	public function test_returns_false_when_license_is_invalid(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 
