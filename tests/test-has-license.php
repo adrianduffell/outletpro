@@ -17,9 +17,9 @@ class Test_Has_License extends WP_UnitTestCase {
 	/**
 	 * Mocks the license server response.
 	 *
-	 * @param bool $success Whether the license validation should succeed or fail.
+	 * @param bool $success Whether the license validation succeeds or fails.
 	 */
-	private function mock_license_server_response( bool $success ): void {
+	private function mock_license_server_response( bool $success ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {

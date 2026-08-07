@@ -12,7 +12,13 @@ use function OutletPro\validate_license;
 
 class Test_Validate_License extends WP_UnitTestCase {
 
-	private function mock_license_server_response( $success ): void {
+	/**
+	 * Mocks the license server response.
+	 *
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+	 * @param mixed $success Whether the license validation succeeds or fails.
+	 */
+	private function mock_license_server_response( $success ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {
@@ -40,7 +46,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		);
 	}
 
-	private function mock_license_server_downtime(): void {
+	private function mock_license_server_downtime(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) {

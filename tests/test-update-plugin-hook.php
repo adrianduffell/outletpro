@@ -15,7 +15,12 @@ use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
-	private function mock_license_server_response( bool $success ): void {
+	/**
+	 * Mocks the license server response.
+	 *
+	 * @param bool $success Whether the license validation succeeds or fails.
+	 */
+	private function mock_license_server_response( bool $success ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {
