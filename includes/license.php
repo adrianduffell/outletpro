@@ -62,6 +62,7 @@ function validate_license( $license_key ): bool {
 	$response = wp_remote_post(
 		'https://api.adrianduffell.store/v1/licenses/validate',
 		array(
+			'timeout' => 5,
 			'headers' => array(
 				'Content-Type' => 'application/json',
 			),
