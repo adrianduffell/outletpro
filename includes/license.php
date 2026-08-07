@@ -43,10 +43,48 @@ function deinit_license(): void {
  * @internal
  *
  * @param mixed $license_key The license key to validate.
+ * @throws \RuntimeException If the license validation request fails.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
 function validate_license( $license_key ): bool {
-	return is_string( $license_key ) && strlen( $license_key ) >= MIN_LICENSE_KEY_LENGTH;
+	if ( ! is_string( $license_key ) ) {
+		return false;
+	}
+
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.adrianduffell.store/v1/licenses/validate',
+		array(
+			'headers' => array(
+				'Content-Type' => 'application/json',
+			),
+			'body'    => wp_json_encode(
+				array(
+					'license_key' => $license_key,
+					'product'     => 'outletpro',
+				)
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+	if ( ! is_array( $data ) || ! isset( $data['success'] ) || ! is_bool( $data['success'] ) ) {
+		throw new \RuntimeException( 'License validation response is invalid' );
+	}
+
+	return $data['success'];
 }
 
 /**
