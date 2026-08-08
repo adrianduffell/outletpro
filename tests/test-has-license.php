@@ -106,4 +106,17 @@ class Test_Has_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result );
 	}
+
+	public function rethrows_when_license_validation_fails(): void {
+		// Arrange.
+		$this->mock_license_server_response( null );
+		delete_transient( HAS_LICENSE_TRANSIENT );
+		update_option( LICENSE_KEY_OPTION, 'valid-license' );
+
+		// Expect
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		has_license();
+	}
 }

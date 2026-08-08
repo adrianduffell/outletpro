@@ -48,8 +48,13 @@ function update_plugin_hook( $update, array $plugin_data ) {
 		return $update;
 	}
 
-	if ( ! has_license() ) {
-		return false;
+	try {
+		if ( ! has_license() ) {
+			return false;
+		}
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Could not check for plugin update due to error checking premium license' );
+		return $update;
 	}
 
 	$license_key = get_option( LICENSE_KEY_OPTION );

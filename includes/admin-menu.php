@@ -27,9 +27,11 @@ const WELCOME_PAGE_SLUG = 'outletpro-welcome';
 function init_admin_menu(): void {
 	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 
-	// phpcs:ignore SlevomatCodingStandard
-	if ( ! has_license() ) {
-		add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
+	try {
+		if ( ! has_license() ) {
+			add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
+		}
+	} catch ( \RuntimeException $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Don't show the welcome screen when the license status is unknown.
 	}
 }
 

@@ -104,6 +104,7 @@ function validate_license( $license_key ): bool {
  * Check whether the current site has a valid license.
  *
  * @internal
+ * @throws \RuntimeException If unable to check premium license.
  */
 function has_license(): bool {
 	$cached_value = get_transient( HAS_LICENSE_TRANSIENT );
@@ -112,7 +113,11 @@ function has_license(): bool {
 		return 'yes' === $cached_value;
 	}
 
-	$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+	try {
+		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+	} catch ( \RuntimeException $e ) {
+		throw new \RuntimeException( 'Unable to check premium license' );
+	}
 
 	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
 

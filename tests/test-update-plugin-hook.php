@@ -224,4 +224,20 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 			$result['package']
 		);
 	}
+
+	public function test_gracefully_handles_exception_when_checking_license(): void {
+		// Arrange.
+		$this->mock_license_server_response( 'error' );
+		update_option( LICENSE_KEY_OPTION, 'valid-license' );
+
+		// Act.
+		$result = apply_filters(
+			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
+			'my-previous-value',
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
+		);
+
+		// Assert.
+		$this->assertSame( 'my-previous-value', $result );
+	}
 }
