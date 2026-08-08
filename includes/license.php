@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 const MIN_LICENSE_KEY_LENGTH = 2;
 
 /**
+ * HTTP OK response code.
+ *
+ * @internal
+ */
+const HTTP_OK = 200;
+
+/**
  * Helper to initialize license features.
  *
  * @internal
@@ -43,16 +50,61 @@ function deinit_license(): void {
  * @internal
  *
  * @param mixed $license_key The license key to validate.
+ * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
 function validate_license( $license_key ): bool {
-	return is_string( $license_key ) && strlen( $license_key ) >= MIN_LICENSE_KEY_LENGTH;
+	if ( ! is_string( $license_key ) ) {
+		return false;
+	}
+
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.adrianduffell.store/v1/licenses/validate',
+		array(
+			'timeout' => 5,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+				'Accept'       => 'application/json',
+			),
+			'body'    => wp_json_encode(
+				array(
+					'license_key' => $license_key,
+					'product'     => 'outletpro',
+				)
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	if ( HTTP_OK !== wp_remote_retrieve_response_code( $response ) ) {
+		throw new \RuntimeException( 'License validation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+	if ( ! is_array( $data ) || ! isset( $data['success'] ) || ! is_bool( $data['success'] ) ) {
+		throw new \RuntimeException( 'License validation response is invalid' );
+	}
+
+	return $data['success'];
 }
 
 /**
  * Check whether the current site has a valid license.
  *
  * @internal
+ * @throws \RuntimeException If unable to check premium license.
  */
 function has_license(): bool {
 	$cached_value = get_transient( HAS_LICENSE_TRANSIENT );
@@ -61,7 +113,11 @@ function has_license(): bool {
 		return 'yes' === $cached_value;
 	}
 
-	$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+	try {
+		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+	} catch ( \RuntimeException $e ) {
+		throw new \RuntimeException( 'Unable to check premium license' );
+	}
 
 	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
 
