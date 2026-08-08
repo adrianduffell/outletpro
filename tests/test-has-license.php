@@ -113,7 +113,7 @@ class Test_Has_License extends WP_UnitTestCase {
 		delete_transient( HAS_LICENSE_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'valid-license' );
 
-		// Expect
+		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
