@@ -48,6 +48,23 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		);
 	}
 
+	private function mock_license_server_downtime(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) {
+				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+					return new WP_Error(
+						'http_request_failed',
+						'Simulated HTTP failure'
+					);
+				}
+				return $pre;
+			},
+			10,
+			3
+		);
+	}
+
 	public function test_returns_false_when_license_key_is_missing(): void {
 		// Arrange.
 		deinit_update_plugin();
@@ -227,7 +244,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_gracefully_handles_exception_when_checking_license(): void {
 		// Arrange.
-		$this->mock_license_server_response( 'error' );
+		$this->mock_license_server_downtime();
 		update_option( LICENSE_KEY_OPTION, 'valid-license' );
 
 		// Act.
