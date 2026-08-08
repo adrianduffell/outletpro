@@ -17,11 +17,12 @@ class Test_Validate_License extends WP_UnitTestCase {
 	 *
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
 	 * @param mixed $success Whether the license validation succeeds or fails.
+	 * @param int $response_code The HTTP response code to simulate.
 	 */
-	private function mock_license_server_response( $success ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	private function mock_license_server_response( $success, int $response_code = 200 ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( $success ) {
+			function ( $pre, $args, $url ) use ( $success, $response_code ) {
 				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
@@ -31,7 +32,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 							)
 						),
 						'response' => array(
-							'code'    => 200,
+							'code'    => $response_code,
 							'message' => 'OK',
 						),
 						'cookies'  => array(),
@@ -62,6 +63,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 			3
 		);
 	}
+
 
 	public function test_returns_true_when_license_is_valid(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
@@ -105,6 +107,17 @@ class Test_Validate_License extends WP_UnitTestCase {
 
 		// Act.
 		$result = validate_license( 'invalid-license' );
+	}
+
+	public function test_throws_when_remote_response_code_unexpected(): void {
+		// Arrange.
+		$this->mock_license_server_response( false, 500 );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		$result = validate_license( 'valid-license' );
 	}
 
 	public function test_returns_false_for_empty_string(): void {

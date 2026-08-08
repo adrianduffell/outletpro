@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 const MIN_LICENSE_KEY_LENGTH = 2;
 
 /**
+ * HTTP OK response code.
+ *
+ * @internal
+ */
+const HTTP_OK = 200;
+
+/**
  * Helper to initialize license features.
  *
  * @internal
@@ -78,6 +85,10 @@ function validate_license( $license_key ): bool {
 
 	if ( is_wp_error( $response ) ) {
 		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	if ( HTTP_OK !== wp_remote_retrieve_response_code( $response ) ) {
+		throw new \RuntimeException( 'License validation response code failed' );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
