@@ -17,13 +17,14 @@ import {
 } from '@wordpress/components';
 import { PanelColorSettings } from '@wordpress/block-editor';
 import { store as coreStore } from '@wordpress/core-data';
-import { useSelect } from '@wordpress/data';
-import { useMemo } from '@wordpress/element';
+import { useDispatch, useSelect } from '@wordpress/data';
+import { useEffect, useMemo } from '@wordpress/element';
 import { PluginSidebar, PluginSidebarMoreMenuItem } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
+import { COMPLEMENTARY_AREA, SIDEBAR_NAME, QUERY_PARAM } from './constants';
 
 type FontWeightOption = {
 	name: string;
@@ -32,8 +33,6 @@ type FontWeightOption = {
 		fontWeight: string;
 	};
 };
-
-const SIDEBAR_NAME = 'outletpro-sidebar';
 
 const FONT_WEIGHTS: FontWeightOption[] = [
 	{ name: __( 'Default', 'outletpro' ), key: '' },
@@ -65,6 +64,17 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 };
 
 const SettingsSidebar = () => {
+	const { enableComplementaryArea } = useDispatch( 'core/interface' );
+
+	useEffect( () => {
+		const query = new URLSearchParams( window.location.search );
+		if ( query.get( QUERY_PARAM ) !== 'open' ) {
+			return;
+		}
+
+		enableComplementaryArea( 'core', COMPLEMENTARY_AREA );
+	}, [ enableComplementaryArea ] );
+
 	const {
 		label,
 		setLabel,
