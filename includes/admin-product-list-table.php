@@ -156,7 +156,12 @@ notice.addEventListener( 'click', handler );
  * @return string|mixed The modified stock HTML.
  */
 function add_badge_to_stock_html_hook( $stock_html, $product ) {
-	if ( ! is_outlet( $product ) ) {
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return $stock_html;
+		}
+	}
+	catch ( \Throwable $e ) {
 		return $stock_html;
 	}
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION, '' );
