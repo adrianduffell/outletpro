@@ -28,7 +28,7 @@ const mockUseUnsignedIntegerEntityProp = jest.mocked(
 	useUnsignedIntegerEntityProp
 );
 
-test( 'links to the Cart template for a block theme', () => {
+test( 'links to the Single Product template for a block theme', () => {
 	// Arrange.
 	mockUseSelect.mockReturnValue( {
 		currentPostId: 37,
@@ -58,7 +58,7 @@ test( 'links to the Cart template for a block theme', () => {
 	);
 	expectedUrl.search = new URLSearchParams( {
 		postType: 'wp_template',
-		postId: 'woocommerce/woocommerce//page-cart',
+		postId: 'woocommerce/woocommerce//single-product',
 		canvas: 'edit',
 		[ QUERY_PARAM ]: '1',
 	} ).toString();
@@ -77,7 +77,6 @@ test( 'links to the Outlet Pro Customizer section for a classic theme', () => {
 	mockUseSelect.mockReturnValue( {
 		currentPostId: 37,
 		isBlockTheme: false,
-		cartUrl: 'http://localhost/cart/',
 	} );
 	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, jest.fn() ] );
 	window.history.replaceState(
@@ -98,7 +97,7 @@ test( 'links to the Outlet Pro Customizer section for a classic theme', () => {
 	const link = screen.getByRole( 'link', { name: 'Open in customizer' } );
 	expect( link ).toHaveAttribute(
 		'href',
-		'http://localhost/wp-admin/customize.php?autofocus%5Bsection%5D=outletpro&url=http%3A%2F%2Flocalhost%2Fcart%2F'
+		'http://localhost/wp-admin/customize.php?autofocus%5Bsection%5D=outletpro'
 	);
 	expect( link ).toHaveAttribute( 'target', '_blank' );
 	expect( link ).toHaveAttribute( 'rel', 'noopener noreferrer' );

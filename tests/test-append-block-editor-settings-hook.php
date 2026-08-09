@@ -84,18 +84,4 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $settings['outletproIsBlockTheme'] );
 	}
-
-	public function test_settings_contain_cart_url(): void {
-		// Arrange.
-		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
-		update_option( 'woocommerce_cart_page_id', $page_id );
-		init_block_editor();
-
-		// Act.
-		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
-
-		// Assert.
-		$this->assertArrayHasKey( 'outletproCartUrl', $settings );
-		$this->assertSame( get_permalink( $page_id ), $settings['outletproCartUrl'] );
-	}
 }

@@ -24,7 +24,6 @@ function init_block_editor(): void {
  * Append data to the block editor settings.
  *
  * - outletproIsBlockTheme: boolean indicating if the current theme is a block theme.
- * - outletproCartUrl: URL of the WooCommerce cart page.
  * - wcOutletCanonicalTermId: ID of the canonical term for the outlet status taxonomy.
  *
  * Fired by `block_editor_settings_all`.
@@ -37,7 +36,6 @@ function init_block_editor(): void {
  */
 function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Context $_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$settings['outletproIsBlockTheme'] = wp_is_block_theme();
-	$settings['outletproCartUrl']      = wc_get_cart_url();
 
 	$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 

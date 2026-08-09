@@ -11,14 +11,15 @@ import { QUERY_PARAM as SETTINGS_SIDEBAR_QUERY_PARAM } from '../settings-sidebar
 import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
 import './style.css';
 
-const WOOCOMMERCE_CART_TEMPLATE_ID = 'woocommerce/woocommerce//page-cart';
+const WOOCOMMERCE_SINGLE_PRODUCT_TEMPLATE_ID =
+	'woocommerce/woocommerce//single-product';
 
 function buildSiteEditorUrl( currentUrl: string ): string {
 	const siteEditorUrl = new URL( 'site-editor.php', currentUrl );
 
 	siteEditorUrl.search = new URLSearchParams( {
 		postType: 'wp_template',
-		postId: WOOCOMMERCE_CART_TEMPLATE_ID,
+		postId: WOOCOMMERCE_SINGLE_PRODUCT_TEMPLATE_ID,
 		canvas: 'edit',
 		[ SETTINGS_SIDEBAR_QUERY_PARAM ]: '1',
 	} ).toString();
@@ -26,16 +27,15 @@ function buildSiteEditorUrl( currentUrl: string ): string {
 	return siteEditorUrl.href;
 }
 
-function buildCustomizerUrl( currentUrl: string, cartUrl: string ): string {
+function buildCustomizerUrl( currentUrl: string ): string {
 	const customizerUrl = new URL( 'customize.php', currentUrl );
 	customizerUrl.searchParams.set( 'autofocus[section]', 'outletpro' );
-	customizerUrl.searchParams.set( 'url', cartUrl );
 
 	return customizerUrl.href;
 }
 
 export default function OutletPageEditorCallout(): JSX.Element | null {
-	const { currentPostId, isBlockTheme, cartUrl } = useSelect( ( select ) => {
+	const { currentPostId, isBlockTheme } = useSelect( ( select ) => {
 		const editor = select( editorStore );
 		const editorSettings = editor.getEditorSettings();
 
@@ -44,11 +44,6 @@ export default function OutletPageEditorCallout(): JSX.Element | null {
 			isBlockTheme:
 				'outletproIsBlockTheme' in editorSettings &&
 				editorSettings.outletproIsBlockTheme === true,
-			cartUrl:
-				'outletproCartUrl' in editorSettings &&
-				typeof editorSettings.outletproCartUrl === 'string'
-					? editorSettings.outletproCartUrl
-					: '',
 		};
 	}, [] );
 	const [ outletPageId ] =
@@ -60,7 +55,7 @@ export default function OutletPageEditorCallout(): JSX.Element | null {
 
 	const settingsUrl = isBlockTheme
 		? buildSiteEditorUrl( window.location.href )
-		: buildCustomizerUrl( window.location.href, cartUrl );
+		: buildCustomizerUrl( window.location.href );
 
 	return (
 		<PluginPostStatusInfo>
