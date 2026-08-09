@@ -67,6 +67,7 @@
 	display: block;
 	width: fit-content;
 	text-box: trim-both cap alphabetic;
+	line-height: 1;
 	padding: 0.32em;
 	font-size: 12px;
 	background-color: transparent;
