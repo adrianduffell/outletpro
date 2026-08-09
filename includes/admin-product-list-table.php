@@ -160,5 +160,5 @@ function add_badge_to_stock_html_hook( $stock_html, $product ) {
 		return $stock_html;
 	}
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION, '' );
-	return $stock_html . '<div class="outletpro-admin-badge">' . $label . '</div>';
+	return $stock_html . '<div class="outletpro-admin-badge">' . esc_html( $label ) . '</div>';
 }
