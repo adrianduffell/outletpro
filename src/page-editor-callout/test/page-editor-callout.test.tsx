@@ -49,7 +49,7 @@ test( 'links to the Cart template for a block theme', () => {
 		screen.getByRole( 'heading', { name: 'Outlet settings' } )
 	).toBeInTheDocument();
 	expect(
-		screen.getByRole( 'img', { name: 'Outlet badge' } )
+		screen.getByRole( 'img', { name: 'Outlet settings' } )
 	).toBeInTheDocument();
 	const link = screen.getByRole( 'link', { name: 'Open in site editor' } );
 	const expectedUrl = new URL(
