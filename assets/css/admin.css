@@ -76,3 +76,11 @@
 	border-radius: 4px;
 	opacity: 0.85;
 }
+
+.wp-list-table .outletpro-admin-badge {
+	margin-top: 2px;
+}
+
+.outletpro-admin-badge:empty {
+	display: none;
+}
