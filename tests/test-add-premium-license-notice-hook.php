@@ -24,11 +24,13 @@ class Test_Add_Premium_License_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputRegex( '/Outlet Pro requires a premium license for plugin updates\..*https:\/\/outletpro\.zip\/premium-license.*target="_blank".*Learn more/s' );
 
 		// Act.
-		do_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), plugin_basename( PLUGIN_FILE ), array(), 'all' );
-
-		// Cleanup.
-		delete_transient( HAS_LICENSE_TRANSIENT );
-		deinit_license();
+		try {
+			do_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), plugin_basename( PLUGIN_FILE ), array(), 'all' );
+		} finally {
+			// Cleanup.
+			delete_transient( HAS_LICENSE_TRANSIENT );
+			deinit_license();
+		}
 	}
 
 	public function test_does_not_render_notice_when_license_is_valid(): void {
@@ -40,10 +42,12 @@ class Test_Add_Premium_License_Notice_Hook extends WP_UnitTestCase {
 		$this->expectOutputString( '' );
 
 		// Act.
-		do_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), plugin_basename( PLUGIN_FILE ), array(), 'all' );
-
-		// Cleanup.
-		delete_transient( HAS_LICENSE_TRANSIENT );
-		deinit_license();
+		try {
+			do_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), plugin_basename( PLUGIN_FILE ), array(), 'all' );
+		} finally {
+			// Cleanup.
+			delete_transient( HAS_LICENSE_TRANSIENT );
+			deinit_license();
+		}
 	}
 }
