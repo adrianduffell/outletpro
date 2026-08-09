@@ -160,8 +160,7 @@ function add_badge_to_stock_html_hook( $stock_html, $product ) {
 		if ( ! is_outlet( $product ) ) {
 			return $stock_html;
 		}
-	}
-	catch ( \Throwable $e ) {
+	} catch ( \Throwable $e ) {
 		return $stock_html;
 	}
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION, '' );
