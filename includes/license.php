@@ -165,7 +165,7 @@ function add_premium_license_notice_hook( string $plugin_file, array $plugin_dat
 			return;
 		}
 	} catch ( \RuntimeException $e ) {
-		\wc_get_logger()->error( 'Could not check premium license to render plugin notice' );
+		\wc_get_logger()->error( 'Premium license status could not be checked' );
 		return;
 	}
 	?>
