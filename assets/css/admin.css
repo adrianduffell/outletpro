@@ -80,3 +80,7 @@
 .wp-list-table .outletpro-admin-badge {
 	margin-top: 2px;
 }
+
+.outletpro-admin-badge:empty {
+	display: none;
+}
