@@ -68,7 +68,7 @@ export default function OutletPageEditorCallout(): JSX.Element | null {
 				<span
 					className="outletpro-page-editor-callout__icon"
 					role="img"
-					aria-label={ __( 'Outlet badge', 'outletpro' ) }
+					aria-label={ __( 'Outlet settings', 'outletpro' ) }
 				>
 					{ SettingsIcon }
 				</span>
