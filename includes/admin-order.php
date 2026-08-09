@@ -72,5 +72,5 @@ function display_order_item_outlet_badge_hook( $_item_id, \WC_Order_Item $item, 
 		$label = __( '⚠️ Missing label', 'outletpro' );
 	}
 
-	echo '<span class="outletpro-admin-badge">' . esc_html( $label ) . '</span>';
+	echo '<div class="outletpro-admin-badge">' . esc_html( $label ) . '</div>';
 }

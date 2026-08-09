@@ -64,14 +64,15 @@
 }
 
 .outletpro-admin-badge {
-	display: inline-block;
-	background-color: #f0f0f1;
-	color: var(--wp-admin-text-color);
-	border-radius: 2px;
-	font-size: 10px;
-	padding: 0.36em;
-	font-weight: 500;
+	display: block;
+	width: fit-content;
+	text-box: trim-both cap alphabetic;
 	line-height: 1;
-	text-box-trim: trim-both;
-	text-box-edge: cap alphabetic;
+	padding: 0.32em;
+	font-size: 12px;
+	background-color: transparent;
+	color: inherit;
+	border: 1px solid currentcolor;
+	border-radius: 4px;
+	opacity: 0.85;
 }

@@ -23,7 +23,7 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$item->add_meta_data( ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY, 'Final Sale', true );
 
 		// Expect.
-		$this->expectOutputString( '<span class="outletpro-admin-badge">Final Sale</span>' );
+		$this->expectOutputString( '<div class="outletpro-admin-badge">Final Sale</div>' );
 
 		// Act.
 		display_order_item_outlet_badge_hook( 1, $item, null );
@@ -36,7 +36,7 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$item->add_meta_data( ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( '<span class="outletpro-admin-badge">⚠️ Missing label</span>' );
+		$this->expectOutputString( '<div class="outletpro-admin-badge">⚠️ Missing label</div>' );
 
 		// Act.
 		display_order_item_outlet_badge_hook( 1, $item, null );
@@ -49,7 +49,7 @@ class Test_Display_Order_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$item->add_meta_data( ORDER_ITEM_OUTLET_META_KEY, 'yes', true );
 
 		// Expect.
-		$this->expectOutputString( '<span class="outletpro-admin-badge">⚠️ Missing label</span>' );
+		$this->expectOutputString( '<div class="outletpro-admin-badge">⚠️ Missing label</div>' );
 
 		// Act.
 		display_order_item_outlet_badge_hook( 1, $item, null );
