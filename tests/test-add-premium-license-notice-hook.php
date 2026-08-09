@@ -21,10 +21,7 @@ class Test_Add_Premium_License_Notice_Hook extends WP_UnitTestCase {
 		set_transient( HAS_LICENSE_TRANSIENT, 'no', WEEK_IN_SECONDS );
 
 		// Expect.
-		$this->expectOutputRegex( '/Outlet Pro requires a premium license for plugin updates\./' );
-		$this->expectOutputRegex( '/https:\/\/outletpro\.zip\/premium-license/' );
-		$this->expectOutputRegex( '/target="_blank"/' );
-		$this->expectOutputRegex( '/Learn more/' );
+		$this->expectOutputRegex( '/Outlet Pro requires a premium license for plugin updates\..*https:\/\/outletpro\.zip\/premium-license.*target="_blank".*Learn more/s' );
 
 		// Act.
 		do_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), plugin_basename( PLUGIN_FILE ), array(), 'all' );
