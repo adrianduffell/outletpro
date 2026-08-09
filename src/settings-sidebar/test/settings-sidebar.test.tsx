@@ -425,7 +425,7 @@ describe( 'settings-sidebar registration', () => {
 		window.history.replaceState(
 			{},
 			'',
-			`/wp-admin/site-editor.php?${ QUERY_PARAM }=open`
+			`/wp-admin/site-editor.php?${ QUERY_PARAM }=1`
 		);
 		jest.isolateModules( () => {
 			require( '../index' );

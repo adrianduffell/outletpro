@@ -68,7 +68,7 @@ const SettingsSidebar = () => {
 
 	useEffect( () => {
 		const query = new URLSearchParams( window.location.search );
-		if ( query.get( QUERY_PARAM ) !== 'open' ) {
+		if ( query.get( QUERY_PARAM ) !== '1' ) {
 			return;
 		}
 
