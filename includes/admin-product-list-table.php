@@ -32,6 +32,7 @@ const ONBOARDING_DISMISS_STORAGE_KEY = 'outletpro_product_onboarding_dismissed';
  */
 function init_admin_product_list_table(): void {
 	add_action( 'admin_notices', 'OutletPro\product_onboarding_notice_hook' );
+	add_filter( 'woocommerce_admin_stock_html', 'OutletPro\add_badge_to_stock_html_hook', 10, 2 );
 }
 
 /**
@@ -141,4 +142,23 @@ notice.addEventListener( 'click', handler );
 }() );
 </script>
 	<?php
+}
+/**
+ * Add the outlet badge to the stock HTML on the product admin list table.
+ *
+ * Fired by `woocommerce_admin_stock_html`.
+ *
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints
+ *
+ * @param string|mixed $stock_html The stock HTML.
+ * @param \WC_Product  $product    The product object.
+ * @return string|mixed The modified stock HTML.
+ */
+function add_badge_to_stock_html_hook( $stock_html, $product ) {
+	if ( ! is_outlet( $product ) ) {
+		return $stock_html;
+	}
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION, '' );
+	return $stock_html . '<div class="outletpro-admin-badge">' . $label . '</div>';
 }
