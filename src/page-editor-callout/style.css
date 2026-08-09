@@ -1,0 +1,47 @@
+/**
+ * Outlet Pro page editor callout styles.
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+.outletpro-page-editor-callout {
+	position: relative;
+	padding: 1em;
+	background-color: color-mix(in srgb, var(--wp-admin-theme-color) 5%, transparent);
+	border: 1px solid color-mix(in srgb, var(--wp-admin-theme-color) 15%, transparent);
+	border-radius: 4px;
+
+	h3 {
+		margin: 0 0 1em 0;
+		padding-right: calc(24px + 0.75em);
+		text-box: trim-both cap alphabetic;
+	}
+
+	p {
+		margin-bottom: 0.75em;
+	}
+
+	p:last-child {
+		margin-bottom: 0;
+		text-box: trim-end cap alphabetic;
+	}
+	p > a {
+		white-space: nowrap;
+	}
+}
+
+.outletpro-page-editor-callout__icon {
+	position: absolute;
+	top: 4px;
+	right: 6px;
+	display: block;
+	width: 24px;
+	height: 24px;
+	line-height: 0;
+}
+
+.outletpro-page-editor-callout__icon svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
