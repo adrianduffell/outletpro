@@ -7,11 +7,15 @@ import type { ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { registerPlugin } from '@wordpress/plugins';
 import useSettings from '../../use-settings';
-import { useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
+import { COMPLEMENTARY_AREA, QUERY_PARAM, SIDEBAR_NAME } from '../constants';
 
 beforeEach( () => {
 	mockRegisterPlugin.mockClear();
+	mockUseDispatch.mockReturnValue( {
+		enableComplementaryArea: jest.fn(),
+	} );
 	window.history.replaceState( {}, '', '/wp-admin/site-editor.php' );
 } );
 
@@ -24,6 +28,7 @@ jest.mock( '@wordpress/plugins', () => ( {
 } ) );
 
 jest.mock( '@wordpress/data', () => ( {
+	useDispatch: jest.fn(),
 	useSelect: jest.fn(),
 } ) );
 
@@ -35,6 +40,7 @@ jest.mock( '../../use-settings', () => jest.fn() );
 
 jest.mock( '@wordpress/element', () => ( {
 	...jest.requireActual( '@wordpress/element' ),
+	useEffect: jest.fn( ( fn: () => void ) => fn() ),
 	useMemo: jest.fn( ( fn: () => unknown ) => fn() ),
 } ) );
 
@@ -284,6 +290,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 
 const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseSettings = useSettings as jest.Mock;
+const mockUseDispatch = jest.mocked( useDispatch );
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
 
@@ -326,7 +333,7 @@ describe( 'settings-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).toHaveBeenCalledWith(
-			'outletpro-sidebar',
+			SIDEBAR_NAME,
 			expect.objectContaining( {
 				render: expect.any( Function ),
 			} )
@@ -362,7 +369,7 @@ describe( 'settings-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'outletpro-sidebar',
+			SIDEBAR_NAME,
 			expect.anything()
 		);
 
@@ -383,7 +390,7 @@ describe( 'settings-sidebar registration', () => {
 
 		// Assert.
 		expect( mockRegisterPlugin ).not.toHaveBeenCalledWith(
-			'outletpro-sidebar',
+			SIDEBAR_NAME,
 			expect.anything()
 		);
 
@@ -406,6 +413,33 @@ describe( 'settings-sidebar registration', () => {
 
 		// Assert.
 		expect( screen.getByText( 'Outlet settings' ) ).toBeInTheDocument();
+	} );
+
+	test( 'opens the outlet settings sidebar when requested by the URL', () => {
+		// Arrange.
+		const enableComplementaryArea = jest.fn();
+		mockUseDispatch.mockReturnValue( { enableComplementaryArea } );
+		mockRegisterPlugin.mockClear();
+		mockUseSelect.mockReturnValue( true );
+		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
+		window.history.replaceState(
+			{},
+			'',
+			`/wp-admin/site-editor.php?${ QUERY_PARAM }=1`
+		);
+		jest.isolateModules( () => {
+			require( '../index' );
+		} );
+		const [ , pluginConfig ] = mockRegisterPlugin.mock.calls[ 0 ];
+
+		// Act.
+		render( pluginConfig.render() );
+
+		// Assert.
+		expect( enableComplementaryArea ).toHaveBeenCalledWith(
+			'core',
+			COMPLEMENTARY_AREA
+		);
 	} );
 
 	test( 'render function outputs all panel sections', () => {
