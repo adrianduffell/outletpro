@@ -69,6 +69,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
 
 		// Assert.
+		$this->assertArrayHasKey( 'outletproIsBlockTheme', $settings );
 		$this->assertTrue( $settings['outletproIsBlockTheme'] );
 	}
 
