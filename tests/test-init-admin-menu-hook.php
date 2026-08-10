@@ -10,8 +10,8 @@
 
 use function OutletPro\deinit_admin_menu;
 use function OutletPro\init_admin_menu;
-use const OutletPro\HAS_LICENSE_TRANSIENT;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
@@ -51,7 +51,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 	public function test_registers_menu_page_when_no_license(): void {
 		// Arrange.
 		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		deinit_admin_menu();
 
 		// Act.
@@ -64,7 +64,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 	public function test_does_not_register_menu_page_when_license_is_active(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'valid-license-key' );
 		deinit_admin_menu();
 

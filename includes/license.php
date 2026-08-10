@@ -50,20 +50,19 @@ function deinit_license(): void {
  * @internal
  *
  * @param mixed $license_key The license key to validate.
- * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
-function validate_license( $license_key ): bool {
+function validate_license( $license_key ): string {
 	if ( ! is_string( $license_key ) ) {
-		return false;
+		return 'not_found';
 	}
 
 	if ( '' === trim( $license_key ) ) {
-		return false;
+		return 'not_found';
 	}
 
 	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
-		return false;
+		return 'not_found';
 	}
 
 	$response = wp_remote_post(
@@ -84,44 +83,64 @@ function validate_license( $license_key ): bool {
 	);
 
 	if ( is_wp_error( $response ) ) {
-		throw new \RuntimeException( 'License validation request failed' );
+		return 'error';
 	}
 
 	if ( HTTP_OK !== wp_remote_retrieve_response_code( $response ) ) {
-		throw new \RuntimeException( 'License validation response code failed' );
+		return 'error';
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
 	if ( ! is_array( $data ) || ! isset( $data['success'] ) || ! is_bool( $data['success'] ) ) {
-		throw new \RuntimeException( 'License validation response is invalid' );
+		return 'error';
 	}
 
-	return $data['success'];
+	return $data['success'] ? 'active' : 'not_found';
 }
 
 /**
  * Check whether the current site has a valid license.
  *
  * @internal
- * @throws \RuntimeException If unable to check premium license.
+ * @throws \RuntimeException If the license status cannot be retrieved.
  */
 function has_license(): bool {
-	$cached_value = get_transient( HAS_LICENSE_TRANSIENT );
+	return in_array( get_license_status(), array( 'active', 'inactive' ), true );
+}
+
+/**
+ * Get the current site's license status.
+ *
+ * @internal
+ * @throws \RuntimeException If the license status cannot be retrieved.
+ */
+function get_license_status(): string {
+	$cached_value = get_transient( LICENSE_STATUS_TRANSIENT );
 
 	if ( false !== $cached_value ) {
-		return 'yes' === $cached_value;
+		if (
+			! is_string( $cached_value )
+			|| ! in_array( $cached_value, array( 'active', 'inactive', 'not_found', 'error', 'expired' ), true )
+		) {
+			delete_transient( LICENSE_STATUS_TRANSIENT );
+		} elseif ( 'error' === $cached_value ) {
+			throw new \RuntimeException( 'Unable to check premium license' );
+		} else {
+			return $cached_value;
+		}
 	}
 
-	try {
-		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
-	} catch ( \RuntimeException $e ) {
+	$license_status = validate_license( get_option( LICENSE_KEY_OPTION ) );
+
+	if ( 'error' === $license_status ) {
+		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
 		throw new \RuntimeException( 'Unable to check premium license' );
 	}
 
-	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
+	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
 
-	return $license_is_valid;
+	return $license_status;
 }
 
 /**

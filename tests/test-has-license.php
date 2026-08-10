@@ -9,8 +9,8 @@
  */
 
 use function OutletPro\has_license;
-use const OutletPro\HAS_LICENSE_TRANSIENT;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Has_License extends WP_UnitTestCase {
 
@@ -64,11 +64,11 @@ class Test_Has_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_true_and_caches_valid_license(): void {
+	public function test_returns_true_and_caches_active_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'ab' );
 
 		// Act.
@@ -76,14 +76,14 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-		$this->assertSame( 'yes', get_transient( HAS_LICENSE_TRANSIENT ) );
+		$this->assertSame( 'active', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
-	public function test_returns_false_and_caches_invalid_license(): void {
+	public function test_returns_false_and_caches_not_found_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'a' );
 
 		// Act.
@@ -91,16 +91,16 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( $result );
-		$this->assertSame( 'no', get_transient( HAS_LICENSE_TRANSIENT ) );
+		$this->assertSame( 'not_found', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
 	public function test_returns_cached_true_value_without_revalidating(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'a' );
-		set_transient( HAS_LICENSE_TRANSIENT, 'yes', WEEK_IN_SECONDS );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 
 		// Act.
 		$result = has_license();
@@ -113,9 +113,9 @@ class Test_Has_License extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_response( false );
 		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'ab' );
-		set_transient( HAS_LICENSE_TRANSIENT, 'no', WEEK_IN_SECONDS );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
 
 		// Act.
 		$result = has_license();
@@ -124,11 +124,22 @@ class Test_Has_License extends WP_UnitTestCase {
 		$this->assertFalse( $result );
 	}
 
-	public function rethrows_when_license_validation_fails(): void {
+	public function test_rethrows_when_license_validation_fails(): void {
 		// Arrange.
 		$this->mock_license_server_downtime();
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'valid-license' );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		has_license();
+	}
+
+	public function test_rethrows_cached_license_validation_error(): void {
+		// Arrange.
+		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS );
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );

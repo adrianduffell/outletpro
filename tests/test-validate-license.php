@@ -65,7 +65,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 	}
 
 
-	public function test_returns_true_when_license_is_valid(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_returns_active_when_license_is_valid(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$this->mock_license_server_response( true );
 
@@ -73,10 +73,10 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( 'abc123' );
 
 		// Assert.
-		$this->assertTrue( $result );
+		$this->assertSame( 'active', $result );
 	}
 
-	public function test_returns_false_when_license_is_invalid(): void {
+	public function test_returns_not_found_when_license_is_invalid(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 
@@ -84,43 +84,54 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( 'invalid-license' );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertSame( 'not_found', $result );
 	}
 
-	public function test_throws_when_response_invalid(): void {
+	public function test_returns_expired_when_license_is_expired(): void {
 		// Arrange.
-		$this->mock_license_server_response( 'error' );
-
-		// Expect.
-		$this->expectException( \RuntimeException::class );
+		$this->mock_license_server_response( false, 200, 'expired' );
 
 		// Act.
-		$result = validate_license( 'license' );
+		$result = validate_license( 'expired-license' );
+
+		// Assert.
+		$this->assertSame( 'expired', $result );
 	}
 
-	public function test_throws_when_remote_request_fails(): void {
+	public function test_returns_error_when_remote_request_fails(): void {
 		// Arrange.
 		$this->mock_license_server_downtime();
 
-		// Expect.
-		$this->expectException( \RuntimeException::class );
-
 		// Act.
 		$result = validate_license( 'invalid-license' );
+
+		// Assert.
+		$this->assertSame( 'error', $result );
 	}
 
-	public function test_throws_when_remote_response_code_unexpected(): void {
+	public function test_returns_error_when_remote_response_code_unexpected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false, 500 );
 
-		// Expect.
-		$this->expectException( \RuntimeException::class );
-
 		// Act.
 		$result = validate_license( 'valid-license' );
+
+		// Assert.
+		$this->assertSame( 'error', $result );
 	}
 
-	public function test_returns_false_for_empty_string(): void {
+	public function test_returns_error_for_unexpected_not_found_response_code(): void {
+		// Arrange.
+		$this->mock_license_server_response( false, 404 );
+
+		// Act.
+		$result = validate_license( 'missing-license' );
+
+		// Assert.
+		$this->assertSame( 'error', $result );
+	}
+
+	public function test_returns_not_found_for_empty_string(): void {
 		// Arrange.
 		$license_key = '';
 
@@ -128,10 +139,10 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( $license_key );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertSame( 'not_found', $result );
 	}
 
-	public function test_returns_false_for_null(): void {
+	public function test_returns_not_found_for_null(): void {
 		// Arrange.
 		$license_key = null;
 
@@ -139,10 +150,10 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( $license_key );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertSame( 'not_found', $result );
 	}
 
-	public function test_returns_false_for_non_string_value(): void {
+	public function test_returns_not_found_for_non_string_value(): void {
 		// Arrange.
 		$license_key = 123;
 
@@ -150,6 +161,6 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( $license_key );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertSame( 'not_found', $result );
 	}
 }
