@@ -106,7 +106,7 @@ function validate_license( $license_key ): string {
  * @throws \RuntimeException If the license status cannot be retrieved.
  */
 function has_license(): bool {
-	return in_array( get_license_status(), array( 'active', 'inactive' ), true );
+	return in_array( get_license_status(), array( 'active' ), true );
 }
 
 /**
