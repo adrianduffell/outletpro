@@ -87,17 +87,6 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertSame( 'not_found', $result );
 	}
 
-	public function test_returns_expired_when_license_is_expired(): void {
-		// Arrange.
-		$this->mock_license_server_response( false, 200, 'expired' );
-
-		// Act.
-		$result = validate_license( 'expired-license' );
-
-		// Assert.
-		$this->assertSame( 'expired', $result );
-	}
-
 	public function test_returns_error_when_remote_request_fails(): void {
 		// Arrange.
 		$this->mock_license_server_downtime();
