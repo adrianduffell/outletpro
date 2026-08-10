@@ -103,6 +103,7 @@ function validate_license( $license_key ): string {
  * Check whether the current site has a valid license.
  *
  * @internal
+ * @deprecated 1.1.0 Use `get_license_status()` instead.
  * @throws \RuntimeException If the license status cannot be retrieved.
  */
 function has_license(): bool {
