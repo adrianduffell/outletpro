@@ -107,36 +107,39 @@ function validate_license( $license_key ): string {
  * @throws \RuntimeException If the license status cannot be retrieved.
  */
 function has_license(): bool {
-	return in_array( get_license_status(), array( 'active' ), true );
+	$license_status = get_license_status();
+
+	if ( 'error' === $license_status ) {
+		throw new \RuntimeException( 'Unable to check premium license' );
+	}
+
+	return 'active' === $license_status;
 }
 
 /**
  * Get the current site's license status.
  *
  * @internal
- * @throws \RuntimeException If the license status cannot be retrieved.
  */
 function get_license_status(): string {
 	$cached_value = get_transient( LICENSE_STATUS_TRANSIENT );
 
 	if ( false !== $cached_value ) {
 		if (
-			! is_string( $cached_value )
-			|| ! in_array( $cached_value, array( 'active', 'inactive', 'not_found', 'error', 'expired' ), true )
+			is_string( $cached_value )
+			&& in_array( $cached_value, array( 'active', 'inactive', 'not_found', 'error', 'expired' ), true )
 		) {
-			delete_transient( LICENSE_STATUS_TRANSIENT );
-		} elseif ( 'error' === $cached_value ) {
-			throw new \RuntimeException( 'Unable to check premium license' );
-		} else {
 			return $cached_value;
 		}
+
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 	}
 
 	$license_status = validate_license( get_option( LICENSE_KEY_OPTION ) );
 
 	if ( 'error' === $license_status ) {
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
-		throw new \RuntimeException( 'Unable to check premium license' );
+		return $license_status;
 	}
 
 	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
