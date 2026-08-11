@@ -110,17 +110,17 @@ function activate_license( string $license_key ): bool {
 		throw new \RuntimeException( 'License activation response code failed' );
 	}
 
-	$data = json_decode( wp_remote_retrieve_body( $response ), true ) ?? array();
+	$data = json_decode( wp_remote_retrieve_body( $response ) ) ?? new stdClass();
 
-	if ( ! is_bool( $data['activated'] ?? null ) ) {
+	if ( ! is_bool( $data->activated ?? null ) ) {
 		throw new \RuntimeException( 'Unexpected license activation response' );
 	}
 
-	if ( false === $data['activated'] ) {
+	if ( false === $data->activated ) {
 		return false;
 	}
 
-	$activation_id = $data['instance']['id'] ?? null;
+	$activation_id = $data->instance->id ?? null;
 
 	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
 		throw new \RuntimeException( 'Unexpected license activation response' );
@@ -180,13 +180,13 @@ function deactivate_license( string $license_key ): bool {
 		throw new \RuntimeException( 'License deactivation response code failed' );
 	}
 
-	$data = json_decode( wp_remote_retrieve_body( $response ), true ) ?? array();
+	$data = json_decode( wp_remote_retrieve_body( $response ) ) ?? new stdClass();
 
-	if ( ! is_bool( $data['deactivated'] ?? null ) ) {
+	if ( ! is_bool( $data->deactivated ?? null ) ) {
 		throw new \RuntimeException( 'Unexpected license deactivation response' );
 	}
 
-	if ( false === $data['deactivated'] ) {
+	if ( false === $data->deactivated ) {
 		return false;
 	}
 
