@@ -27,11 +27,12 @@ const LICENSE_OPTIONS_GROUP = 'outletpro_license';
 const LICENSE_KEY_OPTION = 'outletpro_license_key';
 
 /**
- * WordPress transient key used to cache license validity.
+ * WordPress transient key used to cache license status.
  *
  * @internal
+ * @see get_license_status()
  */
-const HAS_LICENSE_TRANSIENT = 'outletpro_has_license';
+const LICENSE_STATUS_TRANSIENT = 'outletpro_license_status';
 
 /**
  * Helper to initialize license settings.
@@ -91,5 +92,5 @@ function register_license_key_setting(): void {
  * @internal WordPress action hook
  */
 function invalidate_license_cache_hook(): void {
-	delete_transient( HAS_LICENSE_TRANSIENT );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
 }

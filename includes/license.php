@@ -104,24 +104,65 @@ function validate_license( $license_key ): bool {
  * Check whether the current site has a valid license.
  *
  * @internal
+ * @deprecated 1.1.0 Use `get_license_status()` instead.
  * @throws \RuntimeException If unable to check premium license.
  */
 function has_license(): bool {
-	$cached_value = get_transient( HAS_LICENSE_TRANSIENT );
+	$license_status = get_license_status();
+
+	if ( 'error' === $license_status ) {
+		throw new \RuntimeException( 'Unable to check premium license' );
+	}
+
+	return 'active' === $license_status;
+}
+
+/**
+ * Get the license status.
+ *
+ * Performant function to get the license status, using a transient cache to
+ * avoid repeated remote requests. Status is cached for 1 week, or 24 hours
+ * if there was an error validating the license.
+ *
+ * Returns one of 'active', 'inactive', 'not_found', 'error', or 'expired'.
+ *
+ * active: The license key has been activated on this site.
+ * inactive: The license key is valid but has not been activated on this site.
+ * not_found: The license key is not recognized by the server.
+ * error: There was an error validating the license key.
+ * expired: The license key has expired.
+ *
+ * @internal
+ * @see LICENSE_STATUS_TRANSIENT
+ */
+function get_license_status(): string {
+	$cached_value = get_transient( LICENSE_STATUS_TRANSIENT );
 
 	if ( false !== $cached_value ) {
-		return 'yes' === $cached_value;
+		if (
+			is_string( $cached_value )
+			&& in_array( $cached_value, array( 'active', 'inactive', 'not_found', 'error', 'expired' ), true )
+		) {
+			return $cached_value;
+		}
+
+		// If the cached value is invalid, delete it and revalidate.
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 	}
 
 	try {
 		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
 	} catch ( \RuntimeException $e ) {
-		throw new \RuntimeException( 'Unable to check premium license' );
+		\wc_get_logger()->error( 'License status could not be retrieved.' );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
+		return 'error';
 	}
 
-	set_transient( HAS_LICENSE_TRANSIENT, $license_is_valid ? 'yes' : 'no', WEEK_IN_SECONDS );
+	$license_status = $license_is_valid ? 'active' : 'not_found';
 
-	return $license_is_valid;
+	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
+
+	return $license_status;
 }
 
 /**

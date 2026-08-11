@@ -1,6 +1,6 @@
 <?php
 /**
- * Test the has_license function.
+ * Test the get_license_status function.
  *
  * @package OutletPro
  * @group license
@@ -8,11 +8,11 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\has_license;
+use function OutletPro\get_license_status;
 use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
-class Test_Has_License extends WP_UnitTestCase {
+class Test_Get_License_Status extends WP_UnitTestCase {
 
 	/**
 	 * Mocks the license server response.
@@ -57,6 +57,7 @@ class Test_Has_License extends WP_UnitTestCase {
 						'Simulated HTTP failure'
 					);
 				}
+
 				return $pre;
 			},
 			10,
@@ -64,7 +65,7 @@ class Test_Has_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_true_and_caches_valid_license(): void {
+	public function test_returns_active_and_caches_valid_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_KEY_OPTION );
@@ -72,68 +73,84 @@ class Test_Has_License extends WP_UnitTestCase {
 		update_option( LICENSE_KEY_OPTION, 'ab' );
 
 		// Act.
-		$result = has_license();
+		$result = get_license_status();
 
 		// Assert.
-		$this->assertTrue( $result );
+		$this->assertSame( 'active', $result );
 		$this->assertSame( 'active', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
-	public function test_returns_false_and_caches_not_found_license(): void {
+	public function test_returns_not_found_and_caches_invalid_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'a' );
+		update_option( LICENSE_KEY_OPTION, 'ab' );
 
 		// Act.
-		$result = has_license();
+		$result = get_license_status();
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertSame( 'not_found', $result );
 		$this->assertSame( 'not_found', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
-	public function test_returns_cached_true_value_without_revalidating(): void {
+	public function test_returns_cached_active_status_without_revalidating(): void {
 		// Arrange.
-		$this->mock_license_server_response( true );
+		$this->mock_license_server_response( false );
 		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'a' );
+		update_option( LICENSE_KEY_OPTION, 'ab' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 
 		// Act.
-		$result = has_license();
+		$result = get_license_status();
 
 		// Assert.
-		$this->assertTrue( $result );
+		$this->assertSame( 'active', $result );
 	}
 
-	public function test_returns_cached_false_value_without_revalidating(): void {
+	public function test_returns_cached_not_found_status_without_revalidating(): void {
 		// Arrange.
-		$this->mock_license_server_response( false );
+		$this->mock_license_server_response( true );
 		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'ab' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
 
 		// Act.
-		$result = has_license();
+		$result = get_license_status();
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertSame( 'not_found', $result );
 	}
 
-	public function test_rethrows_when_license_validation_fails(): void {
+	public function test_returns_error_and_caches_validation_failure(): void {
 		// Arrange.
 		$this->mock_license_server_downtime();
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_KEY_OPTION, 'valid-license' );
 
-		// Expect.
-		$this->expectException( \RuntimeException::class );
+		// Act.
+		$result = get_license_status();
+
+		// Assert.
+		$this->assertSame( 'error', $result );
+		$this->assertSame( 'error', get_transient( LICENSE_STATUS_TRANSIENT ) );
+	}
+
+	public function test_returns_cached_error_without_revalidating(): void {
+		// Arrange.
+		$this->mock_license_server_response( true );
+		delete_option( LICENSE_KEY_OPTION );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		update_option( LICENSE_KEY_OPTION, 'valid-license' );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS );
 
 		// Act.
-		has_license();
+		$result = get_license_status();
+
+		// Assert.
+		$this->assertSame( 'error', $result );
 	}
 }
