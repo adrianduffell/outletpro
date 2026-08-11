@@ -27,6 +27,20 @@ const MIN_LICENSE_KEY_LENGTH = 2;
 const HTTP_OK = 200;
 
 /**
+ * HTTP Not Found response code.
+ *
+ * @internal
+ */
+const HTTP_NOT_FOUND = 404;
+
+/**
+ * Lemon Squeezy product IDs accepted for Outlet Pro licenses.
+ *
+ * @internal
+ */
+const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
+
+/**
  * Helper to initialize license features.
  *
  * @internal
@@ -67,18 +81,15 @@ function validate_license( $license_key ): bool {
 	}
 
 	$response = wp_remote_post(
-		'https://api.adrianduffell.store/v1/licenses/validate',
+		'https://api.lemonsqueezy.com/v1/licenses/validate',
 		array(
 			'timeout' => 5,
 			'headers' => array(
-				'Content-Type' => 'application/json',
+				'Content-Type' => 'application/x-www-form-urlencoded',
 				'Accept'       => 'application/json',
 			),
-			'body'    => wp_json_encode(
-				array(
-					'license_key' => $license_key,
-					'product'     => 'outletpro',
-				)
+			'body'    => array(
+				'license_key' => $license_key,
 			),
 		)
 	);
@@ -87,17 +98,34 @@ function validate_license( $license_key ): bool {
 		throw new \RuntimeException( 'License validation request failed' );
 	}
 
-	if ( HTTP_OK !== wp_remote_retrieve_response_code( $response ) ) {
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( ! in_array( $status_code, array( HTTP_OK, HTTP_NOT_FOUND ), true ) ) {
+		// Lemon Squeezy returns a 404 Not Found response for invalid license keys,
+		// so it needs to be treated as an expected response code.
 		throw new \RuntimeException( 'License validation response code failed' );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
-	if ( ! is_array( $data ) || ! isset( $data['success'] ) || ! is_bool( $data['success'] ) ) {
-		throw new \RuntimeException( 'License validation response is invalid' );
+	if ( ! is_bool( $data['valid'] ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license validation response' );
 	}
 
-	return $data['success'];
+	if ( false === $data['valid'] ) {
+		// License key is invalid.
+		return false;
+	}
+
+	if ( ! is_int( $data['meta']['product_id'] ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license validation response' );
+	}
+
+	if ( ! in_array( $data['meta']['product_id'], ALLOWED_LICENSE_PRODUCT_IDS, true ) ) {
+		throw new \RuntimeException( 'License not valid for allowed product IDs' );
+	}
+
+	return true;
 }
 
 /**

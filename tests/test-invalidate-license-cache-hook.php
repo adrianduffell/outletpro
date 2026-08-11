@@ -19,12 +19,15 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
 							array(
-								'success' => $success,
+								'valid' => $success,
+								'meta'  => array(
+									'product_id' => 1279790,
+								),
 							)
 						),
 						'response' => array(
