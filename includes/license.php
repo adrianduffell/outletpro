@@ -110,7 +110,11 @@ function activate_license( string $license_key ): bool {
 		throw new \RuntimeException( 'License activation response code failed' );
 	}
 
-	$data = json_decode( wp_remote_retrieve_body( $response ) ) ?? new stdClass();
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( is_null( $data ) ) {
+		throw new \RuntimeException( 'Could not decode JSON response' );
+	}
 
 	if ( ! is_bool( $data->activated ?? null ) ) {
 		throw new \RuntimeException( 'Unexpected license activation response' );
@@ -180,7 +184,11 @@ function deactivate_license( string $license_key ): bool {
 		throw new \RuntimeException( 'License deactivation response code failed' );
 	}
 
-	$data = json_decode( wp_remote_retrieve_body( $response ) ) ?? new stdClass();
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( is_null( $data ) ) {
+		throw new \RuntimeException( 'Could not decode JSON response' );
+	}
 
 	if ( ! is_bool( $data->deactivated ?? null ) ) {
 		throw new \RuntimeException( 'Unexpected license deactivation response' );
