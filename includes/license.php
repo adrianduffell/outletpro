@@ -50,19 +50,20 @@ function deinit_license(): void {
  * @internal
  *
  * @param mixed $license_key The license key to validate.
+ * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
-function validate_license( $license_key ): string {
+function validate_license( $license_key ): bool {
 	if ( ! is_string( $license_key ) ) {
-		return 'not_found';
+		return false;
 	}
 
 	if ( '' === trim( $license_key ) ) {
-		return 'not_found';
+		return false;
 	}
 
 	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
-		return 'not_found';
+		return false;
 	}
 
 	$response = wp_remote_post(
@@ -83,20 +84,20 @@ function validate_license( $license_key ): string {
 	);
 
 	if ( is_wp_error( $response ) ) {
-		return 'error';
+		throw new \RuntimeException( 'License validation request failed' );
 	}
 
 	if ( HTTP_OK !== wp_remote_retrieve_response_code( $response ) ) {
-		return 'error';
+		throw new \RuntimeException( 'License validation response code failed' );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
 	if ( ! is_array( $data ) || ! isset( $data['success'] ) || ! is_bool( $data['success'] ) ) {
-		return 'error';
+		throw new \RuntimeException( 'License validation response is invalid' );
 	}
 
-	return $data['success'] ? 'active' : 'not_found';
+	return $data['success'];
 }
 
 /**
@@ -104,7 +105,7 @@ function validate_license( $license_key ): string {
  *
  * @internal
  * @deprecated 1.1.0 Use `get_license_status()` instead.
- * @throws \RuntimeException If the license status cannot be retrieved.
+ * @throws \RuntimeException If unable to check premium license.
  */
 function has_license(): bool {
 	$license_status = get_license_status();
@@ -119,22 +120,20 @@ function has_license(): bool {
 /**
  * Get the license status.
  *
- *Performant function to get the license status, using a transient cache to
+ * Performant function to get the license status, using a transient cache to
  * avoid repeated remote requests. Status is cached for 1 week, or 24 hours
  * if there was an error validating the license.
  *
  * Returns one of 'active', 'inactive', 'not_found', 'error', or 'expired'.
  *
- * none: No usable license key has been provided
  * active: The license key has been activated on this site.
  * inactive: The license key is valid but has not been activated on this site.
- * not_found: The license key is not recognized by the servoer.
- * error: There was an validating the license key.
+ * not_found: The license key is not recognized by the server.
+ * error: There was an error validating the license key.
  * expired: The license key has expired.
  *
  * @internal
  * @see LICENSE_STATUS_TRANSIENT
- *
  */
 function get_license_status(): string {
 	$cached_value = get_transient( LICENSE_STATUS_TRANSIENT );
@@ -151,12 +150,15 @@ function get_license_status(): string {
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 	}
 
-	$license_status = validate_license( get_option( LICENSE_KEY_OPTION ) );
-
-	if ( 'error' === $license_status ) {
+	try {
+		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
-		return $license_status;
+		return 'error';
 	}
+
+	$license_status = $license_is_valid ? 'active' : 'not_found';
 
 	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
 
