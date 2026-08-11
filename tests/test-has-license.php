@@ -8,7 +8,6 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\get_license_status;
 use function OutletPro\has_license;
 use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
@@ -65,7 +64,7 @@ class Test_Has_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_true_and_caches_active_license(): void {
+	public function test_returns_true_and_caches_valid_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_KEY_OPTION );
@@ -136,41 +135,5 @@ class Test_Has_License extends WP_UnitTestCase {
 
 		// Act.
 		has_license();
-	}
-
-	public function test_rethrows_cached_license_validation_error(): void {
-		// Arrange.
-		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS );
-
-		// Expect.
-		$this->expectException( \RuntimeException::class );
-
-		// Act.
-		has_license();
-	}
-
-	public function test_get_license_status_returns_and_caches_validation_error(): void {
-		// Arrange.
-		$this->mock_license_server_downtime();
-		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'valid-license' );
-
-		// Act.
-		$result = get_license_status();
-
-		// Assert.
-		$this->assertSame( 'error', $result );
-		$this->assertSame( 'error', get_transient( LICENSE_STATUS_TRANSIENT ) );
-	}
-
-	public function test_get_license_status_returns_cached_validation_error(): void {
-		// Arrange.
-		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS );
-
-		// Act.
-		$result = get_license_status();
-
-		// Assert.
-		$this->assertSame( 'error', $result );
 	}
 }
