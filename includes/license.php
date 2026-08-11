@@ -41,6 +41,16 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
+ * WordPress option key used to store the Lemon Squeezy activation ID.
+ *
+ * This option is deliberately not registered as a setting because it is
+ * managed internally rather than directly by users.
+ *
+ * @internal
+ */
+const LICENSE_ACTIVATION_ID_OPTION = 'outletpro_license_activation_id';
+
+/**
  * Helper to initialize license features.
  *
  * @internal
