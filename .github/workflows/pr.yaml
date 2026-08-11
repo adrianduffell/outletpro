@@ -20,11 +20,13 @@ jobs:
             id: self-dist
             preprocess: preprocess
             phpunit_flags: ""
+            e2e_flags: ""
 
           - name: Marketplace build
             id: marketplace
             preprocess: preprocess:marketplace
             phpunit_flags: "--exclude-group license,updates"
+            e2e_flags: "--grep-invert @premium-license"
 
     services:
       mysql:
@@ -161,7 +163,7 @@ jobs:
       run: npm run wp-env start
 
     - name: Run E2E tests
-      run: npm run test:e2e
+      run: npm run test:e2e -- ${{ matrix.build.e2e_flags }}
 
     - name: Run classic theme shortcode E2E tests
       run: THEME=storefront STORE_PAGES=shortcode npm run test:e2e -- tests/e2e/0-bootstrap-theme.spec.js tests/e2e/0-bootstrap-store-pages.spec.js tests/e2e/shopping.spec.js
