@@ -117,9 +117,24 @@ function has_license(): bool {
 }
 
 /**
- * Get the current site's license status.
+ * Get the license status.
+ *
+ *Performant function to get the license status, using a transient cache to
+ * avoid repeated remote requests. Status is cached for 1 week, or 24 hours
+ * if there was an error validating the license.
+ *
+ * Returns one of 'active', 'inactive', 'not_found', 'error', or 'expired'.
+ *
+ * none: No usable license key has been provided
+ * active: The license key has been activated on this site.
+ * inactive: The license key is valid but has not been activated on this site.
+ * not_found: The license key is not recognized by the servoer.
+ * error: There was an validating the license key.
+ * expired: The license key has expired.
  *
  * @internal
+ * @see LICENSE_STATUS_TRANSIENT
+ *
  */
 function get_license_status(): string {
 	$cached_value = get_transient( LICENSE_STATUS_TRANSIENT );
@@ -132,6 +147,7 @@ function get_license_status(): string {
 			return $cached_value;
 		}
 
+		// If the cached value is invalid, delete it and revalidate.
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 	}
 

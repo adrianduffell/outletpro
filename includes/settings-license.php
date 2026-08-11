@@ -29,15 +29,8 @@ const LICENSE_KEY_OPTION = 'outletpro_license_key';
 /**
  * WordPress transient key used to cache license status.
  *
- * Enum values: 'active', 'inactive', 'not_found', 'error', 'expired'.
- *
- * active: The license key has been activated on this site.
- * inactive: The license key is valid but has not been activated on this site.
- * not_found: The license key could not be found.
- * error: There was an error validating the license key.
- * expired: The license key has expired.
- *
  * @internal
+ * @see get_license_status()
  */
 const LICENSE_STATUS_TRANSIENT = 'outletpro_license_status';
 
