@@ -7,6 +7,7 @@
 * Write unit tests for new functions.
 * Don't cast variables, except in extreme circumstances (in which case the occurrence should be thoroughly documented). It is better to fail fast than coerce possibly corrupted values and land in an unknown state.
 * Fast-fail on error: prefer throwing exceptions for unrecoverable internal errors; only recover/continue at system boundaries (e.g. hooks/requests) after logging and returning a safe default.
+* Guards: Use one condition per guard clause. Instead of combining multiple conditions with && or ||, write each guard as a separate if statement to improve readability and debugging.
 
 ## Logging
 
