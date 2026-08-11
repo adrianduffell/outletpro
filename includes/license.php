@@ -133,6 +133,70 @@ function activate_license( string $license_key ): bool {
 }
 
 /**
+ * Deactivate the license on this site.
+ *
+ * @internal
+ *
+ * @param string $license_key The license key.
+ * @throws \RuntimeException If the deactivation request fails or the response is invalid.
+ */
+function deactivate_license( string $license_key ): bool {
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	$activation_id = get_option( LICENSE_ACTIVATION_ID_OPTION );
+
+	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
+		return false;
+	}
+
+	if ( ! validate_license( $license_key ) ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.lemonsqueezy.com/v1/licenses/deactivate',
+		array(
+			'timeout' => 5,
+			'headers' => array(
+				'Content-Type' => 'application/x-www-form-urlencoded',
+				'Accept'       => 'application/json',
+			),
+			'body'    => array(
+				'license_key' => $license_key,
+				'instance_id' => $activation_id,
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License deactivation request failed' );
+	}
+
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( HTTP_OK !== $status_code ) {
+		throw new \RuntimeException( 'License deactivation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ), true );
+
+	if ( ! is_bool( $data['deactivated'] ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license deactivation response' );
+	}
+
+	if ( false === $data['deactivated'] ) {
+		return false;
+	}
+
+	delete_option( LICENSE_ACTIVATION_ID_OPTION );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
+
+	return true;
+}
+
+/**
  * Validate a license key.
  *
  * @internal
