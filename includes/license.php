@@ -101,23 +101,6 @@ function validate_license( $license_key ): bool {
 }
 
 /**
- * Check whether the current site has a valid license.
- *
- * @internal
- * @deprecated 1.1.0 Use `get_license_status()` instead.
- * @throws \RuntimeException If unable to check premium license.
- */
-function has_license(): bool {
-	$license_status = get_license_status();
-
-	if ( 'error' === $license_status ) {
-		throw new \RuntimeException( 'Unable to check premium license' );
-	}
-
-	return 'active' === $license_status;
-}
-
-/**
  * Get the license status.
  *
  * Performant function to get the license status, using a transient cache to
