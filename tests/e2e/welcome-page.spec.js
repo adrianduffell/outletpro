@@ -7,6 +7,8 @@ import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 const licenseKey = process.env.OUTLETPRO_LICENSE_KEY;
 
+test.describe.configure( { mode: 'serial' } );
+
 test( 'show the welcome page navigation menu item', async ( {
 	page,
 	admin,
@@ -60,4 +62,22 @@ test( 'add a license key from the welcome page', async ( {
 	await expect(
 		page.getByRole( 'heading', { name: '🎉 Success!' } )
 	).toBeVisible();
+} );
+
+test( 'hide the welcome page navigation menu item', async ( {
+	page,
+	admin,
+} ) => {
+	test.skip(
+		! licenseKey,
+		'OUTLETPRO_LICENSE_KEY environment variable not found.'
+	);
+
+	// Act.
+	await admin.visitAdminPage( 'index.php' );
+
+	// Assert.
+	await expect(
+		page.getByRole( 'link', { name: 'Outlet Pro Setup' } )
+	).toHaveCount( 0 );
 } );
