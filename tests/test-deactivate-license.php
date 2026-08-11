@@ -153,6 +153,39 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		deactivate_license( 'abc123' );
 	}
 
+	public function test_throws_when_deactivation_response_is_invalid_json(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$this->mock_license_server_response( true );
+		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' !== $url ) {
+					return $pre;
+				}
+
+				return array(
+					'headers'  => array(),
+					'body'     => 'invalid-json',
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		deactivate_license( 'abc123' );
+	}
+
 	public function test_returns_false_without_request_when_activation_id_is_missing(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$request_was_made = false;

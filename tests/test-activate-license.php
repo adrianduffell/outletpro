@@ -158,6 +158,38 @@ class Test_Activate_License extends WP_UnitTestCase {
 		activate_license( 'abc123' );
 	}
 
+	public function test_throws_when_activation_response_is_invalid_json(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$this->mock_license_server_response( true );
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/activate' !== $url ) {
+					return $pre;
+				}
+
+				return array(
+					'headers'  => array(),
+					'body'     => 'invalid-json',
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		activate_license( 'abc123' );
+	}
+
 	public function test_throws_when_activation_response_has_no_activation_id(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$this->mock_license_server_response( true );
