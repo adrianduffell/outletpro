@@ -275,6 +275,27 @@ function validate_license( $license_key ): bool {
 }
 
 /**
+ * Check whether the home URL uses a common local development hostname.
+ *
+ * @internal
+ */
+function is_local_env(): bool {
+	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
+
+	if ( ! is_string( $hostname ) ) {
+		return false;
+	}
+
+	$hostname = strtolower( $hostname );
+
+	if ( in_array( $hostname, array( 'localhost', '127.0.0.1', '[::1]' ), true ) ) {
+		return true;
+	}
+
+	return 1 === preg_match( '/\.(?:local|localhost|test)$/', $hostname );
+}
+
+/**
  * Get the license status.
  *
  * Performant function to get the license status, using a transient cache to
