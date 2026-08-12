@@ -41,6 +41,16 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
+ * WordPress option key used to store the Lemon Squeezy activation ID.
+ *
+ * This option is deliberately not registered as a setting because it is
+ * managed internally rather than directly by users.
+ *
+ * @internal
+ */
+const LICENSE_ACTIVATION_ID_OPTION = 'outletpro_license_activation_id';
+
+/**
  * Helper to initialize license features.
  *
  * @internal
@@ -56,6 +66,142 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+}
+
+/**
+ * Activate a license on this site.
+ *
+ * @internal
+ *
+ * @param string $license_key The license key.
+ * @throws \RuntimeException If the activation request fails or the response is invalid.
+ */
+function activate_license( string $license_key ): bool {
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	if ( ! validate_license( $license_key ) ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.lemonsqueezy.com/v1/licenses/activate',
+		array(
+			'timeout' => 5,
+			'headers' => array(
+				'Content-Type' => 'application/x-www-form-urlencoded',
+				'Accept'       => 'application/json',
+			),
+			'body'    => array(
+				'license_key'   => $license_key,
+				'instance_name' => home_url(),
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License activation request failed' );
+	}
+
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( HTTP_OK !== $status_code ) {
+		throw new \RuntimeException( 'License activation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( is_null( $data ) ) {
+		throw new \RuntimeException( 'Could not decode JSON response' );
+	}
+
+	if ( ! is_bool( $data->activated ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license activation response' );
+	}
+
+	if ( false === $data->activated ) {
+		return false;
+	}
+
+	$activation_id = $data->instance->id ?? null;
+
+	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
+		throw new \RuntimeException( 'Unexpected license activation response' );
+	}
+
+	update_option( LICENSE_ACTIVATION_ID_OPTION, $activation_id, false );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
+
+	return true;
+}
+
+/**
+ * Deactivate the license on this site.
+ *
+ * @internal
+ *
+ * @param string $license_key The license key.
+ * @throws \RuntimeException If the deactivation request fails or the response is invalid.
+ */
+function deactivate_license( string $license_key ): bool {
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	$activation_id = get_option( LICENSE_ACTIVATION_ID_OPTION );
+
+	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
+		return false;
+	}
+
+	if ( ! validate_license( $license_key ) ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.lemonsqueezy.com/v1/licenses/deactivate',
+		array(
+			'timeout' => 5,
+			'headers' => array(
+				'Content-Type' => 'application/x-www-form-urlencoded',
+				'Accept'       => 'application/json',
+			),
+			'body'    => array(
+				'license_key' => $license_key,
+				'instance_id' => $activation_id,
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License deactivation request failed' );
+	}
+
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( HTTP_OK !== $status_code ) {
+		throw new \RuntimeException( 'License deactivation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( is_null( $data ) ) {
+		throw new \RuntimeException( 'Could not decode JSON response' );
+	}
+
+	if ( ! is_bool( $data->deactivated ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license deactivation response' );
+	}
+
+	if ( false === $data->deactivated ) {
+		return false;
+	}
+
+	delete_option( LICENSE_ACTIVATION_ID_OPTION );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
+
+	return true;
 }
 
 /**
