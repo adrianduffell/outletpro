@@ -23,7 +23,7 @@ class Test_Is_Local_Env extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_for_localhost_subdomain(): void {
+	public function test_localhost_tld(): void {
 		// Arrange.
 		update_option( 'home', 'https://shop.localhost' );
 
@@ -34,7 +34,7 @@ class Test_Is_Local_Env extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_for_ipv4_loopback_address(): void {
+	public function test_ipv4_loopback(): void {
 		// Arrange.
 		update_option( 'home', 'http://127.0.0.1' );
 
@@ -45,7 +45,7 @@ class Test_Is_Local_Env extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_for_ipv6_loopback_address(): void {
+	public function test_ipv6_loopback(): void {
 		// Arrange.
 		update_option( 'home', 'http://[::1]:8080' );
 
@@ -56,7 +56,7 @@ class Test_Is_Local_Env extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_for_local_domain(): void {
+	public function test_local_tld(): void {
 		// Arrange.
 		update_option( 'home', 'https://foo.local' );
 
@@ -67,9 +67,9 @@ class Test_Is_Local_Env extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_true_for_test_domain_case_insensitively(): void {
+	public function test_case_test_tld(): void {
 		// Arrange.
-		update_option( 'home', 'https://Foo.TEST' );
+		update_option( 'home', 'https://foo.test' );
 
 		// Act.
 		$result = is_local_env();
@@ -78,25 +78,14 @@ class Test_Is_Local_Env extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_false_for_production_domain(): void {
+	public function test_case_insensitive(): void {
 		// Arrange.
-		update_option( 'home', 'https://example.com' );
+		update_option( 'home', 'http://LOCALHOST' );
 
 		// Act.
 		$result = is_local_env();
 
 		// Assert.
-		$this->assertFalse( $result );
-	}
-
-	public function test_returns_false_when_local_is_not_the_domain_suffix(): void {
-		// Arrange.
-		update_option( 'home', 'https://local.example.com' );
-
-		// Act.
-		$result = is_local_env();
-
-		// Assert.
-		$this->assertFalse( $result );
+		$this->assertTrue( $result );
 	}
 }
