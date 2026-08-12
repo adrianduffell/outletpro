@@ -101,12 +101,12 @@ function validate_license( $license_key ): bool {
 }
 
 /**
- * Check whether the site URL uses a common local development hostname.
+ * Check whether the home URL uses a common local development hostname.
  *
  * @internal
  */
 function is_local_env(): bool {
-	$hostname = wp_parse_url( get_site_url(), PHP_URL_HOST );
+	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
 
 	if ( ! is_string( $hostname ) ) {
 		return false;
