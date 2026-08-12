@@ -16,19 +16,23 @@ class Test_Validate_License extends WP_UnitTestCase {
 	 * Mocks the license server response.
 	 *
 	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
-	 * @param mixed $success Whether the license validation succeeds or fails.
+	 * @param mixed $valid Whether the license validation succeeds or fails.
 	 * @param int $response_code The HTTP response code to simulate.
+	 * @param int $product_id The product ID returned by the license server.
 	 */
-	private function mock_license_server_response( $success, int $response_code = 200 ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	private function mock_license_server_response( $valid, int $response_code = 200, int $product_id = 1279790 ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( $success, $response_code ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+			function ( $pre, $args, $url ) use ( $valid, $response_code, $product_id ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
 							array(
-								'success' => $success,
+								'valid' => $valid,
+								'meta'  => array(
+									'product_id' => $product_id,
+								),
 							)
 						),
 						'response' => array(
@@ -51,7 +55,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return new WP_Error(
 						'http_request_failed',
 						'Simulated HTTP failure'
@@ -87,6 +91,61 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertFalse( $result );
 	}
 
+	public function test_posts_license_key_to_lemonsqueezy_endpoint(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$request_args = null;
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_args ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
+					return $pre;
+				}
+
+				$request_args = $args;
+
+				return array(
+					'headers'  => array(),
+					'body'     => wp_json_encode(
+						array(
+							'valid' => true,
+							'meta'  => array(
+								'product_id' => 1279790,
+							),
+						)
+					),
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		// Act.
+		validate_license( 'abc123' );
+
+		// Assert.
+		$this->assertIsArray( $request_args );
+		$this->assertSame( array( 'license_key' => 'abc123' ), $request_args['body'] );
+		$this->assertSame( 'application/json', $request_args['headers']['Accept'] );
+		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
+	}
+
+	public function test_throws_when_product_is_not_allowed(): void {
+		// Arrange.
+		$this->mock_license_server_response( true, 200, 1234567 );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
+		// Act.
+		validate_license( 'license' );
+	}
+
 	public function test_throws_when_response_invalid(): void {
 		// Arrange.
 		$this->mock_license_server_response( 'error' );
@@ -95,7 +154,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		$result = validate_license( 'license' );
+		validate_license( 'license' );
 	}
 
 	public function test_throws_when_remote_request_fails(): void {
@@ -106,7 +165,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		$result = validate_license( 'invalid-license' );
+		validate_license( 'invalid-license' );
 	}
 
 	public function test_throws_when_remote_response_code_unexpected(): void {
@@ -117,7 +176,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		$result = validate_license( 'valid-license' );
+		validate_license( 'valid-license' );
 	}
 
 	public function test_returns_false_for_empty_string(): void {

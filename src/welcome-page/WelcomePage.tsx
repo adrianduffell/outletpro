@@ -14,8 +14,13 @@ declare const outletproWelcomePage: {
 };
 
 type ValidationResponse = {
-	success: boolean;
+	valid: boolean;
+	meta?: {
+		product_id?: number;
+	};
 };
+
+const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
 
 export function WelcomePage(): JSX.Element {
 	const [ licenseKey, setLicenseKey ] = useState(
@@ -32,18 +37,23 @@ export function WelcomePage(): JSX.Element {
 		let isValid = false;
 		try {
 			const response = await fetch(
-				'https://api.adrianduffell.store/v1/licenses/validate',
+				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				{
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify( {
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: new URLSearchParams( {
 						license_key: licenseKey,
-						product: 'outletpro',
 					} ),
 				}
 			);
 			const data: ValidationResponse = await response.json();
-			isValid = data.success === true;
+			isValid =
+				data.valid === true &&
+				typeof data.meta?.product_id === 'number' &&
+				ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id );
 		} catch {
 			setErrorMessage(
 				__(

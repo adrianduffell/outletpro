@@ -24,12 +24,15 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
 							array(
-								'success' => $success,
+								'valid' => $success,
+								'meta'  => array(
+									'product_id' => 1279790,
+								),
 							)
 						),
 						'response' => array(
@@ -52,7 +55,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return new WP_Error(
 						'http_request_failed',
 						'Simulated HTTP failure'

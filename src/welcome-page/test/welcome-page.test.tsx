@@ -114,11 +114,15 @@ test( 'pre-fills license key from outletproWelcomePage global', () => {
 	expect( input.value ).toBe( 'ABCD-1234' );
 } );
 
-test( 'shows error message when server responds with success: false', async () => {
+test( 'shows error message when server responds with valid: false', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
-		json: () => Promise.resolve( { success: false } ),
+		json: () =>
+			Promise.resolve( {
+				valid: false,
+				meta: { product_id: 1279790 },
+			} ),
 	} );
 
 	// Act.
@@ -129,6 +133,28 @@ test( 'shows error message when server responds with success: false', async () =
 
 	// Assert.
 	expect( screen.getByText( /Invalid license key/i ) ).toBeInTheDocument();
+} );
+
+test( 'shows error message when product ID is not allowed', async () => {
+	// Arrange.
+	arrangeGlobals();
+	mockFetch.mockResolvedValue( {
+		json: () =>
+			Promise.resolve( {
+				valid: true,
+				meta: { product_id: 1234567 },
+			} ),
+	} );
+
+	// Act.
+	render( <WelcomePage /> );
+	await act( async () => {
+		fireEvent.click( screen.getByRole( 'button', { name: /Continue/i } ) );
+	} );
+
+	// Assert.
+	expect( screen.getByText( /Invalid license key/i ) ).toBeInTheDocument();
+	expect( mockApiFetch ).not.toHaveBeenCalled();
 } );
 
 test( 'shows error message when server fetch throws', async () => {
@@ -146,9 +172,13 @@ test( 'shows error message when server fetch throws', async () => {
 
 test( 'shows success message after valid license key is accepted and saved', async () => {
 	// Arrange.
-	arrangeGlobals();
+	arrangeGlobals( { licenseKey: 'ABCD-1234' } );
 	mockFetch.mockResolvedValue( {
-		json: () => Promise.resolve( { success: true } ),
+		json: () =>
+			Promise.resolve( {
+				valid: true,
+				meta: { product_id: 1279790 },
+			} ),
 	} );
 	mockApiFetch.mockResolvedValue( {} );
 
@@ -160,13 +190,30 @@ test( 'shows success message after valid license key is accepted and saved', asy
 
 	// Assert.
 	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
+	expect( mockFetch ).toHaveBeenCalledWith(
+		'https://api.lemonsqueezy.com/v1/licenses/validate',
+		expect.objectContaining( {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: expect.any( URLSearchParams ),
+		} )
+	);
+	const request = mockFetch.mock.calls[ 0 ][ 1 ];
+	expect( request.body.toString() ).toBe( 'license_key=ABCD-1234' );
 } );
 
 test( 'shows error when REST API save fails after valid server response', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
-		json: () => Promise.resolve( { success: true } ),
+		json: () =>
+			Promise.resolve( {
+				valid: true,
+				meta: { product_id: 1279790 },
+			} ),
 	} );
 	mockApiFetch.mockRejectedValue( new Error( 'Forbidden' ) );
 
@@ -182,7 +229,11 @@ test( 'success view shows Products link', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
-		json: () => Promise.resolve( { success: true } ),
+		json: () =>
+			Promise.resolve( {
+				valid: true,
+				meta: { product_id: 1279790 },
+			} ),
 	} );
 	mockApiFetch.mockResolvedValue( {} );
 

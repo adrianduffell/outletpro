@@ -27,6 +27,30 @@ const MIN_LICENSE_KEY_LENGTH = 2;
 const HTTP_OK = 200;
 
 /**
+ * HTTP Not Found response code.
+ *
+ * @internal
+ */
+const HTTP_NOT_FOUND = 404;
+
+/**
+ * Lemon Squeezy product IDs accepted for Outlet Pro licenses.
+ *
+ * @internal
+ */
+const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
+
+/**
+ * WordPress option key used to store the Lemon Squeezy activation ID.
+ *
+ * This option is deliberately not registered as a setting because it is
+ * managed internally rather than directly by users.
+ *
+ * @internal
+ */
+const LICENSE_ACTIVATION_ID_OPTION = 'outletpro_license_activation_id';
+
+/**
  * Helper to initialize license features.
  *
  * @internal
@@ -42,6 +66,142 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+}
+
+/**
+ * Activate a license on this site.
+ *
+ * @internal
+ *
+ * @param string $license_key The license key.
+ * @throws \RuntimeException If the activation request fails or the response is invalid.
+ */
+function activate_license( string $license_key ): bool {
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	if ( ! validate_license( $license_key ) ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.lemonsqueezy.com/v1/licenses/activate',
+		array(
+			'timeout' => 5,
+			'headers' => array(
+				'Content-Type' => 'application/x-www-form-urlencoded',
+				'Accept'       => 'application/json',
+			),
+			'body'    => array(
+				'license_key'   => $license_key,
+				'instance_name' => home_url(),
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License activation request failed' );
+	}
+
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( HTTP_OK !== $status_code ) {
+		throw new \RuntimeException( 'License activation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( is_null( $data ) ) {
+		throw new \RuntimeException( 'Could not decode JSON response' );
+	}
+
+	if ( ! is_bool( $data->activated ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license activation response' );
+	}
+
+	if ( false === $data->activated ) {
+		return false;
+	}
+
+	$activation_id = $data->instance->id ?? null;
+
+	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
+		throw new \RuntimeException( 'Unexpected license activation response' );
+	}
+
+	update_option( LICENSE_ACTIVATION_ID_OPTION, $activation_id, false );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
+
+	return true;
+}
+
+/**
+ * Deactivate the license on this site.
+ *
+ * @internal
+ *
+ * @param string $license_key The license key.
+ * @throws \RuntimeException If the deactivation request fails or the response is invalid.
+ */
+function deactivate_license( string $license_key ): bool {
+	if ( '' === trim( $license_key ) ) {
+		return false;
+	}
+
+	$activation_id = get_option( LICENSE_ACTIVATION_ID_OPTION );
+
+	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
+		return false;
+	}
+
+	if ( ! validate_license( $license_key ) ) {
+		return false;
+	}
+
+	$response = wp_remote_post(
+		'https://api.lemonsqueezy.com/v1/licenses/deactivate',
+		array(
+			'timeout' => 5,
+			'headers' => array(
+				'Content-Type' => 'application/x-www-form-urlencoded',
+				'Accept'       => 'application/json',
+			),
+			'body'    => array(
+				'license_key' => $license_key,
+				'instance_id' => $activation_id,
+			),
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License deactivation request failed' );
+	}
+
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( HTTP_OK !== $status_code ) {
+		throw new \RuntimeException( 'License deactivation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( is_null( $data ) ) {
+		throw new \RuntimeException( 'Could not decode JSON response' );
+	}
+
+	if ( ! is_bool( $data->deactivated ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license deactivation response' );
+	}
+
+	if ( false === $data->deactivated ) {
+		return false;
+	}
+
+	delete_option( LICENSE_ACTIVATION_ID_OPTION );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
+
+	return true;
 }
 
 /**
@@ -67,18 +227,15 @@ function validate_license( $license_key ): bool {
 	}
 
 	$response = wp_remote_post(
-		'https://api.adrianduffell.store/v1/licenses/validate',
+		'https://api.lemonsqueezy.com/v1/licenses/validate',
 		array(
 			'timeout' => 5,
 			'headers' => array(
-				'Content-Type' => 'application/json',
+				'Content-Type' => 'application/x-www-form-urlencoded',
 				'Accept'       => 'application/json',
 			),
-			'body'    => wp_json_encode(
-				array(
-					'license_key' => $license_key,
-					'product'     => 'outletpro',
-				)
+			'body'    => array(
+				'license_key' => $license_key,
 			),
 		)
 	);
@@ -87,17 +244,34 @@ function validate_license( $license_key ): bool {
 		throw new \RuntimeException( 'License validation request failed' );
 	}
 
-	if ( HTTP_OK !== wp_remote_retrieve_response_code( $response ) ) {
+	$status_code = wp_remote_retrieve_response_code( $response );
+
+	if ( ! in_array( $status_code, array( HTTP_OK, HTTP_NOT_FOUND ), true ) ) {
+		// Lemon Squeezy returns a 404 Not Found response for invalid license keys,
+		// so it needs to be treated as an expected response code.
 		throw new \RuntimeException( 'License validation response code failed' );
 	}
 
 	$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
-	if ( ! is_array( $data ) || ! isset( $data['success'] ) || ! is_bool( $data['success'] ) ) {
-		throw new \RuntimeException( 'License validation response is invalid' );
+	if ( ! is_bool( $data['valid'] ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license validation response' );
 	}
 
-	return $data['success'];
+	if ( false === $data['valid'] ) {
+		// License key is invalid.
+		return false;
+	}
+
+	if ( ! is_int( $data['meta']['product_id'] ?? null ) ) {
+		throw new \RuntimeException( 'Unexpected license validation response' );
+	}
+
+	if ( ! in_array( $data['meta']['product_id'], ALLOWED_LICENSE_PRODUCT_IDS, true ) ) {
+		throw new \RuntimeException( 'License not valid for allowed product IDs' );
+	}
+
+	return true;
 }
 
 /**
@@ -119,23 +293,6 @@ function is_local_env(): bool {
 	}
 
 	return 1 === preg_match( '/\.(?:local|localhost|test)$/', $hostname );
-}
-
-/**
- * Check whether the current site has a valid license.
- *
- * @internal
- * @deprecated 1.1.0 Use `get_license_status()` instead.
- * @throws \RuntimeException If unable to check premium license.
- */
-function has_license(): bool {
-	$license_status = get_license_status();
-
-	if ( 'error' === $license_status ) {
-		throw new \RuntimeException( 'Unable to check premium license' );
-	}
-
-	return 'active' === $license_status;
 }
 
 /**
