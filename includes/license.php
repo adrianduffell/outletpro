@@ -47,8 +47,16 @@ const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
  * managed internally rather than directly by users.
  *
  * @internal
+ * @deprecated 1.0.3 Use LICENSE_ACTIVATION_OPTION instead.
  */
 const LICENSE_ACTIVATION_ID_OPTION = 'outletpro_license_activation_id';
+
+/**
+ * WordPress option key used to store the license activation tuple.
+ *
+ * @internal
+ */
+const LICENSE_ACTIVATION_OPTION = 'outletpro_license_activation';
 
 /**
  * Helper to initialize license features.
@@ -66,6 +74,75 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+}
+
+/**
+ * Get the stored license activation.
+ *
+ * @internal
+ * @return array{0: string, 1: string}|null The license key and activation ID, or null when not set.
+ * @throws \UnexpectedValueException If the stored activation is invalid.
+ */
+function get_license_activation(): ?array {
+	$activation = get_option( LICENSE_ACTIVATION_OPTION );
+
+	if ( false === $activation ) {
+		return null;
+	}
+
+	if ( ! is_array( $activation ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( array_keys( $activation ) !== array( 0, 1 ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( ! is_string( $activation[0] ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( '' === trim( $activation[0] ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( strlen( $activation[0] ) < MIN_LICENSE_KEY_LENGTH ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( ! is_string( $activation[1] ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( '' === trim( $activation[1] ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	return $activation;
+}
+
+/**
+ * Store a license activation.
+ *
+ * @internal
+ * @param string $license_key The license key.
+ * @param string $activation_id The Lemon Squeezy activation ID.
+ * @throws \InvalidArgumentException If either value is invalid.
+ */
+function set_license_activation( string $license_key, string $activation_id ): void {
+	if ( '' === trim( $license_key ) ) {
+		throw new \InvalidArgumentException( 'Invalid license activation value.' );
+	}
+
+	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
+		throw new \InvalidArgumentException( 'Invalid license activation value.' );
+	}
+
+	if ( '' === trim( $activation_id ) ) {
+		throw new \InvalidArgumentException( 'Invalid license activation value.' );
+	}
+
+	update_option( LICENSE_ACTIVATION_OPTION, array( $license_key, $activation_id ), false );
 }
 
 /**
