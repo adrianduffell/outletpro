@@ -2,10 +2,6 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
-
-/* eslint-disable @wordpress/i18n-ellipsis -- Acceptance copy requires three periods in “Validating...”. */
-
-import type { ReactNode } from 'react';
 import apiFetch from '@wordpress/api-fetch';
 import { Button, TextControl } from '@wordpress/components';
 import {
@@ -15,15 +11,14 @@ import {
 	useState,
 	createInterpolateElement,
 } from '@wordpress/element';
-import { __, _n, sprintf } from '@wordpress/i18n';
-
+import { __ } from '@wordpress/i18n';
+import { ValidationMessage, type ValidationState } from './ValidationMessage';
 declare const outletproWelcomePage: {
 	hostname: string;
 	isLocalEnvironment: string;
 	licenseKey: string;
 	productsUrl: string;
 };
-
 type ValidationResponse = {
 	valid: boolean;
 	license_key?: {
@@ -34,340 +29,137 @@ type ValidationResponse = {
 		product_id?: number;
 	};
 };
-
-type ValidationState =
-	| { status: 'idle' }
-	| { status: 'validating' }
-	| { status: 'invalid' }
-	| { status: 'error' }
-	| { status: 'available'; remaining: number; total: number }
-	| { status: 'unlimited' }
-	| { status: 'exhausted'; total: number }
-	| { status: 'local' };
-
 const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
 const LICENSE_KEY_LENGTH = 36;
-const HELP_URL = 'https://outletpro.zip/help/license-key';
-const BUY_URL = 'https://outletpro.zip/buy';
-
-function normalizeLicenseKey( value: string ): string {
-	return value.trim().toUpperCase();
-}
-
 function canActivateLicense( validationState: ValidationState ): boolean {
-	if ( validationState.status === 'available' ) {
-		return true;
-	}
-
-	if ( validationState.status === 'local' ) {
-		return true;
-	}
-
-	if ( validationState.status === 'unlimited' ) {
-		return true;
-	}
-
-	return false;
-}
-
-function LearnMoreLink( { children }: { children?: ReactNode } ) {
-	return (
-		<a
-			className="outletpro-button-link"
-			href={ HELP_URL }
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ children }
-		</a>
+	return [ 'available', 'local', 'unlimited' ].includes(
+		validationState.status
 	);
 }
-
-function FindLicenseLink( { children }: { children?: ReactNode } ) {
-	return (
-		<a
-			className="outletpro-button-link"
-			href={ HELP_URL }
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ children }
-		</a>
-	);
+function isNonNegativeInteger( value: unknown ): value is number {
+	if ( typeof value !== 'number' ) {
+		return false;
+	}
+	if ( ! Number.isInteger( value ) ) {
+		return false;
+	}
+	return value >= 0;
 }
-
-function BuyLink( { children }: { children?: ReactNode } ) {
-	return (
-		<a
-			className="outletpro-button-link"
-			href={ BUY_URL }
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ children }
-		</a>
+async function validateLicense(
+	licenseKey: string,
+	isLocalEnvironment: boolean
+): Promise< ValidationState > {
+	const response = await fetch(
+		'https://api.lemonsqueezy.com/v1/licenses/validate',
+		{
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: new URLSearchParams( {
+				license_key: licenseKey,
+			} ),
+		}
 	);
+	const data: ValidationResponse = await response.json();
+	if ( data.valid === false ) {
+		return { status: 'invalid' };
+	}
+	if ( data.valid !== true ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+	if ( typeof data.meta?.product_id !== 'number' ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+	if ( ! ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id ) ) {
+		return { status: 'invalid' };
+	}
+	if ( isLocalEnvironment ) {
+		return { status: 'local' };
+	}
+	const activationLimit = data.license_key?.activation_limit;
+	const activationUsage = data.license_key?.activation_usage;
+	if ( activationLimit === null ) {
+		return { status: 'unlimited' };
+	}
+	if ( ! isNonNegativeInteger( activationLimit ) ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+	if ( ! isNonNegativeInteger( activationUsage ) ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+	const remaining = Math.max( 0, activationLimit - activationUsage );
+	if ( remaining === 0 ) {
+		return { status: 'exhausted', total: activationLimit };
+	}
+	return { status: 'available', remaining, total: activationLimit };
 }
-
-function ValidationMessage( {
-	validationState,
-}: {
-	validationState: ValidationState;
-} ): ReactNode {
-	if ( validationState.status === 'validating' ) {
-		return __( 'Validating...', 'outletpro' );
-	}
-
-	if ( validationState.status === 'invalid' ) {
-		return __(
-			'Please check your premium license key and try again.',
-			'outletpro'
-		);
-	}
-
-	if ( validationState.status === 'error' ) {
-		return __(
-			'Unable to contact the licensing service. Please try again.',
-			'outletpro'
-		);
-	}
-	if ( validationState.status === 'available' ) {
-		/* translators: 1: remaining activations, 2: total activations. */
-		const availableMessage = _n(
-			'✅ 1 site activation available',
-			'✅ %1$d of %2$d site activations available',
-			validationState.remaining,
-			'outletpro'
-		);
-		const formattedAvailableMessage =
-			validationState.remaining === 1
-				? availableMessage
-				: sprintf(
-						availableMessage,
-						validationState.remaining,
-						validationState.total
-				  );
-
-		return formattedAvailableMessage;
-	}
-	if ( validationState.status === 'unlimited' ) {
-		return __( '✅ Unlimited site activations available', 'outletpro' );
-	}
-
-	if ( validationState.status === 'exhausted' ) {
-		/* translators: %1$d: total activation limit. */
-		const exhaustedMessage = _n(
-			'❌ License has reached the site activation limit. Purchase another license or deactivate the existing site to use this license. <help>Learn more</help>',
-			'❌ License has reached the %1$d-site activation limit. Purchase another license or deactivate a site to use this license. <help>Learn more</help>',
-			validationState.total,
-			'outletpro'
-		);
-		const formattedExhaustedMessage =
-			validationState.total === 1
-				? exhaustedMessage
-				: sprintf( exhaustedMessage, validationState.total );
-
-		return createInterpolateElement( formattedExhaustedMessage, {
-			help: <LearnMoreLink />,
-		} );
-	}
-
-	if ( validationState.status === 'local' ) {
-		return createInterpolateElement(
-			sprintf(
-				/* translators: %s: site hostname. */
-				__(
-					'<code>🌐 %s</code> License includes unlimited local sites. <help>Learn more</help>',
-					'outletpro'
-				),
-				outletproWelcomePage.hostname
-			),
-			{ code: <code />, help: <LearnMoreLink /> }
-		);
-	}
-
-	return createInterpolateElement(
-		__(
-			'Need a premium license? <purchase>Purchase a license</purchase> or <help>find your license key</help>',
-			'outletpro'
-		),
-		{ purchase: <BuyLink />, help: <FindLicenseLink /> }
-	);
-}
-
 export function WelcomePage(): JSX.Element {
 	const [ licenseKey, setLicenseKey ] = useState(
-		normalizeLicenseKey( outletproWelcomePage.licenseKey )
+		outletproWelcomePage.licenseKey.trim().toUpperCase()
 	);
 	const [ validationState, setValidationState ] = useState< ValidationState >(
 		{ status: 'idle' }
 	);
-	const [ isSaving, setIsSaving ] = useState( false );
+	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
 	const initialLicenseKey = useRef( licenseKey );
 	const pasted = useRef( false );
 	const validationRequestId = useRef( 0 );
-
-	const validateLicense = useCallback(
+	const validateCurrentLicense = useCallback(
 		async ( value: string, requestId: number ) => {
 			setValidationState( { status: 'validating' } );
-
 			try {
-				const response = await fetch(
-					'https://api.lemonsqueezy.com/v1/licenses/validate',
-					{
-						method: 'POST',
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: new URLSearchParams( {
-							license_key: value,
-						} ),
-					}
+				const result = await validateLicense(
+					value,
+					outletproWelcomePage.isLocalEnvironment === '1'
 				);
-				const data: ValidationResponse = await response.json();
-
 				if ( validationRequestId.current !== requestId ) {
 					return;
 				}
-
-				if ( data.valid === false ) {
-					setValidationState( { status: 'invalid' } );
-					return;
-				}
-
-				if ( data.valid !== true ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( typeof data.meta?.product_id !== 'number' ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if (
-					! ALLOWED_LICENSE_PRODUCT_IDS.includes(
-						data.meta.product_id
-					)
-				) {
-					setValidationState( { status: 'invalid' } );
-					return;
-				}
-
-				if ( outletproWelcomePage.isLocalEnvironment === '1' ) {
-					setValidationState( { status: 'local' } );
-					return;
-				}
-
-				const activationLimit = data.license_key?.activation_limit;
-				const activationUsage = data.license_key?.activation_usage;
-
-				if ( activationLimit === null ) {
-					setValidationState( { status: 'unlimited' } );
-					return;
-				}
-
-				if ( typeof activationLimit !== 'number' ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( ! Number.isInteger( activationLimit ) ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( typeof activationUsage !== 'number' ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( ! Number.isInteger( activationUsage ) ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( activationLimit < 0 ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( activationUsage < 0 ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				const remaining = Math.max(
-					0,
-					activationLimit - activationUsage
-				);
-
-				if ( remaining === 0 ) {
-					setValidationState( {
-						status: 'exhausted',
-						total: activationLimit,
-					} );
-					return;
-				}
-
-				setValidationState( {
-					status: 'available',
-					remaining,
-					total: activationLimit,
-				} );
+				setValidationState( result );
 			} catch {
 				if ( validationRequestId.current !== requestId ) {
 					return;
 				}
-
 				setValidationState( { status: 'error' } );
 			}
 		},
 		[]
 	);
-
 	useEffect( () => {
 		if ( initialLicenseKey.current.length !== LICENSE_KEY_LENGTH ) {
 			return;
 		}
-
-		const requestId = validationRequestId.current + 1;
-
-		validationRequestId.current = requestId;
-		void validateLicense( initialLicenseKey.current, requestId );
-	}, [ validateLicense ] );
-
+		const requestId = ++validationRequestId.current;
+		void validateCurrentLicense( initialLicenseKey.current, requestId );
+	}, [ validateCurrentLicense ] );
 	function handleLicenseKeyPaste() {
 		pasted.current = true;
 	}
-
 	function handleLicenseKeyChange( value: string ) {
-		const normalizedValue = normalizeLicenseKey( value );
-		const requestId = validationRequestId.current + 1;
+		const normalizedValue = value.trim().toUpperCase();
+		const requestId = ++validationRequestId.current;
 		const validateRegardlessOfLength = pasted.current;
-
 		pasted.current = false;
-		validationRequestId.current = requestId;
 		setLicenseKey( normalizedValue );
 		setErrorMessage( '' );
-
 		if ( ! validateRegardlessOfLength ) {
 			if ( normalizedValue.length !== LICENSE_KEY_LENGTH ) {
 				setValidationState( { status: 'idle' } );
 				return;
 			}
 		}
-
-		void validateLicense( normalizedValue, requestId );
+		void validateCurrentLicense( normalizedValue, requestId );
 	}
-
-	async function handleActivate() {
-		if ( licenseKey === '' ) {
-			return;
-		}
-
+	async function handleContinue() {
 		if ( ! canActivateLicense( validationState ) ) {
 			return;
 		}
-
-		setIsSaving( true );
+		setIsLoading( true );
 		setErrorMessage( '' );
-
 		try {
 			await apiFetch( {
 				path: '/wp/v2/settings',
@@ -381,14 +173,12 @@ export function WelcomePage(): JSX.Element {
 					'outletpro'
 				)
 			);
-			setIsSaving( false );
+			setIsLoading( false );
 			return;
 		}
-
 		setIsSuccess( true );
-		setIsSaving( false );
+		setIsLoading( false );
 	}
-
 	if ( isSuccess ) {
 		return (
 			<div className="outletpro-welcome-page">
@@ -417,28 +207,23 @@ export function WelcomePage(): JSX.Element {
 			</div>
 		);
 	}
-
 	const displayedValidationState: ValidationState =
 		licenseKey === '' ? { status: 'idle' } : validationState;
 	const canActivate = canActivateLicense( displayedValidationState );
-	const isValidating = displayedValidationState.status === 'validating';
-	const validationRole =
-		displayedValidationState.status === 'invalid' ||
-		displayedValidationState.status === 'error'
-			? 'alert'
-			: 'status';
-
+	const validationRole = [ 'invalid', 'error' ].includes(
+		displayedValidationState.status
+	)
+		? 'alert'
+		: 'status';
 	return (
 		<div className="outletpro-welcome-page">
-			<h1>{ __( 'Welcome to Outlet Pro', 'outletpro' ) }</h1>
-
+			<h1>{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }</h1>
 			<p className="outletpro-welcome-page__description">
 				{ __(
-					'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
+					'Thank you for installing Outlet Pro. Enter your premium license key to begin setup.',
 					'outletpro'
 				) }
 			</p>
-
 			<div className="outletpro-welcome-page__license-key-input">
 				<TextControl
 					label={ __( 'Premium license key', 'outletpro' ) }
@@ -446,7 +231,7 @@ export function WelcomePage(): JSX.Element {
 					value={ licenseKey }
 					onChange={ handleLicenseKeyChange }
 					onPaste={ handleLicenseKeyPaste }
-					disabled={ isSaving }
+					disabled={ isLoading }
 					autoComplete="off"
 					spellCheck={ false }
 					autoCorrect="off"
@@ -462,6 +247,7 @@ export function WelcomePage(): JSX.Element {
 				<span key={ displayedValidationState.status }>
 					<ValidationMessage
 						validationState={ displayedValidationState }
+						hostname={ outletproWelcomePage.hostname }
 					/>
 				</span>
 			</p>
@@ -474,7 +260,6 @@ export function WelcomePage(): JSX.Element {
 					{
 						tos: (
 							<a
-								className="outletpro-button-link"
 								href="https://adrianduffell.com/tos.html"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -484,7 +269,6 @@ export function WelcomePage(): JSX.Element {
 						),
 						privacy: (
 							<a
-								className="outletpro-button-link"
 								href="https://adrianduffell.com/privacy.html"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -498,9 +282,9 @@ export function WelcomePage(): JSX.Element {
 			<div className="outletpro-welcome-page__button-row">
 				<Button
 					variant="primary"
-					onClick={ handleActivate }
-					isBusy={ isSaving }
-					disabled={ isValidating || isSaving || ! canActivate }
+					onClick={ handleContinue }
+					isBusy={ isLoading }
+					disabled={ isLoading || ! canActivate }
 				>
 					{ __( 'Activate site', 'outletpro' ) }
 				</Button>

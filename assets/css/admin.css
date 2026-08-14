@@ -63,10 +63,6 @@
 	text-decoration: none;
 }
 
-.outletpro-button-link:hover {
-	text-decoration: underline;
-}
-
 .outletpro-admin-badge {
 	display: block;
 	width: fit-content;
