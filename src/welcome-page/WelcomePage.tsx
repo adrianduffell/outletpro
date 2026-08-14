@@ -85,7 +85,12 @@ function LearnMoreLink( { children }: { children?: ReactNode } ) {
 
 function FindLicenseLink( { children }: { children?: ReactNode } ) {
 	return (
-		<a className="outletpro-button-link" href={ HELP_URL } target="_blank" rel="noopener noreferrer">
+		<a
+			className="outletpro-button-link"
+			href={ HELP_URL }
+			target="_blank"
+			rel="noopener noreferrer"
+		>
 			{ children }
 		</a>
 	);
@@ -93,7 +98,12 @@ function FindLicenseLink( { children }: { children?: ReactNode } ) {
 
 function BuyLink( { children }: { children?: ReactNode } ) {
 	return (
-		<a className="outletpro-button-link" href={ BUY_URL } target="_blank" rel="noopener noreferrer">
+		<a
+			className="outletpro-button-link"
+			href={ BUY_URL }
+			target="_blank"
+			rel="noopener noreferrer"
+		>
 			{ children }
 		</a>
 	);
