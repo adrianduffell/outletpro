@@ -56,6 +56,81 @@ function canActivateLicense( validationState: ValidationState ): boolean {
 	return false;
 }
 
+function isNonNegativeInteger( value: unknown ): value is number {
+	if ( typeof value !== 'number' ) {
+		return false;
+	}
+
+	if ( ! Number.isInteger( value ) ) {
+		return false;
+	}
+
+	return value >= 0;
+}
+
+async function validateLicense(
+	licenseKey: string,
+	isLocalEnvironment: boolean
+): Promise< ValidationState > {
+	const response = await fetch(
+		'https://api.lemonsqueezy.com/v1/licenses/validate',
+		{
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: new URLSearchParams( {
+				license_key: licenseKey,
+			} ),
+		}
+	);
+	const data: ValidationResponse = await response.json();
+
+	if ( data.valid === false ) {
+		return { status: 'invalid' };
+	}
+
+	if ( data.valid !== true ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+
+	if ( typeof data.meta?.product_id !== 'number' ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+
+	if ( ! ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id ) ) {
+		return { status: 'invalid' };
+	}
+
+	if ( isLocalEnvironment ) {
+		return { status: 'local' };
+	}
+
+	const activationLimit = data.license_key?.activation_limit;
+	const activationUsage = data.license_key?.activation_usage;
+
+	if ( activationLimit === null ) {
+		return { status: 'unlimited' };
+	}
+
+	if ( ! isNonNegativeInteger( activationLimit ) ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+
+	if ( ! isNonNegativeInteger( activationUsage ) ) {
+		throw new Error( 'Unexpected license validation response' );
+	}
+
+	const remaining = Math.max( 0, activationLimit - activationUsage );
+
+	if ( remaining === 0 ) {
+		return { status: 'exhausted', total: activationLimit };
+	}
+
+	return { status: 'available', remaining, total: activationLimit };
+}
+
 export function WelcomePage(): JSX.Element {
 	const [ licenseKey, setLicenseKey ] = useState(
 		normalizeLicenseKey( outletproWelcomePage.licenseKey )
@@ -63,114 +138,28 @@ export function WelcomePage(): JSX.Element {
 	const [ validationState, setValidationState ] = useState< ValidationState >(
 		{ status: 'idle' }
 	);
-	const [ isSaving, setIsSaving ] = useState( false );
+	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
 	const initialLicenseKey = useRef( licenseKey );
 	const pasted = useRef( false );
 	const validationRequestId = useRef( 0 );
 
-	const validateLicense = useCallback(
+	const validateCurrentLicense = useCallback(
 		async ( value: string, requestId: number ) => {
 			setValidationState( { status: 'validating' } );
 
 			try {
-				const response = await fetch(
-					'https://api.lemonsqueezy.com/v1/licenses/validate',
-					{
-						method: 'POST',
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: new URLSearchParams( {
-							license_key: value,
-						} ),
-					}
+				const result = await validateLicense(
+					value,
+					outletproWelcomePage.isLocalEnvironment === '1'
 				);
-				const data: ValidationResponse = await response.json();
 
 				if ( validationRequestId.current !== requestId ) {
 					return;
 				}
 
-				if ( data.valid === false ) {
-					setValidationState( { status: 'invalid' } );
-					return;
-				}
-
-				if ( data.valid !== true ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( typeof data.meta?.product_id !== 'number' ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if (
-					! ALLOWED_LICENSE_PRODUCT_IDS.includes(
-						data.meta.product_id
-					)
-				) {
-					setValidationState( { status: 'invalid' } );
-					return;
-				}
-
-				if ( outletproWelcomePage.isLocalEnvironment === '1' ) {
-					setValidationState( { status: 'local' } );
-					return;
-				}
-
-				const activationLimit = data.license_key?.activation_limit;
-				const activationUsage = data.license_key?.activation_usage;
-
-				if ( activationLimit === null ) {
-					setValidationState( { status: 'unlimited' } );
-					return;
-				}
-
-				if ( typeof activationLimit !== 'number' ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( ! Number.isInteger( activationLimit ) ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( typeof activationUsage !== 'number' ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( ! Number.isInteger( activationUsage ) ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( activationLimit < 0 ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				if ( activationUsage < 0 ) {
-					throw new Error( 'Unexpected license validation response' );
-				}
-
-				const remaining = Math.max(
-					0,
-					activationLimit - activationUsage
-				);
-
-				if ( remaining === 0 ) {
-					setValidationState( {
-						status: 'exhausted',
-						total: activationLimit,
-					} );
-					return;
-				}
-
-				setValidationState( {
-					status: 'available',
-					remaining,
-					total: activationLimit,
-				} );
+				setValidationState( result );
 			} catch {
 				if ( validationRequestId.current !== requestId ) {
 					return;
@@ -190,8 +179,8 @@ export function WelcomePage(): JSX.Element {
 		const requestId = validationRequestId.current + 1;
 
 		validationRequestId.current = requestId;
-		void validateLicense( initialLicenseKey.current, requestId );
-	}, [ validateLicense ] );
+		void validateCurrentLicense( initialLicenseKey.current, requestId );
+	}, [ validateCurrentLicense ] );
 
 	function handleLicenseKeyPaste() {
 		pasted.current = true;
@@ -214,19 +203,15 @@ export function WelcomePage(): JSX.Element {
 			}
 		}
 
-		void validateLicense( normalizedValue, requestId );
+		void validateCurrentLicense( normalizedValue, requestId );
 	}
 
-	async function handleActivate() {
-		if ( licenseKey === '' ) {
-			return;
-		}
-
+	async function handleContinue() {
 		if ( ! canActivateLicense( validationState ) ) {
 			return;
 		}
 
-		setIsSaving( true );
+		setIsLoading( true );
 		setErrorMessage( '' );
 
 		try {
@@ -242,12 +227,12 @@ export function WelcomePage(): JSX.Element {
 					'outletpro'
 				)
 			);
-			setIsSaving( false );
+			setIsLoading( false );
 			return;
 		}
 
 		setIsSuccess( true );
-		setIsSaving( false );
+		setIsLoading( false );
 	}
 
 	if ( isSuccess ) {
@@ -307,7 +292,7 @@ export function WelcomePage(): JSX.Element {
 					value={ licenseKey }
 					onChange={ handleLicenseKeyChange }
 					onPaste={ handleLicenseKeyPaste }
-					disabled={ isSaving }
+					disabled={ isLoading }
 					autoComplete="off"
 					spellCheck={ false }
 					autoCorrect="off"
@@ -360,9 +345,9 @@ export function WelcomePage(): JSX.Element {
 			<div className="outletpro-welcome-page__button-row">
 				<Button
 					variant="primary"
-					onClick={ handleActivate }
-					isBusy={ isSaving }
-					disabled={ isValidating || isSaving || ! canActivate }
+					onClick={ handleContinue }
+					isBusy={ isLoading }
+					disabled={ isValidating || isLoading || ! canActivate }
 				>
 					{ __( 'Activate site', 'outletpro' ) }
 				</Button>
