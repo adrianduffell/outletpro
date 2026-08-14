@@ -56,9 +56,9 @@ test(
 			.getByRole( 'textbox', { name: 'Premium license key' } )
 			.fill( licenseKey );
 		await expect(
-			page.getByRole( 'button', { name: 'Activate license' } )
+			page.getByRole( 'button', { name: 'Activate site' } )
 		).toBeEnabled();
-		await page.getByRole( 'button', { name: 'Activate license' } ).click();
+		await page.getByRole( 'button', { name: 'Activate site' } ).click();
 
 		// Assert.
 		await expect(
