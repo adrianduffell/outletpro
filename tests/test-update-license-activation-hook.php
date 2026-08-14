@@ -17,6 +17,14 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 
 	public function test_deactivates_previous_license_and_activates_new_license_when_key_is_updated(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		add_filter(
+			'home_url',
+			function (): string {
+				return 'https://example.com';
+			},
+			10,
+			0
+		);
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
@@ -89,6 +97,12 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 
 	public function test_activates_license_when_key_option_is_added(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		add_filter(
+			'home_url',
+			function (): string {
+				return 'https://example.com';
+			}
+		);
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		delete_option( LICENSE_ACTIVATION_ID_OPTION );

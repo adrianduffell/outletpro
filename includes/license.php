@@ -162,6 +162,10 @@ function activate_license( string $license_key ): bool {
 		return false;
 	}
 
+	if ( is_local_env() ) {
+		return true;
+	}
+
 	$response = wp_remote_post(
 		'https://api.lemonsqueezy.com/v1/licenses/activate',
 		array(
