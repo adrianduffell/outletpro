@@ -23,6 +23,13 @@ class Test_Activate_License extends WP_UnitTestCase {
 	 */
 	private function mock_license_server_response( bool $activated, int $response_code = 200, bool $valid = true ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
+			'home_url',
+			function (): string {
+				return 'https://example.com';
+			}
+		);
+
+		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $activated, $response_code, $valid ) {
 				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
@@ -132,6 +139,55 @@ class Test_Activate_License extends WP_UnitTestCase {
 		);
 		$this->assertSame( 'application/json', $request_args['headers']['Accept'] );
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
+	}
+
+	public function test_validates_without_activating_on_a_local_site(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		add_filter(
+			'home_url',
+			function (): string {
+				return 'https://shop.local';
+			}
+		);
+		$request_urls = array();
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_urls ) {
+				$request_urls[] = $url;
+
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
+					return $pre;
+				}
+
+				return array(
+					'headers'  => array(),
+					'body'     => wp_json_encode(
+						array(
+							'valid' => true,
+							'meta'  => array( 'product_id' => 1279790 ),
+						)
+					),
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		// Act.
+		$result = activate_license( 'abc123' );
+
+		// Assert.
+		$this->assertTrue( $result );
+		$this->assertSame(
+			array( 'https://api.lemonsqueezy.com/v1/licenses/validate' ),
+			$request_urls
+		);
 	}
 
 	public function test_returns_false_when_activation_is_rejected(): void {
