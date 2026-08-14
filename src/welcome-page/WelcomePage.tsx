@@ -13,10 +13,7 @@ import {
 	createInterpolateElement,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import {
-	ValidationMessage,
-	type ValidationState,
-} from './ValidationMessage';
+import { ValidationMessage, type ValidationState } from './ValidationMessage';
 
 declare const outletproWelcomePage: {
 	hostname: string;

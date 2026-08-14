@@ -22,37 +22,17 @@ export type ValidationState =
 const HELP_URL = 'https://outletpro.zip/help/license-key';
 const BUY_URL = 'https://outletpro.zip/buy';
 
-function LearnMoreLink( { children }: { children?: ReactNode } ) {
+function MessageLink( {
+	children,
+	href,
+}: {
+	children?: ReactNode;
+	href: string;
+} ) {
 	return (
 		<a
 			className="outletpro-button-link"
-			href={ HELP_URL }
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ children }
-		</a>
-	);
-}
-
-function FindLicenseLink( { children }: { children?: ReactNode } ) {
-	return (
-		<a
-			className="outletpro-button-link"
-			href={ HELP_URL }
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ children }
-		</a>
-	);
-}
-
-function BuyLink( { children }: { children?: ReactNode } ) {
-	return (
-		<a
-			className="outletpro-button-link"
-			href={ BUY_URL }
+			href={ href }
 			target="_blank"
 			rel="noopener noreferrer"
 		>
@@ -88,42 +68,34 @@ export function ValidationMessage( {
 	if ( validationState.status === 'available' ) {
 		/* translators: 1: remaining activations, 2: total activations. */
 		const availableMessage = _n(
-			'✅ 1 site activation available',
+			'✅ %1$d site activation available',
 			'✅ %1$d of %2$d site activations available',
 			validationState.remaining,
 			'outletpro'
 		);
-		const formattedAvailableMessage =
-			validationState.remaining === 1
-				? availableMessage
-				: sprintf(
-						availableMessage,
-						validationState.remaining,
-						validationState.total
-				  );
-
-		return formattedAvailableMessage;
+		return sprintf(
+			availableMessage,
+			validationState.remaining,
+			validationState.total
+		);
 	}
 	if ( validationState.status === 'unlimited' ) {
 		return __( '✅ Unlimited site activations available', 'outletpro' );
 	}
 
 	if ( validationState.status === 'exhausted' ) {
-		/* translators: %1$d: total activation limit. */
+		/* translators: 1: total activation limit, 2: reserved placeholder. */
 		const exhaustedMessage = _n(
-			'❌ License has reached the site activation limit. Purchase another license or deactivate the existing site to use this license. <help>Learn more</help>',
-			'❌ License has reached the %1$d-site activation limit. Purchase another license or deactivate a site to use this license. <help>Learn more</help>',
+			'❌ License has reached the site activation limit%2$s. Purchase another license or deactivate the existing site to use this license. <help>Learn more</help>',
+			'❌ License has reached the %1$d-site activation limit%2$s. Purchase another license or deactivate a site to use this license. <help>Learn more</help>',
 			validationState.total,
 			'outletpro'
 		);
-		const formattedExhaustedMessage =
-			validationState.total === 1
-				? exhaustedMessage
-				: sprintf( exhaustedMessage, validationState.total );
 
-		return createInterpolateElement( formattedExhaustedMessage, {
-			help: <LearnMoreLink />,
-		} );
+		return createInterpolateElement(
+			sprintf( exhaustedMessage, validationState.total, '' ),
+			{ help: <MessageLink href={ HELP_URL } /> }
+		);
 	}
 
 	if ( validationState.status === 'local' ) {
@@ -136,7 +108,7 @@ export function ValidationMessage( {
 				),
 				hostname
 			),
-			{ code: <code />, help: <LearnMoreLink /> }
+			{ code: <code />, help: <MessageLink href={ HELP_URL } /> }
 		);
 	}
 
@@ -145,6 +117,9 @@ export function ValidationMessage( {
 			'Need a premium license? <purchase>Purchase a license</purchase> or <help>find your license key</help>',
 			'outletpro'
 		),
-		{ purchase: <BuyLink />, help: <FindLicenseLink /> }
+		{
+			purchase: <MessageLink href={ BUY_URL } />,
+			help: <MessageLink href={ HELP_URL } />,
+		}
 	);
 }
