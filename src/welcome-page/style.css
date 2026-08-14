@@ -21,7 +21,7 @@ body.toplevel_page_outletpro-welcome {
 	}
 
 	p {
-		margin: 2em auto;
+		margin: 2em auto 2em auto;
 	}
 
 	#outletpro-welcome-page-root {
@@ -87,4 +87,5 @@ body.toplevel_page_outletpro-welcome {
 		position: absolute;
 		margin-top: 2rem;
 	}
+
 }

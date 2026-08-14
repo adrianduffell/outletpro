@@ -2,12 +2,9 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
-
 import { render, screen } from '@testing-library/react';
 import { ValidationMessage, type ValidationState } from '../ValidationMessage';
-
 const helpUrl = 'https://outletpro.zip/help/license-key';
-
 test( 'renders every validation message and link', () => {
 	// Arrange.
 	const { container, rerender } = render(
@@ -46,7 +43,6 @@ test( 'renders every validation message and link', () => {
 			'shop.local',
 		],
 	];
-
 	// Assert.
 	expect( container ).toHaveTextContent( 'Need a premium license?' );
 	expect(
@@ -55,7 +51,6 @@ test( 'renders every validation message and link', () => {
 	expect(
 		screen.getByRole( 'link', { name: 'find your license key' } )
 	).toHaveAttribute( 'href', helpUrl );
-
 	for ( const [ validationState, message, hostname = '' ] of cases ) {
 		// Act.
 		rerender(
@@ -64,11 +59,9 @@ test( 'renders every validation message and link', () => {
 				hostname={ hostname }
 			/>
 		);
-
 		// Assert.
 		expect( container ).toHaveTextContent( message );
 	}
-
 	expect(
 		screen.getByRole( 'link', { name: 'Learn more' } )
 	).toHaveAttribute( 'href', helpUrl );

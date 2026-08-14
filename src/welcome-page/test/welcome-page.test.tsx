@@ -2,17 +2,14 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
-
 import type { ClipboardEventHandler, ReactNode } from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import apiFetch from '@wordpress/api-fetch';
 import { WelcomePage } from '../WelcomePage';
-
 jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
-
 jest.mock( '@wordpress/components', () => ( {
 	Button: ( {
 		children,
@@ -54,14 +51,11 @@ jest.mock( '@wordpress/components', () => ( {
 		/>
 	),
 } ) );
-
 const mockApiFetch = jest.mocked( apiFetch );
 const mockFetch = jest.fn();
 global.fetch = mockFetch;
-
 const licenseKey = '38B1460A-5104-4067-A91D-77B872934D51';
 const productsUrl = '/wp-admin/edit.php?post_type=product';
-
 function arrangeGlobals( {
 	hostname = 'example.com',
 	isLocalEnvironment = false,
@@ -78,7 +72,6 @@ function arrangeGlobals( {
 	mockApiFetch.mockReset();
 	mockFetch.mockReset();
 }
-
 function validationResponse(
 	activationLimit: number | null = 5,
 	activationUsage = 2,
@@ -96,28 +89,18 @@ function validationResponse(
 		} ),
 	};
 }
-
-function licenseKeyInput() {
-	return screen.getByLabelText( /Premium license key/i );
-}
-
-function activateButton() {
-	return screen.getByRole( 'button', { name: 'Activate site' } );
-}
-
-async function enterLicenseKey( value = licenseKey ) {
-	await act( async () =>
+const licenseKeyInput = () => screen.getByLabelText( /Premium license key/i );
+const activateButton = () =>
+	screen.getByRole( 'button', { name: 'Activate site' } );
+const enterLicenseKey = async ( value = licenseKey ) =>
+	act( async () =>
 		fireEvent.change( licenseKeyInput(), { target: { value } } )
 	);
-}
-
 test( 'renders the welcome activation state and agreement', () => {
 	// Arrange.
 	arrangeGlobals();
-
 	// Act.
 	render( <WelcomePage /> );
-
 	// Assert.
 	expect( licenseKeyInput() ).toBeInTheDocument();
 	expect( activateButton() ).toBeDisabled();
@@ -125,7 +108,6 @@ test( 'renders the welcome activation state and agreement', () => {
 		screen.getByText( /By continuing, you agree/i )
 	).toBeInTheDocument();
 } );
-
 test.each( [
 	[ licenseKey, true ],
 	[ 'ABCD-1234', false ],
@@ -135,41 +117,32 @@ test.each( [
 		// Arrange.
 		arrangeGlobals( { licenseKey: value } );
 		mockFetch.mockResolvedValue( validationResponse() );
-
 		// Act.
 		await act( async () => render( <WelcomePage /> ) );
-
 		// Assert.
 		expect( licenseKeyInput() ).toHaveValue( value );
 		expect( mockFetch ).toHaveBeenCalledTimes( validates ? 1 : 0 );
 		expect( activateButton() ).toHaveProperty( 'disabled', ! validates );
 	}
 );
-
 test( 'normalizes changes and validates only at exactly 36 characters', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( validationResponse() );
 	render( <WelcomePage /> );
-
 	// Act.
 	await enterLicenseKey( 'abcd-1234' );
 	await enterLicenseKey( ` ${ licenseKey.toLowerCase() } ` );
-
 	// Assert.
 	expect( licenseKeyInput() ).toHaveValue( licenseKey );
 	expect( mockFetch ).toHaveBeenCalledTimes( 1 );
 	expect( mockFetch.mock.calls[ 0 ][ 1 ].body.toString() ).toBe(
 		`license_key=${ licenseKey }`
 	);
-} );
-
-test( 'validates pasted text regardless of length', async () => {
-	// Arrange.
-	arrangeGlobals();
-	mockFetch.mockResolvedValue( validationResponse() );
-	render( <WelcomePage /> );
-
+	// Act.
+	await enterLicenseKey( 'ABCD' );
+	// Assert.
+	expect( activateButton() ).toBeDisabled();
 	// Act.
 	await act( async () => {
 		fireEvent.paste( licenseKeyInput() );
@@ -177,12 +150,10 @@ test( 'validates pasted text regardless of length', async () => {
 			target: { value: 'abcd-1234' },
 		} );
 	} );
-
 	// Assert.
 	expect( licenseKeyInput() ).toHaveValue( 'ABCD-1234' );
-	expect( mockFetch ).toHaveBeenCalledTimes( 1 );
+	expect( mockFetch ).toHaveBeenCalledTimes( 2 );
 } );
-
 test.each( [ false, true ] )(
 	'disables activation while validating (previously valid: %s)',
 	async ( previouslyValid ) => {
@@ -194,7 +165,6 @@ test.each( [ false, true ] )(
 			await enterLicenseKey();
 		}
 		mockFetch.mockReturnValueOnce( new Promise( () => undefined ) );
-
 		// Act.
 		fireEvent.change( licenseKeyInput(), {
 			target: {
@@ -203,15 +173,12 @@ test.each( [ false, true ] )(
 					: licenseKey,
 			},
 		} );
-
 		// Assert.
 		expect( screen.getByText( 'Validating...' ) ).toBeInTheDocument();
 		expect( activateButton() ).toBeDisabled();
 	}
 );
-
 const invalidResponse = validationResponse( 5, 2, 1279790, false );
-
 test.each( [
 	[ 'available', validationResponse(), true ],
 	[ 'unlimited', validationResponse( null ), true ],
@@ -223,20 +190,17 @@ test.each( [
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( response );
 	render( <WelcomePage /> );
-
 	// Act.
 	await enterLicenseKey();
 	if ( ! enabled ) {
 		fireEvent.click( activateButton() );
 	}
-
 	// Assert.
 	expect( activateButton() ).toHaveProperty( 'disabled', ! enabled );
 	if ( ! enabled ) {
 		expect( mockApiFetch ).not.toHaveBeenCalled();
 	}
 } );
-
 test.each( [
 	[ 'network failure', () => mockFetch.mockRejectedValue( new Error() ) ],
 	[
@@ -251,45 +215,12 @@ test.each( [
 	arrangeGlobals();
 	mockRequest();
 	render( <WelcomePage /> );
-
 	// Act.
 	await enterLicenseKey();
-
 	// Assert.
 	expect( screen.getByText( /Unable to contact/ ) ).toBeInTheDocument();
 	expect( activateButton() ).toBeDisabled();
 } );
-
-test( 'gives a valid local site precedence over exhausted capacity and saves it', async () => {
-	// Arrange.
-	arrangeGlobals( { hostname: 'shop.local', isLocalEnvironment: true } );
-	mockFetch.mockResolvedValue( validationResponse( 5, 5 ) );
-	mockApiFetch.mockResolvedValue( {} );
-	render( <WelcomePage /> );
-
-	// Act.
-	await enterLicenseKey();
-	await act( async () => fireEvent.click( activateButton() ) );
-
-	// Assert.
-	expect( mockApiFetch ).toHaveBeenCalledTimes( 1 );
-	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
-} );
-
-test( 'resets validation when a validated key is edited', async () => {
-	// Arrange.
-	arrangeGlobals();
-	mockFetch.mockResolvedValue( validationResponse() );
-	render( <WelcomePage /> );
-	await enterLicenseKey();
-
-	// Act.
-	await enterLicenseKey( 'ABCD' );
-
-	// Assert.
-	expect( activateButton() ).toBeDisabled();
-} );
-
 test( 'ignores a stale validation response', async () => {
 	// Arrange.
 	arrangeGlobals();
@@ -301,16 +232,26 @@ test( 'ignores a stale validation response', async () => {
 	);
 	mockFetch.mockResolvedValueOnce( invalidResponse );
 	render( <WelcomePage /> );
-
 	// Act.
 	fireEvent.change( licenseKeyInput(), { target: { value: licenseKey } } );
 	await enterLicenseKey( licenseKey.replace( '3', '2' ) );
 	await act( async () => resolveFirstRequest( validationResponse() ) );
-
 	// Assert.
 	expect( screen.getByText( /Please check/ ) ).toBeInTheDocument();
 } );
-
+test( 'gives a valid local site precedence over exhausted capacity and saves it', async () => {
+	// Arrange.
+	arrangeGlobals( { hostname: 'shop.local', isLocalEnvironment: true } );
+	mockFetch.mockResolvedValue( validationResponse( 5, 5 ) );
+	mockApiFetch.mockResolvedValue( {} );
+	render( <WelcomePage /> );
+	// Act.
+	await enterLicenseKey();
+	await act( async () => fireEvent.click( activateButton() ) );
+	// Assert.
+	expect( mockApiFetch ).toHaveBeenCalledTimes( 1 );
+	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
+} );
 test( 'saves an eligible key without revalidating and preserves the success page', async () => {
 	// Arrange.
 	arrangeGlobals();
@@ -318,10 +259,8 @@ test( 'saves an eligible key without revalidating and preserves the success page
 	mockApiFetch.mockResolvedValue( {} );
 	render( <WelcomePage /> );
 	await enterLicenseKey();
-
 	// Act.
 	await act( async () => fireEvent.click( activateButton() ) );
-
 	// Assert.
 	expect( mockFetch ).toHaveBeenCalledTimes( 1 );
 	expect( mockApiFetch ).toHaveBeenCalledWith( {
@@ -334,7 +273,6 @@ test( 'saves an eligible key without revalidating and preserves the success page
 		screen.getByRole( 'link', { name: /Get Started/i } )
 	).toHaveAttribute( 'href', productsUrl );
 } );
-
 test( 'surfaces a save failure and keeps the validated key eligible', async () => {
 	// Arrange.
 	arrangeGlobals();
@@ -342,13 +280,9 @@ test( 'surfaces a save failure and keeps the validated key eligible', async () =
 	mockApiFetch.mockRejectedValue( new Error() );
 	render( <WelcomePage /> );
 	await enterLicenseKey();
-
 	// Act.
 	await act( async () => fireEvent.click( activateButton() ) );
-
 	// Assert.
-	expect(
-		screen.getByText( /Unable to apply the license/ )
-	).toBeInTheDocument();
+	expect( screen.getByText( /Unable to apply/ ) ).toBeInTheDocument();
 	expect( activateButton() ).toBeEnabled();
 } );
