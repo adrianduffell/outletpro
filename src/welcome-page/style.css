@@ -21,7 +21,7 @@ body.toplevel_page_outletpro-welcome {
 	}
 
 	p {
-		margin: 2em auto 2em auto;
+		margin: 2em auto;
 	}
 
 	#outletpro-welcome-page-root {
@@ -57,7 +57,17 @@ body.toplevel_page_outletpro-welcome {
 			font-family: monospace;
 			font-size: 1.2rem;
 			font-weight: 500;
+			border-color: rgb(255 179 0 / 0.6);
+			box-shadow:
+				0 0 0 1px rgb(255 179 0 / 0.15),
+				0 0 30px 8px rgb(255 179 0 / 0.12),
+				0 0 60px 24px rgb(255 179 0 / 0.06);
 		}
+	}
+
+	.outletpro-welcome-page__validation--error,
+	.outletpro-welcome-page__validation--invalid {
+		color: #c00;
 	}
 
 	.outletpro-welcome-page__notice {
@@ -77,5 +87,4 @@ body.toplevel_page_outletpro-welcome {
 		position: absolute;
 		margin-top: 2rem;
 	}
-
 }
