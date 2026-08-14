@@ -21,7 +21,9 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 			'home_url',
 			function (): string {
 				return 'https://example.com';
-			}
+			},
+			10,
+			0
 		);
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
