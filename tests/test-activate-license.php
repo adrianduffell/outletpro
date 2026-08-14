@@ -26,7 +26,9 @@ class Test_Activate_License extends WP_UnitTestCase {
 			'home_url',
 			function (): string {
 				return 'https://example.com';
-			}
+			},
+			10,
+			0
 		);
 
 		add_filter(
