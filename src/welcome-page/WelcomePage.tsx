@@ -441,7 +441,7 @@ export function WelcomePage(): JSX.Element {
 
 			<div className="outletpro-welcome-page__license-key-input">
 				<TextControl
-					label={ __( 'License key', 'outletpro' ) }
+					label={ __( 'Premium license key', 'outletpro' ) }
 					hideLabelFromVision={ true }
 					value={ licenseKey }
 					onChange={ handleLicenseKeyChange }
