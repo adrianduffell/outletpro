@@ -56,12 +56,20 @@ function enqueue_admin_welcome_page_scripts_hook(): void {
 		true
 	);
 
+	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
+
+	if ( ! is_string( $hostname ) ) {
+		$hostname = '';
+	}
+
 	wp_localize_script(
 		'outletpro-welcome-page',
 		'outletproWelcomePage',
 		array(
-			'licenseKey'  => (string) get_option( LICENSE_KEY_OPTION, '' ),
-			'productsUrl' => esc_url( admin_url( 'edit.php?post_type=product' ) ),
+			'hostname'           => $hostname,
+			'isLocalEnvironment' => is_local_env(),
+			'licenseKey'         => (string) get_option( LICENSE_KEY_OPTION, '' ),
+			'productsUrl'        => esc_url( admin_url( 'edit.php?post_type=product' ) ),
 		)
 	);
 
