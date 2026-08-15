@@ -3,6 +3,7 @@
  * Tests for enqueue_admin_welcome_page_scripts_hook().
  *
  * @package OutletPro
+ * @group license
  * @copyright 2026 Adrian Duffell
  * @license GNU General Public License v2.0 or later
  */
