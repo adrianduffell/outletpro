@@ -2,7 +2,6 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
-/* eslint-disable @wordpress/i18n-ellipsis -- Acceptance copy requires three periods in “Validating...”. */
 import { createInterpolateElement } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { Link } from '@wordpress/ui';
@@ -41,7 +40,7 @@ export function ValidationMessage( {
 	}
 	switch ( validationState.status ) {
 		case 'validating':
-			return __( 'Validating...', 'outletpro' );
+			return __( 'Validating…', 'outletpro' );
 		case 'invalid':
 			return __(
 				'Please check your premium license key and try again.',

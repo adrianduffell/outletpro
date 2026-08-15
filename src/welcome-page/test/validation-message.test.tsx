@@ -7,7 +7,7 @@ import { ValidationMessage, type ValidationState } from '../ValidationMessage';
 jest.mock( '@wordpress/ui', () => ( { Link: 'a' } ) );
 const helpUrl = 'https://outletpro.zip/help/license-key';
 const messages: [ string, ValidationState, string ][] = [
-	[ 'validating', { status: 'validating' }, 'Validating...' ],
+	[ 'validating', { status: 'validating' }, 'Validating…' ],
 	[
 		'invalid',
 		{ status: 'invalid' },
