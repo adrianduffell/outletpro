@@ -8,7 +8,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\enqueue_admin_welcome_page_scripts_hook;
+use function OutletPro\license_enqueue_init;
 
 class Test_Enqueue_Admin_Welcome_Page_Scripts_Hook extends WP_UnitTestCase {
 
@@ -18,9 +18,11 @@ class Test_Enqueue_Admin_Welcome_Page_Scripts_Hook extends WP_UnitTestCase {
 		set_current_screen( 'toplevel_page_outletpro-welcome' );
 		wp_dequeue_script( 'outletpro-welcome-page' );
 		wp_deregister_script( 'outletpro-welcome-page' );
+		remove_all_actions( 'admin_enqueue_scripts' );
+		license_enqueue_init();
 
 		// Act.
-		enqueue_admin_welcome_page_scripts_hook();
+		do_action( 'admin_enqueue_scripts' );
 		$data = wp_scripts()->get_data( 'outletpro-welcome-page', 'data' );
 
 		// Assert.
@@ -34,9 +36,11 @@ class Test_Enqueue_Admin_Welcome_Page_Scripts_Hook extends WP_UnitTestCase {
 		set_current_screen( 'toplevel_page_outletpro-welcome' );
 		wp_dequeue_script( 'outletpro-welcome-page' );
 		wp_deregister_script( 'outletpro-welcome-page' );
+		remove_all_actions( 'admin_enqueue_scripts' );
+		license_enqueue_init();
 
 		// Act.
-		enqueue_admin_welcome_page_scripts_hook();
+		do_action( 'admin_enqueue_scripts' );
 		$data = wp_scripts()->get_data( 'outletpro-welcome-page', 'data' );
 
 		// Assert.
@@ -49,9 +53,11 @@ class Test_Enqueue_Admin_Welcome_Page_Scripts_Hook extends WP_UnitTestCase {
 		set_current_screen( 'toplevel_page_outletpro-welcome' );
 		wp_dequeue_script( 'outletpro-welcome-page' );
 		wp_deregister_script( 'outletpro-welcome-page' );
+		remove_all_actions( 'admin_enqueue_scripts' );
+		license_enqueue_init();
 
 		// Act.
-		enqueue_admin_welcome_page_scripts_hook();
+		do_action( 'admin_enqueue_scripts' );
 		$data = wp_scripts()->get_data( 'outletpro-welcome-page', 'data' );
 
 		// Assert.
@@ -68,9 +74,11 @@ class Test_Enqueue_Admin_Welcome_Page_Scripts_Hook extends WP_UnitTestCase {
 		set_current_screen( 'toplevel_page_outletpro-welcome' );
 		wp_dequeue_script( 'outletpro-welcome-page' );
 		wp_deregister_script( 'outletpro-welcome-page' );
+		remove_all_actions( 'admin_enqueue_scripts' );
+		license_enqueue_init();
 
 		// Act.
-		enqueue_admin_welcome_page_scripts_hook();
+		do_action( 'admin_enqueue_scripts' );
 		$data = wp_scripts()->get_data( 'outletpro-welcome-page', 'data' );
 
 		// Assert.
