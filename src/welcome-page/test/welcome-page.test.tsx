@@ -2,7 +2,7 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
-import type { ClipboardEventHandler, ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { render, screen, act, fireEvent } from '@testing-library/react';
 import apiFetch from '@wordpress/api-fetch';
 import { WelcomePage } from '../WelcomePage';
@@ -10,11 +10,7 @@ jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
-jest.mock( '@wordpress/ui', () => ( {
-	Link: ( { children, href }: { children?: ReactNode; href: string } ) => (
-		<a href={ href }>{ children }</a>
-	),
-} ) );
+jest.mock( '@wordpress/ui', () => ( { Link: 'a' } ) );
 jest.mock( '@wordpress/components', () => ( {
 	Button: ( {
 		children,
@@ -35,21 +31,18 @@ jest.mock( '@wordpress/components', () => ( {
 			</button>
 		),
 	TextControl: ( {
-		disabled,
 		label,
 		onChange,
 		onPaste,
 		value,
 	}: {
-		disabled?: boolean;
 		label: string;
 		onChange: ( value: string ) => void;
-		onPaste: ClipboardEventHandler< HTMLInputElement >;
+		onPaste: () => void;
 		value: string;
 	} ) => (
 		<input
 			aria-label={ label }
-			disabled={ disabled }
 			onChange={ ( event ) => onChange( event.target.value ) }
 			onPaste={ onPaste }
 			value={ value }
@@ -101,23 +94,12 @@ const enterLicenseKey = async ( value = licenseKey ) =>
 	act( async () =>
 		fireEvent.change( licenseKeyInput(), { target: { value } } )
 	);
-test( 'renders the welcome activation state and agreement', () => {
-	// Arrange.
-	arrangeGlobals();
-	// Act.
-	render( <WelcomePage /> );
-	// Assert.
-	expect( licenseKeyInput() ).toBeInTheDocument();
-	expect( activateButton() ).toBeDisabled();
-	expect(
-		screen.getByText( /By continuing, you agree/i )
-	).toBeInTheDocument();
-} );
 test.each( [
+	[ '', false ],
 	[ licenseKey, true ],
 	[ 'ABCD-1234', false ],
 ] )(
-	'handles automatic validation for a prefilled key',
+	'renders and handles automatic validation for a prefilled key',
 	async ( value, validates ) => {
 		// Arrange.
 		arrangeGlobals( { licenseKey: value } );
@@ -126,6 +108,9 @@ test.each( [
 		await act( async () => render( <WelcomePage /> ) );
 		// Assert.
 		expect( licenseKeyInput() ).toHaveValue( value );
+		expect(
+			screen.getByText( /By continuing, you agree/i )
+		).toBeInTheDocument();
 		expect( mockFetch ).toHaveBeenCalledTimes( validates ? 1 : 0 );
 		expect( activateButton() ).toHaveProperty( 'disabled', ! validates );
 	}
@@ -209,7 +194,7 @@ test.each( [
 test.each( [
 	[ 'network failure', () => mockFetch.mockRejectedValue( new Error() ) ],
 	[
-		'malformed response',
+		'malformed response on a local host',
 		() =>
 			mockFetch.mockResolvedValue( {
 				json: async () => ( { valid: true } ),
@@ -217,7 +202,7 @@ test.each( [
 	],
 ] )( 'handles a validation-service %s', async ( name, mockRequest ) => {
 	// Arrange.
-	arrangeGlobals();
+	arrangeGlobals( { isLocalHost: true } );
 	mockRequest();
 	render( <WelcomePage /> );
 	// Act.
@@ -244,7 +229,7 @@ test( 'ignores a stale validation response', async () => {
 	// Assert.
 	expect( screen.getByText( /Please check/ ) ).toBeInTheDocument();
 } );
-test( 'gives a valid local host precedence over exhausted capacity and saves it', async () => {
+test( 'ignores exhausted activation capacity on a valid local host and saves it', async () => {
 	// Arrange.
 	arrangeGlobals( { hostname: 'shop.local', isLocalHost: true } );
 	mockFetch.mockResolvedValue( validationResponse( 5, 5 ) );

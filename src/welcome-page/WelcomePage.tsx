@@ -25,16 +25,20 @@ type ValidationResponse = {
 		activation_limit?: number | null;
 		activation_usage?: number;
 	};
-	meta?: {
-		product_id?: number;
-	};
+	meta?: { product_id?: number };
 };
 const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
 const LICENSE_KEY_LENGTH = 36;
-function canActivateLicense( validationState: ValidationState ): boolean {
-	return [ 'available', 'local', 'unlimited' ].includes(
-		validationState.status
-	);
+function canActivateLicense(
+	validationState: ValidationState,
+	isLocalHost: boolean
+): boolean {
+	if ( isLocalHost ) {
+		return [ 'available', 'exhausted', 'unlimited' ].includes(
+			validationState.status
+		);
+	}
+	return [ 'available', 'unlimited' ].includes( validationState.status );
 }
 function isNonNegativeInteger( value: unknown ): value is number {
 	if ( typeof value !== 'number' ) {
@@ -46,8 +50,7 @@ function isNonNegativeInteger( value: unknown ): value is number {
 	return value >= 0;
 }
 async function validateLicense(
-	licenseKey: string,
-	isLocalHost: boolean
+	licenseKey: string
 ): Promise< ValidationState > {
 	const response = await fetch(
 		'https://api.lemonsqueezy.com/v1/licenses/validate',
@@ -75,9 +78,6 @@ async function validateLicense(
 	if ( ! ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id ) ) {
 		return { status: 'invalid' };
 	}
-	if ( isLocalHost ) {
-		return { status: 'local' };
-	}
 	const activationLimit = data.license_key?.activation_limit;
 	const activationUsage = data.license_key?.activation_usage;
 	if ( activationLimit === null ) {
@@ -96,6 +96,7 @@ async function validateLicense(
 	return { status: 'available', remaining, total: activationLimit };
 }
 export function WelcomePage(): JSX.Element {
+	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
 	const [ licenseKey, setLicenseKey ] = useState(
 		outletproWelcomePage.licenseKey.trim().toUpperCase()
 	);
@@ -111,21 +112,16 @@ export function WelcomePage(): JSX.Element {
 	const validateCurrentLicense = useCallback(
 		async ( value: string, requestId: number ) => {
 			setValidationState( { status: 'validating' } );
+			let result: ValidationState;
 			try {
-				const result = await validateLicense(
-					value,
-					outletproWelcomePage.isLocalHost === '1'
-				);
-				if ( validationRequestId.current !== requestId ) {
-					return;
-				}
-				setValidationState( result );
+				result = await validateLicense( value );
 			} catch {
-				if ( validationRequestId.current !== requestId ) {
-					return;
-				}
-				setValidationState( { status: 'error' } );
+				result = { status: 'error' };
 			}
+			if ( validationRequestId.current !== requestId ) {
+				return;
+			}
+			setValidationState( result );
 		},
 		[]
 	);
@@ -155,7 +151,7 @@ export function WelcomePage(): JSX.Element {
 		void validateCurrentLicense( normalizedValue, requestId );
 	}
 	async function handleContinue() {
-		if ( ! canActivateLicense( validationState ) ) {
+		if ( ! canActivateLicense( validationState, isLocalHost ) ) {
 			return;
 		}
 		setIsLoading( true );
@@ -207,11 +203,9 @@ export function WelcomePage(): JSX.Element {
 			</div>
 		);
 	}
-	const displayedValidationState: ValidationState =
-		licenseKey === '' ? { status: 'idle' } : validationState;
-	const canActivate = canActivateLicense( displayedValidationState );
+	const canActivate = canActivateLicense( validationState, isLocalHost );
 	const validationRole = [ 'invalid', 'error' ].includes(
-		displayedValidationState.status
+		validationState.status
 	)
 		? 'alert'
 		: 'status';
@@ -240,14 +234,15 @@ export function WelcomePage(): JSX.Element {
 				/>
 			</div>
 			<p
-				className={ `outletpro-welcome-page__validation outletpro-welcome-page__validation--${ displayedValidationState.status }` }
+				className={ `outletpro-welcome-page__validation outletpro-welcome-page__validation--${ validationState.status }` }
 				role={ validationRole }
 				aria-live="polite"
 			>
-				<span key={ displayedValidationState.status }>
+				<span key={ validationState.status }>
 					<ValidationMessage
-						validationState={ displayedValidationState }
+						validationState={ validationState }
 						hostname={ outletproWelcomePage.hostname }
+						isLocalHost={ isLocalHost }
 					/>
 				</span>
 			</p>
