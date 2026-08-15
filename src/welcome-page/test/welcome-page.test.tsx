@@ -376,19 +376,37 @@ test( 'trims the license key', () => {
 	expect( input ).toHaveValue( 'ABCD-1234' );
 } );
 
+const LICENSE_AVAILABLE = {
+	valid: true,
+	license_key: {
+		activation_limit: 5,
+		activation_usage: 2,
+	},
+	meta: { product_id: 1279790 },
+};
+const LICENSE_UNLIMITED = {
+	valid: true,
+	license_key: {
+		activation_limit: null,
+		activation_usage: 2,
+	},
+	meta: { product_id: 1279790 },
+};
+const LICENSE_EXHAUSTED = {
+	valid: true,
+	license_key: {
+		activation_limit: 5,
+		activation_usage: 5,
+	},
+	meta: { product_id: 1279790 },
+};
+const LICENSE_INVALID = { valid: false };
+
 test( 'validates a pasted license key regardless of length', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
-		json: () =>
-			Promise.resolve( {
-				valid: true,
-				license_key: {
-					activation_limit: 5,
-					activation_usage: 2,
-				},
-				meta: { product_id: 1279790 },
-			} ),
+		json: () => Promise.resolve( LICENSE_AVAILABLE ),
 	} );
 	render( <WelcomePage /> );
 	const input = screen.getByLabelText( /Premium license key/i );
@@ -405,15 +423,7 @@ test( 'disables activation while revalidating a previously valid key', async () 
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValueOnce( {
-		json: () =>
-			Promise.resolve( {
-				valid: true,
-				license_key: {
-					activation_limit: 5,
-					activation_usage: 2,
-				},
-				meta: { product_id: 1279790 },
-			} ),
+		json: () => Promise.resolve( LICENSE_AVAILABLE ),
 	} );
 	render( <WelcomePage /> );
 	const input = screen.getByLabelText( /Premium license key/i );
@@ -448,15 +458,7 @@ test( 'enables activation for an unlimited license', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
-		json: () =>
-			Promise.resolve( {
-				valid: true,
-				license_key: {
-					activation_limit: null,
-					activation_usage: 2,
-				},
-				meta: { product_id: 1279790 },
-			} ),
+		json: () => Promise.resolve( LICENSE_UNLIMITED ),
 	} );
 	render( <WelcomePage /> );
 	// Act.
@@ -475,15 +477,7 @@ test( 'disables activation for an exhausted license', async () => {
 	// Arrange.
 	arrangeGlobals();
 	mockFetch.mockResolvedValue( {
-		json: () =>
-			Promise.resolve( {
-				valid: true,
-				license_key: {
-					activation_limit: 5,
-					activation_usage: 5,
-				},
-				meta: { product_id: 1279790 },
-			} ),
+		json: () => Promise.resolve( LICENSE_EXHAUSTED ),
 	} );
 	render( <WelcomePage /> );
 	// Act.
@@ -508,7 +502,7 @@ test( 'ignores a stale validation response', async () => {
 		} )
 	);
 	mockFetch.mockResolvedValueOnce( {
-		json: () => Promise.resolve( { valid: false } ),
+		json: () => Promise.resolve( LICENSE_INVALID ),
 	} );
 	render( <WelcomePage /> );
 	const input = screen.getByLabelText( /Premium license key/i );
@@ -523,15 +517,7 @@ test( 'ignores a stale validation response', async () => {
 	} );
 	await act( async () =>
 		resolveFirstRequest( {
-			json: () =>
-				Promise.resolve( {
-					valid: true,
-					license_key: {
-						activation_limit: 5,
-						activation_usage: 2,
-					},
-					meta: { product_id: 1279790 },
-				} ),
+			json: () => Promise.resolve( LICENSE_AVAILABLE ),
 		} )
 	);
 	// Assert.
