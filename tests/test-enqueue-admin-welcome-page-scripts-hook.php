@@ -13,7 +13,7 @@ class Test_Enqueue_Admin_Welcome_Page_Scripts_Hook extends WP_UnitTestCase {
 
 	public function test_localizes_the_hostname(): void {
 		// Arrange.
-		add_filter( 'home_url', fn(): string => 'https://shop.local' );
+		add_filter( 'home_url', fn(): string => 'https://shop.local', 10, 0 );
 		set_current_screen( 'toplevel_page_outletpro-welcome' );
 		wp_dequeue_script( 'outletpro-welcome-page' );
 		wp_deregister_script( 'outletpro-welcome-page' );
