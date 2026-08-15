@@ -15,7 +15,7 @@ import { __ } from '@wordpress/i18n';
 import { ValidationMessage, type ValidationState } from './ValidationMessage';
 declare const outletproWelcomePage: {
 	hostname: string;
-	isLocalEnvironment: string;
+	isLocalHost: string;
 	licenseKey: string;
 	productsUrl: string;
 };
@@ -47,7 +47,7 @@ function isNonNegativeInteger( value: unknown ): value is number {
 }
 async function validateLicense(
 	licenseKey: string,
-	isLocalEnvironment: boolean
+	isLocalHost: boolean
 ): Promise< ValidationState > {
 	const response = await fetch(
 		'https://api.lemonsqueezy.com/v1/licenses/validate',
@@ -75,7 +75,7 @@ async function validateLicense(
 	if ( ! ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id ) ) {
 		return { status: 'invalid' };
 	}
-	if ( isLocalEnvironment ) {
+	if ( isLocalHost ) {
 		return { status: 'local' };
 	}
 	const activationLimit = data.license_key?.activation_limit;
@@ -114,7 +114,7 @@ export function WelcomePage(): JSX.Element {
 			try {
 				const result = await validateLicense(
 					value,
-					outletproWelcomePage.isLocalEnvironment === '1'
+					outletproWelcomePage.isLocalHost === '1'
 				);
 				if ( validationRequestId.current !== requestId ) {
 					return;

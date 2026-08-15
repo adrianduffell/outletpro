@@ -63,13 +63,13 @@ const licenseKey = '38B1460A-5104-4067-A91D-77B872934D51';
 const productsUrl = '/wp-admin/edit.php?post_type=product';
 function arrangeGlobals( {
 	hostname = 'example.com',
-	isLocalEnvironment = false,
+	isLocalHost = false,
 	licenseKey: prefilledLicenseKey = '',
 } = {} ) {
 	Object.assign( globalThis, {
 		outletproWelcomePage: {
 			hostname,
-			isLocalEnvironment: isLocalEnvironment ? '1' : '',
+			isLocalHost: isLocalHost ? '1' : '',
 			licenseKey: prefilledLicenseKey,
 			productsUrl,
 		},
@@ -244,9 +244,9 @@ test( 'ignores a stale validation response', async () => {
 	// Assert.
 	expect( screen.getByText( /Please check/ ) ).toBeInTheDocument();
 } );
-test( 'gives a valid local site precedence over exhausted capacity and saves it', async () => {
+test( 'gives a valid local host precedence over exhausted capacity and saves it', async () => {
 	// Arrange.
-	arrangeGlobals( { hostname: 'shop.local', isLocalEnvironment: true } );
+	arrangeGlobals( { hostname: 'shop.local', isLocalHost: true } );
 	mockFetch.mockResolvedValue( validationResponse( 5, 5 ) );
 	mockApiFetch.mockResolvedValue( {} );
 	render( <WelcomePage /> );
