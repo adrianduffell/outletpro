@@ -10,6 +10,11 @@ jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
 	default: jest.fn(),
 } ) );
+jest.mock( '@wordpress/ui', () => ( {
+	Link: ( { children, href }: { children?: ReactNode; href: string } ) => (
+		<a href={ href }>{ children }</a>
+	),
+} ) );
 jest.mock( '@wordpress/components', () => ( {
 	Button: ( {
 		children,

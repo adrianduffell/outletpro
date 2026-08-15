@@ -6,6 +6,7 @@
 import type { ReactNode } from 'react';
 import { createInterpolateElement } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
+import { Link } from '@wordpress/ui';
 type StaticValidationStatus =
 	| 'idle'
 	| 'validating'
@@ -19,24 +20,6 @@ export type ValidationState =
 	| { status: 'exhausted'; total: number };
 const HELP_URL = 'https://outletpro.zip/help/license-key';
 const BUY_URL = 'https://outletpro.zip/buy';
-function MessageLink( {
-	children,
-	href,
-}: {
-	children?: ReactNode;
-	href: string;
-} ) {
-	return (
-		<a
-			className="outletpro-button-link"
-			href={ href }
-			target="_blank"
-			rel="noopener noreferrer"
-		>
-			{ children }
-		</a>
-	);
-}
 export function ValidationMessage( {
 	validationState,
 	hostname,
@@ -83,7 +66,9 @@ export function ValidationMessage( {
 			);
 			return createInterpolateElement(
 				sprintf( exhaustedMessage, validationState.total, '' ),
-				{ help: <MessageLink href={ HELP_URL } /> }
+				{
+					help: <Link href={ HELP_URL } />,
+				}
 			);
 		}
 		case 'local':
@@ -96,7 +81,10 @@ export function ValidationMessage( {
 					),
 					hostname
 				),
-				{ code: <code />, help: <MessageLink href={ HELP_URL } /> }
+				{
+					code: <code />,
+					help: <Link href={ HELP_URL } />,
+				}
 			);
 		default:
 			return createInterpolateElement(
@@ -105,8 +93,8 @@ export function ValidationMessage( {
 					'outletpro'
 				),
 				{
-					purchase: <MessageLink href={ BUY_URL } />,
-					help: <MessageLink href={ HELP_URL } />,
+					purchase: <Link href={ BUY_URL } />,
+					help: <Link href={ HELP_URL } />,
 				}
 			);
 	}

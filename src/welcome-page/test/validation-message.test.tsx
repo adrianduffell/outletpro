@@ -2,8 +2,14 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
+import type { ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import { ValidationMessage, type ValidationState } from '../ValidationMessage';
+jest.mock( '@wordpress/ui', () => ( {
+	Link: ( { children, href }: { children?: ReactNode; href: string } ) => (
+		<a href={ href }>{ children }</a>
+	),
+} ) );
 const helpUrl = 'https://outletpro.zip/help/license-key';
 test( 'renders every validation message and link', () => {
 	// Arrange.
