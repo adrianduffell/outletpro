@@ -12,32 +12,9 @@ export type ValidationState =
 const HELP_URL = 'https://outletpro.zip/help/license-key';
 export function ValidationMessage( {
 	validationState,
-	hostname,
-	isLocalHost,
 }: {
 	validationState: ValidationState;
-	hostname: string;
-	isLocalHost: boolean;
 } ) {
-	if ( isLocalHost ) {
-		if (
-			[ 'available', 'exhausted', 'unlimited' ].includes(
-				validationState.status
-			)
-		) {
-			return createInterpolateElement(
-				sprintf(
-					/* translators: %s: site hostname. */
-					__(
-						'<code>🌐 %s</code> License includes unlimited local sites. <help>Learn more</help>',
-						'outletpro'
-					),
-					hostname
-				),
-				{ code: <code />, help: <Link href={ HELP_URL } /> }
-			);
-		}
-	}
 	switch ( validationState.status ) {
 		case 'validating':
 			return __( 'Validating…', 'outletpro' );

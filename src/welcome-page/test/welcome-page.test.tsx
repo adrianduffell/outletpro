@@ -498,60 +498,6 @@ test( 'disables activation for an exhausted license', async () => {
 	).toBeDisabled();
 } );
 
-test( 'enables activation for an exhausted license on a local host', async () => {
-	// Arrange.
-	arrangeGlobals();
-	( window as any ).outletproWelcomePage.hostname = 'shop.local';
-	( window as any ).outletproWelcomePage.isLocalHost = '1';
-	mockFetch.mockResolvedValue( {
-		json: () =>
-			Promise.resolve( {
-				valid: true,
-				license_key: {
-					activation_limit: 5,
-					activation_usage: 5,
-				},
-				meta: { product_id: 1279790 },
-			} ),
-	} );
-	render( <WelcomePage /> );
-	// Act.
-	await act( async () => {
-		fireEvent.change( screen.getByLabelText( /Premium license key/i ), {
-			target: { value: '38B1460A-5104-4067-A91D-77B872934D51' },
-		} );
-	} );
-	// Assert.
-	expect(
-		screen.getByRole( 'button', { name: /Activate site/i } )
-	).toBeEnabled();
-} );
-
-test( 'disables activation for malformed capacity on a local host', async () => {
-	// Arrange.
-	arrangeGlobals();
-	( window as any ).outletproWelcomePage.hostname = 'shop.local';
-	( window as any ).outletproWelcomePage.isLocalHost = '1';
-	mockFetch.mockResolvedValue( {
-		json: () =>
-			Promise.resolve( {
-				valid: true,
-				meta: { product_id: 1279790 },
-			} ),
-	} );
-	render( <WelcomePage /> );
-	// Act.
-	await act( async () => {
-		fireEvent.change( screen.getByLabelText( /Premium license key/i ), {
-			target: { value: '38B1460A-5104-4067-A91D-77B872934D51' },
-		} );
-	} );
-	// Assert.
-	expect(
-		screen.getByRole( 'button', { name: /Activate site/i } )
-	).toBeDisabled();
-} );
-
 test( 'ignores a stale validation response', async () => {
 	// Arrange.
 	arrangeGlobals();

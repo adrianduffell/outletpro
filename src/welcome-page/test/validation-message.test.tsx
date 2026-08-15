@@ -41,49 +41,33 @@ test.each( messages )(
 		// Act.
 		render(
 			<p role="status">
-				<ValidationMessage
-					validationState={ validationState }
-					hostname="shop.local"
-					isLocalHost={ false }
-				/>
+				<ValidationMessage validationState={ validationState } />
 			</p>
 		);
 		// Assert.
 		expect( screen.getByRole( 'status' ) ).toHaveTextContent( expected );
 	}
 );
-const linkedMessages: [ string, ValidationState, string, boolean ][] = [
+const linkedMessages: [ string, ValidationState, string ][] = [
 	[
 		'singular exhausted capacity',
 		{ status: 'exhausted', total: 1 },
 		'❌ License has reached the site activation limit. Purchase another license or deactivate the existing site to use this license. Learn more',
-		false,
 	],
 	[
 		'plural exhausted capacity',
 		{ status: 'exhausted', total: 5 },
 		'❌ License has reached the 5-site activation limit. Purchase another license or deactivate a site to use this license. Learn more',
-		false,
-	],
-	[
-		'local exemption',
-		{ status: 'exhausted', total: 5 },
-		'🌐 shop.local License includes unlimited local sites. Learn more',
-		true,
 	],
 ];
 test.each( linkedMessages )(
 	'renders the %s message and help link',
-	( name, validationState, expected, isLocalHost ) => {
+	( name, validationState, expected ) => {
 		// Arrange.
 		// Act.
 		render(
 			<p role="status">
-				<ValidationMessage
-					validationState={ validationState }
-					hostname="shop.local"
-					isLocalHost={ isLocalHost }
-				/>
+				<ValidationMessage validationState={ validationState } />
 			</p>
 		);
 		// Assert.
@@ -97,11 +81,7 @@ test( 'renders the default license links', () => {
 	// Act.
 	render(
 		<p role="status">
-			<ValidationMessage
-				validationState={ { status: 'idle' } }
-				hostname="shop.local"
-				isLocalHost
-			/>
+			<ValidationMessage validationState={ { status: 'idle' } } />
 		</p>
 	);
 	// Assert.

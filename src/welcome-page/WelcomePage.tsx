@@ -14,8 +14,6 @@ import {
 import { __ } from '@wordpress/i18n';
 import { ValidationMessage, type ValidationState } from './ValidationMessage';
 declare const outletproWelcomePage: {
-	hostname: string;
-	isLocalHost: string;
 	licenseKey: string;
 	productsUrl: string;
 };
@@ -29,15 +27,7 @@ type ValidationResponse = {
 };
 const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
 const LICENSE_KEY_LENGTH = 36;
-function canActivateLicense(
-	validationState: ValidationState,
-	isLocalHost: boolean
-): boolean {
-	if ( isLocalHost ) {
-		return [ 'available', 'exhausted', 'unlimited' ].includes(
-			validationState.status
-		);
-	}
+function canActivateLicense( validationState: ValidationState ): boolean {
 	return [ 'available', 'unlimited' ].includes( validationState.status );
 }
 function isNonNegativeInteger( value: unknown ): value is number {
@@ -96,7 +86,6 @@ async function validateLicense(
 	return { status: 'available', remaining, total: activationLimit };
 }
 export function WelcomePage(): JSX.Element {
-	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
 	const [ licenseKey, setLicenseKey ] = useState(
 		outletproWelcomePage.licenseKey.trim().toUpperCase()
 	);
@@ -151,7 +140,7 @@ export function WelcomePage(): JSX.Element {
 		void validateCurrentLicense( normalizedValue, requestId );
 	}
 	async function handleContinue() {
-		if ( ! canActivateLicense( validationState, isLocalHost ) ) {
+		if ( ! canActivateLicense( validationState ) ) {
 			return;
 		}
 		setIsLoading( true );
@@ -203,7 +192,7 @@ export function WelcomePage(): JSX.Element {
 			</div>
 		);
 	}
-	const canActivate = canActivateLicense( validationState, isLocalHost );
+	const canActivate = canActivateLicense( validationState );
 	const validationRole = [ 'invalid', 'error' ].includes(
 		validationState.status
 	)
@@ -239,11 +228,7 @@ export function WelcomePage(): JSX.Element {
 				aria-live="polite"
 			>
 				<span key={ validationState.status }>
-					<ValidationMessage
-						validationState={ validationState }
-						hostname={ outletproWelcomePage.hostname }
-						isLocalHost={ isLocalHost }
-					/>
+					<ValidationMessage validationState={ validationState } />
 				</span>
 			</p>
 			<p className="outletpro-welcome-page__notice">
