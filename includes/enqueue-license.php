@@ -56,9 +56,10 @@ function enqueue_admin_welcome_page_scripts_hook(): void {
 		true
 	);
 
-	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
-
-	if ( ! is_string( $hostname ) ) {
+	try {
+		$hostname = get_hostname();
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Hostname could not be retrieved.' );
 		$hostname = '';
 	}
 
@@ -66,10 +67,11 @@ function enqueue_admin_welcome_page_scripts_hook(): void {
 		'outletpro-welcome-page',
 		'outletproWelcomePage',
 		array(
-			'hostname'           => $hostname,
-			'isLocalEnvironment' => is_local_env(),
-			'licenseKey'         => (string) get_option( LICENSE_KEY_OPTION, '' ),
-			'productsUrl'        => esc_url( admin_url( 'edit.php?post_type=product' ) ),
+			'environmentType' => wp_get_environment_type(),
+			'hostname'        => $hostname,
+			'isLocalHost'     => is_local_env(),
+			'licenseKey'      => (string) get_option( LICENSE_KEY_OPTION, '' ),
+			'productsUrl'     => esc_url( admin_url( 'edit.php?post_type=product' ) ),
 		)
 	);
 

@@ -356,6 +356,22 @@ function validate_license( $license_key ): bool {
 }
 
 /**
+ * Get the hostname from the home URL.
+ *
+ * @internal
+ * @throws \RuntimeException If the hostname cannot be retrieved.
+ */
+function get_hostname(): string {
+	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
+
+	if ( ! is_string( $hostname ) ) {
+		throw new \RuntimeException( 'Hostname could not be retrieved' );
+	}
+
+	return $hostname;
+}
+
+/**
  * Check whether the home URL uses a common local development hostname.
  *
  * @internal
