@@ -108,11 +108,11 @@ export function WelcomePage(): JSX.Element {
 		: 'status';
 	return (
 		<div className="outletpro-welcome-page">
-			<h1>{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }</h1>
+			<h1>{ __( 'Welcome to Outlet Pro', 'outletpro' ) }</h1>
 
 			<p className="outletpro-welcome-page__description">
 				{ __(
-					'Thank you for installing Outlet Pro. Enter your premium license key to begin setup.',
+					'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
 					'outletpro'
 				) }
 			</p>

@@ -107,7 +107,7 @@ test( 'renders the welcome message', () => {
 
 	// Assert.
 	expect(
-		screen.getByText( /Thank you for installing Outlet Pro/i )
+		screen.getByText( /Thank you for choosing Outlet Pro!/i )
 	).toBeInTheDocument();
 } );
 
