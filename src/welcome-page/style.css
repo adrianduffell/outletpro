@@ -24,6 +24,14 @@ body.toplevel_page_outletpro-welcome {
 		margin: 2em auto 2em auto;
 	}
 
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
 	#outletpro-welcome-page-root {
 		display: grid;
 
