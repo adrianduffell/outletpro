@@ -222,17 +222,24 @@ function activate_license( string $license_key ): bool {
  *
  * @internal
  *
- * @param string $license_key The license key.
+ * @param string      $license_key The license key.
+ * @param string|null $activation_id The activation ID, prefilled from LICENSE_ACTIVATION_ID_OPTION if not provided.
  * @throws \RuntimeException If the deactivation request fails or the response is invalid.
  */
-function deactivate_license( string $license_key ): bool {
+function deactivate_license( string $license_key, ?string $activation_id = null ): bool {
 	if ( '' === trim( $license_key ) ) {
 		return false;
 	}
 
-	$activation_id = get_option( LICENSE_ACTIVATION_ID_OPTION );
+	if ( is_null( $activation_id ) ) {
+		$activation_id = get_option( LICENSE_ACTIVATION_ID_OPTION );
+	}
 
-	if ( ! is_string( $activation_id ) || '' === trim( $activation_id ) ) {
+	if ( ! is_string( $activation_id ) ) {
+		return false;
+	}
+
+	if ( '' === trim( $activation_id ) ) {
 		return false;
 	}
 

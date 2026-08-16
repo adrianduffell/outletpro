@@ -72,11 +72,11 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_deactivates_license_and_deletes_activation_id(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_deactivates_license_with_activation_id_and_deletes_stored_activation_id(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$request_args = null;
 		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
+		update_option( LICENSE_ACTIVATION_ID_OPTION, 'stored-activation-id' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
@@ -110,7 +110,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = deactivate_license( 'abc123' );
+		$result = deactivate_license( 'abc123', 'activation-id' );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -126,6 +126,33 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 		$this->assertSame( 'application/json', $request_args['headers']['Accept'] );
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
+	}
+
+	public function test_falls_back_to_deprecated_activation_id_option(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$request_args = null;
+		$this->mock_license_server_response( true );
+		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_args ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
+					$request_args = $args;
+				}
+
+				return $pre;
+			},
+			20,
+			3
+		);
+
+		// Act.
+		$result = deactivate_license( 'abc123' );
+
+		// Assert.
+		$this->assertTrue( $result );
+		$this->assertIsArray( $request_args );
+		$this->assertSame( 'activation-id', $request_args['body']['instance_id'] );
 	}
 
 	public function test_returns_false_and_keeps_activation_id_when_deactivation_is_rejected(): void {
