@@ -5,16 +5,38 @@
 import { createInterpolateElement } from '@wordpress/element';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import { Link } from '@wordpress/ui';
-export type ValidationState =
-	| { status: 'idle' | 'validating' | 'invalid' | 'error' | 'unlimited' }
-	| { status: 'available'; remaining: number; total: number }
-	| { status: 'exhausted'; total: number };
+import type { ValidationState } from './useLicenseValidation';
+export type { ValidationState } from './useLicenseValidation';
 const HELP_URL = 'https://outletpro.zip/help/license-key';
 export function ValidationMessage( {
+	hostname,
+	isLocalHost,
 	validationState,
 }: {
+	hostname: string;
+	isLocalHost: boolean;
 	validationState: ValidationState;
 } ) {
+	if ( isLocalHost ) {
+		if (
+			[ 'available', 'unavailable' ].includes( validationState.status )
+		) {
+			return createInterpolateElement(
+				sprintf(
+					/* translators: %s: local site hostname. */
+					__(
+						'✅ <hostname>%s</hostname> License includes unlimited local sites. <help>Learn more</help>',
+						'outletpro'
+					),
+					hostname
+				),
+				{
+					help: <Link href={ HELP_URL } />,
+					hostname: <code />,
+				}
+			);
+		}
+	}
 	switch ( validationState.status ) {
 		case 'validating':
 			return __( 'Validating…', 'outletpro' );
@@ -29,6 +51,12 @@ export function ValidationMessage( {
 				'outletpro'
 			);
 		case 'available': {
+			if ( validationState.remaining === Infinity ) {
+				return __(
+					'✅ Unlimited site activations available',
+					'outletpro'
+				);
+			}
 			/* translators: 1: remaining activations, 2: total activations. */
 			const availableMessage = _n(
 				'✅ %1$d site activation available',
@@ -42,18 +70,16 @@ export function ValidationMessage( {
 				validationState.total
 			);
 		}
-		case 'unlimited':
-			return __( '✅ Unlimited site activations available', 'outletpro' );
-		case 'exhausted': {
+		case 'unavailable': {
 			/* translators: 1: total activation limit, 2: reserved placeholder. */
-			const exhaustedMessage = _n(
+			const unavailableMessage = _n(
 				'❌ License has reached the site activation limit%2$s. Purchase another license or deactivate the existing site to use this license. <help>Learn more</help>',
 				'❌ License has reached the %1$d-site activation limit%2$s. Purchase another license or deactivate a site to use this license. <help>Learn more</help>',
 				validationState.total,
 				'outletpro'
 			);
 			return createInterpolateElement(
-				sprintf( exhaustedMessage, validationState.total, '' ),
+				sprintf( unavailableMessage, validationState.total, '' ),
 				{ help: <Link href={ HELP_URL } /> }
 			);
 		}

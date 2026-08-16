@@ -2,147 +2,53 @@
  * Copyright 2026 Adrian Duffell
  * Licensed under the GNU General Public License v2.0 or later.
  */
+
 import apiFetch from '@wordpress/api-fetch';
 import { Button, TextControl } from '@wordpress/components';
-import {
-	useCallback,
-	useEffect,
-	useRef,
-	useState,
-	createInterpolateElement,
-} from '@wordpress/element';
+import { useRef, useState, createInterpolateElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { ValidationMessage, type ValidationState } from './ValidationMessage';
+import { ValidationMessage } from './ValidationMessage';
+import { useLicenseValidation } from './useLicenseValidation';
+
 declare const outletproWelcomePage: {
+	hostname: string;
+	isLocalHost: string;
 	licenseKey: string;
 	productsUrl: string;
 };
-type ValidationResponse = {
-	valid: boolean;
-	license_key?: {
-		activation_limit?: number | null;
-		activation_usage?: number;
-	};
-	meta?: { product_id?: number };
-};
-const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
-const LICENSE_KEY_LENGTH = 36;
-function canActivateLicense( validationState: ValidationState ): boolean {
-	return [ 'available', 'unlimited' ].includes( validationState.status );
-}
-function isNonNegativeInteger( value: unknown ): value is number {
-	if ( typeof value !== 'number' ) {
-		return false;
-	}
-	if ( ! Number.isInteger( value ) ) {
-		return false;
-	}
-	return value >= 0;
-}
-async function validateLicense(
-	licenseKey: string
-): Promise< ValidationState > {
-	const response = await fetch(
-		'https://api.lemonsqueezy.com/v1/licenses/validate',
-		{
-			method: 'POST',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/x-www-form-urlencoded',
-			},
-			body: new URLSearchParams( {
-				license_key: licenseKey,
-			} ),
-		}
-	);
-	const data: ValidationResponse = await response.json();
-	if ( data.valid === false ) {
-		return { status: 'invalid' };
-	}
-	if ( data.valid !== true ) {
-		throw new Error( 'Unexpected license validation response' );
-	}
-	if ( typeof data.meta?.product_id !== 'number' ) {
-		throw new Error( 'Unexpected license validation response' );
-	}
-	if ( ! ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id ) ) {
-		return { status: 'invalid' };
-	}
-	const activationLimit = data.license_key?.activation_limit;
-	const activationUsage = data.license_key?.activation_usage;
-	if ( activationLimit === null ) {
-		return { status: 'unlimited' };
-	}
-	if ( ! isNonNegativeInteger( activationLimit ) ) {
-		throw new Error( 'Unexpected license validation response' );
-	}
-	if ( ! isNonNegativeInteger( activationUsage ) ) {
-		throw new Error( 'Unexpected license validation response' );
-	}
-	const remaining = Math.max( 0, activationLimit - activationUsage );
-	if ( remaining === 0 ) {
-		return { status: 'exhausted', total: activationLimit };
-	}
-	return { status: 'available', remaining, total: activationLimit };
-}
+
 export function WelcomePage(): JSX.Element {
-	const [ licenseKey, setLicenseKey ] = useState(
-		outletproWelcomePage.licenseKey.trim().toUpperCase()
-	);
-	const [ validationState, setValidationState ] = useState< ValidationState >(
-		{ status: 'idle' }
-	);
+	const {
+		licenseKey,
+		validationState,
+		canActivate: hasAvailableActivation,
+		handleLicenseKeyChange: updateLicenseKey,
+	} = useLicenseValidation( outletproWelcomePage.licenseKey );
+	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
+	const canActivate =
+		hasAvailableActivation ||
+		( isLocalHost && validationState.status === 'unavailable' );
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
-	const initialLicenseKey = useRef( licenseKey );
 	const pasted = useRef( false );
-	const validationRequestId = useRef( 0 );
-	const validateCurrentLicense = useCallback(
-		async ( value: string, requestId: number ) => {
-			setValidationState( { status: 'validating' } );
-			let result: ValidationState;
-			try {
-				result = await validateLicense( value );
-			} catch {
-				result = { status: 'error' };
-			}
-			if ( validationRequestId.current !== requestId ) {
-				return;
-			}
-			setValidationState( result );
-		},
-		[]
-	);
-	useEffect( () => {
-		if ( initialLicenseKey.current.length !== LICENSE_KEY_LENGTH ) {
-			return;
-		}
-		const requestId = ++validationRequestId.current;
-		void validateCurrentLicense( initialLicenseKey.current, requestId );
-	}, [ validateCurrentLicense ] );
+
 	function handleLicenseKeyPaste() {
 		pasted.current = true;
 	}
+
 	function handleLicenseKeyChange( value: string ) {
-		const normalizedValue = value.trim().toUpperCase();
-		const requestId = ++validationRequestId.current;
-		const validateRegardlessOfLength = pasted.current;
+		const forceValidation = pasted.current;
 		pasted.current = false;
-		setLicenseKey( normalizedValue );
 		setErrorMessage( '' );
-		if ( ! validateRegardlessOfLength ) {
-			if ( normalizedValue.length !== LICENSE_KEY_LENGTH ) {
-				setValidationState( { status: 'idle' } );
-				return;
-			}
-		}
-		void validateCurrentLicense( normalizedValue, requestId );
+		updateLicenseKey( value, forceValidation );
 	}
+
 	async function handleContinue() {
-		if ( ! canActivateLicense( validationState ) ) {
+		if ( ! canActivate ) {
 			return;
 		}
+
 		setIsLoading( true );
 		setErrorMessage( '' );
 		try {
@@ -161,9 +67,11 @@ export function WelcomePage(): JSX.Element {
 			setIsLoading( false );
 			return;
 		}
+
 		setIsSuccess( true );
 		setIsLoading( false );
 	}
+
 	if ( isSuccess ) {
 		return (
 			<div className="outletpro-welcome-page">
@@ -192,7 +100,7 @@ export function WelcomePage(): JSX.Element {
 			</div>
 		);
 	}
-	const canActivate = canActivateLicense( validationState );
+
 	const validationRole = [ 'invalid', 'error' ].includes(
 		validationState.status
 	)
@@ -201,12 +109,14 @@ export function WelcomePage(): JSX.Element {
 	return (
 		<div className="outletpro-welcome-page">
 			<h1>{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }</h1>
+
 			<p className="outletpro-welcome-page__description">
 				{ __(
 					'Thank you for installing Outlet Pro. Enter your premium license key to begin setup.',
 					'outletpro'
 				) }
 			</p>
+
 			<div className="outletpro-welcome-page__license-key-input">
 				<TextControl
 					label={ __( 'Premium license key', 'outletpro' ) }
@@ -228,7 +138,11 @@ export function WelcomePage(): JSX.Element {
 				aria-live="polite"
 			>
 				<span key={ validationState.status }>
-					<ValidationMessage validationState={ validationState } />
+					<ValidationMessage
+						hostname={ outletproWelcomePage.hostname }
+						isLocalHost={ isLocalHost }
+						validationState={ validationState }
+					/>
 				</span>
 			</p>
 			<p className="outletpro-welcome-page__notice">
