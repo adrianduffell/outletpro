@@ -5,77 +5,51 @@
 
 import apiFetch from '@wordpress/api-fetch';
 import { Button, TextControl } from '@wordpress/components';
-import { useState, createInterpolateElement } from '@wordpress/element';
+import { useRef, useState, createInterpolateElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { ValidationMessage } from './ValidationMessage';
+import { useLicenseValidation } from './useLicenseValidation';
 
 declare const outletproWelcomePage: {
-	licenseKey: string;
+	hostname: string;
+	isLocalHost: string;
 	productsUrl: string;
 };
 
-type ValidationResponse = {
-	valid: boolean;
-	meta?: {
-		product_id?: number;
-	};
-};
-
-const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
-
 export function WelcomePage(): JSX.Element {
-	const [ licenseKey, setLicenseKey ] = useState(
-		outletproWelcomePage.licenseKey
-	);
+	const {
+		licenseKey,
+		validationState,
+		canActivate: hasAvailableActivation,
+		handleLicenseKeyChange: updateLicenseKey,
+	} = useLicenseValidation();
+	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
+	const canActivate =
+		hasAvailableActivation ||
+		( isLocalHost && validationState.status === 'unavailable' );
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
+	const pasted = useRef( false );
+
+	function handleLicenseKeyPaste() {
+		pasted.current = true;
+	}
+
+	function handleLicenseKeyChange( value: string ) {
+		const forceValidation = pasted.current;
+		pasted.current = false;
+		setErrorMessage( '' );
+		updateLicenseKey( value, forceValidation );
+	}
 
 	async function handleContinue() {
+		if ( ! canActivate ) {
+			return;
+		}
+
 		setIsLoading( true );
 		setErrorMessage( '' );
-
-		let isValid = false;
-		try {
-			const response = await fetch(
-				'https://api.lemonsqueezy.com/v1/licenses/validate',
-				{
-					method: 'POST',
-					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-					body: new URLSearchParams( {
-						license_key: licenseKey,
-					} ),
-				}
-			);
-			const data: ValidationResponse = await response.json();
-			isValid =
-				data.valid === true &&
-				typeof data.meta?.product_id === 'number' &&
-				ALLOWED_LICENSE_PRODUCT_IDS.includes( data.meta.product_id );
-		} catch {
-			setErrorMessage(
-				__(
-					'Unable to contact the licensing service. Please try again.',
-					'outletpro'
-				)
-			);
-			setIsLoading( false );
-			return;
-		}
-
-		if ( ! isValid ) {
-			setErrorMessage(
-				__(
-					'Invalid license key. Please check it and try again.',
-					'outletpro'
-				)
-			);
-			setIsLoading( false );
-			return;
-		}
-
 		try {
 			await apiFetch( {
 				path: '/wp/v2/settings',
@@ -126,13 +100,18 @@ export function WelcomePage(): JSX.Element {
 		);
 	}
 
+	const validationRole = [ 'invalid', 'error' ].includes(
+		validationState.status
+	)
+		? 'alert'
+		: 'status';
 	return (
 		<div className="outletpro-welcome-page">
-			<h1>{ __( 'Welcome to Outlet Pro!', 'outletpro' ) }</h1>
+			<h1>{ __( 'Welcome to Outlet Pro', 'outletpro' ) }</h1>
 
 			<p className="outletpro-welcome-page__description">
 				{ __(
-					'Thank you for installing Outlet Pro. Enter your premium license key to begin setup.',
+					'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
 					'outletpro'
 				) }
 			</p>
@@ -142,9 +121,9 @@ export function WelcomePage(): JSX.Element {
 					label={ __( 'Premium license key', 'outletpro' ) }
 					hideLabelFromVision={ true }
 					value={ licenseKey }
-					onChange={ ( value ) =>
-						setLicenseKey( value.trim().toUpperCase() )
-					}
+					onChange={ handleLicenseKeyChange }
+					onPaste={ handleLicenseKeyPaste }
+					disabled={ isLoading }
 					autoComplete="off"
 					spellCheck={ false }
 					autoCorrect="off"
@@ -152,14 +131,18 @@ export function WelcomePage(): JSX.Element {
 					__next40pxDefaultSize
 				/>
 			</div>
-			<p>
-				<a
-					href="https://outletpro.zip/help/license-key/"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					{ __( 'I don’t have a license key', 'outletpro' ) }
-				</a>
+			<p
+				className={ `outletpro-welcome-page__validation outletpro-welcome-page__validation--${ validationState.status }` }
+				role={ validationRole }
+				aria-live="polite"
+			>
+				<span key={ validationState.status }>
+					<ValidationMessage
+						hostname={ outletproWelcomePage.hostname }
+						isLocalHost={ isLocalHost }
+						validationState={ validationState }
+					/>
+				</span>
 			</p>
 			<p className="outletpro-welcome-page__notice">
 				{ createInterpolateElement(
@@ -194,9 +177,9 @@ export function WelcomePage(): JSX.Element {
 					variant="primary"
 					onClick={ handleContinue }
 					isBusy={ isLoading }
-					disabled={ isLoading }
+					disabled={ isLoading || ! canActivate }
 				>
-					{ __( 'Continue', 'outletpro' ) }
+					{ __( 'Activate site', 'outletpro' ) }
 				</Button>
 			</div>
 			{ errorMessage && (

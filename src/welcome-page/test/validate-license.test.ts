@@ -20,7 +20,7 @@ const LICENSE_UNLIMITED = {
 	license_key: { activation_limit: null },
 	meta: { product_id: PRODUCT_ID },
 };
-const LICENSE_EXHAUSTED = {
+const LICENSE_UNAVAILABLE = {
 	valid: true,
 	license_key: {
 		activation_limit: 5,
@@ -112,11 +112,11 @@ test( 'validates a license with unlimited capacity', async () => {
 	} );
 } );
 
-test( 'validates a license with exhausted capacity', async () => {
+test( 'validates a license with unavailable capacity', async () => {
 	// Arrange.
 	mockFetch.mockReset();
 	mockFetch.mockResolvedValue( {
-		json: () => Promise.resolve( LICENSE_EXHAUSTED ),
+		json: () => Promise.resolve( LICENSE_UNAVAILABLE ),
 	} );
 
 	// Act.
