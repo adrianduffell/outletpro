@@ -66,13 +66,11 @@ const mockUseLicenseValidation = jest.mocked( useLicenseValidation );
 const mockHandleLicenseKeyChange = jest.fn();
 
 function arrangeGlobals( {
-	licenseKey = '',
 	productsUrl = '/wp-admin/edit.php?post_type=product',
-}: { licenseKey?: string; productsUrl?: string } = {} ) {
+}: { productsUrl?: string } = {} ) {
 	( window as any ).outletproWelcomePage = {
 		hostname: 'example.com',
 		isLocalHost: '',
-		licenseKey,
 		productsUrl,
 	};
 	mockApiFetch.mockReset();
@@ -137,21 +135,6 @@ test( 'renders the Activate site button', () => {
 	expect(
 		screen.getByRole( 'button', { name: /Activate site/i } )
 	).toBeInTheDocument();
-} );
-
-test( 'pre-fills license key from outletproWelcomePage global', () => {
-	// Arrange.
-	arrangeGlobals( { licenseKey: 'ABCD-1234' } );
-	arrangeValidation( { licenseKey: 'ABCD-1234' } );
-
-	// Act.
-	render( <WelcomePage /> );
-
-	// Assert.
-	expect( mockUseLicenseValidation ).toHaveBeenCalledWith( 'ABCD-1234' );
-	expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue(
-		'ABCD-1234'
-	);
 } );
 
 test( 'forwards license key changes to validation', () => {

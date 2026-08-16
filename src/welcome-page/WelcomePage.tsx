@@ -13,7 +13,6 @@ import { useLicenseValidation } from './useLicenseValidation';
 declare const outletproWelcomePage: {
 	hostname: string;
 	isLocalHost: string;
-	licenseKey: string;
 	productsUrl: string;
 };
 
@@ -23,7 +22,7 @@ export function WelcomePage(): JSX.Element {
 		validationState,
 		canActivate: hasAvailableActivation,
 		handleLicenseKeyChange: updateLicenseKey,
-	} = useLicenseValidation( outletproWelcomePage.licenseKey );
+	} = useLicenseValidation();
 	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
 	const canActivate =
 		hasAvailableActivation ||
