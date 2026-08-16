@@ -267,3 +267,25 @@ test( 'ignores a stale validation response', async () => {
 	// Assert.
 	expect( result.current.validationState ).toEqual( { status: 'invalid' } );
 } );
+
+test( 'ignores a stale response after editing to a non-validating length', async () => {
+	// Arrange.
+	mockValidateLicense.mockReset();
+	let resolveRequest: ( value: LicenseStatus ) => void = () => undefined;
+	mockValidateLicense.mockReturnValueOnce(
+		new Promise( ( resolve ) => {
+			resolveRequest = resolve;
+		} )
+	);
+	const { result } = renderHook( () => useLicenseValidation() );
+
+	// Act.
+	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
+	act( () => result.current.handleLicenseKeyChange( 'ABCD' ) );
+	await act( async () => resolveRequest( LICENSE_AVAILABLE ) );
+
+	// Assert.
+	expect( mockValidateLicense ).toHaveBeenCalledTimes( 1 );
+	expect( result.current.validationState ).toEqual( { status: 'idle' } );
+	expect( result.current.canActivate ).toBe( false );
+} );
