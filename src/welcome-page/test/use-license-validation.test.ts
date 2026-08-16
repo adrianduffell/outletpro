@@ -21,39 +21,10 @@ const LICENSE_AVAILABLE: LicenseStatus = {
 };
 const mockValidateLicense = jest.mocked( validateLicense );
 
-test( 'does not validate a short prefilled license key', () => {
-	// Arrange.
-	mockValidateLicense.mockReset();
-
-	// Act.
-	const { result } = renderHook( () => useLicenseValidation( 'ABCD-1234' ) );
-
-	// Assert.
-	expect( mockValidateLicense ).not.toHaveBeenCalled();
-	expect( result.current.validationState ).toEqual( { status: 'idle' } );
-} );
-
-test( 'validates a 36-character prefilled license key', async () => {
-	// Arrange.
-	mockValidateLicense.mockReset();
-	mockValidateLicense.mockReturnValue( new Promise( () => undefined ) );
-
-	// Act.
-	const { result } = renderHook( () => useLicenseValidation( LICENSE_KEY ) );
-
-	// Assert.
-	await waitFor( () =>
-		expect( mockValidateLicense ).toHaveBeenCalledWith( LICENSE_KEY )
-	);
-	expect( result.current.validationState ).toEqual( {
-		status: 'validating',
-	} );
-} );
-
 test( 'normalizes the license key', () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( 'abcd-1234' ) );
@@ -65,7 +36,7 @@ test( 'normalizes the license key', () => {
 test( 'trims the license key', () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( '  ABCD-1234  ' ) );
@@ -78,7 +49,7 @@ test( 'validates a changed license key at exactly 36 characters', () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockReturnValue( new Promise( () => undefined ) );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
@@ -94,7 +65,7 @@ test( 'forces validation regardless of license key length', () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockReturnValue( new Promise( () => undefined ) );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( 'abcd-1234', true ) );
@@ -110,7 +81,7 @@ test( 'transitions to invalid for an invalid license', async () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockResolvedValue( { valid: false } );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
@@ -128,7 +99,7 @@ test( 'transitions to error when validation fails', async () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockRejectedValue( new Error( 'Network error' ) );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
@@ -144,7 +115,7 @@ test( 'transitions to available for a license with capacity', async () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockResolvedValue( LICENSE_AVAILABLE );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
@@ -168,7 +139,7 @@ test( 'transitions to available for a license with unlimited capacity', async ()
 		remaining: Infinity,
 		total: Infinity,
 	} );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
@@ -192,7 +163,7 @@ test( 'transitions to unavailable for a license without capacity', async () => {
 		remaining: 0,
 		total: 5,
 	} );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
@@ -211,7 +182,7 @@ test( 'resets validation after editing a validated license key', async () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockResolvedValue( LICENSE_AVAILABLE );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
 	await waitFor( () => expect( result.current.canActivate ).toBe( true ) );
 
@@ -227,7 +198,7 @@ test( 'disables activation while revalidating a license key', async () => {
 	// Arrange.
 	mockValidateLicense.mockReset();
 	mockValidateLicense.mockResolvedValueOnce( LICENSE_AVAILABLE );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
 	await waitFor( () => expect( result.current.canActivate ).toBe( true ) );
 	mockValidateLicense.mockReturnValueOnce( new Promise( () => undefined ) );
@@ -252,7 +223,7 @@ test( 'ignores a stale validation response', async () => {
 		} )
 	);
 	mockValidateLicense.mockResolvedValueOnce( { valid: false } );
-	const { result } = renderHook( () => useLicenseValidation( '' ) );
+	const { result } = renderHook( () => useLicenseValidation() );
 
 	// Act.
 	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );

@@ -3,7 +3,7 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-import { useCallback, useEffect, useRef, useState } from '@wordpress/element';
+import { useCallback, useRef, useState } from '@wordpress/element';
 import { validateLicense } from './validateLicense';
 
 export type ValidationState =
@@ -13,14 +13,11 @@ export type ValidationState =
 
 const LICENSE_KEY_LENGTH = 36;
 
-export function useLicenseValidation( value: string ) {
-	const [ licenseKey, setLicenseKey ] = useState(
-		value.trim().toUpperCase()
-	);
+export function useLicenseValidation() {
+	const [ licenseKey, setLicenseKey ] = useState( '' );
 	const [ validationState, setValidationState ] = useState< ValidationState >(
 		{ status: 'idle' }
 	);
-	const initialLicenseKey = useRef( licenseKey );
 	const validationRequestId = useRef( 0 );
 
 	const validateCurrentLicense = useCallback(
@@ -53,14 +50,6 @@ export function useLicenseValidation( value: string ) {
 		},
 		[]
 	);
-
-	useEffect( () => {
-		if ( initialLicenseKey.current.length !== LICENSE_KEY_LENGTH ) {
-			return;
-		}
-		const requestId = ++validationRequestId.current;
-		void validateCurrentLicense( initialLicenseKey.current, requestId );
-	}, [ validateCurrentLicense ] );
 
 	function handleLicenseKeyChange(
 		currentLicenseKey: string,
