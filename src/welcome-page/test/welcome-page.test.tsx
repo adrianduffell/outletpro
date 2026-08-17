@@ -306,7 +306,7 @@ test( 'shows error when REST API save fails', async () => {
 	).toBeEnabled();
 } );
 
-test( 'success view shows Products link', async () => {
+test( 'welcome mode success view shows Products link', async () => {
 	// Arrange.
 	arrangeGlobals();
 	arrangeValidation( {
@@ -330,4 +330,45 @@ test( 'success view shows Products link', async () => {
 		'href',
 		'/wp-admin/edit.php?post_type=product'
 	);
+} );
+
+test( 'reset mode success view omits getting started guidance', async () => {
+	// Arrange.
+	arrangeGlobals( { licenseKey: 'OLD-LICENSE-KEY' } );
+	arrangeValidation( {
+		licenseKey: 'NEW-LICENSE-KEY',
+		validationState: { status: 'available', remaining: 3, total: 5 },
+		canActivate: true,
+	} );
+	mockApiFetch.mockResolvedValue( {} );
+
+	// Act.
+	render( <WelcomePage /> );
+	await act( async () => {
+		fireEvent.click(
+			screen.getByRole( 'button', { name: /Activate site/i } )
+		);
+	} );
+
+	// Assert.
+	expect(
+		screen.getByRole( 'heading', { name: 'License activated' } )
+	).toBeInTheDocument();
+	const learnMoreLink = screen.getByRole( 'link', { name: 'Learn more' } );
+	expect( learnMoreLink ).toHaveAttribute(
+		'href',
+		'https://outletpro.zip/help/license'
+	);
+	expect( learnMoreLink.previousElementSibling?.tagName ).toBe( 'BR' );
+	expect( learnMoreLink.closest( 'p' ) ).toHaveTextContent(
+		'License activated. Your premium license includes plugin updates and email support. Learn more'
+	);
+	expect(
+		screen.queryByRole( 'link', { name: /Get Started/i } )
+	).not.toBeInTheDocument();
+	expect(
+		screen.queryByText(
+			/Get started by including your first product in the store's outlet/i
+		)
+	).not.toBeInTheDocument();
 } );
