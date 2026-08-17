@@ -103,8 +103,7 @@ export function WelcomePage(): JSX.Element {
 						: __(
 								"Outlet Pro is now set up. Get started by including your first product in the store's outlet.",
 								'outletpro'
-						  ) }
-					{ ' ' }
+						  ) }{ ' ' }
 					{ createInterpolateElement(
 						isResetMode
 							? __(
