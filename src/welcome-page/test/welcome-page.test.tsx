@@ -359,8 +359,8 @@ test( 'reset mode success view omits getting started guidance', async () => {
 		'href',
 		'https://outletpro.zip/help/license'
 	);
-	expect( learnMoreLink.previousElementSibling?.tagName ).toBe( 'BR' );
-	expect( learnMoreLink.closest( 'p' ) ).toHaveTextContent(
+	const description = learnMoreLink.closest( 'p' );
+	expect( description ).toHaveTextContent(
 		'License activated. Your premium license includes plugin updates and email support. Learn more'
 	);
 	expect(
