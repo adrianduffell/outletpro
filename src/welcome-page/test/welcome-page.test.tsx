@@ -109,6 +109,7 @@ test( 'renders the welcome message', () => {
 	expect(
 		screen.getByText( /Thank you for choosing Outlet Pro!/i )
 	).toBeInTheDocument();
+	expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue( '' );
 } );
 
 test( 'renders the license re-setup message for an existing license key', () => {
@@ -128,6 +129,7 @@ test( 'renders the license re-setup message for an existing license key', () => 
 			'The license could not be verified on this site. Enter your premium license key to continue.'
 		)
 	).toBeInTheDocument();
+	expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue( '' );
 } );
 
 test( 'renders the license key input', () => {
