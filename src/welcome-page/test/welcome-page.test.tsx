@@ -66,11 +66,13 @@ const mockUseLicenseValidation = jest.mocked( useLicenseValidation );
 const mockHandleLicenseKeyChange = jest.fn();
 
 function arrangeGlobals( {
+	licenseKey = '',
 	productsUrl = '/wp-admin/edit.php?post_type=product',
-}: { productsUrl?: string } = {} ) {
+}: { licenseKey?: string; productsUrl?: string } = {} ) {
 	( window as any ).outletproWelcomePage = {
 		hostname: 'example.com',
 		isLocalHost: '',
+		licenseKey,
 		productsUrl,
 	};
 	mockApiFetch.mockReset();
@@ -106,6 +108,25 @@ test( 'renders the welcome message', () => {
 	// Assert.
 	expect(
 		screen.getByText( /Thank you for choosing Outlet Pro!/i )
+	).toBeInTheDocument();
+} );
+
+test( 'renders the license re-setup message for an existing license key', () => {
+	// Arrange.
+	arrangeGlobals( { licenseKey: 'OLD-LICENSE-KEY' } );
+	arrangeValidation();
+
+	// Act.
+	render( <WelcomePage /> );
+
+	// Assert.
+	expect(
+		screen.getByRole( 'heading', { name: 'Outlet Pro Setup' } )
+	).toBeInTheDocument();
+	expect(
+		screen.getByText(
+			'The license could not be verified on this site. Enter your premium license key to continue.'
+		)
 	).toBeInTheDocument();
 } );
 

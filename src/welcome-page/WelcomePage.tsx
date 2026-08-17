@@ -13,6 +13,7 @@ import { useLicenseValidation } from './useLicenseValidation';
 declare const outletproWelcomePage: {
 	hostname: string;
 	isLocalHost: string;
+	licenseKey: string;
 	productsUrl: string;
 };
 
@@ -24,6 +25,7 @@ export function WelcomePage(): JSX.Element {
 		handleLicenseKeyChange: updateLicenseKey,
 	} = useLicenseValidation();
 	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
+	const isResetMode = outletproWelcomePage.licenseKey !== '';
 	const canActivate =
 		hasAvailableActivation ||
 		( isLocalHost && validationState.status === 'unavailable' );
@@ -107,13 +109,22 @@ export function WelcomePage(): JSX.Element {
 		: 'status';
 	return (
 		<div className="outletpro-welcome-page">
-			<h1>{ __( 'Welcome to Outlet Pro', 'outletpro' ) }</h1>
+			<h1>
+				{ isResetMode
+					? __( 'Outlet Pro Setup', 'outletpro' )
+					: __( 'Welcome to Outlet Pro', 'outletpro' ) }
+			</h1>
 
 			<p className="outletpro-welcome-page__description">
-				{ __(
-					'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
-					'outletpro'
-				) }
+				{ isResetMode
+					? __(
+							'The license could not be verified on this site. Enter your premium license key to continue.',
+							'outletpro'
+					  )
+					: __(
+							'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
+							'outletpro'
+					  ) }
 			</p>
 
 			<div className="outletpro-welcome-page__license-key-input">
