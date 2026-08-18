@@ -146,6 +146,31 @@ function set_license_activation( string $license_key, string $activation_id ): v
 }
 
 /**
+ * Synchronize the stored activation option with the license key in settings.
+ *
+ * @internal
+ */
+function sync_activation(): void {
+	$settings_license_key = get_license_key();
+
+	// The license key is absent. Remove any stored activation.
+	if ( is_null( $settings_license_key ) ) {
+		delete_option( LICENSE_ACTIVATION_OPTION );
+		return;
+	}
+
+	$activation_license_key = get_license_activation()[0] ?? null;
+
+	// The license key and stored activation match. Do nothing.
+	if ( $settings_license_key === $activation_license_key ) {
+		return;
+	}
+
+	// Stored activation does not match the license key. Activate the license key.
+	activate_license( $settings_license_key );
+}
+
+/**
  * Activate a license on this site.
  *
  * @internal
