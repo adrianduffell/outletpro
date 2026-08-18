@@ -41,17 +41,6 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
- * WordPress option key used to store the Lemon Squeezy activation ID.
- *
- * This option is deliberately not registered as a setting because it is
- * managed internally rather than directly by users.
- *
- * @internal
- * @deprecated 1.0.3 Use LICENSE_ACTIVATION_OPTION instead.
- */
-const LICENSE_ACTIVATION_ID_OPTION = 'outletpro_license_activation_id';
-
-/**
  * WordPress option key used to store the license activation tuple.
  *
  * @internal
@@ -237,7 +226,6 @@ function activate_license( string $license_key ): bool {
 	}
 
 	set_license_activation( $license_key, $activation_id );
-	update_option( LICENSE_ACTIVATION_ID_OPTION, $activation_id, false );
 	delete_transient( LICENSE_STATUS_TRANSIENT );
 
 	return true;
@@ -248,20 +236,12 @@ function activate_license( string $license_key ): bool {
  *
  * @internal
  *
- * @param string      $license_key The license key.
- * @param string|null $activation_id The activation ID, prefilled from LICENSE_ACTIVATION_ID_OPTION if not provided.
+ * @param string $license_key The license key.
+ * @param string $activation_id The activation ID.
  * @throws \RuntimeException If the deactivation request fails or the response is invalid.
  */
-function deactivate_license( string $license_key, ?string $activation_id = null ): bool {
+function deactivate_license( string $license_key, string $activation_id ): bool {
 	if ( '' === trim( $license_key ) ) {
-		return false;
-	}
-
-	if ( is_null( $activation_id ) ) {
-		$activation_id = get_option( LICENSE_ACTIVATION_ID_OPTION );
-	}
-
-	if ( ! is_string( $activation_id ) ) {
 		return false;
 	}
 
@@ -312,7 +292,6 @@ function deactivate_license( string $license_key, ?string $activation_id = null 
 		return false;
 	}
 
-	delete_option( LICENSE_ACTIVATION_ID_OPTION );
 	delete_option( LICENSE_ACTIVATION_OPTION );
 	delete_transient( LICENSE_STATUS_TRANSIENT );
 

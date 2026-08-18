@@ -9,7 +9,6 @@
  */
 
 use function OutletPro\activate_license;
-use const OutletPro\LICENSE_ACTIVATION_ID_OPTION;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
@@ -89,7 +88,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 		// Arrange.
 		$request_args = null;
 		$this->mock_license_server_response( true );
-		delete_option( LICENSE_ACTIVATION_ID_OPTION );
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'inactive', WEEK_IN_SECONDS );
 		add_filter(
@@ -131,7 +129,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-		$this->assertSame( 'activation-id', get_option( LICENSE_ACTIVATION_ID_OPTION ) );
 		$this->assertSame(
 			array( 'abc123', 'activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
@@ -201,14 +198,14 @@ class Test_Activate_License extends WP_UnitTestCase {
 	public function test_returns_false_when_activation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
-		delete_option( LICENSE_ACTIVATION_ID_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION );
 
 		// Act.
 		$result = activate_license( 'abc123' );
 
 		// Assert.
 		$this->assertFalse( $result );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_ID_OPTION ) );
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 	}
 
 	public function test_throws_when_activation_response_code_is_not_ok(): void {
@@ -297,7 +294,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 		// Arrange.
 		$activation_request_was_made = false;
 		$this->mock_license_server_response( true, 200, false );
-		delete_option( LICENSE_ACTIVATION_ID_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION );
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( &$activation_request_was_made ) {
@@ -317,6 +314,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result );
 		$this->assertFalse( $activation_request_was_made );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_ID_OPTION ) );
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 	}
 }
