@@ -10,6 +10,7 @@
 
 use function OutletPro\activate_license;
 use const OutletPro\LICENSE_ACTIVATION_ID_OPTION;
+use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Activate_License extends WP_UnitTestCase {
@@ -89,6 +90,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 		$request_args = null;
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_ACTIVATION_ID_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'inactive', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
@@ -130,6 +132,10 @@ class Test_Activate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertTrue( $result );
 		$this->assertSame( 'activation-id', get_option( LICENSE_ACTIVATION_ID_OPTION ) );
+		$this->assertSame(
+			array( 'abc123', 'activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
 		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
 		$this->assertIsArray( $request_args );
 		$this->assertSame(
