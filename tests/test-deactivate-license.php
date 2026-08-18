@@ -76,7 +76,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		// Arrange.
 		$request_args = null;
 		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'stored-activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
