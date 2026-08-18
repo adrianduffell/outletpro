@@ -45,9 +45,9 @@ function init_license_settings(): void {
 	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 2 );
-	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 2 );
-	add_action( 'delete_option', 'OutletPro\delete_license_activation_hook' );
+	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
+	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
+	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\delete_license_activation_hook', 10, 0 );
 }
 
 /**
@@ -60,72 +60,53 @@ function deinit_license_settings(): void {
 	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 2 );
-	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 2 );
-	remove_action( 'delete_option', 'OutletPro\delete_license_activation_hook' );
+	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
+	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
+	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\delete_license_activation_hook', 10, 0 );
 }
 
 /**
- * Activate a license key when the license key option is first added.
+ * Synchronizes the activation tuple when the license key option is first added.
  *
  * Fired by `add_option_{LICENSE_KEY_OPTION}`.
  *
- * @param string $option The option name.
- * @param mixed  $license_key The added license key.
  * @internal WordPress action hook
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
-function add_license_activation_hook( string $option, $license_key ): void {
+function add_license_activation_hook(): void {
 	try {
-		activate_license( $license_key );
+		sync_activation();
 	} catch ( \RuntimeException $e ) {
-		\wc_get_logger()->error( 'New license could not be activated.' );
+		\wc_get_logger()->error( 'License activation could not be synchronized when setting added.' );
 	}
 }
 
 /**
- * Update the site activation when the license key option is changed.
+ * Synchronizes the activation tuple when the license key option is changed.
  *
  * Fired by `update_option_{LICENSE_KEY_OPTION}`.
  *
- * @param mixed $previous_license_key The previous license key.
- * @param mixed $license_key The new license key.
  * @internal WordPress action hook
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
-function update_license_activation_hook( $previous_license_key, $license_key ): void {
+function update_license_activation_hook(): void {
 	try {
-		deactivate_license( $previous_license_key );
+		sync_activation();
 	} catch ( \RuntimeException $e ) {
-		\wc_get_logger()->error( 'Previous license could not be deactivated.' );
-	}
-
-	try {
-		activate_license( $license_key );
-	} catch ( \RuntimeException $e ) {
-		\wc_get_logger()->error( 'New license could not be activated.' );
+		\wc_get_logger()->error( 'License activation could not be synchronized when setting changed.' );
 	}
 }
 
 /**
- * Deactivate the license before the license key option is deleted.
+ * Synchronizes the activation tuple when the license key option is deleted.
  *
- * Fired by `delete_option`.
+ * Fired by `delete_option_{LICENSE_KEY_OPTION}`.
  *
- * @param string $option The option name.
  * @internal WordPress action hook
  */
-function delete_license_activation_hook( string $option ): void {
-	if ( LICENSE_KEY_OPTION !== $option ) {
-		return;
-	}
-
-	$license_key = get_option( LICENSE_KEY_OPTION );
-
+function delete_license_activation_hook(): void {
 	try {
-		deactivate_license( $license_key );
+		sync_activation();
 	} catch ( \RuntimeException $e ) {
-		\wc_get_logger()->error( 'Previous license could not be deactivated.' );
+		\wc_get_logger()->error( 'License activation could not be synchronized when setting deleted.' );
 	}
 }
 
