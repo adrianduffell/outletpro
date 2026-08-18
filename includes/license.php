@@ -211,6 +211,7 @@ function activate_license( string $license_key ): bool {
 		throw new \RuntimeException( 'Unexpected license activation response' );
 	}
 
+	set_license_activation( $license_key, $activation_id );
 	update_option( LICENSE_ACTIVATION_ID_OPTION, $activation_id, false );
 	delete_transient( LICENSE_STATUS_TRANSIENT );
 
@@ -287,6 +288,7 @@ function deactivate_license( string $license_key, ?string $activation_id = null 
 	}
 
 	delete_option( LICENSE_ACTIVATION_ID_OPTION );
+	delete_option( LICENSE_ACTIVATION_OPTION );
 	delete_transient( LICENSE_STATUS_TRANSIENT );
 
 	return true;
