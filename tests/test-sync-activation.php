@@ -52,24 +52,33 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		add_filter(
 			'home_url',
 			function (): string {
-				return 'https://shop.local';
+				return 'https://example.com';
 			}
 		);
-		$request_license_key = null;
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$request_license_key ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
-					return $pre;
+			function ( $pre, $args, $url ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
+					return array(
+						'body'     => wp_json_encode(
+							array(
+								'valid' => true,
+								'meta'  => array( 'product_id' => 1279790 ),
+							)
+						),
+						'response' => array( 'code' => 200 ),
+					);
 				}
 
-				$request_license_key = $args['body']['license_key'];
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/activate' !== $url ) {
+					return $pre;
+				}
 
 				return array(
 					'body'     => wp_json_encode(
 						array(
-							'valid' => true,
-							'meta'  => array( 'product_id' => 1279790 ),
+							'activated' => true,
+							'instance'  => array( 'id' => 'new-activation-id' ),
 						)
 					),
 					'response' => array( 'code' => 200 ),
@@ -83,7 +92,10 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		sync_activation();
 
 		// Assert.
-		$this->assertSame( 'new-license', $request_license_key );
+		$this->assertSame(
+			array( 'new-license', 'new-activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
 	}
 
 	public function test_activates_license_key_when_stored_activation_is_absent(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -94,24 +106,33 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		add_filter(
 			'home_url',
 			function (): string {
-				return 'https://shop.local';
+				return 'https://example.com';
 			}
 		);
-		$request_license_key = null;
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$request_license_key ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
-					return $pre;
+			function ( $pre, $args, $url ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
+					return array(
+						'body'     => wp_json_encode(
+							array(
+								'valid' => true,
+								'meta'  => array( 'product_id' => 1279790 ),
+							)
+						),
+						'response' => array( 'code' => 200 ),
+					);
 				}
 
-				$request_license_key = $args['body']['license_key'];
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/activate' !== $url ) {
+					return $pre;
+				}
 
 				return array(
 					'body'     => wp_json_encode(
 						array(
-							'valid' => true,
-							'meta'  => array( 'product_id' => 1279790 ),
+							'activated' => true,
+							'instance'  => array( 'id' => 'activation-id' ),
 						)
 					),
 					'response' => array( 'code' => 200 ),
@@ -125,7 +146,10 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		sync_activation();
 
 		// Assert.
-		$this->assertSame( 'license-key', $request_license_key );
+		$this->assertSame(
+			array( 'license-key', 'activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
 	}
 
 	public function test_deletes_stored_activation_when_license_key_is_absent(): void {
