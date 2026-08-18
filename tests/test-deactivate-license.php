@@ -9,7 +9,6 @@
  */
 
 use function OutletPro\deactivate_license;
-use const OutletPro\LICENSE_ACTIVATION_ID_OPTION;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
@@ -73,12 +72,11 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_deactivates_license_with_activation_id_and_deletes_stored_activation_id(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_deactivates_license_with_activation_id_and_deletes_stored_activation(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$request_args = null;
 		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'stored-activation-id' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'stored-activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
@@ -116,7 +114,6 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_ID_OPTION ) );
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
 		$this->assertIsArray( $request_args );
@@ -131,62 +128,36 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
 	}
 
-	public function test_falls_back_to_deprecated_activation_id_option(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		$request_args = null;
-		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$request_args ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
-					$request_args = $args;
-				}
-
-				return $pre;
-			},
-			20,
-			3
-		);
-
-		// Act.
-		$result = deactivate_license( 'abc123' );
-
-		// Assert.
-		$this->assertTrue( $result );
-		$this->assertIsArray( $request_args );
-		$this->assertSame( 'activation-id', $request_args['body']['instance_id'] );
-	}
-
-	public function test_returns_false_and_keeps_activation_id_when_deactivation_is_rejected(): void {
+	public function test_returns_false_and_keeps_stored_activation_when_deactivation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 
 		// Act.
-		$result = deactivate_license( 'abc123' );
+		$result = deactivate_license( 'abc123', 'activation-id' );
 
 		// Assert.
 		$this->assertFalse( $result );
-		$this->assertSame( 'activation-id', get_option( LICENSE_ACTIVATION_ID_OPTION ) );
+		$this->assertSame(
+			array( 'abc123', 'activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
 	}
 
 	public function test_throws_when_deactivation_response_code_is_not_ok(): void {
 		// Arrange.
 		$this->mock_license_server_response( false, true, 400 );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		deactivate_license( 'abc123' );
+		deactivate_license( 'abc123', 'activation-id' );
 	}
 
 	public function test_throws_when_deactivation_response_is_invalid_json(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) {
@@ -213,13 +184,12 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		deactivate_license( 'abc123' );
+		deactivate_license( 'abc123', 'activation-id' );
 	}
 
 	public function test_returns_false_without_request_when_activation_id_is_missing(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$request_was_made = false;
-		delete_option( LICENSE_ACTIVATION_ID_OPTION );
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( &$request_was_made ) {
@@ -234,7 +204,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = deactivate_license( 'abc123' );
+		$result = deactivate_license( 'abc123', '' );
 
 		// Assert.
 		$this->assertFalse( $result );
@@ -245,7 +215,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		// Arrange.
 		$deactivation_request_was_made = false;
 		$this->mock_license_server_response( true, false );
-		update_option( LICENSE_ACTIVATION_ID_OPTION, 'activation-id' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( &$deactivation_request_was_made ) {
@@ -260,11 +230,14 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = deactivate_license( 'abc123' );
+		$result = deactivate_license( 'abc123', 'activation-id' );
 
 		// Assert.
 		$this->assertFalse( $result );
 		$this->assertFalse( $deactivation_request_was_made );
-		$this->assertSame( 'activation-id', get_option( LICENSE_ACTIVATION_ID_OPTION ) );
+		$this->assertSame(
+			array( 'abc123', 'activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
 	}
 }
