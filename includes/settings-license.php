@@ -164,3 +164,30 @@ function register_license_key_setting(): void {
 function invalidate_license_cache_hook(): void {
 	delete_transient( LICENSE_STATUS_TRANSIENT );
 }
+
+/**
+ * Get the license key from the option.
+ *
+ * Validates the license key option is a string or empty value. Non-strings
+ * indicate a corrupted state and exceptions are thrown in these cases.
+ *
+ * @internal
+ * @throws \UnexpectedValueException If the license key option is invalid.
+ */
+function get_license_key(): ?string {
+	$license_key = get_option( LICENSE_KEY_OPTION );
+
+	if ( false === $license_key ) {
+		return null;
+	}
+
+	if ( is_null( $license_key ) ) {
+		return null;
+	}
+
+	if ( ! is_string( $license_key ) ) {
+		throw new \UnexpectedValueException( 'Invalid license key option value.' );
+	}
+
+	return $license_key;
+}
