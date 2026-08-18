@@ -38,22 +38,7 @@ class Test_Get_License_Key extends WP_UnitTestCase {
 		$this->assertNull( $license_key );
 	}
 
-	public function test_returns_null_when_license_key_value_is_null(): void {
-		// Arrange.
-		deinit_license_settings();
-		add_filter(
-			'pre_option_' . LICENSE_KEY_OPTION,
-			fn(): ?string => null
-		);
-
-		// Act.
-		$license_key = get_license_key();
-
-		// Assert.
-		$this->assertNull( $license_key );
-	}
-
-	public function test_returns_blank_license_key(): void {
+	public function test_returns_null_when_license_key_is_empty(): void {
 		// Arrange.
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, '' );
@@ -62,7 +47,7 @@ class Test_Get_License_Key extends WP_UnitTestCase {
 		$license_key = get_license_key();
 
 		// Assert.
-		$this->assertSame( '', $license_key );
+		$this->assertNull( $license_key );
 	}
 
 	public function test_returns_short_license_key(): void {

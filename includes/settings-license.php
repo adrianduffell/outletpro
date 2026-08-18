@@ -168,8 +168,8 @@ function invalidate_license_cache_hook(): void {
 /**
  * Get the license key from the option.
  *
- * Validates the license key option is a string or empty value. Non-strings
- * indicate a corrupted state and exceptions are thrown in these cases.
+ * Returns null when the license key option does not exist or is an empty string.
+ * Other non-strings, including null, indicate a corrupted state.
  *
  * @internal
  * @throws \UnexpectedValueException If the license key option is invalid.
@@ -177,11 +177,13 @@ function invalidate_license_cache_hook(): void {
 function get_license_key(): ?string {
 	$license_key = get_option( LICENSE_KEY_OPTION );
 
+	// Option does not exist.
 	if ( false === $license_key ) {
 		return null;
 	}
 
-	if ( is_null( $license_key ) ) {
+	// Normalize empty string.
+	if ( '' === $license_key ) {
 		return null;
 	}
 
