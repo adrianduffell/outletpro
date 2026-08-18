@@ -96,7 +96,7 @@ function update_license_activation_hook(): void {
 }
 
 /**
- * Synchronizes the activation tuple the license key option is deleted.
+ * Synchronizes the activation tuple when the license key option is deleted.
  *
  * Fired by `delete_option_{LICENSE_KEY_OPTION}`.
  *
