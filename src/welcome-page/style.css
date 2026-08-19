@@ -33,6 +33,7 @@ body.toplevel_page_outletpro-welcome {
 	}
 
 	#outletpro-welcome-page-root {
+		position: relative;
 		display: grid;
 
 		@media (min-width: 600px) {
@@ -48,6 +49,17 @@ body.toplevel_page_outletpro-welcome {
 	.outletpro-welcome-page {
 		max-width: 480px;
 		text-align: center;
+	}
+
+	.outletpro-welcome-page__dismiss {
+		position: absolute;
+		right: 0;
+		text-decoration: none;
+		top: 0;
+	}
+
+	.outletpro-welcome-page__dismiss:hover {
+		text-decoration: none;
 	}
 
 	.outletpro-welcome-page__description {

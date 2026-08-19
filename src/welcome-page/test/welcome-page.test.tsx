@@ -69,6 +69,7 @@ function arrangeGlobals( {
 	licenseKey = '',
 	productsUrl = '/wp-admin/edit.php?post_type=product',
 }: { licenseKey?: string; productsUrl?: string } = {} ) {
+	document.cookie = 'OUTLETPRO_DISMISS_SETUP=; max-age=0; path=/';
 	( window as any ).outletproWelcomePage = {
 		licenseKey,
 		productsUrl,
@@ -156,6 +157,47 @@ test( 'renders the Activate site button', () => {
 	expect(
 		screen.getByRole( 'button', { name: /Activate site/i } )
 	).toBeInTheDocument();
+} );
+
+test( 'dismisses the welcome screen for the current device', () => {
+	// Arrange.
+	arrangeGlobals();
+	arrangeValidation();
+	render( <WelcomePage /> );
+
+	// Act.
+	fireEvent.click( screen.getByRole( 'button', { name: 'Dismiss' } ) );
+
+	// Assert.
+	expect(
+		screen.getByRole( 'heading', { name: 'Setup dismissed' } )
+	).toBeInTheDocument();
+	const learnMoreLink = screen.getByRole( 'link', { name: 'Learn more' } );
+	expect( learnMoreLink.closest( 'p' ) ).toHaveTextContent(
+		'Complete setup any time from the license link on the plugins screen. Learn more'
+	);
+	expect( learnMoreLink ).toHaveAttribute(
+		'href',
+		'https://outletpro.zip/help/license-key'
+	);
+	expect( document.cookie ).toContain( 'OUTLETPRO_DISMISS_SETUP=1' );
+} );
+
+test( 'undoes dismissal for the current device', () => {
+	// Arrange.
+	arrangeGlobals();
+	arrangeValidation();
+	render( <WelcomePage /> );
+
+	// Act.
+	fireEvent.click( screen.getByRole( 'button', { name: 'Dismiss' } ) );
+	fireEvent.click( screen.getByRole( 'button', { name: 'Undo' } ) );
+
+	// Assert.
+	expect(
+		screen.getByRole( 'heading', { name: 'Welcome to Outlet Pro' } )
+	).toBeInTheDocument();
+	expect( document.cookie ).not.toContain( 'OUTLETPRO_DISMISS_SETUP' );
 } );
 
 test( 'forwards license key changes to validation', () => {
