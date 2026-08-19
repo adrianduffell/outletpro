@@ -98,6 +98,19 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		$this->assertSame( 'not_found', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
+	public function test_returns_none_and_caches_empty_license(): void {
+		// Arrange.
+		delete_option( LICENSE_KEY_OPTION );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+
+		// Act.
+		$result = get_license_status();
+
+		// Assert.
+		$this->assertSame( 'none', $result );
+		$this->assertSame( 'none', get_transient( LICENSE_STATUS_TRANSIENT ) );
+	}
+
 	public function test_returns_cached_active_status_without_revalidating(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
@@ -126,6 +139,18 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'not_found', $result );
+	}
+
+	public function test_returns_cached_none_status_without_revalidating(): void {
+		// Arrange.
+		$this->mock_license_server_response( true );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS );
+
+		// Act.
+		$result = get_license_status();
+
+		// Assert.
+		$this->assertSame( 'none', $result );
 	}
 
 	public function test_returns_error_and_caches_validation_failure(): void {
