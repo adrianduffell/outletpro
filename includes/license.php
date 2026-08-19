@@ -505,7 +505,6 @@ function render_license_page(): void {
 							id="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"
 							name="<?php echo esc_attr( LICENSE_KEY_OPTION ); ?>"
 							value="<?php echo esc_attr( (string) get_option( LICENSE_KEY_OPTION, '' ) ); ?>"
-							placeholder="XXXX-XXXX-XXXX-XXXX"
 							class="regular-text"
 						/>
 						<p class="description"><?php esc_html_e( 'Enter your premium license key.', 'outletpro' ); ?></p>
