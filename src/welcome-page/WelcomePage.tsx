@@ -20,6 +20,7 @@ import { Button, TextControl } from '@wordpress/components';
 import { useRef, useState, createInterpolateElement } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Link } from '@wordpress/ui';
+import { dismiss, undoDismiss } from './dismiss';
 import { ValidationMessage } from './ValidationMessage';
 import { useLicenseValidation } from './useLicenseValidation';
 
@@ -45,6 +46,7 @@ export function WelcomePage(): JSX.Element {
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
+	const [ isDismissed, setIsDismissed ] = useState( false );
 	const pasted = useRef( false );
 
 	function handleLicenseKeyPaste() {
@@ -84,6 +86,43 @@ export function WelcomePage(): JSX.Element {
 
 		setIsSuccess( true );
 		setIsLoading( false );
+	}
+
+	function handleDismiss() {
+		dismiss();
+		setIsDismissed( true );
+	}
+
+	function handleUndoDismiss() {
+		undoDismiss();
+		setIsDismissed( false );
+	}
+
+	if ( isDismissed ) {
+		return (
+			<div className="outletpro-welcome-page">
+				<h1>{ __( 'Setup dismissed', 'outletpro' ) }</h1>
+				<p className="outletpro-welcome-page__description">
+					{ createInterpolateElement(
+						__(
+							'Complete setup any time from the license link on the plugins screen. <learnMore>Learn more</learnMore>',
+							'outletpro'
+						),
+						{
+							learnMore: (
+								<Link href="https://outletpro.zip/help/license-key" />
+							),
+						}
+					) }
+				</p>
+
+				<div className="outletpro-welcome-page__button-row">
+					<Button variant="secondary" onClick={ handleUndoDismiss }>
+						{ __( 'Undo', 'outletpro' ) }
+					</Button>
+				</div>
+			</div>
+		);
 	}
 
 	if ( isSuccess ) {
@@ -148,6 +187,13 @@ export function WelcomePage(): JSX.Element {
 		: 'status';
 	return (
 		<div className="outletpro-welcome-page">
+			<Button
+				variant="link"
+				className="outletpro-welcome-page__dismiss"
+				onClick={ handleDismiss }
+			>
+				{ __( 'Dismiss', 'outletpro' ) }
+			</Button>
 			<h1>
 				{ isResetMode
 					? __( 'Outlet Pro Setup', 'outletpro' )

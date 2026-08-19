@@ -20,12 +20,23 @@ defined( 'ABSPATH' ) || exit;
 const WELCOME_PAGE_SLUG = 'outletpro-welcome';
 
 /**
+ * Cookie used to dismiss the welcome screen on the current device.
+ *
+ * @internal
+ */
+const DISMISS_COOKIE = 'OUTLETPRO_DISMISS_SETUP';
+
+/**
  * Helper to initialize license features.
  *
  * @internal
  */
 function init_admin_menu(): void {
 	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+
+	if ( isset( $_COOKIE[ DISMISS_COOKIE ] ) ) {
+		return;
+	}
 
 	$license_status = get_license_status();
 
