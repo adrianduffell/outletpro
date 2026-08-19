@@ -5,10 +5,12 @@
 
 const DISMISS_COOKIE = 'OUTLETPRO_DISMISS_SETUP';
 
+const path = new URL( '.', window.location.href ).pathname;
+
 export function dismiss(): void {
-	document.cookie = `${ DISMISS_COOKIE }=1; Max-Age=2147483647; path=/; SameSite=Lax`;
+	document.cookie = `${ DISMISS_COOKIE }=1; Max-Age=2147483647; path=${ path }; SameSite=Lax`;
 }
 
 export function undoDismiss(): void {
-	document.cookie = `${ DISMISS_COOKIE }=; Max-Age=0; path=/; SameSite=Lax`;
+	document.cookie = `${ DISMISS_COOKIE }=; Max-Age=0; path=${ path }; SameSite=Lax`;
 }
