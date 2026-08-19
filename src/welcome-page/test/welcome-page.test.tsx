@@ -71,8 +71,6 @@ function arrangeGlobals( {
 }: { licenseKey?: string; productsUrl?: string } = {} ) {
 	document.cookie = 'OUTLETPRO_DISMISS_SETUP=; max-age=0; path=/';
 	( window as any ).outletproWelcomePage = {
-		hostname: 'example.com',
-		isLocalHost: '',
 		licenseKey,
 		productsUrl,
 	};
@@ -275,24 +273,6 @@ test( 'renders the available validation state with activation enabled', () => {
 
 	// Assert.
 	expect( screen.getByRole( 'status' ) ).toBeInTheDocument();
-	expect(
-		screen.getByRole( 'button', { name: /Activate site/i } )
-	).toBeEnabled();
-} );
-
-test( 'enables activation for an unavailable license on a local host', () => {
-	// Arrange.
-	arrangeGlobals();
-	( window as any ).outletproWelcomePage.hostname = 'shop.local';
-	( window as any ).outletproWelcomePage.isLocalHost = '1';
-	arrangeValidation( {
-		validationState: { status: 'unavailable', total: 5 },
-	} );
-
-	// Act.
-	render( <WelcomePage /> );
-
-	// Assert.
 	expect(
 		screen.getByRole( 'button', { name: /Activate site/i } )
 	).toBeEnabled();

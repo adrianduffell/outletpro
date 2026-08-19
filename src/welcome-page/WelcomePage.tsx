@@ -25,8 +25,6 @@ import { ValidationMessage } from './ValidationMessage';
 import { useLicenseValidation } from './useLicenseValidation';
 
 declare const outletproWelcomePage: {
-	hostname: string;
-	isLocalHost: string;
 	licenseKey: string;
 	productsUrl: string;
 };
@@ -35,14 +33,10 @@ export function WelcomePage(): JSX.Element {
 	const {
 		licenseKey,
 		validationState,
-		canActivate: hasAvailableActivation,
+		canActivate,
 		handleLicenseKeyChange: updateLicenseKey,
 	} = useLicenseValidation();
-	const isLocalHost = outletproWelcomePage.isLocalHost === '1';
 	const isResetMode = outletproWelcomePage.licenseKey !== '';
-	const canActivate =
-		hasAvailableActivation ||
-		( isLocalHost && validationState.status === 'unavailable' );
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
@@ -233,11 +227,7 @@ export function WelcomePage(): JSX.Element {
 				aria-live="polite"
 			>
 				<span key={ validationState.status }>
-					<ValidationMessage
-						hostname={ outletproWelcomePage.hostname }
-						isLocalHost={ isLocalHost }
-						validationState={ validationState }
-					/>
+					<ValidationMessage validationState={ validationState } />
 				</span>
 			</p>
 			<p className="outletpro-welcome-page__notice">

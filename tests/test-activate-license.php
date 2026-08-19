@@ -146,8 +146,9 @@ class Test_Activate_License extends WP_UnitTestCase {
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
 	}
 
-	public function test_validates_without_activating_on_a_local_site(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_activates_license_on_a_local_site(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		$this->mock_license_server_response( true );
 		add_filter(
 			'home_url',
 			function (): string {
@@ -159,26 +160,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( &$request_urls ) {
 				$request_urls[] = $url;
-
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
-					return $pre;
-				}
-
-				return array(
-					'headers'  => array(),
-					'body'     => wp_json_encode(
-						array(
-							'valid' => true,
-							'meta'  => array( 'product_id' => 1279790 ),
-						)
-					),
-					'response' => array(
-						'code'    => 200,
-						'message' => 'OK',
-					),
-					'cookies'  => array(),
-					'filename' => null,
-				);
+				return $pre;
 			},
 			10,
 			3
@@ -190,7 +172,10 @@ class Test_Activate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertTrue( $result );
 		$this->assertSame(
-			array( 'https://api.lemonsqueezy.com/v1/licenses/validate' ),
+			array(
+				'https://api.lemonsqueezy.com/v1/licenses/validate',
+				'https://api.lemonsqueezy.com/v1/licenses/activate',
+			),
 			$request_urls
 		);
 	}

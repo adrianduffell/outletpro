@@ -176,10 +176,6 @@ function activate_license( string $license_key ): bool {
 		return false;
 	}
 
-	if ( is_local_env() ) {
-		return true;
-	}
-
 	$response = wp_remote_post(
 		'https://api.lemonsqueezy.com/v1/licenses/activate',
 		array(
@@ -366,43 +362,6 @@ function validate_license( $license_key ): bool {
 	}
 
 	return true;
-}
-
-/**
- * Get the hostname from the home URL.
- *
- * @internal
- * @throws \RuntimeException If the hostname cannot be retrieved.
- */
-function get_hostname(): string {
-	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
-
-	if ( ! is_string( $hostname ) ) {
-		throw new \RuntimeException( 'Hostname could not be retrieved' );
-	}
-
-	return $hostname;
-}
-
-/**
- * Check whether the home URL uses a common local development hostname.
- *
- * @internal
- */
-function is_local_env(): bool {
-	$hostname = wp_parse_url( home_url(), PHP_URL_HOST );
-
-	if ( ! is_string( $hostname ) ) {
-		return false;
-	}
-
-	$hostname = strtolower( $hostname );
-
-	if ( in_array( $hostname, array( 'localhost', '127.0.0.1', '[::1]' ), true ) ) {
-		return true;
-	}
-
-	return 1 === preg_match( '/\.(?:local|localhost|test)$/', $hostname );
 }
 
 /**
