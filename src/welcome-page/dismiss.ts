@@ -10,5 +10,5 @@ export function dismiss(): void {
 }
 
 export function undoDismiss(): void {
-	document.cookie = `${ DISMISS_COOKIE }=; max-age=0; path=/; SameSite=Lax`;
+	document.cookie = `${ DISMISS_COOKIE }=; Max-Age=0; path=/; SameSite=Lax`;
 }
