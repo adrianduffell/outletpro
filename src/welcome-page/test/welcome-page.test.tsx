@@ -174,7 +174,7 @@ test( 'dismisses the welcome screen for the current device', () => {
 	).toBeInTheDocument();
 	const learnMoreLink = screen.getByRole( 'link', { name: 'Learn more' } );
 	expect( learnMoreLink.closest( 'p' ) ).toHaveTextContent(
-		'Complete setup any time from the license link on the plugins screen. Learn more'
+		'Complete setup any time from the setup link on the plugins screen. Learn more'
 	);
 	expect( learnMoreLink ).toHaveAttribute(
 		'href',

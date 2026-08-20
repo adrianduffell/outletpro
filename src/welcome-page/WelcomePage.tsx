@@ -99,7 +99,7 @@ export function WelcomePage(): JSX.Element {
 				<p className="outletpro-welcome-page__description">
 					{ createInterpolateElement(
 						__(
-							'Complete setup any time from the license link on the plugins screen. <learnMore>Learn more</learnMore>',
+							'Complete setup any time from the setup link on the plugins screen. <learnMore>Learn more</learnMore>',
 							'outletpro'
 						),
 						{

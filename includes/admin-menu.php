@@ -34,13 +34,16 @@ const DISMISS_COOKIE = 'OUTLETPRO_DISMISS_SETUP';
 function init_admin_menu(): void {
 	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 
-	if ( isset( $_COOKIE[ DISMISS_COOKIE ] ) ) {
+	// The parameter only controls menu visibility and does not process its value.
+	$direct = isset( $_GET['page'] ) && $_GET['page'] === 'outletpro-welcome' ; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( isset( $_COOKIE[ DISMISS_COOKIE ] ) && ! $direct ) {
 		return;
 	}
 
 	$license_status = get_license_status();
 
-	if ( in_array( $license_status, array( 'active', 'error' ), true ) ) {
+	if ( in_array( $license_status, array( 'active', 'error' ), true ) && ! $direct ) {
 		return;
 	}
 

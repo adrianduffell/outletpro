@@ -435,13 +435,15 @@ function get_license_status(): string {
  * @internal WordPress filter
  */
 function add_plugin_action_links_hook( array $links ): array {
-	$settings_link = sprintf(
+	$setup_link = sprintf(
 		'<a href="%s">%s</a>',
-		esc_url( admin_url( 'admin.php?page=' . LICENSE_OPTIONS_GROUP ) ),
-		esc_html__( 'License', 'outletpro' )
+		esc_url(
+			admin_url( 'admin.php?page=outletpro-welcome' )
+		),
+		esc_html__( 'Setup', 'outletpro' )
 	);
 
-	array_unshift( $links, $settings_link );
+	array_unshift( $links, $setup_link );
 
 	return $links;
 }
