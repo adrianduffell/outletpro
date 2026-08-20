@@ -400,9 +400,9 @@ function get_license_status(): string {
 
 	try {
 		$license_key = get_license_key();
-	} catch ( \RuntimeException $e ) {
+	} catch ( \UnexpectedValueException $e ) {
 		\wc_get_logger()->error( 'License key has invalid value.' );
-		$license_key = null; // Set to none to trigger setup screen.
+		$license_key = null; // Proceed to handle malformed data as if empty.
 	}
 
 	if ( is_null( $license_key ) ) {
