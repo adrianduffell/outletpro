@@ -398,7 +398,12 @@ function get_license_status(): string {
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 	}
 
-	$license_key = get_license_key();
+	try {
+		$license_key = get_license_key();
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'License key has invalid value.' );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS ); // Set to none to trigger setup screen.
+	}
 
 	if ( is_null( $license_key ) ) {
 		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS );

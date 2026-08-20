@@ -181,4 +181,15 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'error', $result );
 	}
+
+	function test_returns_none_on_malformed_option_value(): void {
+		// Arrange.
+		update_option( LICENSE_KEY_OPTION, array( 'malformed', 'value' ) );
+
+		// Act.
+		$result = get_license_status();
+
+		// Assert.
+		$this->assertSame( 'none', $result );
+	}
 }
