@@ -426,7 +426,7 @@ function get_license_status(): string {
 }
 
 /**
- * Add a Settings link to the plugin's entry on the Plugins screen.
+ * Add a Setup link to the plugin's entry on the Plugins screen.
  *
  * Fired by `plugin_action_links_{plugin_basename}`.
  *
@@ -435,13 +435,13 @@ function get_license_status(): string {
  * @internal WordPress filter
  */
 function add_plugin_action_links_hook( array $links ): array {
-	$settings_link = sprintf(
+	$setup_link = sprintf(
 		'<a href="%s">%s</a>',
-		esc_url( admin_url( 'admin.php?page=' . LICENSE_OPTIONS_GROUP ) ),
-		esc_html__( 'License', 'outletpro' )
+		esc_url( admin_url( 'admin.php?page=' . WELCOME_PAGE_SLUG ) ),
+		esc_html__( 'Setup', 'outletpro' )
 	);
 
-	array_unshift( $links, $settings_link );
+	array_unshift( $links, $setup_link );
 
 	return $links;
 }
