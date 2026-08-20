@@ -371,12 +371,13 @@ function validate_license( $license_key ): bool {
  * avoid repeated remote requests. Status is cached for 1 week, or 24 hours
  * if there was an error validating the license.
  *
- * Returns one of 'active', 'inactive', 'not_found', 'error', or 'expired'.
+ * Returns one of 'none', 'active', 'inactive', 'not_found', 'error', or 'expired'.
  *
+ * none: No license key exists on this site or it is malformed.
  * active: The license key has been activated on this site.
  * inactive: The license key is valid but has not been activated on this site.
- * not_found: The license key is not recognized by the server.
- * error: There was an error validating the license key.
+ * not_found: The license key is not recognized by the licenensing service.
+ * error: There was an error with the licensing service when validating.
  * expired: The license key has expired.
  *
  * @internal
@@ -388,13 +389,25 @@ function get_license_status(): string {
 	if ( false !== $cached_value ) {
 		if (
 			is_string( $cached_value )
-			&& in_array( $cached_value, array( 'active', 'inactive', 'not_found', 'error', 'expired' ), true )
+			&& in_array( $cached_value, array( 'active', 'inactive', 'not_found', 'error', 'expired', 'none' ), true )
 		) {
 			return $cached_value;
 		}
 
 		// If the cached value is invalid, delete it and revalidate.
 		delete_transient( LICENSE_STATUS_TRANSIENT );
+	}
+
+	try {
+		$license_key = get_license_key();
+	} catch ( \UnexpectedValueException $e ) {
+		\wc_get_logger()->error( 'License key has invalid value.' );
+		$license_key = null; // Proceed to handle malformed data as if empty.
+	}
+
+	if ( is_null( $license_key ) ) {
+		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS );
+		return 'none';
 	}
 
 	try {

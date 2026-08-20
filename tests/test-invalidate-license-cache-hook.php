@@ -52,7 +52,7 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		init_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
-		$this->assertSame( 'not_found', get_license_status() );
+		$this->assertSame( 'none', get_license_status() );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
