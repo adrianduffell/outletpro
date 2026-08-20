@@ -34,8 +34,7 @@ const DISMISS_COOKIE = 'OUTLETPRO_DISMISS_SETUP';
 function init_admin_menu(): void {
 	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended read-only access.
-	$direct = isset( $_GET['page'] ) && 'outletpro-welcome' === wp_unslash( $_GET['page'] );
+	$direct = isset( $_GET['page'] ) && 'outletpro-welcome' === wp_unslash( $_GET['page'] ); // phpcs:ignore
 
 	if ( isset( $_COOKIE[ DISMISS_COOKIE ] ) && ! $direct ) {
 		return;
