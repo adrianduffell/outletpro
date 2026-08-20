@@ -66,12 +66,12 @@ const mockUseLicenseValidation = jest.mocked( useLicenseValidation );
 const mockHandleLicenseKeyChange = jest.fn();
 
 function arrangeGlobals( {
-	licenseKey = '',
+	licenseStatus = 'none',
 	productsUrl = '/wp-admin/edit.php?post_type=product',
-}: { licenseKey?: string; productsUrl?: string } = {} ) {
+}: { licenseStatus?: string; productsUrl?: string } = {} ) {
 	document.cookie = 'OUTLETPRO_DISMISS_SETUP=; max-age=0; path=/';
 	( window as any ).outletproWelcomePage = {
-		licenseKey,
+		licenseStatus,
 		productsUrl,
 	};
 	mockApiFetch.mockReset();
@@ -111,25 +111,30 @@ test( 'renders the welcome message', () => {
 	expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue( '' );
 } );
 
-test( 'renders the license re-setup message for an existing license key', () => {
-	// Arrange.
-	arrangeGlobals( { licenseKey: 'OLD-LICENSE-KEY' } );
-	arrangeValidation();
+test.each( [ 'not_found', 'error', 'expired' ] )(
+	'renders the license re-setup message for the %s license status',
+	( licenseStatus ) => {
+		// Arrange.
+		arrangeGlobals( { licenseStatus } );
+		arrangeValidation();
 
-	// Act.
-	render( <WelcomePage /> );
+		// Act.
+		render( <WelcomePage /> );
 
-	// Assert.
-	expect(
-		screen.getByRole( 'heading', { name: 'Outlet Pro Setup' } )
-	).toBeInTheDocument();
-	expect(
-		screen.getByText(
-			'The license could not be verified on this site. Enter your premium license key to continue.'
-		)
-	).toBeInTheDocument();
-	expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue( '' );
-} );
+		// Assert.
+		expect(
+			screen.getByRole( 'heading', { name: 'Outlet Pro Setup' } )
+		).toBeInTheDocument();
+		expect(
+			screen.getByText(
+				'The license could not be verified on this site. Enter your premium license key to continue.'
+			)
+		).toBeInTheDocument();
+		expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue(
+			''
+		);
+	}
+);
 
 test( 'renders the license key input', () => {
 	// Arrange.
@@ -358,7 +363,7 @@ test( 'welcome mode success view shows Products link', async () => {
 
 test( 'reset mode success view omits getting started guidance', async () => {
 	// Arrange.
-	arrangeGlobals( { licenseKey: 'OLD-LICENSE-KEY' } );
+	arrangeGlobals( { licenseStatus: 'not_found' } );
 	arrangeValidation( {
 		licenseKey: 'NEW-LICENSE-KEY',
 		validationState: { status: 'available', remaining: 3, total: 5 },

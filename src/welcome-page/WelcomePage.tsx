@@ -25,7 +25,13 @@ import { ValidationMessage } from './ValidationMessage';
 import { useLicenseValidation } from './useLicenseValidation';
 
 declare const outletproWelcomePage: {
-	licenseKey: string;
+	licenseStatus:
+		| 'none'
+		| 'active'
+		| 'inactive'
+		| 'not_found'
+		| 'error'
+		| 'expired';
 	productsUrl: string;
 };
 
@@ -36,7 +42,9 @@ export function WelcomePage(): JSX.Element {
 		canActivate,
 		handleLicenseKeyChange: updateLicenseKey,
 	} = useLicenseValidation();
-	const isResetMode = outletproWelcomePage.licenseKey !== '';
+	const isResetMode = [ 'not_found', 'expired', 'error' ].includes(
+		outletproWelcomePage.licenseStatus
+	);
 	const [ isLoading, setIsLoading ] = useState( false );
 	const [ errorMessage, setErrorMessage ] = useState( '' );
 	const [ isSuccess, setIsSuccess ] = useState( false );
