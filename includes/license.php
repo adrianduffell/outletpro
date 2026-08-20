@@ -54,6 +54,7 @@ const LICENSE_ACTIVATION_OPTION = 'outletpro_license_activation';
  */
 function init_license(): void {
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+	add_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_premium_license_notice_hook', 10, 3 );
 }
 
 /**
@@ -63,6 +64,7 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+	remove_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_premium_license_notice_hook', 10 );
 }
 
 /**
@@ -444,6 +446,43 @@ function add_plugin_action_links_hook( array $links ): array {
 	array_unshift( $links, $setup_link );
 
 	return $links;
+}
+
+/**
+ * Add a premium license notice row to the plugin screen.
+ *
+ * Fired by `after_plugin_row_{plugin_basename}`.
+ *
+ * @param string               $plugin_file The plugin file path.
+ * @param array<string, mixed> $plugin_data Plugin metadata.
+ * @param string               $status      Plugin status.
+ * @internal WordPress action hook
+ */
+function add_premium_license_notice_hook( string $plugin_file, array $plugin_data, string $status ): void {
+	unset( $plugin_file, $plugin_data, $status );
+
+	try {
+		if ( has_license() ) {
+			return;
+		}
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Premium license status could not be checked' );
+		return;
+	}
+	?>
+	<tr class="plugin-update-tr outletpro-license-notice">
+		<td colspan="3" class="plugin-update colspanchange">
+			<div class="update-message notice inline notice-warning notice-alt">
+				<p>
+					<?php esc_html_e( 'Outlet Pro requires a premium license for plugin updates.', 'outletpro' ); ?>
+					<a class="button-link" href="<?php echo esc_url( 'https://outletpro.zip/premium-license' ); ?>" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Learn more', 'outletpro' ); ?>
+					</a>
+				</p>
+			</div>
+		</td>
+	</tr>
+	<?php
 }
 
 /**
