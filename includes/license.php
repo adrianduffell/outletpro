@@ -426,7 +426,7 @@ function get_license_status(): string {
 }
 
 /**
- * Add a Settings link to the plugin's entry on the Plugins screen.
+ * Add a Setup link to the plugin's entry on the Plugins screen.
  *
  * Fired by `plugin_action_links_{plugin_basename}`.
  *
