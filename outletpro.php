@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Outlet Pro
- * Description: Move old stock easily with an outlet on WooCommerce stores.
+ * Description: Adds an outlet to WooCommerce. Move old stock quickly with an outlet page, badge, and message.
  * Version: 1.0.2
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
