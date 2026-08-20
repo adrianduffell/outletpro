@@ -419,7 +419,7 @@ function get_license_status(): string {
 	}
 
 	try {
-		$license_is_valid = validate_license( ...( get_license_activation() ?? array( $license_key ) ) );
+		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
