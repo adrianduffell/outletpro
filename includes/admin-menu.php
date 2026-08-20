@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin menu functions for the license settings page.
+ * Admin menu functions for the welcome page.
  *
  * @package OutletPro
  * @subpackage License
@@ -32,8 +32,6 @@ const DISMISS_COOKIE = 'OUTLETPRO_DISMISS_SETUP';
  * @internal
  */
 function init_admin_menu(): void {
-	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
-
 	$direct = isset( $_GET['page'] ) && 'outletpro-welcome' === wp_unslash( $_GET['page'] ); // phpcs:ignore
 
 	if ( isset( $_COOKIE[ DISMISS_COOKIE ] ) && ! $direct ) {
@@ -55,26 +53,7 @@ function init_admin_menu(): void {
  * @internal
  */
 function deinit_admin_menu(): void {
-	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 	remove_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
-}
-
-/**
- * Register a hidden license settings admin page, not linked in any menu.
- *
- * Fired by `admin_menu`.
- *
- * @internal WordPress action hook
- */
-function add_license_menu_hook(): void {
-	add_submenu_page(
-		'options.php',
-		__( 'Outlet Pro License', 'outletpro' ),
-		__( 'Outlet Pro', 'outletpro' ),
-		'manage_options',
-		LICENSE_OPTIONS_GROUP,
-		'OutletPro\render_license_page'
-	);
 }
 
 /**
