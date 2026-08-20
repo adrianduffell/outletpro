@@ -376,8 +376,8 @@ function validate_license( $license_key ): bool {
  * none: No license key exists on this site or it is malformed.
  * active: The license key has been activated on this site.
  * inactive: The license key is valid but has not been activated on this site.
- * not_found: The license key is not recognized by the server.
- * error: There was an error validating the license key on the server.
+ * not_found: The license key is not recognized by the licenensing service.
+ * error: There was an error with the licensing service when validating.
  * expired: The license key has expired.
  *
  * @internal
@@ -402,7 +402,7 @@ function get_license_status(): string {
 		$license_key = get_license_key();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( 'License key has invalid value.' );
-		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS ); // Set to none to trigger setup screen.
+		$license_key = null; // Set to none to trigger setup screen.
 	}
 
 	if ( is_null( $license_key ) ) {
@@ -435,13 +435,15 @@ function get_license_status(): string {
  * @internal WordPress filter
  */
 function add_plugin_action_links_hook( array $links ): array {
-	$settings_link = sprintf(
+	$setup_link = sprintf(
 		'<a href="%s">%s</a>',
-		esc_url( admin_url( 'admin.php?page=' . LICENSE_OPTIONS_GROUP ) ),
-		esc_html__( 'License', 'outletpro' )
+		esc_url(
+			admin_url( 'admin.php?page=outletpro-welcome&outletpro_force' )
+		),
+		esc_html__( 'Setup', 'outletpro' )
 	);
 
-	array_unshift( $links, $settings_link );
+	array_unshift( $links, $setup_link );
 
 	return $links;
 }
