@@ -135,6 +135,54 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
 	}
 
+	public function test_posts_activation_id_to_lemonsqueezy_endpoint_when_provided(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$request_args = null;
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_args ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
+					return $pre;
+				}
+
+				$request_args = $args;
+
+				return array(
+					'headers'  => array(),
+					'body'     => wp_json_encode(
+						array(
+							'valid' => true,
+							'meta'  => array(
+								'product_id' => 1279790,
+							),
+						)
+					),
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+
+		// Act.
+		validate_license( 'abc123', 'activation-id' );
+
+		// Assert.
+		$this->assertIsArray( $request_args );
+		$this->assertSame(
+			array(
+				'license_key' => 'abc123',
+				'instance_id' => 'activation-id',
+			),
+			$request_args['body']
+		);
+	}
+
 	public function test_throws_when_product_is_not_allowed(): void {
 		// Arrange.
 		$this->mock_license_server_response( true, 200, 1234567 );
@@ -182,28 +230,6 @@ class Test_Validate_License extends WP_UnitTestCase {
 	public function test_returns_false_for_empty_string(): void {
 		// Arrange.
 		$license_key = '';
-
-		// Act.
-		$result = validate_license( $license_key );
-
-		// Assert.
-		$this->assertFalse( $result );
-	}
-
-	public function test_returns_false_for_null(): void {
-		// Arrange.
-		$license_key = null;
-
-		// Act.
-		$result = validate_license( $license_key );
-
-		// Assert.
-		$this->assertFalse( $result );
-	}
-
-	public function test_returns_false_for_non_string_value(): void {
-		// Arrange.
-		$license_key = 123;
 
 		// Act.
 		$result = validate_license( $license_key );

@@ -295,25 +295,35 @@ function deactivate_license( string $license_key, string $activation_id ): bool 
 }
 
 /**
- * Validate a license key.
+ * Validate a license.
+ *
+ * A license key may be validated individually, or in combination with an activation ID.
  *
  * @internal
  *
- * @param mixed $license_key The license key to validate.
+ * @param string      $license_key The license key to validate.
+ * @param string|null $activation_id The activation ID (optional).
  * @throws \RuntimeException If the license validation request fails or the response is invalid.
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
  */
-function validate_license( $license_key ): bool {
-	if ( ! is_string( $license_key ) ) {
-		return false;
-	}
-
+function validate_license( string $license_key, ?string $activation_id = null ): bool {
 	if ( '' === trim( $license_key ) ) {
 		return false;
 	}
 
 	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
 		return false;
+	}
+
+	if ( ! is_null( $activation_id ) && '' === trim( $activation_id ) ) {
+		return false;
+	}
+
+	$request_body = array(
+		'license_key' => $license_key,
+	);
+
+	if ( ! is_null( $activation_id ) ) {
+		$request_body['instance_id'] = $activation_id;
 	}
 
 	$response = wp_remote_post(
@@ -324,9 +334,7 @@ function validate_license( $license_key ): bool {
 				'Content-Type' => 'application/x-www-form-urlencoded',
 				'Accept'       => 'application/json',
 			),
-			'body'    => array(
-				'license_key' => $license_key,
-			),
+			'body'    => $request_body,
 		)
 	);
 
