@@ -373,11 +373,11 @@ function validate_license( $license_key ): bool {
  *
  * Returns one of 'none', 'active', 'inactive', 'not_found', 'error', or 'expired'.
  *
- * none: No license key exists on this site.
+ * none: No license key exists on this site or it is malformed.
  * active: The license key has been activated on this site.
  * inactive: The license key is valid but has not been activated on this site.
  * not_found: The license key is not recognized by the server.
- * error: There was an error validating the license key.
+ * error: There was an error validating the license key on the server.
  * expired: The license key has expired.
  *
  * @internal
