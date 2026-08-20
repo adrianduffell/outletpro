@@ -437,9 +437,7 @@ function get_license_status(): string {
 function add_plugin_action_links_hook( array $links ): array {
 	$setup_link = sprintf(
 		'<a href="%s">%s</a>',
-		esc_url(
-			admin_url( 'admin.php?page=outletpro-welcome' )
-		),
+		esc_url( admin_url( 'admin.php?page=' . WELCOME_PAGE_SLUG ) ),
 		esc_html__( 'Setup', 'outletpro' )
 	);
 

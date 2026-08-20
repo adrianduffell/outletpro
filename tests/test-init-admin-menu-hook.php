@@ -13,6 +13,7 @@ use function OutletPro\init_admin_menu;
 use const OutletPro\DISMISS_COOKIE;
 use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
+use const OutletPro\WELCOME_PAGE_SLUG;
 
 class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
@@ -96,5 +97,44 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 		// Cleanup.
 		unset( $_COOKIE[ DISMISS_COOKIE ] );
+	}
+
+	public function test_registers_menu_page_when_opened_directly_after_dismissal(): void {
+		// Arrange.
+		$_GET['page']              = WELCOME_PAGE_SLUG;
+		$_COOKIE[ DISMISS_COOKIE ] = '1';
+		delete_option( LICENSE_KEY_OPTION );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		deinit_admin_menu();
+
+		// Act.
+		init_admin_menu();
+
+		// Assert.
+		$this->assertIsInt( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+
+		// Cleanup.
+		unset( $_GET['page'] );
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+		deinit_admin_menu();
+	}
+
+	public function test_registers_menu_page_when_opened_directly_with_active_license(): void {
+		// Arrange.
+		$_GET['page'] = WELCOME_PAGE_SLUG;
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
+		deinit_admin_menu();
+
+		// Act.
+		init_admin_menu();
+
+		// Assert.
+		$this->assertIsInt( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+
+		// Cleanup.
+		unset( $_GET['page'] );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		deinit_admin_menu();
 	}
 }

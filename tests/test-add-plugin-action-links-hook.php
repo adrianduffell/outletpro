@@ -9,6 +9,7 @@
 
 use function OutletPro\init_license;
 use const OutletPro\PLUGIN_FILE;
+use const OutletPro\WELCOME_PAGE_SLUG;
 
 class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 
@@ -33,7 +34,7 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), $links );
 
 		// Assert.
-		$this->assertStringContainsString( '/wp-admin/admin.php?page=outletpro-welcome&#038;outletpro_force', $result[0] );
+		$this->assertStringContainsString( '/wp-admin/admin.php?page=' . WELCOME_PAGE_SLUG, $result[0] );
 	}
 
 	public function test_setup_link_is_prepended_before_existing_links(): void {
