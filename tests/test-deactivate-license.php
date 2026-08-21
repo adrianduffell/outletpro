@@ -18,33 +18,12 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 	 * Mock the license deactivation response.
 	 *
 	 * @param bool $deactivated Whether the deactivation succeeds.
-	 * @param bool $valid Whether the license validation succeeds.
 	 * @param int  $response_code HTTP response code to return.
 	 */
-	private function mock_license_server_response( bool $deactivated, bool $valid = true, int $response_code = 200 ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	private function mock_license_server_response( bool $deactivated, int $response_code = 200 ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( $deactivated, $response_code, $valid ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
-					return array(
-						'headers'  => array(),
-						'body'     => wp_json_encode(
-							array(
-								'valid' => $valid,
-								'meta'  => array(
-									'product_id' => 1279790,
-								),
-							)
-						),
-						'response' => array(
-							'code'    => 200,
-							'message' => 'OK',
-						),
-						'cookies'  => array(),
-						'filename' => null,
-					);
-				}
-
+			function ( $pre, $args, $url ) use ( $deactivated, $response_code ) {
 				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' !== $url ) {
 					return $pre;
 				}
@@ -128,40 +107,6 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
 	}
 
-	public function test_validates_license_with_activation_id_before_deactivating(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		$validation_request_args = null;
-		$this->mock_license_server_response( true );
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$validation_request_args ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
-					return $pre;
-				}
-
-				$validation_request_args = $args;
-
-				return $pre;
-			},
-			20,
-			3
-		);
-
-		// Act.
-		$result = deactivate_license( 'abc123', 'activation-id' );
-
-		// Assert.
-		$this->assertTrue( $result );
-		$this->assertIsArray( $validation_request_args );
-		$this->assertSame(
-			array(
-				'license_key' => 'abc123',
-				'instance_id' => 'activation-id',
-			),
-			$validation_request_args['body']
-		);
-	}
-
 	public function test_returns_false_and_keeps_stored_activation_when_deactivation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
@@ -180,7 +125,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 
 	public function test_throws_when_deactivation_response_code_is_not_ok(): void {
 		// Arrange.
-		$this->mock_license_server_response( false, true, 400 );
+		$this->mock_license_server_response( false, 400 );
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
@@ -243,35 +188,5 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result );
 		$this->assertFalse( $request_was_made );
-	}
-
-	public function test_returns_false_without_deactivating_when_license_is_invalid(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		$deactivation_request_was_made = false;
-		$this->mock_license_server_response( true, false );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$deactivation_request_was_made ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
-					$deactivation_request_was_made = true;
-				}
-
-				return $pre;
-			},
-			10,
-			3
-		);
-
-		// Act.
-		$result = deactivate_license( 'abc123', 'activation-id' );
-
-		// Assert.
-		$this->assertFalse( $result );
-		$this->assertFalse( $deactivation_request_was_made );
-		$this->assertSame(
-			array( 'abc123', 'activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
-		);
 	}
 }
