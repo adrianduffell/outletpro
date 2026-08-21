@@ -381,7 +381,7 @@ function validate_license( string $license_key, ?string $activation_id = null ):
  *
  * Returns one of 'none', 'active', 'inactive', 'not_found', 'error', or 'expired'.
  *
- * none: No license key exists on this site or it is malformed.
+ * none: No license key activation exists on this site or the record is malformed.
  * active: The license key has been activated on this site.
  * inactive: The license key is valid but has not been activated on this site.
  * not_found: The license key is not recognized by the licenensing service.
