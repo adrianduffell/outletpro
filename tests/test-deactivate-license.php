@@ -51,11 +51,11 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_deactivates_license_with_activation_id_and_deletes_stored_activation(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_deactivates_license_with_activation_id_without_modifying_stored_data(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$request_args = null;
 		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'stored-license', 'stored-activation-id' ) );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
@@ -93,8 +93,11 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $result );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
-		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
+		$this->assertSame(
+			array( 'stored-license', 'stored-activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
+		$this->assertSame( 'active', get_transient( LICENSE_STATUS_TRANSIENT ) );
 		$this->assertIsArray( $request_args );
 		$this->assertSame(
 			array(
