@@ -245,7 +245,7 @@ function deactivate_license( string $license_key, string $activation_id ): bool 
 		return false;
 	}
 
-	if ( ! validate_license( $license_key ) ) {
+	if ( ! validate_license( $license_key, $activation_id ) ) {
 		return false;
 	}
 
