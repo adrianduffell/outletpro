@@ -85,6 +85,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 	public function test_does_not_register_menu_page_when_dismissed_on_device(): void {
 		// Arrange.
 		$_COOKIE[ DISMISS_COOKIE ] = '1';
+		delete_option( LICENSE_ACTIVATION_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 		deinit_admin_menu();
 
