@@ -381,7 +381,7 @@ function validate_license( string $license_key, ?string $activation_id = null ):
  *
  * Returns one of 'none', 'active', 'inactive', 'not_found', 'error', or 'expired'.
  *
- * none: No license key exists on this site or it is malformed.
+ * none: No license key activation exists on this site or the record is malformed.
  * active: The license key has been activated on this site.
  * inactive: The license key is valid but has not been activated on this site.
  * not_found: The license key is not recognized by the licenensing service.
@@ -407,19 +407,19 @@ function get_license_status(): string {
 	}
 
 	try {
-		$license_key = get_license_key();
+		$license_activation = get_license_activation();
 	} catch ( \UnexpectedValueException $e ) {
-		\wc_get_logger()->error( 'License key has invalid value.' );
-		$license_key = null; // Proceed to handle malformed data as if empty.
+		\wc_get_logger()->error( 'License activation has invalid value.' );
+		$license_activation = null; // Proceed to handle malformed data as if empty.
 	}
 
-	if ( is_null( $license_key ) ) {
+	if ( is_null( $license_activation ) ) {
 		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS );
 		return 'none';
 	}
 
 	try {
-		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+		$license_is_valid = validate_license( ...$license_activation );
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
