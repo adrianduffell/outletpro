@@ -245,10 +245,6 @@ function deactivate_license( string $license_key, string $activation_id ): bool 
 		return false;
 	}
 
-	if ( ! validate_license( $license_key ) ) {
-		return false;
-	}
-
 	$response = wp_remote_post(
 		'https://api.lemonsqueezy.com/v1/licenses/deactivate',
 		array(
