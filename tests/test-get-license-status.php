@@ -10,7 +10,6 @@
 
 use function OutletPro\get_license_status;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
-use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Get_License_Status extends WP_UnitTestCase {
@@ -72,9 +71,8 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 	public function test_returns_active_and_caches_valid_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
-		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'ab' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -117,7 +115,6 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 			10,
 			3
 		);
-		update_option( LICENSE_KEY_OPTION, 'license-key' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 
@@ -139,9 +136,8 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 	public function test_returns_not_found_and_caches_invalid_license(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
-		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'ab' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -153,7 +149,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 
 	public function test_returns_none_and_caches_empty_license(): void {
 		// Arrange.
-		delete_option( LICENSE_KEY_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 
 		// Act.
@@ -167,9 +163,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 	public function test_returns_cached_active_status_without_revalidating(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
-		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'ab' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 
 		// Act.
@@ -182,9 +176,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 	public function test_returns_cached_not_found_status_without_revalidating(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
-		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'ab' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
 
 		// Act.
@@ -210,7 +202,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_downtime();
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'valid-license' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -223,9 +215,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 	public function test_returns_cached_error_without_revalidating(): void {
 		// Arrange.
 		$this->mock_license_server_response( true );
-		delete_option( LICENSE_KEY_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'valid-license' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS );
 
 		// Act.
@@ -237,7 +227,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 
 	public function test_returns_none_on_malformed_option_value(): void {
 		// Arrange.
-		update_option( LICENSE_KEY_OPTION, array( 'malformed', 'value' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'malformed' ) );
 
 		// Act.
 		$result = get_license_status();

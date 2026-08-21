@@ -11,6 +11,7 @@
 use function OutletPro\deinit_update_plugin;
 use function OutletPro\init_settings;
 use function OutletPro\init_update_plugin;
+use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
@@ -68,12 +69,12 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_false_when_license_key_is_missing(): void {
+	public function test_returns_false_when_license_activation_is_missing(): void {
 		// Arrange.
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
-		delete_option( LICENSE_KEY_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION );
 
 		// Act.
 		$result = apply_filters(
@@ -96,7 +97,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 			'slug'    => 'foo',
 			'version' => '1.0.0',
 		);
-		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		// Act.
 		$result = apply_filters(
@@ -116,6 +116,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_update_plugin();
 		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 
 		add_filter(
 			'pre_http_request',
@@ -157,6 +158,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_update_plugin();
 		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 
 		$previous = false;
 		add_filter(
@@ -199,6 +201,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_update_plugin();
 		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 
 		add_filter(
 			'pre_http_request',
@@ -248,7 +251,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 	public function test_gracefully_handles_exception_when_checking_license(): void {
 		// Arrange.
 		$this->mock_license_server_downtime();
-		update_option( LICENSE_KEY_OPTION, 'valid-license' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id' ) );
 
 		// Act.
 		$result = apply_filters(
