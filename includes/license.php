@@ -407,19 +407,20 @@ function get_license_status(): string {
 	}
 
 	try {
-		$license_key = get_license_key();
+		$license_key_setting = get_license_key();
 	} catch ( \UnexpectedValueException $e ) {
 		\wc_get_logger()->error( 'License key has invalid value.' );
-		$license_key = null; // Proceed to handle malformed data as if empty.
+		$license_key_setting = null; // Proceed to handle malformed data as if empty.
 	}
 
-	if ( is_null( $license_key ) ) {
+	if ( is_null( $license_key_setting ) ) {
 		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS );
 		return 'none';
 	}
 
 	try {
-		$license_is_valid = validate_license( get_option( LICENSE_KEY_OPTION ) );
+		// Validate the license key using the activation tuple if available, otherwise fall back to the license key setting.
+		$license_is_valid = validate_license( ...( get_license_activation() ?? array( $license_key_setting ) ) );
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.

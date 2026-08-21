@@ -9,6 +9,7 @@
  */
 
 use function OutletPro\get_license_status;
+use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
@@ -81,6 +82,58 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( 'active', $result );
 		$this->assertSame( 'active', get_transient( LICENSE_STATUS_TRANSIENT ) );
+	}
+
+	public function test_validates_stored_license_activation(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$request_args = null;
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_args ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
+					return $pre;
+				}
+
+				$request_args = $args;
+
+				return array(
+					'headers'  => array(),
+					'body'     => wp_json_encode(
+						array(
+							'valid' => true,
+							'meta'  => array(
+								'product_id' => 1279790,
+							),
+						)
+					),
+					'response' => array(
+						'code'    => 200,
+						'message' => 'OK',
+					),
+					'cookies'  => array(),
+					'filename' => null,
+				);
+			},
+			10,
+			3
+		);
+		update_option( LICENSE_KEY_OPTION, 'license-key' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+
+		// Act.
+		$result = get_license_status();
+
+		// Assert.
+		$this->assertSame( 'active', $result );
+		$this->assertIsArray( $request_args );
+		$this->assertSame(
+			array(
+				'license_key' => 'license-key',
+				'instance_id' => 'activation-id',
+			),
+			$request_args['body']
+		);
 	}
 
 	public function test_returns_not_found_and_caches_invalid_license(): void {
