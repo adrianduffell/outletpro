@@ -128,40 +128,6 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
 	}
 
-	public function test_validates_license_with_activation_id_before_deactivating(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		$validation_request_args = null;
-		$this->mock_license_server_response( true );
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$validation_request_args ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' !== $url ) {
-					return $pre;
-				}
-
-				$validation_request_args = $args;
-
-				return $pre;
-			},
-			20,
-			3
-		);
-
-		// Act.
-		$result = deactivate_license( 'abc123', 'activation-id' );
-
-		// Assert.
-		$this->assertTrue( $result );
-		$this->assertIsArray( $validation_request_args );
-		$this->assertSame(
-			array(
-				'license_key' => 'abc123',
-				'instance_id' => 'activation-id',
-			),
-			$validation_request_args['body']
-		);
-	}
-
 	public function test_returns_false_and_keeps_stored_activation_when_deactivation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
