@@ -9,8 +9,9 @@
  */
 
 use function OutletPro\deinit_license_settings;
+use function OutletPro\get_license_activation_site_hash;
 use function OutletPro\sync_activation;
-use const OutletPro\LICENSE_ACTIVATION_OPTION;
+use const OutletPro\LICENSE_ACTIVATION_OPTION_PREFIX;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Sync_Activation extends WP_UnitTestCase {
@@ -19,20 +20,20 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
-		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 
 		// Act.
 		sync_activation();
 
 		// Assert.
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() ) );
 	}
 
 	public function test_does_nothing_when_license_key_matches_stored_activation(): void {
 		// Arrange.
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, 'license-key' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'license-key', 'activation-id' ) );
 
 		// Act.
 		sync_activation();
@@ -40,7 +41,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			array( 'license-key', 'activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
+			get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() )
 		);
 	}
 
@@ -48,7 +49,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Arrange.
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, 'new-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'previous-license', 'activation-id' ) );
 		add_filter(
 			'home_url',
 			function (): string {
@@ -94,7 +95,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			array( 'new-license', 'new-activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
+			get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() )
 		);
 	}
 
@@ -102,7 +103,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Arrange.
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, 'license-key' );
-		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 		add_filter(
 			'home_url',
 			function (): string {
@@ -148,7 +149,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			array( 'license-key', 'activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
+			get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() )
 		);
 	}
 
@@ -156,12 +157,12 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'license-key', 'activation-id' ) );
 
 		// Act.
 		sync_activation();
 
 		// Assert.
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() ) );
 	}
 }

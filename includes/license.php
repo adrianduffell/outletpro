@@ -41,11 +41,23 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
- * WordPress option key used to store the license activation tuple.
+ * Prefix for the site-specific WordPress option used to store the license activation tuple.
  *
  * @internal
  */
-const LICENSE_ACTIVATION_OPTION = 'outletpro_license_activation';
+const LICENSE_ACTIVATION_OPTION_PREFIX = 'outletpro_license_activation_';
+
+/**
+ * Get the hash identifying the current site for license activation storage.
+ *
+ * @internal
+ */
+function get_license_activation_site_hash(): string {
+	return hash(
+		'crc32b',
+		str_replace( 'http://', '', home_url( '/', 'http' ) )
+	);
+}
 
 /**
  * Helper to initialize license features.
@@ -73,7 +85,7 @@ function deinit_license(): void {
  * @throws \UnexpectedValueException If the stored activation is invalid.
  */
 function get_license_activation(): ?array {
-	$activation = get_option( LICENSE_ACTIVATION_OPTION );
+	$activation = get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 
 	if ( false === $activation ) {
 		return null;
@@ -131,7 +143,11 @@ function set_license_activation( string $license_key, string $activation_id ): v
 		throw new \InvalidArgumentException( 'Invalid license activation value.' );
 	}
 
-	update_option( LICENSE_ACTIVATION_OPTION, array( $license_key, $activation_id ), false );
+	update_option(
+		LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(),
+		array( $license_key, $activation_id ),
+		false
+	);
 }
 
 /**
@@ -144,7 +160,7 @@ function sync_activation(): void {
 
 	// The license key is absent. Remove any stored activation.
 	if ( is_null( $settings_license_key ) ) {
-		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 		return;
 	}
 
@@ -284,7 +300,7 @@ function deactivate_license( string $license_key, string $activation_id ): bool 
 		return false;
 	}
 
-	delete_option( LICENSE_ACTIVATION_OPTION );
+	delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 	delete_transient( LICENSE_STATUS_TRANSIENT );
 
 	return true;

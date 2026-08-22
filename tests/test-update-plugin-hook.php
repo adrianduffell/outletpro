@@ -9,9 +9,10 @@
  */
 
 use function OutletPro\deinit_update_plugin;
+use function OutletPro\get_license_activation_site_hash;
 use function OutletPro\init_settings;
 use function OutletPro\init_update_plugin;
-use const OutletPro\LICENSE_ACTIVATION_OPTION;
+use const OutletPro\LICENSE_ACTIVATION_OPTION_PREFIX;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
@@ -74,7 +75,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
-		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 
 		// Act.
 		$result = apply_filters(
@@ -116,7 +117,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_update_plugin();
 		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'abc123', 'activation-id' ) );
 
 		add_filter(
 			'pre_http_request',
@@ -158,7 +159,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_update_plugin();
 		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'abc123', 'activation-id' ) );
 
 		$previous = false;
 		add_filter(
@@ -201,7 +202,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_update_plugin();
 		init_settings();
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'abc123', 'activation-id' ) );
 
 		add_filter(
 			'pre_http_request',
@@ -251,7 +252,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 	public function test_gracefully_handles_exception_when_checking_license(): void {
 		// Arrange.
 		$this->mock_license_server_downtime();
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'valid-license', 'activation-id' ) );
 
 		// Act.
 		$result = apply_filters(

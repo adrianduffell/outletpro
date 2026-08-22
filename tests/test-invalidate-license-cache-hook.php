@@ -9,9 +9,10 @@
  */
 
 use function OutletPro\deinit_license_settings;
+use function OutletPro\get_license_activation_site_hash;
 use function OutletPro\get_license_status;
 use function OutletPro\init_license_settings;
-use const OutletPro\LICENSE_ACTIVATION_OPTION;
+use const OutletPro\LICENSE_ACTIVATION_OPTION_PREFIX;
 use const OutletPro\LICENSE_KEY_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
@@ -55,7 +56,7 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		init_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		$this->assertSame( 'none', get_license_status() );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'new-license-key', 'activation-id' ) );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
@@ -72,7 +73,7 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		update_option( LICENSE_KEY_OPTION, '0' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
 		$this->assertSame( 'not_found', get_license_status() );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'new-license-key', 'activation-id' ) );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
