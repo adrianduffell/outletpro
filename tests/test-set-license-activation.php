@@ -16,13 +16,14 @@ class Test_Set_License_Activation extends WP_UnitTestCase {
 	public function test_stores_license_activation(): void {
 		// Arrange.
 		delete_option( LICENSE_ACTIVATION_OPTION );
+		update_option( 'blogname', 'Foo' );
 
 		// Act.
 		set_license_activation( 'license-key', 'activation-id' );
 
 		// Assert.
 		$this->assertSame(
-			array( 'license-key', 'activation-id' ),
+			array( 'license-key', 'activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 	}

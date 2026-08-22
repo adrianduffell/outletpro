@@ -54,8 +54,9 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		init_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
+		update_option( 'blogname', 'Foo' );
 		$this->assertSame( 'none', get_license_status() );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id', 'Foo' ) );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
@@ -70,9 +71,10 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		init_license_settings();
 		update_option( LICENSE_KEY_OPTION, '0' );
+		update_option( 'blogname', 'Foo' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
 		$this->assertSame( 'not_found', get_license_status() );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id', 'Foo' ) );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );

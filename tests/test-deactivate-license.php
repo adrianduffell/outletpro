@@ -55,7 +55,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		// Arrange.
 		$request_args = null;
 		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id', 'Foo' ) );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
@@ -110,7 +110,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 	public function test_returns_false_and_keeps_stored_activation_when_deactivation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id', 'Foo' ) );
 
 		// Act.
 		$result = deactivate_license( 'abc123', 'activation-id' );
@@ -118,7 +118,7 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( $result );
 		$this->assertSame(
-			array( 'abc123', 'activation-id' ),
+			array( 'abc123', 'activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 	}

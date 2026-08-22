@@ -27,8 +27,9 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		);
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
+		update_option( 'blogname', 'Foo' );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'previous-activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'previous-activation-id', 'Foo' ) );
 		$requests = array();
 		add_filter(
 			'pre_http_request',
@@ -79,7 +80,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'new-license', $requests[0]['body']['license_key'] );
 		$this->assertSame( 'new-license', $requests[1]['body']['license_key'] );
 		$this->assertSame(
-			array( 'new-license', 'new-activation-id' ),
+			array( 'new-license', 'new-activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 
@@ -98,6 +99,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		delete_option( LICENSE_ACTIVATION_OPTION );
+		update_option( 'blogname', 'Foo' );
 		$activation_request_was_made = false;
 		add_filter(
 			'pre_http_request',
@@ -141,7 +143,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertTrue( $activation_request_was_made );
 		$this->assertSame(
-			array( 'new-license', 'activation-id' ),
+			array( 'new-license', 'activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 
@@ -154,7 +156,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id', 'Foo' ) );
 		init_license_settings();
 
 		// Act.

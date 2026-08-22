@@ -69,7 +69,8 @@ function deinit_license(): void {
  * Get the stored license activation.
  *
  * @internal
- * @return array{0: string, 1: string}|null The license key and activation ID, or null when not set.
+ * @return array{0: string, 1: string, 2: string}|null The license key, activation ID, and blog name,
+ * or null when not set for the current site.
  * @throws \UnexpectedValueException If the stored activation is invalid.
  */
 function get_license_activation(): ?array {
@@ -83,7 +84,7 @@ function get_license_activation(): ?array {
 		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
 	}
 
-	if ( array_keys( $activation ) !== array( 0, 1 ) ) {
+	if ( array_keys( $activation ) !== array( 0, 1, 2 ) ) {
 		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
 	}
 
@@ -107,6 +108,14 @@ function get_license_activation(): ?array {
 		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
 	}
 
+	if ( ! is_string( $activation[2] ) ) {
+		throw new \UnexpectedValueException( 'Invalid license activation option value.' );
+	}
+
+	if ( get_option( 'blogname' ) !== $activation[2] ) {
+		return null;
+	}
+
 	return $activation;
 }
 
@@ -117,6 +126,7 @@ function get_license_activation(): ?array {
  * @param string $license_key The license key.
  * @param string $activation_id The Lemon Squeezy activation ID.
  * @throws \InvalidArgumentException If either value is invalid.
+ * @throws \UnexpectedValueException If the blog name option is invalid.
  */
 function set_license_activation( string $license_key, string $activation_id ): void {
 	if ( '' === trim( $license_key ) ) {
@@ -131,7 +141,13 @@ function set_license_activation( string $license_key, string $activation_id ): v
 		throw new \InvalidArgumentException( 'Invalid license activation value.' );
 	}
 
-	update_option( LICENSE_ACTIVATION_OPTION, array( $license_key, $activation_id ), false );
+	$blogname = get_option( 'blogname' );
+
+	if ( ! is_string( $blogname ) ) {
+		throw new \UnexpectedValueException( 'Invalid blog name option value.' );
+	}
+
+	update_option( LICENSE_ACTIVATION_OPTION, array( $license_key, $activation_id, $blogname ), false );
 }
 
 /**
@@ -415,7 +431,7 @@ function get_license_status(): string {
 	}
 
 	try {
-		$license_is_valid = validate_license( ...$license_activation );
+		$license_is_valid = validate_license( $license_activation[0], $license_activation[1] );
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
