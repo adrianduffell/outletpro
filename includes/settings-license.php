@@ -27,12 +27,31 @@ const LICENSE_OPTIONS_GROUP = 'outletpro_license';
 const LICENSE_KEY_OPTION = 'outletpro_license_key';
 
 /**
+ * Get a unique hash for the site.
+ *
+ * @internal
+ * @return string The hash of the site.
+ */
+function get_site_hash(): string {
+	$url = str_replace( 'http://', '', home_url( '/', 'http' ) );
+
+	return substr( hash( 'sha256', $url ), 0, 12 );
+}
+
+/**
+ * WordPress option name used to store the license activation tuple.
+ *
+ * @internal
+ */
+define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'outletpro_license_activation' . get_site_hash() );
+
+/**
  * WordPress transient key used to cache license status.
  *
  * @internal
  * @see get_license_status()
  */
-const LICENSE_STATUS_TRANSIENT = 'outletpro_license_status';
+define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . get_site_hash() );
 
 /**
  * Helper to initialize license settings.
