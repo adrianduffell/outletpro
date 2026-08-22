@@ -41,11 +41,30 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
- * WordPress option key used to store the license activation tuple.
+ * Lazily defines the option name used to store the license activation tuple.
  *
  * @internal
  */
-const LICENSE_ACTIVATION_OPTION = 'outletpro_license_activation';
+function define_license_activation_option(): void {
+	if ( defined( 'OutletPro\LICENSE_ACTIVATION_OPTION' ) ) {
+		return;
+	}
+
+	// Suffixes a CRC hash of the site URL to support multiple sites in the same
+	// database and cloning between local, staging, production, etc.
+	// Strips the scheme to allow http and https on the same site.
+	$name = 'outletpro_license_activation_' . hash(
+		'crc32b',
+		str_replace( 'http://', '', home_url( '/', 'http' ) )
+	);
+
+	/**
+	 * WordPress option name used to store the license activation tuple.
+	 *
+	 * @internal
+	 */
+	define( 'OutletPro\LICENSE_ACTIVATION_OPTION', $name );
+}
 
 /**
  * Helper to initialize license features.
@@ -73,6 +92,8 @@ function deinit_license(): void {
  * @throws \UnexpectedValueException If the stored activation is invalid.
  */
 function get_license_activation(): ?array {
+	define_license_activation_option();
+
 	$activation = get_option( LICENSE_ACTIVATION_OPTION );
 
 	if ( false === $activation ) {
@@ -119,6 +140,8 @@ function get_license_activation(): ?array {
  * @throws \InvalidArgumentException If either value is invalid.
  */
 function set_license_activation( string $license_key, string $activation_id ): void {
+	define_license_activation_option();
+
 	if ( '' === trim( $license_key ) ) {
 		throw new \InvalidArgumentException( 'Invalid license activation value.' );
 	}
@@ -140,6 +163,8 @@ function set_license_activation( string $license_key, string $activation_id ): v
  * @internal
  */
 function sync_activation(): void {
+	define_license_activation_option();
+
 	$settings_license_key = get_license_key();
 
 	// The license key is absent. Remove any stored activation.
@@ -237,6 +262,8 @@ function activate_license( string $license_key ): bool {
  * @throws \RuntimeException If the deactivation request fails or the response is invalid.
  */
 function deactivate_license( string $license_key, string $activation_id ): bool {
+	define_license_activation_option();
+
 	if ( '' === trim( $license_key ) ) {
 		return false;
 	}

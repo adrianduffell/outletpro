@@ -8,6 +8,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\define_license_activation_option;
 use function OutletPro\deinit_license_settings;
 use function OutletPro\get_license_status;
 use function OutletPro\init_license_settings;
@@ -50,6 +51,7 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 
 	public function test_invalidates_transient_when_license_key_is_added(): void {
 		// Arrange.
+		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		deinit_license_settings();
 		init_license_settings();
@@ -66,6 +68,7 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 
 	public function test_invalidates_transient_when_license_key_is_updated(): void {
 		// Arrange.
+		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		deinit_license_settings();
 		init_license_settings();

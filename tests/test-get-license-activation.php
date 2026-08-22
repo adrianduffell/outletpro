@@ -8,6 +8,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\define_license_activation_option;
 use function OutletPro\get_license_activation;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 
@@ -15,6 +16,7 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_returns_license_activation(): void {
 		// Arrange.
+		define_license_activation_option();
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
 
 		// Act.
@@ -26,6 +28,7 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_returns_null_when_license_activation_is_not_set(): void {
 		// Arrange.
+		define_license_activation_option();
 		delete_option( LICENSE_ACTIVATION_OPTION );
 
 		// Act.
@@ -37,6 +40,7 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_throws_when_stored_license_activation_is_not_a_tuple(): void {
 		// Arrange.
+		define_license_activation_option();
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key' ) );
 
 		// Expect.
@@ -48,6 +52,7 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_throws_when_stored_license_key_is_invalid(): void {
 		// Arrange.
+		define_license_activation_option();
 		update_option( LICENSE_ACTIVATION_OPTION, array( '', 'activation-id' ) );
 
 		// Expect.
@@ -59,6 +64,7 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_throws_when_stored_activation_id_is_invalid(): void {
 		// Arrange.
+		define_license_activation_option();
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 123 ) );
 
 		// Expect.

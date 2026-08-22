@@ -8,6 +8,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\define_license_activation_option;
 use function OutletPro\deinit_admin_menu;
 use function OutletPro\init_admin_menu;
 use const OutletPro\DISMISS_COOKIE;
@@ -55,6 +56,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_registers_menu_page_when_no_license(): void {
 		// Arrange.
+		define_license_activation_option();
 		unset( $_COOKIE[ DISMISS_COOKIE ] );
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
@@ -69,6 +71,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_register_menu_page_when_license_is_active(): void {
 		// Arrange.
+		define_license_activation_option();
 		unset( $_COOKIE[ DISMISS_COOKIE ] );
 		$this->mock_license_server_response( true );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
@@ -84,6 +87,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_register_menu_page_when_dismissed_on_device(): void {
 		// Arrange.
+		define_license_activation_option();
 		$_COOKIE[ DISMISS_COOKIE ] = '1';
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
@@ -101,6 +105,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_registers_menu_page_when_opened_directly_after_dismissal(): void {
 		// Arrange.
+		define_license_activation_option();
 		$_GET['page']              = WELCOME_PAGE_SLUG;
 		$_COOKIE[ DISMISS_COOKIE ] = '1';
 		delete_option( LICENSE_ACTIVATION_OPTION );
@@ -121,6 +126,7 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_registers_menu_page_when_opened_directly_with_active_license(): void {
 		// Arrange.
+		define_license_activation_option();
 		$_GET['page'] = WELCOME_PAGE_SLUG;
 		unset( $_COOKIE[ DISMISS_COOKIE ] );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
