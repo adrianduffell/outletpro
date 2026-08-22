@@ -8,7 +8,6 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\define_license_activation_option;
 use function OutletPro\deinit_license_settings;
 use function OutletPro\init_license_settings;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
@@ -18,7 +17,6 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 
 	public function test_syncs_activation_when_key_is_updated(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		add_filter(
 			'home_url',
 			function (): string {
@@ -91,7 +89,6 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 
 	public function test_activates_license_when_key_option_is_added(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		add_filter(
 			'home_url',
 			function (): string {
@@ -154,7 +151,6 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 
 	public function test_deletes_activation_when_key_option_is_deleted(): void {
 		// Arrange.
-		define_license_activation_option();
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );

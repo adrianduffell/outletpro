@@ -8,7 +8,6 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\define_license_activation_option;
 use function OutletPro\deinit_update_plugin;
 use function OutletPro\init_settings;
 use function OutletPro\init_update_plugin;
@@ -72,7 +71,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_returns_false_when_license_activation_is_missing(): void {
 		// Arrange.
-		define_license_activation_option();
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
@@ -91,7 +89,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_returns_previous_update_when_plugin_does_not_match(): void {
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		deinit_update_plugin();
 		init_update_plugin();
@@ -114,7 +111,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_returns_false_when_remote_request_fails(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		deinit_update_plugin();
 		init_update_plugin();
@@ -157,7 +153,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_returns_previous_value_when_response_is_invalid(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		deinit_update_plugin();
 		init_update_plugin();
@@ -201,7 +196,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_returns_update_when_new_version_is_available(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		deinit_update_plugin();
 		init_update_plugin();
@@ -256,7 +250,6 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 	public function test_gracefully_handles_exception_when_checking_license(): void {
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_downtime();
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id' ) );
 

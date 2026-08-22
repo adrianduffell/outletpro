@@ -9,7 +9,6 @@
  */
 
 use function OutletPro\activate_license;
-use function OutletPro\define_license_activation_option;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
@@ -87,7 +86,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_activates_license_and_stores_activation_id(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$request_args = null;
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_ACTIVATION_OPTION );
@@ -150,7 +148,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_activates_license_on_a_local_site(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		add_filter(
 			'home_url',
@@ -185,7 +182,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_returns_false_when_activation_is_rejected(): void {
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( false );
 		delete_option( LICENSE_ACTIVATION_OPTION );
 
@@ -199,7 +195,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_throws_when_activation_response_code_is_not_ok(): void {
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( false, 400 );
 
 		// Expect.
@@ -211,7 +206,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_throws_when_activation_response_is_invalid_json(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		add_filter(
 			'pre_http_request',
@@ -244,7 +238,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_throws_when_activation_response_has_no_activation_id(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$this->mock_license_server_response( true );
 		add_filter(
 			'pre_http_request',
@@ -284,7 +277,6 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 	public function test_returns_false_without_activating_when_license_is_invalid(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		define_license_activation_option();
 		$activation_request_was_made = false;
 		$this->mock_license_server_response( true, 200, false );
 		delete_option( LICENSE_ACTIVATION_OPTION );
