@@ -72,10 +72,9 @@ function deinit_license(): void {
  * @return string The hash of the site.
  */
 function get_site_hash(): string {
-	return hash(
-		'crc32b',
-		str_replace( 'http://', '', home_url( '/', 'http' ) )
-	);
+	$url = str_replace( 'http://', '', home_url( '/', 'http' ) );
+
+	return substr( hash( 'sha256', $url ), 0, 12 );
 }
 
 /**
