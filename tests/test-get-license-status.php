@@ -8,8 +8,9 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\get_license_activation_site_hash;
 use function OutletPro\get_license_status;
-use const OutletPro\LICENSE_ACTIVATION_OPTION;
+use const OutletPro\LICENSE_ACTIVATION_OPTION_PREFIX;
 use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Get_License_Status extends WP_UnitTestCase {
@@ -72,7 +73,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_response( true );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'ab', 'activation-id' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -115,7 +116,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 			10,
 			3
 		);
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'license-key', 'activation-id' ) );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 
 		// Act.
@@ -137,7 +138,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_response( false );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'ab', 'activation-id' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -149,7 +150,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 
 	public function test_returns_none_and_caches_empty_license(): void {
 		// Arrange.
-		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 
 		// Act.
@@ -202,7 +203,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_downtime();
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'valid-license', 'activation-id' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -227,7 +228,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 
 	public function test_returns_none_on_malformed_option_value(): void {
 		// Arrange.
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'malformed' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'malformed' ) );
 
 		// Act.
 		$result = get_license_status();

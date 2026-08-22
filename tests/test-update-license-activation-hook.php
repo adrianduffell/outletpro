@@ -9,8 +9,9 @@
  */
 
 use function OutletPro\deinit_license_settings;
+use function OutletPro\get_license_activation_site_hash;
 use function OutletPro\init_license_settings;
-use const OutletPro\LICENSE_ACTIVATION_OPTION;
+use const OutletPro\LICENSE_ACTIVATION_OPTION_PREFIX;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
@@ -28,7 +29,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'previous-activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'previous-license', 'previous-activation-id' ) );
 		$requests = array();
 		add_filter(
 			'pre_http_request',
@@ -80,7 +81,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'new-license', $requests[1]['body']['license_key'] );
 		$this->assertSame(
 			array( 'new-license', 'new-activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
+			get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() )
 		);
 
 		// Cleanup.
@@ -97,7 +98,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		);
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
-		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() );
 		$activation_request_was_made = false;
 		add_filter(
 			'pre_http_request',
@@ -142,7 +143,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		$this->assertTrue( $activation_request_was_made );
 		$this->assertSame(
 			array( 'new-license', 'activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
+			get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() )
 		);
 
 		// Cleanup.
@@ -154,14 +155,14 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash(), array( 'previous-license', 'activation-id' ) );
 		init_license_settings();
 
 		// Act.
 		delete_option( LICENSE_KEY_OPTION );
 
 		// Assert.
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION_PREFIX . get_license_activation_site_hash() ) );
 
 		// Cleanup.
 		deinit_license_settings();
