@@ -43,7 +43,7 @@ function get_site_hash(): string {
  *
  * @internal
  */
-define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'ouletpro_license_activation' . get_site_hash() );
+define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'outletpro_license_activation' . get_site_hash() );
 
 /**
  * WordPress transient key used to cache license status.
