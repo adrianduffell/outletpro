@@ -71,7 +71,7 @@ function deinit_license(): void {
  * @internal
  * @return string The hash of the site.
  */
-function get_site_hash() :string {
+function get_site_hash(): string {
 	return hash(
 		'crc32b',
 		str_replace( 'http://', '', home_url( '/', 'http' ) )
