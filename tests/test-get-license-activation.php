@@ -15,13 +15,26 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_returns_license_activation(): void {
 		// Arrange.
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id', 'Foo' ) );
 
 		// Act.
 		$activation = get_license_activation();
 
 		// Assert.
-		$this->assertSame( array( 'license-key', 'activation-id' ), $activation );
+		$this->assertSame( array( 'license-key', 'activation-id', 'Foo' ), $activation );
+	}
+
+	public function test_returns_null_when_blog_name_does_not_match(): void {
+		// Arrange.
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id', 'Bar' ) );
+
+		// Act.
+		$activation = get_license_activation();
+
+		// Assert.
+		$this->assertNull( $activation );
 	}
 
 	public function test_returns_null_when_license_activation_is_not_set(): void {
@@ -37,7 +50,7 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_throws_when_stored_license_activation_is_not_a_tuple(): void {
 		// Arrange.
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
@@ -48,7 +61,8 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_throws_when_stored_license_key_is_invalid(): void {
 		// Arrange.
-		update_option( LICENSE_ACTIVATION_OPTION, array( '', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( '', 'activation-id', 'Foo' ) );
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
@@ -59,7 +73,19 @@ class Test_Get_License_Activation extends WP_UnitTestCase {
 
 	public function test_throws_when_stored_activation_id_is_invalid(): void {
 		// Arrange.
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 123 ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 123, 'Foo' ) );
+
+		// Expect.
+		$this->expectException( \UnexpectedValueException::class );
+
+		// Act.
+		get_license_activation();
+	}
+
+	public function test_throws_when_stored_blog_name_is_invalid(): void {
+		// Arrange.
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id', 123 ) );
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );

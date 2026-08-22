@@ -31,15 +31,16 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 	public function test_does_nothing_when_license_key_matches_stored_activation(): void {
 		// Arrange.
 		deinit_license_settings();
+		update_option( 'blogname', 'Foo' );
 		update_option( LICENSE_KEY_OPTION, 'license-key' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id', 'Foo' ) );
 
 		// Act.
 		sync_activation();
 
 		// Assert.
 		$this->assertSame(
-			array( 'license-key', 'activation-id' ),
+			array( 'license-key', 'activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 	}
@@ -47,8 +48,9 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 	public function test_activates_license_key_when_it_does_not_match_stored_activation(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
+		update_option( 'blogname', 'Foo' );
 		update_option( LICENSE_KEY_OPTION, 'new-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id', 'Foo' ) );
 		add_filter(
 			'home_url',
 			function (): string {
@@ -93,7 +95,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'new-license', 'new-activation-id' ),
+			array( 'new-license', 'new-activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 	}
@@ -101,6 +103,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 	public function test_activates_license_key_when_stored_activation_is_absent(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
+		update_option( 'blogname', 'Foo' );
 		update_option( LICENSE_KEY_OPTION, 'license-key' );
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		add_filter(
@@ -147,7 +150,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'license-key', 'activation-id' ),
+			array( 'license-key', 'activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 	}
@@ -156,7 +159,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id', 'Foo' ) );
 
 		// Act.
 		sync_activation();

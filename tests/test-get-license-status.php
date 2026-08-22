@@ -72,7 +72,8 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_response( true );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id', 'Foo' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -115,7 +116,8 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 			10,
 			3
 		);
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id', 'Foo' ) );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 
 		// Act.
@@ -137,7 +139,8 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_response( false );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id', 'Foo' ) );
 
 		// Act.
 		$result = get_license_status();
@@ -202,7 +205,8 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 		// Arrange.
 		$this->mock_license_server_downtime();
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license', 'activation-id', 'Foo' ) );
 
 		// Act.
 		$result = get_license_status();

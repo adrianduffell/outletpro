@@ -72,7 +72,8 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 		unset( $_COOKIE[ DISMISS_COOKIE ] );
 		$this->mock_license_server_response( true );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license-key', 'activation-id' ) );
+		update_option( 'blogname', 'Foo' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license-key', 'activation-id', 'Foo' ) );
 		deinit_admin_menu();
 
 		// Act.

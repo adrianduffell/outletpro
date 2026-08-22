@@ -89,6 +89,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 		$request_args = null;
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_ACTIVATION_OPTION );
+		update_option( 'blogname', 'Foo' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'inactive', WEEK_IN_SECONDS );
 		add_filter(
 			'pre_http_request',
@@ -130,7 +131,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertTrue( $result );
 		$this->assertSame(
-			array( 'abc123', 'activation-id' ),
+			array( 'abc123', 'activation-id', 'Foo' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
 		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
