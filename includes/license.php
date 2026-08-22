@@ -41,13 +41,6 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
- * WordPress option name used to store the license activation tuple.
- *
- * @internal
- */
-define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'ouletpro_license_activation' . get_site_hash() );
-
-/**
  * Helper to initialize license features.
  *
  * @internal
@@ -63,18 +56,6 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
-}
-
-/**
- * Get a unique hash for the site.
- *
- * @internal
- * @return string The hash of the site.
- */
-function get_site_hash(): string {
-	$url = str_replace( 'http://', '', home_url( '/', 'http' ) );
-
-	return substr( hash( 'sha256', $url ), 0, 12 );
 }
 
 /**
