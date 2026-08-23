@@ -148,7 +148,8 @@ function sync_activation(): void {
 		return;
 	}
 
-	// Stored activation does not match the license key. Activate the license key.
+	// New license key detected in settings.
+	delete_option( LICENSE_ACTIVATION_OPTION ); // Clear any previous (now stale) activation data.
 	activate_license( $settings_license_key );
 }
 

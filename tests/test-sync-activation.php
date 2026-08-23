@@ -152,6 +152,46 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 	}
 
+	public function test_deletes_stored_activation_when_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		deinit_license_settings();
+		update_option( LICENSE_KEY_OPTION, 'new-license' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
+					return array(
+						'body'     => wp_json_encode(
+							array(
+								'valid' => true,
+								'meta'  => array( 'product_id' => 1279790 ),
+							)
+						),
+						'response' => array( 'code' => 200 ),
+					);
+				}
+
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/activate' !== $url ) {
+					return $pre;
+				}
+
+				return array(
+					'body'     => wp_json_encode( array( 'activated' => false ) ),
+					'response' => array( 'code' => 200 ),
+				);
+			},
+			10,
+			3
+		);
+
+		// Act.
+		sync_activation();
+
+		// Assert.
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+	}
+
 	public function test_deletes_stored_activation_when_license_key_is_absent(): void {
 		// Arrange.
 		deinit_license_settings();
