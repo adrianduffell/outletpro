@@ -82,7 +82,7 @@ function deinit_license_settings(): void {
 function add_license_activation_hook(): void {
 	try {
 		sync_activation();
-	} catch ( \RuntimeException $e ) {
+	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'License activation could not be synchronized when setting added.' );
 	}
 }
@@ -97,7 +97,7 @@ function add_license_activation_hook(): void {
 function update_license_activation_hook(): void {
 	try {
 		sync_activation();
-	} catch ( \RuntimeException $e ) {
+	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'License activation could not be synchronized when setting changed.' );
 	}
 }
@@ -112,7 +112,7 @@ function update_license_activation_hook(): void {
 function delete_license_activation_hook(): void {
 	try {
 		sync_activation();
-	} catch ( \RuntimeException $e ) {
+	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'License activation could not be synchronized when setting deleted.' );
 	}
 }
