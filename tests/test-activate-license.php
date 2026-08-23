@@ -89,7 +89,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 		$request_args = null;
 		$this->mock_license_server_response( true );
 		delete_option( LICENSE_ACTIVATION_OPTION );
-		set_transient( LICENSE_STATUS_TRANSIENT, 'inactive', WEEK_IN_SECONDS );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( &$request_args ) {
