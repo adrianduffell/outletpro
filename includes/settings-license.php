@@ -27,12 +27,19 @@ const LICENSE_OPTIONS_GROUP = 'outletpro_license';
 const LICENSE_KEY_OPTION = 'outletpro_license_key';
 
 /**
+ * WordPress option name used to store the license activation tuple.
+ *
+ * @internal
+ */
+define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'outletpro_license_activation_' . safe_get_site_key() );
+
+/**
  * WordPress transient key used to cache license status.
  *
  * @internal
  * @see get_license_status()
  */
-const LICENSE_STATUS_TRANSIENT = 'outletpro_license_status';
+define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe_get_site_key() );
 
 /**
  * Helper to initialize license settings.
@@ -173,4 +180,51 @@ function get_license_key(): ?string {
 	}
 
 	return $license_key;
+}
+
+/**
+ * Get a unique key for the site based on the hostname of the home URL.
+ *
+ * @internal
+ * @return string The key for the site.
+ * @throws \UnexpectedValueException If the site key cannot be determined.
+ */
+function get_site_key(): string {
+	$home_url = home_url();
+
+	if ( ! is_string( $home_url ) ) {
+		throw new \UnexpectedValueException( 'Invalid home URL.' );
+	}
+
+	$domain = wp_parse_url( $home_url, PHP_URL_HOST );
+
+	if ( ! is_string( $domain ) ) {
+		throw new \UnexpectedValueException( 'Invalid home URL hostname.' );
+	}
+
+	$site_key = sanitize_key( str_replace( '.', '_', $domain ) );
+
+	if ( ! is_string( $site_key ) ) {
+		throw new \UnexpectedValueException( 'Invalid site key.' );
+	}
+
+	if ( '' === $site_key ) {
+		throw new \UnexpectedValueException( 'Invalid site key.' );
+	}
+
+	return substr( $site_key, -80 );
+}
+
+/**
+ * Safely call get_site_key() and return its response or "invalid" string on exception.
+ *
+ * @internal
+ * @return string The site key, or 'invalid' on failure.
+ */
+function safe_get_site_key(): string {
+	try {
+		return get_site_key();
+	} catch ( \Throwable $e ) {
+		return 'invalid';
+	}
 }

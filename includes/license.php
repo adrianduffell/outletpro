@@ -41,13 +41,6 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
- * WordPress option key used to store the license activation tuple.
- *
- * @internal
- */
-const LICENSE_ACTIVATION_OPTION = 'outletpro_license_activation';
-
-/**
  * Helper to initialize license features.
  *
  * @internal
