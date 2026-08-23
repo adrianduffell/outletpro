@@ -277,9 +277,6 @@ function deactivate_license( string $license_key, string $activation_id ): bool 
 		return false;
 	}
 
-	delete_option( LICENSE_ACTIVATION_OPTION );
-	delete_transient( LICENSE_STATUS_TRANSIENT );
-
 	return true;
 }
 

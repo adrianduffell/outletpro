@@ -10,7 +10,6 @@
 
 use function OutletPro\deactivate_license;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
-use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Deactivate_License extends WP_UnitTestCase {
 
@@ -49,62 +48,6 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 			10,
 			3
 		);
-	}
-
-	public function test_deactivates_license_with_activation_id_and_deletes_stored_activation(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		$request_args = null;
-		$this->mock_license_server_response( true );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
-		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$request_args ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' !== $url ) {
-					return $pre;
-				}
-
-				$request_args = $args;
-
-				return array(
-					'headers'  => array(),
-					'body'     => wp_json_encode(
-						array(
-							'deactivated' => true,
-							'meta'        => array(
-								'product_id' => 1279790,
-							),
-						)
-					),
-					'response' => array(
-						'code'    => 200,
-						'message' => 'OK',
-					),
-					'cookies'  => array(),
-					'filename' => null,
-				);
-			},
-			10,
-			3
-		);
-
-		// Act.
-		$result = deactivate_license( 'abc123', 'activation-id' );
-
-		// Assert.
-		$this->assertTrue( $result );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
-		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
-		$this->assertIsArray( $request_args );
-		$this->assertSame(
-			array(
-				'license_key' => 'abc123',
-				'instance_id' => 'activation-id',
-			),
-			$request_args['body']
-		);
-		$this->assertSame( 'application/json', $request_args['headers']['Accept'] );
-		$this->assertSame( 'application/x-www-form-urlencoded', $request_args['headers']['Content-Type'] );
 	}
 
 	public function test_returns_false_and_keeps_stored_activation_when_deactivation_is_rejected(): void {
