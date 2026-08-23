@@ -25,13 +25,7 @@ import { ValidationMessage } from './ValidationMessage';
 import { useLicenseValidation } from './useLicenseValidation';
 
 declare const outletproWelcomePage: {
-	licenseStatus:
-		| 'none'
-		| 'active'
-		| 'inactive'
-		| 'not_found'
-		| 'error'
-		| 'expired';
+	licenseStatus: 'none' | 'active' | 'not_found' | 'error' | 'expired';
 	productsUrl: string;
 };
 
