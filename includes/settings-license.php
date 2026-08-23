@@ -216,7 +216,7 @@ function get_site_key(): string {
 }
 
 /**
- * Safely call get_site_key() and return it's response or "invalid" string on exception.
+ * Safely call get_site_key() and return its response or "invalid" string on exception.
  *
  * @internal
  * @return string The site key, or 'invalid' on failure.
