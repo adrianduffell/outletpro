@@ -130,26 +130,44 @@ function set_license_activation( string $license_key, string $activation_id ): v
 /**
  * Synchronize the stored activation option with the license key in settings.
  *
+ * The license key in settings is treated as the source of truth. A sync is
+ * required when one of:
+ *
+ * 1. The license key in settings is added.
+ *   - Perform activation.
+ *
+ * 2. The license key in settings is updated.
+ *   - Clean up any stale activation
+ *   - Perform activation.
+ *
+ * 3. The license key in settings is deleted.
+ *   - Clean-up of stale activation
+ *
  * @internal
  */
 function sync_activation(): void {
-	$settings_license_key = get_license_key();
+	$settings_license_key   = get_license_key();
+	$license_activation     = get_license_activation();
+	$activation_license_key = $license_activation[0] ?? null;
 
-	// The license key is absent. Remove any stored activation.
-	if ( is_null( $settings_license_key ) ) {
-		delete_option( LICENSE_ACTIVATION_OPTION );
-		return;
-	}
 
-	$activation_license_key = get_license_activation()[0] ?? null;
-
-	// The license key and stored activation match. Do nothing.
+	// License setting and activation are in sync. Nothing to do.
 	if ( $settings_license_key === $activation_license_key ) {
 		return;
 	}
 
-	// New license key detected in settings.
-	delete_option( LICENSE_ACTIVATION_OPTION ); // Clear any previous (now stale) activation data.
+	// Cases 2 or 3: Clean up any stale activation.
+	if ( ! is_null( $license_activation ) ) {
+		deactivate_license( ...$license_activation );
+	}
+	delete_option( LICENSE_ACTIVATION_OPTION );
+
+	// Case 3: No activation required.
+	if ( is_null( $settings_license_key ) ) {
+		return;
+	}
+
+	// Case 1 or 2: Perform activation.
 	activate_license( $settings_license_key );
 }
 
