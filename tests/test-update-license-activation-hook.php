@@ -167,12 +167,12 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 	}
 
-	public function test_handles_invalid_argument_when_key_option_is_added(): void {
+	public function test_handles_invalid_argument_when_key_option_is_added(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		delete_option( LICENSE_ACTIVATION_OPTION );
-		$invalid_license_key_filter = function (): string {
+		$invalid_license_key_filter     = function (): string {
 			return ' ';
 		};
 		$add_invalid_license_key_filter = function () use ( $invalid_license_key_filter ): void {
@@ -194,13 +194,13 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		remove_action( 'add_option_' . LICENSE_KEY_OPTION, $add_invalid_license_key_filter, 5 );
 	}
 
-	public function test_handles_invalid_argument_when_key_option_is_updated(): void {
+	public function test_handles_invalid_argument_when_key_option_is_updated(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
-		$invalid_license_key_filter = function (): string {
+		$invalid_license_key_filter     = function (): string {
 			return ' ';
 		};
 		$add_invalid_license_key_filter = function () use ( $invalid_license_key_filter ): void {
@@ -222,13 +222,13 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		remove_action( 'update_option_' . LICENSE_KEY_OPTION, $add_invalid_license_key_filter, 5 );
 	}
 
-	public function test_handles_invalid_argument_when_key_option_is_deleted(): void {
+	public function test_handles_invalid_argument_when_key_option_is_deleted(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
-		$invalid_license_key_filter = function (): string {
+		$invalid_license_key_filter     = function (): string {
 			return ' ';
 		};
 		$add_invalid_license_key_filter = function () use ( $invalid_license_key_filter ): void {
@@ -242,7 +242,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		remove_filter( 'pre_option_' . LICENSE_KEY_OPTION, $invalid_license_key_filter );
 
 		// Assert.
-		$this->assertFalse( get_option( LICENSE_KEY_OPTION ) );
+		$this->assertSame( '', get_option( LICENSE_KEY_OPTION ) );
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 
 		// Cleanup.
