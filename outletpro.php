@@ -44,7 +44,7 @@ require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
 // #ifdef LICENSE
-require_once __DIR__ . '/includes/admin-menu.php';
+require_once __DIR__ . '/includes/admin-menu-license.php';
 // #endif
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
@@ -53,7 +53,7 @@ require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/settings-license.php';
-require_once __DIR__ . '/includes/license.php';
+require_once __DIR__ . '/includes/admin-plugins-license.php';
 require_once __DIR__ . '/includes/enqueue-license.php';
 // #endif
 require_once __DIR__ . '/includes/patterns.php';
