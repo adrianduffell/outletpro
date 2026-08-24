@@ -1,6 +1,6 @@
 {
 	"name": "outletpro",
-	"version": "1.0.2",
+	"version": "1.1.0-dev",
 	"private": true,
 	"license": "GPL-2.0-or-later",
 	"type": "module",
