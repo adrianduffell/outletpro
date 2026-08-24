@@ -167,7 +167,9 @@ function sync_activation(): void {
 	}
 
 	// Case 1 or 2: Perform activation.
-	activate_license( $settings_license_key );
+	$activation_id = activate_license( $settings_license_key );
+	set_license_activation( $settings_license_key, $activation_id );
+	delete_transient( LICENSE_STATUS_TRANSIENT );
 }
 
 /**
@@ -176,10 +178,11 @@ function sync_activation(): void {
  * @internal
  *
  * @param string $license_key The license key.
+ * @return string The Lemon Squeezy activation ID.
  * @throws \InvalidArgumentException If the license key is invalid.
  * @throws \RuntimeException If the activation request fails or the response is invalid.
  */
-function activate_license( string $license_key ): void {
+function activate_license( string $license_key ): string {
 	if ( '' === trim( $license_key ) ) {
 		throw new \InvalidArgumentException( 'License key cannot be empty.' );
 	}
@@ -233,8 +236,7 @@ function activate_license( string $license_key ): void {
 		throw new \RuntimeException( 'Unexpected license activation response' );
 	}
 
-	set_license_activation( $license_key, $activation_id );
-	delete_transient( LICENSE_STATUS_TRANSIENT );
+	return $activation_id;
 }
 
 /**

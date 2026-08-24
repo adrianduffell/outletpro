@@ -12,6 +12,7 @@ use function OutletPro\deinit_license_settings;
 use function OutletPro\sync_activation;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Sync_Activation extends WP_UnitTestCase {
 
@@ -126,6 +127,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, 'license-key' );
 		delete_option( LICENSE_ACTIVATION_OPTION );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
 		add_filter(
 			'home_url',
 			function (): string {
@@ -173,6 +175,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 			array( 'license-key', 'activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
+		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
 	public function test_throws_when_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
