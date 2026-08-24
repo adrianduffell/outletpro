@@ -54,7 +54,7 @@ function init_license_settings(): void {
 	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
 	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
-	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\delete_license_activation_hook', 10, 0 );
+	add_action( 'deleted_option', 'OutletPro\delete_license_activation_hook', 10, 1 );
 }
 
 /**
@@ -69,7 +69,7 @@ function deinit_license_settings(): void {
 	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
 	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
-	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\delete_license_activation_hook', 10, 0 );
+	remove_action( 'deleted_option', 'OutletPro\delete_license_activation_hook', 10 );
 }
 
 /**
@@ -105,11 +105,16 @@ function update_license_activation_hook(): void {
 /**
  * Synchronizes the activation tuple when the license key option is deleted.
  *
- * Fired by `delete_option_{LICENSE_KEY_OPTION}`.
+ * Fired by `deleted_option`.
  *
  * @internal WordPress action hook
+ * @param string $option The deleted option name.
  */
-function delete_license_activation_hook(): void {
+function delete_license_activation_hook( string $option ): void {
+	if ( LICENSE_KEY_OPTION !== $option ) {
+		return;
+	}
+
 	try {
 		sync_activation();
 	} catch ( \Throwable $e ) {
