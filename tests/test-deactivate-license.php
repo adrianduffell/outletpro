@@ -9,7 +9,6 @@
  */
 
 use function OutletPro\deactivate_license;
-use const OutletPro\LICENSE_ACTIVATION_OPTION;
 
 class Test_Deactivate_License extends WP_UnitTestCase {
 
@@ -50,20 +49,49 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_false_and_keeps_stored_activation_when_deactivation_is_rejected(): void {
+	public function test_deactivates_license(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		$this->mock_license_server_response( false );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		$request_args = null;
+		$this->mock_license_server_response( true );
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_args ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' !== $url ) {
+					return $pre;
+				}
+
+				$request_args = $args;
+
+				return $pre;
+			},
+			5,
+			3
+		);
 
 		// Act.
-		$result = deactivate_license( 'abc123', 'activation-id' );
+		deactivate_license( 'abc123', 'activation-id' );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertIsArray( $request_args );
 		$this->assertSame(
-			array( 'abc123', 'activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
+			array(
+				'license_key' => 'abc123',
+				'instance_id' => 'activation-id',
+			),
+			$request_args['body']
 		);
+	}
+
+	public function test_throws_when_deactivation_is_rejected(): void {
+		// Arrange.
+		$this->mock_license_server_response( false );
+
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'License deactivation was rejected.' );
+
+		// Act.
+		deactivate_license( 'abc123', 'activation-id' );
 	}
 
 	public function test_throws_when_deactivation_response_code_is_not_ok(): void {
@@ -109,27 +137,21 @@ class Test_Deactivate_License extends WP_UnitTestCase {
 		deactivate_license( 'abc123', 'activation-id' );
 	}
 
-	public function test_returns_false_without_request_when_activation_id_is_missing(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		$request_was_made = false;
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$request_was_made ) {
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
-					$request_was_made = true;
-				}
-
-				return $pre;
-			},
-			10,
-			3
-		);
+	public function test_throws_when_activation_id_is_missing(): void {
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Activation ID cannot be empty.' );
 
 		// Act.
-		$result = deactivate_license( 'abc123', '' );
+		deactivate_license( 'abc123', '' );
+	}
 
-		// Assert.
-		$this->assertFalse( $result );
-		$this->assertFalse( $request_was_made );
+	public function test_throws_when_license_key_is_empty(): void {
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'License key cannot be empty.' );
+
+		// Act.
+		deactivate_license( '', 'activation-id' );
 	}
 }

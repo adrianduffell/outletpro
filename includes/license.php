@@ -159,15 +159,16 @@ function sync_activation(): void {
  * @internal
  *
  * @param string $license_key The license key.
+ * @throws \InvalidArgumentException If the license key is invalid.
  * @throws \RuntimeException If the activation request fails or the response is invalid.
  */
-function activate_license( string $license_key ): bool {
+function activate_license( string $license_key ): void {
 	if ( '' === trim( $license_key ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'License key cannot be empty.' );
 	}
 
 	if ( ! validate_license( $license_key ) ) {
-		return false;
+		throw new \RuntimeException( 'License is invalid.' );
 	}
 
 	$response = wp_remote_post(
@@ -206,7 +207,7 @@ function activate_license( string $license_key ): bool {
 	}
 
 	if ( false === $data->activated ) {
-		return false;
+		throw new \RuntimeException( 'License activation was rejected.' );
 	}
 
 	$activation_id = $data->instance->id ?? null;
@@ -217,8 +218,6 @@ function activate_license( string $license_key ): bool {
 
 	set_license_activation( $license_key, $activation_id );
 	delete_transient( LICENSE_STATUS_TRANSIENT );
-
-	return true;
 }
 
 /**
@@ -228,15 +227,16 @@ function activate_license( string $license_key ): bool {
  *
  * @param string $license_key The license key.
  * @param string $activation_id The activation ID.
+ * @throws \InvalidArgumentException If the license key or activation ID is invalid.
  * @throws \RuntimeException If the deactivation request fails or the response is invalid.
  */
-function deactivate_license( string $license_key, string $activation_id ): bool {
+function deactivate_license( string $license_key, string $activation_id ): void {
 	if ( '' === trim( $license_key ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'License key cannot be empty.' );
 	}
 
 	if ( '' === trim( $activation_id ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'Activation ID cannot be empty.' );
 	}
 
 	$response = wp_remote_post(
@@ -275,10 +275,8 @@ function deactivate_license( string $license_key, string $activation_id ): bool 
 	}
 
 	if ( false === $data->deactivated ) {
-		return false;
+		throw new \RuntimeException( 'License deactivation was rejected.' );
 	}
-
-	return true;
 }
 
 /**
