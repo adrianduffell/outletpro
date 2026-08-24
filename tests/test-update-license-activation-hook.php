@@ -159,6 +159,58 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 	}
 
+	public function test_deletes_stale_activation_when_replacement_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		deinit_license_settings();
+		delete_option( LICENSE_KEY_OPTION );
+		update_option( LICENSE_KEY_OPTION, 'previous-license' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
+					return array(
+						'body'     => wp_json_encode( array( 'deactivated' => true ) ),
+						'response' => array( 'code' => 200 ),
+					);
+				}
+
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
+					return array(
+						'body'     => wp_json_encode(
+							array(
+								'valid' => true,
+								'meta'  => array( 'product_id' => 1279790 ),
+							)
+						),
+						'response' => array( 'code' => 200 ),
+					);
+				}
+
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/activate' !== $url ) {
+					return $pre;
+				}
+
+				return array(
+					'body'     => wp_json_encode( array( 'activated' => false ) ),
+					'response' => array( 'code' => 200 ),
+				);
+			},
+			10,
+			3
+		);
+		init_license_settings();
+
+		// Act.
+		update_option( LICENSE_KEY_OPTION, 'new-license' );
+
+		// Assert.
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+
+		// Cleanup.
+		deinit_license_settings();
+	}
+
 	public function test_deactivates_and_deletes_activation_when_key_option_is_deleted(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();

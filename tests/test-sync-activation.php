@@ -175,7 +175,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_deletes_stored_activation_when_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_throws_when_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, 'new-license' );
@@ -215,11 +215,11 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 			3
 		);
 
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+
 		// Act.
 		sync_activation();
-
-		// Assert.
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 	}
 
 	public function test_deactivates_and_deletes_stored_activation_when_license_key_is_absent(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded

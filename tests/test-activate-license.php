@@ -125,10 +125,9 @@ class Test_Activate_License extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = activate_license( 'abc123' );
+		activate_license( 'abc123' );
 
 		// Assert.
-		$this->assertTrue( $result );
 		$this->assertSame(
 			array( 'abc123', 'activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
@@ -167,10 +166,9 @@ class Test_Activate_License extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$result = activate_license( 'abc123' );
+		activate_license( 'abc123' );
 
 		// Assert.
-		$this->assertTrue( $result );
 		$this->assertSame(
 			array(
 				'https://api.lemonsqueezy.com/v1/licenses/validate',
@@ -180,17 +178,26 @@ class Test_Activate_License extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_false_when_activation_is_rejected(): void {
+	public function test_throws_when_license_key_is_empty(): void {
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'License key cannot be empty.' );
+
+		// Act.
+		activate_license( '' );
+	}
+
+	public function test_throws_when_activation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 		delete_option( LICENSE_ACTIVATION_OPTION );
 
-		// Act.
-		$result = activate_license( 'abc123' );
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'License activation was rejected.' );
 
-		// Assert.
-		$this->assertFalse( $result );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+		// Act.
+		activate_license( 'abc123' );
 	}
 
 	public function test_throws_when_activation_response_code_is_not_ok(): void {
@@ -275,16 +282,15 @@ class Test_Activate_License extends WP_UnitTestCase {
 		activate_license( 'abc123' );
 	}
 
-	public function test_returns_false_without_activating_when_license_is_invalid(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_throws_without_activating_when_license_is_invalid(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		$activation_request_was_made = false;
 		$this->mock_license_server_response( true, 200, false );
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$activation_request_was_made ) {
+			function ( $pre, $args, $url ) {
 				if ( 'https://api.lemonsqueezy.com/v1/licenses/activate' === $url ) {
-					$activation_request_was_made = true;
+					throw new \LogicException( 'Activation request should not be made.' );
 				}
 
 				return $pre;
@@ -293,12 +299,11 @@ class Test_Activate_License extends WP_UnitTestCase {
 			3
 		);
 
-		// Act.
-		$result = activate_license( 'abc123' );
+		// Expect.
+		$this->expectException( \RuntimeException::class );
+		$this->expectExceptionMessage( 'License is invalid.' );
 
-		// Assert.
-		$this->assertFalse( $result );
-		$this->assertFalse( $activation_request_was_made );
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+		// Act.
+		activate_license( 'abc123' );
 	}
 }
