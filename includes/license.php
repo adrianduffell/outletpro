@@ -150,7 +150,6 @@ function sync_activation(): void {
 	$license_activation     = get_license_activation();
 	$activation_license_key = $license_activation[0] ?? null;
 
-
 	// License setting and activation are in sync. Nothing to do.
 	if ( $settings_license_key === $activation_license_key ) {
 		return;
