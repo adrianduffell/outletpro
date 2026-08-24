@@ -27,6 +27,34 @@ const LICENSE_OPTIONS_GROUP = 'outletpro_license';
 const LICENSE_KEY_OPTION = 'outletpro_license_key';
 
 /**
+ * Minimum length for a valid stub license key.
+ *
+ * @internal
+ */
+const MIN_LICENSE_KEY_LENGTH = 2;
+
+/**
+ * HTTP OK response code.
+ *
+ * @internal
+ */
+const HTTP_OK = 200;
+
+/**
+ * HTTP Not Found response code.
+ *
+ * @internal
+ */
+const HTTP_NOT_FOUND = 404;
+
+/**
+ * Lemon Squeezy product IDs accepted for Outlet Pro licenses.
+ *
+ * @internal
+ */
+const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
+
+/**
  * WordPress option name used to store the license activation tuple.
  *
  * @internal
