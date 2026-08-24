@@ -38,6 +38,13 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 					'body' => $args['body'],
 				);
 
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
+					return array(
+						'body'     => wp_json_encode( array( 'deactivated' => true ) ),
+						'response' => array( 'code' => 200 ),
+					);
+				}
+
 				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
 					return array(
 						'body'     => wp_json_encode(
@@ -71,13 +78,16 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			array(
+				'https://api.lemonsqueezy.com/v1/licenses/deactivate',
 				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				'https://api.lemonsqueezy.com/v1/licenses/activate',
 			),
 			array_column( $requests, 'url' )
 		);
-		$this->assertSame( 'new-license', $requests[0]['body']['license_key'] );
+		$this->assertSame( 'previous-license', $requests[0]['body']['license_key'] );
+		$this->assertSame( 'previous-activation-id', $requests[0]['body']['instance_id'] );
 		$this->assertSame( 'new-license', $requests[1]['body']['license_key'] );
+		$this->assertSame( 'new-license', $requests[2]['body']['license_key'] );
 		$this->assertSame(
 			array( 'new-license', 'new-activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
@@ -149,18 +159,43 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 	}
 
-	public function test_deletes_activation_when_key_option_is_deleted(): void {
+	public function test_deactivates_and_deletes_activation_when_key_option_is_deleted(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		$request_body = null;
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$request_body ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' !== $url ) {
+					return $pre;
+				}
+
+				$request_body = $args['body'];
+
+				return array(
+					'body'     => wp_json_encode( array( 'deactivated' => true ) ),
+					'response' => array( 'code' => 200 ),
+				);
+			},
+			10,
+			3
+		);
 		init_license_settings();
 
 		// Act.
 		delete_option( LICENSE_KEY_OPTION );
 
 		// Assert.
+		$this->assertSame(
+			array(
+				'license_key' => 'previous-license',
+				'instance_id' => 'activation-id',
+			),
+			$request_body
+		);
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 
 		// Cleanup.
