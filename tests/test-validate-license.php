@@ -9,6 +9,7 @@
  */
 
 use function OutletPro\validate_license;
+use const OutletPro\LICENSE_ERROR_NOT_FOUND;
 
 class Test_Validate_License extends WP_UnitTestCase {
 
@@ -80,7 +81,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_false_when_license_is_invalid(): void {
+	public function test_returns_not_found_wp_error_when_license_is_invalid(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 
@@ -88,7 +89,8 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( 'invalid-license' );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertWPError( $result );
+		$this->assertSame( LICENSE_ERROR_NOT_FOUND, $result->get_error_code() );
 	}
 
 	public function test_posts_license_key_to_lemonsqueezy_endpoint(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -227,14 +229,39 @@ class Test_Validate_License extends WP_UnitTestCase {
 		validate_license( 'valid-license' );
 	}
 
-	public function test_returns_false_for_empty_string(): void {
+	public function test_throws_when_license_key_is_empty(): void {
 		// Arrange.
 		$license_key = '';
 
-		// Act.
-		$result = validate_license( $license_key );
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'License key must not be empty.' );
 
-		// Assert.
-		$this->assertFalse( $result );
+		// Act.
+		validate_license( $license_key );
+	}
+
+	public function test_throws_when_license_key_is_too_short(): void {
+		// Arrange.
+		$license_key = 'a';
+
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'License key is too short.' );
+
+		// Act.
+		validate_license( $license_key );
+	}
+
+	public function test_throws_when_activation_id_is_empty(): void {
+		// Arrange.
+		$activation_id = '';
+
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'Activation ID must not be empty.' );
+
+		// Act.
+		validate_license( 'license-key', $activation_id );
 	}
 }

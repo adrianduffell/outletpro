@@ -34,6 +34,13 @@ const LICENSE_KEY_OPTION = 'outletpro_license_key';
 const MIN_LICENSE_KEY_LENGTH = 2;
 
 /**
+ * License not found error code.
+ *
+ * @internal
+ */
+const LICENSE_ERROR_NOT_FOUND = 'not_found';
+
+/**
  * HTTP OK response code.
  *
  * @internal
@@ -392,7 +399,7 @@ function activate_license( string $license_key ): string {
 		throw new \InvalidArgumentException( 'License key cannot be empty.' );
 	}
 
-	if ( ! validate_license( $license_key ) ) {
+	if ( is_wp_error( validate_license( $license_key ) ) ) {
 		throw new \RuntimeException( 'License is invalid.' );
 	}
 
@@ -512,19 +519,22 @@ function deactivate_license( string $license_key, string $activation_id ): void 
  *
  * @param string      $license_key The license key to validate.
  * @param string|null $activation_id The activation ID (optional).
+ * @return true|\WP_Error True when the license is valid, otherwise an error.
+ * @throws \InvalidArgumentException If the license key or activation ID is invalid.
  * @throws \RuntimeException If the license validation request fails or the response is invalid.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
  */
-function validate_license( string $license_key, ?string $activation_id = null ): bool {
+function validate_license( string $license_key, ?string $activation_id = null ) {
 	if ( '' === trim( $license_key ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'License key must not be empty.' );
 	}
 
 	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
-		return false;
+		throw new \InvalidArgumentException( 'License key is too short.' );
 	}
 
 	if ( ! is_null( $activation_id ) && '' === trim( $activation_id ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'Activation ID must not be empty.' );
 	}
 
 	$request_body = array(
@@ -566,8 +576,7 @@ function validate_license( string $license_key, ?string $activation_id = null ):
 	}
 
 	if ( false === $data['valid'] ) {
-		// License key is invalid.
-		return false;
+		return new \WP_Error( LICENSE_ERROR_NOT_FOUND );
 	}
 
 	if ( ! is_int( $data['meta']['product_id'] ?? null ) ) {
@@ -627,14 +636,14 @@ function get_license_status(): string {
 	}
 
 	try {
-		$license_is_valid = validate_license( ...$license_activation );
+		$validation_result = validate_license( ...$license_activation );
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
 		return 'error';
 	}
 
-	$license_status = $license_is_valid ? 'active' : 'not_found';
+	$license_status = is_wp_error( $validation_result ) ? 'not_found' : 'active';
 
 	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
 
