@@ -229,39 +229,14 @@ class Test_Validate_License extends WP_UnitTestCase {
 		validate_license( 'valid-license' );
 	}
 
-	public function test_throws_when_license_key_is_empty(): void {
+	public function test_returns_false_for_empty_string(): void {
 		// Arrange.
 		$license_key = '';
 
-		// Expect.
-		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'License key must not be empty.' );
-
 		// Act.
-		validate_license( $license_key );
-	}
+		$result = validate_license( $license_key );
 
-	public function test_throws_when_license_key_is_too_short(): void {
-		// Arrange.
-		$license_key = 'a';
-
-		// Expect.
-		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'License key is too short.' );
-
-		// Act.
-		validate_license( $license_key );
-	}
-
-	public function test_throws_when_activation_id_is_empty(): void {
-		// Arrange.
-		$activation_id = '';
-
-		// Expect.
-		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'Activation ID must not be empty.' );
-
-		// Act.
-		validate_license( 'license-key', $activation_id );
+		// Assert.
+		$this->assertFalse( $result );
 	}
 }

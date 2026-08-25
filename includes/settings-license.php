@@ -519,22 +519,21 @@ function deactivate_license( string $license_key, string $activation_id ): void 
  *
  * @param string      $license_key The license key to validate.
  * @param string|null $activation_id The activation ID (optional).
- * @return true|\WP_Error True when the license is valid, otherwise an error.
- * @throws \InvalidArgumentException If the license key or activation ID is invalid.
+ * @return bool|\WP_Error True when the license is valid, false when input is invalid, otherwise an error.
  * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
  */
 function validate_license( string $license_key, ?string $activation_id = null ) {
 	if ( '' === trim( $license_key ) ) {
-		throw new \InvalidArgumentException( 'License key must not be empty.' );
+		return false;
 	}
 
 	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
-		throw new \InvalidArgumentException( 'License key is too short.' );
+		return false;
 	}
 
 	if ( ! is_null( $activation_id ) && '' === trim( $activation_id ) ) {
-		throw new \InvalidArgumentException( 'Activation ID must not be empty.' );
+		return false;
 	}
 
 	$request_body = array(
