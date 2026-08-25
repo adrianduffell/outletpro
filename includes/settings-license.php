@@ -399,7 +399,13 @@ function activate_license( string $license_key ): string {
 		throw new \InvalidArgumentException( 'License key cannot be empty.' );
 	}
 
-	if ( is_wp_error( validate_license( $license_key ) ) ) {
+	$validation_result = validate_license( $license_key );
+
+	if ( false === $validation_result ) {
+		throw new \InvalidArgumentException( 'License data could not be validated.' );
+	}
+
+	if ( is_wp_error( $validation_result ) ) {
 		throw new \RuntimeException( 'License is invalid.' );
 	}
 
@@ -640,6 +646,11 @@ function get_license_status(): string {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
 		return 'error';
+	}
+
+	if ( false === $validation_result ) {
+		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
+		return 'not_found';
 	}
 
 	$license_status = is_wp_error( $validation_result ) ? 'not_found' : 'active';

@@ -180,6 +180,23 @@ class Test_Activate_License extends WP_UnitTestCase {
 		activate_license( '' );
 	}
 
+	public function test_throws_without_activating_when_license_key_is_too_short(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		add_filter(
+			'pre_http_request',
+			function (): void {
+				throw new \LogicException( 'License request should not be made.' );
+			}
+		);
+
+		// Expect.
+		$this->expectException( \InvalidArgumentException::class );
+		$this->expectExceptionMessage( 'License data could not be validated.' );
+
+		// Act.
+		activate_license( 'a' );
+	}
+
 	public function test_throws_when_activation_is_rejected(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
