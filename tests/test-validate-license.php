@@ -9,6 +9,7 @@
  */
 
 use function OutletPro\validate_license;
+use const OutletPro\LICENSE_ERROR_NOT_FOUND;
 
 class Test_Validate_License extends WP_UnitTestCase {
 
@@ -80,7 +81,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
-	public function test_returns_false_when_license_is_invalid(): void {
+	public function test_returns_not_found_wp_error_when_license_is_invalid(): void {
 		// Arrange.
 		$this->mock_license_server_response( false );
 
@@ -88,7 +89,8 @@ class Test_Validate_License extends WP_UnitTestCase {
 		$result = validate_license( 'invalid-license' );
 
 		// Assert.
-		$this->assertFalse( $result );
+		$this->assertWPError( $result );
+		$this->assertSame( LICENSE_ERROR_NOT_FOUND, $result->get_error_code() );
 	}
 
 	public function test_posts_license_key_to_lemonsqueezy_endpoint(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
