@@ -24,7 +24,16 @@ body.toplevel_page_outletpro-welcome {
 		margin: 2em auto 2em auto;
 	}
 
+	a {
+		text-decoration: none;
+	}
+
+	a:hover {
+		text-decoration: underline;
+	}
+
 	#outletpro-welcome-page-root {
+		position: relative;
 		display: grid;
 
 		@media (min-width: 600px) {
@@ -42,6 +51,17 @@ body.toplevel_page_outletpro-welcome {
 		text-align: center;
 	}
 
+	.outletpro-welcome-page__dismiss {
+		position: absolute;
+		right: 0;
+		text-decoration: none;
+		top: 0;
+	}
+
+	.outletpro-welcome-page__dismiss:hover {
+		text-decoration: none;
+	}
+
 	.outletpro-welcome-page__description {
 		font-size: 1.2rem;
 		font-weight: 300;
@@ -57,7 +77,17 @@ body.toplevel_page_outletpro-welcome {
 			font-family: monospace;
 			font-size: 1.2rem;
 			font-weight: 500;
+			border-color: rgb(255 179 0 / 0.6);
+			box-shadow:
+				0 0 0 1px rgb(255 179 0 / 0.15),
+				0 0 30px 8px rgb(255 179 0 / 0.12),
+				0 0 60px 24px rgb(255 179 0 / 0.06);
 		}
+	}
+
+	.outletpro-welcome-page__validation--error,
+	.outletpro-welcome-page__validation--invalid {
+		color: #c00;
 	}
 
 	.outletpro-welcome-page__notice {

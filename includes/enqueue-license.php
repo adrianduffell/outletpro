@@ -60,8 +60,9 @@ function enqueue_admin_welcome_page_scripts_hook(): void {
 		'outletpro-welcome-page',
 		'outletproWelcomePage',
 		array(
-			'licenseKey'  => (string) get_option( LICENSE_KEY_OPTION, '' ),
-			'productsUrl' => esc_url( admin_url( 'edit.php?post_type=product' ) ),
+			'environmentType' => wp_get_environment_type(),
+			'licenseStatus'   => get_license_status(),
+			'productsUrl'     => esc_url( admin_url( 'edit.php?post_type=product' ) ),
 		)
 	);
 

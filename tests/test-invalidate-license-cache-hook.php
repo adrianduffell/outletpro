@@ -9,9 +9,11 @@
  */
 
 use function OutletPro\deinit_license_settings;
-use function OutletPro\has_license;
+use function OutletPro\get_license_status;
 use function OutletPro\init_license_settings;
+use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 
@@ -19,12 +21,15 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
 							array(
-								'success' => $success,
+								'valid' => $success,
+								'meta'  => array(
+									'product_id' => 1279790,
+								),
 							)
 						),
 						'response' => array(
@@ -49,13 +54,14 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		init_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
-		$this->assertFalse( has_license() );
+		$this->assertSame( 'none', get_license_status() );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id' ) );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
 
 		// Assert.
-		$this->assertTrue( has_license() );
+		$this->assertSame( 'active', get_license_status() );
 	}
 
 	public function test_invalidates_transient_when_license_key_is_updated(): void {
@@ -64,12 +70,14 @@ class Test_Invalidate_License_Cache_Hook extends WP_UnitTestCase {
 		deinit_license_settings();
 		init_license_settings();
 		update_option( LICENSE_KEY_OPTION, '0' );
-		$this->assertFalse( has_license() );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
+		$this->assertSame( 'not_found', get_license_status() );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'new-license-key', 'activation-id' ) );
 
 		// Act.
 		update_option( LICENSE_KEY_OPTION, 'new-license-key' );
 
 		// Assert.
-		$this->assertTrue( has_license() );
+		$this->assertSame( 'active', get_license_status() );
 	}
 }

@@ -10,8 +10,10 @@
 
 use function OutletPro\deinit_admin_menu;
 use function OutletPro\init_admin_menu;
-use const OutletPro\HAS_LICENSE_TRANSIENT;
-use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\DISMISS_COOKIE;
+use const OutletPro\LICENSE_ACTIVATION_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
+use const OutletPro\WELCOME_PAGE_SLUG;
 
 class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
@@ -24,12 +26,15 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( $success ) {
-				if ( strpos( $url, 'https://api.adrianduffell.store/v1/licenses/validate' ) !== false ) {
+				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
 							array(
-								'success' => $success,
+								'valid' => $success,
+								'meta'  => array(
+									'product_id' => 1279790,
+								),
 							)
 						),
 						'response' => array(
@@ -50,8 +55,9 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_registers_menu_page_when_no_license(): void {
 		// Arrange.
-		delete_option( LICENSE_KEY_OPTION );
-		delete_transient( HAS_LICENSE_TRANSIENT );
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
 		deinit_admin_menu();
 
 		// Act.
@@ -63,9 +69,10 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_register_menu_page_when_license_is_active(): void {
 		// Arrange.
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
 		$this->mock_license_server_response( true );
-		delete_transient( HAS_LICENSE_TRANSIENT );
-		update_option( LICENSE_KEY_OPTION, 'valid-license-key' );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'valid-license-key', 'activation-id' ) );
 		deinit_admin_menu();
 
 		// Act.
@@ -73,5 +80,61 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+	}
+
+	public function test_does_not_register_menu_page_when_dismissed_on_device(): void {
+		// Arrange.
+		$_COOKIE[ DISMISS_COOKIE ] = '1';
+		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		deinit_admin_menu();
+
+		// Act.
+		init_admin_menu();
+
+		// Assert.
+		$this->assertFalse( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+
+		// Cleanup.
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+	}
+
+	public function test_registers_menu_page_when_opened_directly_after_dismissal(): void {
+		// Arrange.
+		$_GET['page']              = WELCOME_PAGE_SLUG;
+		$_COOKIE[ DISMISS_COOKIE ] = '1';
+		delete_option( LICENSE_ACTIVATION_OPTION );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		deinit_admin_menu();
+
+		// Act.
+		init_admin_menu();
+
+		// Assert.
+		$this->assertIsInt( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+
+		// Cleanup.
+		unset( $_GET['page'] );
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+		deinit_admin_menu();
+	}
+
+	public function test_registers_menu_page_when_opened_directly_with_active_license(): void {
+		// Arrange.
+		$_GET['page'] = WELCOME_PAGE_SLUG;
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
+		deinit_admin_menu();
+
+		// Act.
+		init_admin_menu();
+
+		// Assert.
+		$this->assertIsInt( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+
+		// Cleanup.
+		unset( $_GET['page'] );
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+		deinit_admin_menu();
 	}
 }

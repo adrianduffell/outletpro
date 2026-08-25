@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Outlet Pro
- * Description: Move old stock easily with an outlet on WooCommerce stores.
- * Version: 1.0.2
+ * Description: Adds an outlet to WooCommerce. Move old stock quickly with an outlet page, badge, and message.
+ * Version: 1.1.0-dev
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
  * Text Domain: outletpro
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const VERSION = '1.0.2';
+const VERSION = '1.1.0-dev';
 
 /**
  * Plugin file path.
@@ -44,7 +44,7 @@ require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/rest-api.php';
 // #ifdef LICENSE
-require_once __DIR__ . '/includes/admin-menu.php';
+require_once __DIR__ . '/includes/admin-menu-license.php';
 // #endif
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
@@ -53,7 +53,7 @@ require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/settings-license.php';
-require_once __DIR__ . '/includes/license.php';
+require_once __DIR__ . '/includes/admin-plugins-license.php';
 require_once __DIR__ . '/includes/enqueue-license.php';
 // #endif
 require_once __DIR__ . '/includes/patterns.php';

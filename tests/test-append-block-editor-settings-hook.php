@@ -30,7 +30,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$this->assertSame( $canonical_term->term_id, $settings['wcOutletCanonicalTermId'] );
 	}
 
-	public function test_settings_unchanged_when_canonical_term_missing(): void {
+	public function test_canonical_term_setting_is_omitted_when_canonical_term_missing(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		init_block_editor();
@@ -58,5 +58,30 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertArrayHasKey( 'foo', $settings );
 		$this->assertSame( 'bar', $settings['foo'] );
+	}
+
+	public function test_settings_identify_block_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		init_block_editor();
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertArrayHasKey( 'outletproIsBlockTheme', $settings );
+		$this->assertTrue( $settings['outletproIsBlockTheme'] );
+	}
+
+	public function test_settings_identify_classic_theme(): void {
+		// Arrange.
+		switch_theme( 'storefront' );
+		init_block_editor();
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertFalse( $settings['outletproIsBlockTheme'] );
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin menu functions for the license settings page.
+ * Admin menu functions for the welcome page.
  *
  * @package OutletPro
  * @subpackage License
@@ -20,19 +20,31 @@ defined( 'ABSPATH' ) || exit;
 const WELCOME_PAGE_SLUG = 'outletpro-welcome';
 
 /**
+ * Cookie used to dismiss the welcome screen on the current device.
+ *
+ * @internal
+ */
+const DISMISS_COOKIE = 'OUTLETPRO_DISMISS_SETUP';
+
+/**
  * Helper to initialize license features.
  *
  * @internal
  */
 function init_admin_menu(): void {
-	add_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
+	$direct = isset( $_GET['page'] ) && 'outletpro-welcome' === wp_unslash( $_GET['page'] ); // phpcs:ignore
 
-	try {
-		if ( ! has_license() ) {
-			add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
-		}
-	} catch ( \RuntimeException $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch -- Don't show the welcome screen when the license status is unknown.
+	if ( isset( $_COOKIE[ DISMISS_COOKIE ] ) && ! $direct ) {
+		return;
 	}
+
+	$license_status = get_license_status();
+
+	if ( in_array( $license_status, array( 'active', 'error' ), true ) && ! $direct ) {
+		return;
+	}
+
+	add_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
 }
 
 /**
@@ -41,26 +53,7 @@ function init_admin_menu(): void {
  * @internal
  */
 function deinit_admin_menu(): void {
-	remove_action( 'admin_menu', 'OutletPro\add_license_menu_hook' );
 	remove_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' );
-}
-
-/**
- * Register a hidden license settings admin page, not linked in any menu.
- *
- * Fired by `admin_menu`.
- *
- * @internal WordPress action hook
- */
-function add_license_menu_hook(): void {
-	add_submenu_page(
-		'options.php',
-		__( 'Outlet Pro License', 'outletpro' ),
-		__( 'Outlet Pro', 'outletpro' ),
-		'manage_options',
-		LICENSE_OPTIONS_GROUP,
-		'OutletPro\render_license_page'
-	);
 }
 
 /**
