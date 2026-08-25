@@ -19,11 +19,12 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 	 *
 	 * @param bool $success Whether the license validation succeeds or fails.
 	 * @param string $license_status The license status returned by the license server.
+	 * @param int $response_code The HTTP response code to simulate.
 	 */
-	private function mock_license_server_response( bool $success, string $license_status = 'active' ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	private function mock_license_server_response( bool $success, string $license_status = 'active', int $response_code = 200 ): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( $success, $license_status ) {
+			function ( $pre, $args, $url ) use ( $success, $license_status, $response_code ) {
 				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
@@ -39,7 +40,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 							)
 						),
 						'response' => array(
-							'code'    => 200,
+							'code'    => $response_code,
 							'message' => 'OK',
 						),
 						'cookies'  => array(),
@@ -153,7 +154,7 @@ class Test_Get_License_Status extends WP_UnitTestCase {
 
 	public function test_returns_expired_and_caches_expired_license(): void {
 		// Arrange.
-		$this->mock_license_server_response( false, 'expired' );
+		$this->mock_license_server_response( false, 'expired', 400 );
 		delete_transient( LICENSE_STATUS_TRANSIENT );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'ab', 'activation-id' ) );
 

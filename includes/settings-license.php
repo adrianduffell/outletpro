@@ -48,6 +48,13 @@ const LICENSE_ERROR_NOT_FOUND = 'not_found';
 const LICENSE_ERROR_EXPIRED = 'expired';
 
 /**
+ * HTTP Bad Request response code.
+ *
+ * @internal
+ */
+const HTTP_BAD_REQUEST = 400;
+
+/**
  * HTTP OK response code.
  *
  * @internal
@@ -573,9 +580,9 @@ function validate_license( string $license_key, ?string $activation_id = null ) 
 
 	$status_code = wp_remote_retrieve_response_code( $response );
 
-	if ( ! in_array( $status_code, array( HTTP_OK, HTTP_NOT_FOUND ), true ) ) {
-		// Lemon Squeezy returns a 404 Not Found response for invalid license keys,
-		// so it needs to be treated as an expected response code.
+	// Throw an exception for unexpected reponse codes.  Note: Lemon Squeeze returns
+	// 400 for expired and 404 for not_found, so these are considered expected.
+	if ( ! in_array( $status_code, array( HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND ), true ) ) {
 		throw new \RuntimeException( 'License validation response code failed' );
 	}
 
