@@ -191,7 +191,7 @@ class Test_Activate_License extends WP_UnitTestCase {
 
 		// Expect.
 		$this->expectException( \InvalidArgumentException::class );
-		$this->expectExceptionMessage( 'License data could not be validated.' );
+		$this->expectExceptionMessage( 'License key is too short.' );
 
 		// Act.
 		activate_license( 'a' );
