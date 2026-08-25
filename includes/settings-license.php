@@ -527,7 +527,7 @@ function deactivate_license( string $license_key, string $activation_id ): void 
  * @param string|null $activation_id The activation ID (optional).
  * @return true|\WP_Error True when the licensing service determines it is valid, otherwise WP_Error.
  * @throws \InvalidArgumentException If the license key is empty or too short.
- * @throws \InvalidArgumentException If the activation ID is malformed.
+ * @throws \InvalidArgumentException If the activation ID is provided but empty.
  * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
  */
