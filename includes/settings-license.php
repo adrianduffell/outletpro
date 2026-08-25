@@ -580,7 +580,7 @@ function validate_license( string $license_key, ?string $activation_id = null ) 
 
 	$status_code = wp_remote_retrieve_response_code( $response );
 
-	// Throw an exception for unexpected reponse codes.  Note: Lemon Squeeze returns
+	// Throw an exception for unexpected response codes. Note: Lemon Squeezy returns
 	// 400 for expired and 404 for not_found, so these are considered expected.
 	if ( ! in_array( $status_code, array( HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND ), true ) ) {
 		throw new \RuntimeException( 'License validation response code failed' );
