@@ -401,10 +401,6 @@ function activate_license( string $license_key ): string {
 
 	$validation_result = validate_license( $license_key );
 
-	if ( false === $validation_result ) {
-		throw new \InvalidArgumentException( 'License data could not be validated.' );
-	}
-
 	if ( is_wp_error( $validation_result ) ) {
 		throw new \RuntimeException( 'License is invalid.' );
 	}
@@ -525,21 +521,23 @@ function deactivate_license( string $license_key, string $activation_id ): void 
  *
  * @param string      $license_key The license key to validate.
  * @param string|null $activation_id The activation ID (optional).
- * @return bool|\WP_Error True when the licensing service determines it is valid, otherwise WP_Error. Invalid input returns false.
+ * @return true|\WP_Error True when the licensing service determines it is valid, otherwise WP_Error.
+ * @throws \InvalidArgumentException If the license key is empty or too short.
+ * @throws \InvalidArgumentException If the activation ID is provided but empty.
  * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
  */
 function validate_license( string $license_key, ?string $activation_id = null ) {
 	if ( '' === trim( $license_key ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'License key must not be empty.' );
 	}
 
 	if ( strlen( $license_key ) < MIN_LICENSE_KEY_LENGTH ) {
-		return false;
+		throw new \InvalidArgumentException( 'License key is too short.' );
 	}
 
 	if ( ! is_null( $activation_id ) && '' === trim( $activation_id ) ) {
-		return false;
+		throw new \InvalidArgumentException( 'Activation ID must not be empty.' );
 	}
 
 	$request_body = array(
@@ -646,11 +644,6 @@ function get_license_status(): string {
 		\wc_get_logger()->error( 'License status could not be retrieved.' );
 		set_transient( LICENSE_STATUS_TRANSIENT, 'error', DAY_IN_SECONDS ); // Try again in 24 hours.
 		return 'error';
-	}
-
-	if ( false === $validation_result ) {
-		set_transient( LICENSE_STATUS_TRANSIENT, 'not_found', WEEK_IN_SECONDS );
-		return 'not_found';
 	}
 
 	$license_status = is_wp_error( $validation_result ) ? 'not_found' : 'active';
