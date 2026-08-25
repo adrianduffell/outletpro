@@ -8,6 +8,7 @@ import { validateLicense } from './validateLicense';
 
 export type ValidationState =
 	| { status: 'idle' | 'validating' | 'invalid' | 'error' }
+	| { status: 'expired'; expiresAt: string }
 	| { status: 'available'; remaining: number; total: number }
 	| { status: 'unavailable'; total: number };
 
@@ -27,7 +28,12 @@ export function useLicenseValidation() {
 			try {
 				const validation = await validateLicense( currentLicenseKey );
 				if ( ! validation.valid ) {
-					result = { status: 'invalid' };
+					result = validation.expiresAt
+						? {
+								status: 'expired',
+								expiresAt: validation.expiresAt,
+						  }
+						: { status: 'invalid' };
 				} else if ( validation.remaining === 0 ) {
 					result = {
 						status: 'unavailable',

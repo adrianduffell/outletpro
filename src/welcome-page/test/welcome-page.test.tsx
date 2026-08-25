@@ -10,6 +10,8 @@ import { WelcomePage } from '../WelcomePage';
 import type { ValidationState } from '../useLicenseValidation';
 import { useLicenseValidation } from '../useLicenseValidation';
 
+const EXPIRES_AT = '2026-03-25T00:00:00.000000Z';
+
 jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
 	default: jest.fn(),
@@ -245,6 +247,7 @@ test.each< [ string, ValidationState, 'status' | 'alert' ] >( [
 	[ 'idle', { status: 'idle' }, 'status' ],
 	[ 'validating', { status: 'validating' }, 'status' ],
 	[ 'invalid', { status: 'invalid' }, 'alert' ],
+	[ 'expired', { status: 'expired', expiresAt: EXPIRES_AT }, 'alert' ],
 	[ 'error', { status: 'error' }, 'alert' ],
 	[ 'unavailable', { status: 'unavailable', total: 5 }, 'status' ],
 ] )(

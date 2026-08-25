@@ -176,7 +176,7 @@ export function WelcomePage(): JSX.Element {
 		);
 	}
 
-	const validationRole = [ 'invalid', 'error' ].includes(
+	const validationRole = [ 'invalid', 'expired', 'error' ].includes(
 		validationState.status
 	)
 		? 'alert'

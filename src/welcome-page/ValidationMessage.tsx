@@ -8,6 +8,7 @@ import { Link } from '@wordpress/ui';
 import type { ValidationState } from './useLicenseValidation';
 export type { ValidationState } from './useLicenseValidation';
 const HELP_URL = 'https://outletpro.zip/help/license-key';
+const EXPIRY_HELP_URL = 'https://outletpro.zip/help/license-expiry';
 export function ValidationMessage( {
 	validationState,
 }: {
@@ -21,6 +22,26 @@ export function ValidationMessage( {
 				'Please check your premium license key and try again.',
 				'outletpro'
 			);
+		case 'expired': {
+			const expiryDate = new Date(
+				validationState.expiresAt
+			).toLocaleDateString( undefined, {
+				day: 'numeric',
+				month: 'long',
+				year: 'numeric',
+			} );
+			return createInterpolateElement(
+				sprintf(
+					/* translators: %s: localized license expiry date. */
+					__(
+						'❌ License expired on %s. <help>Learn more</help>',
+						'outletpro'
+					),
+					expiryDate
+				),
+				{ help: <Link href={ EXPIRY_HELP_URL } /> }
+			);
+		}
 		case 'error':
 			return __(
 				'Unable to contact the licensing service. Please try again.',
