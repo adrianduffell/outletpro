@@ -50,7 +50,17 @@ const messages: [ string, ValidationState, string ][] = [
 		'✅ Unlimited site activations available',
 	],
 	[
-		'availability with expiry',
+		'singular availability with expiry',
+		{
+			status: 'available',
+			remaining: 1,
+			total: 1,
+			expiresAt: availableExpiresAt,
+		},
+		`✅ 1 site activation available. Expires ${ localizedAvailableExpiry }`,
+	],
+	[
+		'plural availability with expiry',
 		{
 			status: 'available',
 			remaining: 15,
@@ -58,6 +68,16 @@ const messages: [ string, ValidationState, string ][] = [
 			expiresAt: availableExpiresAt,
 		},
 		`✅ 15 of 25 site activations available. Expires ${ localizedAvailableExpiry }`,
+	],
+	[
+		'unlimited availability with expiry',
+		{
+			status: 'available',
+			remaining: Infinity,
+			total: Infinity,
+			expiresAt: availableExpiresAt,
+		},
+		`✅ Unlimited site activations available. Expires ${ localizedAvailableExpiry }`,
 	],
 ];
 test.each( messages )(
