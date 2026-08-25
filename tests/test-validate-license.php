@@ -100,7 +100,7 @@ class Test_Validate_License extends WP_UnitTestCase {
 
 	public function test_returns_expired_wp_error_when_license_is_expired(): void {
 		// Arrange.
-		$this->mock_license_server_response( false, 200, 1279790, 'expired' );
+		$this->mock_license_server_response( false, 400, 1279790, 'expired' );
 
 		// Act.
 		$result = validate_license( 'expired-license' );
