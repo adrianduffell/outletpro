@@ -519,7 +519,7 @@ function deactivate_license( string $license_key, string $activation_id ): void 
  *
  * @param string      $license_key The license key to validate.
  * @param string|null $activation_id The activation ID (optional).
- * @return bool|\WP_Error True when the license is valid, false when input is invalid, otherwise an error.
+ * @return bool|\WP_Error True when the licensing service determines it is valid, otherwise WP_Error. Invalid input returns false.
  * @throws \RuntimeException If the license validation request fails or the response is invalid.
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
  */
