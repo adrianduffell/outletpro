@@ -6,6 +6,7 @@ import { render, screen } from '@testing-library/react';
 import { ValidationMessage, type ValidationState } from '../ValidationMessage';
 jest.mock( '@wordpress/ui', () => ( { Link: 'a' } ) );
 const helpUrl = 'https://outletpro.zip/help/license-key';
+const expiryHelpUrl = 'https://outletpro.zip/help/license-expiry';
 
 function renderMessage( validationState: ValidationState ) {
 	render(
@@ -53,6 +54,32 @@ test.each( messages )(
 		expect( screen.getByRole( 'status' ) ).toHaveTextContent( expected );
 	}
 );
+test( 'renders an expired license with a browser-localized date', () => {
+	// Arrange.
+	const formatDate = jest
+		.spyOn( Date.prototype, 'toLocaleDateString' )
+		.mockReturnValue( '25 March, 2026' );
+
+	// Act.
+	renderMessage( {
+		status: 'expired',
+		expiresAt: '2026-03-25T00:00:00.000000Z',
+	} );
+
+	// Assert.
+	expect( screen.getByRole( 'status' ) ).toHaveTextContent(
+		'❌ License expired on 25 March, 2026. Learn more'
+	);
+	expect(
+		screen.getByRole( 'link', { name: 'Learn more' } )
+	).toHaveAttribute( 'href', expiryHelpUrl );
+	expect( formatDate ).toHaveBeenCalledWith( undefined, {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+	} );
+	formatDate.mockRestore();
+} );
 const linkedMessages: [ string, ValidationState, string ][] = [
 	[
 		'singular unavailable capacity',

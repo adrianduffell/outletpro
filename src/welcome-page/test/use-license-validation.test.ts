@@ -14,6 +14,7 @@ jest.mock( '../validateLicense', () => ( {
 
 const LICENSE_KEY = '38B1460A-5104-4067-A91D-77B872934D51';
 const OTHER_LICENSE_KEY = '28B1460A-5104-4067-A91D-77B872934D51';
+const EXPIRES_AT = '2026-03-25T00:00:00.000000Z';
 const LICENSE_AVAILABLE: LicenseStatus = {
 	valid: true,
 	remaining: 3,
@@ -90,6 +91,28 @@ test( 'transitions to invalid for an invalid license', async () => {
 	await waitFor( () =>
 		expect( result.current.validationState ).toEqual( {
 			status: 'invalid',
+		} )
+	);
+	expect( result.current.canActivate ).toBe( false );
+} );
+
+test( 'transitions to expired for an expired license', async () => {
+	// Arrange.
+	mockValidateLicense.mockReset();
+	mockValidateLicense.mockResolvedValue( {
+		valid: false,
+		expiresAt: EXPIRES_AT,
+	} );
+	const { result } = renderHook( () => useLicenseValidation() );
+
+	// Act.
+	act( () => result.current.handleLicenseKeyChange( LICENSE_KEY ) );
+
+	// Assert.
+	await waitFor( () =>
+		expect( result.current.validationState ).toEqual( {
+			status: 'expired',
+			expiresAt: EXPIRES_AT,
 		} )
 	);
 	expect( result.current.canActivate ).toBe( false );

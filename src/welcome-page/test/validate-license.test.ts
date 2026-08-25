@@ -6,6 +6,7 @@
 import { validateLicense } from '../validateLicense';
 
 const LICENSE_KEY = '38B1460A-5104-4067-A91D-77B872934D51';
+const EXPIRES_AT = '2026-03-25T00:00:00.000000Z';
 const PRODUCT_ID = 1279790;
 const LICENSE_AVAILABLE = {
 	valid: true,
@@ -75,6 +76,54 @@ test( 'returns invalid when the license is invalid', async () => {
 	// Assert.
 	expect( result ).toEqual( { valid: false } );
 } );
+
+test( 'returns expired when the license is expired', async () => {
+	// Arrange.
+	mockFetch.mockReset();
+	mockFetch.mockResolvedValue( {
+		json: () =>
+			Promise.resolve( {
+				valid: false,
+				license_key: {
+					expires_at: EXPIRES_AT,
+					status: 'expired',
+				},
+			} ),
+	} );
+
+	// Act.
+	const result = await validateLicense( LICENSE_KEY );
+
+	// Assert.
+	expect( result ).toEqual( { valid: false, expiresAt: EXPIRES_AT } );
+} );
+
+test.each( [
+	[ 'missing', undefined ],
+	[ 'invalid', 'not-a-date' ],
+] )(
+	'rejects an expired license with a %s expiry date',
+	async ( name, expiresAt ) => {
+		// Arrange.
+		mockFetch.mockReset();
+		mockFetch.mockResolvedValue( {
+			json: () =>
+				Promise.resolve( {
+					valid: false,
+					license_key: {
+						expires_at: expiresAt,
+						status: 'expired',
+					},
+				} ),
+		} );
+
+		// Expect.
+		const validation = expect( validateLicense( LICENSE_KEY ) ).rejects;
+
+		// Act and assert.
+		await validation.toThrow( 'Unexpected license validation response' );
+	}
+);
 
 test( 'returns invalid when the product is not allowed', async () => {
 	// Arrange.
