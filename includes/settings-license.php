@@ -41,6 +41,13 @@ const MIN_LICENSE_KEY_LENGTH = 2;
 const LICENSE_ERROR_NOT_FOUND = 'not_found';
 
 /**
+ * License expired error code.
+ *
+ * @internal
+ */
+const LICENSE_ERROR_EXPIRED = 'expired';
+
+/**
  * HTTP OK response code.
  *
  * @internal
@@ -579,6 +586,10 @@ function validate_license( string $license_key, ?string $activation_id = null ) 
 	}
 
 	if ( false === $data['valid'] ) {
+		if ( 'expired' === ( $data['license_key']['status'] ?? null ) ) {
+			return new \WP_Error( LICENSE_ERROR_EXPIRED );
+		}
+
 		return new \WP_Error( LICENSE_ERROR_NOT_FOUND );
 	}
 
@@ -646,7 +657,7 @@ function get_license_status(): string {
 		return 'error';
 	}
 
-	$license_status = is_wp_error( $validation_result ) ? 'not_found' : 'active';
+	$license_status = is_wp_error( $validation_result ) ? $validation_result->get_error_code() : 'active';
 
 	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
 

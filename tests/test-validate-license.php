@@ -9,6 +9,7 @@
  */
 
 use function OutletPro\validate_license;
+use const OutletPro\LICENSE_ERROR_EXPIRED;
 use const OutletPro\LICENSE_ERROR_NOT_FOUND;
 
 class Test_Validate_License extends WP_UnitTestCase {
@@ -20,18 +21,22 @@ class Test_Validate_License extends WP_UnitTestCase {
 	 * @param mixed $valid Whether the license validation succeeds or fails.
 	 * @param int $response_code The HTTP response code to simulate.
 	 * @param int $product_id The product ID returned by the license server.
+	 * @param string $license_status The license status returned by the license server.
 	 */
-	private function mock_license_server_response( $valid, int $response_code = 200, int $product_id = 1279790 ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	private function mock_license_server_response( $valid, int $response_code = 200, int $product_id = 1279790, string $license_status = 'active' ): void {  //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) use ( $valid, $response_code, $product_id ) {
+			function ( $pre, $args, $url ) use ( $valid, $response_code, $product_id, $license_status ) {
 				if ( strpos( $url, 'https://api.lemonsqueezy.com/v1/licenses/validate' ) !== false ) {
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
 							array(
-								'valid' => $valid,
-								'meta'  => array(
+								'valid'       => $valid,
+								'license_key' => array(
+									'status' => $license_status,
+								),
+								'meta'        => array(
 									'product_id' => $product_id,
 								),
 							)
@@ -91,6 +96,18 @@ class Test_Validate_License extends WP_UnitTestCase {
 		// Assert.
 		$this->assertWPError( $result );
 		$this->assertSame( LICENSE_ERROR_NOT_FOUND, $result->get_error_code() );
+	}
+
+	public function test_returns_expired_wp_error_when_license_is_expired(): void {
+		// Arrange.
+		$this->mock_license_server_response( false, 200, 1279790, 'expired' );
+
+		// Act.
+		$result = validate_license( 'expired-license' );
+
+		// Assert.
+		$this->assertWPError( $result );
+		$this->assertSame( LICENSE_ERROR_EXPIRED, $result->get_error_code() );
 	}
 
 	public function test_posts_license_key_to_lemonsqueezy_endpoint(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
