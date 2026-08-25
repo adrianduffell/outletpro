@@ -13,6 +13,7 @@ const LICENSE_AVAILABLE = {
 	license_key: {
 		activation_limit: 5,
 		activation_usage: 2,
+		expires_at: EXPIRES_AT,
 	},
 	meta: { product_id: PRODUCT_ID },
 };
@@ -47,6 +48,7 @@ test( 'validates a license with available capacity', async () => {
 		valid: true,
 		remaining: 3,
 		total: 5,
+		expiresAt: EXPIRES_AT,
 	} );
 	expect( mockFetch ).toHaveBeenCalledWith(
 		'https://api.lemonsqueezy.com/v1/licenses/validate',
@@ -229,6 +231,18 @@ test.each( [
 		{
 			valid: true,
 			license_key: { activation_limit: 5, activation_usage: 1.5 },
+			meta: { product_id: PRODUCT_ID },
+		},
+	],
+	[
+		'expiry date',
+		{
+			valid: true,
+			license_key: {
+				activation_limit: 5,
+				activation_usage: 2,
+				expires_at: 'not-a-date',
+			},
 			meta: { product_id: PRODUCT_ID },
 		},
 	],

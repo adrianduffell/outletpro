@@ -48,11 +48,20 @@ export function ValidationMessage( {
 				'outletpro'
 			);
 		case 'available': {
+			const expiryMessage = validationState.expiresAt
+				? sprintf(
+						/* translators: %s: localized license expiry date. */
+						__( '. Expires %s', 'outletpro' ),
+						new Intl.DateTimeFormat( undefined, {
+							dateStyle: 'long',
+						} ).format( new Date( validationState.expiresAt ) )
+				  )
+				: '';
 			if ( validationState.remaining === Infinity ) {
-				return __(
+				return `${ __(
 					'✅ Unlimited site activations available',
 					'outletpro'
-				);
+				) }${ expiryMessage }`;
 			}
 			/* translators: 1: remaining activations, 2: total activations. */
 			const availableMessage = _n(
@@ -61,11 +70,11 @@ export function ValidationMessage( {
 				validationState.remaining,
 				'outletpro'
 			);
-			return sprintf(
+			return `${ sprintf(
 				availableMessage,
 				validationState.remaining,
 				validationState.total
-			);
+			) }${ expiryMessage }`;
 		}
 		case 'unavailable': {
 			/* translators: 1: total activation limit, 2: reserved placeholder. */

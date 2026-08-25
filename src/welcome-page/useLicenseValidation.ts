@@ -9,7 +9,12 @@ import { validateLicense } from './validateLicense';
 export type ValidationState =
 	| { status: 'idle' | 'validating' | 'invalid' | 'error' }
 	| { status: 'expired'; expiresAt: string }
-	| { status: 'available'; remaining: number; total: number }
+	| {
+			status: 'available';
+			remaining: number;
+			total: number;
+			expiresAt?: string;
+	  }
 	| { status: 'unavailable'; total: number };
 
 const LICENSE_KEY_LENGTH = 36;
@@ -40,10 +45,14 @@ export function useLicenseValidation() {
 						total: validation.total,
 					};
 				} else {
+					const expiry = validation.expiresAt
+						? { expiresAt: validation.expiresAt }
+						: {};
 					result = {
 						status: 'available',
 						remaining: validation.remaining,
 						total: validation.total,
+						...expiry,
 					};
 				}
 			} catch {

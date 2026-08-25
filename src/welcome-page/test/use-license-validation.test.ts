@@ -19,6 +19,7 @@ const LICENSE_AVAILABLE: LicenseStatus = {
 	valid: true,
 	remaining: 3,
 	total: 5,
+	expiresAt: EXPIRES_AT,
 };
 const mockValidateLicense = jest.mocked( validateLicense );
 
@@ -149,6 +150,7 @@ test( 'transitions to available for a license with capacity', async () => {
 			status: 'available',
 			remaining: 3,
 			total: 5,
+			expiresAt: EXPIRES_AT,
 		} )
 	);
 	expect( result.current.canActivate ).toBe( true );
