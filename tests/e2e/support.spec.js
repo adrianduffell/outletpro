@@ -5,18 +5,14 @@
 
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test(
-	'Get support',
-	{ tag: '@premium-license' },
-	async ( { page, admin } ) => {
-		// Act.
-		await admin.visitAdminPage( 'plugins.php' );
+test( 'Get support', { tag: '@premium-license' }, async ( { page, admin } ) => {
+	// Act.
+	await admin.visitAdminPage( 'plugins.php' );
 
-		// Assert.
-		const supportLink = page
-			.locator( 'tr[data-slug="outlet-pro"]' )
-			.getByRole( 'link', { name: 'Support' } );
-		await expect( supportLink ).toBeVisible();
-		await supportLink.click( { trial: true } );
-	}
-);
+	// Assert.
+	const supportLink = page
+		.locator( 'tr[data-slug="outlet-pro"]' )
+		.getByRole( 'link', { name: 'Support' } );
+	await expect( supportLink ).toBeVisible();
+	await supportLink.click( { trial: true } );
+} );
