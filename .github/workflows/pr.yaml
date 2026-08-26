@@ -155,9 +155,19 @@ jobs:
 
     - name: Run PHPUnit (PHP 8.5)
       run: composer run test -- ${{ matrix.build.phpunit_flags }}
-
+    
     - name: Install Playwright browsers
       run: npx playwright install chromium --with-deps
+
+    - name: Configure WordPress environment
+      run: |
+        cat > .wp-env.override.json <<EOF
+        {
+          "plugins": [
+            "https://downloads.wordpress.org/plugin/woocommerce.${WOOCOMMERCE_MAX}.zip"
+          ]
+        }
+        EOF
 
     - name: Start WordPress environment
       run: npm run wp-env start
