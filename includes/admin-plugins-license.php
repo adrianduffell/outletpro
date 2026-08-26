@@ -19,6 +19,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_license(): void {
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+	add_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook', 10, 2 );
 }
 
 /**
@@ -28,6 +29,7 @@ function init_license(): void {
  */
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
+	remove_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook' );
 }
 
 /**
@@ -47,6 +49,30 @@ function add_plugin_action_links_hook( array $links ): array {
 	);
 
 	array_unshift( $links, $setup_link );
+
+	return $links;
+}
+
+/**
+ * Add a Support link to the plugin's meta links on the Plugins screen.
+ *
+ * Fired by `plugin_row_meta`.
+ *
+ * @param string[] $links       Existing plugin meta links.
+ * @param string   $plugin_file Path to the plugin file relative to the plugins directory.
+ * @return string[] Modified plugin meta links.
+ * @internal WordPress filter
+ */
+function add_plugin_meta_links_hook( array $links, string $plugin_file ): array {
+	if ( plugin_basename( PLUGIN_FILE ) !== $plugin_file ) {
+		return $links;
+	}
+
+	$links[] = sprintf(
+		'<a href="%s">%s</a>',
+		esc_url( 'https://outletpro.zip/support' ),
+		esc_html__( 'Support', 'outletpro' )
+	);
 
 	return $links;
 }

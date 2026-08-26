@@ -50,4 +50,39 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Setup', $result[0] );
 		$this->assertStringContainsString( 'Deactivate', $result[1] );
 	}
+
+	public function test_adds_support_link_to_plugin_meta_links(): void {
+		// Arrange.
+		init_license();
+		$links = array(
+			'Version 1.0.0',
+			'By <a href="https://adrianduffell.com">Adrian Duffell</a>',
+		);
+
+		// Act.
+		$result = apply_filters( 'plugin_row_meta', $links, plugin_basename( PLUGIN_FILE ) );
+
+		// Assert.
+		$this->assertCount( 3, $result );
+		$this->assertSame( $links[0], $result[0] );
+		$this->assertSame( $links[1], $result[1] );
+		$this->assertStringContainsString( 'https://outletpro.zip/support', $result[2] );
+		$this->assertStringContainsString( 'Support', $result[2] );
+	}
+
+	public function test_does_not_add_support_link_to_other_plugins(): void {
+		// Arrange.
+		init_license();
+		$links = array(
+			'Version 1.0.0',
+			'By <a href="https://example.com">Another Plugin Author</a>',
+			'<a href="https://example.com/plugin">Visit plugin site</a>',
+		);
+
+		// Act.
+		$result = apply_filters( 'plugin_row_meta', $links, 'another-plugin/plugin.php' );
+
+		// Assert.
+		$this->assertSame( $links, $result );
+	}
 }
