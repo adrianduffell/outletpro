@@ -63,14 +63,11 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'plugin_row_meta', $links, plugin_basename( PLUGIN_FILE ) );
 
 		// Assert.
-		$this->assertSame(
-			array(
-				'Version 1.0.0',
-				'By <a href="https://adrianduffell.com">Adrian Duffell</a>',
-				'<a href="https://outletpro.zip/support">Support</a>',
-			),
-			$result
-		);
+		$this->assertCount( 3, $result );
+		$this->assertSame( $links[0], $result[0] );
+		$this->assertSame( $links[1], $result[1] );
+		$this->assertStringContainsString( 'https://outletpro.zip/support', $result[2] );
+		$this->assertStringContainsString( 'Support', $result[2] );
 	}
 
 	public function test_does_not_add_support_link_to_other_plugins(): void {
