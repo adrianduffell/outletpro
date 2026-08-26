@@ -164,7 +164,7 @@ jobs:
         cat > .wp-env.override.json <<EOF
         {
           "plugins": [
-            "https://downloads.wordpress.org/plugin/woocommerce.${WOOCOMMERCE_MAX}.zip"
+            "https://downloads.wordpress.org/plugin/woocommerce.${{ vars.WOOCOMMERCE_MAX }}.zip"
           ]
         }
         EOF
