@@ -14,5 +14,9 @@ test( 'Get support', { tag: '@premium-license' }, async ( { page, admin } ) => {
 		.locator( 'tr[data-slug="outlet-pro"]' )
 		.getByRole( 'link', { name: 'Support' } );
 	await expect( supportLink ).toBeVisible();
-	await expect( supportLink ).toHaveAttribute( 'href', 'https://outletpro.zip/support' );
+	await expect( supportLink ).toHaveAttribute(
+		'href',
+		'https://outletpro.zip/support'
+	);
 	await supportLink.click( { trial: true } );
+} );
