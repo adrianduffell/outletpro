@@ -88,3 +88,9 @@
 .outletpro-admin-badge:empty {
 	display: none;
 }
+
+.plugins tr:has(+ .outletpro-license-notice) > th,
+.plugins tr:has(+ .outletpro-license-notice) > td {
+	border-bottom: 0;
+	box-shadow: none;
+}
