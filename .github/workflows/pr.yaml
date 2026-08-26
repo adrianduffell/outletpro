@@ -163,6 +163,7 @@ jobs:
       run: |
         cat > .wp-env.override.json <<EOF
         {
+          "core": "https://wordpress.org/wordpress-${{ vars.WORDPRESS_MAX }}.zip"
           "plugins": [
             "https://downloads.wordpress.org/plugin/woocommerce.${{ vars.WOOCOMMERCE_MAX }}.zip"
           ]
