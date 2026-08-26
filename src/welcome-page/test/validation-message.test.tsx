@@ -7,6 +7,12 @@ import { ValidationMessage, type ValidationState } from '../ValidationMessage';
 jest.mock( '@wordpress/ui', () => ( { Link: 'a' } ) );
 const helpUrl = 'https://outletpro.zip/help/license-key';
 const expiryHelpUrl = 'https://outletpro.zip/help/license-expiry';
+const availableExpiresAt = '2030-09-25T00:00:00.000000Z';
+const localizedAvailableExpiry = new Intl.DateTimeFormat( undefined, {
+	day: 'numeric',
+	month: 'long',
+	year: 'numeric',
+} ).format( new Date( availableExpiresAt ) );
 
 function renderMessage( validationState: ValidationState ) {
 	render(
@@ -42,6 +48,36 @@ const messages: [ string, ValidationState, string ][] = [
 		'unlimited availability',
 		{ status: 'available', remaining: Infinity, total: Infinity },
 		'✅ Unlimited site activations available',
+	],
+	[
+		'singular availability with expiry',
+		{
+			status: 'available',
+			remaining: 1,
+			total: 1,
+			expiresAt: availableExpiresAt,
+		},
+		`✅ 1 site activation available. Expires ${ localizedAvailableExpiry }`,
+	],
+	[
+		'plural availability with expiry',
+		{
+			status: 'available',
+			remaining: 15,
+			total: 25,
+			expiresAt: availableExpiresAt,
+		},
+		`✅ 15 of 25 site activations available. Expires ${ localizedAvailableExpiry }`,
+	],
+	[
+		'unlimited availability with expiry',
+		{
+			status: 'available',
+			remaining: Infinity,
+			total: Infinity,
+			expiresAt: availableExpiresAt,
+		},
+		`✅ Unlimited site activations available. Expires ${ localizedAvailableExpiry }`,
 	],
 ];
 test.each( messages )(
