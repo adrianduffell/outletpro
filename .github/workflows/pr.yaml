@@ -91,7 +91,7 @@ jobs:
       run: npm run lint:md-docs
 
     - name: Install WordPress test suite
-      run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 6.9.4
+      run: bash bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 ${{ vars.WORDPRESS_MIN }}
 
     - name: Install WP-CLI
       run: |
@@ -116,7 +116,7 @@ jobs:
     - name: Install WordPress with WP-CLI
       run: |
         wp core download \
-          --version=6.9.4 \
+          --version=${{ vars.WORDPRESS_MIN }} \
           --path=/tmp/wordpress \
           --force
         wp core install \
@@ -163,6 +163,7 @@ jobs:
       run: |
         cat > .wp-env.override.json <<EOF
         {
+          "core": "https://wordpress.org/wordpress-${{ vars.WORDPRESS_MAX }}.zip",
           "plugins": [
             "https://downloads.wordpress.org/plugin/woocommerce.${{ vars.WOOCOMMERCE_MAX }}.zip"
           ]
