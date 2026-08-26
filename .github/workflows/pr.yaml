@@ -168,6 +168,7 @@ jobs:
           ]
         }
         EOF
+        cat .wp-env.override.json
 
     - name: Start WordPress environment
       run: npm run wp-env start
