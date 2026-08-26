@@ -132,7 +132,7 @@ jobs:
       run: wp core version --path=/tmp/wordpress
 
     - name: Install WooCommerce
-      run: wp plugin install woocommerce --activate --path=/tmp/wordpress
+      run: wp plugin install woocommerce --version=${{ vars.WOOCOMMERCE_MIN }} --activate --path=/tmp/wordpress
 
     - name: Run Woo setup tasks
       run: wp cron event run --due-now --path=/tmp/wordpress
