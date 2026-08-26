@@ -1,0 +1,15 @@
+{
+	"valid": true,
+	"error": null,
+	"license_key": {
+		"status": "active",
+		"expires_at": null
+	},
+	"instance": {
+		"id": "activation-id"
+	},
+	"meta": {
+		"product_id": 1279790,
+		"variant_name": "Lifetime"
+	}
+}

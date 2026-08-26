@@ -1,0 +1,15 @@
+{
+	"valid": true,
+	"error": null,
+	"license_key": {
+		"status": "active",
+		"expires_at": "2027-12-25T00:00:00.000000Z"
+	},
+	"instance": {
+		"id": "activation-id"
+	},
+	"meta": {
+		"product_id": 1279790,
+		"variant_name": "Long-term service"
+	}
+}
