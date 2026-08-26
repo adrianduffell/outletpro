@@ -53,3 +53,6 @@ require_once WP_PLUGIN_DIR . '/woocommerce/includes/admin/wc-meta-box-functions.
 
 // WooCommerce test helpers.
 require_once dirname( __DIR__ ) . '/vendor/class-wc-helper-product.php';
+
+// Outlet Pro mocks.
+require_once __DIR__ . '/mock-http-rest-api-response.php';
