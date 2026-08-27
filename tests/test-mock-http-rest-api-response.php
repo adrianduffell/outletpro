@@ -46,12 +46,12 @@ class Test_Mock_Http_Rest_Api_Response extends WP_UnitTestCase {
 		// Act.
 		$response = apply_filters(
 			'pre_http_request',
-			false,
+			array( 'body' => '{"foo":"bar"}' ),
 			array( 'method' => 'GET' ),
 			'https://example.com/path/to/endpoint'
 		);
 
 		// Assert.
-		$this->assertFalse( $response );
+		$this->assertSame( array( 'body' => '{"foo":"bar"}' ), $response );
 	}
 }
