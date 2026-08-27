@@ -78,5 +78,4 @@ class Test_Get_License_Name extends WP_UnitTestCase {
 		$this->assertSame( 200, wp_remote_retrieve_response_code( $cached_response ) );
 		$this->assertSame( $response_body, wp_remote_retrieve_body( $cached_response ) );
 	}
-
 }
