@@ -62,7 +62,7 @@ tests_add_filter(
 	'pre_http_request',
 	function ( $preempt, $parsed_args, $url ) {
 		if ( false === $preempt ) {
-			throw new RuntimeException( "Unexpected HTTP request: $url" );
+			throw new RuntimeException( 'Unexpected HTTP request.' );
 		}
 
 		return $preempt;
