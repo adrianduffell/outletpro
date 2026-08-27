@@ -755,7 +755,8 @@ function get_license_name(): string {
 		throw new \UnexpectedValueException( 'License name is unavailable.' );
 	}
 
-	set_transient( LICENSE_NAME_TRANSIENT, $license_name, WEEK_IN_SECONDS );
+	// Set the transient with no scheduled expiry since the name is not expected to change.
+	set_transient( LICENSE_NAME_TRANSIENT, $license_name, 0 );
 
 	return $license_name;
 }
