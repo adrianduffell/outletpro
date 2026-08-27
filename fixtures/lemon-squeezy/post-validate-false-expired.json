@@ -1,0 +1,15 @@
+{
+	"valid": false,
+	"error": "This license key has expired.",
+	"license_key": {
+		"status": "expired",
+		"expires_at": "1997-08-29T06:14:00.000000Z"
+	},
+	"instance": {
+		"id": "activation-id"
+	},
+	"meta": {
+		"product_id": 1279790,
+		"variant_name": "Long-term service"
+	}
+}
