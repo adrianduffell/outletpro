@@ -52,6 +52,6 @@ class Test_Mock_Http_Rest_Api_Response extends WP_UnitTestCase {
 		);
 
 		// Assert.
-		$this->assertFalse( $response );
+		$this->assertSame( array( 'body' => '{"foo":"bar"}' ), $response );
 	}
 }
