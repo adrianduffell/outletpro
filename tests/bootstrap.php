@@ -56,3 +56,17 @@ require_once dirname( __DIR__ ) . '/vendor/class-wc-helper-product.php';
 
 // Outlet Pro mocks.
 require_once __DIR__ . '/mock-http-rest-api-response.php';
+
+// Prevent unexpected HTTP requests during tests.
+tests_add_filter(
+	'pre_http_request',
+	function ( $preempt, $parsed_args, $url ) {
+		if ( false === $preempt ) {
+			throw new RuntimeException( "Unexpected HTTP request: $url" );
+		}
+
+		return $preempt;
+	},
+	PHP_INT_MAX,
+	3
+);
