@@ -5,7 +5,7 @@
 		"status": "active",
 		"activation_limit": 5,
 		"activation_usage": 2,
-		"expires_at": "2027-12-25T00:00:00.000000Z"
+		"expires_at": "2050-01-01T00:00:00.000000Z"
 	},
 	"instance": {
 		"id": "activation-id"
