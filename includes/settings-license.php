@@ -850,7 +850,7 @@ function get_license_expiry(): ?\DateTimeImmutable {
 
 	$data = json_decode( wp_remote_retrieve_body( $response ) );
 
-	if ( ! isset( $data->license_key ) ) {
+	if ( ! is_object( $data->license_key ?? null ) ) {
 		throw new \UnexpectedValueException( 'Unexpected license type.' );
 	}
 

@@ -146,6 +146,18 @@ class Test_Get_License_Expiry extends WP_UnitTestCase {
 		get_license_expiry();
 	}
 
+	public function test_throws_when_license_has_invalid_type(): void {
+		// Arrange.
+		$response_body = wp_json_encode( array( 'license_key' => array() ) );
+		$this->mock_validation_response( 'invalid-license-type', $response_body );
+
+		// Expect.
+		$this->expectException( UnexpectedValueException::class );
+
+		// Act.
+		get_license_expiry();
+	}
+
 	public function test_throws_when_expiry_is_empty(): void {
 		// Arrange.
 		$response_body = wp_json_encode( array( 'license_key' => array( 'expires_at' => '' ) ) );
