@@ -692,13 +692,13 @@ function get_license_status(): string {
 }
 
 /**
- * Get the license variant name.
+ * Get the name of the license activated on the site.
  *
  * @internal
  * @see LICENSE_NAME_TRANSIENT
  * @throws \RuntimeException If the site is not activated with a license.
  * @throws \RuntimeException If the license validation request fails.
- * @throws \UnexpectedValueException If the license name is unavailable.
+ * @throws \UnexpectedValueException If the license is unavailable.
  */
 function get_license_name(): string {
 	if ( in_array( get_license_status(), array( 'none', 'not_found' ), true ) ) {
@@ -714,7 +714,7 @@ function get_license_name(): string {
 	$license_activation = get_license_activation();
 
 	if ( is_null( $license_activation ) ) {
-		throw new \UnexpectedValueException( 'License name is unavailable.' );
+		throw new \UnexpectedValueException( 'License is unavailable.' );
 	}
 
 	$cache_key = hash( 'sha256', $license_activation[0] . $license_activation[1] );
@@ -753,11 +753,11 @@ function get_license_name(): string {
 	$license_name = $data['meta']['variant_name'] ?? null;
 
 	if ( ! is_string( $license_name ) ) {
-		throw new \UnexpectedValueException( 'License name is unavailable.' );
+		throw new \UnexpectedValueException( 'Unexpected license name type.' );
 	}
 
 	if ( '' === trim( $license_name ) ) {
-		throw new \UnexpectedValueException( 'License name is unavailable.' );
+		throw new \UnexpectedValueException( 'License name is empty' );
 	}
 
 	// Set the transient with no scheduled expiry since the name is not expected to change.
