@@ -34,6 +34,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		deinit_license_settings();
 		update_option( LICENSE_KEY_OPTION, 'license-key' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
 
 		// Act.
 		sync_activation();
@@ -43,6 +44,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 			array( 'license-key', 'activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
+		$this->assertSame( 'active', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
 	public function test_activates_license_key_when_it_does_not_match_stored_activation(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -230,6 +232,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
 		$request_body = null;
 		add_filter(
 			'pre_http_request',
@@ -261,5 +264,6 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 			$request_body
 		);
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 }

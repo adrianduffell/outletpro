@@ -125,9 +125,6 @@ function init_license_settings(): void {
 	wp_cache_add_non_persistent_groups( LICENSE_HTTP_CACHE_GROUP );
 	register_license_key_setting();
 
-	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
 	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
 	add_action( 'deleted_option', 'OutletPro\delete_license_activation_hook', 10, 1 );
@@ -140,9 +137,6 @@ function init_license_settings(): void {
  */
 function deinit_license_settings(): void {
 	unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
-	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
 	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
 	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
 	remove_action( 'deleted_option', 'OutletPro\delete_license_activation_hook', 10 );
@@ -221,17 +215,6 @@ function register_license_key_setting(): void {
 			),
 		)
 	);
-}
-
-/**
- * Invalidate the license cache when the license key option is added, updated, or deleted.
- *
- * Fired by `add_option_{LICENSE_KEY_OPTION}`, `update_option_{LICENSE_KEY_OPTION}`, and `delete_option_{LICENSE_KEY_OPTION}`.
- *
- * @internal WordPress action hook
- */
-function invalidate_license_cache_hook(): void {
-	delete_transient( LICENSE_STATUS_TRANSIENT );
 }
 
 /**
@@ -408,6 +391,8 @@ function sync_activation(): void {
 		return;
 	}
 
+	delete_transient( LICENSE_STATUS_TRANSIENT );
+
 	// Cases 2 or 3: Clean up any stale activation.
 	if ( ! is_null( $license_activation ) ) {
 		deactivate_license( ...$license_activation );
@@ -422,7 +407,6 @@ function sync_activation(): void {
 	// Case 1 or 2: Perform activation.
 	$activation_id = activate_license( $settings_license_key );
 	set_license_activation( $settings_license_key, $activation_id );
-	delete_transient( LICENSE_STATUS_TRANSIENT );
 }
 
 /**
