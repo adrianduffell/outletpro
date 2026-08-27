@@ -12,13 +12,26 @@ use function OutletPro\get_license_name;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_HTTP_CACHE_GROUP;
 use const OutletPro\LICENSE_NAME_TRANSIENT;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 
 class Test_Get_License_Name extends WP_UnitTestCase {
 
+	public function test_throws_when_site_not_activated(): void {
+		// Arrange.
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+
+		// Expect.
+		$this->expectException( RuntimeException::class );
+
+		// Act.
+		$result = get_license_name();
+	}
+
 	public function test_returns_cached_license_name(): void {
 		// Arrange.
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
 		set_transient( LICENSE_NAME_TRANSIENT, 'Long-term service', WEEK_IN_SECONDS );
-		delete_option( LICENSE_ACTIVATION_OPTION );
 
 		// Act.
 		$result = get_license_name();
