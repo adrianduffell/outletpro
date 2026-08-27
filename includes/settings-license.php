@@ -98,6 +98,14 @@ define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'outletpro_license_activation_' .
 define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe_get_site_key() );
 
 /**
+ * WordPress transient key used to cache the license variant name.
+ *
+ * @internal
+ * @see get_license_name()
+ */
+define( 'OutletPro\LICENSE_NAME_TRANSIENT', 'outletpro_license_name_' . safe_get_site_key() );
+
+/**
  * Helper to initialize license settings.
  *
  * @internal
@@ -681,4 +689,73 @@ function get_license_status(): string {
 	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
 
 	return $license_status;
+}
+
+/**
+ * Get the license variant name.
+ *
+ * @internal
+ * @see LICENSE_NAME_TRANSIENT
+ * @throws \RuntimeException If the license validation request fails.
+ * @throws \UnexpectedValueException If the license name is unavailable.
+ */
+function get_license_name(): string {
+	$cached_value = get_transient( LICENSE_NAME_TRANSIENT );
+
+	if ( is_string( $cached_value ) && '' !== trim( $cached_value ) ) {
+		return $cached_value;
+	}
+
+	$license_activation = get_license_activation();
+
+	if ( is_null( $license_activation ) ) {
+		throw new \UnexpectedValueException( 'License name is unavailable.' );
+	}
+
+	$cache_key = hash( 'sha256', $license_activation[0] . $license_activation[1] );
+	$response  = wp_cache_get( $cache_key, LICENSE_HTTP_CACHE_GROUP )
+		?: wp_remote_post( // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'timeout' => 5,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Accept'       => 'application/json',
+				),
+				'body'    => array(
+					'license_key' => $license_activation[0],
+					'instance_id' => $license_activation[1],
+				),
+			)
+		);
+
+	wp_cache_set( $cache_key, $response, LICENSE_HTTP_CACHE_GROUP );
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	if ( ! in_array(
+		wp_remote_retrieve_response_code( $response ),
+		array( HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND ),
+		true
+	)
+	) {
+		throw new \RuntimeException( 'License validation response code failed' );
+	}
+
+	$data         = json_decode( wp_remote_retrieve_body( $response ), true );
+	$license_name = $data['meta']['variant_name'] ?? null;
+
+	if ( ! is_string( $license_name ) ) {
+		throw new \UnexpectedValueException( 'License name is unavailable.' );
+	}
+
+	if ( '' === trim( $license_name ) ) {
+		throw new \UnexpectedValueException( 'License name is unavailable.' );
+	}
+
+	set_transient( LICENSE_NAME_TRANSIENT, $license_name, WEEK_IN_SECONDS );
+
+	return $license_name;
 }
