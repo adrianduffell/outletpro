@@ -76,6 +76,13 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
+ * Request-local cache group for license validation responses.
+ *
+ * @internal
+ */
+const LICENSE_HTTP_CACHE_GROUP = 'outletpro_license_http';
+
+/**
  * WordPress option name used to store the license activation tuple.
  *
  * @internal
@@ -96,6 +103,7 @@ define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe
  * @internal
  */
 function init_license_settings(): void {
+	wp_cache_add_non_persistent_groups( LICENSE_HTTP_CACHE_GROUP );
 	register_license_key_setting();
 
 	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
@@ -562,17 +570,21 @@ function validate_license( string $license_key, ?string $activation_id = null ) 
 		$request_body['instance_id'] = $activation_id;
 	}
 
-	$response = wp_remote_post(
-		'https://api.lemonsqueezy.com/v1/licenses/validate',
-		array(
-			'timeout' => 5,
-			'headers' => array(
-				'Content-Type' => 'application/x-www-form-urlencoded',
-				'Accept'       => 'application/json',
-			),
-			'body'    => $request_body,
-		)
-	);
+	$cache_key = hash( 'sha256', $license_key . ( $activation_id ?? '' ) );
+	$response  = wp_cache_get( $cache_key, LICENSE_HTTP_CACHE_GROUP )
+		?: wp_remote_post( // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'timeout' => 5,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Accept'       => 'application/json',
+				),
+				'body'    => $request_body,
+			)
+		);
+
+	wp_cache_set( $cache_key, $response, LICENSE_HTTP_CACHE_GROUP );
 
 	if ( is_wp_error( $response ) ) {
 		throw new \RuntimeException( 'License validation request failed' );
