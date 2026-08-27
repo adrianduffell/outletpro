@@ -60,7 +60,7 @@ require_once __DIR__ . '/mock-http-rest-api-response.php';
 // Prevent unexpected HTTP requests during tests.
 tests_add_filter(
 	'pre_http_request',
-	function ( $preempt, $parsed_args, $url ) {
+	function ( $preempt ) {
 		if ( false === $preempt ) {
 			throw new RuntimeException( 'Unexpected HTTP request.' );
 		}
@@ -68,5 +68,5 @@ tests_add_filter(
 		return $preempt;
 	},
 	PHP_INT_MAX,
-	3
+	1
 );
