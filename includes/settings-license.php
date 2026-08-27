@@ -106,6 +106,17 @@ define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe
 define( 'OutletPro\LICENSE_NAME_TRANSIENT', 'outletpro_license_name_' . safe_get_site_key() );
 
 /**
+ * WordPress transient key used to cache the license expiry.
+ *
+ * The transient value is an array tuple where:
+ * 0: Is a boolean indicating whether the license has an expiry (true) or is perpetual (false).
+ * 1: Is a string containing the expiry date in ISO 8601 format, or not defined if perpetual.
+ *
+ * @internal
+ */
+define( 'OutletPro\LICENSE_EXPIRY_TRANSIENT', 'outletpro_license_expiry_' . safe_get_site_key() );
+
+/**
  * Helper to initialize license settings.
  *
  * @internal
@@ -764,4 +775,110 @@ function get_license_name(): string {
 	set_transient( LICENSE_NAME_TRANSIENT, $license_name, 0 );
 
 	return $license_name;
+}
+
+/**
+ * Get the expiry of the license activated on the site.
+ *
+ * @internal
+ * @see LICENSE_EXPIRY_TRANSIENT
+ * @throws \RuntimeException If the site is not activated with a license.
+ * @throws \RuntimeException If the license validation request fails.
+ * @throws \UnexpectedValueException If the license is unavailable or has an invalid expiry.
+ */
+function get_license_expiry(): ?\DateTimeImmutable {
+	if ( in_array( get_license_status(), array( 'none', 'not_found' ), true ) ) {
+		throw new \RuntimeException( 'Site is not activated with license.' );
+	}
+
+	$transient = get_transient( LICENSE_EXPIRY_TRANSIENT );
+
+	// License has no expiry.
+	if ( is_array( $transient ) && false === ( $transient[0] ?? null ) ) {
+		return null;
+	}
+
+	// License with expiry.
+	if (
+		is_array( $transient )
+		&& true === ( $transient[0] ?? null )
+		&& is_string( $transient[1] ?? null )
+	) {
+		try {
+			return new \DateTimeImmutable( $transient[1] ); // Convert ISO date.
+		} catch ( \Exception $e ) {
+			delete_transient( LICENSE_EXPIRY_TRANSIENT );
+		}
+	}
+
+	$license_activation = get_license_activation();
+
+	if ( is_null( $license_activation ) ) {
+		throw new \UnexpectedValueException( 'License is unavailable.' );
+	}
+
+	$cache_key = hash( 'sha256', $license_activation[0] . $license_activation[1] );
+	$response  = wp_cache_get( $cache_key, LICENSE_HTTP_CACHE_GROUP )
+		?: wp_remote_post( // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'timeout' => 5,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Accept'       => 'application/json',
+				),
+				'body'    => array(
+					'license_key' => $license_activation[0],
+					'instance_id' => $license_activation[1],
+				),
+			)
+		);
+
+	wp_cache_set( $cache_key, $response, LICENSE_HTTP_CACHE_GROUP );
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	if ( ! in_array(
+		wp_remote_retrieve_response_code( $response ),
+		array( HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND ),
+		true
+	) ) {
+		throw new \RuntimeException( 'License validation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( ! isset( $data->license_key ) ) {
+		throw new \UnexpectedValueException( 'Unexpected license type.' );
+	}
+
+	if ( ! property_exists( $data->license_key, 'expires_at' ) ) {
+		throw new \UnexpectedValueException( 'License expiry is missing.' );
+	}
+
+	// License has no expiry.
+	if ( is_null( $data->license_key->expires_at ) ) {
+		set_transient( LICENSE_EXPIRY_TRANSIENT, array( false ), DAY_IN_SECONDS );
+		return null;
+	}
+
+	if ( ! is_string( $data->license_key->expires_at ) ) {
+		throw new \UnexpectedValueException( 'Unexpected license expiry type.' );
+	}
+
+	if ( '' === trim( $data->license_key->expires_at ) ) {
+		throw new \UnexpectedValueException( 'License expiry is empty.' );
+	}
+
+	try {
+		$license_expiry_date = new \DateTimeImmutable( $data->license_key->expires_at );
+	} catch ( \Exception $e ) {
+		throw new \UnexpectedValueException( 'License expiry is malformed.' );
+	}
+
+	set_transient( LICENSE_EXPIRY_TRANSIENT, array( true, $data->license_key->expires_at ), DAY_IN_SECONDS );
+
+	return $license_expiry_date;
 }
