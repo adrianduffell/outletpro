@@ -698,7 +698,7 @@ function get_license_status(): string {
  * @see LICENSE_NAME_TRANSIENT
  * @throws \RuntimeException If the site is not activated with a license.
  * @throws \RuntimeException If the license validation request fails.
- * @throws \UnexpectedValueException If the license is unavailable.
+ * @throws \UnexpectedValueException If the license activation is unavailable, or the license name is missing/invalid.
  */
 function get_license_name(): string {
 	if ( in_array( get_license_status(), array( 'none', 'not_found' ), true ) ) {
