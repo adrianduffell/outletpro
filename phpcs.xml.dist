@@ -68,9 +68,6 @@
 	<!-- Require null coalesce operator (??) where applicable -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
 
-	<!-- Require short ternary operator (?:) where applicable -->
-	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
-
 	<!-- Complexity checks -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />
 
