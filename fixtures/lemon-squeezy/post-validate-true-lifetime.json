@@ -3,6 +3,8 @@
 	"error": null,
 	"license_key": {
 		"status": "active",
+		"activation_limit": 50,
+		"activation_usage": 2,
 		"expires_at": null
 	},
 	"instance": {
