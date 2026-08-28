@@ -29,6 +29,50 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
 	}
 
+	public function test_deletes_invalid_stored_activation(): void {
+		// Arrange.
+		deinit_license_settings();
+		delete_option( LICENSE_KEY_OPTION );
+		update_option( LICENSE_ACTIVATION_OPTION, 'invalid' );
+
+		// Act.
+		sync_activation();
+
+		// Assert.
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+	}
+
+	public function test_activates_license_key_when_stored_activation_is_invalid(): void {
+		// Arrange.
+		deinit_license_settings();
+		update_option( LICENSE_KEY_OPTION, 'license-key' );
+		update_option( LICENSE_ACTIVATION_OPTION, 'invalid' );
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array( 'license_key' => 'license-key' ),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-true.json' )
+		);
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/activate',
+			array(
+				'license_key'   => 'license-key',
+				'instance_name' => home_url(),
+			),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-activate-true.json' )
+		);
+
+		// Act.
+		sync_activation();
+
+		// Assert.
+		$this->assertSame(
+			array( 'license-key', 'activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
+	}
+
 	public function test_does_nothing_when_license_key_matches_stored_activation(): void {
 		// Arrange.
 		deinit_license_settings();

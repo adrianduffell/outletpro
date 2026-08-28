@@ -418,8 +418,16 @@ function set_license_activation( string $license_key, string $activation_id ): v
  * @internal
  */
 function sync_activation(): void {
-	$settings_license_key   = get_license_key();
-	$license_activation     = get_license_activation();
+	$settings_license_key = get_license_key();
+
+	try {
+		$license_activation = get_license_activation();
+	} catch ( \UnexpectedValueException $e ) {
+		\wc_get_logger()->error( 'Could not remove previous activation tuple due to unexpected value' );
+		delete_option( LICENSE_ACTIVATION_OPTION );
+		$license_activation = null;
+	}
+
 	$activation_license_key = $license_activation[0] ?? null;
 
 	// License setting and activation are in sync. Nothing to do.
