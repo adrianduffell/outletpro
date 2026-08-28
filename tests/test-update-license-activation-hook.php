@@ -78,6 +78,7 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			array(
+				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				'https://api.lemonsqueezy.com/v1/licenses/deactivate',
 				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				'https://api.lemonsqueezy.com/v1/licenses/activate',
@@ -86,8 +87,8 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		);
 		$this->assertSame( 'previous-license', $requests[0]['body']['license_key'] );
 		$this->assertSame( 'previous-activation-id', $requests[0]['body']['instance_id'] );
-		$this->assertSame( 'new-license', $requests[1]['body']['license_key'] );
 		$this->assertSame( 'new-license', $requests[2]['body']['license_key'] );
+		$this->assertSame( 'new-license', $requests[3]['body']['license_key'] );
 		$this->assertSame(
 			array( 'new-license', 'new-activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
@@ -217,6 +218,11 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		delete_option( LICENSE_KEY_OPTION );
 		update_option( LICENSE_KEY_OPTION, 'previous-license' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-true.json' )
+		);
 		$request_body = null;
 		add_filter(
 			'pre_http_request',
