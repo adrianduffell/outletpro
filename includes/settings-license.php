@@ -235,6 +235,25 @@ function invalidate_license_cache_hook(): void {
 }
 
 /**
+ * Prime the transients used for licensing.
+ *
+ * @internal
+ */
+function prime_license_transients(): void {
+	$license_status = get_license_status(); // This will prime LICENSE_STATUS_TRANSIENT.
+
+	if ( in_array( $license_status, array( 'none', 'not_found' ), true ) ) {
+		// Handle case where license does not exist.
+		delete_transient( LICENSE_NAME_TRANSIENT );
+		delete_transient( LICENSE_EXPIRY_TRANSIENT );
+		return;
+	}
+
+	get_license_name(); // This will prime LICENSE_NAME_TRANSIENT.
+	get_license_expiry(); // This will prime LICENSE_EXPIRY_TRANSIENT.
+}
+
+/**
  * Get the license key from the option.
  *
  * Returns null when the license key option does not exist or is an empty string.
