@@ -25,6 +25,10 @@ class Test_Prime_License_Transients extends WP_UnitTestCase {
 		mock_http_rest_api_response(
 			'POST',
 			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'license_key' => 'prime-license-key',
+				'instance_id' => 'activation-id',
+			),
 			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-true.json' )
 		);
 
