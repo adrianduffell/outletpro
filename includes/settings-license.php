@@ -429,7 +429,9 @@ function sync_activation(): void {
 
 	// Cases 2 or 3: Clean up any stale activation.
 	if ( ! is_null( $license_activation ) ) {
-		deactivate_license( ...$license_activation );
+		if ( true === validate_license( ...$license_activation ) ) {
+			deactivate_license( ...$license_activation );
+		}
 	}
 	delete_option( LICENSE_ACTIVATION_OPTION );
 
