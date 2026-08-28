@@ -76,6 +76,10 @@ class Test_Get_License_Name extends WP_UnitTestCase {
 		mock_http_rest_api_response(
 			'POST',
 			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'license_key' => 'cache-write-license',
+				'instance_id' => 'activation-id',
+			),
 			$response_body
 		);
 		wp_cache_delete( $cache_key, LICENSE_HTTP_CACHE_GROUP );
