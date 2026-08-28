@@ -95,7 +95,7 @@ define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'outletpro_license_activation_' .
  * @internal
  * @see get_license_status()
  */
-define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe_get_site_key() );
+const LICENSE_STATUS_TRANSIENT = 'outletpro_license_status';
 
 /**
  * WordPress transient key used to cache the license variant name.
@@ -103,7 +103,7 @@ define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe
  * @internal
  * @see get_license_name()
  */
-define( 'OutletPro\LICENSE_NAME_TRANSIENT', 'outletpro_license_name_' . safe_get_site_key() );
+const LICENSE_NAME_TRANSIENT = 'outletpro_license_name';
 
 /**
  * WordPress transient key used to cache the license expiry.
@@ -114,7 +114,7 @@ define( 'OutletPro\LICENSE_NAME_TRANSIENT', 'outletpro_license_name_' . safe_get
  *
  * @internal
  */
-define( 'OutletPro\LICENSE_EXPIRY_TRANSIENT', 'outletpro_license_expiry_' . safe_get_site_key() );
+const LICENSE_EXPIRY_TRANSIENT = 'outletpro_license_expiry';
 
 /**
  * Helper to initialize license settings.
