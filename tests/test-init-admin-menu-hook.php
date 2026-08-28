@@ -82,6 +82,22 @@ class Test_Add_Welcome_Menu_Hook extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
 	}
 
+	public function test_does_not_register_menu_page_when_license_is_expired(): void {
+		// Arrange.
+		unset( $_COOKIE[ DISMISS_COOKIE ] );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'expired' );
+		deinit_admin_menu();
+
+		// Act.
+		init_admin_menu();
+
+		// Assert.
+		$this->assertFalse( has_action( 'admin_menu', 'OutletPro\add_welcome_menu_hook' ) );
+
+		// Cleanup.
+		delete_transient( LICENSE_STATUS_TRANSIENT );
+	}
+
 	public function test_does_not_register_menu_page_when_dismissed_on_device(): void {
 		// Arrange.
 		$_COOKIE[ DISMISS_COOKIE ] = '1';

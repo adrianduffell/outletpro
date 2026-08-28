@@ -40,7 +40,7 @@ function init_admin_menu(): void {
 
 	$license_status = get_license_status();
 
-	if ( in_array( $license_status, array( 'active', 'error' ), true ) && ! $direct ) {
+	if ( in_array( $license_status, array( 'active', 'error', 'expired' ), true ) && ! $direct ) {
 		return;
 	}
 
