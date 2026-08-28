@@ -27,6 +27,10 @@ class Test_Get_License_Expiry extends WP_UnitTestCase {
 		mock_http_rest_api_response(
 			'POST',
 			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'license_key' => $license_key,
+				'instance_id' => 'activation-id',
+			),
 			$response_body
 		);
 
