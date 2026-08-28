@@ -187,6 +187,10 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		mock_http_rest_api_response(
 			'POST',
 			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'license_key' => 'stale-license',
+				'instance_id' => 'stale-activation-id',
+			),
 			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-false-not-found.json' ),
 			404
 		);
@@ -196,6 +200,47 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+	}
+
+	public function test_replaces_stale_activation_that_is_not_found(): void {
+		// Arrange.
+		deinit_license_settings();
+		update_option( LICENSE_KEY_OPTION, 'new-license' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'stale-license', 'stale-activation-id' ) );
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'license_key' => 'stale-license',
+				'instance_id' => 'stale-activation-id',
+			),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-false-not-found.json' ),
+			404
+		);
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array( 'license_key' => 'new-license' ),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-true.json' )
+		);
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/activate',
+			array(
+				'license_key'   => 'new-license',
+				'instance_name' => home_url(),
+			),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-activate-true.json' )
+		);
+
+		// Act.
+		sync_activation();
+
+		// Assert.
+		$this->assertSame(
+			array( 'new-license', 'activation-id' ),
+			get_option( LICENSE_ACTIVATION_OPTION )
+		);
 	}
 
 	public function test_throws_when_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded

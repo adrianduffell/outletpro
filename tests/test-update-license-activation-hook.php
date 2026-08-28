@@ -221,6 +221,10 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		mock_http_rest_api_response(
 			'POST',
 			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'license_key' => 'previous-license',
+				'instance_id' => 'activation-id',
+			),
 			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-true.json' )
 		);
 		$request_body = null;
