@@ -115,8 +115,8 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 			),
 			array_column( $requests, 'url' )
 		);
-		$this->assertSame( 'previous-license', $requests[0]['body']['license_key'] );
-		$this->assertSame( 'activation-id', $requests[0]['body']['instance_id'] );
+		$this->assertSame( 'previous-license', $requests[1]['body']['license_key'] );
+		$this->assertSame( 'activation-id', $requests[1]['body']['instance_id'] );
 		$this->assertSame(
 			array( 'new-license', 'new-activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
