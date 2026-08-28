@@ -108,6 +108,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			array(
+				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				'https://api.lemonsqueezy.com/v1/licenses/deactivate',
 				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				'https://api.lemonsqueezy.com/v1/licenses/activate',
@@ -178,6 +179,25 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
+	public function test_deletes_stale_activation_that_is_not_found(): void {
+		// Arrange.
+		deinit_license_settings();
+		delete_option( LICENSE_KEY_OPTION );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'stale-license', 'stale-activation-id' ) );
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-false-not-found.json' ),
+			404
+		);
+
+		// Act.
+		sync_activation();
+
+		// Assert.
+		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
+	}
+
 	public function test_throws_when_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
@@ -234,6 +254,18 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		add_filter(
 			'pre_http_request',
 			function ( $pre, $args, $url ) use ( &$request_body ) {
+				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
+					return array(
+						'body'     => wp_json_encode(
+							array(
+								'valid' => true,
+								'meta'  => array( 'product_id' => 1279790 ),
+							)
+						),
+						'response' => array( 'code' => 200 ),
+					);
+				}
+
 				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' !== $url ) {
 					return $pre;
 				}
