@@ -32,6 +32,17 @@ class Test_Mock_Http_Rest_Api_Response extends WP_UnitTestCase {
 		$this->assertSame( $json, wp_remote_retrieve_body( $response ) );
 	}
 
+	public function test_mocks_request_without_body(): void {
+		// Arrange.
+		mock_http_rest_api_response( 'GET', 'https://example.com/endpoint', null, '{"mocked":true}' );
+
+		// Act.
+		$response = wp_remote_get( 'https://example.com/endpoint' );
+
+		// Assert.
+		$this->assertSame( '{"mocked":true}', wp_remote_retrieve_body( $response ) );
+	}
+
 	public function test_does_not_override_response_for_another_endpoint(): void {
 		// Arrange.
 		mock_http_rest_api_response( 'POST', 'https://test.invalid/path/to/endpoint', array( 'foo' => 'bar' ), '{"endpoint":"test.invalid"}' );

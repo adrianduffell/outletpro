@@ -13,11 +13,11 @@
  *
  * @param string               $request_method Matching HTTP request method.
  * @param string               $endpoint Matching request URL.
- * @param array<string, mixed> $request_body Matching request body.
+ * @param array<string, mixed>|null $request_body Matching request body, or null for no body.
  * @param string $json Response JSON.
  * @param int    $response_code HTTP response code.
  */
-function mock_http_rest_api_response( string $request_method, string $endpoint, array $request_body, string $json, int $response_code = 200 ): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+function mock_http_rest_api_response( string $request_method, string $endpoint, ?array $request_body, string $json, int $response_code = 200 ): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 	add_filter(
 		'pre_http_request',
 		function ( $pre, $args, $url ) use ( $request_method, $endpoint, $request_body, $json, $response_code ) {
