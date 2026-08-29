@@ -9,8 +9,7 @@
 		"WordPress/twentytwentyfive",
 		"https://downloads.wordpress.org/theme/storefront.zip"
 	],
-	"port": 1111,
-	"testsPort": 1112,
+	"autoPort": true,
 	"config": {
 		"WP_DEBUG": true,
 		"WP_DEBUG_LOG": true,
