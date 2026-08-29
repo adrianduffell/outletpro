@@ -470,7 +470,7 @@ function sync_activation( ?string $new_license_key ): void {
 	try {
 		$license_activation = get_license_activation();
 	} catch ( \UnexpectedValueException $e ) {
-		\wc_get_logger()->error( 'Could not remove previous activation tuple due to unexpected value' );
+		\wc_get_logger()->error( 'Could not remove previous activation tuple due to unexpected value.' );
 		// Proceed as if there was no previous activation.
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		invalidate_license_transients();
@@ -497,7 +497,7 @@ function sync_activation( ?string $new_license_key ): void {
 				deactivate_license( ...$license_activation );
 			}
 		} catch ( \Throwable $e ) {
-			\wc_get_logger()->error( 'Previous license activation could not be deactivated.' );
+			\wc_get_logger()->error( 'Previous license activation could not be deactivated. Remove it via Lemon Squeezy dashboard.' );
 		}
 	}
 	delete_option( LICENSE_ACTIVATION_OPTION );
