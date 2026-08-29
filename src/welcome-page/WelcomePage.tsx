@@ -209,14 +209,12 @@ export function WelcomePage(): JSX.Element {
 					) }
 				{ isExpiredMode &&
 					sprintf(
-						/* translators: %s: lowercase license name followed by a space, or empty. */
+						/* translators: %s: lowercase license name, or empty. */
 						__(
-							'Your %slicense has expired. Add a new premium license key to continue.',
+							'Your %s license has expired. Add a new premium license key to continue.',
 							'outletpro'
 						),
-						outletproWelcomePage.licenseName === ''
-							? ''
-							: `${ outletproWelcomePage.licenseName.toLocaleLowerCase() } `
+						outletproWelcomePage.licenseName.toLocaleLowerCase()
 					) }
 				{ isWelcomeMode &&
 					__(
