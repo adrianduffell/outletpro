@@ -73,17 +73,27 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Support', $result[2] );
 	}
 
-	public function test_registers_license_expiry_separately_after_support_link(): void {
+	public function test_adds_license_expiry_last(): void {
 		// Arrange.
 		init_license();
+		update_option( 'date_format', 'Y/m/d' );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
+		set_transient( LICENSE_NAME_TRANSIENT, 'Long-term service' );
+		set_transient( LICENSE_EXPIRY_TRANSIENT, array( true, '2050-01-01T00:00:00.000000Z' ) );
+		$links = array(
+			'Version 1.0.0',
+			'By <a href="https://adrianduffell.com">Adrian Duffell</a>',
+		);
 
 		// Act.
-		$support_priority = has_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook' );
-		$expiry_priority  = has_filter( 'plugin_row_meta', 'OutletPro\add_plugin_license_expiry_hook' );
+		$result = apply_filters( 'plugin_row_meta', $links, plugin_basename( PLUGIN_FILE ) );
 
 		// Assert.
-		$this->assertSame( 10, $support_priority );
-		$this->assertSame( 9999, $expiry_priority );
+		$this->assertCount( 4, $result );
+		$this->assertSame(
+			'<span class="outletpro-license-expiry">Long-term service until 2050/01/01</span>',
+			$result[ array_key_last( $result ) ]
+		);
 	}
 
 	public function test_does_not_add_support_link_to_other_plugins(): void {
