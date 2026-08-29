@@ -81,9 +81,9 @@ function add_premium_license_notice_hook( string $plugin_file, array $plugin_dat
 		<td colspan="4" class="plugin-update colspanchange">
 			<div class="update-message notice inline notice-warning notice-alt">
 				<p>
-					<?php esc_html_e( 'Outlet Pro requires a premium license for plugin updates.', 'outletpro' ); ?>
-					<a class="button-link" href="<?php echo esc_url( 'https://outletpro.zip/premium-license' ); ?>" target="_blank" rel="noopener noreferrer">
-						<?php esc_html_e( 'Learn more', 'outletpro' ); ?>
+					<?php esc_html_e( 'A premium license is needed for Outlet Pro to recieve updates.', 'outletpro' ); ?>
+					<a class="button-link" href="<?php echo esc_url( admin_url( 'admin.php?page=outletpro-welcome' ) ); ?>" target="_blank" rel="noopener noreferrer">
+						<?php esc_html_e( 'Set up premium license', 'outletpro' ); ?>
 					</a>
 				</p>
 			</div>
