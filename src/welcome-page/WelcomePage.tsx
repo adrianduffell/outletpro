@@ -208,13 +208,20 @@ export function WelcomePage(): JSX.Element {
 						'outletpro'
 					) }
 				{ isExpiredMode &&
+					outletproWelcomePage.licenseName !== '' &&
 					sprintf(
-						/* translators: %s: lowercase license name, or empty. */
+						/* translators: %s: lowercase license name. */
 						__(
 							'Your %s license has expired. Add a new premium license key to continue.',
 							'outletpro'
 						),
 						outletproWelcomePage.licenseName.toLocaleLowerCase()
+					) }
+				{ isExpiredMode &&
+					outletproWelcomePage.licenseName === '' &&
+					__(
+						'Your license has expired. Add a new premium license key to continue.',
+						'outletpro'
 					) }
 				{ isWelcomeMode &&
 					__(
