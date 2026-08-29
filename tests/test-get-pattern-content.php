@@ -59,7 +59,7 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 		// Assert.
 		$this->assertMatchesRegularExpression( '/<!-- wp:paragraph(?: \{[^\r\n]*\})? -->/', $content );
 		$this->assertStringContainsString( '<p>Pattern helper test content.</p>', $content );
-		$this->assertStringNotContainsString( '"slug":"' . 'outletpro/foo-pattern' . '"', $content );
+		$this->assertStringNotContainsString( '"slug":"outletpro/foo-pattern"', $content );
 		$this->assertStringContainsString( '"metadata"', $content );
 	}
 }
