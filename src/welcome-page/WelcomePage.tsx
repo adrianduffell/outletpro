@@ -215,7 +215,7 @@ export function WelcomePage(): JSX.Element {
 							'Your %1$s expired %2$s. Add a new premium license key to continue.',
 							'outletpro'
 						),
-						outletproWelcomePage.licenseName.toLowerCase(),
+						outletproWelcomePage.licenseName.toLocaleLowerCase(),
 						new Date(
 							outletproWelcomePage.licenseExpiry ?? ''
 						).toLocaleDateString( undefined, {
