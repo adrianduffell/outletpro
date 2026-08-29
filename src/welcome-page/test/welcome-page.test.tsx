@@ -11,10 +11,6 @@ import type { ValidationState } from '../useLicenseValidation';
 import { useLicenseValidation } from '../useLicenseValidation';
 
 const EXPIRES_AT = '2026-03-25T00:00:00.000000Z';
-const EXPIRED_LICENSE_DATE = '2020-10-20T00:00:00+00:00';
-const localizedExpiredLicenseDate = new Intl.DateTimeFormat( undefined, {
-	dateStyle: 'long',
-} ).format( new Date( EXPIRED_LICENSE_DATE ) );
 
 jest.mock( '@wordpress/api-fetch', () => ( {
 	__esModule: true,
@@ -72,19 +68,16 @@ const mockUseLicenseValidation = jest.mocked( useLicenseValidation );
 const mockHandleLicenseKeyChange = jest.fn();
 
 function arrangeGlobals( {
-	licenseExpiry = '',
 	licenseName = '',
 	licenseStatus = 'none',
 	productsUrl = '/wp-admin/edit.php?post_type=product',
 }: {
-	licenseExpiry?: string;
 	licenseName?: string;
 	licenseStatus?: string;
 	productsUrl?: string;
 } = {} ) {
 	document.cookie = 'OUTLETPRO_DISMISS_SETUP=; max-age=0; path=/';
 	( window as any ).outletproWelcomePage = {
-		licenseExpiry,
 		licenseName,
 		licenseStatus,
 		productsUrl,
@@ -154,7 +147,6 @@ test.each( [ 'not_found', 'error' ] )(
 test( 'renders the expired license heading and re-setup message', () => {
 	// Arrange.
 	arrangeGlobals( {
-		licenseExpiry: EXPIRED_LICENSE_DATE,
 		licenseName: 'Long-term service',
 		licenseStatus: 'expired',
 	} );
@@ -169,7 +161,23 @@ test( 'renders the expired license heading and re-setup message', () => {
 	).toBeInTheDocument();
 	expect(
 		screen.getByText(
-			`Your long-term service expired ${ localizedExpiredLicenseDate }. Add a new premium license key to continue.`
+			'Your long-term service license has expired. Add a new premium license key to continue.'
+		)
+	).toBeInTheDocument();
+} );
+
+test( 'renders the expired license message without an unavailable license name', () => {
+	// Arrange.
+	arrangeGlobals( { licenseStatus: 'expired' } );
+	arrangeValidation();
+
+	// Act.
+	render( <WelcomePage /> );
+
+	// Assert.
+	expect(
+		screen.getByText(
+			'Your license has expired. Add a new premium license key to continue.'
 		)
 	).toBeInTheDocument();
 } );

@@ -57,19 +57,20 @@ function enqueue_admin_welcome_page_scripts_hook(): void {
 	);
 
 	$license_status = get_license_status();
-	$license_name   = in_array( $license_status, array( 'active', 'expired' ), true )
-		? get_license_name()
-		: '';
-	$license_expiry = in_array( $license_status, array( 'active', 'expired' ), true )
-		? get_license_expiry()?->format( DATE_ATOM )
-		: null;
+	try {
+		$license_name = in_array( $license_status, array( 'active', 'expired' ), true )
+			? get_license_name()
+			: '';
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'License name could not be retrieved.' );
+		$license_name = '';
+	}
 
 	wp_localize_script(
 		'outletpro-welcome-page',
 		'outletproWelcomePage',
 		array(
 			'environmentType' => wp_get_environment_type(),
-			'licenseExpiry'   => $license_expiry,
 			'licenseName'     => $license_name,
 			'licenseStatus'   => $license_status,
 			'productsUrl'     => esc_url( admin_url( 'edit.php?post_type=product' ) ),

@@ -25,7 +25,6 @@ import { ValidationMessage } from './ValidationMessage';
 import { useLicenseValidation } from './useLicenseValidation';
 
 declare const outletproWelcomePage: {
-	licenseExpiry: string | null;
 	licenseName: string;
 	licenseStatus: 'none' | 'active' | 'not_found' | 'error' | 'expired';
 	productsUrl: string;
@@ -210,17 +209,14 @@ export function WelcomePage(): JSX.Element {
 					) }
 				{ isExpiredMode &&
 					sprintf(
-						/* translators: 1: license name, 2: localized license expiry date. */
+						/* translators: %s: lowercase license name followed by a space, or empty. */
 						__(
-							'Your %1$s expired %2$s. Add a new premium license key to continue.',
+							'Your %slicense has expired. Add a new premium license key to continue.',
 							'outletpro'
 						),
-						outletproWelcomePage.licenseName.toLocaleLowerCase(),
-						new Date(
-							outletproWelcomePage.licenseExpiry ?? ''
-						).toLocaleDateString( undefined, {
-							dateStyle: 'long',
-						} )
+						outletproWelcomePage.licenseName === ''
+							? ''
+							: `${ outletproWelcomePage.licenseName.toLocaleLowerCase() } `
 					) }
 				{ isWelcomeMode &&
 					__(
