@@ -125,11 +125,7 @@ function init_license_settings(): void {
 	wp_cache_add_non_persistent_groups( LICENSE_HTTP_CACHE_GROUP );
 	register_license_key_setting();
 
-	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
-	add_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
+	add_filter( 'pre_update_option_' . LICENSE_KEY_OPTION, 'OutletPro\pre_update_license_key_hook', 10, 2 );
 	add_action( 'deleted_option', 'OutletPro\delete_license_activation_hook', 10, 1 );
 }
 
@@ -140,12 +136,49 @@ function init_license_settings(): void {
  */
 function deinit_license_settings(): void {
 	unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
-	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	remove_action( 'delete_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
-	remove_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\add_license_activation_hook', 10, 0 );
-	remove_action( 'update_option_' . LICENSE_KEY_OPTION, 'OutletPro\update_license_activation_hook', 10, 0 );
+	remove_filter( 'pre_update_option_' . LICENSE_KEY_OPTION, 'OutletPro\pre_update_license_key_hook', 10 );
 	remove_action( 'deleted_option', 'OutletPro\delete_license_activation_hook', 10 );
+}
+
+/**
+ * Perform activation before the license key option is updated.
+ *
+ * If activation fails, the option update is rejected and the previous value is retained.
+ *
+ * Fired by `pre_update_option_{LICENSE_KEY_OPTION}`.
+ *
+ * @internal WordPress filter hook
+ * @param mixed $value New option value.
+ * @param mixed $old_value Current option value.
+ * @return mixed The new option value, or current value when synchronization fails.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+ */
+function pre_update_license_key_hook( $value, $old_value ) {
+	if ( ! is_string( $value ) ) {
+		add_settings_error(
+			LICENSE_KEY_OPTION,
+			'license_activation_failed',
+			__( 'The license could not be activated. Please try again.', 'outletpro' )
+		);
+
+		return $old_value;
+	}
+
+	try {
+		sync_activation( '' === $value ? null : $value ); // Delete is denoted with null.
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'License setting could not be updated.' );
+		add_settings_error(
+			LICENSE_KEY_OPTION,
+			'license_activation_failed',
+			__( 'The license could not be activated. Please try again.', 'outletpro' )
+		);
+
+		return $old_value;
+	}
+
+	return $value;
 }
 
 /**
@@ -153,11 +186,12 @@ function deinit_license_settings(): void {
  *
  * Fired by `add_option_{LICENSE_KEY_OPTION}`.
  *
+ * @deprecated 1.1.0 Use pre_update_license_key_hook().
  * @internal WordPress action hook
  */
 function add_license_activation_hook(): void {
 	try {
-		sync_activation();
+		sync_activation( get_license_key() );
 	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'License activation could not be synchronized when setting added.' );
 	}
@@ -168,11 +202,12 @@ function add_license_activation_hook(): void {
  *
  * Fired by `update_option_{LICENSE_KEY_OPTION}`.
  *
+ * @deprecated 1.1.0 Use pre_update_license_key_hook().
  * @internal WordPress action hook
  */
 function update_license_activation_hook(): void {
 	try {
-		sync_activation();
+		sync_activation( get_license_key() );
 	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'License activation could not be synchronized when setting changed.' );
 	}
@@ -191,11 +226,7 @@ function delete_license_activation_hook( string $option ): void {
 		return;
 	}
 
-	try {
-		sync_activation();
-	} catch ( \Throwable $e ) {
-		\wc_get_logger()->error( 'License activation could not be synchronized when setting deleted.' );
-	}
+	sync_activation( null );
 }
 
 
@@ -228,10 +259,22 @@ function register_license_key_setting(): void {
  *
  * Fired by `add_option_{LICENSE_KEY_OPTION}`, `update_option_{LICENSE_KEY_OPTION}`, and `delete_option_{LICENSE_KEY_OPTION}`.
  *
+ * @deprecated 1.1.0
  * @internal WordPress action hook
  */
 function invalidate_license_cache_hook(): void {
+	invalidate_license_transients();
+}
+
+/**
+ * Invalidate all license transients.
+ *
+ * @internal
+ */
+function invalidate_license_transients(): void {
 	delete_transient( LICENSE_STATUS_TRANSIENT );
+	delete_transient( LICENSE_NAME_TRANSIENT );
+	delete_transient( LICENSE_EXPIRY_TRANSIENT );
 }
 
 /**
@@ -409,49 +452,62 @@ function set_license_activation( string $license_key, string $activation_id ): v
  *   - Perform activation.
  *
  * 2. The license key in settings is updated.
- *   - Clean up any stale activation
  *   - Perform activation.
+ *   - Clean up any stale activation
  *
  * 3. The license key in settings is deleted.
  *   - Clean-up of stale activation
  *
  * @internal
+ * @param string|null $new_license_key New license key, or null to remove it.
  */
-function sync_activation(): void {
-	$settings_license_key = get_license_key();
-
+function sync_activation( ?string $new_license_key ): void {
 	try {
 		$license_activation = get_license_activation();
 	} catch ( \UnexpectedValueException $e ) {
 		\wc_get_logger()->error( 'Could not remove previous activation tuple due to unexpected value' );
 		delete_option( LICENSE_ACTIVATION_OPTION );
+		invalidate_license_transients();
 		$license_activation = null;
 	}
 
 	$activation_license_key = $license_activation[0] ?? null;
 
 	// License setting and activation are in sync. Nothing to do.
-	if ( $settings_license_key === $activation_license_key ) {
+	if ( $new_license_key === $activation_license_key ) {
 		return;
+	}
+
+	if ( ! is_null( $new_license_key ) ) {
+		// Activate first so a failure leaves the previous activation intact.
+		// Cases 1 or 2: Perform activation.
+		$activation_id = activate_license( $new_license_key );
 	}
 
 	// Cases 2 or 3: Clean up any stale activation.
 	if ( ! is_null( $license_activation ) ) {
-		if ( true === validate_license( ...$license_activation ) ) {
-			deactivate_license( ...$license_activation );
+		try {
+			if ( true === validate_license( ...$license_activation ) ) {
+				deactivate_license( ...$license_activation );
+			}
+		} catch ( \Throwable $e ) {
+			\wc_get_logger()->error( 'Previous license activation could not be deactivated.' );
 		}
 	}
 	delete_option( LICENSE_ACTIVATION_OPTION );
 
-	// Case 3: No activation required.
-	if ( is_null( $settings_license_key ) ) {
-		return;
+	// Cases 1 or 2: Store activation.
+	if ( ! is_null( $new_license_key ) ) {
+		set_license_activation( $new_license_key, $activation_id );
 	}
 
-	// Case 1 or 2: Perform activation.
-	$activation_id = activate_license( $settings_license_key );
-	set_license_activation( $settings_license_key, $activation_id );
-	delete_transient( LICENSE_STATUS_TRANSIENT );
+	invalidate_license_transients();
+
+	try {
+		prime_license_transients();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'License transients could not be primed.' );
+	}
 }
 
 /**

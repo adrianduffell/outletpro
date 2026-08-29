@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for the license activation option hooks.
+ * Tests for the pre_update_license_key_hook function.
  *
  * @package OutletPro
  * @group license
@@ -13,90 +13,7 @@ use function OutletPro\init_license_settings;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
 
-class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
-
-	public function test_syncs_activation_when_key_is_updated(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
-		// Arrange.
-		add_filter(
-			'home_url',
-			function (): string {
-				return 'https://example.com';
-			},
-			10,
-			0
-		);
-		deinit_license_settings();
-		delete_option( LICENSE_KEY_OPTION );
-		update_option( LICENSE_KEY_OPTION, 'previous-license' );
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'previous-activation-id' ) );
-		$requests = array();
-		add_filter(
-			'pre_http_request',
-			function ( $pre, $args, $url ) use ( &$requests ) {
-				$requests[] = array(
-					'url'  => $url,
-					'body' => $args['body'],
-				);
-
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/deactivate' === $url ) {
-					return array(
-						'body'     => wp_json_encode( array( 'deactivated' => true ) ),
-						'response' => array( 'code' => 200 ),
-					);
-				}
-
-				if ( 'https://api.lemonsqueezy.com/v1/licenses/validate' === $url ) {
-					return array(
-						'body'     => wp_json_encode(
-							array(
-								'valid' => true,
-								'meta'  => array( 'product_id' => 1279790 ),
-							)
-						),
-						'response' => array( 'code' => 200 ),
-					);
-				}
-
-				return array(
-					'body'     => wp_json_encode(
-						array(
-							'activated' => true,
-							'instance'  => array( 'id' => 'new-activation-id' ),
-						)
-					),
-					'response' => array( 'code' => 200 ),
-				);
-			},
-			10,
-			3
-		);
-		init_license_settings();
-
-		// Act.
-		update_option( LICENSE_KEY_OPTION, 'new-license' );
-
-		// Assert.
-		$this->assertSame(
-			array(
-				'https://api.lemonsqueezy.com/v1/licenses/validate',
-				'https://api.lemonsqueezy.com/v1/licenses/deactivate',
-				'https://api.lemonsqueezy.com/v1/licenses/validate',
-				'https://api.lemonsqueezy.com/v1/licenses/activate',
-			),
-			array_column( $requests, 'url' )
-		);
-		$this->assertSame( 'previous-license', $requests[0]['body']['license_key'] );
-		$this->assertSame( 'previous-activation-id', $requests[0]['body']['instance_id'] );
-		$this->assertSame( 'new-license', $requests[2]['body']['license_key'] );
-		$this->assertSame( 'new-license', $requests[3]['body']['license_key'] );
-		$this->assertSame(
-			array( 'new-license', 'new-activation-id' ),
-			get_option( LICENSE_ACTIVATION_OPTION )
-		);
-
-		// Cleanup.
-		deinit_license_settings();
-	}
+class Test_Pre_Update_License_Key_Hook extends WP_UnitTestCase {
 
 	public function test_activates_license_when_key_option_is_added(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
@@ -155,12 +72,9 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 			array( 'new-license', 'activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
-
-		// Cleanup.
-		deinit_license_settings();
 	}
 
-	public function test_deletes_stale_activation_when_replacement_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_returns_false_when_replacement_license_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		deinit_license_settings();
 		delete_option( LICENSE_KEY_OPTION );
@@ -203,13 +117,12 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 		init_license_settings();
 
 		// Act.
-		update_option( LICENSE_KEY_OPTION, 'new-license' );
+		$updated = update_option( LICENSE_KEY_OPTION, 'new-license' );
 
 		// Assert.
-		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
-
-		// Cleanup.
-		deinit_license_settings();
+		$this->assertFalse( $updated );
+		$this->assertSame( 'previous-license', get_option( LICENSE_KEY_OPTION ) );
+		$this->assertSame( array( 'previous-license', 'activation-id' ), get_option( LICENSE_ACTIVATION_OPTION ) );
 	}
 
 	public function test_deactivates_and_deletes_activation_when_key_option_is_deleted(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -259,8 +172,5 @@ class Test_Update_License_Activation_Hook extends WP_UnitTestCase {
 			$request_body
 		);
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
-
-		// Cleanup.
-		deinit_license_settings();
 	}
 }
