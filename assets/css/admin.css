@@ -90,6 +90,7 @@
 }
 
 @supports selector(:has(*)) {
+
 	.plugins tr:has(+ .outletpro-license-notice) > th,
 	.plugins tr:has(+ .outletpro-license-notice) > td {
 		border-bottom: 0;
