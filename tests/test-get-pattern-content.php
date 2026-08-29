@@ -11,8 +11,6 @@ use function OutletPro\get_pattern_content;
 
 class Test_Get_Pattern_Content extends WP_UnitTestCase {
 
-	private const TEST_PATTERN = 'outletpro/test-pattern-content';
-
 	public function test_throws_when_pattern_name_is_empty(): void {
 		// Expect.
 		$this->expectException( \InvalidArgumentException::class );
@@ -48,7 +46,7 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 	public function test_returns_resolved_registered_pattern_content(): void {
 		// Arrange.
 		register_block_pattern(
-			self::TEST_PATTERN,
+			'outletpro/foo-pattern',
 			array(
 				'title'   => 'Test pattern content',
 				'content' => '<!-- wp:paragraph --><p>Pattern helper test content.</p><!-- /wp:paragraph -->',
@@ -56,16 +54,12 @@ class Test_Get_Pattern_Content extends WP_UnitTestCase {
 		);
 
 		// Act.
-		$content = get_pattern_content( self::TEST_PATTERN );
+		$content = get_pattern_content( 'outletpro/foo-pattern' );
 
 		// Assert.
-		$this->assertStringContainsString( '<!-- wp:paragraph -->', $content );
-		$this->assertStringContainsString( 'Pattern helper test content.', $content );
-		$this->assertStringNotContainsString( '"slug":"' . self::TEST_PATTERN . '"', $content );
-		version_compare( get_bloginfo( 'version' ), '7.0', '>=' )
-			&& $this->assertStringContainsString( '"metadata"', $content );
-
-		// Cleanup.
-		unregister_block_pattern( self::TEST_PATTERN );
+		$this->assertMatchesRegularExpression( '/<!-- wp:paragraph(?: \{[^\r\n]*\})? -->/', $content );
+		$this->assertStringContainsString( '<p>Pattern helper test content.</p>', $content );
+		$this->assertStringNotContainsString( '"slug":"' . 'outletpro/foo-pattern' . '"', $content );
+		$this->assertStringContainsString( '"metadata"', $content );
 	}
 }
