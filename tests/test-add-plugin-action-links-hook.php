@@ -8,6 +8,9 @@
  */
 
 use function OutletPro\init_license;
+use const OutletPro\LICENSE_EXPIRY_TRANSIENT;
+use const OutletPro\LICENSE_NAME_TRANSIENT;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 use const OutletPro\PLUGIN_FILE;
 use const OutletPro\WELCOME_PAGE_SLUG;
 
@@ -70,6 +73,19 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Support', $result[2] );
 	}
 
+	public function test_registers_license_expiry_separately_after_support_link(): void {
+		// Arrange.
+		init_license();
+
+		// Act.
+		$support_priority = has_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook' );
+		$expiry_priority  = has_filter( 'plugin_row_meta', 'OutletPro\add_plugin_license_expiry_hook' );
+
+		// Assert.
+		$this->assertSame( 10, $support_priority );
+		$this->assertSame( 9999, $expiry_priority );
+	}
+
 	public function test_does_not_add_support_link_to_other_plugins(): void {
 		// Arrange.
 		init_license();
@@ -84,5 +100,77 @@ class Test_Add_Plugin_Action_Links_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( $links, $result );
+	}
+
+	public function test_adds_future_license_expiry_using_site_date_format(): void {
+		// Arrange.
+		init_license();
+		update_option( 'date_format', 'Y/m/d' );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
+		set_transient( LICENSE_NAME_TRANSIENT, 'Long-term service' );
+		set_transient( LICENSE_EXPIRY_TRANSIENT, array( true, '2050-01-01T00:00:00.000000Z' ) );
+
+		// Act.
+		$result = apply_filters( 'plugin_row_meta', array(), plugin_basename( PLUGIN_FILE ) );
+
+		// Assert.
+		$this->assertCount( 2, $result );
+		$this->assertStringContainsString( 'Support', $result[0] );
+		$this->assertStringContainsString(
+			'<span class="outletpro-license-expiry">Long-term service until 2050/01/01</span>',
+			$result[1]
+		);
+	}
+
+	public function test_adds_expired_license_expiry_highlighted_in_red(): void {
+		// Arrange.
+		init_license();
+		update_option( 'date_format', 'Y/m/d' );
+		set_transient( LICENSE_STATUS_TRANSIENT, 'expired' );
+		set_transient( LICENSE_NAME_TRANSIENT, 'Long-term service' );
+		set_transient( LICENSE_EXPIRY_TRANSIENT, array( true, '1997-08-29T06:14:00.000000Z' ) );
+
+		// Act.
+		$result = apply_filters( 'plugin_row_meta', array(), plugin_basename( PLUGIN_FILE ) );
+
+		// Assert.
+		$this->assertCount( 2, $result );
+		$this->assertStringContainsString( 'Support', $result[0] );
+		$this->assertStringContainsString(
+			'<span class="outletpro-license-expiry outletpro-alert-text">Long-term service expired 1997/08/29</span>',
+			$result[1]
+		);
+	}
+
+	public function test_adds_non_expiring_license_message(): void {
+		// Arrange.
+		init_license();
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active' );
+		set_transient( LICENSE_NAME_TRANSIENT, 'Lifetime service' );
+		set_transient( LICENSE_EXPIRY_TRANSIENT, array( false ) );
+
+		// Act.
+		$result = apply_filters( 'plugin_row_meta', array(), plugin_basename( PLUGIN_FILE ) );
+
+		// Assert.
+		$this->assertCount( 2, $result );
+		$this->assertStringContainsString( 'Support', $result[0] );
+		$this->assertStringContainsString(
+			'<span class="outletpro-license-expiry">Lifetime service (non-expiring)</span>',
+			$result[1]
+		);
+	}
+
+	public function test_does_not_add_license_message_when_site_is_not_activated(): void {
+		// Arrange.
+		init_license();
+		set_transient( LICENSE_STATUS_TRANSIENT, 'none' );
+
+		// Act.
+		$result = apply_filters( 'plugin_row_meta', array(), plugin_basename( PLUGIN_FILE ) );
+
+		// Assert.
+		$this->assertCount( 1, $result );
+		$this->assertStringContainsString( 'Support', $result[0] );
 	}
 }

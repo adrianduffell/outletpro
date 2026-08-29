@@ -21,6 +21,7 @@ function init_license(): void {
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 	add_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_premium_license_notice_hook', 10, 3 );
 	add_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook', 10, 2 );
+	add_filter( 'plugin_row_meta', 'OutletPro\add_plugin_license_expiry_hook', 9999, 2 );
 }
 
 /**
@@ -32,6 +33,7 @@ function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 	remove_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_premium_license_notice_hook', 10 );
 	remove_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook' );
+	remove_filter( 'plugin_row_meta', 'OutletPro\add_plugin_license_expiry_hook', 9999 );
 }
 
 /**
@@ -113,6 +115,70 @@ function add_plugin_meta_links_hook( array $links, string $plugin_file ): array 
 		esc_url( 'https://outletpro.zip/support' ),
 		esc_html__( 'Support', 'outletpro' )
 	);
+
+	return $links;
+}
+
+/**
+ * Add license expiry details alongside the plugin’s meta links.
+ *
+ * Fired by `plugin_row_meta` after the plugin's other meta links are added.
+ *
+ * @param string[] $links       Existing plugin meta links.
+ * @param string   $plugin_file Plugin file.
+ * @return string[] Modified plugin meta links.
+ * @internal WordPress filter
+ */
+function add_plugin_license_expiry_hook( array $links, string $plugin_file ): array {
+	if ( plugin_basename( PLUGIN_FILE ) !== $plugin_file ) {
+		return $links;
+	}
+
+	$license_status = get_license_status();
+
+	switch ( $license_status ) {
+		case 'none':
+		case 'not_found':
+			return $links;
+	}
+
+	try {
+		$license_name   = get_license_name();
+		$license_expiry = get_license_expiry();
+	} catch ( \Throwable $e ) {
+		return $links;
+	}
+
+	if ( is_null( $license_expiry ) ) {
+		$links[] = sprintf(
+			/* translators: %s: license name. */
+			'<span class="outletpro-license-expiry">' . esc_html__( '%s (non-expiring)', 'outletpro' ) . '</span>',
+			esc_html( $license_name )
+		);
+		return $links;
+	}
+
+	$formatted_expiry = wp_date( get_option( 'date_format' ), $license_expiry->getTimestamp() );
+
+	switch ( $license_status ) {
+		case 'expired':
+			$license_message = sprintf(
+				/* translators: 1: license name, 2: localized license expiry date. */
+				'<span class="outletpro-license-expiry outletpro-alert-text">' . esc_html__( '%1$s expired %2$s', 'outletpro' ) . '</span>',
+				esc_html( $license_name ),
+				esc_html( $formatted_expiry )
+			);
+			break;
+		default:
+			$license_message = sprintf(
+				/* translators: 1: license name, 2: localized license expiry date. */
+				'<span class="outletpro-license-expiry">' . esc_html__( '%1$s until %2$s', 'outletpro' ) . '</span>',
+				esc_html( $license_name ),
+				esc_html( $formatted_expiry )
+			);
+	}
+
+	$links[] = $license_message;
 
 	return $links;
 }

@@ -67,6 +67,10 @@
 	text-decoration: underline;
 }
 
+.outletpro-alert-text {
+	color: #b32d2e;
+}
+
 .outletpro-admin-badge {
 	display: block;
 	width: fit-content;
