@@ -8,15 +8,15 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\deinit_license_settings;
 use function OutletPro\register_license_key_setting;
 use const OutletPro\LICENSE_KEY_OPTION;
-use const OutletPro\LICENSE_OPTIONS_GROUP;
 
 class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 	public function test_registers_license_key_setting(): void {
 		// Arrange.
-		unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+		deinit_license_settings();
 
 		// Act.
 		register_license_key_setting();
@@ -28,7 +28,7 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 	public function test_setting_type_is_string(): void {
 		// Arrange.
-		unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+		deinit_license_settings();
 
 		// Act.
 		register_license_key_setting();
@@ -40,7 +40,7 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 	public function test_setting_default_is_empty_string(): void {
 		// Arrange.
-		unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+		deinit_license_settings();
 
 		// Act.
 		register_license_key_setting();
@@ -52,7 +52,7 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 	public function test_sanitize_callback_is_sanitize_text_field(): void {
 		// Arrange.
-		unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+		deinit_license_settings();
 
 		// Act.
 		register_license_key_setting();
@@ -64,7 +64,7 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 	public function test_setting_is_shown_in_rest(): void {
 		// Arrange.
-		unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+		deinit_license_settings();
 		register_license_key_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -79,7 +79,7 @@ class Test_Register_License_Key_Setting extends WP_UnitTestCase {
 
 	public function test_setting_can_be_updated_via_rest(): void {
 		// Arrange.
-		unregister_setting( LICENSE_OPTIONS_GROUP, LICENSE_KEY_OPTION );
+		deinit_license_settings();
 		register_license_key_setting();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );

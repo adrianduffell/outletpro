@@ -10,6 +10,7 @@
 
 use function OutletPro\deinit_license_settings;
 use function OutletPro\init_license_settings;
+use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Init_License_Settings extends WP_UnitTestCase {
 
@@ -21,6 +22,6 @@ class Test_Init_License_Settings extends WP_UnitTestCase {
 		init_license_settings();
 
 		// Assert.
-		$this->assertArrayHasKey( 'outletpro_license_key', get_registered_settings() );
+		$this->assertArrayHasKey( LICENSE_KEY_OPTION, get_registered_settings() );
 	}
 }

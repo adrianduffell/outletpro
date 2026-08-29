@@ -115,8 +115,8 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
-		update_option( LICENSE_KEY_OPTION, 'abc123' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		add_filter(
 			'pre_http_request',
@@ -157,8 +157,8 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
-		update_option( LICENSE_KEY_OPTION, 'abc123' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		$previous = false;
 		add_filter(
@@ -200,8 +200,8 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
-		update_option( LICENSE_KEY_OPTION, 'abc123' );
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_KEY_OPTION, 'abc123' );
 
 		add_filter(
 			'pre_http_request',

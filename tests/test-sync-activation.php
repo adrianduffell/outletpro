@@ -23,7 +23,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		delete_option( LICENSE_ACTIVATION_OPTION );
 
 		// Act.
-		sync_activation();
+		sync_activation( null );
 
 		// Assert.
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
@@ -36,7 +36,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		update_option( LICENSE_ACTIVATION_OPTION, 'invalid' );
 
 		// Act.
-		sync_activation();
+		sync_activation( null );
 
 		// Assert.
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
@@ -64,7 +64,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 
 		// Act.
-		sync_activation();
+		sync_activation( 'license-key' );
 
 		// Assert.
 		$this->assertSame(
@@ -80,7 +80,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'license-key', 'activation-id' ) );
 
 		// Act.
-		sync_activation();
+		sync_activation( 'license-key' );
 
 		// Assert.
 		$this->assertSame(
@@ -147,20 +147,21 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 
 		// Act.
-		sync_activation();
+		sync_activation( 'new-license' );
 
 		// Assert.
 		$this->assertSame(
 			array(
 				'https://api.lemonsqueezy.com/v1/licenses/validate',
+				'https://api.lemonsqueezy.com/v1/licenses/activate',
+				'https://api.lemonsqueezy.com/v1/licenses/validate',
 				'https://api.lemonsqueezy.com/v1/licenses/deactivate',
 				'https://api.lemonsqueezy.com/v1/licenses/validate',
-				'https://api.lemonsqueezy.com/v1/licenses/activate',
 			),
 			array_column( $requests, 'url' )
 		);
-		$this->assertSame( 'previous-license', $requests[1]['body']['license_key'] );
-		$this->assertSame( 'activation-id', $requests[1]['body']['instance_id'] );
+		$this->assertSame( 'previous-license', $requests[3]['body']['license_key'] );
+		$this->assertSame( 'activation-id', $requests[3]['body']['instance_id'] );
 		$this->assertSame(
 			array( 'new-license', 'new-activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
@@ -213,14 +214,14 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 
 		// Act.
-		sync_activation();
+		sync_activation( 'license-key' );
 
 		// Assert.
 		$this->assertSame(
 			array( 'license-key', 'activation-id' ),
 			get_option( LICENSE_ACTIVATION_OPTION )
 		);
-		$this->assertFalse( get_transient( LICENSE_STATUS_TRANSIENT ) );
+		$this->assertSame( 'active', get_transient( LICENSE_STATUS_TRANSIENT ) );
 	}
 
 	public function test_deletes_stale_activation_that_is_not_found(): void {
@@ -240,7 +241,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 
 		// Act.
-		sync_activation();
+		sync_activation( null );
 
 		// Assert.
 		$this->assertFalse( get_option( LICENSE_ACTIVATION_OPTION ) );
@@ -278,7 +279,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 
 		// Act.
-		sync_activation();
+		sync_activation( 'new-license' );
 
 		// Assert.
 		$this->assertSame(
@@ -331,7 +332,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		$this->expectException( \RuntimeException::class );
 
 		// Act.
-		sync_activation();
+		sync_activation( 'new-license' );
 	}
 
 	public function test_deactivates_and_deletes_stored_activation_when_license_key_is_absent(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
@@ -371,7 +372,7 @@ class Test_Sync_Activation extends WP_UnitTestCase {
 		);
 
 		// Act.
-		sync_activation();
+		sync_activation( null );
 
 		// Assert.
 		$this->assertSame(
