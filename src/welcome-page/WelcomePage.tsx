@@ -18,13 +18,14 @@
 import apiFetch from '@wordpress/api-fetch';
 import { Button, TextControl } from '@wordpress/components';
 import { useRef, useState, createInterpolateElement } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Link } from '@wordpress/ui';
 import { dismiss, undoDismiss } from './dismiss';
 import { ValidationMessage } from './ValidationMessage';
 import { useLicenseValidation } from './useLicenseValidation';
 
 declare const outletproWelcomePage: {
+	licenseName: string;
 	licenseStatus: 'none' | 'active' | 'not_found' | 'error' | 'expired';
 	productsUrl: string;
 };
@@ -36,7 +37,11 @@ export function WelcomePage(): JSX.Element {
 		canActivate,
 		handleLicenseKeyChange: updateLicenseKey,
 	} = useLicenseValidation();
-	const isResetMode = [ 'not_found', 'expired', 'error' ].includes(
+	const isResetMode = [ 'not_found', 'error' ].includes(
+		outletproWelcomePage.licenseStatus
+	);
+	const isExpiredMode = outletproWelcomePage.licenseStatus === 'expired';
+	const isWelcomeMode = [ 'none', 'active' ].includes(
 		outletproWelcomePage.licenseStatus
 	);
 	const [ isLoading, setIsLoading ] = useState( false );
@@ -125,12 +130,12 @@ export function WelcomePage(): JSX.Element {
 		return (
 			<div className="outletpro-welcome-page">
 				<h1>
-					{ isResetMode
+					{ isResetMode || isExpiredMode
 						? __( 'License activated', 'outletpro' )
 						: __( '🎉 Success!', 'outletpro' ) }
 				</h1>
 				<p className="outletpro-welcome-page__description">
-					{ isResetMode
+					{ isResetMode || isExpiredMode
 						? __(
 								'License activated. Your premium license includes plugin updates and email support.',
 								'outletpro'
@@ -140,7 +145,7 @@ export function WelcomePage(): JSX.Element {
 								'outletpro'
 						  ) }{ ' ' }
 					{ createInterpolateElement(
-						isResetMode
+						isResetMode || isExpiredMode
 							? __(
 									'<learnMore>Learn more</learnMore>',
 									'outletpro'
@@ -153,7 +158,7 @@ export function WelcomePage(): JSX.Element {
 							learnMore: (
 								<Link
 									href={
-										isResetMode
+										isResetMode || isExpiredMode
 											? 'https://outletpro.zip/help/license'
 											: 'https://outletpro.zip/help/get-started/'
 									}
@@ -162,7 +167,7 @@ export function WelcomePage(): JSX.Element {
 						}
 					) }
 				</p>
-				{ ! isResetMode && (
+				{ ! ( isResetMode || isExpiredMode ) && (
 					<div className="outletpro-welcome-page__button-row">
 						<Button
 							variant="primary"
@@ -191,21 +196,38 @@ export function WelcomePage(): JSX.Element {
 				{ __( 'Dismiss', 'outletpro' ) }
 			</Button>
 			<h1>
-				{ isResetMode
+				{ isResetMode || isExpiredMode
 					? __( 'Outlet Pro Setup', 'outletpro' )
 					: __( 'Welcome to Outlet Pro', 'outletpro' ) }
 			</h1>
 
 			<p className="outletpro-welcome-page__description">
-				{ isResetMode
-					? __(
-							'The license could not be verified on this site. Enter your premium license key to continue.',
+				{ isResetMode &&
+					__(
+						'The license could not be verified on this site. Enter your premium license key to continue.',
+						'outletpro'
+					) }
+				{ isExpiredMode &&
+					outletproWelcomePage.licenseName !== '' &&
+					sprintf(
+						/* translators: %s: lowercase license name. */
+						__(
+							'Your %s license has expired. Add a new premium license key to continue.',
 							'outletpro'
-					  )
-					: __(
-							'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
-							'outletpro'
-					  ) }
+						),
+						outletproWelcomePage.licenseName.toLocaleLowerCase()
+					) }
+				{ isExpiredMode &&
+					outletproWelcomePage.licenseName === '' &&
+					__(
+						'Your license has expired. Add a new premium license key to continue.',
+						'outletpro'
+					) }
+				{ isWelcomeMode &&
+					__(
+						'Thank you for choosing Outlet Pro! Enter your premium license key to begin setup.',
+						'outletpro'
+					) }
 			</p>
 
 			<div className="outletpro-welcome-page__license-key-input">

@@ -68,11 +68,17 @@ const mockUseLicenseValidation = jest.mocked( useLicenseValidation );
 const mockHandleLicenseKeyChange = jest.fn();
 
 function arrangeGlobals( {
+	licenseName = '',
 	licenseStatus = 'none',
 	productsUrl = '/wp-admin/edit.php?post_type=product',
-}: { licenseStatus?: string; productsUrl?: string } = {} ) {
+}: {
+	licenseName?: string;
+	licenseStatus?: string;
+	productsUrl?: string;
+} = {} ) {
 	document.cookie = 'OUTLETPRO_DISMISS_SETUP=; max-age=0; path=/';
 	( window as any ).outletproWelcomePage = {
+		licenseName,
 		licenseStatus,
 		productsUrl,
 	};
@@ -113,7 +119,7 @@ test( 'renders the welcome message', () => {
 	expect( screen.getByLabelText( /Premium license key/i ) ).toHaveValue( '' );
 } );
 
-test.each( [ 'not_found', 'error', 'expired' ] )(
+test.each( [ 'not_found', 'error' ] )(
 	'renders the license re-setup message for the %s license status',
 	( licenseStatus ) => {
 		// Arrange.
@@ -137,6 +143,44 @@ test.each( [ 'not_found', 'error', 'expired' ] )(
 		);
 	}
 );
+
+test( 'renders the expired license heading and re-setup message', () => {
+	// Arrange.
+	arrangeGlobals( {
+		licenseName: 'Long-term service',
+		licenseStatus: 'expired',
+	} );
+	arrangeValidation();
+
+	// Act.
+	render( <WelcomePage /> );
+
+	// Assert.
+	expect(
+		screen.getByRole( 'heading', { name: 'Outlet Pro Setup' } )
+	).toBeInTheDocument();
+	expect(
+		screen.getByText(
+			'Your long-term service license has expired. Add a new premium license key to continue.'
+		)
+	).toBeInTheDocument();
+} );
+
+test( 'renders the expired license message without an unavailable license name', () => {
+	// Arrange.
+	arrangeGlobals( { licenseStatus: 'expired' } );
+	arrangeValidation();
+
+	// Act.
+	render( <WelcomePage /> );
+
+	// Assert.
+	expect(
+		screen.getByText(
+			'Your license has expired. Add a new premium license key to continue.'
+		)
+	).toBeInTheDocument();
+} );
 
 test( 'renders the license key input', () => {
 	// Arrange.
