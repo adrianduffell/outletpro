@@ -458,6 +458,11 @@ function set_license_activation( string $license_key, string $activation_id ): v
  * 3. The license key in settings is deleted.
  *   - Clean-up of stale activation
  *
+ * When stale activation cleanup is attempted, any errors are logged but do not block the sync.
+ * The previous activation will need to be removed via Lemon Squeezy dashboard in this case.
+ *
+ * When sync is complete, the license transients are primed with fresh values.
+ *
  * @internal
  * @param string|null $new_license_key New license key, or null to remove it.
  */
@@ -466,6 +471,7 @@ function sync_activation( ?string $new_license_key ): void {
 		$license_activation = get_license_activation();
 	} catch ( \UnexpectedValueException $e ) {
 		\wc_get_logger()->error( 'Could not remove previous activation tuple due to unexpected value' );
+		// Proceed as if there was no previous activation.
 		delete_option( LICENSE_ACTIVATION_OPTION );
 		invalidate_license_transients();
 		$license_activation = null;
