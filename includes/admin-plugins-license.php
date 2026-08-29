@@ -75,7 +75,6 @@ function add_premium_license_notice_hook( string $plugin_file, array $plugin_dat
 	}
 
 	if ( 'error' === $license_status ) {
-		\wc_get_logger()->error( 'Premium license status could not be checked' );
 		return;
 	}
 	?>
