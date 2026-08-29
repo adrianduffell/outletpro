@@ -48,23 +48,50 @@ export function ValidationMessage( {
 				'outletpro'
 			);
 		case 'available': {
+			const expiryDate = validationState.expiresAt
+				? new Intl.DateTimeFormat( undefined, {
+						dateStyle: 'long',
+				  } ).format( new Date( validationState.expiresAt ) )
+				: '';
+			if (
+				validationState.remaining === Infinity &&
+				validationState.expiresAt
+			) {
+				return sprintf(
+					/* translators: %s: localized license expiry date. */
+					__(
+						'✅ Unlimited site activations available. Expires %s',
+						'outletpro'
+					),
+					expiryDate
+				);
+			}
 			if ( validationState.remaining === Infinity ) {
 				return __(
 					'✅ Unlimited site activations available',
 					'outletpro'
 				);
 			}
-			/* translators: 1: remaining activations, 2: total activations. */
-			const availableMessage = _n(
-				'✅ %1$d site activation available',
-				'✅ %1$d of %2$d site activations available',
-				validationState.remaining,
-				'outletpro'
-			);
+			const availableMessage = validationState.expiresAt
+				? /* translators: 1: remaining activations, 2: total activations, 3: localized license expiry date. */
+				  _n(
+						'✅ %1$d site activation available. Expires %3$s',
+						'✅ %1$d of %2$d site activations available. Expires %3$s',
+						validationState.remaining,
+						'outletpro'
+				  )
+				: /* translators: 1: remaining activations, 2: total activations. */
+				  _n(
+						'✅ %1$d site activation available',
+						'✅ %1$d of %2$d site activations available',
+						validationState.remaining,
+						'outletpro'
+				  );
 			return sprintf(
 				availableMessage,
 				validationState.remaining,
-				validationState.total
+				validationState.total,
+				expiryDate
 			);
 		}
 		case 'unavailable': {

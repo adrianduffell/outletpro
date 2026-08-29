@@ -23,6 +23,9 @@
 	<!-- Use WordPress Coding Standards -->
 	<rule ref="WordPress">
 	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents">
+		<exclude-pattern>tests/</exclude-pattern>
+	</rule>
 
 	<!-- Set minimum supported WordPress version for deprecation checks -->
 	<config name="minimum_supported_wp_version" value="6.9" />
@@ -67,9 +70,6 @@
 
 	<!-- Require null coalesce operator (??) where applicable -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator" />
-
-	<!-- Require short ternary operator (?:) where applicable -->
-	<rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator" />
 
 	<!-- Complexity checks -->
 	<rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit" />

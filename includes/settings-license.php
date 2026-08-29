@@ -76,6 +76,13 @@ const HTTP_NOT_FOUND = 404;
 const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
 
 /**
+ * Request-local cache group for license validation responses.
+ *
+ * @internal
+ */
+const LICENSE_HTTP_CACHE_GROUP = 'outletpro_license_http';
+
+/**
  * WordPress option name used to store the license activation tuple.
  *
  * @internal
@@ -91,11 +98,31 @@ define( 'OutletPro\LICENSE_ACTIVATION_OPTION', 'outletpro_license_activation_' .
 define( 'OutletPro\LICENSE_STATUS_TRANSIENT', 'outletpro_license_status_' . safe_get_site_key() );
 
 /**
+ * WordPress transient key used to cache the license variant name.
+ *
+ * @internal
+ * @see get_license_name()
+ */
+define( 'OutletPro\LICENSE_NAME_TRANSIENT', 'outletpro_license_name_' . safe_get_site_key() );
+
+/**
+ * WordPress transient key used to cache the license expiry.
+ *
+ * The transient value is an array tuple where:
+ * 0: Is a boolean indicating whether the license has an expiry (true) or is perpetual (false).
+ * 1: Is a string containing the expiry date in ISO 8601 format, or not defined if perpetual.
+ *
+ * @internal
+ */
+define( 'OutletPro\LICENSE_EXPIRY_TRANSIENT', 'outletpro_license_expiry_' . safe_get_site_key() );
+
+/**
  * Helper to initialize license settings.
  *
  * @internal
  */
 function init_license_settings(): void {
+	wp_cache_add_non_persistent_groups( LICENSE_HTTP_CACHE_GROUP );
 	register_license_key_setting();
 
 	add_action( 'add_option_' . LICENSE_KEY_OPTION, 'OutletPro\invalidate_license_cache_hook', 10, 0 );
@@ -205,6 +232,25 @@ function register_license_key_setting(): void {
  */
 function invalidate_license_cache_hook(): void {
 	delete_transient( LICENSE_STATUS_TRANSIENT );
+}
+
+/**
+ * Prime the transients used for licensing.
+ *
+ * @internal
+ */
+function prime_license_transients(): void {
+	$license_status = get_license_status(); // This will prime LICENSE_STATUS_TRANSIENT.
+
+	if ( in_array( $license_status, array( 'none', 'not_found' ), true ) ) {
+		// Handle case where license does not exist.
+		delete_transient( LICENSE_NAME_TRANSIENT );
+		delete_transient( LICENSE_EXPIRY_TRANSIENT );
+		return;
+	}
+
+	get_license_name(); // This will prime LICENSE_NAME_TRANSIENT.
+	get_license_expiry(); // This will prime LICENSE_EXPIRY_TRANSIENT.
 }
 
 /**
@@ -372,8 +418,16 @@ function set_license_activation( string $license_key, string $activation_id ): v
  * @internal
  */
 function sync_activation(): void {
-	$settings_license_key   = get_license_key();
-	$license_activation     = get_license_activation();
+	$settings_license_key = get_license_key();
+
+	try {
+		$license_activation = get_license_activation();
+	} catch ( \UnexpectedValueException $e ) {
+		\wc_get_logger()->error( 'Could not remove previous activation tuple due to unexpected value' );
+		delete_option( LICENSE_ACTIVATION_OPTION );
+		$license_activation = null;
+	}
+
 	$activation_license_key = $license_activation[0] ?? null;
 
 	// License setting and activation are in sync. Nothing to do.
@@ -383,7 +437,9 @@ function sync_activation(): void {
 
 	// Cases 2 or 3: Clean up any stale activation.
 	if ( ! is_null( $license_activation ) ) {
-		deactivate_license( ...$license_activation );
+		if ( true === validate_license( ...$license_activation ) ) {
+			deactivate_license( ...$license_activation );
+		}
 	}
 	delete_option( LICENSE_ACTIVATION_OPTION );
 
@@ -562,17 +618,21 @@ function validate_license( string $license_key, ?string $activation_id = null ) 
 		$request_body['instance_id'] = $activation_id;
 	}
 
-	$response = wp_remote_post(
-		'https://api.lemonsqueezy.com/v1/licenses/validate',
-		array(
-			'timeout' => 5,
-			'headers' => array(
-				'Content-Type' => 'application/x-www-form-urlencoded',
-				'Accept'       => 'application/json',
-			),
-			'body'    => $request_body,
-		)
-	);
+	$cache_key = hash( 'sha256', $license_key . ( $activation_id ?? '' ) );
+	$response  = wp_cache_get( $cache_key, LICENSE_HTTP_CACHE_GROUP )
+		?: wp_remote_post( // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'timeout' => 5,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Accept'       => 'application/json',
+				),
+				'body'    => $request_body,
+			)
+		);
+
+	wp_cache_set( $cache_key, $response, LICENSE_HTTP_CACHE_GROUP );
 
 	if ( is_wp_error( $response ) ) {
 		throw new \RuntimeException( 'License validation request failed' );
@@ -669,4 +729,185 @@ function get_license_status(): string {
 	set_transient( LICENSE_STATUS_TRANSIENT, $license_status, WEEK_IN_SECONDS );
 
 	return $license_status;
+}
+
+/**
+ * Get the name of the license activated on the site.
+ *
+ * @internal
+ * @see LICENSE_NAME_TRANSIENT
+ * @throws \RuntimeException If the site is not activated with a license.
+ * @throws \RuntimeException If the license validation request fails.
+ * @throws \UnexpectedValueException If the license activation is unavailable, or the license name is missing/invalid.
+ */
+function get_license_name(): string {
+	if ( in_array( get_license_status(), array( 'none', 'not_found' ), true ) ) {
+		throw new \RuntimeException( 'Site is not activated with license.' );
+	}
+
+	$cached_value = get_transient( LICENSE_NAME_TRANSIENT );
+
+	if ( is_string( $cached_value ) && '' !== trim( $cached_value ) ) {
+		return $cached_value;
+	}
+
+	$license_activation = get_license_activation();
+
+	if ( is_null( $license_activation ) ) {
+		throw new \UnexpectedValueException( 'License is unavailable.' );
+	}
+
+	$cache_key = hash( 'sha256', $license_activation[0] . $license_activation[1] );
+	$response  = wp_cache_get( $cache_key, LICENSE_HTTP_CACHE_GROUP )
+		?: wp_remote_post( // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'timeout' => 5,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Accept'       => 'application/json',
+				),
+				'body'    => array(
+					'license_key' => $license_activation[0],
+					'instance_id' => $license_activation[1],
+				),
+			)
+		);
+
+	wp_cache_set( $cache_key, $response, LICENSE_HTTP_CACHE_GROUP );
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	if ( ! in_array(
+		wp_remote_retrieve_response_code( $response ),
+		array( HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND ),
+		true
+	)
+	) {
+		throw new \RuntimeException( 'License validation response code failed' );
+	}
+
+	$data         = json_decode( wp_remote_retrieve_body( $response ), true );
+	$license_name = $data['meta']['variant_name'] ?? null;
+
+	if ( ! is_string( $license_name ) ) {
+		throw new \UnexpectedValueException( 'Unexpected license name type.' );
+	}
+
+	if ( '' === trim( $license_name ) ) {
+		throw new \UnexpectedValueException( 'License name is empty' );
+	}
+
+	// Set the transient with no scheduled expiry since the name is not expected to change.
+	set_transient( LICENSE_NAME_TRANSIENT, $license_name, 0 );
+
+	return $license_name;
+}
+
+/**
+ * Get the expiry of the license activated on the site.
+ *
+ * @internal
+ * @see LICENSE_EXPIRY_TRANSIENT
+ * @throws \RuntimeException If the site is not activated with a license.
+ * @throws \RuntimeException If the license validation request fails.
+ * @throws \UnexpectedValueException If the license is unavailable or has an invalid expiry.
+ */
+function get_license_expiry(): ?\DateTimeImmutable {
+	if ( in_array( get_license_status(), array( 'none', 'not_found' ), true ) ) {
+		throw new \RuntimeException( 'Site is not activated with license.' );
+	}
+
+	$transient = get_transient( LICENSE_EXPIRY_TRANSIENT );
+
+	// License has no expiry.
+	if ( is_array( $transient ) && false === ( $transient[0] ?? null ) ) {
+		return null;
+	}
+
+	// License with expiry.
+	if (
+		is_array( $transient )
+		&& true === ( $transient[0] ?? null )
+		&& is_string( $transient[1] ?? null )
+	) {
+		try {
+			return new \DateTimeImmutable( $transient[1] ); // Convert ISO date.
+		} catch ( \Exception $e ) {
+			delete_transient( LICENSE_EXPIRY_TRANSIENT );
+		}
+	}
+
+	$license_activation = get_license_activation();
+
+	if ( is_null( $license_activation ) ) {
+		throw new \UnexpectedValueException( 'License is unavailable.' );
+	}
+
+	$cache_key = hash( 'sha256', $license_activation[0] . $license_activation[1] );
+	$response  = wp_cache_get( $cache_key, LICENSE_HTTP_CACHE_GROUP )
+		?: wp_remote_post( // phpcs:ignore Universal.Operators.DisallowShortTernary.Found
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array(
+				'timeout' => 5,
+				'headers' => array(
+					'Content-Type' => 'application/x-www-form-urlencoded',
+					'Accept'       => 'application/json',
+				),
+				'body'    => array(
+					'license_key' => $license_activation[0],
+					'instance_id' => $license_activation[1],
+				),
+			)
+		);
+
+	wp_cache_set( $cache_key, $response, LICENSE_HTTP_CACHE_GROUP );
+
+	if ( is_wp_error( $response ) ) {
+		throw new \RuntimeException( 'License validation request failed' );
+	}
+
+	if ( ! in_array(
+		wp_remote_retrieve_response_code( $response ),
+		array( HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND ),
+		true
+	) ) {
+		throw new \RuntimeException( 'License validation response code failed' );
+	}
+
+	$data = json_decode( wp_remote_retrieve_body( $response ) );
+
+	if ( ! is_object( $data->license_key ?? null ) ) {
+		throw new \UnexpectedValueException( 'Unexpected license type.' );
+	}
+
+	if ( ! property_exists( $data->license_key, 'expires_at' ) ) {
+		throw new \UnexpectedValueException( 'License expiry is missing.' );
+	}
+
+	// License has no expiry.
+	if ( is_null( $data->license_key->expires_at ) ) {
+		set_transient( LICENSE_EXPIRY_TRANSIENT, array( false ), DAY_IN_SECONDS );
+		return null;
+	}
+
+	if ( ! is_string( $data->license_key->expires_at ) ) {
+		throw new \UnexpectedValueException( 'Unexpected license expiry type.' );
+	}
+
+	if ( '' === trim( $data->license_key->expires_at ) ) {
+		throw new \UnexpectedValueException( 'License expiry is empty.' );
+	}
+
+	try {
+		$license_expiry_date = new \DateTimeImmutable( $data->license_key->expires_at );
+	} catch ( \Exception $e ) {
+		throw new \UnexpectedValueException( 'License expiry is malformed.' );
+	}
+
+	set_transient( LICENSE_EXPIRY_TRANSIENT, array( true, $data->license_key->expires_at ), DAY_IN_SECONDS );
+
+	return $license_expiry_date;
 }
