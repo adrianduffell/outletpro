@@ -74,6 +74,7 @@ class Test_Add_Auto_Update_Unavailable_Label_Hook extends WP_UnitTestCase {
 	public function test_preserves_setting_when_auto_updates_are_supported(): void {
 		// Arrange.
 		init_license();
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
 		$html = '<a class="toggle-auto-update">Enable auto-updates</a>';
 
 		// Act.
@@ -86,6 +87,27 @@ class Test_Add_Auto_Update_Unavailable_Label_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( $html, $result );
+	}
+
+	public function test_adds_message_when_cached_update_support_is_stale(): void {
+		// Arrange.
+		init_license();
+		set_transient( LICENSE_STATUS_TRANSIENT, 'none', WEEK_IN_SECONDS );
+		$html = '<a class="toggle-auto-update">Enable auto-updates</a>';
+
+		// Act.
+		$result = apply_filters(
+			'plugin_auto_update_setting_html',
+			$html,
+			plugin_basename( PLUGIN_FILE ),
+			array( 'update-supported' => true )
+		);
+
+		// Assert.
+		$this->assertSame(
+			'<span class="label">Auto-updates unavailable</span>',
+			$result
+		);
 	}
 
 	public function test_preserves_forced_auto_update_status(): void {

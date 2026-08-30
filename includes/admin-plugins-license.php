@@ -122,10 +122,6 @@ function add_auto_update_unavailable_label_hook(
 		return $html;
 	}
 
-	if ( ! empty( $plugin_data['update-supported'] ) ) {
-		return $html;
-	}
-
 	$license_status = get_license_status();
 
 	if ( 'active' === $license_status ) {
