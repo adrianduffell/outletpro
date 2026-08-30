@@ -108,6 +108,26 @@ class Test_Add_Auto_Update_Unavailable_Label_Hook extends WP_UnitTestCase {
 		$this->assertSame( $html, $result );
 	}
 
+	public function test_preserves_forced_disabled_auto_update_status(): void {
+		// Arrange.
+		init_license();
+		$html = '<span class="label">Auto-updates disabled</span>';
+
+		// Act.
+		$result = apply_filters(
+			'plugin_auto_update_setting_html',
+			$html,
+			plugin_basename( PLUGIN_FILE ),
+			array(
+				'auto-update-forced' => false,
+				'update-supported'   => false,
+			)
+		);
+
+		// Assert.
+		$this->assertSame( $html, $result );
+	}
+
 	public function test_does_not_change_other_plugins(): void {
 		// Arrange.
 		init_license();
