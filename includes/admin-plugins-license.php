@@ -20,6 +20,7 @@ defined( 'ABSPATH' ) || exit;
 function init_license(): void {
 	add_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 	add_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_premium_license_notice_hook', 10, 3 );
+	add_filter( 'plugin_auto_update_setting_html', 'OutletPro\add_auto_update_unavailable_label_hook', 10, 3 );
 	add_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook', 10, 2 );
 	add_filter( 'plugin_row_meta', 'OutletPro\add_plugin_license_expiry_hook', 9999, 2 );
 }
@@ -32,6 +33,7 @@ function init_license(): void {
 function deinit_license(): void {
 	remove_filter( 'plugin_action_links_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_plugin_action_links_hook' );
 	remove_action( 'after_plugin_row_' . plugin_basename( PLUGIN_FILE ), 'OutletPro\add_premium_license_notice_hook', 10 );
+	remove_filter( 'plugin_auto_update_setting_html', 'OutletPro\add_auto_update_unavailable_label_hook' );
 	remove_filter( 'plugin_row_meta', 'OutletPro\add_plugin_meta_links_hook' );
 	remove_filter( 'plugin_row_meta', 'OutletPro\add_plugin_license_expiry_hook', 9999 );
 }
@@ -93,6 +95,51 @@ function add_premium_license_notice_hook( string $plugin_file, array $plugin_dat
 		</td>
 	</tr>
 	<?php
+}
+
+/**
+ * Adds an "Auto-updates unavailable" label to the plugin admin table row when the
+ * license is not active.
+ *
+ * Fired by `plugin_auto_update_setting_html`.
+ *
+ * @param string               $html        Existing auto-update setting HTML.
+ * @param string               $plugin_file Plugin file relative to the plugins directory.
+ * @param array<string, mixed> $plugin_data Plugin metadata.
+ * @return string Modified auto-update setting HTML.
+ * @internal WordPress filter
+ */
+function add_auto_update_unavailable_label_hook(
+	string $html,
+	string $plugin_file,
+	array $plugin_data
+): string {
+	if ( plugin_basename( PLUGIN_FILE ) !== $plugin_file ) {
+		return $html;
+	}
+
+	if ( isset( $plugin_data['auto-update-forced'] ) ) {
+		return $html;
+	}
+
+	if ( ! empty( $plugin_data['update-supported'] ) ) {
+		return $html;
+	}
+
+	$license_status = get_license_status();
+
+	if ( 'active' === $license_status ) {
+		return $html;
+	}
+
+	if ( 'error' === $license_status ) {
+		return $html;
+	}
+
+	return sprintf(
+		'<span class="label">%s</span>',
+		esc_html__( 'Auto-updates unavailable', 'outletpro' )
+	);
 }
 
 /**
