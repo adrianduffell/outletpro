@@ -156,12 +156,6 @@ function deinit_license_settings(): void {
  */
 function pre_update_license_key_hook( $value, $old_value ) {
 	if ( ! is_string( $value ) ) {
-		add_settings_error(
-			LICENSE_KEY_OPTION,
-			'license_activation_failed',
-			__( 'The license could not be activated. Please try again.', 'outletpro' )
-		);
-
 		return $old_value;
 	}
 
@@ -169,12 +163,6 @@ function pre_update_license_key_hook( $value, $old_value ) {
 		sync_activation( '' === $value ? null : $value ); // Delete is denoted with null.
 	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'License setting could not be updated.' );
-		add_settings_error(
-			LICENSE_KEY_OPTION,
-			'license_activation_failed',
-			__( 'The license could not be activated. Please try again.', 'outletpro' )
-		);
-
 		return $old_value;
 	}
 
