@@ -14,6 +14,42 @@ use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
 
 class Test_Pre_Update_License_Key_Hook extends WP_UnitTestCase {
+	public function test_rest_api_returns_previous_license_when_activation_fails(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		deinit_license_settings();
+		delete_option( LICENSE_KEY_OPTION );
+		update_option( LICENSE_KEY_OPTION, 'previous-license' );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'previous-license', 'activation-id' ) );
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/validate',
+			array( 'license_key' => 'new-license' ),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-validate-true.json' )
+		);
+		mock_http_rest_api_response(
+			'POST',
+			'https://api.lemonsqueezy.com/v1/licenses/activate',
+			array(
+				'license_key'   => 'new-license',
+				'instance_name' => home_url(),
+			),
+			file_get_contents( dirname( __DIR__ ) . '/fixtures/lemon-squeezy/post-activate-false.json' )
+		);
+		init_license_settings();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( LICENSE_KEY_OPTION, 'new-license' );
+
+		// Act.
+		$response = rest_do_request( $request );
+		$data     = $response->get_data();
+
+		// Assert.
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertSame( 'previous-license', $data[ LICENSE_KEY_OPTION ] );
+		$this->assertSame( 'previous-license', get_option( LICENSE_KEY_OPTION ) );
+	}
 
 	public function test_activates_license_when_key_option_is_added(): void { //phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
