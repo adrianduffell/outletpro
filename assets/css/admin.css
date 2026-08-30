@@ -95,9 +95,19 @@
 
 @supports selector(:has(*)) {
 
+	/* Remove the plugin row divider before the custom license notice. */
 	.plugins tr:has(+ .outletpro-license-notice) > th,
 	.plugins tr:has(+ .outletpro-license-notice) > td {
 		border-bottom: 0;
 		box-shadow: none;
+	}
+}
+
+@media (max-width: 782px) {
+
+	/* Fill the area behind the premium license notice. */
+	.plugins .outletpro-license-notice::before {
+		background-color: rgba(var(--wp-admin-theme-color--rgb), 0.08);
+		border-inline-start: 4px solid var(--wp-admin-theme-color);
 	}
 }
