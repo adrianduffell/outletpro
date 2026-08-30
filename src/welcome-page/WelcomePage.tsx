@@ -68,8 +68,9 @@ export function WelcomePage(): JSX.Element {
 
 		setIsLoading( true );
 		setErrorMessage( '' );
+		let settings: { outletpro_license_key?: string };
 		try {
-			await apiFetch( {
+			settings = await apiFetch< { outletpro_license_key?: string } >( {
 				path: '/wp/v2/settings',
 				method: 'POST',
 				data: { outletpro_license_key: licenseKey },
@@ -80,6 +81,13 @@ export function WelcomePage(): JSX.Element {
 					'Unable to apply the license. Please try again.',
 					'outletpro'
 				)
+			);
+			setIsLoading( false );
+			return;
+		}
+		if ( settings.outletpro_license_key !== licenseKey ) {
+			setErrorMessage(
+				__( 'Error activating site. Please try again', 'outletpro' )
 			);
 			setIsLoading( false );
 			return;

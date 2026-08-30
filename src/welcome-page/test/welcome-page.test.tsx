@@ -338,7 +338,9 @@ test( 'shows success message after valid license key is saved', async () => {
 		validationState: { status: 'available', remaining: 3, total: 5 },
 		canActivate: true,
 	} );
-	mockApiFetch.mockResolvedValue( {} );
+	mockApiFetch.mockResolvedValue( {
+		outletpro_license_key: 'ABCD-1234',
+	} );
 
 	// Act.
 	render( <WelcomePage /> );
@@ -382,6 +384,35 @@ test( 'shows error when REST API save fails', async () => {
 	).toBeEnabled();
 } );
 
+test( 'shows activation error when the saved license key does not match', async () => {
+	// Arrange.
+	arrangeGlobals();
+	arrangeValidation( {
+		licenseKey: 'ABCD-1234',
+		validationState: { status: 'available', remaining: 3, total: 5 },
+		canActivate: true,
+	} );
+	mockApiFetch.mockResolvedValue( {
+		outletpro_license_key: 'PREVIOUS-LICENSE-KEY',
+	} );
+
+	// Act.
+	render( <WelcomePage /> );
+	await act( async () => {
+		fireEvent.click(
+			screen.getByRole( 'button', { name: /Activate site/i } )
+		);
+	} );
+
+	// Assert.
+	expect(
+		screen.getByText( 'Error activating site. Please try again' )
+	).toBeInTheDocument();
+	expect(
+		screen.getByRole( 'button', { name: /Activate site/i } )
+	).toBeEnabled();
+} );
+
 test( 'welcome mode success view shows Products link', async () => {
 	// Arrange.
 	arrangeGlobals();
@@ -390,7 +421,9 @@ test( 'welcome mode success view shows Products link', async () => {
 		validationState: { status: 'available', remaining: 3, total: 5 },
 		canActivate: true,
 	} );
-	mockApiFetch.mockResolvedValue( {} );
+	mockApiFetch.mockResolvedValue( {
+		outletpro_license_key: 'ABCD-1234',
+	} );
 
 	// Act.
 	render( <WelcomePage /> );
@@ -416,7 +449,9 @@ test( 'reset mode success view omits getting started guidance', async () => {
 		validationState: { status: 'available', remaining: 3, total: 5 },
 		canActivate: true,
 	} );
-	mockApiFetch.mockResolvedValue( {} );
+	mockApiFetch.mockResolvedValue( {
+		outletpro_license_key: 'NEW-LICENSE-KEY',
+	} );
 
 	// Act.
 	render( <WelcomePage /> );
