@@ -104,6 +104,12 @@
 
 @media (max-width: 782px) {
 
+	/* Hide the auto-update button area when empty to avoid extra spacing. */
+	#wpbody-content .plugins tr:has(+ .outletpro-license-notice)
+	.column-auto-updates:not(:has(.toggle-auto-update)) {
+		display: none;
+	}
+
 	/* Fill the area behind the premium license notice. */
 	.plugins .outletpro-license-notice::before {
 		background-color: rgba(var(--wp-admin-theme-color--rgb), 0.08);
