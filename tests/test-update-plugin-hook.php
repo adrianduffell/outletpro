@@ -244,7 +244,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			'https://api.adrianduffell.store/v1/outletpro/updates?version=' . VERSION,
+			add_query_arg( 'version', VERSION, 'https://api.adrianduffell.store/v1/outletpro/updates' ),
 			$requested_url
 		);
 	}
