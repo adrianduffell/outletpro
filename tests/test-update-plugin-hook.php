@@ -321,7 +321,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		);
 
 		// Assert.
-		$this->assertSame( 'Bearer abc123.activation.id', $authorization );
+		$this->assertSame( 'Bearer abc123.activation-id', $authorization );
 		$this->assertIsArray( $result );
 		$this->assertSame( 'outletpro', $result['slug'] );
 		$this->assertSame( '1.0.1', $result['version'] );
