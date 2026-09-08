@@ -13,6 +13,7 @@ use function OutletPro\init_settings;
 use function OutletPro\init_update_plugin;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 use const OutletPro\VERSION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
@@ -81,6 +82,29 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			false,
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
+		);
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
+
+	public function test_returns_false_when_cached_active_license_activation_is_invalid(): void {
+		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
+		init_settings();
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'invalid' ) );
+		$previous = array(
+			'slug'    => 'outletpro',
+			'version' => '1.0.1',
+		);
+
+		// Act.
+		$result = apply_filters(
+			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
+			$previous,
 			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
 		);
 
