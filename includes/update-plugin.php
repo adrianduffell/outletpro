@@ -71,7 +71,11 @@ function update_plugin_hook( $update, array $plugin_data ) {
 	}
 
 	$response = wp_remote_get(
-		'https://api.adrianduffell.store/v1/outletpro/updates',
+		add_query_arg(
+			'version',
+			VERSION,
+			'https://api.adrianduffell.store/v1/outletpro/updates'
+		),
 		array(
 			'timeout' => 5,
 			'headers' => array(

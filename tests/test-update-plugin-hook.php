@@ -13,6 +13,7 @@ use function OutletPro\init_settings;
 use function OutletPro\init_update_plugin;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\VERSION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
@@ -192,6 +193,60 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( $previous, $result );
+	}
+
+	public function test_sends_current_version_to_update_service(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+		// Arrange.
+		$this->mock_license_server_response( true );
+		deinit_update_plugin();
+		init_update_plugin();
+		init_settings();
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_KEY_OPTION, 'abc123' );
+		$requested_url = '';
+
+		add_filter(
+			'pre_http_request',
+			function ( $pre, $args, $url ) use ( &$requested_url ) {
+				if ( strpos( $url, 'v1/outletpro/updates' ) !== false ) {
+					$requested_url = $url;
+
+					return array(
+						'headers'  => array(),
+						'body'     => wp_json_encode(
+							array(
+								'version' => '1.0.1',
+								'url'     => 'https://example.com',
+								'package' => 'https://example.com/outletpro.zip',
+							)
+						),
+						'response' => array(
+							'code'    => 200,
+							'message' => 'OK',
+						),
+						'cookies'  => array(),
+						'filename' => null,
+					);
+				}
+
+				return $pre;
+			},
+			10,
+			3
+		);
+
+		// Act.
+		apply_filters(
+			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
+			false,
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
+		);
+
+		// Assert.
+		$this->assertSame(
+			add_query_arg( 'version', VERSION, 'https://api.adrianduffell.store/v1/outletpro/updates' ),
+			$requested_url
+		);
 	}
 
 	public function test_sends_license_activation_and_returns_available_update(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
