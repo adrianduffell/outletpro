@@ -63,7 +63,7 @@ function update_plugin_hook( $update, array $plugin_data ) {
 		$license_activation = get_license_activation();
 	} catch ( \UnexpectedValueException $e ) {
 		\wc_get_logger()->error( 'Could not retrieve license activation for plugin update.' );
-		return $update;
+		return false;
 	}
 
 	if ( is_null( $license_activation ) ) {
