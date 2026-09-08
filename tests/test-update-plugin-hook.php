@@ -194,19 +194,22 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$this->assertSame( $previous, $result );
 	}
 
-	public function test_returns_update_when_new_version_is_available(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_sends_license_activation_and_returns_available_update(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$this->mock_license_server_response( true );
 		deinit_update_plugin();
 		init_update_plugin();
 		init_settings();
-		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation.id' ) );
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
+		$authorization = '';
 
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) {
+			function ( $pre, $args, $url ) use ( &$authorization ) {
 				if ( strpos( $url, 'v1/outletpro/updates' ) !== false ) {
+					$authorization = $args['headers']['Authorization'];
+
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
@@ -239,6 +242,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		);
 
 		// Assert.
+		$this->assertSame( 'Bearer abc123.activation.id', $authorization );
 		$this->assertIsArray( $result );
 		$this->assertSame( 'outletpro', $result['slug'] );
 		$this->assertSame( '1.0.1', $result['version'] );

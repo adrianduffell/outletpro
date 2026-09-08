@@ -59,14 +59,23 @@ function update_plugin_hook( $update, array $plugin_data ) {
 		return false;
 	}
 
-	$license_key = get_option( LICENSE_KEY_OPTION );
+	try {
+		$license_activation = get_license_activation();
+	} catch ( \UnexpectedValueException $e ) {
+		\wc_get_logger()->error( 'Could not retrieve license activation for plugin update.' );
+		return $update;
+	}
+
+	if ( is_null( $license_activation ) ) {
+		return false;
+	}
 
 	$response = wp_remote_get(
 		'https://api.adrianduffell.store/v1/outletpro/updates',
 		array(
 			'timeout' => 5,
 			'headers' => array(
-				'Authorization' => 'Bearer ' . $license_key,
+				'Authorization' => 'Bearer ' . implode( '.', $license_activation ),
 				'Accept'        => 'application/json',
 			),
 		)
