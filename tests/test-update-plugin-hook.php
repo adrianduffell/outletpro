@@ -13,6 +13,7 @@ use function OutletPro\init_settings;
 use function OutletPro\init_update_plugin;
 use const OutletPro\LICENSE_ACTIVATION_OPTION;
 use const OutletPro\LICENSE_KEY_OPTION;
+use const OutletPro\LICENSE_STATUS_TRANSIENT;
 use const OutletPro\VERSION;
 
 class Test_Update_Plugin_Hook extends WP_UnitTestCase {
@@ -81,6 +82,29 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		$result = apply_filters(
 			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
 			false,
+			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
+		);
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
+
+	public function test_returns_false_when_cached_active_license_activation_is_invalid(): void {
+		// Arrange.
+		deinit_update_plugin();
+		init_update_plugin();
+		init_settings();
+		set_transient( LICENSE_STATUS_TRANSIENT, 'active', WEEK_IN_SECONDS );
+		update_option( LICENSE_ACTIVATION_OPTION, array( 'invalid' ) );
+		$previous = array(
+			'slug'    => 'outletpro',
+			'version' => '1.0.1',
+		);
+
+		// Act.
+		$result = apply_filters(
+			'update_plugins_adrianduffell.store', //phpcs:ignore WordPress.NamingConventions.ValidHookName
+			$previous,
 			array( 'UpdateURI' => 'https://adrianduffell.store/outletpro' ),
 		);
 
@@ -249,7 +273,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_returns_update_when_new_version_is_available(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
+	public function test_sends_license_activation_and_returns_available_update(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		$this->mock_license_server_response( true );
 		deinit_update_plugin();
@@ -257,11 +281,14 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		init_settings();
 		update_option( LICENSE_ACTIVATION_OPTION, array( 'abc123', 'activation-id' ) );
 		update_option( LICENSE_KEY_OPTION, 'abc123' );
+		$authorization = '';
 
 		add_filter(
 			'pre_http_request',
-			function ( $pre, $args, $url ) {
+			function ( $pre, $args, $url ) use ( &$authorization ) {
 				if ( strpos( $url, 'v1/outletpro/updates' ) !== false ) {
+					$authorization = $args['headers']['Authorization'];
+
 					return array(
 						'headers'  => array(),
 						'body'     => wp_json_encode(
@@ -294,6 +321,7 @@ class Test_Update_Plugin_Hook extends WP_UnitTestCase {
 		);
 
 		// Assert.
+		$this->assertSame( 'Bearer abc123.activation-id', $authorization );
 		$this->assertIsArray( $result );
 		$this->assertSame( 'outletpro', $result['slug'] );
 		$this->assertSame( '1.0.1', $result['version'] );
