@@ -1,6 +1,6 @@
 {
 	"phpVersion": "8.2",
-	"core": "WordPress/WordPress#6.9.1",
+	"core": "https://wordpress.org/latest.zip",
 	"plugins": [ "https://downloads.wordpress.org/plugin/woocommerce.zip" ],
 	"mappings": {
 		"wp-content/plugins/outletpro": "."
