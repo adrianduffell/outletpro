@@ -1,0 +1,79 @@
+{
+	"landingPage": "/outlet/",
+	"preferredVersions": {
+		"php": "8.2",
+		"wp": "latest"
+	},
+	"phpExtensionBundles": [ "kitchen-sink" ],
+	"steps": [
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "woocommerce"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "setSiteOptions",
+			"options": {
+				"woocommerce_onboarding_profile": {
+					"skipped": true
+				}
+			}
+		},
+		{
+			"step": "wp-cli",
+			"command": "wp transient delete _wc_activation_redirect"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "wordpress.org/plugins",
+				"slug": "wordpress-importer"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "wp-cli",
+			"command": "wp import wp-content/plugins/woocommerce/sample-data/sample_products.xml --authors=create"
+		},
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "url",
+				"url": "https://api.adrianduffell.store/demo.zip"
+			},
+			"options": {
+				"activate": true
+			}
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; $products = wc_get_products( array( 'limit' => 8, 'status' => 'publish', 'orderby' => 'ID', 'order' => 'ASC' ) ); foreach ( $products as $product ) { OutletPro\\add_to_outlet( $product ); }"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once '/wordpress/wp-load.php'; wp_publish_post( OutletPro\\get_outlet_page_id() );"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/mu-plugins/outlet-pro-playground.php",
+			"data": "<?php $_COOKIE['OUTLETPRO_DISMISS_SETUP'] = '1'; setcookie( 'OUTLETPRO_DISMISS_SETUP', '1', 0, '/' );"
+		},
+		{
+			"step": "writeFile",
+			"path": "/wordpress/wp-content/mu-plugins/outlet-pro-action-links-playground.php",
+			"data": "<?php add_action( 'admin_init', static function (): void { OutletPro\\deinit_license(); }, PHP_INT_MAX );"
+		}
+	]
+}
