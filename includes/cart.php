@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_cart(): void {
 	add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
+	add_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook', 10, 2 );
 }
 
 /**
@@ -27,6 +28,7 @@ function init_cart(): void {
  */
 function deinit_cart(): void {
 	remove_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
+	remove_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook' );
 }
 
 /**
@@ -75,4 +77,38 @@ function add_outlet_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 	);
 
 	return $item_data;
+}
+
+/**
+ * Add .outletpro-cart-item class name to rows in the classic cart when the cart item is an outlet product.
+ *
+ * Fired by `woocommerce_cart_item_class`.
+ *
+ * @param string $classes The existing cart item classes.
+ * @param array  $cart_item The cart item.
+ * @return string Filtered cart item classes.
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ */
+function add_outlet_to_cart_item_class_hook( $classes, $cart_item ): string {
+	$product = $cart_item['data'] ?? null;
+
+	if ( ! $product instanceof \WC_Product ) {
+		return $classes;
+	}
+
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return $classes;
+		}
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet status could not be retrieved in classic cart item' );
+		return $classes;
+	}
+
+	if ( '' === $classes ) {
+		return 'outletpro-cart-item';
+	}
+
+	return $classes . ' outletpro-cart-item';
 }
