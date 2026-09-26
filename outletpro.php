@@ -65,6 +65,7 @@ require_once __DIR__ . '/includes/block-editor.php';
 require_once __DIR__ . '/includes/blocks.php';
 require_once __DIR__ . '/includes/admin-order.php';
 require_once __DIR__ . '/includes/cart.php';
+require_once __DIR__ . '/includes/store-api.php';
 require_once __DIR__ . '/includes/orders.php';
 require_once __DIR__ . '/includes/customizer.php';
 require_once __DIR__ . '/includes/woocommerce-template-hooks.php';
@@ -97,6 +98,7 @@ function init_hook(): void {
 	init_block_editor();
 	init_orders();
 	init_cart();
+	init_store_api();
 
 	// #ifdef LICENSE
 	if ( is_admin() ) {

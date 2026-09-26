@@ -358,6 +358,25 @@ themes). Added in 1.0.0.
 
 ## REST API
 
+### WooCommerce Store API cart items
+
+Each item returned by the WooCommerce Store API cart endpoints includes its outlet
+status in the Outlet Pro extension namespace.
+
+```json
+{
+    "extensions": {
+        "outletpro": {
+            "is_outlet": true
+        }
+    }
+}
+```
+
+Added in 1.1.0.
+
+### Product filtering
+
 The plugin extends the WooCommerce products REST endpoint with a `outletpro` query
 parameter.
 
