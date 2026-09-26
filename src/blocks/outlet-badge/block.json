@@ -7,7 +7,10 @@
 	"description": "Displays a badge when a product is in the store’s outlet.",
 	"usesContext": [ "postId" ],
 	"supports": {
-		"html": false
+		"html": false,
+		"spacing": {
+			"margin": true
+		}
 	},
 	"textdomain": "outletpro"
 }
