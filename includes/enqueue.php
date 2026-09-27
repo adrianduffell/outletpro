@@ -18,6 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'OutletPro\register_classic_styles_hook' );
+	add_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_styles_hook' );
+	add_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_scripts_hook' );
 	add_action( 'wp_enqueue_scripts', 'OutletPro\enqueue_cart_styles_hook' );
 	add_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_editor_styles_hook' );
 	add_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_canvas_scripts_hook' );
@@ -36,6 +38,8 @@ function enqueue_init(): void {
  */
 function deinit_enqueue(): void {
 	remove_action( 'wp_enqueue_scripts', 'OutletPro\enqueue_cart_styles_hook' );
+	remove_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_scripts_hook' );
+	remove_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'OutletPro\register_classic_styles_hook' );
 	remove_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_editor_styles_hook' );
 	remove_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_canvas_scripts_hook' );
@@ -48,6 +52,10 @@ function deinit_enqueue(): void {
 	wp_deregister_style( 'outletpro-classic-message' );
 	wp_dequeue_style( 'outletpro-cart-badge' );
 	wp_deregister_style( 'outletpro-cart-badge' );
+	wp_dequeue_style( 'outletpro-block-cart' );
+	wp_deregister_style( 'outletpro-block-cart' );
+	wp_dequeue_script( 'outletpro-block-cart' );
+	wp_deregister_script( 'outletpro-block-cart' );
 	wp_dequeue_style( 'outletpro-admin' );
 	wp_deregister_style( 'outletpro-admin' );
 	wp_dequeue_style( 'outletpro-admin-editor' );
@@ -175,6 +183,65 @@ function enqueue_cart_styles_hook(): void {
 	wp_add_inline_style(
 		'outletpro-cart-badge',
 		':root { --outletpro-badge-label: ' . ( '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'none' ) . '; }'
+	);
+}
+
+/**
+ * Register the front-end block cart badge stylesheet.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function register_block_cart_styles_hook(): void {
+	/**
+	 * Front-end block cart badge stylesheet.
+	 *
+	 * @since 1.1.0
+	 */
+	wp_register_style(
+		'outletpro-block-cart',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/block-cart.css',
+		array(),
+		VERSION
+	);
+}
+
+/**
+ * Register the front-end block cart badge script.
+ *
+ * Fired by `wp_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function register_block_cart_scripts_hook(): void {
+	if ( wp_script_is( 'outletpro-block-cart', 'registered' ) ) {
+		return;
+	}
+
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION, '' );
+
+	if ( ! is_string( $label ) ) {
+		$label = '';
+	}
+
+	/**
+	 * Front-end block cart badge script.
+	 *
+	 * @since 1.1.0
+	 */
+	wp_register_script(
+		'outletpro-block-cart',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/block-cart.js',
+		array( 'wc-blocks-checkout' ),
+		VERSION,
+		true
+	);
+
+	wp_localize_script(
+		'outletpro-block-cart',
+		'__experimentalOutletProBlockCart',
+		array( 'badgeLabel' => $label )
 	);
 }
 

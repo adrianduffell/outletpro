@@ -17,6 +17,17 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_cart(): void {
+	/* Block integrations. */
+
+	// Cart block: enqueue cart-block assets.
+	add_filter( 'render_block_woocommerce/cart', 'OutletPro\enqueue_block_cart_assets_hook' );
+
+	// Checkout block: enqueue cart-block assets.
+	add_filter( 'render_block_woocommerce/checkout', 'OutletPro\enqueue_block_cart_assets_hook' );
+
+	// Mini-Cart: enqueue cart-block assets.
+	add_filter( 'render_block_woocommerce/mini-cart', 'OutletPro\enqueue_block_cart_assets_hook' );
+
 	add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 	add_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook', 10, 2 );
 }
@@ -27,8 +38,29 @@ function init_cart(): void {
  * @internal
  */
 function deinit_cart(): void {
+	remove_filter( 'render_block_woocommerce/cart', 'OutletPro\enqueue_block_cart_assets_hook' );
+	remove_filter( 'render_block_woocommerce/checkout', 'OutletPro\enqueue_block_cart_assets_hook' );
+	remove_filter( 'render_block_woocommerce/mini-cart', 'OutletPro\enqueue_block_cart_assets_hook' );
 	remove_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
 	remove_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook' );
+}
+
+/**
+ * Enqueue the front-end block cart badge assets.
+ *
+ * Fired by `render_block_woocommerce/cart`.
+ * Fired by `render_block_woocommerce/checkout`.
+ * Fired by `render_block_woocommerce/mini-cart`.
+ *
+ * @param string $block_content The rendered block content.
+ * @return string Unmodified block content.
+ * @internal WordPress filter hook
+ */
+function enqueue_block_cart_assets_hook( string $block_content ): string {
+	wp_enqueue_style( 'outletpro-block-cart' );
+	wp_enqueue_script( 'outletpro-block-cart' );
+
+	return $block_content;
 }
 
 /**
@@ -67,12 +99,13 @@ function add_outlet_to_cart_item_meta_hook( $item_data, $cart_item ): array {
 	array_unshift(
 		$item_data,
 		array(
-			'key'     => $outlet_label,
-			'value'   => __( 'Yes', 'outletpro' ),
-			'display' => sprintf(
+			'key'                                      => $outlet_label,
+			'value'                                    => __( 'Yes', 'outletpro' ),
+			'display'                                  => sprintf(
 				'<span class="outletpro-cart-item-meta">%s</span>',
 				esc_html__( 'Yes', 'outletpro' )
 			),
+			'__experimental_woocommerce_blocks_hidden' => true,
 		)
 	);
 
