@@ -9,7 +9,7 @@
 	width: 100%;
 }
 
-.outletpro-badge {
+.outletpro-cart-item .outletpro-badge {
 	display: block;
 	width: fit-content;
 	border-radius: var(--outletpro-badge-border-radius, unset);
