@@ -25,9 +25,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		wp_register_style( 'outletpro-classic-badge', false, array(), 'test' );
 		wp_dequeue_style( 'outletpro-classic-badge' );
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '<strong>Product</strong>', array( 'data' => $product ), 'cart-item-key' );
@@ -47,9 +47,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		wp_register_style( 'outletpro-classic-badge', false, array(), 'test' );
 		wp_dequeue_style( 'outletpro-classic-badge' );
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '<strong>Product</strong>', array( 'data' => $product ), 'cart-item-key' );
@@ -66,9 +66,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance & more' );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '', array( 'data' => $product ), 'cart-item-key' );
@@ -85,9 +85,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_variation_product();
 		add_to_outlet( $product );
 		$variation = wc_get_product( $product->get_children()[0] );
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Variation</span>', array( 'data' => $variation ), 'cart-item-key' );
@@ -98,9 +98,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_preserves_product_name_for_invalid_cart_item(): void {
 		// Arrange.
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array(), 'cart-item-key' );
@@ -113,9 +113,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		$product = WC_Helper_Product::create_simple_product();
 		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array( 'data' => $product ), 'cart-item-key' );
@@ -136,9 +136,9 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		update_option( OUTLET_BADGE_LABEL_OPTION, $label );
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
+		add_filter( 'woocommerce_is_checkout', '__return_true' );
 		deinit_cart();
 		init_cart();
-		do_action( 'wp' );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array( 'data' => $product ), 'cart-item-key' );
