@@ -31,7 +31,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_blocks();
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', array() );
+		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', array() );
 
 		// Assert.
 		$this->assertNotContains( 'outletpro/outlet-badge', $result );
@@ -43,7 +43,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_blocks();
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', null );
+		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', null );
 
 		// Assert.
 		$this->assertNotContains( 'outletpro/outlet-badge', $result );
@@ -57,7 +57,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$template->slug = 'archive-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', $template );
 
 		// Assert.
 		$this->assertNotContains( 'outletpro/outlet-badge', $result );
@@ -71,7 +71,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$template->slug = 'single-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'after', 'woocommerce/product-price', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', $template );
 
 		// Assert.
 		$this->assertContains( 'outletpro/outlet-badge', $result );
@@ -85,7 +85,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$template->slug = 'archive-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'after', 'woocommerce/product-price', $template );
+		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'before', 'core/post-title', $template );
 
 		// Assert.
 		$this->assertContains( 'core/paragraph', $result );
@@ -99,7 +99,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$template->slug = 'single-product';
 
 		// Act.
-		$result = apply_filters( 'hooked_block_types', array(), 'after', 'core/heading', $template );
+		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/heading', $template );
 
 		// Assert.
 		$this->assertNotContains( 'outletpro/outlet-badge', $result );

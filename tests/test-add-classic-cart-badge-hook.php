@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for add_classic_cart_badge_hook().
+ * Tests for display_cart_item_outlet_badge_hook().
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
@@ -16,7 +16,7 @@ use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
-	public function test_appends_badge_to_classic_checkout_quantity(): void {
+	public function test_prepends_badge_to_classic_product_name(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -27,17 +27,19 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		wp_dequeue_style( 'outletpro-classic-badge' );
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '<strong>1</strong>', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<strong>Product</strong>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertStringStartsWith( '<strong>1</strong>', $result );
+		$this->assertStringStartsWith( '<div class="outletpro-badge-container">', $result );
 		$this->assertStringContainsString( 'outletpro-badge', $result );
+		$this->assertStringEndsWith( '<strong>Product</strong>', $result );
 		$this->assertTrue( wp_style_is( 'outletpro-classic-badge', 'enqueued' ) );
 	}
 
-	public function test_preserves_classic_checkout_quantity_for_non_outlet_product(): void {
+	public function test_preserves_classic_product_name_for_non_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -47,12 +49,13 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		wp_dequeue_style( 'outletpro-classic-badge' );
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '<strong>1</strong>', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<strong>Product</strong>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertSame( '<strong>1</strong>', $result );
+		$this->assertSame( '<strong>Product</strong>', $result );
 		$this->assertFalse( wp_style_is( 'outletpro-classic-badge', 'enqueued' ) );
 	}
 
@@ -65,15 +68,16 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
 		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge">Clearance &amp; more</div></div>', $result );
 	}
 
-	public function test_appends_badge_for_variation_of_outlet_product(): void {
+	public function test_prepends_badge_for_variation_of_outlet_product(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -83,38 +87,41 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		$variation = wc_get_product( $product->get_children()[0] );
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '', array( 'data' => $variation ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Variation</span>', array( 'data' => $variation ), 'cart-item-key' );
 
 		// Assert.
 		$this->assertStringContainsString( 'outletpro-badge', $result );
 	}
 
-	public function test_preserves_quantity_for_invalid_cart_item(): void {
+	public function test_preserves_product_name_for_invalid_cart_item(): void {
 		// Arrange.
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '<span>1</span>', array(), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array(), 'cart-item-key' );
 
 		// Assert.
-		$this->assertSame( '<span>1</span>', $result );
+		$this->assertSame( '<span>Product</span>', $result );
 	}
 
-	public function test_preserves_quantity_when_outlet_status_cannot_be_retrieved(): void {
+	public function test_preserves_product_name_when_outlet_status_cannot_be_retrieved(): void {
 		// Arrange.
 		$product = WC_Helper_Product::create_simple_product();
 		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '<span>1</span>', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertSame( '<span>1</span>', $result );
+		$this->assertSame( '<span>Product</span>', $result );
 	}
 
 	/**
@@ -122,7 +129,7 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 	 *
 	 * @dataProvider empty_badge_label_provider
 	 */
-	public function test_appends_empty_badge_when_label_is_empty_or_missing( ?string $label ): void {
+	public function test_prepends_empty_badge_when_label_is_empty_or_missing( ?string $label ): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -131,12 +138,13 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		add_to_outlet( $product );
 		deinit_cart();
 		init_cart();
+		do_action( 'wp' );
 
 		// Act.
-		$result = apply_filters( 'woocommerce_checkout_cart_item_quantity', '<span>1</span>', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertSame( '<span>1</span><div class="outletpro-badge-container"><div class="outletpro-badge"></div></div>', $result );
+		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div><span>Product</span>', $result );
 	}
 
 	/**

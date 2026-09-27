@@ -27,13 +27,11 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 
-		// Expect.
-		$this->expectOutputString( '<div class="outletpro-badge-container"><div class="outletpro-badge">Clearance</div></div>' );
-
 		// Act.
-		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<a>Product</a>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
+		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge">Clearance</div></div><a>Product</a>', $result );
 		$this->assertTrue( wp_style_is( 'outletpro-classic-badge', 'enqueued' ) );
 	}
 
@@ -47,11 +45,11 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 
-		// Expect.
-		$this->expectOutputString( '<div class="outletpro-badge-container"><div class="outletpro-badge">Clearance &amp; more</div></div>' );
-
 		// Act.
-		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<a>Product</a>', array( 'data' => $product ), 'cart-item-key' );
+
+		// Assert.
+		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge">Clearance &amp; more</div></div><a>Product</a>', $result );
 	}
 
 	public function test_displays_nothing_for_non_outlet_product(): void {
@@ -65,13 +63,11 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 
-		// Expect.
-		$this->expectOutputString( '' );
-
 		// Act.
-		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<a>Product</a>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
+		$this->assertSame( '<a>Product</a>', $result );
 		$this->assertFalse( wp_style_is( 'outletpro-classic-badge', 'enqueued' ) );
 	}
 
@@ -80,11 +76,11 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 
-		// Expect.
-		$this->expectOutputString( '' );
-
 		// Act.
-		do_action( 'woocommerce_after_cart_item_name', array(), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<a>Product</a>', array(), 'cart-item-key' );
+
+		// Assert.
+		$this->assertSame( '<a>Product</a>', $result );
 	}
 
 	public function test_displays_empty_badge_when_label_is_empty(): void {
@@ -97,11 +93,11 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 
-		// Expect.
-		$this->expectOutputString( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div>' );
-
 		// Act.
-		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<a>Product</a>', array( 'data' => $product ), 'cart-item-key' );
+
+		// Assert.
+		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div><a>Product</a>', $result );
 	}
 
 	public function test_displays_empty_badge_when_label_is_missing(): void {
@@ -114,10 +110,10 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		deinit_cart();
 		init_cart();
 
-		// Expect.
-		$this->expectOutputString( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div>' );
-
 		// Act.
-		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
+		$result = apply_filters( 'woocommerce_cart_item_name', '<a>Product</a>', array( 'data' => $product ), 'cart-item-key' );
+
+		// Assert.
+		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div><a>Product</a>', $result );
 	}
 }

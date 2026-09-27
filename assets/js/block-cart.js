@@ -40,8 +40,10 @@
 				continue;
 			}
 
-			// Select the anchor point used by block cart item rows.
-			const anchor = row.querySelector( '.wc-block-cart-item__prices' );
+			// Anchor to the product name.
+			const anchor = row.querySelector(
+				'.wc-block-components-product-name'
+			);
 
 			if ( ! anchor ) {
 				continue;
@@ -54,7 +56,7 @@
 			const badgeContainer = document.createElement( 'div' );
 			badgeContainer.className = 'outletpro-badge-container';
 			badgeContainer.append( badge );
-			anchor.after( badgeContainer );
+			anchor.before( badgeContainer );
 		}
 	};
 

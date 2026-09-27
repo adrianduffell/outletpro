@@ -17,6 +17,11 @@
 	line-height: 1;
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
+
+}
+
+body.single-product .outletpro-badge{
+	margin-bottom: 0.25em;
 }
 
 .outletpro-badge-container {
