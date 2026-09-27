@@ -6,12 +6,12 @@
 				"padding": "6.5016px"
 			},
 			"cartPage": {
-				"fontSize": "10.1675px",
-				"padding": "3.6576px"
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
 			},
 			"checkoutPage": {
-				"fontSize": "10.1675px",
-				"padding": "3.6576px"
+				"fontSize": "11.62px",
+				"padding": "4.1832px"
 			}
 		}
 	},
@@ -22,12 +22,12 @@
 				"padding": "5.06909px"
 			},
 			"cartPage": {
-				"fontSize": "10.458px",
-				"padding": "3.8px"
+				"fontSize": "11.952px",
+				"padding": "4.34545px"
 			},
 			"checkoutPage": {
-				"fontSize": "10.458px",
-				"padding": "3.8px"
+				"fontSize": "11.952px",
+				"padding": "4.34545px"
 			}
 		}
 	},
@@ -38,12 +38,12 @@
 				"padding": "5.26329px"
 			},
 			"cartPage": {
-				"fontSize": "11.62px",
-				"padding": "4.09367px"
+				"fontSize": "13.28px",
+				"padding": "4.67848px"
 			},
 			"checkoutPage": {
-				"fontSize": "11.62px",
-				"padding": "4.09367px"
+				"fontSize": "13.28px",
+				"padding": "4.67848px"
 			}
 		}
 	},
@@ -55,11 +55,11 @@
 			},
 			"cartPage": {
 				"fontSize": "14.94px",
-				"padding": "5.3784px"
+				"padding": "5.43273px"
 			},
 			"checkoutPage": {
 				"fontSize": "14.94px",
-				"padding": "5.3784px"
+				"padding": "5.15056px"
 			}
 		}
 	},
@@ -70,12 +70,12 @@
 				"padding": "4.67848px"
 			},
 			"cartPage": {
-				"fontSize": "9.44125px",
-				"padding": "3.32566px"
+				"fontSize": "10.79px",
+				"padding": "3.80126px"
 			},
 			"checkoutPage": {
-				"fontSize": "9.44125px",
-				"padding": "3.32566px"
+				"fontSize": "10.79px",
+				"padding": "3.80126px"
 			}
 		}
 	},
