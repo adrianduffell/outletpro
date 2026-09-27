@@ -33,42 +33,11 @@ function getViewportKey( page ) {
 }
 
 /**
- * Reads computed badge dimensions from a CSS pseudo-element host and emits
- * soft assertions when fixture data is available.
- *
- * @param {import('@playwright/test').Locator}            locator     - Host element locator.
- * @param {string}                                        pseudo      - CSS pseudo-element string, e.g. `'::before'`.
- * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
- * @param {string}                                        label       - Context label for assertion messages.
- */
-async function checkPseudoBadgeDimensions(
-	locator,
-	pseudo,
-	fixtureData,
-	label
-) {
-	await expect( locator ).toBeVisible();
-	const { fontSize, paddingTop } = await locator.evaluate(
-		( el, pseudoArg ) => {
-			const style = window.getComputedStyle( el, pseudoArg );
-			return { fontSize: style.fontSize, paddingTop: style.paddingTop };
-		},
-		pseudo
-	);
-	expect
-		.soft( fontSize, `${ label } font-size` )
-		.toBe( fixtureData?.fontSize );
-	expect
-		.soft( paddingTop, `${ label } padding` )
-		.toBe( fixtureData?.padding );
-}
-
-/**
- * Opens the mini-cart drawer and returns the badge host locator and
- * pseudo-element string. Returns null when no mini-cart button is present.
+ * Opens the mini-cart drawer and returns the badge locator. Returns null when
+ * no mini-cart button is present.
  *
  * @param {import('@playwright/test').Page} page
- * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}|null>} Badge locator and pseudo-element, or null when no mini-cart button is present.
+ * @return {Promise<import('@playwright/test').Locator|null>} Badge locator, or null when no mini-cart button is present.
  */
 async function getMiniCartBadge( page ) {
 	const miniCartButton = page.locator( '.wc-block-mini-cart__button' );
@@ -77,59 +46,41 @@ async function getMiniCartBadge( page ) {
 	}
 	await miniCartButton.click();
 	const locator = page
-		.locator(
-			'.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
-		)
+		.locator( '.wc-block-mini-cart__drawer .outletpro-badge' )
 		.first();
-	return { locator, pseudo: '::before' };
+	return locator;
 }
 
 /**
- * Returns the cart badge host locator and pseudo-element for the cart page.
+ * Returns the cart badge locator for the cart page.
  * Detects block vs shortcode cart automatically.
  *
  * @param {import('@playwright/test').Page} page
- * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>} Badge locator and pseudo-element string.
+ * @return {Promise<import('@playwright/test').Locator>} Badge locator.
  */
 async function getCartBadge( page ) {
 	const isBlock =
 		( await page.locator( '.wp-block-woocommerce-cart' ).count() ) > 0;
 	const locator = isBlock
-		? page
-				.locator(
-					'.wc-block-cart-item__product:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
-				)
-				.first()
-		: page
-				.locator(
-					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
-				)
-				.first();
-	return { locator, pseudo: isBlock ? '::before' : '::after' };
+		? page.locator( '.outletpro-cart-item .outletpro-badge' ).first()
+		: page.locator( '.shop_table .outletpro-badge' ).first();
+	return locator;
 }
 
 /**
- * Returns the checkout badge host locator and pseudo-element for the checkout page.
+ * Returns the checkout badge locator for the checkout page.
  * Detects block vs shortcode checkout automatically.
  *
  * @param {import('@playwright/test').Page} page
- * @return {Promise<{locator: import('@playwright/test').Locator, pseudo: string}>} Badge locator and pseudo-element string.
+ * @return {Promise<import('@playwright/test').Locator>} Badge locator.
  */
 async function getCheckoutBadge( page ) {
 	const isBlock =
 		( await page.locator( '.wp-block-woocommerce-checkout' ).count() ) > 0;
 	const locator = isBlock
-		? page
-				.locator(
-					'.wc-block-components-order-summary-item__description:has(.outletpro-cart-item-meta) .wc-block-components-product-metadata'
-				)
-				.first()
-		: page
-				.locator(
-					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
-				)
-				.first();
-	return { locator, pseudo: isBlock ? '::before' : '::after' };
+		? page.locator( '.outletpro-cart-item .outletpro-badge' ).first()
+		: page.locator( '.shop_table .outletpro-badge' ).first();
+	return locator;
 }
 
 /**
@@ -309,12 +260,13 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
 	const miniCartBadge = await getMiniCartBadge( customerPage );
 	if ( miniCartBadge ) {
-		await checkPseudoBadgeDimensions(
-			miniCartBadge.locator,
-			miniCartBadge.pseudo,
-			fixture?.cartPage,
-			'Minicart'
-		);
+		await expect( miniCartBadge ).toBeVisible();
+		await expect
+			.soft( miniCartBadge, 'Minicart font-size' )
+			.toHaveCSS( 'font-size', fixture?.cartPage?.fontSize );
+		await expect
+			.soft( miniCartBadge, 'Minicart padding' )
+			.toHaveCSS( 'padding-top', fixture?.cartPage?.padding );
 		await customerPage
 			.locator( '.wc-block-mini-cart__drawer' )
 			.getByLabel( 'Close' )
@@ -323,23 +275,20 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	}
 
 	// Navigate to the cart page and check badge dimensions.
-	// The badge is rendered as CSS generated content on the cart page (see cart.css).
-	// Block cart: ::before on .wc-block-components-product-metadata
-	// Shortcode cart: ::after on td.product-name
 	// Click the checkout link in the menu.
 	await customerPage
 		.locator( 'nav' )
 		.getByRole( 'link', { name: /^cart$/i } )
 		.first()
 		.click();
-	const { locator: cartBadgeHost, pseudo: cartPseudo } =
-		await getCartBadge( customerPage );
-	await checkPseudoBadgeDimensions(
-		cartBadgeHost,
-		cartPseudo,
-		fixture?.cartPage,
-		'Cart'
-	);
+	const cartBadgeHost = await getCartBadge( customerPage );
+	await expect( cartBadgeHost ).toBeVisible();
+	await expect
+		.soft( cartBadgeHost, 'Cart font-size' )
+		.toHaveCSS( 'font-size', fixture?.cartPage?.fontSize );
+	await expect
+		.soft( cartBadgeHost, 'Cart padding' )
+		.toHaveCSS( 'padding-top', fixture?.cartPage?.padding );
 
 	// Click the checkout link in the menu.
 	await customerPage
@@ -354,17 +303,15 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		.waitFor( { state: 'visible' } );
 
 	// Check badge in the checkout order summary.
-	// Block checkout: ::before on .wc-block-components-product-metadata inside .wc-block-components-order-summary-item__description
-	// Shortcode checkout: ::after on .shop_table td.product-name (order review table)
-	const { locator: checkoutBadgeHost, pseudo: checkoutPseudo } =
-		await getCheckoutBadge( customerPage );
+	const checkoutBadgeHost = await getCheckoutBadge( customerPage );
 
-	await checkPseudoBadgeDimensions(
-		checkoutBadgeHost,
-		checkoutPseudo,
-		fixture?.checkoutPage,
-		'Checkout'
-	);
+	await expect( checkoutBadgeHost ).toBeVisible();
+	await expect
+		.soft( checkoutBadgeHost, 'Checkout font-size' )
+		.toHaveCSS( 'font-size', fixture?.checkoutPage?.fontSize );
+	await expect
+		.soft( checkoutBadgeHost, 'Checkout padding' )
+		.toHaveCSS( 'padding-top', fixture?.checkoutPage?.padding );
 
 	await fillCheckout( customerPage );
 	await placeOrder( customerPage );

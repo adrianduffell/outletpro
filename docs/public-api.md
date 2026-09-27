@@ -265,6 +265,10 @@ it on demand. Added in 1.0.0.
 
 Cart badge stylesheet enqueued on `wp_enqueue_scripts`. Added in 1.0.0.
 
+#### `outletpro-block-cart`
+
+Stylesheet for outlet badges in block-based carts. Added in 1.1.0.
+
 #### `outletpro-badge-block`
 
 Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
@@ -281,6 +285,10 @@ Admin editor stylesheet enqueued on `enqueue_block_assets` in wp-admin for edito
 previewing. Added in 1.0.0.
 
 ### Scripts
+
+#### `outletpro-block-cart`
+
+Inserts the badge into block-based carts. Added in 1.1.0.
 
 #### `outletpro-editor`
 

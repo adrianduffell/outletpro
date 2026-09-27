@@ -34,6 +34,28 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'OutletPro\enqueue_cart_styles_hook' ) );
 	}
 
+	public function test_removes_register_block_cart_styles_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_styles_hook' ) );
+	}
+
+	public function test_removes_register_block_cart_scripts_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_scripts_hook' ) );
+	}
+
 	public function test_removes_output_badge_style_css_variables_hook(): void {
 		// Arrange.
 		enqueue_init();
@@ -151,6 +173,28 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( wp_style_is( 'outletpro-cart-badge', 'registered' ) );
+	}
+
+	public function test_deregisters_block_cart_style(): void {
+		// Arrange.
+		wp_register_style( 'outletpro-block-cart', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'outletpro-block-cart', 'registered' ) );
+	}
+
+	public function test_deregisters_block_cart_script(): void {
+		// Arrange.
+		wp_register_script( 'outletpro-block-cart', false, array(), 'test', true );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'outletpro-block-cart', 'registered' ) );
 	}
 
 	public function test_deregisters_admin_styles(): void {
