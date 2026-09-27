@@ -83,7 +83,37 @@ function enqueue_block_cart_assets_hook( string $block_content ): string {
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  */
 function display_cart_item_outlet_badge_hook( $cart_item ): void {
-	echo add_classic_cart_badge_hook( '', $cart_item ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by add_classic_cart_badge_hook().
+	$product = $cart_item['data'] ?? null;
+
+	if ( ! $product instanceof \WC_Product ) {
+		return;
+	}
+
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet status could not be retrieved in classic cart item' );
+		return;
+	}
+
+	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
+
+	if ( ! is_string( $label ) ) {
+		return;
+	}
+
+	if ( '' === trim( $label ) ) {
+		return;
+	}
+
+	wp_enqueue_style( 'outletpro-classic-badge' );
+
+	printf(
+		'<div class="outletpro-badge-container"><div class="outletpro-badge">%s</div></div>',
+		esc_html( $label )
+	);
 }
 
 /**
