@@ -194,10 +194,6 @@ function enqueue_cart_styles_hook(): void {
  * @internal WordPress action hook
  */
 function register_block_cart_styles_hook(): void {
-	if ( wp_style_is( 'outletpro-block-cart', 'registered' ) ) {
-		return;
-	}
-
 	/**
 	 * Front-end block cart badge stylesheet.
 	 *
