@@ -23,7 +23,6 @@ test( 'choose products in store setup task', async ( {
 		await requestUtils.rest( {
 			method: 'DELETE',
 			path: `/wc/v3/products/${ outletProduct.id }`,
-			data: { force: true },
 		} );
 	}
 	const product = await requestUtils.rest( {
