@@ -569,3 +569,28 @@ function get_outlet_page_id(): ?int {
 	// Return the original value in normalized form.
 	return (int) $value;
 }
+
+/**
+ * Get the outlet badge label from the option.
+ *
+ * Validates the badge label is a string. Non-string values indicate a
+ * corrupted state and an exception is thrown in these cases.
+ *
+ * Returns the badge label unchanged, or null when the option does not exist.
+ *
+ * @since 1.1.0
+ * @throws \UnexpectedValueException If the stored option value is not a string.
+ */
+function get_outlet_badge_label(): ?string {
+	$value = get_option( OUTLET_BADGE_LABEL_OPTION, null );
+
+	if ( null === $value ) {
+		return null;
+	}
+
+	if ( ! is_string( $value ) ) {
+		throw new \UnexpectedValueException( 'Invalid outlet badge label option value.' );
+	}
+
+	return $value;
+}
