@@ -11,6 +11,21 @@ test( 'choose products in store setup task', async ( {
 	requestUtils,
 } ) => {
 	// Arrange.
+	const outletProducts = await requestUtils.rest( {
+		method: 'GET',
+		path: '/wc/v3/products',
+		params: {
+			outletpro: true,
+			per_page: 100,
+		},
+	} );
+	for ( const outletProduct of outletProducts ) {
+		await requestUtils.rest( {
+			method: 'DELETE',
+			path: `/wc/v3/products/${ outletProduct.id }`,
+			data: { force: true },
+		} );
+	}
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
