@@ -30,7 +30,9 @@ test( 'choose products in store setup task', async ( {
 		method: 'GET',
 		path: '/wp/v2/plugins/woocommerce/woocommerce',
 	} );
-	const isOldCompletionBehavior = woocommercePlugin.version.startsWith( '11.1' ) || woocommercePlugin.version.startsWith( '11.0' );
+	const isOldCompletionBehavior =
+		woocommercePlugin.version.startsWith( '11.1' ) ||
+		woocommercePlugin.version.startsWith( '11.0' );
 
 	const product = await requestUtils.rest( {
 		method: 'POST',
