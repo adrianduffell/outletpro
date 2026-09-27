@@ -33,31 +33,6 @@ function getViewportKey( page ) {
 }
 
 /**
- * Reads computed badge dimensions from an element or pseudo-element.
- *
- * @param {import('@playwright/test').Locator}            locator     - Badge element or pseudo-element host.
- * @param {string|null}                                   pseudo      - CSS pseudo-element string, or null for the element.
- * @param {{fontSize: string, padding: string}|undefined} fixtureData - Expected values or undefined when no fixture matches.
- * @param {string}                                        label       - Context label for assertion messages.
- */
-async function checkBadgeDimensions( locator, pseudo, fixtureData, label ) {
-	await expect( locator ).toBeVisible();
-	const { fontSize, paddingTop } = await locator.evaluate(
-		( el, pseudoArg ) => {
-			const style = window.getComputedStyle( el, pseudoArg );
-			return { fontSize: style.fontSize, paddingTop: style.paddingTop };
-		},
-		pseudo
-	);
-	expect
-		.soft( fontSize, `${ label } font-size` )
-		.toBe( fixtureData?.fontSize );
-	expect
-		.soft( paddingTop, `${ label } padding` )
-		.toBe( fixtureData?.padding );
-}
-
-/**
  * Opens the mini-cart drawer and returns the badge locator. Returns null when
  * no mini-cart button is present.
  *
@@ -88,11 +63,7 @@ async function getCartBadge( page ) {
 		( await page.locator( '.wp-block-woocommerce-cart' ).count() ) > 0;
 	const locator = isBlock
 		? page.locator( '.outletpro-cart-item .outletpro-badge' ).first()
-		: page
-				.locator(
-					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
-				)
-				.first();
+		: page.locator( '.shop_table .outletpro-badge' ).first();
 	return locator;
 }
 
@@ -108,11 +79,7 @@ async function getCheckoutBadge( page ) {
 		( await page.locator( '.wp-block-woocommerce-checkout' ).count() ) > 0;
 	const locator = isBlock
 		? page.locator( '.outletpro-cart-item .outletpro-badge' ).first()
-		: page
-				.locator(
-					'.shop_table td.product-name:has(.outletpro-cart-item-meta)'
-				)
-				.first();
+		: page.locator( '.shop_table .outletpro-badge' ).first();
 	return locator;
 }
 
@@ -315,17 +282,13 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		.first()
 		.click();
 	const cartBadgeHost = await getCartBadge( customerPage );
-	const cartPseudo =
-		( await customerPage.locator( '.wp-block-woocommerce-cart' ).count() ) >
-		0
-			? null
-			: '::after';
-	await checkBadgeDimensions(
-		cartBadgeHost,
-		cartPseudo,
-		fixture?.cartPage,
-		'Cart'
-	);
+	await expect( cartBadgeHost ).toBeVisible();
+	await expect
+		.soft( cartBadgeHost, 'Cart font-size' )
+		.toHaveCSS( 'font-size', fixture?.cartPage?.fontSize );
+	await expect
+		.soft( cartBadgeHost, 'Cart padding' )
+		.toHaveCSS( 'padding-top', fixture?.cartPage?.padding );
 
 	// Click the checkout link in the menu.
 	await customerPage
@@ -341,18 +304,14 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	// Check badge in the checkout order summary.
 	const checkoutBadgeHost = await getCheckoutBadge( customerPage );
-	const checkoutPseudo =
-		( await customerPage
-			.locator( '.wp-block-woocommerce-checkout' )
-			.count() ) > 0
-			? null
-			: '::after';
-	await checkBadgeDimensions(
-		checkoutBadgeHost,
-		checkoutPseudo,
-		fixture?.checkoutPage,
-		'Checkout'
-	);
+
+	await expect( checkoutBadgeHost ).toBeVisible();
+	await expect
+		.soft( checkoutBadgeHost, 'Checkout font-size' )
+		.toHaveCSS( 'font-size', fixture?.checkoutPage?.fontSize );
+	await expect
+		.soft( checkoutBadgeHost, 'Checkout padding' )
+		.toHaveCSS( 'padding-top', fixture?.checkoutPage?.padding );
 
 	await fillCheckout( customerPage );
 	await placeOrder( customerPage );
