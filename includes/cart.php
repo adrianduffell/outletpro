@@ -28,8 +28,16 @@ function init_cart(): void {
 	// Mini-Cart: enqueue cart-block assets.
 	add_filter( 'render_block_woocommerce/mini-cart', 'OutletPro\enqueue_block_cart_assets_hook' );
 
-	add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
+	/* Classic integrations. */
+
+	// Add class name to cart item rows.
 	add_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook', 10, 2 );
+
+	// Cart: Display the badge after the product name.
+	add_action( 'woocommerce_after_cart_item_name', 'OutletPro\display_cart_item_outlet_badge_hook' );
+
+	// Checkout: Display the badge after quantity.
+	add_filter( 'woocommerce_checkout_cart_item_quantity', 'OutletPro\add_classic_cart_badge_hook', 10, 2 );
 }
 
 /**
@@ -43,6 +51,8 @@ function deinit_cart(): void {
 	remove_filter( 'render_block_woocommerce/mini-cart', 'OutletPro\enqueue_block_cart_assets_hook' );
 	remove_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
 	remove_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook' );
+	remove_action( 'woocommerce_after_cart_item_name', 'OutletPro\display_cart_item_outlet_badge_hook' );
+	remove_filter( 'woocommerce_checkout_cart_item_quantity', 'OutletPro\add_classic_cart_badge_hook' );
 }
 
 /**
@@ -61,6 +71,88 @@ function enqueue_block_cart_assets_hook( string $block_content ): string {
 	wp_enqueue_script( 'outletpro-block-cart' );
 
 	return $block_content;
+}
+
+/**
+ * Display the outlet badge after the product name in the classic cart.
+ *
+ * Fired by `woocommerce_after_cart_item_name`.
+ *
+ * @param array $cart_item The cart item.
+ * @internal WordPress action hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ */
+function display_cart_item_outlet_badge_hook( $cart_item ): void {
+	$product = $cart_item['data'] ?? null;
+
+	if ( ! $product instanceof \WC_Product ) {
+		return;
+	}
+
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet status could not be retrieved in classic cart item' );
+		return;
+	}
+
+	try {
+		$label = get_outlet_badge_label();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet badge label could not be retrieved in classic cart item' );
+		return;
+	}
+
+	wp_enqueue_style( 'outletpro-classic-badge' );
+
+	printf(
+		'<div class="outletpro-badge-container"><div class="outletpro-badge">%s</div></div>',
+		esc_html( $label )
+	);
+}
+
+/**
+ * Add the outlet badge after the quantity in the classic checkout.
+ *
+ * Fired by `woocommerce_checkout_cart_item_quantity`.
+ *
+ * @param string $quantity_html The existing quantity HTML.
+ * @param array  $cart_item The cart item.
+ * @return string Filtered quantity HTML.
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ */
+function add_classic_cart_badge_hook( $quantity_html, $cart_item ): string {
+	$product = $cart_item['data'] ?? null;
+
+	if ( ! $product instanceof \WC_Product ) {
+		return $quantity_html;
+	}
+
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return $quantity_html;
+		}
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet status could not be retrieved in classic cart item' );
+		return $quantity_html;
+	}
+
+	try {
+		$label = get_outlet_badge_label();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet badge label could not be retrieved in classic cart item' );
+		return $quantity_html;
+	}
+
+	wp_enqueue_style( 'outletpro-classic-badge' );
+
+	return $quantity_html . sprintf(
+		'<div class="outletpro-badge-container"><div class="outletpro-badge">%s</div></div>',
+		esc_html( $label )
+	);
 }
 
 /**

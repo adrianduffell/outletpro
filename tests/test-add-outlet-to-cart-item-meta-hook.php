@@ -8,8 +8,6 @@
  */
 
 use function OutletPro\add_to_outlet;
-use function OutletPro\deinit_cart;
-use function OutletPro\init_cart;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
@@ -24,8 +22,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$cart_item = array( 'data' => $product );
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -45,8 +42,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$cart_item = array( 'data' => $product );
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -62,8 +58,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		$product   = WC_Helper_Product::create_simple_product();
 		$cart_item = array( 'data' => $product );
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -80,8 +75,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$cart_item = array( 'data' => $product );
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -104,8 +98,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 			),
 		);
 		$cart_item = array( 'data' => $product );
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', $existing, $cart_item );
@@ -119,8 +112,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 	public function test_returns_item_data_unchanged_when_product_is_missing(): void {
 		// Arrange.
 		$cart_item = array();
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );
@@ -137,8 +129,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$product = WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$cart_item = array( 'data' => $product );
-		deinit_cart();
-		init_cart();
+		add_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX, 2 );
 
 		// Act.
 		$result = apply_filters( 'woocommerce_get_item_data', array(), $cart_item );

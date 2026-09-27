@@ -18,3 +18,7 @@
 	text-box-trim: trim-both;
 	text-box-edge: cap alphabetic;
 }
+
+.outletpro-badge-container {
+	width: 100%;
+}
