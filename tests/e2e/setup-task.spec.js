@@ -25,6 +25,14 @@ test( 'choose products in store setup task', async ( {
 			path: `/wc/v3/products/${ outletProduct.id }`,
 		} );
 	}
+	const woocommercePlugin = await requestUtils.rest( {
+		method: 'GET',
+		path: '/wp/v2/plugins/woocommerce/woocommerce',
+	} );
+	const isOldCompletionBehavior =
+		woocommercePlugin.version.startsWith( '11.1' ) ||
+		woocommercePlugin.version.startsWith( '11.0' );
+
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',
@@ -57,5 +65,9 @@ test( 'choose products in store setup task', async ( {
 
 	// Assert.
 	await admin.visitAdminPage( 'admin.php', 'page=wc-admin' );
-	await expect( taskItem ).toHaveClass( /complete/ );
+	if ( isOldCompletionBehavior ) {
+		await expect( taskItem ).toHaveClass( /complete/ );
+	} else {
+		await expect( taskItem ).not.toBeVisible();
+	}
 } );
