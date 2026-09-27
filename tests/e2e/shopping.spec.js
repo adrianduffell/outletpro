@@ -280,7 +280,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	// Navigate to the product page and check badge dimensions.
 	await customerPage.goto( productData.permalink );
-	const badge = customerPage.locator( '.outletpro-badge' );
+	const badge = customerPage.locator( 'main .outletpro-badge' );
 	await expect( badge ).toBeVisible();
 	await expect
 		.soft( badge, 'Product font-size' )
