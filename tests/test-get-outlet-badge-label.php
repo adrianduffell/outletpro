@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\get_outlet_badge_label;
+use function OutletPro\register_outlet_badge_label_setting;
 use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
@@ -15,6 +16,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance' );
+		register_outlet_badge_label_setting();
 
 		// Act.
 		$result = get_outlet_badge_label();
@@ -27,6 +29,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, '' );
+		register_outlet_badge_label_setting();
 
 		// Act.
 		$result = get_outlet_badge_label();
@@ -39,6 +42,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, '42' );
+		register_outlet_badge_label_setting();
 
 		// Act.
 		$result = get_outlet_badge_label();
@@ -51,6 +55,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
+		register_outlet_badge_label_setting();
 
 		// Act.
 		$result = get_outlet_badge_label();
@@ -63,6 +68,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, 42 );
+		register_outlet_badge_label_setting();
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
@@ -75,6 +81,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, 4.2 );
+		register_outlet_badge_label_setting();
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
@@ -87,6 +94,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, true );
+		register_outlet_badge_label_setting();
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
@@ -99,6 +107,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, array( 'invalid' ) );
+		register_outlet_badge_label_setting();
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
@@ -111,6 +120,7 @@ class Test_Get_Outlet_Badge_Label extends WP_UnitTestCase {
 		// Arrange.
 		unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
 		update_option( OUTLET_BADGE_LABEL_OPTION, new stdClass() );
+		register_outlet_badge_label_setting();
 
 		// Expect.
 		$this->expectException( \UnexpectedValueException::class );
