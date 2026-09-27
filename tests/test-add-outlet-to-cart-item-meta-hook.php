@@ -34,6 +34,7 @@ class Test_Add_Outlet_To_Cart_Item_Meta_Hook extends WP_UnitTestCase {
 		$this->assertCount( 1, $result );
 		$this->assertSame( 'Clearance', $result[0]['key'] );
 		$this->assertSame( 'Yes', $result[0]['value'] );
+		$this->assertTrue( $result[0]['__experimental_woocommerce_blocks_hidden'] );
 	}
 
 	public function test_includes_display_field_with_wrapper_class(): void {
