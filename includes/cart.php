@@ -98,13 +98,10 @@ function display_cart_item_outlet_badge_hook( $cart_item ): void {
 		return;
 	}
 
-	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
-
-	if ( ! is_string( $label ) ) {
-		return;
-	}
-
-	if ( '' === trim( $label ) ) {
+	try {
+		$label = get_outlet_badge_label();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet badge label could not be retrieved in classic cart item' );
 		return;
 	}
 
@@ -143,13 +140,10 @@ function add_classic_cart_badge_hook( $quantity_html, $cart_item ): string {
 		return $quantity_html;
 	}
 
-	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
-
-	if ( ! is_string( $label ) ) {
-		return $quantity_html;
-	}
-
-	if ( '' === trim( $label ) ) {
+	try {
+		$label = get_outlet_badge_label();
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet badge label could not be retrieved in classic cart item' );
 		return $quantity_html;
 	}
 

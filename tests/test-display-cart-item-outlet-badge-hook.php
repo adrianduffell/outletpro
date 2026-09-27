@@ -87,7 +87,7 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_after_cart_item_name', array(), 'cart-item-key' );
 	}
 
-	public function test_displays_nothing_when_label_is_empty(): void {
+	public function test_displays_empty_badge_when_label_is_empty(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
@@ -98,7 +98,24 @@ class Test_Display_Cart_Item_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_cart();
 
 		// Expect.
-		$this->expectOutputString( '' );
+		$this->expectOutputString( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div>' );
+
+		// Act.
+		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
+	}
+
+	public function test_displays_empty_badge_when_label_is_missing(): void {
+		// Arrange.
+		register_outlet_status_taxonomy();
+		seed_outlet_status_taxonomy();
+		delete_option( OUTLET_BADGE_LABEL_OPTION );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		deinit_cart();
+		init_cart();
+
+		// Expect.
+		$this->expectOutputString( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div>' );
 
 		// Act.
 		do_action( 'woocommerce_after_cart_item_name', array( 'data' => $product ), 'cart-item-key' );
