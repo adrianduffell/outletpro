@@ -44,7 +44,7 @@ function init_woocommerce_template_hooks(): void {
 	 */
 	$single_product_badge_priority = apply_filters(
 		'outletpro_badge_single_product_priority',
-		15
+		1
 	);
 
 	if ( ! is_int( $single_product_badge_priority ) ) {
@@ -56,9 +56,9 @@ function init_woocommerce_template_hooks(): void {
 }
 
 /**
- * Output the outlet badge above the product excerpt on single product pages.
+ * Output the outlet badge above the product name on single product pages.
  *
- * Fired by `woocommerce_single_product_summary`.
+ * Fired by the configured WooCommerce single product hook.
  *
  * @internal WordPress action hook
  */
@@ -82,7 +82,7 @@ function display_outlet_badge_hook(): void {
 	wp_enqueue_style( 'outletpro-classic-badge' );
 
 	printf(
-		'<p class="outletpro-badge">%s</p>',
+		'<div class="outletpro-badge">%s</div>',
 		esc_html( $label )
 	);
 }
@@ -117,5 +117,5 @@ function display_outlet_message_hook(): void {
 
 	wp_enqueue_style( 'outletpro-classic-message' );
 
-	echo '<p class="outletpro-message">' . esc_html( $message ) . '</p>';
+	echo '<div class="outletpro-message">' . esc_html( $message ) . '</div>';
 }

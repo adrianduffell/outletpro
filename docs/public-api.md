@@ -236,7 +236,7 @@ add_filter( 'outletpro_badge_single_product_priority', function ( $priority ) {
 
 | Parameter   | Type  | Description                  |
 | ----------- | ----- | ---------------------------- |
-| `$priority` | `int` | Hook priority. Default `15`. |
+| `$priority` | `int` | Hook priority. Default `1`. |
 
 Must return an integer. Added in 1.0.0.
 
@@ -327,8 +327,8 @@ template hooks. Added in 1.0.0.
 ### `outletpro/outlet-badge`
 
 Displays a outlet badge when the product is in the store’s outlet. Automatically
-inserted after the product price on the single product template (block themes). Added
-in 1.0.0.
+inserted before the product name on the single product template (block themes).
+Added in 1.0.0.
 
 Styles are inherited from site-wide settings. Default style values:
 

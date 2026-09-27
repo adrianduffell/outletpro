@@ -26,7 +26,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/<p[^>]+class="[^"]*outletpro-badge/' );
+		$this->expectOutputRegex( '/outletpro-badge(?=.*<h1)/s' ); // Badge appears before the product name.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
@@ -83,7 +83,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/outletpro-badge(?=.*<h1)/s' ); // Badge appears before the product title.
+		$this->expectOutputRegex( '/outletpro-badge(?=.*<h1)/s' ); // Badge appears before the product name.
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );

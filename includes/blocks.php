@@ -61,7 +61,7 @@ function register_outlet_badge_block(): void {
 }
 
 /**
- * Auto-insert the outlet badge block after the product price on the single product template.
+ * Auto-insert the outlet badge block before the product name on the single product template.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -72,7 +72,7 @@ function register_outlet_badge_block(): void {
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'woocommerce/product-price' !== $anchor_block || 'after' !== $relative_position ) {
+	if ( 'core/post-title' !== $anchor_block || 'before' !== $relative_position ) {
 		return $hooked_blocks;
 	}
 
