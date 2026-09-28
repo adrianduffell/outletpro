@@ -61,6 +61,35 @@ function register_outlet_badge_block(): void {
 }
 
 /**
+ * Returns whether Block Hooks context is the single product template.
+ *
+ * Template slugs and pattern names containing `single-product` are recognized
+ * to support Woo Purple, child themes, and other themes that use the same
+ * approach.
+ *
+ * @internal
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param \WP_Block_Template|array|null $context Block Hooks context.
+ */
+function is_single_product_context( $context ): bool {
+	if ( $context instanceof \WP_Block_Template ) {
+		return false !== strpos( $context->slug, 'single-product' );
+	}
+
+	if ( ! is_array( $context ) ) {
+		return false;
+	}
+
+	$context_name = $context['name'] ?? null;
+
+	if ( ! is_string( $context_name ) ) {
+		return false;
+	}
+
+	return false !== strpos( $context_name, 'single-product' );
+}
+
+/**
  * Auto-insert the outlet badge block before the product name on the single product template.
  *
  * @internal WordPress filter hook
@@ -76,10 +105,11 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 		return $hooked_blocks;
 	}
 
-	// Only auto-insert the badge on the single product template.
-	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'outletpro/outlet-badge';
+	if ( ! is_single_product_context( $context ) ) {
+		return $hooked_blocks;
 	}
+
+	$hooked_blocks[] = 'outletpro/outlet-badge';
 
 	return $hooked_blocks;
 }
@@ -100,10 +130,11 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 		return $hooked_blocks;
 	}
 
-	// Only auto-insert the message on the single product template.
-	if ( $context instanceof \WP_Block_Template && 'single-product' === $context->slug ) {
-		$hooked_blocks[] = 'outletpro/outlet-message';
+	if ( ! is_single_product_context( $context ) ) {
+		return $hooked_blocks;
 	}
+
+	$hooked_blocks[] = 'outletpro/outlet-message';
 
 	return $hooked_blocks;
 }
