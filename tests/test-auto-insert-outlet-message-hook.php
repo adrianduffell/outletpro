@@ -77,6 +77,19 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$this->assertContains( 'outletpro/outlet-message', $result );
 	}
 
+	public function test_message_is_added_to_woo_hidden_single_product_pattern(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$context = array( 'name' => 'purple/hidden-single-product' );
+
+		// Act.
+		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $context );
+
+		// Assert.
+		$this->assertContains( 'outletpro/outlet-message', $result );
+	}
+
 	public function test_existing_hooked_blocks_are_preserved(): void {
 		// Arrange.
 		deinit_blocks();

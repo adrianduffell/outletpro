@@ -25,7 +25,29 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( $block_type->block_hooks );
 	}
 
-	public function test_badge_is_not_added_when_context_is_array(): void {
+	public function test_outlet_badge_has_default_block_margins(): void {
+		// Arrange.
+		deinit_blocks();
+		register_outlet_badge_block();
+
+		// Act.
+		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-badge' );
+
+		// Assert.
+		$this->assertSame(
+			array(
+				'spacing' => array(
+					'margin' => array(
+						'top'    => '0',
+						'bottom' => 'var:preset|spacing|10',
+					),
+				),
+			),
+			$block_type->attributes['style']['default']
+		);
+	}
+
+	public function test_badge_is_not_added_when_context_is_array_without_name(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -72,6 +94,19 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', $template );
+
+		// Assert.
+		$this->assertContains( 'outletpro/outlet-badge', $result );
+	}
+
+	public function test_badge_is_added_to_woo_hidden_single_product_pattern(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$context = array( 'name' => 'purple/hidden-single-product' );
+
+		// Act.
+		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', $context );
 
 		// Assert.
 		$this->assertContains( 'outletpro/outlet-badge', $result );
