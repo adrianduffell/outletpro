@@ -6,6 +6,19 @@
 	"category": "woocommerce",
 	"description": "Displays a badge when a product is in the store’s outlet.",
 	"usesContext": [ "postId" ],
+	"attributes": {
+		"style": {
+			"type": "object",
+			"default": {
+				"spacing": {
+					"margin": {
+						"top": "0",
+						"bottom": "var:preset|spacing|10"
+					}
+				}
+			}
+		}
+	},
 	"supports": {
 		"html": false,
 		"spacing": {
