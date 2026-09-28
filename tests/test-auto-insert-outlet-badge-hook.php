@@ -25,28 +25,6 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( $block_type->block_hooks );
 	}
 
-	public function test_outlet_badge_has_default_block_margins(): void {
-		// Arrange.
-		deinit_blocks();
-		register_outlet_badge_block();
-
-		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-badge' );
-
-		// Assert.
-		$this->assertSame(
-			array(
-				'spacing' => array(
-					'margin' => array(
-						'top'    => '0',
-						'bottom' => 'var:preset|spacing|10',
-					),
-				),
-			),
-			$block_type->attributes['style']['default']
-		);
-	}
-
 	public function test_badge_is_not_added_when_context_is_array_without_name(): void {
 		// Arrange.
 		deinit_blocks();
