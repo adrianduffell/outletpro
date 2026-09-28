@@ -71,7 +71,7 @@ function register_outlet_badge_block(): void {
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
  * @param \WP_Block_Template|array|null $context Block Hooks context.
  */
-function is_single_product_template( $context ): bool {
+function is_single_product_context( $context ): bool {
 	if ( $context instanceof \WP_Block_Template ) {
 		return false !== strpos( $context->slug, 'single-product' );
 	}
@@ -105,7 +105,7 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_template( $context ) ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
@@ -130,7 +130,7 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_template( $context ) ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 

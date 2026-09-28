@@ -1,15 +1,15 @@
 <?php
 /**
- * Tests for is_single_product_template().
+ * Tests for is_single_product_context().
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\is_single_product_template;
+use function OutletPro\is_single_product_context;
 
-class Test_Is_Single_Product_Template extends WP_UnitTestCase {
+class Test_Is_Single_Product_Context extends WP_UnitTestCase {
 
 	public function test_single_product_block_template_is_recognized(): void {
 		// Arrange.
@@ -17,7 +17,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$template->slug = 'single-product';
 
 		// Act.
-		$result = is_single_product_template( $template );
+		$result = is_single_product_context( $template );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -29,7 +29,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$template->slug = 'hidden-single-product';
 
 		// Act.
-		$result = is_single_product_template( $template );
+		$result = is_single_product_context( $template );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -41,7 +41,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$template->slug = 'single-product-design';
 
 		// Act.
-		$result = is_single_product_template( $template );
+		$result = is_single_product_context( $template );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -53,7 +53,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$template->slug = 'archive-product';
 
 		// Act.
-		$result = is_single_product_template( $template );
+		$result = is_single_product_context( $template );
 
 		// Assert.
 		$this->assertFalse( $result );
@@ -64,7 +64,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array( 'name' => 'purple/hidden-single-product' );
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -75,7 +75,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array( 'name' => 'purple-child/hidden-single-product' );
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -86,7 +86,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array( 'name' => 'purple-foo/single-product' );
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -97,7 +97,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array( 'name' => 'purple-bar/single-product-design' );
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -108,7 +108,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array( 'name' => 'red/hidden-single-product' );
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertTrue( $result );
@@ -119,7 +119,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array( 'name' => 'purple/product-collection' );
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertFalse( $result );
@@ -130,7 +130,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = array();
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertFalse( $result );
@@ -141,7 +141,7 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$context = null;
 
 		// Act.
-		$result = is_single_product_template( $context );
+		$result = is_single_product_context( $context );
 
 		// Assert.
 		$this->assertFalse( $result );
