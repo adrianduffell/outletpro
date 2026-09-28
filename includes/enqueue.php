@@ -20,7 +20,6 @@ function enqueue_init(): void {
 	add_action( 'wp_enqueue_scripts', 'OutletPro\register_classic_styles_hook' );
 	add_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_styles_hook' );
 	add_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_scripts_hook' );
-	add_action( 'wp_enqueue_scripts', 'OutletPro\enqueue_cart_styles_hook' );
 	add_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_editor_styles_hook' );
 	add_action( 'enqueue_block_assets', 'OutletPro\enqueue_admin_canvas_scripts_hook' );
 	add_action( 'wp_head', 'OutletPro\output_badge_style_css_variables_hook' );
@@ -37,7 +36,6 @@ function enqueue_init(): void {
  * @internal
  */
 function deinit_enqueue(): void {
-	remove_action( 'wp_enqueue_scripts', 'OutletPro\enqueue_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_scripts_hook' );
 	remove_action( 'wp_enqueue_scripts', 'OutletPro\register_block_cart_styles_hook' );
 	remove_action( 'wp_enqueue_scripts', 'OutletPro\register_classic_styles_hook' );
@@ -50,8 +48,6 @@ function deinit_enqueue(): void {
 	remove_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' );
 	wp_deregister_style( 'outletpro-classic-badge' );
 	wp_deregister_style( 'outletpro-classic-message' );
-	wp_dequeue_style( 'outletpro-cart-badge' );
-	wp_deregister_style( 'outletpro-cart-badge' );
 	wp_dequeue_style( 'outletpro-block-cart' );
 	wp_deregister_style( 'outletpro-block-cart' );
 	wp_dequeue_script( 'outletpro-block-cart' );
@@ -153,36 +149,6 @@ function register_classic_styles_hook(): void {
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/classic-message.css',
 		array(),
 		VERSION
-	);
-}
-
-/**
- * Enqueue front-end cart stylesheet.
- *
- * Fired by `wp_enqueue_scripts`.
- *
- * @internal WordPress action hook
- */
-function enqueue_cart_styles_hook(): void {
-	$label = sanitize_text_field( get_option( OUTLET_BADGE_LABEL_OPTION, '' ) );
-
-	/**
-	 * Front-end cart badge stylesheet.
-	 *
-	 * @internal
-	 */
-	wp_register_style(
-		'outletpro-cart-badge',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/cart.css',
-		array(),
-		VERSION
-	);
-
-	wp_enqueue_style( 'outletpro-cart-badge' );
-
-	wp_add_inline_style(
-		'outletpro-cart-badge',
-		':root { --outletpro-badge-label: ' . ( '' !== $label ? wp_json_encode( $label, JSON_UNESCAPED_UNICODE ) : 'none' ) . '; }'
 	);
 }
 

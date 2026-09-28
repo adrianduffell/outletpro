@@ -46,7 +46,6 @@ function deinit_cart(): void {
 	remove_filter( 'render_block_woocommerce/cart', 'OutletPro\enqueue_block_cart_assets_hook' );
 	remove_filter( 'render_block_woocommerce/checkout', 'OutletPro\enqueue_block_cart_assets_hook' );
 	remove_filter( 'render_block_woocommerce/mini-cart', 'OutletPro\enqueue_block_cart_assets_hook' );
-	remove_filter( 'woocommerce_get_item_data', 'OutletPro\add_outlet_to_cart_item_meta_hook', PHP_INT_MAX );
 	remove_filter( 'woocommerce_cart_item_class', 'OutletPro\add_outlet_to_cart_item_class_hook' );
 	remove_filter( 'woocommerce_cart_item_name', 'OutletPro\display_cart_item_outlet_badge_hook' );
 }
@@ -67,55 +66,6 @@ function enqueue_block_cart_assets_hook( string $block_content ): string {
 	wp_enqueue_script( 'outletpro-block-cart' );
 
 	return $block_content;
-}
-
-/**
- * Adds outlet status into the cart item meta.
- *
- * Fired by `woocommerce_get_item_data`.
- *
- * @param array $item_data The existing cart item data.
- * @param array $cart_item The cart item.
- * @return array<int, array<string, mixed>>
- * @internal WordPress filter hook
- * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
- */
-function add_outlet_to_cart_item_meta_hook( $item_data, $cart_item ): array {
-	$product = $cart_item['data'] ?? null;
-
-	if ( ! $product instanceof \WC_Product ) {
-		return $item_data;
-	}
-
-	try {
-		if ( ! is_outlet( $product ) ) {
-			return $item_data;
-		}
-	} catch ( \Throwable $e ) {
-		return $item_data;
-	}
-
-	$outlet_label = get_option( OUTLET_BADGE_LABEL_OPTION );
-
-	if ( ! is_string( $outlet_label ) || '' === trim( $outlet_label ) ) {
-		return $item_data;
-	}
-
-	// Important: The CSS badge replacement expects outlet meta to be first.
-	array_unshift(
-		$item_data,
-		array(
-			'key'                                      => $outlet_label,
-			'value'                                    => __( 'Yes', 'outletpro' ),
-			'display'                                  => sprintf(
-				'<span class="outletpro-cart-item-meta">%s</span>',
-				esc_html__( 'Yes', 'outletpro' )
-			),
-			'__experimental_woocommerce_blocks_hidden' => true,
-		)
-	);
-
-	return $item_data;
 }
 
 /**
