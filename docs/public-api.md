@@ -261,10 +261,6 @@ automatically enqueued — on `wp_enqueue_scripts`. Use
 `wp_enqueue_style( 'outletpro-classic-message' )` or declare it as a dependency to load
 it on demand. Added in 1.0.0.
 
-#### `outletpro-cart-badge`
-
-Cart badge stylesheet enqueued on `wp_enqueue_scripts`. Added in 1.0.0.
-
 #### `outletpro-block-cart`
 
 Stylesheet for outlet badges in block-based carts. Added in 1.1.0.
