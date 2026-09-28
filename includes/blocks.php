@@ -63,8 +63,9 @@ function register_outlet_badge_block(): void {
 /**
  * Returns whether Block Hooks context is the single product template.
  *
- * Pattern names containing `single-product` are recognized to support Woo
- * Purple, child themes, and other themes that use the same approach.
+ * Template slugs and pattern names containing `single-product` are recognized
+ * to support Woo Purple, child themes, and other themes that use the same
+ * approach.
  *
  * @internal
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -72,11 +73,7 @@ function register_outlet_badge_block(): void {
  */
 function is_single_product_template( $context ): bool {
 	if ( $context instanceof \WP_Block_Template ) {
-		if ( 'single-product' === $context->slug ) {
-			return true;
-		}
-
-		return 'hidden-single-product' === $context->slug;
+		return false !== strpos( $context->slug, 'single-product' );
 	}
 
 	if ( ! is_array( $context ) ) {

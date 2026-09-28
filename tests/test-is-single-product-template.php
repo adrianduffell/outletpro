@@ -35,6 +35,30 @@ class Test_Is_Single_Product_Template extends WP_UnitTestCase {
 		$this->assertTrue( $result );
 	}
 
+	public function test_single_product_block_template_slug_variation_is_recognized(): void {
+		// Arrange.
+		$template       = new WP_Block_Template();
+		$template->slug = 'single-product-design';
+
+		// Act.
+		$result = is_single_product_template( $template );
+
+		// Assert.
+		$this->assertTrue( $result );
+	}
+
+	public function test_other_block_template_is_not_recognized(): void {
+		// Arrange.
+		$template       = new WP_Block_Template();
+		$template->slug = 'archive-product';
+
+		// Act.
+		$result = is_single_product_template( $template );
+
+		// Assert.
+		$this->assertFalse( $result );
+	}
+
 	public function test_namespaced_hidden_single_product_pattern_is_recognized(): void {
 		// Arrange.
 		$context = array( 'name' => 'purple/hidden-single-product' );
