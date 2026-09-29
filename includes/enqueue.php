@@ -117,6 +117,33 @@ function enqueue_admin_editor_styles_hook(): void {
 		array(),
 		VERSION
 	);
+
+	$badge_style_options = array(
+		OUTLET_BADGE_BG_COLOR_OPTION,
+		OUTLET_BADGE_TEXT_COLOR_OPTION,
+		OUTLET_BADGE_BORDER_COLOR_OPTION,
+		OUTLET_BADGE_BORDER_STYLE_OPTION,
+		OUTLET_BADGE_BORDER_WIDTH_OPTION,
+		OUTLET_BADGE_BORDER_RADIUS_OPTION,
+		OUTLET_BADGE_FONT_WEIGHT_OPTION,
+		OUTLET_BADGE_SCALE_OPTION,
+		OUTLET_BADGE_DENSITY_OPTION,
+	);
+
+	$declarations = array_map(
+		function ( string $option_name ): string {
+			$variable_name = '--' . str_replace( '_', '-', $option_name );
+			$option_value  = sanitize_css_value( get_option( $option_name, '' ) );
+
+			return $variable_name . ': ' . ( '' !== $option_value ? $option_value : 'unset' );
+		},
+		$badge_style_options
+	);
+
+	wp_add_inline_style(
+		'outletpro-admin-editor',
+		':root { ' . implode( '; ', $declarations ) . '; }'
+	);
 }
 
 /**
