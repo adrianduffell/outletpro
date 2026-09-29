@@ -350,6 +350,10 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 \* Denotes modifiable in settings.
 
+### `outletpro/outlet-group`
+
+A container for arbitrary blocks that renders only for outlet products. Added in 1.1.0.
+
 ### `outletpro/outlet-message`
 
 Displays the outlet message when the product is in the store’s outlet. Automatically

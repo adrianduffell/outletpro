@@ -17,10 +17,12 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_blocks(): void {
+	register_outlet_group_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
 }
@@ -33,6 +35,7 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
+	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
@@ -44,6 +47,15 @@ function deinit_blocks(): void {
 
 		unregister_block_type( $block_name );
 	}
+}
+
+/**
+ * Register the outlet group block type.
+ *
+ * @internal
+ */
+function register_outlet_group_block(): void {
+	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-group/' );
 }
 
 /**
@@ -322,4 +334,38 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 		$wrapper_attributes,
 		wp_kses_post( $message )
 	);
+}
+
+/**
+ * Conditionally render Outlet Group block.
+ *
+ * The current post must be an outlet product for the block to render.
+ *
+ * Fired by `pre_render_block`.
+ *
+ * @internal WordPress filter hook
+ * @param string|null          $pre_render   The pre-rendered content, or null to render normally.
+ * @param array<string, mixed> $parsed_block The parsed block data.
+ * @return string|null Empty string when hidden, otherwise the existing pre-rendered content.
+ */
+function conditionally_render_outlet_group_hook( ?string $pre_render, array $parsed_block ): ?string {
+	if ( 'outletpro/outlet-group' !== ( $parsed_block['blockName'] ?? null ) ) {
+		return $pre_render;
+	}
+
+	$product = wc_get_product( get_the_ID() );
+	if ( ! $product instanceof \WC_Product ) {
+		return '';
+	}
+
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return '';
+		}
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product status could not be determined in outlet group block.' );
+		return '';
+	}
+
+	return $pre_render;
 }
