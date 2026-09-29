@@ -9,13 +9,18 @@ import { __ } from '@wordpress/i18n';
 export const outletGroupVariation = {
 	name: 'outletpro/outlet-group',
 	title: __( 'Outlet Group', 'outletpro' ),
-	description: __( 'Conditionally displays contents for outlet products only.', 'outletpro' ),
+	description: __(
+		'Conditionally displays contents for outlet products only.',
+		'outletpro'
+	),
 	attributes: {
 		metadata: {
 			outletpro: true,
 		},
 	},
-	isActive: [ 'metadata.outletpro' ],
+	isActive: ( blockAttributes: {
+		metadata?: { outletpro?: unknown };
+	} ): boolean => blockAttributes.metadata?.outletpro === true,
 };
 
 registerBlockVariation( 'core/group', outletGroupVariation );
