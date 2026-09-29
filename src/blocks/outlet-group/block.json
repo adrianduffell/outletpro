@@ -1,0 +1,30 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "outletpro/outlet-group",
+	"title": "Outlet Group",
+	"category": "woocommerce",
+	"description": "Conditionally displays contents for outlet products only.",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"layout": {
+			"allowEditing": true,
+			"allowInheriting": false,
+			"allowJustification": true,
+			"allowOrientation": true,
+			"allowSizingOnChildren": true,
+			"allowSwitching": true,
+			"allowVerticalAlignment": true,
+			"default": {
+				"type": "default"
+			}
+		},
+		"spacing": {
+			"blockGap": true,
+			"margin": true,
+			"padding": true
+		}
+	},
+	"textdomain": "outletpro"
+}
