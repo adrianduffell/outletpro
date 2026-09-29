@@ -16,7 +16,6 @@ export const outletGroupVariation = {
 		},
 	},
 	isActive: [ 'metadata.outletpro' ],
-	scope: [ 'block', 'inserter', 'transform' ],
 };
 
 registerBlockVariation( 'core/group', outletGroupVariation );
