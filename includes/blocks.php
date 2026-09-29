@@ -343,7 +343,7 @@ function conditionally_render_outlet_group_hook( ?string $pre_render, array $par
 		return $pre_render;
 	}
 
-	$is_outlet_group = $parsed_block['attrs']['metadata']['outletpro'] ?? false;
+	$is_outlet_group = $parsed_block['attrs']['layout']['outletpro'] ?? false;
 	if ( true !== $is_outlet_group ) {
 		return $pre_render;
 	}

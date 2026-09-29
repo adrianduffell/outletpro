@@ -24,7 +24,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		deinit_blocks();
 		init_blocks();
-		$content = '<!-- wp:group {"metadata":{"outletpro":true}} --><div class="wp-block-group"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:group -->';
+		$content = '<!-- wp:group {"layout":{"type":"default","outletpro":true}} --><div class="wp-block-group"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:group -->';
 
 		// Act.
 		$result = do_blocks( $content );
@@ -42,7 +42,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		deinit_blocks();
 		init_blocks();
-		$content = '<!-- wp:group {"metadata":{"outletpro":true}} --><div class="wp-block-group"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:group -->';
+		$content = '<!-- wp:group {"layout":{"type":"default","outletpro":true}} --><div class="wp-block-group"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:group -->';
 
 		// Act.
 		$result = do_blocks( $content );
@@ -69,7 +69,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 				},
 			)
 		);
-		$content = '<!-- wp:group {"metadata":{"outletpro":true}} --><div class="wp-block-group"><!-- wp:outletpro/outlet-group-test-inner /--></div><!-- /wp:group -->';
+		$content = '<!-- wp:group {"layout":{"type":"default","outletpro":true}} --><div class="wp-block-group"><!-- wp:outletpro/outlet-group-test-inner /--></div><!-- /wp:group -->';
 
 		// Act.
 		$result = do_blocks( $content );
@@ -104,7 +104,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		deinit_blocks();
 		init_blocks();
-		$content = '<!-- wp:group {"metadata":{"outletpro":"true"}} --><div class="wp-block-group"><!-- wp:paragraph --><p>Regular content</p><!-- /wp:paragraph --></div><!-- /wp:group -->';
+		$content = '<!-- wp:group {"layout":{"type":"default","outletpro":"true"}} --><div class="wp-block-group"><!-- wp:paragraph --><p>Regular content</p><!-- /wp:paragraph --></div><!-- /wp:group -->';
 
 		// Act.
 		$result = do_blocks( $content );

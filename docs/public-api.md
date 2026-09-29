@@ -352,7 +352,11 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 ### `outletpro/outlet-group`
 
-A variation of `core/group` that conditionally renders for outlet products. Added in 1.1.0.
+A variation of `core/group` that conditionally renders for outlet products. It uses a
+default layout and is identified by `layout.outletpro` set to `true`. Layout editing is
+disabled while the marker is present. Changing to a core Group, Row, Stack, or Grid
+variation replaces the layout, removes the marker, and restores layout editing. Added in
+1.1.0.
 
 ### `outletpro/outlet-message`
 
