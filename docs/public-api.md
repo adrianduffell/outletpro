@@ -257,7 +257,7 @@ Outlet message stylesheet for classic themes. Added in 1.0.0.
 
 #### `outletpro-block-cart`
 
-Cart stylesheet for block-based themes. Added in 1.1.0.
+Stylesheet for outlet badges in block-based carts. Added in 1.1.0.
 
 ### Scripts
 
