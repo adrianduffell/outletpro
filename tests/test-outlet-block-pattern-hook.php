@@ -76,4 +76,22 @@ class Test_Outlet_Block_Pattern_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( $badge, $result );
 	}
+
+	public function test_badge_is_not_inserted_when_outlet_badge_row_pattern_is_missing(): void {
+		// Arrange.
+		deinit_blocks();
+		deinit_patterns();
+		init_blocks();
+		$template       = new WP_Block_Template();
+		$template->slug = 'single-product';
+		$content        = '<!-- wp:post-title /-->';
+
+		// Act.
+		$result = apply_block_hooks_to_content( $content, $template );
+		$blocks = parse_blocks( $result );
+
+		// Assert.
+		$this->assertCount( 1, $blocks );
+		$this->assertSame( 'core/post-title', $blocks[0]['blockName'] );
+	}
 }

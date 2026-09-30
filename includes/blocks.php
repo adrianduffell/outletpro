@@ -142,7 +142,7 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
  * @param string                        $relative_position   Position relative to the anchor block.
  * @param array<string, mixed>          $parsed_anchor_block Parsed anchor block.
  * @param \WP_Block_Template|array|null $context             Block Hooks context.
- * @return array<string, mixed>|null Parsed pattern block, or the original value.
+ * @return array<string, mixed>|null Parsed pattern block, null to suppress insertion, or the original value.
  */
 function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block, $context ): ?array {
 	if ( null === $parsed_hooked_block ) {
@@ -169,12 +169,12 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
 		$pattern_blocks = parse_blocks( get_pattern_content( 'outletpro/outlet-badge-row' ) );
 	} catch ( \Throwable $e ) {
 		\wc_get_logger()->error( 'Outlet Badge row pattern could not be retrieved' );
-		return $parsed_hooked_block;
+		return null;
 	}
 
 	if ( 1 !== count( $pattern_blocks ) ) {
 		\wc_get_logger()->error( 'Outlet Badge row pattern has invalid content' );
-		return $parsed_hooked_block;
+		return null;
 	}
 
 	return $pattern_blocks[0];
