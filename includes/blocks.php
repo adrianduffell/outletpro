@@ -21,6 +21,7 @@ function init_blocks(): void {
 	register_outlet_badge_block();
 	register_outlet_message_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
@@ -36,6 +37,9 @@ function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
 	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook' );
+	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10 );
+	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
@@ -124,6 +128,56 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 	$hooked_blocks[] = 'outletpro/outlet-badge';
 
 	return $hooked_blocks;
+}
+
+/**
+ * Replace the auto-inserted outlet badge with the Outlet Badge row pattern.
+ *
+ * Fired by `hooked_block_outletpro/outlet-badge`.
+ *
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param array<string, mixed>|null     $parsed_hooked_block Parsed outlet badge block, or null when suppressed.
+ * @param string                        $hooked_block_type   Hooked block name.
+ * @param string                        $relative_position   Position relative to the anchor block.
+ * @param array<string, mixed>          $parsed_anchor_block Parsed anchor block.
+ * @param \WP_Block_Template|array|null $context             Block Hooks context.
+ * @return array<string, mixed>|null Parsed pattern block, null to suppress insertion, or the original value.
+ */
+function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block, $context ): ?array {
+	if ( null === $parsed_hooked_block ) {
+		return null;
+	}
+
+	if ( 'outletpro/outlet-badge' !== $hooked_block_type ) {
+		return $parsed_hooked_block;
+	}
+
+	if ( 'before' !== $relative_position ) {
+		return $parsed_hooked_block;
+	}
+
+	if ( 'core/post-title' !== ( $parsed_anchor_block['blockName'] ?? null ) ) {
+		return $parsed_hooked_block;
+	}
+
+	if ( ! is_single_product_context( $context ) ) {
+		return $parsed_hooked_block;
+	}
+
+	try {
+		$pattern_blocks = parse_blocks( get_pattern_content( 'outletpro/outlet-badge-row' ) );
+	} catch ( \Throwable $e ) {
+		\wc_get_logger()->error( 'Outlet Badge row pattern could not be retrieved' );
+		return null;
+	}
+
+	if ( 1 !== count( $pattern_blocks ) ) {
+		\wc_get_logger()->error( 'Outlet Badge row pattern has invalid content' );
+		return null;
+	}
+
+	return $pattern_blocks[0];
 }
 
 /**
