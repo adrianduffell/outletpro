@@ -12,8 +12,8 @@ To develop Outlet Pro locally:
 
 ### Prerequisites
 
--   Node.js 24.x
--   Docker Desktop (if using wp-env)
+- Node.js 24.x
+- Docker Desktop (if using wp-env)
 
 ```sh
 npm i

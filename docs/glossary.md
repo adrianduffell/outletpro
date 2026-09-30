@@ -11,6 +11,6 @@ Outlet uses the following terminology:
 
 ❌ Don't use:
 
--   The outlet
--   Outlet section
--   Mark as outlet
+- The outlet
+- Outlet section
+- Mark as outlet
