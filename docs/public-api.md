@@ -265,41 +265,11 @@ it on demand. Added in 1.0.0.
 
 Stylesheet for outlet badges in block-based carts. Added in 1.1.0.
 
-#### `outletpro-badge-block`
-
-Stylesheet for the outlet badge block. Registered via `wp_enqueue_block_style` so it
-is only loaded when the `outletpro/outlet-badge` block is rendered on the page.
-Added in 1.0.0.
-
-#### `outletpro-admin`
-
-Admin stylesheet enqueued on all `admin_enqueue_scripts` pages. Added in 1.0.0.
-
-#### `outletpro-admin-editor`
-
-Admin editor stylesheet enqueued on `enqueue_block_assets` in wp-admin for editor canvas
-previewing. Added in 1.0.0.
-
 ### Scripts
 
 #### `outletpro-block-cart`
 
 Inserts the badge into block-based carts. Added in 1.1.0.
-
-#### `outletpro-editor`
-
-Block editor JavaScript enqueued on `enqueue_block_editor_assets`. Contains the block
-editor integration for the outlet badge and outlet message blocks. Added in 1.0.0.
-
-#### `outletpro-products-admin`
-
-Admin JavaScript enqueued on `admin_enqueue_scripts` for the product edit screen only.
-Added in 1.0.0.
-
-#### `outletpro-admin-canvas-scripts`
-
-Admin JavaScript enqueued on `enqueue_block_assets` in wp-admin for editor canvas
-previewing. Added in 1.0.0.
 
 ## CSS classes
 
