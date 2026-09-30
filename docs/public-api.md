@@ -249,17 +249,11 @@ enqueues.
 
 #### `outletpro-classic-badge`
 
-Front-end badge stylesheet for classic (non-block) themes. Registered — but not
-automatically enqueued — on `wp_enqueue_scripts`. Use
-`wp_enqueue_style( 'outletpro-classic-badge' )` or declare it as a dependency to load
-it on demand. Added in 1.0.0.
+Outlet badge stylesheet for classic themes. Added in 1.0.0.
 
 #### `outletpro-classic-message`
 
-Front-end message stylesheet for classic (non-block) themes. Registered — but not
-automatically enqueued — on `wp_enqueue_scripts`. Use
-`wp_enqueue_style( 'outletpro-classic-message' )` or declare it as a dependency to load
-it on demand. Added in 1.0.0.
+Outlet message stylesheet for classic themes. Added in 1.0.0.
 
 #### `outletpro-block-cart`
 
