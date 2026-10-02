@@ -38,6 +38,15 @@ function init_taxonomies(): void {
 }
 
 /**
+ * Helper to de-initialize taxonomies.
+ *
+ * @internal
+ */
+function deinit_taxonomies(): void {
+	unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+}
+
+/**
  * Helper to report diagnostic info on taxonomies.
  *
  * @internal
