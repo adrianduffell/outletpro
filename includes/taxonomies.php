@@ -222,6 +222,7 @@ function init_taxonomies(): void {
  */
 function deinit_taxonomies(): void {
 	unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+	unregister_taxonomy( OUTLET_SEARCH_INDEX_TAXONOMY );
 }
 
 /**
