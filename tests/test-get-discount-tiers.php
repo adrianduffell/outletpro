@@ -31,6 +31,21 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		$this->assertSame( array( 30, 50, 70 ), $tiers );
 	}
 
+	public function test_returns_discount_tiers_in_numeric_order(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		wp_insert_term( 'outlet-discount-5', OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_insert_term( 'outlet-discount-30', OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_insert_term( 'outlet-discount-100', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$tiers = get_discount_tiers();
+
+		// Assert.
+		$this->assertSame( array( 5, 30, 100 ), $tiers );
+	}
+
 	public function test_includes_custom_discount_tiers(): void {
 		// Arrange.
 		register_outlet_search_index_taxonomy();

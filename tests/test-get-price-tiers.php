@@ -31,6 +31,20 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		$this->assertSame( array( 15, 30, 50 ), $tiers );
 	}
 
+	public function test_returns_price_tiers_in_numeric_order(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'BRL' );
+		seed_outlet_search_index_taxonomy();
+
+		// Act.
+		$tiers = get_price_tiers();
+
+		// Assert.
+		$this->assertSame( array( 50, 100, 200 ), $tiers );
+	}
+
 	public function test_includes_custom_price_tiers(): void {
 		// Arrange.
 		register_outlet_search_index_taxonomy();

@@ -576,7 +576,7 @@ function set_outlet( \WC_Product $product, bool $new_value ): void {
 }
 
 /**
- * Get the price tiers for the outlet.
+ * Get the outlet price tiers in numerical order.
  *
  * @return int[] Price tier amounts
  * @throws \RuntimeException If the price tiers cannot be retrieved.
@@ -602,22 +602,23 @@ function get_price_tiers(): array {
 		}
 	);
 
-	return array_values(
-		array_map(
-			static function ( string $term ): int {
-				$amount = filter_var( substr( $term, strlen( 'outlet-price-' ) ), FILTER_VALIDATE_INT );
-				if ( false === $amount ) {
-					throw new \RuntimeException( 'Outlet price tier threshold is invalid.' );
-				}
-				return $amount;
-			},
-			$tiers
-		)
+	$amounts = array_map(
+		static function ( string $term ): int {
+			$amount = filter_var( substr( $term, strlen( 'outlet-price-' ) ), FILTER_VALIDATE_INT );
+			if ( false === $amount ) {
+				throw new \RuntimeException( 'Outlet price tier threshold is invalid.' );
+			}
+			return $amount;
+		},
+		$tiers
 	);
+	sort( $amounts, SORT_NUMERIC );
+
+	return $amounts;
 }
 
 /**
- * Get the discount tiers for the outlet.
+ * Get the outlet discount tiers in numerical order.
  *
  * @return int[] Discount tier amounts
  * @throws \RuntimeException If the discount tiers cannot be retrieved.
@@ -649,12 +650,13 @@ function get_discount_tiers(): array {
 		$tiers
 	);
 
-	return array_values(
-		array_filter(
-			$amounts,
-			static function ( ?int $amount ): bool {
-				return null !== $amount;
-			}
-		)
+	$amounts = array_filter(
+		$amounts,
+		static function ( ?int $amount ): bool {
+			return null !== $amount;
+		}
 	);
+	sort( $amounts, SORT_NUMERIC );
+
+	return $amounts;
 }
