@@ -26,7 +26,7 @@ const OUTLET_STATUS_TAXONOMY = 'outletpro_status';
  *
  * @internal
  */
-const OUTLET_SEARCH_INDEX_TAXONOMY = 'outlet_search_index_taxonomy';
+const OUTLET_SEARCH_INDEX_TAXONOMY = 'outletpro_search_index_taxonomy';
 
 /**
  * Canonical term for products belonging in the outlet.
