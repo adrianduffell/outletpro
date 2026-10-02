@@ -85,6 +85,34 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		$this->assertSame( array(), $tiers );
 	}
 
+	public function test_skips_invalid_discount_threshold(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		wp_insert_term( 'outlet-discount-invalid', OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_insert_term( 'outlet-discount-30', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$tiers = get_discount_tiers();
+
+		// Assert.
+		$this->assertSame( array( 30 ), $tiers );
+	}
+
+	public function test_skips_non_integer_discount_threshold(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		wp_insert_term( 'outlet-discount-50-percent', OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_insert_term( 'outlet-discount-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$tiers = get_discount_tiers();
+
+		// Assert.
+		$this->assertSame( array( 50 ), $tiers );
+	}
+
 	public function test_throws_when_taxonomy_is_missing(): void {
 		// Arrange.
 		unregister_taxonomy( OUTLET_SEARCH_INDEX_TAXONOMY );

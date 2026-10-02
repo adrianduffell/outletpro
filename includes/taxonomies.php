@@ -580,7 +580,6 @@ function set_outlet( \WC_Product $product, bool $new_value ): void {
  *
  * @return int[] Price tier amounts
  * @throws \RuntimeException If the price tiers cannot be retrieved.
- * @throws \RuntimeException If a price tier threshold is invalid.
  * @internal
  */
 function get_price_tiers(): array {
@@ -603,14 +602,17 @@ function get_price_tiers(): array {
 	);
 
 	$amounts = array_map(
-		static function ( string $term ): int {
+		static function ( string $term ): ?int {
 			$amount = filter_var( substr( $term, strlen( 'outlet-price-' ) ), FILTER_VALIDATE_INT );
-			if ( false === $amount ) {
-				throw new \RuntimeException( 'Outlet price tier threshold is invalid.' );
-			}
-			return $amount;
+			return false === $amount ? null : $amount;
 		},
 		$tiers
+	);
+	$amounts = array_filter(
+		$amounts,
+		static function ( ?int $amount ): bool {
+			return null !== $amount;
+		}
 	);
 	sort( $amounts, SORT_NUMERIC );
 

@@ -84,6 +84,34 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		$this->assertSame( array(), $tiers );
 	}
 
+	public function test_skips_invalid_price_threshold(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		wp_insert_term( 'outlet-price-invalid', OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_insert_term( 'outlet-price-25', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$tiers = get_price_tiers();
+
+		// Assert.
+		$this->assertSame( array( 25 ), $tiers );
+	}
+
+	public function test_skips_non_integer_price_threshold(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		wp_insert_term( 'outlet-price-25-dollars', OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_insert_term( 'outlet-price-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$tiers = get_price_tiers();
+
+		// Assert.
+		$this->assertSame( array( 50 ), $tiers );
+	}
+
 	public function test_throws_when_taxonomy_is_missing(): void {
 		// Arrange.
 		unregister_taxonomy( OUTLET_SEARCH_INDEX_TAXONOMY );
