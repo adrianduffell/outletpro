@@ -9,12 +9,14 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\init_admin_product_list_table;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Add_Badge_To_Stock_Html_Hook extends WP_UnitTestCase {
 
 	public function test_adds_badge_when_product_is_outlet(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 
 		$product = WC_Helper_Product::create_simple_product();

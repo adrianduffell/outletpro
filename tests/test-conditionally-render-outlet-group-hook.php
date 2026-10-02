@@ -10,6 +10,7 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 
@@ -17,6 +18,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_renders_outlet_group_for_outlet_product(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -98,6 +100,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_renders_outlet_group_only_for_outlet_products_in_query_loop(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 

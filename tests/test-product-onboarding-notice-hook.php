@@ -10,6 +10,7 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\create_outlet_page;
 use function OutletPro\init_admin_product_list_table;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
@@ -85,6 +86,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_when_outlet_products_exist(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -118,6 +120,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_renders_publish_page_notice_when_outlet_products_exist_and_page_is_draft(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -138,6 +141,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_publish_page_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -192,6 +196,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_publish_page_notice_when_outlet_page_is_not_registered(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -211,6 +216,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_publish_page_notice_when_outlet_page_is_published(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -233,6 +239,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_publish_page_notice_contains_edit_page_link(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -253,6 +260,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_products_added_notice_contains_dismiss_storage_key_and_is_dismissible(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -323,6 +331,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_draft_page_notice_contains_product_count(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -343,6 +352,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_draft_page_notice_contains_plural_product_count(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -365,6 +375,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_no_page_notice_contains_tip_message_when_page_not_registered(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -384,6 +395,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_ready_state_notice_contains_ready_message_when_page_is_published(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
@@ -406,6 +418,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
 	public function test_ready_state_notice_contains_view_page_link_when_page_is_published(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );

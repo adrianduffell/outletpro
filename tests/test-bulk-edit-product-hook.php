@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\bulk_edit_field_hook;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\save_bulk_edit_hook;
 use function OutletPro\seed_outlet_status_taxonomy;
@@ -50,6 +51,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 
 	public function test_save_bulk_edit_hook_adds_product_to_outlet(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product                = WC_Helper_Product::create_simple_product();
@@ -69,6 +71,7 @@ class Test_Bulk_Edit_Product_Hook extends WP_UnitTestCase {
 	public function test_save_bulk_edit_hook_removes_product_from_outlet(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
+		register_outlet_search_index_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );

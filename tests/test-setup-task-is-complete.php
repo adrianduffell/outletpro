@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\setup_task_is_complete;
@@ -28,6 +29,7 @@ class Test_Setup_Task_Is_Complete extends WP_UnitTestCase {
 
 	public function test_is_complete_returns_true_when_outlet_section_has_products(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 

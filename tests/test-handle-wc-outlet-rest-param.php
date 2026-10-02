@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
@@ -15,6 +16,7 @@ class Test_Handle_Outletpro_Rest_Param extends WP_UnitTestCase {
 
 	public function test_unfiltered_request_returns_all_products(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -34,6 +36,7 @@ class Test_Handle_Outletpro_Rest_Param extends WP_UnitTestCase {
 
 	public function test_outletpro_param_filters_to_outlet_products_only(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
@@ -54,6 +57,7 @@ class Test_Handle_Outletpro_Rest_Param extends WP_UnitTestCase {
 
 	public function test_false_outletpro_param_returns_all_products(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );

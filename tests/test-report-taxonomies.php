@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\report_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
@@ -99,6 +100,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_product_count_matches_number_of_outlet_products(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 
@@ -116,6 +118,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_product_count_ignores_draft_products(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 

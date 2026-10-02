@@ -10,6 +10,7 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_cart;
 use function OutletPro\init_cart;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 
@@ -27,6 +28,7 @@ class Test_Add_Outlet_To_Cart_Item_Class_Hook extends WP_UnitTestCase {
 
 	public function test_adds_outlet_class_for_outlet_product(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -44,6 +46,7 @@ class Test_Add_Outlet_To_Cart_Item_Class_Hook extends WP_UnitTestCase {
 
 	public function test_adds_outlet_class_without_leading_space_when_existing_classes_are_empty(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -61,6 +64,7 @@ class Test_Add_Outlet_To_Cart_Item_Class_Hook extends WP_UnitTestCase {
 
 	public function test_preserves_existing_classes(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();

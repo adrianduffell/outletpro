@@ -9,6 +9,7 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\init_woocommerce_template_hooks;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
@@ -17,6 +18,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_outputs_badge_html_for_outlet_product(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance' );
@@ -49,6 +51,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_display_badge_using_custom_single_product_hook_name(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		add_filter(
 			'outletpro_badge_single_product_hook',
 			static function () {
@@ -70,6 +73,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_display_badge_using_custom_single_product_hook_priority(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		add_filter(
 			'outletpro_badge_single_product_priority',
 			static function () {
@@ -139,6 +143,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_outputs_nothing_when_label_is_empty(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_BADGE_LABEL_OPTION, '' );

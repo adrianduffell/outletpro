@@ -11,6 +11,7 @@ use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
 use function OutletPro\register_outlet_message_block;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\render_outlet_message_callback;
 use function OutletPro\seed_outlet_status_taxonomy;
@@ -45,6 +46,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 	public function test_returns_message_html_when_product_is_in_outlet(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_message_block();
 		register_outlet_status_taxonomy();
@@ -76,6 +78,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 	public function test_message_uses_global_message_option(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_message_block();
 		register_outlet_status_taxonomy();
@@ -144,6 +147,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 	public function test_empty_option_returns_empty_string(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_message_block();
 		register_outlet_status_taxonomy();
@@ -174,6 +178,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 	public function test_missing_option_returns_empty_string(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_message_block();
 		register_outlet_status_taxonomy();
@@ -201,6 +206,7 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 	public function test_message_is_wrapped_in_paragraph_tag(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_message_block();
 		register_outlet_status_taxonomy();

@@ -11,6 +11,7 @@ use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
 use function OutletPro\register_outlet_badge_block;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\render_outlet_badge_callback;
 use function OutletPro\seed_outlet_status_taxonomy;
@@ -45,6 +46,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_badge_html_when_product_is_in_outlet(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_badge_block();
 		register_outlet_status_taxonomy();
@@ -74,6 +76,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_badge_uses_global_badge_label_option(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_badge_block();
 		register_outlet_status_taxonomy();
@@ -139,6 +142,7 @@ class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 
 	public function test_returns_empty_string_when_label_is_empty(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		deinit_blocks();
 		register_outlet_badge_block();
 		register_outlet_status_taxonomy();

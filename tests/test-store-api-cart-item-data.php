@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\add_to_outlet;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\store_api_cart_item_data;
@@ -17,6 +18,7 @@ class Test_Store_Api_Cart_Item_Data extends WP_UnitTestCase {
 
 	public function test_returns_true_for_outlet_product(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
@@ -44,6 +46,7 @@ class Test_Store_Api_Cart_Item_Data extends WP_UnitTestCase {
 
 	public function test_returns_true_for_variation_of_outlet_product(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_variation_product();

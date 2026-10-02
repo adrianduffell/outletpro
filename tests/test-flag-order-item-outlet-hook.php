@@ -9,6 +9,7 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\flag_order_item_outlet_hook;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\ORDER_ITEM_OUTLET_BADGE_LABEL_META_KEY;
@@ -19,6 +20,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 	public function test_adds_outlet_meta_for_outlet_product(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_BADGE_LABEL_OPTION, 'Final Sale' );
@@ -61,6 +63,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 	public function test_uses_parent_id_for_variation(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$variable_product = WC_Helper_Product::create_variation_product();
@@ -84,6 +87,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_add_badge_label_meta_when_option_is_missing(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		delete_option( OUTLET_BADGE_LABEL_OPTION );
@@ -106,6 +110,7 @@ class Test_Flag_Order_Item_Outlet_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_add_badge_label_meta_when_option_is_empty_string(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_BADGE_LABEL_OPTION, '' );

@@ -9,6 +9,7 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\is_outlet;
+use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\register_outlet_status_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\set_outlet;
@@ -17,6 +18,7 @@ use const OutletPro\OUTLET_STATUS_TAXONOMY;
 class Test_Set_Outlet extends \WP_UnitTestCase {
 	public function test_adds_to_outlet_when_true(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -31,6 +33,7 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 	public function test_removes_from_outlet_when_false(): void {
 		// Arrange.
 		register_outlet_status_taxonomy();
+		register_outlet_search_index_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -56,6 +59,7 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 
 	public function test_noop_when_already_true(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
@@ -91,6 +95,7 @@ class Test_Set_Outlet extends \WP_UnitTestCase {
 
 	public function test_action_passes_correct_values(): void {
 		// Arrange.
+		register_outlet_search_index_taxonomy();
 		register_outlet_status_taxonomy();
 		seed_outlet_status_taxonomy();
 
