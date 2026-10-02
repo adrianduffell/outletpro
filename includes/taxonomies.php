@@ -109,6 +109,28 @@ function seed_outlet_status_taxonomy(): void {
 }
 
 /**
+ * Remove all terms in the outlet status taxonomy.
+ *
+ * @throws \RuntimeException If terms cannot be retrieved.
+ * @internal
+ */
+function truncate_outlet_status_taxonomy(): void {
+	$terms = get_terms(
+		array(
+			'taxonomy'   => OUTLET_STATUS_TAXONOMY,
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		throw new \RuntimeException( 'Outlet status terms could not be retrieved.' );
+	}
+	foreach ( $terms as $term_id ) {
+		wp_delete_term( $term_id, OUTLET_STATUS_TAXONOMY );
+	}
+}
+
+/**
  * Check if a product is in the outlet.
  *
  * @param \WC_Product $product The product to check.
