@@ -167,6 +167,7 @@ function activate(): void {
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
 		seed_outlet_status_taxonomy();
+		seed_outlet_search_index_taxonomy();
 		create_outlet_page();
 		seed_activated_at_option();
 		seed_settings();
