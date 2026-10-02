@@ -574,3 +574,91 @@ function set_outlet( \WC_Product $product, bool $new_value ): void {
 		$new_value
 	);
 }
+
+/**
+ * Get the outlet price tiers in numerical order.
+ *
+ * @return int[] Price tier amounts
+ * @throws \RuntimeException If the price tiers cannot be retrieved.
+ * @internal
+ */
+function get_price_tiers(): array {
+	$terms = get_terms(
+		array(
+			'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'hide_empty' => false,
+			'fields'     => 'slugs',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		throw new \RuntimeException( 'Outlet price tiers could not be retrieved.' );
+	}
+
+	$tiers = array_filter(
+		$terms,
+		static function ( string $term ): bool {
+			return 0 === strpos( $term, 'outlet-price-' );
+		}
+	);
+
+	$amounts = array_map(
+		static function ( string $term ): ?int {
+			$amount = filter_var( substr( $term, strlen( 'outlet-price-' ) ), FILTER_VALIDATE_INT );
+			return false === $amount ? null : $amount;
+		},
+		$tiers
+	);
+	$amounts = array_filter(
+		$amounts,
+		static function ( ?int $amount ): bool {
+			return null !== $amount;
+		}
+	);
+	sort( $amounts, SORT_NUMERIC );
+
+	return $amounts;
+}
+
+/**
+ * Get the outlet discount tiers in numerical order.
+ *
+ * @return int[] Discount tier amounts
+ * @throws \RuntimeException If the discount tiers cannot be retrieved.
+ * @internal
+ */
+function get_discount_tiers(): array {
+	$terms = get_terms(
+		array(
+			'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'hide_empty' => false,
+			'fields'     => 'slugs',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		throw new \RuntimeException( 'Outlet discount tiers could not be retrieved.' );
+	}
+
+	$tiers   = array_filter(
+		$terms,
+		static function ( string $term ): bool {
+			return 0 === strpos( $term, 'outlet-discount-' );
+		}
+	);
+	$amounts = array_map(
+		static function ( string $term ): ?int {
+			$amount = filter_var( substr( $term, strlen( 'outlet-discount-' ) ), FILTER_VALIDATE_INT );
+			return false === $amount ? null : $amount;
+		},
+		$tiers
+	);
+
+	$amounts = array_filter(
+		$amounts,
+		static function ( ?int $amount ): bool {
+			return null !== $amount;
+		}
+	);
+	sort( $amounts, SORT_NUMERIC );
+
+	return $amounts;
+}
