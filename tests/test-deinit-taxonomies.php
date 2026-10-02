@@ -9,6 +9,7 @@
 
 use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_taxonomies;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Deinit_Taxonomies extends WP_UnitTestCase {
@@ -23,6 +24,18 @@ class Test_Deinit_Taxonomies extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( taxonomy_exists( OUTLET_STATUS_TAXONOMY ) );
 	}
+
+	public function test_unregisters_outlet_search_index_taxonomy(): void {
+		// Arrange.
+		init_taxonomies();
+
+		// Act.
+		deinit_taxonomies();
+
+		// Assert.
+		$this->assertFalse( taxonomy_exists( OUTLET_SEARCH_INDEX_TAXONOMY ) );
+	}
+
 	public function test_preserves_unrelated_taxonomy(): void {
 		// Arrange.
 		init_taxonomies();

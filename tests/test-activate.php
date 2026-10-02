@@ -8,10 +8,35 @@
  */
 
 use function OutletPro\activate;
+use function OutletPro\register_outlet_search_index_taxonomy;
+use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
 use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Activate extends WP_UnitTestCase {
+
+	public function test_seeds_outlet_search_indexes_on_activation(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+
+		// Act.
+		activate();
+
+		// Assert.
+		$this->assertSame(
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-25', 'outlet-price-50' ),
+			get_terms(
+				array(
+					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
+					'hide_empty' => false,
+					'fields'     => 'slugs',
+				)
+			)
+		);
+	}
 
 	public function test_creates_outlet_page_on_activation(): void {
 		// Arrange.
