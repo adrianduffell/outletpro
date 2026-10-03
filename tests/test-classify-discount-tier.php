@@ -20,8 +20,10 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$variation = new WC_Product_Variation();
 		$variation->set_parent_id( $product->get_id() );
 		$variation->set_regular_price( '100' );
@@ -75,6 +77,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product();
 		$product->set_regular_price( '1.90' );
 		$product->set_price( '1.33' );
@@ -91,6 +94,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product();
 		$product->set_regular_price( '100' );
 		$product->set_price( '70.00000001' );
@@ -140,6 +144,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product();
 		$product->set_regular_price( '100' );
 		$product->set_price( '100' );
@@ -156,6 +161,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product();
 		$product->set_price( '50' );
 
@@ -171,6 +177,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product();
 		$product->set_regular_price( '100' );
 
@@ -186,6 +193,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product();
 		$product->set_regular_price( '100' );
 		$product->set_price( '0' );
@@ -202,6 +210,7 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		$product = new WC_Product();
 		$product->set_regular_price( '100' );
 		$product->set_price( '50' );
+
 		add_filter( 'woocommerce_product_get_price', '__return_empty_array', PHP_INT_MAX );
 
 		// Expect.

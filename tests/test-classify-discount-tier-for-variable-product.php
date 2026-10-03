@@ -19,13 +19,16 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$first = new WC_Product_Variation();
 		$first->set_parent_id( $product->get_id() );
 		$first->set_regular_price( '100' );
 		$first->set_sale_price( '40' );
 		$first->save();
+
 		$second = new WC_Product_Variation();
 		$second->set_parent_id( $product->get_id() );
 		$second->set_regular_price( '100' );
@@ -45,13 +48,16 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$first = new WC_Product_Variation();
 		$first->set_parent_id( $product->get_id() );
 		$first->set_regular_price( '100' );
 		$first->set_sale_price( '20' );
 		$first->save();
+
 		$second = new WC_Product_Variation();
 		$second->set_parent_id( $product->get_id() );
 		$second->set_regular_price( '100' );
@@ -71,13 +77,16 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$first = new WC_Product_Variation();
 		$first->set_parent_id( $product->get_id() );
 		$first->set_regular_price( '100' );
 		$first->set_sale_price( '40' );
 		$first->save();
+
 		$second = new WC_Product_Variation();
 		$second->set_parent_id( $product->get_id() );
 		$second->set_regular_price( '100' );
@@ -97,14 +106,17 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$hidden = new WC_Product_Variation();
 		$hidden->set_parent_id( $product->get_id() );
 		$hidden->set_regular_price( '100' );
 		$hidden->set_sale_price( '20' );
 		$hidden->set_status( 'private' );
 		$hidden->save();
+
 		$visible = new WC_Product_Variation();
 		$visible->set_parent_id( $product->get_id() );
 		$visible->set_regular_price( '100' );
@@ -125,14 +137,17 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		truncate_outlet_search_index_taxonomy();
 		update_option( 'woocommerce_hide_out_of_stock_items', 'yes' );
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$hidden = new WC_Product_Variation();
 		$hidden->set_parent_id( $product->get_id() );
 		$hidden->set_regular_price( '100' );
 		$hidden->set_sale_price( '20' );
 		$hidden->set_stock_status( 'outofstock' );
 		$hidden->save();
+
 		$visible = new WC_Product_Variation();
 		$visible->set_parent_id( $product->get_id() );
 		$visible->set_regular_price( '100' );
@@ -152,11 +167,14 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 		$product->save();
+
 		$unpriced = new WC_Product_Variation();
 		$unpriced->set_parent_id( $product->get_id() );
 		$unpriced->save();
+
 		$priced = new WC_Product_Variation();
 		$priced->set_parent_id( $product->get_id() );
 		$priced->set_regular_price( '100' );
@@ -176,6 +194,7 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		seed_outlet_search_index_taxonomy();
+
 		$product = new WC_Product_Variable();
 
 		// Act.

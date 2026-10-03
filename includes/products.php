@@ -97,19 +97,24 @@ function classify_discount_tier( \WC_Product $product ): ?int {
 
 	$price         = $product->get_price();
 	$regular_price = $product->get_regular_price();
+
 	// WooCommerce represents unset prices as empty strings.
 	if ( '' === $price ) {
 		return null;
 	}
+
 	if ( '' === $regular_price ) {
 		return null;
 	}
+
 	if ( ! is_numeric( $price ) ) {
 		throw new \RuntimeException( 'Outlet product price is invalid.' );
 	}
+
 	if ( ! is_numeric( $regular_price ) ) {
 		throw new \RuntimeException( 'Outlet product regular price is invalid.' );
 	}
+
 	$discount = $regular_price > 0 && $price < $regular_price ? ( 1 - $price / $regular_price ) * 100 : 0;
 
 	// Allow tiny floating-point errors at discount tier boundaries.
@@ -118,13 +123,16 @@ function classify_discount_tier( \WC_Product $product ): ?int {
 	$tiers = get_discount_tiers();
 	$match = null;
 	$best  = -INF;
+
 	foreach ( $tiers as $threshold ) {
 		if ( $discount + $epsilon < $threshold ) {
 			continue;
 		}
+
 		if ( $threshold <= $best ) {
 			continue;
 		}
+
 		$match = $threshold;
 		$best  = $threshold;
 	}
@@ -148,19 +156,26 @@ function classify_discount_tier_for_variable_product( \WC_Product_Variable $prod
 	$variation_ids = array_keys( $prices['price'] );
 
 	$tier = null;
+
 	foreach ( $variation_ids as $variation_id ) {
 		$variation = wc_get_product( $variation_id );
+
 		if ( ! $variation ) {
 			throw new \RuntimeException( 'Outlet product variation could not be retrieved.' );
 		}
+
 		$variation_tier = classify_discount_tier( $variation );
+
 		if ( null === $variation_tier ) {
 			return null;
 		}
+
 		if ( null !== $tier && $tier !== $variation_tier ) {
 			return null;
 		}
+
 		$tier = $variation_tier;
 	}
+
 	return $tier;
 }
