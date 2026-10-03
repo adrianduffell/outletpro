@@ -19,6 +19,10 @@ defined( 'ABSPATH' ) || exit;
 function init_products(): void {
 	add_action( 'woocommerce_after_product_object_save', 'OutletPro\update_search_index_hook' );
 	add_action( 'outletpro_reindex_search_facets', 'OutletPro\reindex_search_facets' );
+	add_action( 'outletpro_reindex_search_facets_batch', 'OutletPro\reindex_search_facets_batch' );
+	add_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	add_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	add_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 }
 
 /**
@@ -48,6 +52,68 @@ function update_search_index_hook( \WC_Product $product ): void {
 		as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro' );
 	} catch ( \Throwable $e ) {
 		wc_get_logger()->error( 'Outlet product search index update could not be scheduled.' );
+	}
+}
+
+/**
+ * Schedule outlet products for re-indexing in batches of 100 after search index terms change.
+ *
+ * Fired by `created_outletpro_search_index`, `edited_outletpro_search_index`, and `delete_outletpro_search_index`.
+ *
+ * @internal WordPress action hook
+ */
+function reindex_all_outlet_products_hook(): void {
+	$page = 1;
+	do {
+		try {
+			$query = new \WP_Query(
+				array(
+					'post_type'      => 'product',
+					'post_status'    => 'any',
+					'posts_per_page' => 100,
+					'paged'          => $page,
+					'orderby'        => 'ID',
+					'order'          => 'ASC',
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+					'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+						array(
+							'taxonomy' => OUTLET_STATUS_TAXONOMY,
+							'field'    => 'name',
+							'terms'    => OUTLET_STATUS_CANONICAL_TERM,
+						),
+					),
+				)
+			);
+		} catch ( \Throwable $e ) {
+			wc_get_logger()->error( 'Outlet products could not be retrieved for search index updates.' );
+			return;
+		}
+
+		if ( empty( $query->posts ) ) {
+			return;
+		}
+
+		try {
+			as_enqueue_async_action( 'outletpro_reindex_search_facets_batch', array( $query->posts ), 'outletpro' );
+		} catch ( \Throwable $e ) {
+			wc_get_logger()->error( 'Outlet product search index batch could not be scheduled.' );
+			return;
+		}
+		$batch_size = count( $query->posts );
+		++$page;
+	} while ( 100 === $batch_size );
+}
+
+/**
+ * Reindex the search facets for a batch of products.
+ *
+ * @param array<\WC_Product|int> $products Product objects or product IDs.
+ * @internal
+ */
+function reindex_search_facets_batch( array $products ): void {
+	foreach ( $products as $product ) {
+		reindex_search_facets( $product );
 	}
 }
 

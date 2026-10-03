@@ -327,6 +327,11 @@ function seed_outlet_status_taxonomy(): void {
  * @throws \RuntimeException If the term seeding fails.
  */
 function seed_outlet_search_index_taxonomy(): void {
+	// Pause search index during seeding.
+	remove_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	remove_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	remove_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+
 	$terms = array();
 	foreach ( DEFAULT_DISCOUNT_TIERS as $discount ) {
 		$terms[] = 'outlet-discount-' . $discount;
@@ -347,6 +352,14 @@ function seed_outlet_search_index_taxonomy(): void {
 			throw new \RuntimeException( 'Failed to seed outlet search index taxonomy.' );
 		}
 	}
+
+	// Manually re-index products.
+	reindex_all_outlet_products_hook();
+
+	// Unpause search index.
+	add_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	add_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	add_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 }
 
 /**

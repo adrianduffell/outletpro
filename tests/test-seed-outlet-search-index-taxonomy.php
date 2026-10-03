@@ -7,8 +7,12 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\add_to_outlet;
+use function OutletPro\init_products;
+use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\seed_outlet_search_index_taxonomy;
+use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
@@ -123,5 +127,37 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 				)
 			)
 		);
+	}
+
+	public function test_seeding_queues_one_reindex_per_product_and_restores_term_hooks(): void {
+		// Arrange.
+		init_taxonomies();
+		init_products();
+		seed_outlet_status_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		as_unschedule_all_actions( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro' );
+
+		// Act.
+		seed_outlet_search_index_taxonomy();
+
+		// Assert.
+		$this->assertCount(
+			1,
+			as_get_scheduled_actions(
+				array(
+					'hook'   => 'outletpro_reindex_search_facets_batch',
+					'args'   => array( array( $product->get_id() ) ),
+					'group'  => 'outletpro',
+					'status' => ActionScheduler_Store::STATUS_PENDING,
+				),
+				'ids'
+			)
+		);
+		$this->assertSame( 10, has_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' ) );
+		$this->assertSame( 10, has_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' ) );
+		$this->assertSame( 10, has_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' ) );
 	}
 }
