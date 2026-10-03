@@ -9,8 +9,8 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_taxonomies;
-use function OutletPro\init_taxonomies;
 use function OutletPro\init_products;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_search_index_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;

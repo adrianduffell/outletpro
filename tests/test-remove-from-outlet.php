@@ -8,8 +8,8 @@
  */
 
 use function OutletPro\deinit_taxonomies;
-use function OutletPro\init_taxonomies;
 use function OutletPro\init_products;
+use function OutletPro\init_taxonomies;
 use function OutletPro\remove_from_outlet;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
