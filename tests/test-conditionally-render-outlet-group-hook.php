@@ -10,14 +10,14 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 
 class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_renders_outlet_group_for_outlet_product(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -36,7 +36,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_outlet_group_for_non_outlet_product(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
@@ -53,7 +53,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_render_inner_blocks_for_non_outlet_product(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
@@ -81,7 +81,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_renders_core_group_for_non_outlet_product(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
@@ -98,7 +98,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 
 	public function test_renders_outlet_group_only_for_outlet_products_in_query_loop(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		$outlet_product = \WC_Helper_Product::create_simple_product();

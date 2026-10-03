@@ -9,8 +9,8 @@
 
 use function OutletPro\add_products_shortcode_attribute_hook;
 use function OutletPro\filter_products_shortcode_query_hook;
+use function OutletPro\init_taxonomies;
 use function OutletPro\max_price_posts_clauses;
-use function OutletPro\register_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
@@ -42,7 +42,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_query_gets_tax_query_when_outletpro_is_true(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$query_args = array( 'post_type' => 'product' );
 		$attributes = array( 'outletpro' => true );
 
@@ -58,7 +58,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_tax_query_appended_when_existing_tax_query_present(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$existing_tax = array(
 			'taxonomy' => 'product_cat',
 			'field'    => 'slug',
@@ -122,7 +122,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_added_to_query_args_when_get_param_present(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$_GET['max_price'] = '100';
 		$query_args        = array( 'post_type' => 'product' );
 		$attributes        = array( 'outletpro' => true );
@@ -140,7 +140,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_not_added_when_get_param_absent(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$query_args = array( 'post_type' => 'product' );
 		$attributes = array( 'outletpro' => true );
 
@@ -169,7 +169,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_sanitizes_invalid_string(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$_GET['max_price'] = 'invalid';
 		$query_args        = array( 'post_type' => 'product' );
 		$attributes        = array( 'outletpro' => true );
@@ -187,7 +187,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_sanitizes_negative_value(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$_GET['max_price'] = '-50';
 		$query_args        = array( 'post_type' => 'product' );
 		$attributes        = array( 'outletpro' => true );
@@ -205,7 +205,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_sanitizes_decimal_value(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$_GET['max_price'] = '99.99';
 		$query_args        = array( 'post_type' => 'product' );
 		$attributes        = array( 'outletpro' => true );
@@ -223,7 +223,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_accepts_zero(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$_GET['max_price'] = '0';
 		$query_args        = array( 'post_type' => 'product' );
 		$attributes        = array( 'outletpro' => true );
@@ -241,7 +241,7 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 	public function test_max_price_accepts_large_integer(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$_GET['max_price'] = '999999';
 		$query_args        = array( 'post_type' => 'product' );
 		$attributes        = array( 'outletpro' => true );

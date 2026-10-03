@@ -8,14 +8,14 @@
  */
 
 use function OutletPro\init_system_status;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 
 class Test_Add_System_Status_Section extends WP_UnitTestCase {
 
 	public function test_output_contains_section_heading(): void {
 		// Arrange.
 		init_system_status();
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Expect.
 		$this->expectOutputRegex( '/Outlet/' );
@@ -27,7 +27,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	public function test_table_has_correct_css_class(): void {
 		// Arrange.
 		init_system_status();
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Expect.
 		$this->expectOutputRegex( '/<table[^>]*class="(?=[^"]*\bwc_status_table\b)(?=[^"]*\bwidefat\b)[^"]*"/' );
@@ -39,7 +39,7 @@ class Test_Add_System_Status_Section extends WP_UnitTestCase {
 	public function test_table_has_thead_and_tbody(): void {
 		// Arrange.
 		init_system_status();
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Expect.
 		$this->expectOutputRegex( '/<table[^>]*>.*?<thead>.*?<\/thead>.*?<tbody>.*?<\/tbody>.*?<\/table>/s' );

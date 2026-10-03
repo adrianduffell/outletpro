@@ -8,14 +8,14 @@
  */
 
 use function OutletPro\add_product_checkbox_hook;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 
 class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 
 	public function test_settings_link_present_when_settings_screen_enabled(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product         = WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
@@ -33,7 +33,7 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 
 	public function test_settings_link_absent_when_settings_disabled(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product         = WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );

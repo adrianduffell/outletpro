@@ -8,7 +8,7 @@
  */
 
 use function OutletPro\init_block_editor;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
@@ -17,7 +17,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 	public function test_settings_contain_outlet_term_id(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		init_block_editor();
 		$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
@@ -32,7 +32,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 	public function test_canonical_term_setting_is_omitted_when_canonical_term_missing(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		init_block_editor();
 		$initial_settings = array( 'foo' => 'bar' );
 
@@ -47,7 +47,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 
 	public function test_existing_settings_are_preserved(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		init_block_editor();
 		$initial_settings = array( 'foo' => 'bar' );

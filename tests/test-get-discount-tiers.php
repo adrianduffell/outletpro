@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\deinit_taxonomies;
 use function OutletPro\get_discount_tiers;
 use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\seed_outlet_search_index_taxonomy;
@@ -115,7 +116,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 
 	public function test_throws_when_taxonomy_is_missing(): void {
 		// Arrange.
-		unregister_taxonomy( OUTLET_SEARCH_INDEX_TAXONOMY );
+		deinit_taxonomies();
 
 		// Expect.
 		$this->expectException( RuntimeException::class );

@@ -9,15 +9,15 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\count_outlet;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\deinit_taxonomies;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
-use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Count_Outlet extends WP_UnitTestCase {
 
 	public function test_throws_exception_when_taxonomy_not_registered(): void {
 		// Arrange.
-		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		deinit_taxonomies();
 
 		// Expect.
 		$this->expectException( \RuntimeException::class );
@@ -28,7 +28,7 @@ class Test_Count_Outlet extends WP_UnitTestCase {
 
 	public function test_returns_zero_when_canonical_term_does_not_exist(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Act.
 		$count = count_outlet();
@@ -39,7 +39,7 @@ class Test_Count_Outlet extends WP_UnitTestCase {
 
 	public function test_returns_zero_when_no_products_in_outlet(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Act.
@@ -51,7 +51,7 @@ class Test_Count_Outlet extends WP_UnitTestCase {
 
 	public function test_returns_correct_count_of_outlet_products(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		$product_one = \WC_Helper_Product::create_simple_product();
@@ -68,7 +68,7 @@ class Test_Count_Outlet extends WP_UnitTestCase {
 
 	public function test_only_counts_published_products(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		$published_product = \WC_Helper_Product::create_simple_product();
