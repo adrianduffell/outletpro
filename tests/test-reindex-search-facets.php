@@ -18,6 +18,19 @@ use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Reindex_Search_Facets extends WP_UnitTestCase {
 
+	public function test_clears_all_facets_for_non_outlet_product(): void {
+		// Arrange.
+		init_taxonomies();
+		$product = WC_Helper_Product::create_simple_product();
+		wp_set_object_terms( $product->get_id(), array( 'outlet-price-25', 'outlet-discount-70', 'custom-index' ), OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		reindex_search_facets( $product );
+
+		// Assert.
+		$this->assertSame( array(), wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY ) );
+	}
+
 	public function test_reindexes_using_the_supplied_product_object(): void {
 		// Arrange.
 		init_taxonomies();
