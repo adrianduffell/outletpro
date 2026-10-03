@@ -18,10 +18,12 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_products(): void {
 	add_action( 'woocommerce_after_product_object_save', 'OutletPro\update_search_index_hook' );
+	add_action( 'outletpro_reindex_search_facets', 'OutletPro\reindex_search_facets' );
+	add_action( 'outletpro_clear_search_index_facets', 'OutletPro\clear_search_index_facets' );
 }
 
 /**
- * Updates the search index after a product is saved.
+ * Schedule re-indexing a product’s search facets after it is saved.
  *
  * Fired by `woocommerce_after_product_object_save`.
  *
@@ -38,7 +40,43 @@ function update_search_index_hook( \WC_Product $product ): void {
 		if ( ! is_outlet( $product ) ) {
 			return;
 		}
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product status could not be determined.' );
+		return;
+	}
 
+	try {
+		as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro', true );
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product search index update could not be scheduled.' );
+	}
+}
+
+/**
+ * Reindex the search facets for an outlet product.
+ *
+ * @param \WC_Product|int $product Product object or product ID.
+ * @internal
+ */
+function reindex_search_facets( $product ): void { // phpcs:ignore SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint -- PHP 7.4 does not support a WC_Product|int union type.
+	if ( is_int( $product ) ) {
+		$product = wc_get_product( $product );
+
+		if ( ! $product ) {
+			return; // A queued product may have been deleted before the action runs.
+		}
+	}
+
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return;
+		}
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product status could not be determined.' );
+		return;
+	}
+
+	try {
 		set_search_index_facets(
 			$product,
 			classify_price_tier( $product ),
@@ -46,6 +84,30 @@ function update_search_index_hook( \WC_Product $product ): void {
 		);
 	} catch ( \Throwable $e ) {
 		wc_get_logger()->error( 'Outlet product search indexes could not be synchronized.' );
+	}
+}
+
+/**
+ * Clear search facets after a product leaves the outlet.
+ *
+ * @param int $product_id Product ID.
+ * @internal
+ */
+function clear_search_index_facets( int $product_id ): void {
+	$product = wc_get_product( $product_id );
+	if ( ! $product ) {
+		return;
+	}
+
+	try {
+		// The product may have been added back before the action runs.
+		if ( is_outlet( $product ) ) {
+			return;
+		}
+
+		set_search_index_facets( $product, null, null );
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product search index facets could not be cleared.' );
 	}
 }
 

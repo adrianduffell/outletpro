@@ -421,7 +421,7 @@ function is_outlet( \WC_Product $product ): bool {
 /**
  * Add a product to the outlet.
  *
- * Updates the search index after adding the product.
+ * Schedules a search index update after adding the product.
  *
  * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the store’s outlet status taxonomy does not exist or the term assignment fails.
@@ -438,11 +438,7 @@ function add_to_outlet( \WC_Product $product ): void {
 		throw new \RuntimeException( 'Failed to assign outlet status term to product.' );
 	}
 
-	set_search_index_facets(
-		$product,
-		classify_price_tier( $product ),
-		classify_discount_tier( $product )
-	);
+	as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro', true );
 }
 
 /**
@@ -525,7 +521,7 @@ function outlet_empty(): bool {
 /**
  * Remove a product from the store’s outlet.
  *
- * Updates the search index after removal.
+ * Schedules clearing the search index after removal.
  *
  * @param \WC_Product $product Product to update.
  * @throws \RuntimeException If the outlet status taxonomy does not exist or term removal fails.
@@ -542,7 +538,7 @@ function remove_from_outlet( \WC_Product $product ): void {
 		throw new \RuntimeException( 'Failed to remove product from outlet.' );
 	}
 
-	set_search_index_facets( $product, null, null );
+	as_enqueue_async_action( 'outletpro_clear_search_index_facets', array( $product->get_id() ), 'outletpro', true );
 }
 
 /**
