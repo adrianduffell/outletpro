@@ -98,6 +98,7 @@ function init_hook(): void {
 	init_blocks();
 	init_block_editor();
 	init_orders();
+	init_products();
 	init_cart();
 	init_store_api();
 
