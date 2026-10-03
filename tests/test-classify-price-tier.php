@@ -155,13 +155,29 @@ class Test_Classify_Price_Tier extends WP_UnitTestCase {
 		$this->assertSame( 50, $tier );
 	}
 
-	public function test_unset_product_price_matches_lowest_tier(): void {
+	public function test_returns_null_when_product_price_is_unset(): void {
 		// Arrange.
 		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		update_option( 'woocommerce_currency', 'USD' );
 		seed_outlet_search_index_taxonomy();
 		$product = new WC_Product();
+
+		// Act.
+		$tier = classify_price_tier( $product );
+
+		// Assert.
+		$this->assertNull( $tier );
+	}
+
+	public function test_zero_product_price_matches_lowest_tier(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		seed_outlet_search_index_taxonomy();
+		$product = new WC_Product();
+		$product->set_price( '0' );
 
 		// Act.
 		$tier = classify_price_tier( $product );

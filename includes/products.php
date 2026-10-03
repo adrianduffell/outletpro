@@ -27,7 +27,9 @@ function classify_price_tier( \WC_Product $product ): ?int {
 
 	$price = $product->get_price();
 	// WooCommerce represents unset prices as empty strings.
-	$price = '' === $price ? 0 : $price;
+	if ( '' === $price ) {
+		return null;
+	}
 	if ( ! is_numeric( $price ) ) {
 		throw new \RuntimeException( 'Outlet product price is invalid.' );
 	}

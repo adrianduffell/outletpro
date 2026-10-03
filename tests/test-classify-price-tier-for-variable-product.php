@@ -89,6 +89,50 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$this->assertNull( $tier );
 	}
 
+	public function test_ignores_unpriced_variations(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		seed_outlet_search_index_taxonomy();
+		$product = new WC_Product_Variable();
+		$product->save();
+		$unpriced = new WC_Product_Variation();
+		$unpriced->set_parent_id( $product->get_id() );
+		$unpriced->save();
+		$priced = new WC_Product_Variation();
+		$priced->set_parent_id( $product->get_id() );
+		$priced->set_regular_price( '20' );
+		$priced->save();
+		$product->set_children( array( $unpriced->get_id(), $priced->get_id() ) );
+
+		// Act.
+		$tier = classify_price_tier_for_variable_product( $product );
+
+		// Assert.
+		$this->assertSame( 25, $tier );
+	}
+
+	public function test_returns_null_when_all_variations_are_unpriced(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		seed_outlet_search_index_taxonomy();
+		$product = new WC_Product_Variable();
+		$product->save();
+		$variation = new WC_Product_Variation();
+		$variation->set_parent_id( $product->get_id() );
+		$variation->save();
+		$product->set_children( array( $variation->get_id() ) );
+
+		// Act.
+		$tier = classify_price_tier_for_variable_product( $product );
+
+		// Assert.
+		$this->assertNull( $tier );
+	}
+
 	public function test_returns_null_for_variable_product_without_variations(): void {
 		// Arrange.
 		init_taxonomies();
