@@ -9,6 +9,7 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_taxonomies;
+use function OutletPro\init_products;
 use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_search_index_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
@@ -70,9 +71,10 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 		add_to_outlet( $product );
 	}
 
-	public function test_assigns_search_index_facets_without_another_product_save(): void {
+	public function test_schedules_search_index_update_without_another_product_save(): void {
 		// Arrange.
 		init_taxonomies();
+		init_products();
 		seed_outlet_status_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		update_option( 'woocommerce_currency', 'USD' );
@@ -87,6 +89,22 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 		add_to_outlet( $product );
 
 		// Assert.
+		$this->assertSame( array(), wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY ) );
+		$action_ids = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets',
+				'args'   => array( $product->get_id() ),
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			),
+			'ids'
+		);
+		$this->assertCount( 1, $action_ids );
+
+		// Act.
+		ActionScheduler::runner()->process_action( $action_ids[0], 'test' );
+
+		// Assert.
+		$this->assertSame( ActionScheduler_Store::STATUS_COMPLETE, ActionScheduler::store()->get_status( $action_ids[0] ) );
 		$this->assertSame(
 			array( 'outlet-discount-70', 'outlet-price-25' ),
 			wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY, array( 'fields' => 'slugs' ) )

@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\deinit_taxonomies;
+use function OutletPro\init_products;
 use function OutletPro\init_taxonomies;
 use function OutletPro\remove_from_outlet;
 use function OutletPro\seed_outlet_status_taxonomy;
@@ -58,9 +59,10 @@ class Test_Remove_From_Outlet extends WP_UnitTestCase {
 		remove_from_outlet( $product );
 	}
 
-	public function test_clears_product_search_index_terms(): void {
+	public function test_schedules_clearing_product_search_index_terms(): void {
 		// Arrange.
 		init_taxonomies();
+		init_products();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
@@ -70,6 +72,22 @@ class Test_Remove_From_Outlet extends WP_UnitTestCase {
 		remove_from_outlet( $product );
 
 		// Assert.
+		$this->assertCount( 3, wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY ) );
+		$action_ids = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets',
+				'args'   => array( $product->get_id() ),
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			),
+			'ids'
+		);
+		$this->assertCount( 1, $action_ids );
+
+		// Act.
+		ActionScheduler::runner()->process_action( $action_ids[0], 'test' );
+
+		// Assert.
+		$this->assertSame( ActionScheduler_Store::STATUS_COMPLETE, ActionScheduler::store()->get_status( $action_ids[0] ) );
 		$this->assertSame( array(), wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY ) );
 	}
 }
