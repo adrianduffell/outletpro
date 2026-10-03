@@ -29,6 +29,11 @@ function init_products(): void {
  * @internal WordPress action hook
  */
 function update_search_index_hook( \WC_Product $product ): void {
+	// Skip variations, since Woo will also fire the hook for the parent product.
+	if ( $product->is_type( 'variation' ) ) {
+		return;
+	}
+
 	try {
 		if ( ! is_outlet( $product ) ) {
 			return;
