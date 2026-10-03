@@ -12,6 +12,39 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Initialize product hooks.
+ *
+ * @internal
+ */
+function init_products(): void {
+	add_action( 'woocommerce_after_product_object_save', 'OutletPro\update_search_index_hook' );
+}
+
+/**
+ * Updates the search index after a product is saved.
+ *
+ * Fired by `woocommerce_after_product_object_save`.
+ *
+ * @param \WC_Product $product Saved product.
+ * @internal WordPress action hook
+ */
+function update_search_index_hook( \WC_Product $product ): void {
+	try {
+		if ( ! is_outlet( $product ) ) {
+			return;
+		}
+
+		set_search_index_facets(
+			$product,
+			classify_price_tier( $product ),
+			classify_discount_tier( $product )
+		);
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product search indexes could not be synchronized.' );
+	}
+}
+
+/**
  * Classify the price tier for the product.
  *
  * @param \WC_Product $product Product to classify.
@@ -178,4 +211,31 @@ function classify_discount_tier_for_variable_product( \WC_Product_Variable $prod
 	}
 
 	return $tier;
+}
+
+/**
+ * Set the product's search index facets.
+ *
+ * @param \WC_Product $product Product to update.
+ * @param int|null    $price_tier Price tier, or null when no tier matches.
+ * @param int|null    $discount_tier Discount tier, or null when no tier matches.
+ * @throws \RuntimeException If term assignment fails.
+ * @internal
+ */
+function set_search_index_facets( \WC_Product $product, ?int $price_tier, ?int $discount_tier ): void {
+	$search_indexes = array();
+
+	if ( null !== $price_tier ) {
+		$search_indexes[] = 'outlet-price-' . $price_tier;
+	}
+
+	if ( null !== $discount_tier ) {
+		$search_indexes[] = 'outlet-discount-' . $discount_tier;
+	}
+
+	$result = wp_set_object_terms( $product->get_id(), $search_indexes, OUTLET_SEARCH_INDEX_TAXONOMY );
+
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet search indexes could not be assigned.' );
+	}
 }

@@ -11,6 +11,7 @@ use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_taxonomies;
 use function OutletPro\remove_from_outlet;
 use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
@@ -55,5 +56,20 @@ class Test_Remove_From_Outlet extends WP_UnitTestCase {
 
 		// Act.
 		remove_from_outlet( $product );
+	}
+
+	public function test_clears_product_search_index_terms(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+		wp_set_object_terms( $product->get_id(), array( 'outlet-price-25', 'outlet-discount-70', 'custom-index' ), OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		remove_from_outlet( $product );
+
+		// Assert.
+		$this->assertSame( array(), wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY ) );
 	}
 }

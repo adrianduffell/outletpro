@@ -10,7 +10,10 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_taxonomies;
+use function OutletPro\seed_outlet_search_index_taxonomy;
 use function OutletPro\seed_outlet_status_taxonomy;
+use function OutletPro\truncate_outlet_search_index_taxonomy;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
@@ -65,5 +68,28 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 
 		// Act.
 		add_to_outlet( $product );
+	}
+
+	public function test_assigns_search_index_facets_without_another_product_save(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		seed_outlet_search_index_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		$product->set_regular_price( '100' );
+		$product->set_sale_price( '20' );
+		$product->set_price( '20' );
+		$product->save();
+
+		// Act.
+		add_to_outlet( $product );
+
+		// Assert.
+		$this->assertSame(
+			array( 'outlet-discount-70', 'outlet-price-25' ),
+			wp_get_object_terms( $product->get_id(), OUTLET_SEARCH_INDEX_TAXONOMY, array( 'fields' => 'slugs' ) )
+		);
 	}
 }
