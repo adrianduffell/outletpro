@@ -7,7 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
@@ -16,7 +16,7 @@ class Test_Seed_Outlet_Status_Taxonomy extends WP_UnitTestCase {
 
 	public function test_seeds_term_when_not_exists(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		foreach ( get_terms(
 			array(
 				'taxonomy'   => OUTLET_STATUS_TAXONOMY,
@@ -42,7 +42,7 @@ class Test_Seed_Outlet_Status_Taxonomy extends WP_UnitTestCase {
 
 	public function test_does_not_seed_term_when_already_exists(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		wp_insert_term( OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 		// Act.
@@ -61,7 +61,7 @@ class Test_Seed_Outlet_Status_Taxonomy extends WP_UnitTestCase {
 
 	public function test_throws_exception_when_wp_insert_term_fails(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Ensure the taxonomy has no existing terms, to mirror the happy-path setup.
 		foreach ( get_terms(

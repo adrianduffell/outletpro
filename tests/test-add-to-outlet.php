@@ -8,7 +8,8 @@
  */
 
 use function OutletPro\add_to_outlet;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\deinit_taxonomies;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
@@ -17,7 +18,7 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 
 	public function test_throws_exception_when_taxonomy_not_registered(): void {
 		// Arrange.
-		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		deinit_taxonomies();
 		$product = \WC_Helper_Product::create_simple_product();
 
 		// Expect.
@@ -29,7 +30,7 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 
 	public function test_assigns_outlet_term_to_single_product(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
 
@@ -43,7 +44,7 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 
 	public function test_throws_exception_on_insert_term_failure(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		foreach ( get_terms(
 			array(
 				'taxonomy'   => OUTLET_STATUS_TAXONOMY,

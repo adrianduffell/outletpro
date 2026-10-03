@@ -7,13 +7,14 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\deinit_taxonomies;
 use function OutletPro\register_outlet_status_taxonomy;
 
 class Test_Register_Outlet_Status_Taxonomy extends \WP_UnitTestCase {
 
 	public function test_registers_taxonomy_successfully(): void {
 		// Arrange.
-		unregister_taxonomy( 'outletpro_status' );
+		deinit_taxonomies();
 
 		// Act.
 		register_outlet_status_taxonomy();

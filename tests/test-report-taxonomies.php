@@ -8,7 +8,8 @@
  */
 
 use function OutletPro\add_to_outlet;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\deinit_taxonomies;
+use function OutletPro\init_taxonomies;
 use function OutletPro\report_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
@@ -18,7 +19,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_taxonomy_registered_is_no_when_taxonomy_not_registered(): void {
 		// Arrange.
-		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		deinit_taxonomies();
 
 		// Act.
 		$result = report_taxonomies();
@@ -29,7 +30,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_taxonomy_registered_is_yes_when_taxonomy_is_registered(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Act.
 		$result = report_taxonomies();
@@ -40,7 +41,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_canonical_term_id_is_not_found_when_taxonomy_not_registered(): void {
 		// Arrange.
-		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		deinit_taxonomies();
 
 		// Act.
 		$result = report_taxonomies();
@@ -51,7 +52,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_canonical_term_id_is_not_found_when_canonical_term_does_not_exist(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 
 		// Act.
 		$result = report_taxonomies();
@@ -62,7 +63,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_canonical_term_id_is_term_id_when_canonical_term_exists(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$term    = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		$term_id = $term->term_id;
@@ -76,7 +77,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_product_count_is_unknown_when_taxonomy_not_registered(): void {
 		// Arrange.
-		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		deinit_taxonomies();
 
 		// Act.
 		$result = report_taxonomies();
@@ -87,7 +88,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_product_count_is_zero_when_no_products_in_outlet(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Act.
@@ -99,7 +100,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_product_count_matches_number_of_outlet_products(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		$product_one = \WC_Helper_Product::create_simple_product();
@@ -116,7 +117,7 @@ class Test_Report_Taxonomies extends WP_UnitTestCase {
 
 	public function test_product_count_ignores_draft_products(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		$product = \WC_Helper_Product::create_simple_product();

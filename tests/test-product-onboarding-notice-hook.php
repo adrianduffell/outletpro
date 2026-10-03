@@ -9,13 +9,13 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\create_outlet_page;
+use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_admin_product_list_table;
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
 use const OutletPro\ONBOARDING_DISMISS_STORAGE_KEY;
 use const OutletPro\OUTLET_PAGE_OPTION;
-use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 
@@ -25,7 +25,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Expect.
@@ -41,7 +41,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Expect.
@@ -57,7 +57,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'dashboard' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Expect.
@@ -73,7 +73,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Expect.
@@ -89,7 +89,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -107,7 +107,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		unregister_taxonomy( OUTLET_STATUS_TAXONOMY );
+		deinit_taxonomies();
 
 		// Expect.
 		$this->expectOutputString( '' );
@@ -122,7 +122,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -142,7 +142,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -177,7 +177,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		// No products added to outlet.
 		delete_option( OUTLET_PAGE_OPTION );
@@ -196,7 +196,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -215,7 +215,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -237,7 +237,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -257,7 +257,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -277,7 +277,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		update_option( ACTIVATED_AT_OPTION, time() - ( 15 * DAY_IN_SECONDS ) );
 
@@ -294,7 +294,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		update_option( ACTIVATED_AT_OPTION, time() - ( 13 * DAY_IN_SECONDS ) );
 
@@ -311,7 +311,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 
 		// Expect.
@@ -327,7 +327,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -347,7 +347,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product1 = \WC_Helper_Product::create_simple_product();
 		$product2 = \WC_Helper_Product::create_simple_product();
@@ -369,7 +369,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -388,7 +388,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
@@ -410,7 +410,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		set_current_screen( 'edit-product' );
 		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );

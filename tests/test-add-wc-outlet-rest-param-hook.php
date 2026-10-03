@@ -7,13 +7,13 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\register_outlet_status_taxonomy;
+use function OutletPro\init_taxonomies;
 
 class Test_Add_Outletpro_Rest_Param_Hook extends WP_UnitTestCase {
 
 	public function test_outletpro_param_is_in_product_collection_schema(): void {
 		// Arrange.
-		register_outlet_status_taxonomy();
+		init_taxonomies();
 		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $user_id );
 
