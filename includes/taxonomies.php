@@ -438,7 +438,7 @@ function add_to_outlet( \WC_Product $product ): void {
 		throw new \RuntimeException( 'Failed to assign outlet status term to product.' );
 	}
 
-	as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro', true );
+	as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro' );
 }
 
 /**
@@ -538,7 +538,7 @@ function remove_from_outlet( \WC_Product $product ): void {
 		throw new \RuntimeException( 'Failed to remove product from outlet.' );
 	}
 
-	as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro', true );
+	as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro' );
 }
 
 /**

@@ -45,7 +45,7 @@ function update_search_index_hook( \WC_Product $product ): void {
 	}
 
 	try {
-		as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro', true );
+		as_enqueue_async_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro' );
 	} catch ( \Throwable $e ) {
 		wc_get_logger()->error( 'Outlet product search index update could not be scheduled.' );
 	}

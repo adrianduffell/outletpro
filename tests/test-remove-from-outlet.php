@@ -7,7 +7,6 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_products;
 use function OutletPro\init_taxonomies;
@@ -60,17 +59,16 @@ class Test_Remove_From_Outlet extends WP_UnitTestCase {
 		remove_from_outlet( $product );
 	}
 
-	public function test_schedules_one_action_to_clear_product_search_index_terms(): void {
+	public function test_schedules_clearing_product_search_index_terms(): void {
 		// Arrange.
 		init_taxonomies();
 		init_products();
 		seed_outlet_status_taxonomy();
 		$product = WC_Helper_Product::create_simple_product();
-		add_to_outlet( $product );
+		wp_set_object_terms( $product->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		wp_set_object_terms( $product->get_id(), array( 'outlet-price-25', 'outlet-discount-70', 'custom-index' ), OUTLET_SEARCH_INDEX_TAXONOMY );
 
 		// Act.
-		remove_from_outlet( $product );
 		remove_from_outlet( $product );
 
 		// Assert.

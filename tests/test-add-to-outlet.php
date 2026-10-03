@@ -71,7 +71,7 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 		add_to_outlet( $product );
 	}
 
-	public function test_schedules_one_search_index_update_without_another_product_save(): void {
+	public function test_schedules_search_index_update_without_another_product_save(): void {
 		// Arrange.
 		init_taxonomies();
 		init_products();
@@ -86,7 +86,6 @@ class Test_Add_To_Outlet extends WP_UnitTestCase {
 		$product->save();
 
 		// Act.
-		add_to_outlet( $product );
 		add_to_outlet( $product );
 
 		// Assert.
