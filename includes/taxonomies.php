@@ -236,7 +236,7 @@ function report_taxonomies(): array {
 	$canonical_term       = $taxonomy_exists ? get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY ) : null;
 	$outlet_product_count = $taxonomy_exists ? count_outlet() : null;
 
-	return array(
+	$report = array(
 		'outlet-taxonomy-registered' => array(
 			__( 'Outlet status taxonomy registered', 'outletpro' ),
 			$taxonomy_exists ? __( 'Yes', 'outletpro' ) : __( 'No', 'outletpro' ),
@@ -250,6 +250,39 @@ function report_taxonomies(): array {
 			$outlet_product_count ?? __( 'Unknown', 'outletpro' ),
 		),
 	);
+
+	$report['outlet-search-index-terms'] = array(
+		__( 'Search index', 'outletpro' ),
+		__( 'Unknown', 'outletpro' ),
+	);
+
+	if ( ! taxonomy_exists( OUTLET_SEARCH_INDEX_TAXONOMY ) ) {
+		return $report;
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'hide_empty' => false,
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		\wc_get_logger()->error( 'Outlet search index terms could not be retrieved.' );
+		return $report;
+	}
+	if ( ! $terms ) {
+		$report['outlet-search-index-terms'][1] = __( 'None', 'outletpro' );
+		return $report;
+	}
+
+	$facets = array();
+	foreach ( $terms as $term ) {
+		/* translators: 1: Search index term name, 2: Product count. */
+		$facets[] = sprintf( __( '%1$s (%2$d)', 'outletpro' ), $term->name, $term->count );
+	}
+	$report['outlet-search-index-terms'][1] = implode( ', ', $facets );
+
+	return $report;
 }
 
 /**
