@@ -319,6 +319,8 @@ function register_outlet_status_taxonomy(): void {
 function register_outlet_search_index_taxonomy(): void {
 	$args = array(
 		'label'        => __( 'Outlet Search Indexes', 'outletpro' ),
+		'public'       => false,
+		'show_ui'      => false,
 		'show_in_rest' => false,
 		'hierarchical' => false,
 		'query_var'    => false,
