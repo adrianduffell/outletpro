@@ -23,17 +23,8 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product = new WC_Product_Variable();
 		$product->save();
 
-		$first = new WC_Product_Variation();
-		$first->set_parent_id( $product->get_id() );
-		$first->set_regular_price( '100' );
-		$first->set_sale_price( '40' );
-		$first->save();
-
-		$second = new WC_Product_Variation();
-		$second->set_parent_id( $product->get_id() );
-		$second->set_regular_price( '100' );
-		$second->set_sale_price( '45' );
-		$second->save();
+		self::create_variation( $product, '100', '40' );
+		self::create_variation( $product, '100', '45' );
 		$product = wc_get_product( $product->get_id() );
 
 		// Act.
@@ -52,17 +43,8 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product = new WC_Product_Variable();
 		$product->save();
 
-		$first = new WC_Product_Variation();
-		$first->set_parent_id( $product->get_id() );
-		$first->set_regular_price( '100' );
-		$first->set_sale_price( '20' );
-		$first->save();
-
-		$second = new WC_Product_Variation();
-		$second->set_parent_id( $product->get_id() );
-		$second->set_regular_price( '100' );
-		$second->set_sale_price( '40' );
-		$second->save();
+		self::create_variation( $product, '100', '20' );
+		self::create_variation( $product, '100', '40' );
 		$product = wc_get_product( $product->get_id() );
 
 		// Act.
@@ -81,17 +63,8 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product = new WC_Product_Variable();
 		$product->save();
 
-		$first = new WC_Product_Variation();
-		$first->set_parent_id( $product->get_id() );
-		$first->set_regular_price( '100' );
-		$first->set_sale_price( '40' );
-		$first->save();
-
-		$second = new WC_Product_Variation();
-		$second->set_parent_id( $product->get_id() );
-		$second->set_regular_price( '100' );
-		$second->set_sale_price( '80' );
-		$second->save();
+		self::create_variation( $product, '100', '40' );
+		self::create_variation( $product, '100', '80' );
 		$product = wc_get_product( $product->get_id() );
 
 		// Act.
@@ -110,18 +83,11 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product = new WC_Product_Variable();
 		$product->save();
 
-		$hidden = new WC_Product_Variation();
-		$hidden->set_parent_id( $product->get_id() );
-		$hidden->set_regular_price( '100' );
-		$hidden->set_sale_price( '20' );
+		$hidden = self::create_variation( $product, '100', '20' );
 		$hidden->set_status( 'private' );
 		$hidden->save();
 
-		$visible = new WC_Product_Variation();
-		$visible->set_parent_id( $product->get_id() );
-		$visible->set_regular_price( '100' );
-		$visible->set_sale_price( '40' );
-		$visible->save();
+		self::create_variation( $product, '100', '40' );
 		$product = wc_get_product( $product->get_id() );
 
 		// Act.
@@ -141,18 +107,11 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product = new WC_Product_Variable();
 		$product->save();
 
-		$hidden = new WC_Product_Variation();
-		$hidden->set_parent_id( $product->get_id() );
-		$hidden->set_regular_price( '100' );
-		$hidden->set_sale_price( '20' );
+		$hidden = self::create_variation( $product, '100', '20' );
 		$hidden->set_stock_status( 'outofstock' );
 		$hidden->save();
 
-		$visible = new WC_Product_Variation();
-		$visible->set_parent_id( $product->get_id() );
-		$visible->set_regular_price( '100' );
-		$visible->set_sale_price( '40' );
-		$visible->save();
+		self::create_variation( $product, '100', '40' );
 		$product = wc_get_product( $product->get_id() );
 
 		// Act.
@@ -171,15 +130,8 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product = new WC_Product_Variable();
 		$product->save();
 
-		$unpriced = new WC_Product_Variation();
-		$unpriced->set_parent_id( $product->get_id() );
-		$unpriced->save();
-
-		$priced = new WC_Product_Variation();
-		$priced->set_parent_id( $product->get_id() );
-		$priced->set_regular_price( '100' );
-		$priced->set_sale_price( '40' );
-		$priced->save();
+		self::create_variation( $product, '', '' );
+		self::create_variation( $product, '100', '40' );
 		$product = wc_get_product( $product->get_id() );
 
 		// Act.
@@ -202,5 +154,15 @@ class Test_Classify_Discount_Tier_For_Variable_Product extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertNull( $tier );
+	}
+
+	private static function create_variation( WC_Product_Variable $product, string $regular_price, string $sale_price ): WC_Product_Variation {
+		$variation = new WC_Product_Variation();
+		$variation->set_parent_id( $product->get_id() );
+		$variation->set_regular_price( $regular_price );
+		$variation->set_sale_price( $sale_price );
+		$variation->save();
+
+		return $variation;
 	}
 }
