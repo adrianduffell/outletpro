@@ -13,6 +13,8 @@ use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 
@@ -37,20 +39,17 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		wp_insert_term( 'New price tier', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-25' ) );
 
 		// Assert.
-		foreach ( $products as $product ) {
-			$actions = as_get_scheduled_actions(
-				array(
-					'hook'     => 'outletpro_reindex_search_facets',
-					'args'     => array( $product->get_id() ),
-					'group'    => 'outletpro',
-					'status'   => ActionScheduler_Store::STATUS_PENDING,
-					'per_page' => -1,
-				),
-				'ids'
-			);
-			$this->assertCount( 1, $actions );
-		}
-		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets', array( $non_outlet->get_id() ), 'outletpro' ) );
+		$product_ids = array_map( static fn( WC_Product $product ): int => $product->get_id(), $products );
+		$actions     = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets_batch',
+				'group'  => 'outletpro',
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			)
+		);
+		$this->assertCount( 1, $actions );
+		$this->assertSame( array( $product_ids ), reset( $actions )->get_args() );
+		$this->assertNotContains( $non_outlet->get_id(), reset( $actions )->get_args()[0] );
 	}
 
 	public function test_editing_search_index_term_queues_every_outlet_product(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Verify scheduling for each product status.
@@ -75,20 +74,17 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		wp_update_term( $term['term_id'], OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-25' ) );
 
 		// Assert.
-		foreach ( $products as $product ) {
-			$actions = as_get_scheduled_actions(
-				array(
-					'hook'     => 'outletpro_reindex_search_facets',
-					'args'     => array( $product->get_id() ),
-					'group'    => 'outletpro',
-					'status'   => ActionScheduler_Store::STATUS_PENDING,
-					'per_page' => -1,
-				),
-				'ids'
-			);
-			$this->assertCount( 1, $actions );
-		}
-		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets', array( $non_outlet->get_id() ), 'outletpro' ) );
+		$product_ids = array_map( static fn( WC_Product $product ): int => $product->get_id(), $products );
+		$actions     = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets_batch',
+				'group'  => 'outletpro',
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			)
+		);
+		$this->assertCount( 1, $actions );
+		$this->assertSame( array( $product_ids ), reset( $actions )->get_args() );
+		$this->assertNotContains( $non_outlet->get_id(), reset( $actions )->get_args()[0] );
 	}
 
 	public function test_deleting_search_index_term_queues_every_outlet_product(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Verify scheduling for each product status.
@@ -113,20 +109,17 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		wp_delete_term( $term['term_id'], OUTLET_SEARCH_INDEX_TAXONOMY );
 
 		// Assert.
-		foreach ( $products as $product ) {
-			$actions = as_get_scheduled_actions(
-				array(
-					'hook'     => 'outletpro_reindex_search_facets',
-					'args'     => array( $product->get_id() ),
-					'group'    => 'outletpro',
-					'status'   => ActionScheduler_Store::STATUS_PENDING,
-					'per_page' => -1,
-				),
-				'ids'
-			);
-			$this->assertCount( 1, $actions );
-		}
-		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets', array( $non_outlet->get_id() ), 'outletpro' ) );
+		$product_ids = array_map( static fn( WC_Product $product ): int => $product->get_id(), $products );
+		$actions     = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets_batch',
+				'group'  => 'outletpro',
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			)
+		);
+		$this->assertCount( 1, $actions );
+		$this->assertSame( array( $product_ids ), reset( $actions )->get_args() );
+		$this->assertNotContains( $non_outlet->get_id(), reset( $actions )->get_args()[0] );
 	}
 
 	public function test_unrelated_term_changes_do_not_queue_outlet_products(): void {
@@ -144,6 +137,48 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		wp_delete_term( $term['term_id'], 'product_cat' );
 
 		// Assert.
-		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets', array( $product->get_id() ), 'outletpro' ) );
+		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets_batch', null, 'outletpro' ) );
+	}
+
+	public function test_queues_full_batches_and_the_remaining_products(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Arrange products and inspect each queued batch.
+		// Arrange.
+		init_taxonomies();
+		init_products();
+		seed_outlet_status_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		$product_ids = self::factory()->post->create_many(
+			201,
+			array(
+				'post_type'   => 'product',
+				'post_status' => 'publish',
+			)
+		);
+		foreach ( $product_ids as $product_id ) {
+			wp_set_object_terms( $product_id, OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+		}
+
+		// Act.
+		wp_insert_term( 'New price tier', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-25' ) );
+
+		// Assert.
+		$actions = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets_batch',
+				'group'  => 'outletpro',
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			)
+		);
+		$this->assertCount( 3, $actions );
+		$queued_ids  = array();
+		$batch_sizes = array();
+		foreach ( $actions as $action ) {
+			$batch         = $action->get_args()[0];
+			$batch_sizes[] = count( $batch );
+			$queued_ids    = array_merge( $queued_ids, $batch );
+		}
+		sort( $queued_ids );
+		sort( $batch_sizes );
+		$this->assertSame( array( 1, 100, 100 ), $batch_sizes );
+		$this->assertSame( $product_ids, $queued_ids );
 	}
 }

@@ -148,8 +148,8 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 			1,
 			as_get_scheduled_actions(
 				array(
-					'hook'   => 'outletpro_reindex_search_facets',
-					'args'   => array( $product->get_id() ),
+					'hook'   => 'outletpro_reindex_search_facets_batch',
+					'args'   => array( array( $product->get_id() ) ),
 					'group'  => 'outletpro',
 					'status' => ActionScheduler_Store::STATUS_PENDING,
 				),
