@@ -30,7 +30,61 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$second->set_parent_id( $product->get_id() );
 		$second->set_regular_price( '20' );
 		$second->save();
-		$product->set_children( array( $first->get_id(), $second->get_id() ) );
+		$product = wc_get_product( $product->get_id() );
+
+		// Act.
+		$tier = classify_price_tier_for_variable_product( $product );
+
+		// Assert.
+		$this->assertSame( 25, $tier );
+	}
+
+	public function test_ignores_private_variations(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		update_option( 'woocommerce_hide_out_of_stock_items', 'no' );
+		seed_outlet_search_index_taxonomy();
+		$product = new WC_Product_Variable();
+		$product->save();
+		$hidden = new WC_Product_Variation();
+		$hidden->set_parent_id( $product->get_id() );
+		$hidden->set_regular_price( '5' );
+		$hidden->set_status( 'private' );
+		$hidden->save();
+		$visible = new WC_Product_Variation();
+		$visible->set_parent_id( $product->get_id() );
+		$visible->set_regular_price( '20' );
+		$visible->save();
+		$product = wc_get_product( $product->get_id() );
+
+		// Act.
+		$tier = classify_price_tier_for_variable_product( $product );
+
+		// Assert.
+		$this->assertSame( 25, $tier );
+	}
+
+	public function test_ignores_out_of_stock_variations_when_hidden(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		update_option( 'woocommerce_hide_out_of_stock_items', 'yes' );
+		seed_outlet_search_index_taxonomy();
+		$product = new WC_Product_Variable();
+		$product->save();
+		$hidden = new WC_Product_Variation();
+		$hidden->set_parent_id( $product->get_id() );
+		$hidden->set_regular_price( '5' );
+		$hidden->set_stock_status( 'outofstock' );
+		$hidden->save();
+		$visible = new WC_Product_Variation();
+		$visible->set_parent_id( $product->get_id() );
+		$visible->set_regular_price( '20' );
+		$visible->save();
+		$product = wc_get_product( $product->get_id() );
 
 		// Act.
 		$tier = classify_price_tier_for_variable_product( $product );
@@ -55,7 +109,7 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$second->set_parent_id( $product->get_id() );
 		$second->set_regular_price( '20' );
 		$second->save();
-		$product->set_children( array( $first->get_id(), $second->get_id() ) );
+		$product = wc_get_product( $product->get_id() );
 
 		// Act.
 		$tier = classify_price_tier_for_variable_product( $product );
@@ -80,7 +134,7 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$second->set_parent_id( $product->get_id() );
 		$second->set_regular_price( '80' );
 		$second->save();
-		$product->set_children( array( $first->get_id(), $second->get_id() ) );
+		$product = wc_get_product( $product->get_id() );
 
 		// Act.
 		$tier = classify_price_tier_for_variable_product( $product );
@@ -104,7 +158,7 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$priced->set_parent_id( $product->get_id() );
 		$priced->set_regular_price( '20' );
 		$priced->save();
-		$product->set_children( array( $unpriced->get_id(), $priced->get_id() ) );
+		$product = wc_get_product( $product->get_id() );
 
 		// Act.
 		$tier = classify_price_tier_for_variable_product( $product );
@@ -124,7 +178,7 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$variation = new WC_Product_Variation();
 		$variation->set_parent_id( $product->get_id() );
 		$variation->save();
-		$product->set_children( array( $variation->get_id() ) );
+		$product = wc_get_product( $product->get_id() );
 
 		// Act.
 		$tier = classify_price_tier_for_variable_product( $product );

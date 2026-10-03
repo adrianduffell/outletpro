@@ -28,7 +28,7 @@ class Test_Classify_Price_Tier extends WP_UnitTestCase {
 		$variation->set_parent_id( $product->get_id() );
 		$variation->set_regular_price( '20' );
 		$variation->save();
-		$product->set_children( array( $variation->get_id() ) );
+		$product = wc_get_product( $product->get_id() );
 
 		// Act.
 		$tier = classify_price_tier( $product );

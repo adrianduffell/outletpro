@@ -54,7 +54,7 @@ function classify_price_tier( \WC_Product $product ): ?int {
 /**
  * Classify the price tier for the product.
  *
- * Returns the lowest price tier across all variations.
+ * Returns the lowest price tier across all visible variations.
  *
  * @param \WC_Product_Variable $product Product to classify.
  * @return int|null Smallest matching variation price tier.
@@ -62,8 +62,12 @@ function classify_price_tier( \WC_Product $product ): ?int {
  * @internal
  */
 function classify_price_tier_for_variable_product( \WC_Product_Variable $product ): ?int {
+	// Determine the visible variations from the price lookup.
+	$prices        = $product->get_variation_prices( false );
+	$variation_ids = array_keys( $prices['price'] );
+
 	$tier = null;
-	foreach ( $product->get_children() as $variation_id ) {
+	foreach ( $variation_ids as $variation_id ) {
 		$variation = wc_get_product( $variation_id );
 		if ( ! $variation ) {
 			throw new \RuntimeException( 'Outlet product variation could not be retrieved.' );
