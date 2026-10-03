@@ -323,10 +323,27 @@ function seed_outlet_status_taxonomy(): void {
 /**
  * Seed the outlet search index taxonomy with default terms.
  *
+ * Seeding is not performed if the taxonomy contains terms.
+ *
  * @internal
  * @throws \RuntimeException If the term seeding fails.
  */
 function seed_outlet_search_index_taxonomy(): void {
+	$existing_terms = get_terms(
+		array(
+			'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'hide_empty' => false,
+			'fields'     => 'ids',
+			'number'     => 1,
+		)
+	);
+	if ( is_wp_error( $existing_terms ) ) {
+		throw new \RuntimeException( 'Outlet search index terms could not be retrieved.' );
+	}
+	if ( $existing_terms ) {
+		return;
+	}
+
 	// Pause search index during seeding.
 	remove_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 	remove_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
