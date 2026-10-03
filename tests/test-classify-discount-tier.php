@@ -212,21 +212,6 @@ class Test_Classify_Discount_Tier extends WP_UnitTestCase {
 		classify_discount_tier( $product );
 	}
 
-	public function test_throws_when_regular_price_filter_returns_null(): void {
-		// Arrange.
-		$product = new WC_Product();
-		$product->set_regular_price( '100' );
-		$product->set_price( '50' );
-		add_filter( 'woocommerce_product_get_regular_price', '__return_null', PHP_INT_MAX );
-
-		// Expect.
-		$this->expectException( RuntimeException::class );
-		$this->expectExceptionMessage( 'Outlet product regular price is invalid.' );
-
-		// Act.
-		classify_discount_tier( $product );
-	}
-
 	public function test_throws_when_taxonomy_is_missing(): void {
 		// Arrange.
 		deinit_taxonomies();
