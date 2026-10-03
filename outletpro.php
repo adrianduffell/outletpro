@@ -42,6 +42,7 @@ const PLUGIN_FILE = __FILE__;
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
+require_once __DIR__ . '/includes/products.php';
 require_once __DIR__ . '/includes/rest-api.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/admin-menu-license.php';
