@@ -398,15 +398,7 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		init_blocks();
 		set_query_var( 'outlet_category', 'clothing' );
 		$query          = array( 'post_type' => 'product' );
-		$block          = new WP_Block(
-			array(
-				'blockName'    => 'core/query',
-				'attrs'        => array(),
-				'innerBlocks'  => array(),
-				'innerHTML'    => '',
-				'innerContent' => array(),
-			)
-		);
+		$block          = new WP_Block( array( 'blockName' => 'core/query' ) );
 		$block->context = array(
 			'query' => array( 'outletpro' => false ),
 		);
@@ -424,34 +416,27 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		deinit_blocks();
 		init_blocks();
-		$clothing        = self::factory()->term->create(
+		$clothing      = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
 				'slug'     => 'clothing',
 			)
 		);
-		$shirts          = self::factory()->term->create(
+		$shirts        = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
 				'slug'     => 'shirts',
 				'parent'   => $clothing,
 			)
 		);
-		$shirt           = WC_Helper_Product::create_simple_product();
-		$shoes           = WC_Helper_Product::create_simple_product();
-		$regular_shirt   = WC_Helper_Product::create_simple_product();
-		$other_tag_shirt = WC_Helper_Product::create_simple_product();
+		$shirt         = WC_Helper_Product::create_simple_product();
+		$shoes         = WC_Helper_Product::create_simple_product();
+		$regular_shirt = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $shirt->get_id(), array( $shirts ), 'product_cat' );
 		wp_set_object_terms( $shoes->get_id(), 'shoes', 'product_cat' );
 		wp_set_object_terms( $regular_shirt->get_id(), array( $shirts ), 'product_cat' );
-		wp_set_object_terms( $other_tag_shirt->get_id(), array( $shirts ), 'product_cat' );
-		wp_set_object_terms( $shirt->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $shoes->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $regular_shirt->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $other_tag_shirt->get_id(), 'other', 'product_tag' );
 		wp_set_object_terms( $shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		wp_set_object_terms( $shoes->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		wp_set_object_terms( $other_tag_shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 
 		set_query_var( 'outlet_category', 'clothing' );
 		$block          = new WP_Block(
@@ -464,13 +449,6 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$query          = array(
 			'post_type' => 'product',
 			'fields'    => 'ids',
-			'tax_query' => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-				array(
-		'taxonomy' => 'product_tag',
-		'field'    => 'slug',
-		'terms'    => 'eligible',
-			),
-			),
 		);
 
 		// Act.

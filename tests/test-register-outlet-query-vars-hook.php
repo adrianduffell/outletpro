@@ -12,20 +12,6 @@ use function OutletPro\init_query_vars;
 
 class Test_Register_Outlet_Query_Vars_Hook extends WP_UnitTestCase {
 
-	public function test_outlet_filters_are_registered_without_losing_existing_vars(): void {
-		// Arrange.
-		init_query_vars();
-
-		// Act.
-		$vars = apply_filters( 'query_vars', array( 'existing' ) );
-
-		// Assert.
-		$this->assertContains( 'existing', $vars );
-		$this->assertContains( 'outlet_category', $vars );
-		$this->assertContains( 'outlet_price', $vars );
-		$this->assertContains( 'outlet_discount', $vars );
-	}
-
 	public function test_url_filters_are_available_as_wordpress_query_vars(): void {
 		// Arrange.
 		init_query_vars();

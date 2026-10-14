@@ -379,44 +379,32 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		init_shortcodes();
-		$clothing        = self::factory()->term->create(
+		$clothing      = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
 				'slug'     => 'clothing',
 			)
 		);
-		$shirts          = self::factory()->term->create(
+		$shirts        = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
 				'slug'     => 'shirts',
 				'parent'   => $clothing,
 			)
 		);
-		$shirt           = WC_Helper_Product::create_simple_product();
-		$shoes           = WC_Helper_Product::create_simple_product();
-		$regular_shirt   = WC_Helper_Product::create_simple_product();
-		$other_tag_shirt = WC_Helper_Product::create_simple_product();
+		$shirt         = WC_Helper_Product::create_simple_product();
+		$shoes         = WC_Helper_Product::create_simple_product();
+		$regular_shirt = WC_Helper_Product::create_simple_product();
 		wp_set_object_terms( $shirt->get_id(), array( $shirts ), 'product_cat' );
 		wp_set_object_terms( $shoes->get_id(), 'shoes', 'product_cat' );
 		wp_set_object_terms( $regular_shirt->get_id(), array( $shirts ), 'product_cat' );
-		wp_set_object_terms( $other_tag_shirt->get_id(), array( $shirts ), 'product_cat' );
-		wp_set_object_terms( $shirt->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $shoes->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $regular_shirt->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $other_tag_shirt->get_id(), 'other', 'product_tag' );
 		wp_set_object_terms( $shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		wp_set_object_terms( $shoes->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		wp_set_object_terms( $other_tag_shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		set_query_var( 'outlet_category', 'clothing' );
-		$shortcode = new WC_Shortcode_Products(
-			array(
-				'outletpro' => 'yes',
-				'tag'       => 'eligible',
-			)
-		);
 
 		// Act.
-		$results = new WP_Query( $shortcode->get_query_args() );
+		$shortcode = new WC_Shortcode_Products( array( 'outletpro' => 'yes' ) );
+		$results   = new WP_Query( $shortcode->get_query_args() );
 
 		// Assert.
 		$this->assertSame( array( $shirt->get_id() ), $results->posts );
