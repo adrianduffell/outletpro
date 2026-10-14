@@ -12,6 +12,28 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Returns the permalink for the outlet page.
+ *
+ * Returns null when the outlet page is not configured.
+ *
+ * @internal
+ * @throws \RuntimeException If the configured outlet page permalink cannot be retrieved.
+ */
+function get_outlet_permalink(): ?string {
+	$page_id = get_outlet_page_id();
+	if ( null === $page_id ) {
+		return null;
+	}
+
+	$permalink = get_permalink( $page_id );
+	if ( ! is_string( $permalink ) ) {
+		throw new \RuntimeException( 'Outlet page permalink could not be retrieved.' );
+	}
+
+	return $permalink;
+}
+
+/**
  * Helper to initialize page integrations.
  *
  * @internal
