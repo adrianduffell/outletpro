@@ -407,11 +407,11 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertCount( 2, $result['tax_query'] );
-		$this->assertSame( 'product_cat', $result['tax_query'][0]['taxonomy'] );
-		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
-		$this->assertSame( 'clothing', $result['tax_query'][0]['terms'] );
-		$this->assertTrue( $result['tax_query'][0]['include_children'] );
-		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
+		$this->assertSame( 'product_cat', $result['tax_query'][1]['taxonomy'] );
+		$this->assertSame( 'slug', $result['tax_query'][1]['field'] );
+		$this->assertSame( 'clothing', $result['tax_query'][1]['terms'] );
+		$this->assertTrue( $result['tax_query'][1]['include_children'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
 
 		// Cleanup.
 		set_query_var( 'outlet_category', '' );

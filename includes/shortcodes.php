@@ -54,6 +54,12 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 		$query_args['tax_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 	}
 
+	$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		'taxonomy' => OUTLET_STATUS_TAXONOMY,
+		'field'    => 'name',
+		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
+	);
+
 	$category_slug = get_category_filter_query_param();
 	if ( null !== $category_slug ) {
 		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
@@ -81,12 +87,6 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 			'terms'    => $discount_facet,
 		);
 	}
-
-	$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
-		'taxonomy' => OUTLET_STATUS_TAXONOMY,
-		'field'    => 'name',
-		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
-	);
 
 	return $query_args;
 }

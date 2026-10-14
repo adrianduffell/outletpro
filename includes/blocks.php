@@ -277,6 +277,12 @@ function filter_outlet_product_collection_hook( array $query, \WP_Block $block, 
 		$query['tax_query'] = array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 	}
 
+	$query['tax_query'][] = array(
+		'taxonomy' => OUTLET_STATUS_TAXONOMY,
+		'field'    => 'term_id',
+		'terms'    => $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0,
+	);
+
 	$category_slug = get_category_filter_query_param();
 	if ( null !== $category_slug ) {
 		$query['tax_query'][] = array(
@@ -304,12 +310,6 @@ function filter_outlet_product_collection_hook( array $query, \WP_Block $block, 
 			'terms'    => $discount_facet,
 		);
 	}
-
-	$query['tax_query'][] = array(
-		'taxonomy' => OUTLET_STATUS_TAXONOMY,
-		'field'    => 'term_id',
-		'terms'    => $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0,
-	);
 
 	return $query;
 }
