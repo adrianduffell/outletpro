@@ -119,11 +119,13 @@ test.each( [
 				} ),
 		} );
 
-		// Expect.
-		const validation = expect( validateLicense( LICENSE_KEY ) ).rejects;
+		// Act.
+		const validation = validateLicense( LICENSE_KEY );
 
-		// Act and assert.
-		await validation.toThrow( 'Unexpected license validation response' );
+		// Assert.
+		await expect( validation ).rejects.toThrow(
+			'Unexpected license validation response'
+		);
 	}
 );
 
@@ -253,11 +255,13 @@ test.each( [
 		json: () => Promise.resolve( response ),
 	} );
 
-	// Expect.
-	const validation = expect( validateLicense( LICENSE_KEY ) ).rejects;
+	// Act.
+	const validation = validateLicense( LICENSE_KEY );
 
-	// Act and assert.
-	await validation.toThrow( 'Unexpected license validation response' );
+	// Assert.
+	await expect( validation ).rejects.toThrow(
+		'Unexpected license validation response'
+	);
 } );
 
 test( 'propagates request failures', async () => {
@@ -265,9 +269,9 @@ test( 'propagates request failures', async () => {
 	mockFetch.mockReset();
 	mockFetch.mockRejectedValue( new Error( 'Network error' ) );
 
-	// Expect.
-	const validation = expect( validateLicense( LICENSE_KEY ) ).rejects;
+	// Act.
+	const validation = validateLicense( LICENSE_KEY );
 
-	// Act and assert.
-	await validation.toThrow( 'Network error' );
+	// Assert.
+	await expect( validation ).rejects.toThrow( 'Network error' );
 } );
