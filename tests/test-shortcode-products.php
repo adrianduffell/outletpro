@@ -79,6 +79,64 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
 	}
 
+	public function test_outlet_category_is_added_to_shortcode_query(): void {
+		// Arrange.
+		init_taxonomies();
+		set_query_var( 'outlet_category', 'Clothing' );
+		$query_args = array( 'post_type' => 'product' );
+		$attributes = array( 'outletpro' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+
+		// Assert.
+		$this->assertCount( 2, $result['tax_query'] );
+		$this->assertSame( 'product_cat', $result['tax_query'][0]['taxonomy'] );
+		$this->assertSame( 'slug', $result['tax_query'][0]['field'] );
+		$this->assertSame( 'clothing', $result['tax_query'][0]['terms'] );
+		$this->assertTrue( $result['tax_query'][0]['include_children'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
+
+		// Cleanup.
+		set_query_var( 'outlet_category', '' );
+	}
+
+	public function test_outlet_category_and_max_price_are_added_to_shortcode_query(): void {
+		// Arrange.
+		init_taxonomies();
+		set_query_var( 'outlet_category', 'clothing' );
+		$_GET['max_price'] = '50';
+		$query_args        = array( 'post_type' => 'product' );
+		$attributes        = array( 'outletpro' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+
+		// Assert.
+		$this->assertSame( 'clothing', $result['tax_query'][0]['terms'] );
+		$this->assertSame( 50, $result['outletpro_max_price'] );
+
+		// Cleanup.
+		set_query_var( 'outlet_category', '' );
+		unset( $_GET['max_price'] );
+	}
+
+	public function test_outlet_category_is_not_added_when_outletpro_is_false(): void {
+		// Arrange.
+		set_query_var( 'outlet_category', 'clothing' );
+		$query_args = array( 'post_type' => 'product' );
+		$attributes = array( 'outletpro' => false );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+
+		// Assert.
+		$this->assertSame( $query_args, $result );
+
+		// Cleanup.
+		set_query_var( 'outlet_category', '' );
+	}
+
 	public function test_add_products_shortcode_attribute_hook_adds_outletpro_when_present(): void {
 		// Arrange.
 		$out  = array();

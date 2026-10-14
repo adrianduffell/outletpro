@@ -50,6 +50,7 @@ require_once __DIR__ . '/includes/admin-menu-license.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
+require_once __DIR__ . '/includes/query-vars.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 // #ifdef LICENSE
@@ -92,6 +93,7 @@ function init_hook(): void {
 	init_settings();
 	init_taxonomies();
 	init_rest_api();
+	init_query_vars();
 	init_shortcodes();
 	init_patterns();
 	init_page();
