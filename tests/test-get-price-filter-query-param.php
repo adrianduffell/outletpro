@@ -19,11 +19,10 @@ class Test_Get_Price_Filter_Query_Param extends WP_UnitTestCase {
 		set_query_var( 'outlet_price', '49' );
 
 		// Act.
-		$facet = get_price_filter_query_param();
-		set_query_var( 'outlet_price', '' );
+		$arg = get_price_filter_query_param();
 
 		// Assert.
-		$this->assertNull( $facet );
+		$this->assertNull( $arg );
 	}
 
 	public function test_malformed_price_facet_is_ignored(): void {
@@ -31,11 +30,10 @@ class Test_Get_Price_Filter_Query_Param extends WP_UnitTestCase {
 		set_query_var( 'outlet_price', array( '50' ) );
 
 		// Act.
-		$facet = get_price_filter_query_param();
-		set_query_var( 'outlet_price', '' );
+		$arg = get_price_filter_query_param();
 
 		// Assert.
-		$this->assertNull( $facet );
+		$this->assertNull( $arg );
 	}
 	public function test_existing_price_facet_is_returned(): void {
 		// Arrange.
@@ -45,7 +43,6 @@ class Test_Get_Price_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_price_filter_query_param();
-		set_query_var( 'outlet_price', '' );
 
 		// Assert.
 		$this->assertSame( 'outlet-price-250', $result );

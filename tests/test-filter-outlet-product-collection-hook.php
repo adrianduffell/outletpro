@@ -309,6 +309,89 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertSame( $expected, $result );
 	}
 
+	public function test_tax_query_is_added_when_canonical_term_exists(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
+		$block->context = array(
+			'query' => array( 'outletpro' => true ),
+		);
+
+		// Act.
+		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
+
+		// Assert.
+		$this->assertArrayHasKey( 'tax_query', $result );
+		$this->assertCount( 1, $result['tax_query'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
+		$this->assertSame( 'term_id', $result['tax_query'][0]['field'] );
+		$this->assertSame( $canonical_term->term_id, $result['tax_query'][0]['terms'] );
+	}
+
+	public function test_existing_tax_query_entries_are_preserved(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$existing_tax_clause = array(
+			'taxonomy' => 'product_cat',
+			'field'    => 'slug',
+			'terms'    => array( 'clothing' ),
+		);
+
+		$query = array(
+			'post_type' => 'product',
+			'tax_query' => array( $existing_tax_clause ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		);
+
+		$block = new WP_Block(
+			array(
+				'blockName'    => 'core/query',
+				'attrs'        => array(),
+				'innerBlocks'  => array(),
+				'innerHTML'    => '',
+				'innerContent' => array(),
+			)
+		);
+
+		$block->context = array(
+			'query' => array( 'outletpro' => true ),
+		);
+
+		// Act.
+		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
+
+		// Assert.
+		$this->assertCount( 2, $result['tax_query'] );
+		$this->assertSame( $existing_tax_clause, $result['tax_query'][0] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
+	}
+
+	public function test_filter_is_registered_by_init_blocks(): void {
+		// Arrange.
+		deinit_blocks();
+
+		// Act.
+		init_blocks();
+
+		// Assert.
+		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook' ) );
+		$this->assertSame( 11, has_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook' ) );
+	}
 	public function test_outlet_category_is_not_added_to_non_outlet_product_collection_query(): void {
 		// Arrange.
 		deinit_blocks();
@@ -333,9 +416,6 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( $query, $result );
-
-		// Cleanup.
-		set_query_var( 'outlet_category', '' );
 	}
 
 	public function test_collection_returns_only_matching_outlet_clothing_products(): void {
@@ -395,7 +475,6 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 
 		// Act.
 		$results = new WP_Query( apply_filters( 'query_loop_block_query_vars', $query, $block, 1 ) );
-		set_query_var( 'outlet_category', '' );
 
 		// Assert.
 		$this->assertSame( array( $shirt->get_id() ), $results->posts );

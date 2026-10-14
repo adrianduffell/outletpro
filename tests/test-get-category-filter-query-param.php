@@ -20,9 +20,6 @@ class Test_Get_Category_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'clothing-shoes', $result );
-
-		// Cleanup.
-		set_query_var( 'outlet_category', '' );
 	}
 
 	public function test_requested_outlet_category_slug_ignores_non_string_value(): void {
@@ -34,9 +31,6 @@ class Test_Get_Category_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertNull( $result );
-
-		// Cleanup.
-		set_query_var( 'outlet_category', '' );
 	}
 	public function test_missing_category_query_param_returns_null(): void {
 		// Arrange.

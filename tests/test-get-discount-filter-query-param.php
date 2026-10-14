@@ -21,7 +21,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertNull( $result );
@@ -35,7 +34,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertNull( $result );
@@ -49,7 +47,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertNull( $result );
@@ -63,7 +60,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertNull( $result );
@@ -77,7 +73,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertNull( $result );
@@ -91,7 +86,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertNull( $result );
@@ -115,7 +109,6 @@ class Test_Get_Discount_Filter_Query_Param extends WP_UnitTestCase {
 
 		// Act.
 		$result = get_discount_filter_query_param();
-		set_query_var( 'outlet_discount', '' );
 
 		// Assert.
 		$this->assertSame( 'outlet-discount-70', $result );

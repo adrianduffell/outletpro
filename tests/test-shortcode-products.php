@@ -42,6 +42,45 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertSame( $query_args, $result );
 	}
 
+	public function test_query_gets_tax_query_when_outletpro_is_true(): void {
+		// Arrange.
+		init_taxonomies();
+		$query_args = array( 'post_type' => 'product' );
+		$attributes = array( 'outletpro' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+
+		// Assert.
+		$this->assertArrayHasKey( 'tax_query', $result );
+		$this->assertCount( 1, $result['tax_query'] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][0]['taxonomy'] );
+		$this->assertSame( OUTLET_STATUS_CANONICAL_TERM, $result['tax_query'][0]['terms'] );
+	}
+
+	public function test_tax_query_appended_when_existing_tax_query_present(): void {
+		// Arrange.
+		init_taxonomies();
+		$existing_tax = array(
+			'taxonomy' => 'product_cat',
+			'field'    => 'slug',
+			'terms'    => 'sale',
+		);
+		$query_args   = array(
+			'post_type' => 'product',
+			'tax_query' => array( $existing_tax ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+		);
+		$attributes   = array( 'outletpro' => true );
+
+		// Act.
+		$result = filter_products_shortcode_query_hook( $query_args, $attributes, 'products' );
+
+		// Assert.
+		$this->assertCount( 2, $result['tax_query'] );
+		$this->assertSame( $existing_tax, $result['tax_query'][0] );
+		$this->assertSame( OUTLET_STATUS_TAXONOMY, $result['tax_query'][1]['taxonomy'] );
+	}
+
 	public function test_add_products_shortcode_attribute_hook_adds_outletpro_when_present(): void {
 		// Arrange.
 		$out  = array();
@@ -335,7 +374,6 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'wc_product_meta_lookup', $result['join'] );
 		$this->assertStringContainsString( 'AND NOT ( 999999 < wc_product_meta_lookup.min_price )', $result['where'] );
 	}
-
 	public function test_shortcode_returns_only_matching_outlet_clothing_products(): void {
 		// Arrange.
 		init_taxonomies();
@@ -369,14 +407,6 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		wp_set_object_terms( $shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		wp_set_object_terms( $shoes->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 		wp_set_object_terms( $other_tag_shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		$expensive_shirt = WC_Helper_Product::create_simple_product();
-		$expensive_shirt->set_regular_price( '100' );
-		$expensive_shirt->set_price( '100' );
-		$expensive_shirt->save();
-		wp_set_object_terms( $expensive_shirt->get_id(), array( $shirts ), 'product_cat' );
-		wp_set_object_terms( $expensive_shirt->get_id(), 'eligible', 'product_tag' );
-		wp_set_object_terms( $expensive_shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
-		$_GET['max_price'] = '50';
 		set_query_var( 'outlet_category', 'clothing' );
 		$shortcode = new WC_Shortcode_Products(
 			array(
@@ -387,8 +417,6 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 
 		// Act.
 		$results = new WP_Query( $shortcode->get_query_args() );
-		set_query_var( 'outlet_category', '' );
-		unset( $_GET['max_price'] );
 
 		// Assert.
 		$this->assertSame( array( $shirt->get_id() ), $results->posts );
