@@ -24,6 +24,8 @@ function init_block_editor(): void {
  * Append data to the block editor settings.
  *
  * - outletproIsBlockTheme: boolean indicating if the current theme is a block theme.
+ * - outletproMenuItems: Available outlet menu selections.
+ * - outletproMenuPermalink: Current outlet page permalink for the editor.
  * - wcOutletCanonicalTermId: ID of the canonical term for the outlet status taxonomy.
  *
  * Fired by `block_editor_settings_all`.
@@ -36,6 +38,46 @@ function init_block_editor(): void {
  */
 function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Context $_context ): array { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$settings['outletproIsBlockTheme'] = wp_is_block_theme();
+
+	$settings['outletproMenuItems'] = array(
+		'categories' => array(),
+		'prices'     => array(),
+		'discounts'  => array(),
+	);
+
+	$permalink = get_outlet_permalink();
+
+	$settings['outletproMenuPermalink'] = $permalink;
+	if ( is_string( $permalink ) ) {
+		$menu_categories = get_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'hide_empty' => true,
+				'parent'     => 0,
+				'orderby'    => 'name',
+				'order'      => 'ASC',
+			)
+		);
+
+		$settings['outletproMenuItems']['categories'][] = array( __( 'All', 'outletpro' ), '' );
+		if ( ! is_wp_error( $menu_categories ) ) {
+			foreach ( $menu_categories as $category ) {
+				$settings['outletproMenuItems']['categories'][] = array( html_entity_decode( $category->name, ENT_QUOTES, 'UTF-8' ), 'outlet_category=' . rawurlencode( $category->slug ) );
+			}
+		}
+		foreach ( get_price_tiers() as $price ) {
+			// translators: %s: Formatted price tier amount.
+			$name = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $price, array( 'decimals' => 0 ) ) );
+
+			$settings['outletproMenuItems']['prices'][] = array( html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' ), 'outlet_price=' . $price );
+		}
+		foreach ( get_discount_tiers() as $discount ) {
+			// translators: %d: Discount tier percentage.
+			$name = sprintf( __( '%d%% off', 'outletpro' ), $discount );
+
+			$settings['outletproMenuItems']['discounts'][] = array( $name, 'outlet_discount=' . $discount );
+		}
+	}
 
 	$canonical_term = get_term_by( 'name', OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
 

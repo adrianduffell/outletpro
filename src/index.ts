@@ -16,6 +16,7 @@ import EditorPreview from './editor-preview';
 import './blocks/outlet-group';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
+import './blocks/outlet-menu';
 
 registerPlugin( 'outletpro-editor-preview', {
 	render: EditorPreview,

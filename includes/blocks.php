@@ -20,6 +20,7 @@ function init_blocks(): void {
 	register_outlet_group_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
@@ -74,6 +75,64 @@ function register_outlet_badge_block(): void {
 			'render_callback' => 'OutletPro\render_outlet_badge_callback',
 		)
 	);
+}
+
+/**
+ * Register the Outlet Menu block.
+ *
+ * @internal
+ */
+function register_outlet_menu_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-menu/',
+		array( 'render_callback' => 'OutletPro\render_outlet_menu_callback' )
+	);
+}
+
+/**
+ * Render the outlet menu block.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ * @return string|null Rendered menu markup, or null when items are invalid or the outlet page is unavailable.
+ */
+function render_outlet_menu_callback( array $attributes ): ?string {
+	$links = $attributes['items'] ?? array();
+	if ( ! is_array( $links ) ) {
+		return null;
+	}
+	foreach ( $links as $link ) {
+		if ( ! is_array( $link ) ) {
+			return null;
+		}
+		if ( count( $link ) !== 2 ) {
+			return null;
+		}
+		if ( ! is_string( $link[0] ?? null ) ) {
+			return null;
+		}
+		if ( ! is_string( $link[1] ?? null ) ) {
+			return null;
+		}
+	}
+
+	$permalink = get_outlet_permalink();
+	if ( null === $permalink ) {
+		return null;
+	}
+
+	return '<menu ' . get_block_wrapper_attributes() . '>' . join(
+		' ',
+		array_map(
+			static function ( array $link ) use ( $permalink ): string {
+				wp_parse_str( $link[1], $query );
+				$url = add_query_arg( $query, $permalink );
+
+				return '<li><a href="' . esc_url( $url ) . '">' . esc_html( $link[0] ) . '</a></li>';
+			},
+			$links
+		)
+	) . '</menu>';
 }
 
 /**
