@@ -60,6 +60,34 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
 	);
 
+	$category_filter = get_category_filter_query_param();
+	if ( null !== $category_filter ) {
+		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'taxonomy'         => 'product_cat',
+			'field'            => 'slug',
+			'terms'            => $category_filter,
+			'include_children' => true,
+		);
+	}
+
+	$price_filter = get_price_filter_query_param();
+	if ( null !== $price_filter ) {
+		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'field'    => 'slug',
+			'terms'    => $price_filter,
+		);
+	}
+
+	$discount_filter = get_discount_filter_query_param();
+	if ( null !== $discount_filter ) {
+		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'field'    => 'slug',
+			'terms'    => $discount_filter,
+		);
+	}
+
 	return $query_args;
 }
 

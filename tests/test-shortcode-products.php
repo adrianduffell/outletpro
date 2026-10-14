@@ -9,8 +9,10 @@
 
 use function OutletPro\add_products_shortcode_attribute_hook;
 use function OutletPro\filter_products_shortcode_query_hook;
+use function OutletPro\init_shortcodes;
 use function OutletPro\init_taxonomies;
 use function OutletPro\max_price_posts_clauses;
+use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
@@ -371,5 +373,40 @@ class Test_Shortcode_Products extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'wc_product_meta_lookup', $result['join'] );
 		$this->assertStringContainsString( 'AND NOT ( 999999 < wc_product_meta_lookup.min_price )', $result['where'] );
+	}
+	public function test_shortcode_returns_only_matching_outlet_clothing_products(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		init_shortcodes();
+		$clothing      = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'slug'     => 'clothing',
+			)
+		);
+		$shirts        = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'slug'     => 'shirts',
+				'parent'   => $clothing,
+			)
+		);
+		$shirt         = WC_Helper_Product::create_simple_product();
+		$shoes         = WC_Helper_Product::create_simple_product();
+		$regular_shirt = WC_Helper_Product::create_simple_product();
+		wp_set_object_terms( $shirt->get_id(), array( $shirts ), 'product_cat' );
+		wp_set_object_terms( $shoes->get_id(), 'shoes', 'product_cat' );
+		wp_set_object_terms( $regular_shirt->get_id(), array( $shirts ), 'product_cat' );
+		wp_set_object_terms( $shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+		wp_set_object_terms( $shoes->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+		set_query_var( 'outlet_category', 'clothing' );
+
+		// Act.
+		$shortcode = new WC_Shortcode_Products( array( 'outletpro' => 'yes' ) );
+		$results   = new WP_Query( $shortcode->get_query_args() );
+
+		// Assert.
+		$this->assertSame( array( $shirt->get_id() ), $results->posts );
 	}
 }
