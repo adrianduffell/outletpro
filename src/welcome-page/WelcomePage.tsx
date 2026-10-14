@@ -147,21 +147,21 @@ export function WelcomePage(): JSX.Element {
 						? __(
 								'License activated. Your premium license includes plugin updates and email support.',
 								'outletpro'
-						  )
+							)
 						: __(
 								"Outlet Pro is now set up. Get started by including your first product in the store's outlet.",
 								'outletpro'
-						  ) }{ ' ' }
+							) }{ ' ' }
 					{ createInterpolateElement(
 						isResetMode || isExpiredMode
 							? __(
 									'<learnMore>Learn more</learnMore>',
 									'outletpro'
-							  )
+								)
 							: __(
 									'<learnMore>Learn More</learnMore>',
 									'outletpro'
-							  ),
+								),
 						{
 							learnMore: (
 								<Link

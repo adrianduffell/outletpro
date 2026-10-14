@@ -37,7 +37,7 @@ export function useLicenseValidation() {
 						? {
 								status: 'expired',
 								expiresAt: validation.expiresAt,
-						  }
+							}
 						: { status: 'invalid' };
 				} else if ( validation.remaining === 0 ) {
 					result = {
