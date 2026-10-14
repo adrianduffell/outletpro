@@ -43,7 +43,7 @@ function register_outlet_query_vars_hook( array $vars ): array {
 }
 
 /**
- * Get the requested Outlet product category slug.
+ * Returns the argument for the outlet category filter param.
  *
  * @internal
  */
@@ -63,10 +63,9 @@ function get_category_filter_query_param(): ?string {
 }
 
 /**
- * Get the requested Outlet discount search index facet.
+ * Returns the argument for the outlet discount filter param.
  *
  * @internal
- * @return string|null Existing discount facet slug, or null for invalid input.
  */
 function get_discount_filter_query_param(): ?string {
 	$value = get_query_var( 'outlet_discount', '' );
@@ -92,10 +91,9 @@ function get_discount_filter_query_param(): ?string {
 }
 
 /**
- * Get the requested Outlet price search index facet.
+ * Returns the argument for the outlet price filter param.
  *
  * @internal
- * @return string|null Existing price facet slug, or null for invalid input.
  */
 function get_price_filter_query_param(): ?string {
 	$value = get_query_var( 'outlet_price', '' );
