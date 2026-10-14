@@ -12,7 +12,7 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Initialize public Outlet query variable registration.
+ * Init query vars.
  *
  * @internal
  */
@@ -21,7 +21,7 @@ function init_query_vars(): void {
 }
 
 /**
- * Remove public Outlet query variable registration.
+ * De-Init query vars.
  *
  * @internal
  */
@@ -30,7 +30,11 @@ function deinit_query_vars(): void {
 }
 
 /**
- * Register public query variables for the Outlet filters.
+ * Registers the outlet query vars.
+ *
+ * - outlet_category
+ * - outlet_price
+ * - outlet_discount
  *
  * Fired by `query_vars`.
  *
@@ -43,7 +47,7 @@ function register_outlet_query_vars_hook( array $vars ): array {
 }
 
 /**
- * Returns the argument for the outlet category filter param.
+ * Returns the argument for the outlet category filter param as a category slug.
  *
  * @internal
  */
@@ -63,7 +67,7 @@ function get_category_filter_query_param(): ?string {
 }
 
 /**
- * Returns the argument for the outlet discount filter param.
+ * Returns the argument for the outlet discount filter param as a search index facet.
  *
  * @internal
  */
@@ -91,7 +95,7 @@ function get_discount_filter_query_param(): ?string {
 }
 
 /**
- * Returns the argument for the outlet price filter param.
+ * Returns the argument for the outlet price filter param as a search index facet.
  *
  * @internal
  */
