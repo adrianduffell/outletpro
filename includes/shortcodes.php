@@ -60,31 +60,31 @@ function filter_products_shortcode_query_hook( array $query_args, array $attribu
 		'terms'    => OUTLET_STATUS_CANONICAL_TERM,
 	);
 
-	$category_slug = get_category_filter_query_param();
-	if ( null !== $category_slug ) {
+	$category_filter = get_category_filter_query_param();
+	if ( null !== $category_filter ) {
 		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'taxonomy'         => 'product_cat',
 			'field'            => 'slug',
-			'terms'            => $category_slug,
+			'terms'            => $category_filter,
 			'include_children' => true,
 		);
 	}
 
-	$price_facet = get_price_filter_query_param();
-	if ( null !== $price_facet ) {
+	$price_filter = get_price_filter_query_param();
+	if ( null !== $price_filter ) {
 		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
 			'field'    => 'slug',
-			'terms'    => $price_facet,
+			'terms'    => $price_filter,
 		);
 	}
 
-	$discount_facet = get_discount_filter_query_param();
-	if ( null !== $discount_facet ) {
+	$discount_filter = get_discount_filter_query_param();
+	if ( null !== $discount_filter ) {
 		$query_args['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
 			'field'    => 'slug',
-			'terms'    => $discount_facet,
+			'terms'    => $discount_filter,
 		);
 	}
 
