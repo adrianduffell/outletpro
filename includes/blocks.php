@@ -134,13 +134,16 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		list( , $type, $amount ) = explode( '-', $term->slug, 3 );
 		if ( 'price' === $type ) {
 			// translators: %s: Formatted price tier amount.
-			$name    = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $amount, array( 'decimals' => 0 ) ) );
-			$links[] = array( html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' ), add_query_arg( 'outlet_price', $amount, $permalink ) );
+			$name    = html_entity_decode( wp_strip_all_tags( sprintf( __( 'Under %s', 'outletpro' ), wc_price( $amount, array( 'decimals' => 0 ) ) ) ), ENT_QUOTES, 'UTF-8' );
+			$links[] = array( $name, add_query_arg( 'outlet_price', $amount, $permalink ) );
 			continue;
 		}
-		// translators: %d: Discount tier percentage.
-		$name    = sprintf( __( '%d%% off', 'outletpro' ), $amount );
-		$links[] = array( $name, add_query_arg( 'outlet_discount', $amount, $permalink ) );
+		if ( 'discount' === $type ) {
+			// translators: %d: Discount tier percentage.
+			$name    = sprintf( __( '%d%% off', 'outletpro' ), $amount );
+			$links[] = array( $name, add_query_arg( 'outlet_discount', $amount, $permalink ) );
+			continue;
+		}
 	}
 
 	$link_styles          = wp_style_engine_get_styles(
