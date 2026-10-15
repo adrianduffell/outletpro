@@ -51,15 +51,15 @@ export function Edit( {
 			categories:
 				'categories' in groups && Array.isArray( groups.categories )
 					? groups.categories
-					: [],
+					: EMPTY_ITEMS.categories, // Keep original array reference to prevent re-render.
 			prices:
 				'prices' in groups && Array.isArray( groups.prices )
 					? groups.prices
-					: [],
+					: EMPTY_ITEMS.prices, // Keep original array reference to prevent re-render.
 			discounts:
 				'discounts' in groups && Array.isArray( groups.discounts )
 					? groups.discounts
-					: [],
+					: EMPTY_ITEMS.discounts, // Keep original array reference to prevent re-render.
 		};
 	}, [] );
 	const permalink = useSelect( ( select ) => {
