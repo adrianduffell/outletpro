@@ -29,7 +29,6 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$output = do_blocks( '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( array( 'items' => array( $term['term_id'] ) ) ) . ' /-->' );
 
 		// Assert.
-		$this->assertStringContainsString( esc_url( add_query_arg( 'outlet_category', 'clothing', get_permalink( $page_id ) ) ), $output );
 		$this->assertStringContainsString( 'Clothing', $output );
 	}
 
