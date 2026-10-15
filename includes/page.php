@@ -52,11 +52,21 @@ function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
 		return null;
 	}
 
-	list( , $type, $amount ) = explode( '-', $term->slug, 3 );
+	if ( 1 !== preg_match( '/^outlet-(price|discount)-([0-9]+)$/D', $term->slug, $matches ) ) {
+		return null;
+	}
+	$type   = $matches[1];
+	$amount = filter_var( $matches[2], FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+	if ( false === $amount ) {
+		return null;
+	}
 	if ( 'price' === $type ) {
 		return add_query_arg( 'outlet_price', $amount, $permalink );
 	}
 	if ( 'discount' === $type ) {
+		if ( $amount > 100 ) {
+			return null;
+		}
 		return add_query_arg( 'outlet_discount', $amount, $permalink );
 	}
 
