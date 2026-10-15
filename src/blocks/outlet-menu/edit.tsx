@@ -7,11 +7,13 @@ import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import { useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
+import { useEntityRecords } from '@wordpress/core-data';
+import { decodeEntities } from '@wordpress/html-entities';
 import { store as editorStore } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 import type { CSSProperties } from 'react';
 
-type MenuItem = { id: number; name: string; query: string };
+type MenuItem = { id: number; name: string };
 
 type EditProps = {
 	attributes: {
@@ -28,60 +30,50 @@ type EditProps = {
 	__unstableLayoutClassNames?: string;
 };
 
-type MenuItemGroups = {
-	categories: MenuItem[];
-	prices: MenuItem[];
-	discounts: MenuItem[];
-};
-
-const EMPTY_ITEMS: MenuItemGroups = {
-	categories: [],
-	prices: [],
-	discounts: [],
-};
+const EMPTY_ITEMS: MenuItem[] = [];
 
 export function Edit( {
 	attributes,
 	setAttributes,
 	__unstableLayoutClassNames,
 }: EditProps ): JSX.Element {
-	const menuItems: MenuItemGroups = useSelect( ( select ) => {
+	const { records: categories, hasResolved } = useEntityRecords< MenuItem >(
+		'taxonomy',
+		'product_cat',
+		{
+			parent: 0,
+			hide_empty: false,
+			per_page: -1,
+			orderby: 'name',
+			order: 'asc',
+		}
+	);
+	const { prices, discounts } = useSelect( ( select ) => {
 		const settings = select( editorStore ).getEditorSettings();
-		if ( ! ( 'outletproMenuItems' in settings ) ) {
-			return EMPTY_ITEMS;
-		}
-		const groups = settings.outletproMenuItems;
-		if ( typeof groups !== 'object' ) {
-			return EMPTY_ITEMS;
-		}
-		if ( groups === null ) {
-			return EMPTY_ITEMS;
-		}
 		return {
-			categories:
-				'categories' in groups && Array.isArray( groups.categories )
-					? groups.categories
-					: EMPTY_ITEMS.categories, // Keep original array reference to prevent re-render.
 			prices:
-				'prices' in groups && Array.isArray( groups.prices )
-					? groups.prices
-					: EMPTY_ITEMS.prices, // Keep original array reference to prevent re-render.
+				'outletproPriceTiers' in settings &&
+				Array.isArray( settings.outletproPriceTiers )
+					? settings.outletproPriceTiers
+					: EMPTY_ITEMS, // Keep original array reference to prevent re-render.
 			discounts:
-				'discounts' in groups && Array.isArray( groups.discounts )
-					? groups.discounts
-					: EMPTY_ITEMS.discounts, // Keep original array reference to prevent re-render.
+				'outletproDiscountTiers' in settings &&
+				Array.isArray( settings.outletproDiscountTiers )
+					? settings.outletproDiscountTiers
+					: EMPTY_ITEMS, // Keep original array reference to prevent re-render.
 		};
 	}, [] );
-	const permalink = useSelect( ( select ) => {
-		const settings = select( editorStore ).getEditorSettings();
-		return 'outletproMenuPermalink' in settings &&
-			typeof settings.outletproMenuPermalink === 'string'
-			? settings.outletproMenuPermalink
-			: '';
-	}, [] );
+	const categoryItems = useMemo(
+		() =>
+			categories?.map( ( { id, name } ) => ( {
+				id,
+				name: decodeEntities( name ),
+			} ) ) ?? EMPTY_ITEMS,
+		[ categories ]
+	);
 	const availableItems = useMemo(
-		() => Object.values( menuItems ).flat(),
-		[ menuItems ]
+		() => [ ...categoryItems, ...prices, ...discounts ],
+		[ categoryItems, prices, discounts ]
 	);
 	const items = attributes.items ?? availableItems.map( ( item ) => item.id );
 	const includeAll =
@@ -100,15 +92,29 @@ export function Edit( {
 	} );
 
 	useEffect( () => {
-		if ( attributes.items === undefined ) {
-			if ( availableItems.length > 0 ) {
-				setAttributes( {
-					items: availableItems.map( ( item ) => item.id ),
-					includeAll: true,
-				} );
-			}
+		if ( attributes.items !== undefined ) {
+			return;
 		}
-	}, [ attributes.items, availableItems, setAttributes ] );
+		if ( ! hasResolved ) {
+			return;
+		}
+		if ( categories === null ) {
+			return;
+		}
+		if ( availableItems.length === 0 ) {
+			return;
+		}
+		setAttributes( {
+			items: availableItems.map( ( item ) => item.id ),
+			includeAll: true,
+		} );
+	}, [
+		attributes.items,
+		availableItems,
+		categories,
+		hasResolved,
+		setAttributes,
+	] );
 
 	return (
 		<>
@@ -117,15 +123,15 @@ export function Edit( {
 					{
 						title: __( 'Categories', 'outletpro' ),
 						includeAll: true,
-						items: menuItems.categories,
+						items: categoryItems,
 					},
 					{
 						title: __( 'Price tiers', 'outletpro' ),
-						items: menuItems.prices,
+						items: prices,
 					},
 					{
 						title: __( 'Discount tiers', 'outletpro' ),
-						items: menuItems.discounts,
+						items: discounts,
 					},
 				].map( ( group ) => (
 					<PanelBody
@@ -134,7 +140,7 @@ export function Edit( {
 						initialOpen
 					>
 						<div style={ { display: 'grid', gap: '12px' } }>
-							{ group.includeAll && permalink !== '' && (
+							{ group.includeAll && (
 								<ToggleControl
 									label={ __( 'All', 'outletpro' ) }
 									checked={ includeAll }
@@ -168,30 +174,18 @@ export function Edit( {
 			<menu { ...blockProps }>
 				{ includeAll && (
 					<li>
-						<a
-							style={ linkStyle }
-							href={
-								new URL( permalink, window.location.href ).href
-							}
-						>
+						<a style={ linkStyle } href={ window.location.href }>
 							{ __( 'All', 'outletpro' ) }
 						</a>
 					</li>
 				) }
-				{ selectedItems.map( ( { id, name, query } ) => {
-					const url = new URL( permalink, window.location.href );
-					new URLSearchParams( query ).forEach( ( value, key ) =>
-						url.searchParams.set( key, value )
-					);
-
-					return (
-						<li key={ id }>
-							<a href={ url.href } style={ linkStyle }>
-								{ name }
-							</a>
-						</li>
-					);
-				} ) }
+				{ selectedItems.map( ( { id, name } ) => (
+					<li key={ id }>
+						<a href={ window.location.href } style={ linkStyle }>
+							{ name }
+						</a>
+					</li>
+				) ) }
 			</menu>
 		</>
 	);
