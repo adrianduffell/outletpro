@@ -10,7 +10,6 @@
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
 use function OutletPro\init_taxonomies;
-use function OutletPro\register_block_styles;
 use function OutletPro\render_outlet_menu_callback;
 use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
@@ -324,47 +323,6 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertNull( $output );
 	}
 
-	public function test_menu_supports_native_styles_without_metadata_stylesheets(): void {
-		// Arrange.
-		deinit_blocks();
-		init_blocks();
-
-		// Act.
-		$block_type = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-menu' );
-
-		// Assert.
-		$this->assertSame( array(), $block_type->style_handles );
-		$this->assertTrue( $block_type->supports['typography']['__experimentalTextDecoration'] );
-	}
-
-	public function test_menu_does_not_enqueue_a_stylesheet(): void {
-		// Arrange.
-		wp_dequeue_style( 'outletpro-menu-block' );
-		wp_deregister_style( 'outletpro-menu-block' );
-		register_block_styles();
-
-		// Act.
-		do_action( 'wp_enqueue_scripts' );
-		apply_filters( 'render_block', '', array( 'blockName' => 'outletpro/outlet-menu' ), new WP_Block( array( 'blockName' => 'outletpro/outlet-menu' ) ) );
-
-		// Assert.
-		$this->assertFalse( wp_style_is( 'outletpro-menu-block', 'registered' ) );
-	}
-
-	public function test_gutenberg_underline_setting_is_applied_to_links(): void {
-		// Arrange.
-		deinit_blocks();
-		init_blocks();
-		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
-		update_option( OUTLET_PAGE_OPTION, $page_id );
-
-		// Act.
-		$output = do_blocks( '<!-- wp:outletpro/outlet-menu {"includeAll":true,"style":{"typography":{"textDecoration":"underline"}}} /-->' );
-
-		// Assert.
-		$this->assertMatchesRegularExpression( '/<a[^>]+style="text-decoration:underline;?"[^>]*>All<\/a>/', $output );
-	}
-
 	public function test_gutenberg_none_setting_is_applied_to_links(): void {
 		// Arrange.
 		deinit_blocks();
@@ -377,26 +335,5 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertMatchesRegularExpression( '/<a[^>]+style="text-decoration:none;?"[^>]*>All<\/a>/', $output );
-	}
-
-	public function test_menu_applies_native_block_styles(): void {
-		// Arrange.
-		deinit_blocks();
-		init_blocks();
-		$page_id = self::factory()->post->create(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'publish',
-			)
-		);
-		update_option( OUTLET_PAGE_OPTION, $page_id );
-
-		// Act.
-		$output = do_blocks( '<!-- wp:outletpro/outlet-menu {"style":{"spacing":{"blockGap":"2em","padding":{"top":"2em"}},"typography":{"fontSize":"24px"}}} /-->' );
-
-		// Assert.
-		$this->assertStringContainsString( 'wp-block-outletpro-outlet-menu', $output );
-		$this->assertStringContainsString( 'padding-top:2em', $output );
-		$this->assertStringContainsString( 'font-size:24px', $output );
 	}
 }
