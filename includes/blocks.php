@@ -97,21 +97,15 @@ function register_outlet_menu_block(): void {
  * @return string|null Rendered menu markup, or null when items are invalid or the outlet page is unavailable.
  */
 function render_outlet_menu_callback( array $attributes ): ?string {
-	$links = $attributes['items'] ?? array();
-	if ( ! is_array( $links ) ) {
+	$items = $attributes['items'] ?? array();
+	if ( ! is_array( $items ) ) {
 		return null;
 	}
-	foreach ( $links as $link ) {
-		if ( ! is_array( $link ) ) {
+	foreach ( $items as $term_id ) {
+		if ( ! is_int( $term_id ) ) {
 			return null;
 		}
-		if ( count( $link ) !== 2 ) {
-			return null;
-		}
-		if ( ! is_string( $link[0] ?? null ) ) {
-			return null;
-		}
-		if ( ! is_string( $link[1] ?? null ) ) {
+		if ( $term_id < 1 ) {
 			return null;
 		}
 	}
@@ -121,14 +115,53 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		return null;
 	}
 
+	$terms = array();
+	if ( count( $items ) > 0 ) {
+		$terms = get_terms(
+			array(
+				'taxonomy'   => array( 'product_cat', OUTLET_SEARCH_INDEX_TAXONOMY ),
+				'include'    => $items,
+				'hide_empty' => false,
+				'orderby'    => 'include',
+			)
+		);
+		if ( is_wp_error( $terms ) ) {
+			return null;
+		}
+	}
+
+	$links = array();
+	if ( true === ( $attributes['includeAll'] ?? false ) ) {
+		$links[] = array( __( 'All', 'outletpro' ), $permalink );
+	}
+	foreach ( $terms as $term ) {
+		if ( 'product_cat' === $term->taxonomy ) {
+			$links[] = array( $term->name, add_query_arg( 'outlet_category', $term->slug, $permalink ) );
+			continue;
+		}
+		if ( ! preg_match( '/^outlet-(price|discount)-([0-9]+)$/', $term->slug, $matches ) ) {
+			continue;
+		}
+		$amount = filter_var( $matches[2], FILTER_VALIDATE_INT );
+		if ( false === $amount ) {
+			continue;
+		}
+		if ( 'price' === $matches[1] ) {
+			// translators: %s: Formatted price tier amount.
+			$name    = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $amount, array( 'decimals' => 0 ) ) );
+			$links[] = array( html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' ), add_query_arg( 'outlet_price', $amount, $permalink ) );
+			continue;
+		}
+		// translators: %d: Discount tier percentage.
+		$name    = sprintf( __( '%d%% off', 'outletpro' ), $amount );
+		$links[] = array( $name, add_query_arg( 'outlet_discount', $amount, $permalink ) );
+	}
+
 	return '<menu ' . get_block_wrapper_attributes() . '>' . join(
 		' ',
 		array_map(
-			static function ( array $link ) use ( $permalink ): string {
-				wp_parse_str( $link[1], $query );
-				$url = add_query_arg( $query, $permalink );
-
-				return '<li><a href="' . esc_url( $url ) . '">' . esc_html( $link[0] ) . '</a></li>';
+			static function ( array $link ): string {
+				return '<li><a href="' . esc_url( $link[1] ) . '">' . esc_html( $link[0] ) . '</a></li>';
 			},
 			$links
 		)

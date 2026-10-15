@@ -59,15 +59,15 @@
 				}
 			}
 		},
+		"includeAll": {
+			"type": "boolean",
+			"default": false
+		},
 		"items": {
 			"type": "array",
 			"items": {
-				"type": "array",
-				"items": {
-					"type": "string"
-				},
-				"minItems": 2,
-				"maxItems": 2
+				"type": "integer",
+				"minimum": 1
 			}
 		}
 	}

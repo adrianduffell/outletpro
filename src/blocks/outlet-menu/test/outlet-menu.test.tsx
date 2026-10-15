@@ -55,7 +55,7 @@ jest.mock( '@wordpress/components', () => ( {
 
 function renderMenu(
 	settings: Record< string, unknown >,
-	attributes: { items?: [ string, string ][] } = {}
+	attributes: { items?: number[]; includeAll?: boolean } = {}
 ) {
 	const registry = createRegistry();
 	registry.register(
@@ -93,13 +93,17 @@ function renderMenu(
 	return { ...view, registry, setAttributes };
 }
 
-test( 'initializes new menus with every available item tuple', () => {
+test( 'initializes new menus with all term IDs and includes All', () => {
 	// Arrange.
 	const settings = {
 		outletproMenuItems: {
-			categories: [ [ 'All', '' ] ],
-			prices: [ [ 'Under $25', 'outlet_price=25' ] ],
-			discounts: [ [ '30% off', 'outlet_discount=30' ] ],
+			categories: [
+				{ id: 1, name: 'Clothing', query: 'outlet_category=clothing' },
+			],
+			prices: [ { id: 2, name: 'Under $25', query: 'outlet_price=25' } ],
+			discounts: [
+				{ id: 3, name: '30% off', query: 'outlet_discount=30' },
+			],
 		},
 		outletproMenuPermalink: 'https://example.com/outlet/',
 	};
@@ -110,13 +114,10 @@ test( 'initializes new menus with every available item tuple', () => {
 	// Assert.
 	expect( setAttributes ).toHaveBeenCalledTimes( 1 );
 	expect( setAttributes ).toHaveBeenCalledWith( {
-		items: [
-			[ 'All', '' ],
-			[ 'Under $25', 'outlet_price=25' ],
-			[ '30% off', 'outlet_discount=30' ],
-		],
+		items: [ 1, 2, 3 ],
+		includeAll: true,
 	} );
-	for ( const name of [ 'All', 'Under $25', '30% off' ] ) {
+	for ( const name of [ 'All', 'Clothing', 'Under $25', '30% off' ] ) {
 		expect( screen.getByRole( 'checkbox', { name } ) ).toBeChecked();
 	}
 	for ( const name of [ 'Categories', 'Price tiers', 'Discount tiers' ] ) {
@@ -131,42 +132,36 @@ test( 'initializes when editor settings arrive after the first render', async ()
 	// Act.
 	await act( async () => {
 		await registry.dispatch( editorStore ).updateEditorSettings( {
-			outletproMenuItems: { categories: [ [ 'All', '' ] ] },
+			outletproMenuItems: {
+				categories: [
+					{
+						id: 1,
+						name: 'Clothing',
+						query: 'outlet_category=clothing',
+					},
+				],
+			},
 			outletproMenuPermalink: 'https://example.com/outlet/',
 		} );
 	} );
 
 	// Assert.
 	expect( setAttributes ).toHaveBeenCalledWith( {
-		items: [ [ 'All', '' ] ],
+		items: [ 1 ],
+		includeAll: true,
 	} );
-	expect( screen.getByRole( 'link', { name: 'All' } ) ).toHaveAttribute(
+	expect( screen.getByRole( 'link', { name: 'Clothing' } ) ).toHaveAttribute(
 		'href',
-		'https://example.com/outlet/'
+		'https://example.com/outlet/?outlet_category=clothing'
 	);
 } );
 
 test( 'preserves an empty saved selection', () => {
 	// Arrange.
-	const settings = { outletproMenuItems: { categories: [ [ 'All', '' ] ] } };
-
-	// Act.
-	const { setAttributes } = renderMenu( settings, { items: [] } );
-
-	// Assert.
-	expect( setAttributes ).not.toHaveBeenCalled();
-	expect( screen.queryByRole( 'link' ) ).not.toBeInTheDocument();
-	expect( screen.getByRole( 'checkbox', { name: 'All' } ) ).not.toBeChecked();
-} );
-
-test( 'preserves saved names and does not select newly available items', () => {
-	// Arrange.
 	const settings = {
 		outletproMenuItems: {
-			categories: [ [ 'All', '' ] ],
-			discounts: [
-				[ '30% off', 'outlet_discount=30' ],
-				[ '50% off', 'outlet_discount=50' ],
+			categories: [
+				{ id: 1, name: 'Clothing', query: 'outlet_category=clothing' },
 			],
 		},
 		outletproMenuPermalink: 'https://example.com/outlet/',
@@ -174,98 +169,191 @@ test( 'preserves saved names and does not select newly available items', () => {
 
 	// Act.
 	const { setAttributes } = renderMenu( settings, {
-		items: [ [ 'Saved sale name', 'outlet_discount=30' ] ],
+		items: [],
+		includeAll: false,
+	} );
+
+	// Assert.
+	expect( setAttributes ).not.toHaveBeenCalled();
+	expect( screen.queryByRole( 'link' ) ).not.toBeInTheDocument();
+	expect(
+		screen.getByRole( 'checkbox', { name: 'Clothing' } )
+	).not.toBeChecked();
+	expect( screen.getByRole( 'checkbox', { name: 'All' } ) ).not.toBeChecked();
+} );
+
+test( 'keeps a selected term opted in when its name and slug change', async () => {
+	// Arrange.
+	const { registry, setAttributes } = renderMenu(
+		{
+			outletproMenuItems: {
+				categories: [
+					{
+						id: 1,
+						name: 'Old name',
+						query: 'outlet_category=old-slug',
+					},
+				],
+			},
+			outletproMenuPermalink: 'https://example.com/outlet/',
+		},
+		{ items: [ 1 ] }
+	);
+
+	// Act.
+	await act( async () => {
+		await registry.dispatch( editorStore ).updateEditorSettings( {
+			outletproMenuItems: {
+				categories: [
+					{
+						id: 1,
+						name: 'New name',
+						query: 'outlet_category=new-slug',
+					},
+					{
+						id: 2,
+						name: 'New category',
+						query: 'outlet_category=new-category',
+					},
+				],
+			},
+			outletproMenuPermalink: 'https://example.com/outlet/',
+		} );
 	} );
 
 	// Assert.
 	expect( setAttributes ).not.toHaveBeenCalled();
 	expect(
-		screen.getByRole( 'link', { name: 'Saved sale name' } )
-	).toBeVisible();
-	expect( screen.getByRole( 'checkbox', { name: '30% off' } ) ).toBeChecked();
+		screen.getByRole( 'checkbox', { name: 'New name' } )
+	).toBeChecked();
 	expect(
-		screen.getByRole( 'checkbox', { name: '50% off' } )
+		screen.getByRole( 'checkbox', { name: 'New category' } )
 	).not.toBeChecked();
+	expect( screen.getByRole( 'link', { name: 'New name' } ) ).toHaveAttribute(
+		'href',
+		'https://example.com/outlet/?outlet_category=new-slug'
+	);
 	expect(
-		screen.queryByRole( 'link', { name: '50% off' } )
+		screen.queryByRole( 'link', { name: 'Old name' } )
+	).not.toBeInTheDocument();
+	expect(
+		screen.queryByRole( 'link', { name: 'New category' } )
 	).not.toBeInTheDocument();
 } );
 
-test( 'checking an item adds its name and query tuple', () => {
+test( 'checking an item saves only its term ID', () => {
 	// Arrange.
-	const settings = {
-		outletproMenuItems: {
-			discounts: [ [ '30% off', 'outlet_discount=30' ] ],
+	const { setAttributes } = renderMenu(
+		{
+			outletproMenuItems: {
+				discounts: [
+					{ id: 3, name: '30% off', query: 'outlet_discount=30' },
+				],
+			},
 		},
-	};
-	const { setAttributes } = renderMenu( settings, {
-		items: [ [ 'All', '' ] ],
-	} );
+		{ items: [ 1 ] }
+	);
 
 	// Act.
 	fireEvent.click( screen.getByRole( 'checkbox', { name: '30% off' } ) );
 
 	// Assert.
-	expect( setAttributes ).toHaveBeenCalledWith( {
-		items: [
-			[ 'All', '' ],
-			[ '30% off', 'outlet_discount=30' ],
-		],
-	} );
+	expect( setAttributes ).toHaveBeenCalledWith( { items: [ 1, 3 ] } );
 } );
 
-test( 'unchecking an item removes only its matching query', () => {
+test( 'unchecking an item removes only its term ID', () => {
 	// Arrange.
-	const settings = {
-		outletproMenuItems: {
-			discounts: [ [ '30% off', 'outlet_discount=30' ] ],
+	const { setAttributes } = renderMenu(
+		{
+			outletproMenuItems: {
+				discounts: [
+					{ id: 3, name: '30% off', query: 'outlet_discount=30' },
+				],
+			},
 		},
-	};
-	const { setAttributes } = renderMenu( settings, {
-		items: [
-			[ 'All', '' ],
-			[ 'Sale', 'outlet_discount=30' ],
-		],
-	} );
+		{ items: [ 1, 3 ] }
+	);
 
 	// Act.
 	fireEvent.click( screen.getByRole( 'checkbox', { name: '30% off' } ) );
 
 	// Assert.
-	expect( setAttributes ).toHaveBeenCalledWith( {
-		items: [ [ 'All', '' ] ],
-	} );
+	expect( setAttributes ).toHaveBeenCalledWith( { items: [ 1 ] } );
 } );
 
-test( 'All can be selected using an empty query', () => {
+test.each( [ true, false ] )(
+	'All is stored independently of the selected term IDs (%s)',
+	( includeAll ) => {
+		// Arrange.
+		const { setAttributes } = renderMenu(
+			{
+				outletproMenuPermalink: 'https://example.com/outlet/',
+			},
+			{ items: [ 1 ], includeAll }
+		);
+
+		// Act.
+		fireEvent.click( screen.getByRole( 'checkbox', { name: 'All' } ) );
+
+		// Assert.
+		expect( setAttributes ).toHaveBeenCalledWith( {
+			includeAll: ! includeAll,
+		} );
+	}
+);
+
+test( 'omits deleted terms from the preview without rewriting saved IDs', async () => {
 	// Arrange.
-	const settings = { outletproMenuItems: { categories: [ [ 'All', '' ] ] } };
-	const { setAttributes } = renderMenu( settings, { items: [] } );
+	const { registry, setAttributes } = renderMenu(
+		{
+			outletproMenuItems: {
+				discounts: [
+					{ id: 3, name: '30% off', query: 'outlet_discount=30' },
+				],
+			},
+			outletproMenuPermalink: 'https://example.com/outlet/',
+		},
+		{ items: [ 3 ], includeAll: true }
+	);
 
 	// Act.
-	fireEvent.click( screen.getByRole( 'checkbox', { name: 'All' } ) );
+	await act( async () => {
+		await registry.dispatch( editorStore ).updateEditorSettings( {
+			outletproMenuItems: { categories: [], prices: [], discounts: [] },
+			outletproMenuPermalink: 'https://example.com/outlet/',
+		} );
+	} );
 
 	// Assert.
-	expect( setAttributes ).toHaveBeenCalledWith( {
-		items: [ [ 'All', '' ] ],
-	} );
+	expect( setAttributes ).not.toHaveBeenCalled();
+	expect(
+		screen.queryByRole( 'link', { name: '30% off' } )
+	).not.toBeInTheDocument();
+	expect( screen.getByRole( 'link', { name: 'All' } ) ).toBeVisible();
 } );
 
-test( 'combines saved queries with the current permalink and preserves existing parameters', () => {
+test( 'combines current term queries with the current permalink and preserves existing parameters', () => {
 	// Arrange.
 	const settings = {
+		outletproMenuItems: {
+			categories: [
+				{
+					id: 1,
+					name: 'Sale',
+					query: 'outlet_discount=30&outlet_category=home%20goods',
+				},
+			],
+		},
 		outletproMenuPermalink:
 			'https://example.com/?page_id=42&outlet_discount=10',
 	};
 
 	// Act.
-	renderMenu( settings, {
-		items: [
-			[ 'Sale', 'outlet_discount=30&outlet_category=home%20goods' ],
-		],
-	} );
-	const link = screen.getByRole( 'link', { name: 'Sale' } );
-	const url = new URL( link.getAttribute( 'href' ) ?? '' );
+	renderMenu( settings, { items: [ 1 ] } );
+	const url = new URL(
+		screen.getByRole( 'link', { name: 'Sale' } ).getAttribute( 'href' ) ??
+			''
+	);
 
 	// Assert.
 	expect( url.origin ).toBe( 'https://example.com' );
@@ -274,12 +362,37 @@ test( 'combines saved queries with the current permalink and preserves existing 
 	expect( url.searchParams.get( 'outlet_category' ) ).toBe( 'home goods' );
 } );
 
+test( 'previews selected terms in their saved order', () => {
+	// Arrange.
+	const settings = {
+		outletproMenuItems: {
+			categories: [
+				{ id: 1, name: 'Clothing', query: 'outlet_category=clothing' },
+			],
+			discounts: [
+				{ id: 3, name: '30% off', query: 'outlet_discount=30' },
+			],
+		},
+	};
+
+	// Act.
+	renderMenu( settings, { items: [ 3, 1 ] } );
+
+	// Assert.
+	expect(
+		screen.getAllByRole( 'link' ).map( ( link ) => link.textContent )
+	).toEqual( [ '30% off', 'Clothing' ] );
+} );
+
 test( 'applies layout classes to the menu and prevents navigation in the preview', () => {
 	// Arrange.
 	const settings = { outletproMenuPermalink: 'https://example.com/outlet/' };
 
 	// Act.
-	const { container } = renderMenu( settings, { items: [ [ 'All', '' ] ] } );
+	const { container } = renderMenu( settings, {
+		items: [],
+		includeAll: true,
+	} );
 	const link = screen.getByRole( 'link', { name: 'All' } );
 
 	// Assert.
@@ -328,7 +441,7 @@ test.each( [ undefined, null, 25 ] )(
 		const settings = { outletproMenuPermalink: permalink };
 
 		// Act.
-		renderMenu( settings, { items: [ [ 'All', '' ] ] } );
+		renderMenu( settings, { items: [], includeAll: true } );
 
 		// Assert.
 		expect( screen.getByRole( 'link', { name: 'All' } ) ).toHaveAttribute(

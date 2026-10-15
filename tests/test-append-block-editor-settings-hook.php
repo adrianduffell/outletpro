@@ -87,7 +87,7 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$this->assertFalse( $settings['outletproIsBlockTheme'] );
 	}
 
-	public function test_menu_settings_contain_grouped_names_and_queries(): void {
+	public function test_menu_settings_contain_grouped_term_ids_names_and_queries(): void {
 		// Arrange.
 		init_taxonomies();
 		init_block_editor();
@@ -108,22 +108,94 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 			)
 		);
 		wp_set_object_terms( $product_id, array( $category_id ), 'product_cat' );
-		wp_insert_term( 'outlet-price-50', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-price-15', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-discount-70', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-discount-45', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$price_50_term    = wp_insert_term( 'outlet-price-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$price_15_term    = wp_insert_term( 'outlet-price-15', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$discount_70_term = wp_insert_term( 'outlet-discount-70', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$discount_45_term = wp_insert_term( 'outlet-discount-45', OUTLET_SEARCH_INDEX_TAXONOMY );
 
 		// Act.
 		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
 
 		// Assert.
 		$this->assertSame( get_permalink( $page_id ), $settings['outletproMenuPermalink'] );
-		$this->assertSame( array( 'All', '' ), $settings['outletproMenuItems']['categories'][0] );
-		$this->assertContains( array( 'Clothing & Accessories', 'outlet_category=clothing' ), $settings['outletproMenuItems']['categories'] );
-		$this->assertSame( array( 'Under $15', 'outlet_price=15' ), $settings['outletproMenuItems']['prices'][0] );
-		$this->assertSame( array( 'Under $50', 'outlet_price=50' ), $settings['outletproMenuItems']['prices'][1] );
-		$this->assertSame( array( '45% off', 'outlet_discount=45' ), $settings['outletproMenuItems']['discounts'][0] );
-		$this->assertSame( array( '70% off', 'outlet_discount=70' ), $settings['outletproMenuItems']['discounts'][1] );
+		$this->assertContains( $category_id, array_column( $settings['outletproMenuItems']['categories'], 'id' ) );
+		$this->assertContains(
+			array(
+				'id'    => $category_id,
+				'name'  => 'Clothing & Accessories',
+				'query' => 'outlet_category=clothing',
+			),
+			$settings['outletproMenuItems']['categories']
+		);
+		$this->assertSame(
+			array(
+				'id'    => $price_15_term['term_id'],
+				'name'  => 'Under $15',
+				'query' => 'outlet_price=15',
+			),
+			$settings['outletproMenuItems']['prices'][0]
+		);
+		$this->assertSame(
+			array(
+				'id'    => $price_50_term['term_id'],
+				'name'  => 'Under $50',
+				'query' => 'outlet_price=50',
+			),
+			$settings['outletproMenuItems']['prices'][1]
+		);
+		$this->assertSame(
+			array(
+				'id'    => $discount_45_term['term_id'],
+				'name'  => '45% off',
+				'query' => 'outlet_discount=45',
+			),
+			$settings['outletproMenuItems']['discounts'][0]
+		);
+		$this->assertSame(
+			array(
+				'id'    => $discount_70_term['term_id'],
+				'name'  => '70% off',
+				'query' => 'outlet_discount=70',
+			),
+			$settings['outletproMenuItems']['discounts'][1]
+		);
+	}
+
+	public function test_menu_settings_include_empty_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		init_block_editor();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$category_id = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'slug'     => 'empty-category',
+				'name'     => 'Empty category',
+			)
+		);
+		self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'slug'     => 'empty-child',
+				'name'     => 'Empty child',
+				'parent'   => $category_id,
+			)
+		);
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertContains(
+			array(
+				'id'    => $category_id,
+				'name'  => 'Empty category',
+				'query' => 'outlet_category=empty-category',
+			),
+			$settings['outletproMenuItems']['categories']
+		);
+		$this->assertNotContains( 'outlet_category=empty-child', array_column( $settings['outletproMenuItems']['categories'], 'query' ) );
 	}
 
 	public function test_menu_settings_are_empty_without_an_outlet_page(): void {

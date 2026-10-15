@@ -9,23 +9,43 @@
 
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
+use function OutletPro\init_taxonomies;
 use function OutletPro\register_block_styles;
 use function OutletPro\render_outlet_menu_callback;
 use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\PLUGIN_FILE;
 
 class Test_Outlet_Menu extends WP_UnitTestCase {
 
-	public function test_renders_saved_names_and_queries_with_the_outlet_permalink(): void {
+	public function test_renders_selected_term_ids_with_current_labels_and_queries(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
+		init_taxonomies();
+		update_option( 'woocommerce_currency', 'USD' );
 		$items = array(
-			array( 'Clothing & Accessories', 'outlet_category=clothing' ),
-			array( 'Under $25', 'outlet_price=25' ),
-			array( '50% off', 'outlet_discount=50' ),
+			self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Clothing & Accessories',
+					'slug'     => 'clothing',
+				)
+			),
+			self::factory()->term->create(
+				array(
+					'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+					'slug'     => 'outlet-price-25',
+				)
+			),
+			self::factory()->term->create(
+				array(
+					'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+					'slug'     => 'outlet-discount-50',
+				)
+			),
 		);
 
 		// Act.
@@ -42,14 +62,26 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'padding-left:0', $output );
 	}
 
-	public function test_saved_queries_use_the_current_outlet_permalink(): void {
+	public function test_selected_terms_use_the_current_outlet_permalink(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
 		$old_page = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		$new_page = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $old_page );
-		$content = '<!-- wp:outletpro/outlet-menu {"items":[["All",""],["30% off","outlet_discount=30"]]} /-->';
+		init_taxonomies();
+		$term_id = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'slug'     => 'outlet-discount-30',
+			)
+		);
+		$content = '<!-- wp:outletpro/outlet-menu ' . wp_json_encode(
+			array(
+				'items'      => array( $term_id ),
+				'includeAll' => true,
+			)
+		) . ' /-->';
 		update_option( OUTLET_PAGE_OPTION, $new_page );
 
 		// Act.
@@ -68,7 +100,12 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
-		$output = render_outlet_menu_callback( array( 'items' => array( array( 'All', '' ) ) ) );
+		$output = render_outlet_menu_callback(
+			array(
+				'items'      => array(),
+				'includeAll' => true,
+			)
+		);
 
 		// Assert.
 		$this->assertNull( $output );
@@ -95,6 +132,13 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		init_blocks();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
+		init_taxonomies();
+		self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Unselected category',
+			)
+		);
 
 		// Act.
 		$output = do_blocks( '<!-- wp:outletpro/outlet-menu {"items":[]} /-->' );
@@ -103,21 +147,160 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '<a', $output );
 	}
 
-	public function test_saved_labels_and_rendered_urls_are_escaped(): void {
+	public function test_category_name_and_slug_changes_are_reflected_without_resaving(): void {
 		// Arrange.
-		deinit_blocks();
-		init_blocks();
+		init_taxonomies();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
-		$items = array( array( '<script>alert(1)</script>', 'outlet_category=%22%20onclick%3D%22alert%281%29' ) );
+		$term_id    = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Old name',
+				'slug'     => 'old-slug',
+			)
+		);
+		$attributes = array( 'items' => array( $term_id ) );
+		wp_update_term(
+			$term_id,
+			'product_cat',
+			array(
+				'name' => 'Home & Garden',
+				'slug' => 'home-garden',
+			)
+		);
 
 		// Act.
-		$output = do_blocks( '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( array( 'items' => $items ) ) . ' /-->' );
+		$output = render_outlet_menu_callback( $attributes );
 
 		// Assert.
-		$this->assertStringNotContainsString( '<script>', $output );
-		$this->assertStringNotContainsString( '" onclick=', $output );
-		$this->assertStringContainsString( '&lt;script&gt;', $output );
+		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_category', 'home-garden', get_permalink( $page_id ) ) ) . '">Home &amp; Garden</a>', $output );
+		$this->assertStringNotContainsString( 'Old name', $output );
+		$this->assertStringNotContainsString( 'old-slug', $output );
+	}
+
+	public function test_tier_slug_changes_update_the_label_and_query(): void {
+		// Arrange.
+		init_taxonomies();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		update_option( 'woocommerce_currency', 'USD' );
+		$term_id    = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'slug'     => 'outlet-price-25',
+			)
+		);
+		$attributes = array( 'items' => array( $term_id ) );
+		wp_update_term( $term_id, OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-50' ) );
+
+		// Act.
+		$output = render_outlet_menu_callback( $attributes );
+
+		// Assert.
+		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_price', 50, get_permalink( $page_id ) ) ) . '">Under $50</a>', $output );
+		$this->assertStringNotContainsString( 'outlet_price=25', $output );
+	}
+
+	public function test_deleted_terms_are_omitted_without_resaving(): void {
+		// Arrange.
+		init_taxonomies();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$category_id = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Deleted category',
+			)
+		);
+		$tier_id     = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'slug'     => 'outlet-discount-30',
+			)
+		);
+		$attributes  = array(
+			'items'      => array( $category_id, $tier_id ),
+			'includeAll' => true,
+		);
+		wp_delete_term( $category_id, 'product_cat' );
+		wp_delete_term( $tier_id, OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$output = render_outlet_menu_callback( $attributes );
+
+		// Assert.
+		$this->assertSame( 1, substr_count( $output, '<li>' ) );
+		$this->assertStringContainsString( '>All</a>', $output );
+		$this->assertStringNotContainsString( 'Deleted category', $output );
+		$this->assertStringNotContainsString( 'outlet_discount', $output );
+	}
+
+	public function test_terms_render_in_selected_order(): void {
+		// Arrange.
+		init_taxonomies();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$first_id  = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Zebra',
+			)
+		);
+		$second_id = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Apple',
+			)
+		);
+
+		// Act.
+		$output = render_outlet_menu_callback( array( 'items' => array( $first_id, $second_id ) ) );
+
+		// Assert.
+		$this->assertLessThan( strpos( $output, '>Apple</a>' ), strpos( $output, '>Zebra</a>' ) );
+		$this->assertStringNotContainsString( '>All</a>', $output );
+	}
+
+	public function test_unrelated_taxonomies_and_index_terms_are_omitted(): void {
+		// Arrange.
+		init_taxonomies();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$tag_id   = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_tag',
+				'name'     => 'Tag',
+			)
+		);
+		$index_id = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'slug'     => 'unrelated-index',
+			)
+		);
+
+		// Act.
+		$output = render_outlet_menu_callback( array( 'items' => array( $tag_id, $index_id ) ) );
+
+		// Assert.
+		$this->assertStringNotContainsString( '<li>', $output );
+	}
+
+	public function test_term_query_errors_return_null(): void {
+		// Arrange.
+		init_taxonomies();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$term_id    = self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+		$fail_query = static fn() => new WP_Error( 'query_failed' );
+		add_filter( 'get_terms', $fail_query );
+
+		// Act.
+		$output = render_outlet_menu_callback( array( 'items' => array( $term_id ) ) );
+		remove_filter( 'get_terms', $fail_query );
+
+		// Assert.
+		$this->assertNull( $output );
 	}
 
 	public function test_invalid_items_return_null(): void {
@@ -131,9 +314,9 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertNull( $output );
 	}
 
-	public function test_invalid_pair_returns_null(): void {
+	public function test_invalid_term_ids_return_null(): void {
 		// Arrange.
-		$attributes = array( 'items' => array( array( 'Name', 25 ) ) );
+		$attributes = array( 'items' => array( '25' ) );
 
 		// Act.
 		$output = render_outlet_menu_callback( $attributes );

@@ -10,11 +10,14 @@ import { useSelect } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
 
-type MenuItem = [ string, string ];
+type MenuItem = { id: number; name: string; query: string };
 
 type EditProps = {
-	attributes: { items?: MenuItem[] };
-	setAttributes: ( attributes: { items: MenuItem[] } ) => void;
+	attributes: { items?: number[]; includeAll?: boolean };
+	setAttributes: ( attributes: {
+		items?: number[];
+		includeAll?: boolean;
+	} ) => void;
 	__unstableLayoutClassNames?: string;
 };
 
@@ -73,7 +76,14 @@ export function Edit( {
 		() => Object.values( menuItems ).flat(),
 		[ menuItems ]
 	);
-	const items = attributes.items ?? availableItems;
+	const items = attributes.items ?? availableItems.map( ( item ) => item.id );
+	const includeAll =
+		attributes.items === undefined
+			? availableItems.length > 0
+			: ( attributes.includeAll ?? false );
+	const selectedItems = items
+		.map( ( id ) => availableItems.find( ( item ) => item.id === id ) )
+		.filter( ( item ): item is MenuItem => item !== undefined );
 	const blockProps = useBlockProps( {
 		className: __unstableLayoutClassNames,
 		onClick: ( event: React.MouseEvent ) => event.preventDefault(),
@@ -82,7 +92,10 @@ export function Edit( {
 	useEffect( () => {
 		if ( attributes.items === undefined ) {
 			if ( availableItems.length > 0 ) {
-				setAttributes( { items: availableItems } );
+				setAttributes( {
+					items: availableItems.map( ( item ) => item.id ),
+					includeAll: true,
+				} );
 			}
 		}
 	}, [ attributes.items, availableItems, setAttributes ] );
@@ -93,6 +106,7 @@ export function Edit( {
 				{ [
 					{
 						title: __( 'Categories', 'outletpro' ),
+						includeAll: true,
 						items: menuItems.categories,
 					},
 					{
@@ -110,20 +124,27 @@ export function Edit( {
 						initialOpen
 					>
 						<div style={ { display: 'grid', gap: '12px' } }>
+							{ group.includeAll && permalink !== '' && (
+								<ToggleControl
+									label={ __( 'All', 'outletpro' ) }
+									checked={ includeAll }
+									onChange={ ( checked ) =>
+										setAttributes( { includeAll: checked } )
+									}
+									__nextHasNoMarginBottom
+								/>
+							) }
 							{ group.items.map( ( item ) => (
 								<ToggleControl
-									key={ item[ 1 ] }
-									label={ item[ 0 ] }
-									checked={ items.some(
-										( [ , query ] ) => query === item[ 1 ]
-									) }
+									key={ item.id }
+									label={ item.name }
+									checked={ items.includes( item.id ) }
 									onChange={ ( checked ) =>
 										setAttributes( {
 											items: checked
-												? [ ...items, item ]
+												? [ ...items, item.id ]
 												: items.filter(
-														( [ , url ] ) =>
-															url !== item[ 1 ]
+														( id ) => id !== item.id
 													),
 										} )
 									}
@@ -135,14 +156,25 @@ export function Edit( {
 				) ) }
 			</InspectorControls>
 			<menu { ...blockProps }>
-				{ items.map( ( [ name, query ] ) => {
+				{ includeAll && (
+					<li>
+						<a
+							href={
+								new URL( permalink, window.location.href ).href
+							}
+						>
+							{ __( 'All', 'outletpro' ) }
+						</a>
+					</li>
+				) }
+				{ selectedItems.map( ( { id, name, query } ) => {
 					const url = new URL( permalink, window.location.href );
 					new URLSearchParams( query ).forEach( ( value, key ) =>
 						url.searchParams.set( key, value )
 					);
 
 					return (
-						<li key={ query }>
+						<li key={ id }>
 							<a href={ url.href }>{ name }</a>
 						</li>
 					);

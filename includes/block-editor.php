@@ -52,30 +52,49 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
 		$menu_categories = get_terms(
 			array(
 				'taxonomy'   => 'product_cat',
-				'hide_empty' => true,
+				'hide_empty' => false,
 				'parent'     => 0,
 				'orderby'    => 'name',
 				'order'      => 'ASC',
 			)
 		);
 
-		$settings['outletproMenuItems']['categories'][] = array( __( 'All', 'outletpro' ), '' );
 		if ( ! is_wp_error( $menu_categories ) ) {
 			foreach ( $menu_categories as $category ) {
-				$settings['outletproMenuItems']['categories'][] = array( html_entity_decode( $category->name, ENT_QUOTES, 'UTF-8' ), 'outlet_category=' . rawurlencode( $category->slug ) );
+				$settings['outletproMenuItems']['categories'][] = array(
+					'id'    => $category->term_id,
+					'name'  => html_entity_decode( $category->name, ENT_QUOTES, 'UTF-8' ),
+					'query' => 'outlet_category=' . rawurlencode( $category->slug ),
+				);
 			}
 		}
 		foreach ( get_price_tiers() as $price ) {
+			$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+			if ( ! $term instanceof \WP_Term ) {
+				continue;
+			}
 			// translators: %s: Formatted price tier amount.
 			$name = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $price, array( 'decimals' => 0 ) ) );
 
-			$settings['outletproMenuItems']['prices'][] = array( html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' ), 'outlet_price=' . $price );
+			$settings['outletproMenuItems']['prices'][] = array(
+				'id'    => $term->term_id,
+				'name'  => html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' ),
+				'query' => 'outlet_price=' . $price,
+			);
 		}
 		foreach ( get_discount_tiers() as $discount ) {
+			$term = get_term_by( 'slug', 'outlet-discount-' . $discount, OUTLET_SEARCH_INDEX_TAXONOMY );
+			if ( ! $term instanceof \WP_Term ) {
+				continue;
+			}
 			// translators: %d: Discount tier percentage.
 			$name = sprintf( __( '%d%% off', 'outletpro' ), $discount );
 
-			$settings['outletproMenuItems']['discounts'][] = array( $name, 'outlet_discount=' . $discount );
+			$settings['outletproMenuItems']['discounts'][] = array(
+				'id'    => $term->term_id,
+				'name'  => $name,
+				'query' => 'outlet_discount=' . $discount,
+			);
 		}
 	}
 
