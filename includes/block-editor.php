@@ -18,6 +18,8 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_block_editor(): void {
 	add_filter( 'block_editor_settings_all', 'OutletPro\append_block_editor_settings_hook', 10, 2 );
+	add_filter( 'block_editor_settings_all', 'OutletPro\append_price_tier_editor_settings_hook' );
+	add_filter( 'block_editor_settings_all', 'OutletPro\append_discount_tier_editor_settings_hook' );
 }
 
 /**
@@ -105,6 +107,82 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
 	}
 
 	$settings['wcOutletCanonicalTermId'] = $canonical_term->term_id;
+
+	return $settings;
+}
+
+/**
+ * Append price tiers to the block editor settings.
+ *
+ * Fired by `block_editor_settings_all`.
+ *
+ * @internal WordPress filter hook
+ *
+ * @param array<string, mixed> $settings Existing block editor settings.
+ * @return array<string, mixed> Modified block editor settings.
+ */
+function append_price_tier_editor_settings_hook( array $settings ): array {
+	$settings['outletproPriceTiers'] = array();
+
+	try {
+		$price_tiers = get_price_tiers();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet price tiers could not be retrieved for the editor.' );
+		return $settings;
+	}
+
+	foreach ( $price_tiers as $price ) {
+		$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+		if ( ! $term instanceof \WP_Term ) {
+			continue;
+		}
+		// translators: %s: Formatted price tier amount.
+		$name = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $price, array( 'decimals' => 0 ) ) );
+
+		$tier       = new \stdClass();
+		$tier->id   = $term->term_id;
+		$tier->name = html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' );
+
+		$settings['outletproPriceTiers'][] = $tier;
+	}
+
+	return $settings;
+}
+
+/**
+ * Append discount tiers to the block editor settings.
+ *
+ * Fired by `block_editor_settings_all`.
+ *
+ * @internal WordPress filter hook
+ *
+ * @param array<string, mixed> $settings Existing block editor settings.
+ * @return array<string, mixed> Modified block editor settings.
+ */
+function append_discount_tier_editor_settings_hook( array $settings ): array {
+	$settings['outletproDiscountTiers'] = array();
+
+	try {
+		$discount_tiers = get_discount_tiers();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet discount tiers could not be retrieved for the editor.' );
+		return $settings;
+	}
+
+	foreach ( $discount_tiers as $discount ) {
+		$term = get_term_by( 'slug', 'outlet-discount-' . $discount, OUTLET_SEARCH_INDEX_TAXONOMY );
+		if ( ! $term instanceof \WP_Term ) {
+			continue;
+		}
+		// translators: %d: Discount tier percentage.
+		$name = sprintf( __( '%d%% off', 'outletpro' ), $discount );
+
+		$tier       = new \stdClass();
+		$tier->id   = $term->term_id;
+		$tier->name = $name;
+
+		$settings['outletproDiscountTiers'][] = $tier;
+	}
 
 	return $settings;
 }
