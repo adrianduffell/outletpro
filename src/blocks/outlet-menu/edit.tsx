@@ -88,6 +88,7 @@ export function Edit( {
 	};
 	const blockProps = useBlockProps( {
 		className: __unstableLayoutClassNames,
+		style: { listStyleType: 'none' },
 		onClick: ( event: React.MouseEvent ) => event.preventDefault(),
 	} );
 

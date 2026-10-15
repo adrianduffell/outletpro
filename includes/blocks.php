@@ -147,7 +147,7 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		static fn( array $link ): string => '<li><a href="' . esc_url( $link[1] ) . '"' . $link_style_attribute . '>' . esc_html( $link[0] ) . '</a></li>',
 		$links
 	);
-	return '<menu ' . get_block_wrapper_attributes() . '>' . join( ' ', $items ) . '</menu>';
+	return '<menu ' . get_block_wrapper_attributes( array( 'style' => 'list-style-type:none;' ) ) . '>' . join( ' ', $items ) . '</menu>';
 }
 
 /**
