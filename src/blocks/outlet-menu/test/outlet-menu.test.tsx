@@ -103,7 +103,7 @@ test( 'waits for categories before opting in', () => {
 	expect( setAttributes ).toHaveBeenCalledTimes( 1 );
 	expect( setAttributes ).toHaveBeenCalledWith( {
 		items: [ 1, 2, 3 ],
-		includeAll: true,
+		showAll: true,
 	} );
 } );
 
@@ -138,24 +138,18 @@ test( 'preserves an empty saved selection', () => {
 	expect( screen.queryByRole( 'link' ) ).not.toBeInTheDocument();
 } );
 
-test.each( [ true, false ] )(
-	'toggles All independently (%s)',
-	( includeAll ) => {
-		// Arrange.
-		const { setAttributes } = renderMenu(
-			{},
-			{ items: [ 1 ], includeAll }
-		);
+test.each( [ true, false ] )( 'toggles All independently (%s)', ( showAll ) => {
+	// Arrange.
+	const { setAttributes } = renderMenu( {}, { items: [ 1 ], showAll } );
 
-		// Act.
-		fireEvent.click( screen.getByRole( 'checkbox', { name: 'All' } ) );
+	// Act.
+	fireEvent.click( screen.getByRole( 'checkbox', { name: 'All' } ) );
 
-		// Assert.
-		expect( setAttributes ).toHaveBeenCalledWith( {
-			includeAll: ! includeAll,
-		} );
-	}
-);
+	// Assert.
+	expect( setAttributes ).toHaveBeenCalledWith( {
+		showAll: ! showAll,
+	} );
+} );
 
 test( 'previews available selections in saved order', () => {
 	// Arrange.

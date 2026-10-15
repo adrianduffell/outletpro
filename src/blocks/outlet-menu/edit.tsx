@@ -18,14 +18,14 @@ type MenuItem = { id: number; name: string };
 type EditProps = {
 	attributes: {
 		items?: number[];
-		includeAll?: boolean;
+		showAll?: boolean;
 		style?: {
 			typography?: { textDecoration?: CSSProperties[ 'textDecoration' ] };
 		};
 	};
 	setAttributes: ( attributes: {
 		items?: number[];
-		includeAll?: boolean;
+		showAll?: boolean;
 	} ) => void;
 	__unstableLayoutClassNames?: string;
 };
@@ -76,10 +76,10 @@ export function Edit( {
 		[ categoryItems, prices, discounts ]
 	);
 	const items = attributes.items ?? availableItems.map( ( item ) => item.id );
-	const includeAll =
+	const showAll =
 		attributes.items === undefined
 			? availableItems.length > 0
-			: ( attributes.includeAll ?? false );
+			: ( attributes.showAll ?? false );
 	const selectedItems = items
 		.map( ( id ) => availableItems.find( ( item ) => item.id === id ) )
 		.filter( ( item ): item is MenuItem => item !== undefined );
@@ -106,7 +106,7 @@ export function Edit( {
 		}
 		setAttributes( {
 			items: availableItems.map( ( item ) => item.id ),
-			includeAll: true,
+			showAll: true,
 		} );
 	}, [
 		attributes.items,
@@ -122,7 +122,7 @@ export function Edit( {
 				{ [
 					{
 						title: __( 'Categories', 'outletpro' ),
-						includeAll: true,
+						showAll: true,
 						items: categoryItems,
 					},
 					{
@@ -140,12 +140,12 @@ export function Edit( {
 						initialOpen
 					>
 						<div style={ { display: 'grid', gap: '12px' } }>
-							{ group.includeAll && (
+							{ group.showAll && (
 								<ToggleControl
 									label={ __( 'All', 'outletpro' ) }
-									checked={ includeAll }
+									checked={ showAll }
 									onChange={ ( checked ) =>
-										setAttributes( { includeAll: checked } )
+										setAttributes( { showAll: checked } )
 									}
 									__nextHasNoMarginBottom
 								/>
@@ -172,7 +172,7 @@ export function Edit( {
 				) ) }
 			</InspectorControls>
 			<menu { ...blockProps }>
-				{ includeAll && (
+				{ showAll && (
 					<li>
 						<a style={ linkStyle } href={ window.location.href }>
 							{ __( 'All', 'outletpro' ) }

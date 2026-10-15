@@ -59,7 +59,7 @@
 				}
 			}
 		},
-		"includeAll": {
+		"showAll": {
 			"type": "boolean",
 			"default": false
 		},
