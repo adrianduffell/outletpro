@@ -102,9 +102,6 @@ export function Edit( {
 		if ( categories === null ) {
 			return;
 		}
-		if ( availableItems.length === 0 ) {
-			return;
-		}
 		setAttributes( {
 			items: availableItems.map( ( item ) => item.id ),
 			showAll: true,

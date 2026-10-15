@@ -126,6 +126,21 @@ test.each( [
 	expect( setAttributes ).toHaveBeenCalledWith( { items: expected } );
 } );
 
+test( 'persists an empty resolved selection', () => {
+	// Arrange.
+	const settings = { outletproPriceTiers: [], outletproDiscountTiers: [] };
+
+	// Act.
+	const { setAttributes } = renderMenu( settings );
+
+	// Assert.
+	expect( setAttributes ).toHaveBeenCalledTimes( 1 );
+	expect( setAttributes ).toHaveBeenCalledWith( {
+		items: [],
+		showAll: true,
+	} );
+} );
+
 test( 'preserves an empty saved selection', () => {
 	// Arrange.
 	const categories = [ { id: 1, name: 'Clothing' } ];
