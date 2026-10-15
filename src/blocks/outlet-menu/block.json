@@ -46,7 +46,7 @@
 			"default": {
 				"typography": {
 					"textDecoration": "none",
-					"fontSize": "var:preset|font-size|medium"
+					"fontSize": "var(--wp--preset--font-size--medium)"
 				},
 				"spacing": {
 					"blockGap": "1em",

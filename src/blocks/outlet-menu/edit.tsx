@@ -9,11 +9,18 @@ import { useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { store as editorStore } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
+import type { CSSProperties } from 'react';
 
 type MenuItem = { id: number; name: string; query: string };
 
 type EditProps = {
-	attributes: { items?: number[]; includeAll?: boolean };
+	attributes: {
+		items?: number[];
+		includeAll?: boolean;
+		style?: {
+			typography?: { textDecoration?: CSSProperties[ 'textDecoration' ] };
+		};
+	};
 	setAttributes: ( attributes: {
 		items?: number[];
 		includeAll?: boolean;
@@ -84,6 +91,9 @@ export function Edit( {
 	const selectedItems = items
 		.map( ( id ) => availableItems.find( ( item ) => item.id === id ) )
 		.filter( ( item ): item is MenuItem => item !== undefined );
+	const linkStyle = {
+		textDecoration: attributes.style?.typography?.textDecoration,
+	};
 	const blockProps = useBlockProps( {
 		className: __unstableLayoutClassNames,
 		onClick: ( event: React.MouseEvent ) => event.preventDefault(),
@@ -159,6 +169,7 @@ export function Edit( {
 				{ includeAll && (
 					<li>
 						<a
+							style={ linkStyle }
 							href={
 								new URL( permalink, window.location.href ).href
 							}
@@ -175,7 +186,9 @@ export function Edit( {
 
 					return (
 						<li key={ id }>
-							<a href={ url.href }>{ name }</a>
+							<a href={ url.href } style={ linkStyle }>
+								{ name }
+							</a>
 						</li>
 					);
 				} ) }

@@ -157,11 +157,16 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		$links[] = array( $name, add_query_arg( 'outlet_discount', $amount, $permalink ) );
 	}
 
+	$link_styles          = wp_style_engine_get_styles(
+		array( 'typography' => array( 'textDecoration' => $attributes['style']['typography']['textDecoration'] ?? null ) )
+	);
+	$link_style_attribute = isset( $link_styles['css'] ) ? ' style="' . esc_attr( $link_styles['css'] ) . '"' : '';
+
 	return '<menu ' . get_block_wrapper_attributes() . '>' . join(
 		' ',
 		array_map(
-			static function ( array $link ): string {
-				return '<li><a href="' . esc_url( $link[1] ) . '">' . esc_html( $link[0] ) . '</a></li>';
+			static function ( array $link ) use ( $link_style_attribute ): string {
+				return '<li><a href="' . esc_url( $link[1] ) . '"' . $link_style_attribute . '>' . esc_html( $link[0] ) . '</a></li>';
 			},
 			$links
 		)

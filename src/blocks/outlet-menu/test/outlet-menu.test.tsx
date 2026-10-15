@@ -55,7 +55,7 @@ jest.mock( '@wordpress/components', () => ( {
 
 function renderMenu(
 	settings: Record< string, unknown >,
-	attributes: { items?: number[]; includeAll?: boolean } = {}
+	attributes: Parameters< typeof Edit >[ 0 ][ 'attributes' ] = {}
 ) {
 	const registry = createRegistry();
 	registry.register(

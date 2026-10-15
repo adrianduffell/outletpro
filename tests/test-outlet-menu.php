@@ -14,7 +14,6 @@ use function OutletPro\register_block_styles;
 use function OutletPro\render_outlet_menu_callback;
 use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
-use const OutletPro\PLUGIN_FILE;
 
 class Test_Outlet_Menu extends WP_UnitTestCase {
 
@@ -52,9 +51,9 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$output = do_blocks( '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( array( 'items' => $items ) ) . ' /-->' );
 
 		// Assert.
-		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_category', 'clothing', get_permalink( $page_id ) ) ) . '">Clothing &amp; Accessories</a>', $output );
-		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_price', 25, get_permalink( $page_id ) ) ) . '">Under $25</a>', $output );
-		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_discount', 50, get_permalink( $page_id ) ) ) . '">50% off</a>', $output );
+		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_category', 'clothing', get_permalink( $page_id ) ) ) . '" style="text-decoration:none;">Clothing &amp; Accessories</a>', $output );
+		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_price', 25, get_permalink( $page_id ) ) ) . '" style="text-decoration:none;">Under $25</a>', $output );
+		$this->assertStringContainsString( '<a href="' . esc_url( add_query_arg( 'outlet_discount', 50, get_permalink( $page_id ) ) ) . '" style="text-decoration:none;">50% off</a>', $output );
 		$this->assertStringContainsString( 'is-layout-flex', $output );
 		$this->assertStringContainsString( 'padding-top:0', $output );
 		$this->assertStringContainsString( 'padding-right:0', $output );
@@ -88,7 +87,7 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$output = do_blocks( $content );
 
 		// Assert.
-		$this->assertStringContainsString( '<a href="' . esc_url( get_permalink( $new_page ) ) . '">All</a>', $output );
+		$this->assertStringContainsString( '<a href="' . esc_url( get_permalink( $new_page ) ) . '" style="text-decoration:none;">All</a>', $output );
 		$this->assertStringContainsString( esc_url( add_query_arg( 'outlet_discount', 30, get_permalink( $new_page ) ) ), $output );
 		$this->assertStringNotContainsString( esc_url( get_permalink( $old_page ) ), $output );
 	}
@@ -338,7 +337,7 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertTrue( $block_type->supports['typography']['__experimentalTextDecoration'] );
 	}
 
-	public function test_menu_uses_the_built_block_stylesheet(): void {
+	public function test_menu_does_not_enqueue_a_stylesheet(): void {
 		// Arrange.
 		wp_dequeue_style( 'outletpro-menu-block' );
 		wp_deregister_style( 'outletpro-menu-block' );
@@ -349,8 +348,35 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		apply_filters( 'render_block', '', array( 'blockName' => 'outletpro/outlet-menu' ), new WP_Block( array( 'blockName' => 'outletpro/outlet-menu' ) ) );
 
 		// Assert.
-		$this->assertTrue( wp_style_is( 'outletpro-menu-block', 'registered' ) );
-		$this->assertSame( plugins_url( 'build/style-index.css', PLUGIN_FILE ), wp_styles()->registered['outletpro-menu-block']->src );
+		$this->assertFalse( wp_style_is( 'outletpro-menu-block', 'registered' ) );
+	}
+
+	public function test_gutenberg_underline_setting_is_applied_to_links(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+
+		// Act.
+		$output = do_blocks( '<!-- wp:outletpro/outlet-menu {"includeAll":true,"style":{"typography":{"textDecoration":"underline"}}} /-->' );
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/<a[^>]+style="text-decoration:underline;?"[^>]*>All<\/a>/', $output );
+	}
+
+	public function test_gutenberg_none_setting_is_applied_to_links(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+
+		// Act.
+		$output = do_blocks( '<!-- wp:outletpro/outlet-menu {"includeAll":true,"style":{"typography":{"textDecoration":"none"}}} /-->' );
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/<a[^>]+style="text-decoration:none;?"[^>]*>All<\/a>/', $output );
 	}
 
 	public function test_menu_applies_native_block_styles(): void {
