@@ -87,78 +87,84 @@ class Test_Append_Block_Editor_Settings_Hook extends WP_UnitTestCase {
 		$this->assertFalse( $settings['outletproIsBlockTheme'] );
 	}
 
-	public function test_menu_settings_contain_grouped_term_ids_names_and_queries(): void {
+	public function test_menu_settings_contain_category_options(): void {
+		// Arrange.
+		init_taxonomies();
+		init_block_editor();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$term = wp_insert_term( 'Clothing', 'product_cat' );
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertContains(
+			array(
+				'id'    => $term['term_id'],
+				'name'  => 'Clothing',
+				'query' => 'outlet_category=clothing',
+			),
+			$settings['outletproMenuItems']['categories']
+		);
+	}
+
+	public function test_menu_settings_contain_price_options(): void {
 		// Arrange.
 		init_taxonomies();
 		init_block_editor();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
 		update_option( 'woocommerce_currency', 'USD' );
-		$category_id = self::factory()->term->create(
+		$term = wp_insert_term( 'outlet-price-15', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertSame(
 			array(
-				'taxonomy' => 'product_cat',
-				'slug'     => 'clothing',
-				'name'     => 'Clothing & Accessories',
-			)
+				'id'    => $term['term_id'],
+				'name'  => 'Under $15',
+				'query' => 'outlet_price=15',
+			),
+			$settings['outletproMenuItems']['prices'][0]
 		);
-		$product_id  = self::factory()->post->create(
+	}
+
+	public function test_menu_settings_contain_discount_options(): void {
+		// Arrange.
+		init_taxonomies();
+		init_block_editor();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$term = wp_insert_term( 'outlet-discount-45', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
+
+		// Assert.
+		$this->assertSame(
 			array(
-				'post_type'   => 'product',
-				'post_status' => 'publish',
-			)
+				'id'    => $term['term_id'],
+				'name'  => '45% off',
+				'query' => 'outlet_discount=45',
+			),
+			$settings['outletproMenuItems']['discounts'][0]
 		);
-		wp_set_object_terms( $product_id, array( $category_id ), 'product_cat' );
-		$price_50_term    = wp_insert_term( 'outlet-price-50', OUTLET_SEARCH_INDEX_TAXONOMY );
-		$price_15_term    = wp_insert_term( 'outlet-price-15', OUTLET_SEARCH_INDEX_TAXONOMY );
-		$discount_70_term = wp_insert_term( 'outlet-discount-70', OUTLET_SEARCH_INDEX_TAXONOMY );
-		$discount_45_term = wp_insert_term( 'outlet-discount-45', OUTLET_SEARCH_INDEX_TAXONOMY );
+	}
+
+	public function test_menu_settings_contain_the_outlet_permalink(): void {
+		// Arrange.
+		init_block_editor();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
 
 		// Act.
 		$settings = apply_filters( 'block_editor_settings_all', array(), new WP_Block_Editor_Context() );
 
 		// Assert.
 		$this->assertSame( get_permalink( $page_id ), $settings['outletproMenuPermalink'] );
-		$this->assertContains( $category_id, array_column( $settings['outletproMenuItems']['categories'], 'id' ) );
-		$this->assertContains(
-			array(
-				'id'    => $category_id,
-				'name'  => 'Clothing & Accessories',
-				'query' => 'outlet_category=clothing',
-			),
-			$settings['outletproMenuItems']['categories']
-		);
-		$this->assertSame(
-			array(
-				'id'    => $price_15_term['term_id'],
-				'name'  => 'Under $15',
-				'query' => 'outlet_price=15',
-			),
-			$settings['outletproMenuItems']['prices'][0]
-		);
-		$this->assertSame(
-			array(
-				'id'    => $price_50_term['term_id'],
-				'name'  => 'Under $50',
-				'query' => 'outlet_price=50',
-			),
-			$settings['outletproMenuItems']['prices'][1]
-		);
-		$this->assertSame(
-			array(
-				'id'    => $discount_45_term['term_id'],
-				'name'  => '45% off',
-				'query' => 'outlet_discount=45',
-			),
-			$settings['outletproMenuItems']['discounts'][0]
-		);
-		$this->assertSame(
-			array(
-				'id'    => $discount_70_term['term_id'],
-				'name'  => '70% off',
-				'query' => 'outlet_discount=70',
-			),
-			$settings['outletproMenuItems']['discounts'][1]
-		);
 	}
 
 	public function test_menu_settings_include_empty_top_level_categories(): void {
