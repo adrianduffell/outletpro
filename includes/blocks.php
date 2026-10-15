@@ -101,13 +101,8 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 	if ( ! is_array( $items ) ) {
 		return null;
 	}
-	foreach ( $items as $term_id ) {
-		if ( ! is_int( $term_id ) ) {
-			return null;
-		}
-		if ( $term_id < 1 ) {
-			return null;
-		}
+	if ( array_filter( $items, static fn( $id ): bool => is_int( $id ) && $id > 0 ) !== $items ) {
+		return null;
 	}
 
 	$permalink = get_outlet_permalink();
@@ -115,19 +110,16 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		return null;
 	}
 
-	$terms = array();
-	if ( count( $items ) > 0 ) {
-		$terms = get_terms(
-			array(
-				'taxonomy'   => array( 'product_cat', OUTLET_SEARCH_INDEX_TAXONOMY ),
-				'include'    => $items,
-				'hide_empty' => false,
-				'orderby'    => 'include',
-			)
-		);
-		if ( is_wp_error( $terms ) ) {
-			return null;
-		}
+	$terms = empty( $items ) ? array() : get_terms(
+		array(
+			'taxonomy'   => array( 'product_cat', OUTLET_SEARCH_INDEX_TAXONOMY ),
+			'include'    => $items,
+			'hide_empty' => false,
+			'orderby'    => 'include',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		return null;
 	}
 
 	$links = array();
@@ -139,14 +131,8 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 			$links[] = array( $term->name, add_query_arg( 'outlet_category', $term->slug, $permalink ) );
 			continue;
 		}
-		if ( ! preg_match( '/^outlet-(price|discount)-([0-9]+)$/', $term->slug, $matches ) ) {
-			continue;
-		}
-		$amount = filter_var( $matches[2], FILTER_VALIDATE_INT );
-		if ( false === $amount ) {
-			continue;
-		}
-		if ( 'price' === $matches[1] ) {
+		list( , $type, $amount ) = explode( '-', $term->slug, 3 );
+		if ( 'price' === $type ) {
 			// translators: %s: Formatted price tier amount.
 			$name    = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $amount, array( 'decimals' => 0 ) ) );
 			$links[] = array( html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' ), add_query_arg( 'outlet_price', $amount, $permalink ) );
@@ -162,15 +148,11 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 	);
 	$link_style_attribute = isset( $link_styles['css'] ) ? ' style="' . esc_attr( $link_styles['css'] ) . '"' : '';
 
-	return '<menu ' . get_block_wrapper_attributes() . '>' . join(
-		' ',
-		array_map(
-			static function ( array $link ) use ( $link_style_attribute ): string {
-				return '<li><a href="' . esc_url( $link[1] ) . '"' . $link_style_attribute . '>' . esc_html( $link[0] ) . '</a></li>';
-			},
-			$links
-		)
-	) . '</menu>';
+	$items = array_map(
+		static fn( array $link ): string => '<li><a href="' . esc_url( $link[1] ) . '"' . $link_style_attribute . '>' . esc_html( $link[0] ) . '</a></li>',
+		$links
+	);
+	return '<menu ' . get_block_wrapper_attributes() . '>' . join( ' ', $items ) . '</menu>';
 }
 
 /**

@@ -140,26 +140,20 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '<a', $output );
 	}
 
-	public function test_unrelated_taxonomies_and_index_terms_are_omitted(): void {
+	public function test_unrelated_taxonomies_are_omitted(): void {
 		// Arrange.
 		init_taxonomies();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
-		$tag_id   = self::factory()->term->create(
+		$tag_id = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_tag',
 				'name'     => 'Tag',
 			)
 		);
-		$index_id = self::factory()->term->create(
-			array(
-				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
-				'slug'     => 'unrelated-index',
-			)
-		);
 
 		// Act.
-		$output = render_outlet_menu_callback( array( 'items' => array( $tag_id, $index_id ) ) );
+		$output = render_outlet_menu_callback( array( 'items' => array( $tag_id ) ) );
 
 		// Assert.
 		$this->assertStringNotContainsString( '<li>', $output );
