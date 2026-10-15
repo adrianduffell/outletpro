@@ -75,12 +75,9 @@ function append_price_tier_editor_settings_hook( array $settings ): array {
 		if ( ! $term instanceof \WP_Term ) {
 			continue;
 		}
-		// translators: %s: Formatted price tier amount.
-		$name = sprintf( __( 'Under %s', 'outletpro' ), wc_price( $price, array( 'decimals' => 0 ) ) );
-
 		$tier       = new \stdClass();
 		$tier->id   = $term->term_id;
-		$tier->name = html_entity_decode( wp_strip_all_tags( $name ), ENT_QUOTES, 'UTF-8' );
+		$tier->name = get_search_index_facet_nice_name( $term );
 
 		$settings['outletproPriceTiers'][] = $tier;
 	}
@@ -113,12 +110,9 @@ function append_discount_tier_editor_settings_hook( array $settings ): array {
 		if ( ! $term instanceof \WP_Term ) {
 			continue;
 		}
-		// translators: %d: Discount tier percentage.
-		$name = sprintf( __( '%d%% off', 'outletpro' ), $discount );
-
 		$tier       = new \stdClass();
 		$tier->id   = $term->term_id;
-		$tier->name = $name;
+		$tier->name = get_search_index_facet_nice_name( $term );
 
 		$settings['outletproDiscountTiers'][] = $tier;
 	}

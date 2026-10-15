@@ -632,6 +632,38 @@ function set_outlet( \WC_Product $product, bool $new_value ): void {
 }
 
 /**
+ * Returns the human-readable name for a search index facet.
+ *
+ * @internal
+ * @param \WP_Term $term Search index facet term.
+ * @throws \InvalidArgumentException If the term is not a valid search index facet.
+ */
+function get_search_index_facet_nice_name( \WP_Term $term ): string {
+	if ( OUTLET_SEARCH_INDEX_TAXONOMY !== $term->taxonomy ) {
+		throw new \InvalidArgumentException( 'Term is not an outlet search index facet.' );
+	}
+	if ( 1 !== preg_match( '/^outlet-([a-z]+)-([0-9]+)$/D', $term->slug, $matches ) ) {
+		throw new \InvalidArgumentException( 'Invalid search index facet slug.' );
+	}
+	$amount = filter_var( $matches[2], FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 0 ) ) );
+	if ( false === $amount ) {
+		throw new \InvalidArgumentException( 'Invalid search index facet amount.' );
+	}
+
+	if ( 'price' === $matches[1] ) {
+		// translators: %s: Formatted price tier amount.
+		$name = html_entity_decode( wp_strip_all_tags( sprintf( __( 'Under %s', 'outletpro' ), wc_price( $amount, array( 'decimals' => 0 ) ) ) ), ENT_QUOTES, 'UTF-8' );
+		return $name;
+	}
+	if ( 'discount' === $matches[1] ) {
+		// translators: %d: Discount tier percentage.
+		return sprintf( __( '%d%% off', 'outletpro' ), $amount );
+	}
+
+	throw new \InvalidArgumentException( 'Unsupported search index facet type.' );
+}
+
+/**
  * Get the outlet price tiers in numerical order.
  *
  * @return int[] Price tier amounts
