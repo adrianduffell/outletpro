@@ -272,7 +272,7 @@ function output_badge_style_css_variables_hook(): void {
 }
 
 /**
- * Register stylesheets for blocks.
+ * Register the block stylesheet so it only loads when the outlet badge block is rendered.
  *
  * The message block doesn't have any styles currently.
  *
