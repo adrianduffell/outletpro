@@ -83,6 +83,30 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertNull( $output );
 	}
 
+	public function test_deleted_outlet_page_returns_null(): void {
+		// Arrange.
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		wp_delete_post( $page_id, true );
+
+		// Act.
+		$output = render_outlet_menu_callback( array() );
+
+		// Assert.
+		$this->assertNull( $output );
+	}
+
+	public function test_invalid_outlet_page_option_returns_null(): void {
+		// Arrange.
+		update_option( OUTLET_PAGE_OPTION, 'invalid' );
+
+		// Act.
+		$output = render_outlet_menu_callback( array() );
+
+		// Assert.
+		$this->assertNull( $output );
+	}
+
 	public function test_missing_items_render_an_empty_menu(): void {
 		// Arrange.
 		deinit_blocks();

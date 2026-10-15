@@ -105,7 +105,11 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		return null;
 	}
 
-	$permalink = get_outlet_permalink();
+	try {
+		$permalink = get_outlet_permalink();
+	} catch ( \RuntimeException ) {
+		return null;
+	}
 	if ( null === $permalink ) {
 		return null;
 	}
