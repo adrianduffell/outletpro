@@ -34,6 +34,36 @@ function get_outlet_permalink(): ?string {
 }
 
 /**
+ * Returns the outlet page permalink with a filter query param.
+ *
+ * @internal
+ * @param \WP_Term $term Product category or search index facet term.
+ */
+function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
+	$permalink = get_outlet_permalink();
+	if ( null === $permalink ) {
+		return null;
+	}
+
+	if ( 'product_cat' === $term->taxonomy ) {
+		return add_query_arg( 'outlet_category', $term->slug, $permalink );
+	}
+	if ( OUTLET_SEARCH_INDEX_TAXONOMY !== $term->taxonomy ) {
+		return null;
+	}
+
+	list( , $type, $amount ) = explode( '-', $term->slug, 3 );
+	if ( 'price' === $type ) {
+		return add_query_arg( 'outlet_price', $amount, $permalink );
+	}
+	if ( 'discount' === $type ) {
+		return add_query_arg( 'outlet_discount', $amount, $permalink );
+	}
+
+	return null;
+}
+
+/**
  * Helper to initialize page integrations.
  *
  * @internal
