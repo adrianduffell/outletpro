@@ -10,6 +10,8 @@ export function Edit(): JSX.Element {
 	const blockProps = useBlockProps();
 	const innerBlocksProps = useInnerBlocksProps( blockProps, {
 		allowedBlocks: metadata.allowedBlocks,
+		defaultBlock: { name: 'outletpro/outlet-tile' },
+		directInsert: true,
 	} );
 	return <div { ...innerBlocksProps } />;
 }

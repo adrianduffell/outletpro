@@ -4,18 +4,11 @@
 	"name": "outletpro/outlet-tile-grid",
 	"title": "Outlet Tile Grid",
 	"category": "woocommerce",
-	"description": "Grid for outlet category, price, and discount tiles.",
-	"allowedBlocks": [
-		"outletpro/outlet-category-tile",
-		"outletpro/outlet-price-tile",
-		"outletpro/outlet-discount-tile"
-	],
+	"description": "Add tiles to help customers browse the most important categories in the outlet.",
+	"allowedBlocks": [ "outletpro/outlet-tile" ],
 	"supports": {
 		"html": false,
-		"align": [
-			"wide",
-			"full"
-		],
+		"align": [ "wide", "full" ],
 		"color": {
 			"text": true,
 			"background": true
