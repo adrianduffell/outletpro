@@ -20,6 +20,7 @@ function init_blocks(): void {
 	register_outlet_group_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_tile_grid_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
@@ -75,6 +76,17 @@ function register_outlet_badge_block(): void {
 			'render_callback' => 'OutletPro\render_outlet_badge_callback',
 		)
 	);
+}
+
+/**
+ * Register the Outlet Tile Grid block.
+ *
+ * Container for the Category Tile, Discount Tile, and Price Tile blocks.
+ *
+ * @internal
+ */
+function register_outlet_tile_grid_block(): void {
+	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-tile-grid/' );
 }
 
 /**
