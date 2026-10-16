@@ -32,7 +32,7 @@
 		"layout": {
 			"default": {
 				"type": "grid",
-				"columnCount": 3
+				"columnCount": 6
 			},
 			"allowEditing": true
 		}
