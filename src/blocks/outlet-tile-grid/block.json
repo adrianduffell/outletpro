@@ -1,0 +1,52 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "outletpro/outlet-tile-grid",
+	"title": "Outlet Tile Grid",
+	"category": "woocommerce",
+	"description": "Grid for outlet category, price, and discount tiles.",
+	"allowedBlocks": [
+		"outletpro/outlet-category-tile",
+		"outletpro/outlet-price-tile",
+		"outletpro/outlet-discount-tile"
+	],
+	"supports": {
+		"html": false,
+		"align": [
+			"wide",
+			"full"
+		],
+		"anchor": true,
+		"color": {
+			"text": true,
+			"background": true
+		},
+		"spacing": {
+			"blockGap": true,
+			"padding": true,
+			"margin": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"layout": {
+			"default": {
+				"type": "grid",
+				"columnCount": 3
+			},
+			"allowEditing": true
+		}
+	},
+	"textdomain": "outletpro",
+	"attributes": {
+		"style": {
+			"type": "object",
+			"default": {
+				"spacing": {
+					"blockGap": "1em"
+				}
+			}
+		}
+	}
+}
