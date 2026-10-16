@@ -3,6 +3,7 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
+import { expect, test } from 'vitest';
 import { dismiss, undoDismiss } from '../dismiss';
 
 test( 'sets the permanent dismissal cookie', () => {

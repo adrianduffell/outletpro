@@ -29,6 +29,7 @@ For example, prefer `Standardize hooks` over `Rename WordPress hook callbacks wi
 
 ## Tests
 
+* New JavaScript unit tests use Vitest.
 * Tests should be in the global namespace. Deliberately add `use` statements to import the namespaced classes, functions, and constants used in the tests.
 * Each test is self-contained. Never use shared `setUp` / `tearDown` or similar variants in PHPUnit, nor `test.beforeEach` / `test.afterEach` in Playwright. Each test is responsible for arranging the environment to be the exact state it needs.
 * Use Arrange-Act-Assert, or (where applicable) Arrange-Expect-Act pattern. Use comment headings in the test code, e.g. `// Arrange.`, `// Act.`, `// Assert.`
