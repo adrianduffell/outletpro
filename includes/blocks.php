@@ -20,6 +20,7 @@ function init_blocks(): void {
 	register_outlet_group_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_tile_block();
 	register_outlet_tile_grid_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
@@ -79,9 +80,79 @@ function register_outlet_badge_block(): void {
 }
 
 /**
+ * Register the Outlet Tile block.
+ *
+ * @internal
+ */
+function register_outlet_tile_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-tile/',
+		array(
+			'render_callback' => 'OutletPro\render_outlet_tile_callback',
+		)
+	);
+}
+
+/**
+ * Render the Outlet Tile block.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ * @return string Rendered tile markup.
+ */
+function render_outlet_tile_callback( array $attributes ): string {
+	$term_id = $attributes['category'] ?? null;
+	if ( ! is_int( $term_id ) ) {
+		return '';
+	}
+	if ( $term_id < 1 ) {
+		return '';
+	}
+	$term = get_term( $term_id );
+	if ( ! $term instanceof \WP_Term ) {
+		return '';
+	}
+
+	try {
+		$href = get_outlet_permalink_with_filter( $term );
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Outlet page permalink could not be retrieved.' );
+		return '';
+	}
+	if ( null === $href ) {
+		return '';
+	}
+
+	$name                = 'product_cat' === $term->taxonomy ? $term->name : get_search_index_facet_nice_name( $term );
+	$badge_markup        = '';
+	$display_badge_label = $attributes['displayOutletBadgeLabel'] ?? true;
+	if ( true === $display_badge_label ) {
+		try {
+			$badge_label = get_outlet_badge_label();
+		} catch ( \UnexpectedValueException $e ) {
+			\wc_get_logger()->error( 'Outlet badge label could not be retrieved.' );
+			$badge_label = null;
+		}
+		if ( is_string( $badge_label ) ) {
+			if ( '' !== $badge_label ) {
+				$badge_markup = '<div class="outletpro-tile-tagline" style="font-size:0.75em">' . esc_html( $badge_label ) . '</div>';
+			}
+		}
+	}
+
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'href' => esc_url( $href ),
+		)
+	);
+
+	return '<a ' . $wrapper_attributes . '><div class="outletpro-tile-text">' . esc_html( $name ) . '</div>' . $badge_markup . '</a>';
+}
+
+/**
  * Register the Outlet Tile Grid block.
  *
- * Container for the Category Tile, Discount Tile, and Price Tile blocks.
+ * Container for outlet tile blocks.
  *
  * @internal
  */

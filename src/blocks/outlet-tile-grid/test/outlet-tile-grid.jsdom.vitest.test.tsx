@@ -28,6 +28,8 @@ test( 'passes the allowed tiles to the editor', () => {
 	// Assert.
 	expect( useInnerBlocksProps ).toHaveBeenLastCalledWith( blockProps, {
 		allowedBlocks: metadata.allowedBlocks,
+		defaultBlock: { name: 'outletpro/outlet-tile' },
+		directInsert: true,
 	} );
 } );
 
