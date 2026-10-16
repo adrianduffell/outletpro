@@ -45,7 +45,6 @@
 		},
 		"html": false,
 		"align": [ "wide", "full" ],
-		"anchor": true,
 		"__experimentalBorder": {
 			"color": true,
 			"radius": true,
