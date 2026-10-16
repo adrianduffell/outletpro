@@ -22,16 +22,16 @@
 		"preprocess": "./bin/preprocess.sh",
 		"preprocess:marketplace": "./bin/preprocess-marketplace.sh",
 		"start": "wp-scripts start",
-		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
-		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
 		"test:e2e": "wp-scripts test-playwright",
+		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
+		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
 		"test:unit": "npm run test:unit:jest && npm run test:unit:vitest",
+		"test:unit:jest": "wp-scripts test-unit-jest --config jest.config.cjs",
+		"test:unit:vitest": "vitest run",
 		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/outletpro vendor/bin/phpunit",
 		"typecheck": "tsc --noEmit",
 		"wp-env": "wp-env",
-		"wp-scripts": "wp-scripts",
-		"test:unit:jest": "wp-scripts test-unit-jest --config jest.config.cjs",
-		"test:unit:vitest": "vitest run"
+		"wp-scripts": "wp-scripts"
 	},
 	"babel": {
 		"presets": [
