@@ -43,7 +43,7 @@ function renderTile( attributes: Attributes ) {
 		records: [ { id: 1, name: 'Clothing &amp; Accessories' } ],
 	} );
 	vi.mocked( useEntityProp ).mockReturnValue( [
-		'Last chance',
+		'Sale &amp; clearance',
 		vi.fn(),
 		null,
 	] );
@@ -101,7 +101,9 @@ test( 'previews the selected term label', () => {
 	expect( screen.getByRole( 'link' ) ).toHaveTextContent(
 		'Clothing & Accessories'
 	);
-	expect( screen.getByRole( 'link' ) ).toHaveTextContent( 'Last chance' );
+	expect( screen.getByRole( 'link' ) ).toHaveTextContent(
+		'Sale & clearance'
+	);
 } );
 
 test( 'toggles the badge label', () => {
@@ -134,5 +136,5 @@ test( 'omits the disabled badge label from the preview', () => {
 
 	// Assert.
 	expect( screen.getByRole( 'link' ) ).toHaveTextContent( 'Under $25' );
-	expect( screen.queryByText( 'Last chance' ) ).not.toBeInTheDocument();
+	expect( screen.queryByText( 'Sale & clearance' ) ).not.toBeInTheDocument();
 } );

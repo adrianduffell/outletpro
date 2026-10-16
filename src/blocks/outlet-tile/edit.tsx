@@ -125,7 +125,7 @@ export function Edit( {
 						className="outletpro-tile-tagline"
 						style={ { fontSize: '0.75em' } }
 					>
-						{ badgeLabel }
+						{ decodeEntities( badgeLabel ) }
 					</div>
 				) : null }
 			</a>
