@@ -23,5 +23,5 @@ Outlet Pro aims for full test coverage.
 | Script              | Description                                   |
 | ------------------- | --------------------------------------------- |
 | `npm run test:wp`   | Run WordPress integration tests with PHPUnit. |
-| `npm run test:unit` | Run Jest unit tests.                          |
+| `npm run test:unit` | Run unit tests.                              |
 | `npm run test:e2e`  | Run Playwright end-to-end tests.              |
