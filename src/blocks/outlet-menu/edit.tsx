@@ -9,7 +9,7 @@ import { useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { useEntityRecords } from '@wordpress/core-data';
 import { decodeEntities } from '@wordpress/html-entities';
-import { store as editorStore } from '@wordpress/editor';
+import { store as outletStore } from '../../data';
 import { __ } from '@wordpress/i18n';
 import type { CSSProperties } from 'react';
 
@@ -48,21 +48,13 @@ export function Edit( {
 			order: 'asc',
 		}
 	);
-	const { prices, discounts } = useSelect( ( select ) => {
-		const settings = select( editorStore ).getEditorSettings();
-		return {
-			prices:
-				'outletproPriceTiers' in settings &&
-				Array.isArray( settings.outletproPriceTiers )
-					? settings.outletproPriceTiers
-					: EMPTY_ITEMS, // Keep original array reference to prevent re-render.
-			discounts:
-				'outletproDiscountTiers' in settings &&
-				Array.isArray( settings.outletproDiscountTiers )
-					? settings.outletproDiscountTiers
-					: EMPTY_ITEMS, // Keep original array reference to prevent re-render.
-		};
-	}, [] );
+	const { prices, discounts } = useSelect(
+		( select ) => ( {
+			prices: select( outletStore ).getPriceFacets(),
+			discounts: select( outletStore ).getDiscountFacets(),
+		} ),
+		[]
+	);
 	const categoryItems = useMemo(
 		() =>
 			categories?.map( ( { id, name } ) => ( {
