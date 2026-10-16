@@ -12,6 +12,7 @@ import {
 import { store as editorStore } from '@wordpress/editor';
 import type { PropsWithChildren } from 'react';
 import { Edit } from '../edit';
+import { store as outletStore } from '../../../data';
 
 const mockUseEntityRecords = jest.fn();
 jest.mock( '@wordpress/core-data', () => ( {
@@ -53,6 +54,7 @@ function renderMenu(
 	categories: { id: number; name: string }[] | null = []
 ) {
 	const registry = createRegistry();
+	registry.register( outletStore );
 	registry.register(
 		createReduxStore( editorStore.name, {
 			reducer: () => settings,
