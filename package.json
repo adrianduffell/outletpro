@@ -27,7 +27,7 @@
 		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
 		"test:unit": "npm run test:unit:jest && npm run test:unit:vitest",
 		"test:unit:jest": "wp-scripts test-unit-jest --config jest.config.cjs",
-		"test:unit:vitest": "vitest run",
+		"test:unit:vitest": "wp-scripts test-unit-js",
 		"test:wp": "wp-env run tests-cli --env-cwd=wp-content/plugins/outletpro vendor/bin/phpunit",
 		"typecheck": "tsc --noEmit",
 		"wp-env": "wp-env",
