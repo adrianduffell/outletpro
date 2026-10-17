@@ -22,6 +22,7 @@ function init_patterns(): void {
 	register_outlet_filter_tiles_pattern();
 	register_outlet_navigation_3_pattern();
 	register_outlet_navigation_4_pattern();
+	register_outlet_navigation_4_circles_pattern();
 	register_outlet_navigation_6_pattern();
 
 	if ( version_compare( get_bloginfo( 'version' ), '7.0', '<' ) ) {
@@ -380,6 +381,24 @@ function register_outlet_navigation_4_pattern(): void {
 			'title'         => __( 'Outlet navigation with four category tiles', 'outletpro' ),
 			'description'   => __( 'Displays four tiles and a menu.', 'outletpro' ),
 			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-four-tiles-pattern.php',
+			'categories'    => array( 'outletpro' ),
+			'viewportWidth' => 1000,
+		)
+	);
+}
+
+/**
+ * Register the price tiers with circles pattern.
+ *
+ * @internal
+ */
+function register_outlet_navigation_4_circles_pattern(): void {
+	register_block_pattern(
+		'outletpro/outlet-navigation-4-circles',
+		array(
+			'title'         => __( 'Outlet navigation with circular price tier tiles', 'outletpro' ),
+			'description'   => __( 'Displays four price tier tiles and a menu.', 'outletpro' ),
+			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-price-circles-pattern.php',
 			'categories'    => array( 'outletpro' ),
 			'viewportWidth' => 1000,
 		)
