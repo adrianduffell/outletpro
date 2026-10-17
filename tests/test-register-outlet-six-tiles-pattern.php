@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_6_pattern;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
@@ -15,6 +16,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_selected_categories_follow_woocommerce_display_order(): void {
 		// Arrange.
+		init_taxonomies();
 		$first_category_id  = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
@@ -70,6 +72,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_tiles_exclude_child_categories(): void {
 		// Arrange.
+		init_taxonomies();
 		$parent_category_id = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
@@ -103,6 +106,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_tiles_include_default_category(): void {
 		// Arrange.
+		init_taxonomies();
 		$default_category_id = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
@@ -129,6 +133,9 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 	}
 
 	public function test_pattern_is_registered_with_expected_properties(): void {
+		// Arrange.
+		init_taxonomies();
+
 		// Act.
 		register_outlet_navigation_6_pattern();
 		$pattern = \WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-6' );
@@ -141,6 +148,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_content_contains_six_linked_category_tiles(): void {
 		// Arrange.
+		init_taxonomies();
 		$shirts_category_id      = self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
@@ -173,6 +181,9 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 	}
 
 	public function test_missing_categories_are_padded_to_six_tiles(): void {
+		// Arrange.
+		init_taxonomies();
+
 		// Act.
 		register_outlet_navigation_6_pattern();
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-6' );
@@ -185,6 +196,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_selects_only_the_top_six_categories(): void {
 		// Arrange.
+		init_taxonomies();
 		$category_ids = self::factory()->term->create_many( 7, array( 'taxonomy' => 'product_cat' ) );
 		$product_ids  = self::factory()->post->create_many(
 			2,
@@ -208,6 +220,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_menu_selects_every_price_and_discount_tier(): void {
 		// Arrange.
+		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		$price_id    = self::factory()->term->create(
 			array(
@@ -247,6 +260,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_menu_selects_all_top_level_categories(): void {
 		// Arrange.
+		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
 		$query       = array(
 			'taxonomy'   => 'product_cat',
