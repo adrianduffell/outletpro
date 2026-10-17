@@ -29,7 +29,7 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-25', 'outlet-price-50' ),
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-100', 'outlet-price-25', 'outlet-price-50' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
@@ -51,7 +51,7 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-15', 'outlet-price-30', 'outlet-price-50' ),
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-100', 'outlet-price-15', 'outlet-price-30', 'outlet-price-50' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
@@ -73,7 +73,7 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-1000', 'outlet-price-3000', 'outlet-price-5000' ),
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-1000', 'outlet-price-10000', 'outlet-price-3000', 'outlet-price-5000' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
@@ -95,7 +95,7 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-25', 'outlet-price-50' ),
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-100', 'outlet-price-25', 'outlet-price-50' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
