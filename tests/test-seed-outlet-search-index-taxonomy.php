@@ -106,19 +106,22 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 		);
 	}
 
-	public function test_preserves_existing_search_indexes(): void {
+	public function test_skips_seeding_and_reindexing_when_any_term_exists(): void {
 		// Arrange.
-		register_outlet_search_index_taxonomy();
+		init_taxonomies();
 		truncate_outlet_search_index_taxonomy();
-		update_option( 'woocommerce_currency', 'USD' );
 		wp_insert_term( 'custom', OUTLET_SEARCH_INDEX_TAXONOMY );
+		as_unschedule_all_actions( 'outletpro_reindex_search_facets_batch', null, 'outletpro' );
+		seed_outlet_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
 
 		// Act.
 		seed_outlet_search_index_taxonomy();
 
 		// Assert.
-		$this->assertContains(
-			'custom',
+		$this->assertSame(
+			array( 'custom' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
@@ -127,6 +130,10 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 				)
 			)
 		);
+		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets_batch', null, 'outletpro' ) );
+		$this->assertSame( 10, has_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\\reindex_all_outlet_products_hook' ) );
+		$this->assertSame( 10, has_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\\reindex_all_outlet_products_hook' ) );
+		$this->assertSame( 10, has_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\\reindex_all_outlet_products_hook' ) );
 	}
 
 	public function test_seeding_queues_one_reindex_per_product_and_restores_term_hooks(): void {
