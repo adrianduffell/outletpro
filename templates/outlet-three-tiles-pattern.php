@@ -68,7 +68,7 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 				'width' => '0',
 			),
 			'dimensions' => array(
-				'minHeight' => '200px',
+				'minHeight' => '150px',
 			),
 			'color'      => array(
 				'background' => $bg_color,
