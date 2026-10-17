@@ -8,6 +8,9 @@
  */
 
 use function OutletPro\create_outlet_page;
+use function OutletPro\deinit_patterns;
+use function OutletPro\init_patterns;
+use function OutletPro\init_taxonomies;
 use function OutletPro\outlet_page_exists;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
@@ -48,6 +51,9 @@ class Test_Outlet_Page_Exists extends WP_UnitTestCase {
 
 	public function test_outlet_page_exists_returns_true_when_option_is_numeric_string(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = (string) get_option( OUTLET_PAGE_OPTION );
@@ -73,6 +79,9 @@ class Test_Outlet_Page_Exists extends WP_UnitTestCase {
 
 	public function test_outlet_page_exists_returns_true_when_page_exists(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 
@@ -85,6 +94,9 @@ class Test_Outlet_Page_Exists extends WP_UnitTestCase {
 
 	public function test_outlet_page_exists_returns_false_after_page_is_trashed(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = get_option( OUTLET_PAGE_OPTION );
@@ -99,6 +111,9 @@ class Test_Outlet_Page_Exists extends WP_UnitTestCase {
 
 	public function test_outlet_page_exists_returns_false_after_page_is_deleted(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = get_option( OUTLET_PAGE_OPTION );

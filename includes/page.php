@@ -357,9 +357,39 @@ function create_outlet_page(): void {
 		}
 	}
 
-	$filter_tiles_content = get_outlet_filter_tiles_content();
-	if ( '' !== $filter_tiles_content ) {
-		$post_content = $filter_tiles_content . "\n\n" . $post_content;
+	$categories = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'hide_empty' => false,
+			'fields'     => 'ids',
+			'number'     => 7,
+		)
+	);
+	if ( is_wp_error( $categories ) ) {
+		wc_get_logger()->error( 'Product categories could not be retrieved.' );
+		throw new \RuntimeException( 'Product categories could not be retrieved.' );
+	}
+
+	$category_count = count( $categories );
+	switch ( $category_count ) {
+		case 0:
+		case 1:
+		case 2:
+			$navigation_pattern = 'outletpro/outlet-navigation-4-circles';
+			break;
+		case 4:
+			$navigation_pattern = 'outletpro/outlet-navigation-4';
+			break;
+		case 6:
+			$navigation_pattern = 'outletpro/outlet-navigation-6';
+			break;
+		default:
+			$navigation_pattern = 'outletpro/outlet-navigation-3';
+	}
+	$navigation_content = get_pattern_content( $navigation_pattern );
+	if ( '' !== $navigation_content ) {
+		$post_content = $navigation_content . "\n\n" . $post_content;
 	}
 
 	$result = wp_update_post(
