@@ -57,6 +57,7 @@
 			"text": true
 		},
 		"dimensions": {
+			"aspectRatio": true,
 			"height": true,
 			"minHeight": true
 		},
