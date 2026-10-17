@@ -26,6 +26,37 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 		$this->assertSame( 'Outlet navigation with circular price tier tiles', $pattern['title'] );
 	}
 
+	public function test_selects_the_four_lowest_price_tiers(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		$prices   = array( 100, 10, 200, 50, 25 );
+		$tier_ids = array_combine(
+			$prices,
+			array_map(
+				static fn( int $price ): int => self::factory()->term->create(
+					array(
+						'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+						'slug'     => 'outlet-price-' . $price,
+					)
+				),
+				$prices
+			)
+		);
+
+		// Act.
+		register_outlet_navigation_4_circles_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		$blocks  = parse_blocks( $pattern['content'] );
+		$grid    = $blocks[0]['innerBlocks'][0];
+
+		// Assert.
+		$this->assertSame(
+			array( $tier_ids[10], $tier_ids[25], $tier_ids[50], $tier_ids[100] ),
+			array_column( array_column( $grid['innerBlocks'], 'attrs' ), 'category' )
+		);
+	}
+
 	public function test_preserves_price_tile_content(): void {
 		// Arrange.
 		init_taxonomies();
