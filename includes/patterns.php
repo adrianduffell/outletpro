@@ -21,6 +21,7 @@ function init_patterns(): void {
 	register_outlet_badge_row_pattern();
 	register_outlet_filter_tiles_pattern();
 	register_outlet_navigation_3_pattern();
+	register_outlet_navigation_6_pattern();
 
 	if ( version_compare( get_bloginfo( 'version' ), '7.0', '<' ) ) {
 		return;
@@ -360,6 +361,24 @@ function register_outlet_navigation_3_pattern(): void {
 			'title'         => __( 'Outlet navigation with three category tiles', 'outletpro' ),
 			'description'   => __( 'Displays three tiles and a menu.', 'outletpro' ),
 			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-three-tiles-pattern.php',
+			'categories'    => array( 'outletpro' ),
+			'viewportWidth' => 1000,
+		)
+	);
+}
+
+/**
+ * Register the outlet navigation with six category tiles pattern.
+ *
+ * @internal
+ */
+function register_outlet_navigation_6_pattern(): void {
+	register_block_pattern(
+		'outletpro/outlet-navigation-6',
+		array(
+			'title'         => __( 'Outlet navigation with six category tiles', 'outletpro' ),
+			'description'   => __( 'Displays six tiles and a menu.', 'outletpro' ),
+			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-six-tiles-pattern.php',
 			'categories'    => array( 'outletpro' ),
 			'viewportWidth' => 1000,
 		)
