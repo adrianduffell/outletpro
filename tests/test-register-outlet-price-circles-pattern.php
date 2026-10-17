@@ -1,0 +1,80 @@
+<?php
+/**
+ * Tests for the price tiers with circles pattern.
+ *
+ * @package OutletPro
+ * @copyright 2026 Adrian Duffell
+ * @license GNU General Public License v2.0 or later
+ */
+
+use function OutletPro\init_taxonomies;
+use function OutletPro\register_outlet_navigation_4_circles_pattern;
+use function OutletPro\truncate_outlet_search_index_taxonomy;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
+
+class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
+
+	public function test_registers_the_pattern(): void {
+		// Arrange.
+		init_taxonomies();
+
+		// Act.
+		register_outlet_navigation_4_circles_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+
+		// Assert.
+		$this->assertSame( 'Outlet navigation with circular price tier tiles', $pattern['title'] );
+	}
+
+	public function test_preserves_price_tile_content(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		$term = wp_insert_term( 'outlet-price-25', OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		register_outlet_navigation_4_circles_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		$blocks  = parse_blocks( $pattern['content'] );
+		$blocks  = $blocks[0]['innerBlocks'];
+
+		// Assert.
+		$this->assertSame( array( $term['term_id'], 0, 0, 0 ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
+		$this->assertSame( 'outletpro/outlet-menu', $blocks[1]['blockName'] );
+	}
+
+	public function test_menu_omits_price_tiers(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		$price    = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'slug'     => 'outlet-price-25',
+			)
+		);
+		$discount = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'slug'     => 'outlet-discount-50',
+			)
+		);
+		$category = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'parent'   => 0,
+			)
+		);
+
+		// Act.
+		register_outlet_navigation_4_circles_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		$blocks  = parse_blocks( $pattern['content'] );
+		$items   = $blocks[0]['innerBlocks'][1]['attrs']['items'];
+
+		// Assert.
+		$this->assertNotContains( $price, $items );
+		$this->assertContains( $discount, $items );
+		$this->assertContains( $category, $items );
+	}
+}
