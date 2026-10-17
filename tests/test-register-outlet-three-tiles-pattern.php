@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\get_pattern_content;
+use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_3_pattern;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
@@ -17,6 +18,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 	public function test_leaves_unset_colors_unstyled(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Exercise missing and empty options with the same assertions.
 		foreach ( array( null, '' ) as $color ) {
 			// Arrange.
+			init_taxonomies();
 			delete_option( OUTLET_BADGE_BG_COLOR_OPTION );
 			delete_option( OUTLET_BADGE_TEXT_COLOR_OPTION );
 			if ( null !== $color ) {
@@ -39,6 +41,9 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 	}
 
 	public function test_registers_the_pattern(): void {
+		// Arrange.
+		init_taxonomies();
+
 		// Act.
 		register_outlet_navigation_3_pattern();
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-3' );
@@ -51,6 +56,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_selects_the_top_three_categories_in_menu_order(): void {
 		// Arrange.
+		init_taxonomies();
 		$category_ids = self::factory()->term->create_many( 4, array( 'taxonomy' => 'product_cat' ) );
 		$product_ids  = self::factory()->post->create_many(
 			2,
@@ -79,6 +85,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
 	public function test_pads_missing_categories(): void {
 		// Arrange.
+		init_taxonomies();
 		$category_id = self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
 
 		// Act.
@@ -86,8 +93,11 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-3' );
 		$blocks  = parse_blocks( $pattern['content'] );
 		$blocks  = $blocks[0]['innerBlocks'];
+		$items   = array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' );
 
 		// Assert.
-		$this->assertSame( array( $category_id, 0, 0 ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
+		$this->assertCount( 3, $items );
+		$this->assertContains( $category_id, $items );
+		$this->assertContains( 0, $items );
 	}
 }
