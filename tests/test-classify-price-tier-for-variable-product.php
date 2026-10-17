@@ -103,7 +103,7 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product->save();
 		$first = new WC_Product_Variation();
 		$first->set_parent_id( $product->get_id() );
-		$first->set_regular_price( '60' );
+		$first->set_regular_price( '101' );
 		$first->save();
 		$second = new WC_Product_Variation();
 		$second->set_parent_id( $product->get_id() );
@@ -128,11 +128,11 @@ class Test_Classify_Price_Tier_For_Variable_Product extends WP_UnitTestCase {
 		$product->save();
 		$first = new WC_Product_Variation();
 		$first->set_parent_id( $product->get_id() );
-		$first->set_regular_price( '60' );
+		$first->set_regular_price( '101' );
 		$first->save();
 		$second = new WC_Product_Variation();
 		$second->set_parent_id( $product->get_id() );
-		$second->set_regular_price( '80' );
+		$second->set_regular_price( '120' );
 		$second->save();
 		$product = wc_get_product( $product->get_id() );
 

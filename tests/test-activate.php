@@ -27,7 +27,7 @@ class Test_Activate extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame(
-			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-25', 'outlet-price-50' ),
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-100', 'outlet-price-25', 'outlet-price-50' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
