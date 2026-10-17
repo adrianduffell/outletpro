@@ -8,9 +8,7 @@
  */
 
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
-use const OutletPro\OUTLET_BADGE_BG_COLOUR_DEFAULT;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
-use const OutletPro\OUTLET_BADGE_TEXT_COLOUR_DEFAULT;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 defined( 'ABSPATH' ) || exit;
@@ -52,8 +50,8 @@ if ( ! empty( $terms ) ) {
 	}
 }
 
-$bg_color   = get_option( OUTLET_BADGE_BG_COLOR_OPTION, OUTLET_BADGE_BG_COLOUR_DEFAULT );
-$text_color = get_option( OUTLET_BADGE_TEXT_COLOR_OPTION, OUTLET_BADGE_TEXT_COLOUR_DEFAULT );
+$bg_color   = get_option( OUTLET_BADGE_BG_COLOR_OPTION, null );
+$text_color = get_option( OUTLET_BADGE_TEXT_COLOR_OPTION, null );
 
 $tiles = array();
 
@@ -70,9 +68,7 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 			'dimensions' => array(
 				'minHeight' => '150px',
 			),
-			'color'      => array(
-				'background' => $bg_color,
-			),
+			'color'      => array( 'background' => $bg_color ),
 			'spacing'    => array(
 				'blockGap' => '0',
 				'padding'  => array(
@@ -109,9 +105,7 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 
 $grid_attrs = array(
 	'style'  => array(
-		'color'      => array(
-			'text' => $text_color,
-		),
+		'color'      => array( 'text' => $text_color ),
 		'spacing'    => array(
 			'blockGap' => 'var:preset|spacing|30',
 			'margin'   => array(
@@ -150,11 +144,7 @@ $grid_attrs = array(
 	),
 );
 
-$grid_style = sprintf(
-	'color:%s;margin-top:var(--wp--preset--spacing--50);margin-bottom:var(--wp--preset--spacing--50);font-size:%s;font-style:normal;font-weight:700;line-height:1.2;text-decoration:none',
-	$text_color,
-	3 === $column_count ? 'clamp(12px, 1.8vw, 45px)' : 'clamp(12px, 1.6vw, 45px)'
-);
+$grid_styles = wp_style_engine_get_styles( $grid_attrs['style'] );
 
 $menu_categories = get_terms(
 	array(
@@ -199,7 +189,7 @@ $menu_content = '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( $menu_attrs, 
 // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Block attributes and inline styles are escaped above.
 echo '<!-- wp:group {"layout":{"type":"default"}} --><div class="wp-block-group">' .
 	'<!-- wp:outletpro/outlet-tile-grid ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
-	'<div class="wp-block-outletpro-outlet-tile-grid has-text-color" style="' . esc_attr( $grid_style ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
+	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tile-grid ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
 	'<!-- /wp:outletpro/outlet-tile-grid -->' .
 	$menu_content . '</div><!-- /wp:group -->';
 // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped

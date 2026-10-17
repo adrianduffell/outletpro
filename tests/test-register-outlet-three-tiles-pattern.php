@@ -9,8 +9,34 @@
 
 use function OutletPro\get_pattern_content;
 use function OutletPro\register_outlet_navigation_3_pattern;
+use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
+
+	public function test_leaves_unset_colors_unstyled(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Exercise missing and empty options with the same assertions.
+		foreach ( array( null, '' ) as $color ) {
+			// Arrange.
+			delete_option( OUTLET_BADGE_BG_COLOR_OPTION );
+			delete_option( OUTLET_BADGE_TEXT_COLOR_OPTION );
+			if ( null !== $color ) {
+				update_option( OUTLET_BADGE_BG_COLOR_OPTION, $color );
+				update_option( OUTLET_BADGE_TEXT_COLOR_OPTION, $color );
+			}
+
+			// Act.
+			register_outlet_navigation_3_pattern();
+			$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-3' );
+			$blocks  = parse_blocks( $pattern['content'] );
+			$grid    = $blocks[0]['innerBlocks'][0];
+
+			// Assert.
+			$this->assertEmpty( $grid['attrs']['style']['color']['text'] );
+			$this->assertEmpty( $grid['innerBlocks'][0]['attrs']['style']['color']['background'] );
+			$this->assertStringNotContainsString( 'has-text-color', $pattern['content'] );
+			$this->assertStringNotContainsString( 'color:', $pattern['content'] );
+		}
+	}
 
 	public function test_registers_the_pattern(): void {
 		// Act.
