@@ -197,8 +197,9 @@ foreach ( $facets as $facet ) {
 
 $menu_content = '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( $menu_attrs, JSON_UNESCAPED_SLASHES ) . ' /-->';
 // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Block attributes and inline styles are escaped above.
-echo '<!-- wp:outletpro/outlet-tile-grid ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
+echo '<!-- wp:group {"layout":{"type":"default"}} --><div class="wp-block-group">' .
+	'<!-- wp:outletpro/outlet-tile-grid ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
 	'<div class="wp-block-outletpro-outlet-tile-grid has-text-color" style="' . esc_attr( $grid_style ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
 	'<!-- /wp:outletpro/outlet-tile-grid -->' .
-	$menu_content;
+	$menu_content . '</div><!-- /wp:group -->';
 // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped

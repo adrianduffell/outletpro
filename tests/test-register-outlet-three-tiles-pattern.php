@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\get_pattern_content;
 use function OutletPro\register_outlet_navigation_3_pattern;
 
 class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
@@ -15,9 +16,11 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 		// Act.
 		register_outlet_navigation_3_pattern();
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-3' );
+		$blocks  = parse_blocks( get_pattern_content( 'outletpro/outlet-navigation-3' ) );
 
 		// Assert.
 		$this->assertSame( 'Outlet navigation with three category tiles', $pattern['title'] );
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
 	}
 
 	public function test_selects_the_top_three_categories_in_menu_order(): void {
@@ -40,6 +43,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 		register_outlet_navigation_3_pattern();
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-3' );
 		$blocks  = parse_blocks( $pattern['content'] );
+		$blocks  = $blocks[0]['innerBlocks'];
 
 		// Assert.
 		$this->assertSame( array_reverse( array_slice( $category_ids, 0, 3 ) ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
@@ -55,6 +59,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 		register_outlet_navigation_3_pattern();
 		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-3' );
 		$blocks  = parse_blocks( $pattern['content'] );
+		$blocks  = $blocks[0]['innerBlocks'];
 
 		// Assert.
 		$this->assertSame( array( $category_id, 0, 0 ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
