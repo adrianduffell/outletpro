@@ -2,7 +2,6 @@ node_modules/
 build/
 vendor/
 AGENTS.md
-CLAUDE.md
 README.md
 docs/glossary.md
 docs/public-api.md
