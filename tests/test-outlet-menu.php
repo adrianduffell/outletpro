@@ -32,6 +32,49 @@ class Test_Outlet_Menu extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Clothing', $output );
 	}
 
+	public function test_categories_and_facets_follow_menu_order(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$alpha        = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Alpha',
+			)
+		);
+		$zebra        = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Zebra',
+			)
+		);
+		$facet        = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'name'     => 'outlet-discount-50',
+			)
+		);
+		$second_facet = self::factory()->term->create(
+			array(
+				'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+				'name'     => 'outlet-discount-30',
+			)
+		);
+		update_term_meta( $facet, 'order', 2 );
+		update_term_meta( $second_facet, 'order', 1 );
+		update_term_meta( $alpha, 'order', 2 );
+		update_term_meta( $zebra, 'order', 1 );
+
+		// Act.
+		$output = do_blocks( '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( array( 'items' => array( $facet, $alpha, $second_facet, $zebra ) ) ) . ' /-->' );
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/Zebra.*Alpha.*30% off.*50% off/', $output );
+	}
+
 	public function test_renders_price(): void {
 		// Arrange.
 		deinit_blocks();

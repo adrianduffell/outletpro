@@ -197,17 +197,32 @@ function render_outlet_menu_callback( array $attributes ): ?string {
 		return null;
 	}
 
-	$terms = empty( $items ) ? array() : get_terms(
+	$product_categories = empty( $items ) ? array() : get_terms(
 		array(
-			'taxonomy'   => array( 'product_cat', OUTLET_SEARCH_INDEX_TAXONOMY ),
+			'taxonomy'   => 'product_cat',
 			'include'    => $items,
 			'hide_empty' => false,
-			'orderby'    => 'include',
+			'orderby'    => 'menu_order',
+			'order'      => 'ASC',
 		)
 	);
-	if ( is_wp_error( $terms ) ) {
+	if ( is_wp_error( $product_categories ) ) {
 		return null;
 	}
+
+	$facets = empty( $items ) ? array() : get_terms(
+		array(
+			'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'include'    => $items,
+			'hide_empty' => false,
+			'orderby'    => 'menu_order',
+			'order'      => 'ASC',
+		)
+	);
+	if ( is_wp_error( $facets ) ) {
+		return null;
+	}
+	$terms = array_merge( $product_categories, $facets );
 
 	$links = array();
 	if ( true === ( $attributes['showAll'] ?? false ) ) {
