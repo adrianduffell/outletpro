@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\add_to_outlet;
+use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_products;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_search_index_taxonomy;
@@ -109,6 +110,7 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 	public function test_skips_seeding_and_reindexing_when_any_term_exists(): void {
 		// Arrange.
 		init_taxonomies();
+		init_products();
 		truncate_outlet_search_index_taxonomy();
 		wp_insert_term( 'custom', OUTLET_SEARCH_INDEX_TAXONOMY );
 		as_unschedule_all_actions( 'outletpro_reindex_search_facets_batch', null, 'outletpro' );
@@ -166,5 +168,16 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 		$this->assertSame( 10, has_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' ) );
 		$this->assertSame( 10, has_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' ) );
 		$this->assertSame( 10, has_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' ) );
+	}
+
+	public function test_throws_when_taxonomy_is_missing(): void {
+		// Arrange.
+		deinit_taxonomies();
+
+		// Expect.
+		$this->expectException( RuntimeException::class );
+
+		// Act.
+		seed_outlet_search_index_taxonomy();
 	}
 }
