@@ -22,7 +22,7 @@ function init_patterns(): void {
 	register_outlet_filter_tiles_pattern();
 	register_outlet_navigation_3_pattern();
 	register_outlet_navigation_4_pattern();
-	register_outlet_navigation_4_circles_pattern();
+	register_outlet_navigation_price_tiers_pattern();
 	register_outlet_navigation_6_pattern();
 
 	if ( version_compare( get_bloginfo( 'version' ), '7.0', '<' ) ) {
@@ -392,9 +392,9 @@ function register_outlet_navigation_4_pattern(): void {
  *
  * @internal
  */
-function register_outlet_navigation_4_circles_pattern(): void {
+function register_outlet_navigation_price_tiers_pattern(): void {
 	register_block_pattern(
-		'outletpro/outlet-navigation-4-circles',
+		'outletpro/outlet-navigation-price-tiers',
 		array(
 			'title'         => __( 'Outlet navigation with circular price tier tiles', 'outletpro' ),
 			'description'   => __( 'Displays four price tier tiles and a menu.', 'outletpro' ),

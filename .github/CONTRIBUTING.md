@@ -8,7 +8,9 @@ Thanks for your interest in Outlet Pro!
 
 ## Linting
 
-Outlet Pro lints against the [WordPress coding standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/) and other conventions found in [AGENTS.md](../AGENTS.md).
+Outlet Pro lints against the [WordPress coding
+standards][wordpress-coding-standards] and other conventions found in
+[AGENTS.md](../AGENTS.md).
 
 | Script             | Description            |
 | ------------------ | ---------------------- |
@@ -23,5 +25,7 @@ Outlet Pro aims for full test coverage.
 | Script              | Description                                   |
 | ------------------- | --------------------------------------------- |
 | `npm run test:wp`   | Run WordPress integration tests with PHPUnit. |
-| `npm run test:unit` | Run unit tests.                              |
+| `npm run test:unit` | Run unit tests.                               |
 | `npm run test:e2e`  | Run Playwright end-to-end tests.              |
+
+[wordpress-coding-standards]: https://developer.wordpress.org/coding-standards/wordpress-coding-standards/
