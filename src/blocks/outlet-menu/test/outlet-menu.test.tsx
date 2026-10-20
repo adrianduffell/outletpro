@@ -14,11 +14,6 @@ import type { PropsWithChildren } from 'react';
 import { Edit } from '../edit';
 import { store as outletStore } from '../../../data';
 
-const mockUseEntityRecords = jest.fn();
-jest.mock( '@wordpress/core-data', () => ( {
-	useEntityRecords: ( ...args: unknown[] ) => mockUseEntityRecords( ...args ),
-} ) );
-
 jest.mock( '@wordpress/editor', () => ( {
 	store: { name: 'core/editor' },
 } ) );
@@ -51,23 +46,22 @@ jest.mock( '@wordpress/components', () => ( {
 function renderMenu(
 	settings: Record< string, unknown >,
 	attributes: Parameters< typeof Edit >[ 0 ][ 'attributes' ] = {},
-	categories: { id: number; name: string }[] | null = []
+	categories: { id: number; name: string }[] = []
 ) {
 	const registry = createRegistry();
 	registry.register( outletStore );
 	registry.register(
 		createReduxStore( editorStore.name, {
-			reducer: () => settings,
+			reducer: () => ( {
+				...settings,
+				outletproProductCategories: categories,
+			} ),
 			selectors: {
 				getEditorSettings: ( state: Record< string, unknown > ) =>
 					state,
 			},
 		} )
 	);
-	mockUseEntityRecords.mockReturnValue( {
-		records: categories,
-		hasResolved: categories !== null,
-	} );
 	const setAttributes = jest.fn();
 	const view = render(
 		<RegistryProvider value={ registry }>
@@ -78,33 +72,24 @@ function renderMenu(
 	return { ...view, registry, setAttributes };
 }
 
-test( 'waits for categories before opting in', () => {
+test( 'initializes items in category and tier setting order', () => {
 	// Arrange.
-	const { registry, rerender, setAttributes } = renderMenu(
-		{
-			outletproPriceTiers: [ { id: 2, name: 'Under $25' } ],
-			outletproDiscountTiers: [ { id: 3, name: '30% off' } ],
-		},
-		{},
-		null
-	);
-	expect( setAttributes ).not.toHaveBeenCalled();
+	const settings = {
+		outletproPriceTiers: [ { id: 2, name: 'Under $25' } ],
+		outletproDiscountTiers: [ { id: 3, name: '30% off' } ],
+	};
+	const categories = [
+		{ id: 1, name: 'Zebra' },
+		{ id: 4, name: 'Alpha' },
+	];
 
 	// Act.
-	mockUseEntityRecords.mockReturnValue( {
-		records: [ { id: 1, name: 'Clothing' } ],
-		hasResolved: true,
-	} );
-	rerender(
-		<RegistryProvider value={ registry }>
-			<Edit attributes={ {} } setAttributes={ setAttributes } />
-		</RegistryProvider>
-	);
+	const { setAttributes } = renderMenu( settings, {}, categories );
 
 	// Assert.
 	expect( setAttributes ).toHaveBeenCalledTimes( 1 );
 	expect( setAttributes ).toHaveBeenCalledWith( {
-		items: [ 1, 2, 3 ],
+		items: [ 1, 4, 2, 3 ],
 		showAll: true,
 	} );
 } );
@@ -174,10 +159,15 @@ test( 'previews available selections in saved order', () => {
 	const categories = [ { id: 1, name: 'Home &amp; Garden' } ];
 
 	// Act.
-	renderMenu( settings, { items: [ 3, 99, 1 ] }, categories );
+	const { setAttributes } = renderMenu(
+		settings,
+		{ items: [ 3, 99, 1 ] },
+		categories
+	);
 
 	// Assert.
 	expect(
 		screen.getAllByRole( 'link' ).map( ( link ) => link.textContent )
 	).toEqual( [ '30% off', 'Home & Garden' ] );
+	expect( setAttributes ).toHaveBeenCalledWith( { items: [ 1, 3 ] } );
 } );

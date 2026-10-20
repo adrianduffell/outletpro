@@ -7,7 +7,6 @@ import { InspectorControls, useBlockProps } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import { useEffect, useMemo } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import { useEntityRecords } from '@wordpress/core-data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { store as outletStore } from '../../data';
 import { __ } from '@wordpress/i18n';
@@ -30,26 +29,14 @@ type EditProps = {
 	__unstableLayoutClassNames?: string;
 };
 
-const EMPTY_ITEMS: MenuItem[] = [];
-
 export function Edit( {
 	attributes,
 	setAttributes,
 	__unstableLayoutClassNames,
 }: EditProps ): JSX.Element {
-	const { records: categories, hasResolved } = useEntityRecords< MenuItem >(
-		'taxonomy',
-		'product_cat',
-		{
-			parent: 0,
-			hide_empty: false,
-			per_page: -1,
-			orderby: 'name',
-			order: 'asc',
-		}
-	);
-	const { prices, discounts } = useSelect(
+	const { categories, prices, discounts } = useSelect(
 		( select ) => ( {
+			categories: select( outletStore ).getProductCategories(),
 			prices: select( outletStore ).getPriceFacets(),
 			discounts: select( outletStore ).getDiscountFacets(),
 		} ),
@@ -57,10 +44,10 @@ export function Edit( {
 	);
 	const categoryItems = useMemo(
 		() =>
-			categories?.map( ( { id, name } ) => ( {
+			categories.map( ( { id, name } ) => ( {
 				id,
 				name: decodeEntities( name ),
-			} ) ) ?? EMPTY_ITEMS,
+			} ) ),
 		[ categories ]
 	);
 	const availableItems = useMemo(
@@ -85,26 +72,20 @@ export function Edit( {
 	} );
 
 	useEffect( () => {
-		if ( attributes.items !== undefined ) {
-			return;
-		}
-		if ( ! hasResolved ) {
-			return;
-		}
-		if ( categories === null ) {
+		const orderedItems = availableItems
+			.filter( ( item ) => items.includes( item.id ) )
+			.map( ( item ) => item.id );
+		if (
+			JSON.stringify( attributes.items ) ===
+			JSON.stringify( orderedItems )
+		) {
 			return;
 		}
 		setAttributes( {
-			items: availableItems.map( ( item ) => item.id ),
-			showAll: true,
+			items: orderedItems,
+			...( attributes.items === undefined ? { showAll: true } : {} ),
 		} );
-	}, [
-		attributes.items,
-		availableItems,
-		categories,
-		hasResolved,
-		setAttributes,
-	] );
+	}, [ attributes.items, availableItems, setAttributes, items ] );
 
 	return (
 		<>
