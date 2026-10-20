@@ -18,7 +18,7 @@ export type LicenseStatus =
 	| { valid: false; expiresAt?: string }
 	| { valid: true; remaining: number; total: number; expiresAt?: string };
 
-const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790 ];
+const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790, 1272656 ];
 
 function isNonNegativeInteger( value: unknown ): value is number {
 	if ( typeof value !== 'number' ) {
