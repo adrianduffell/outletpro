@@ -21,7 +21,7 @@ function init_blocks(): void {
 	register_outlet_badge_block();
 	register_outlet_message_block();
 	register_outlet_tile_block();
-	register_outlet_tile_grid_block();
+	register_outlet_tiles_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
@@ -150,14 +150,14 @@ function render_outlet_tile_callback( array $attributes ): string {
 }
 
 /**
- * Register the Outlet Tile Grid block.
+ * Register the Outlet Tiles block.
  *
  * Container for outlet tile blocks.
  *
  * @internal
  */
-function register_outlet_tile_grid_block(): void {
-	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-tile-grid/' );
+function register_outlet_tiles_block(): void {
+	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-tiles/' );
 }
 
 /**

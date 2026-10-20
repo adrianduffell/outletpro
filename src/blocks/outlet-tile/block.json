@@ -4,7 +4,7 @@
 	"name": "outletpro/outlet-tile",
 	"title": "Outlet Tile",
 	"category": "woocommerce",
-	"parent": [ "outletpro/outlet-tile-grid" ],
+	"parent": [ "outletpro/outlet-tiles" ],
 	"description": "A tile that links to all outlet products in the selected category.",
 	"attributes": {
 		"style": {

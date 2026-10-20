@@ -177,8 +177,8 @@ foreach ( $facets as $facet ) {
 $menu_content = '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( $menu_attrs, JSON_UNESCAPED_SLASHES ) . ' /-->';
 // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Block attributes and inline styles are escaped above.
 echo '<!-- wp:group {"layout":{"type":"default"}} --><div class="wp-block-group">' .
-	'<!-- wp:outletpro/outlet-tile-grid ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
-	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tile-grid alignfull ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
-	'<!-- /wp:outletpro/outlet-tile-grid -->' .
+	'<!-- wp:outletpro/outlet-tiles ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
+	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tiles alignfull ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
+	'<!-- /wp:outletpro/outlet-tiles -->' .
 	$menu_content . '</div><!-- /wp:group -->';
 // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
