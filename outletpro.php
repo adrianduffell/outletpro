@@ -13,8 +13,8 @@
  * Requires PHP: 7.4
  * Update URI: https://adrianduffell.store/outletpro
  *
- * WC requires at least: 10.8.0
- * WC tested up to: 11.0.0
+ * WC requires at least: 11.1.0
+ * WC tested up to: 11.2.1
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
