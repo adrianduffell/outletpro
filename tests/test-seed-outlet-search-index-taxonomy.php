@@ -129,6 +129,21 @@ class Test_Seed_Outlet_Search_Index_Taxonomy extends WP_UnitTestCase {
 		);
 	}
 
+	public function test_preserves_existing_tier_order(): void {
+		// Arrange.
+		register_outlet_search_index_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		update_option( 'woocommerce_currency', 'USD' );
+		$discount = wp_insert_term( 'outlet-discount-70', OUTLET_SEARCH_INDEX_TAXONOMY );
+		update_term_meta( $discount['term_id'], 'order', 0 );
+
+		// Act.
+		seed_outlet_search_index_taxonomy();
+
+		// Assert.
+		$this->assertSame( '0', get_term_meta( $discount['term_id'], 'order', true ) );
+	}
+
 	public function test_seeding_queues_one_reindex_per_product_and_restores_term_hooks(): void {
 		// Arrange.
 		init_taxonomies();
