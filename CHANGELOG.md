@@ -9,7 +9,7 @@ Maintenance release fixing the issues:
 - The field label was mis-aligned in the bulk editor.
 - The outlet badge block’s label was reverting to the default value when empty.
 - A PHP notice was displaying on the widget editor.
-- The settings sidebar was being added to the full site editor toolbar.
+- An icon for outlet settings was shown in the site editor toolbar.
 
 ## 1.0.1 (2026-06-07)
 
