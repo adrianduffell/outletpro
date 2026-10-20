@@ -8,7 +8,7 @@
  */
 
 use function OutletPro\init_taxonomies;
-use function OutletPro\register_outlet_navigation_4_circles_pattern;
+use function OutletPro\register_outlet_navigation_price_tiers_pattern;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
@@ -19,8 +19,8 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 		init_taxonomies();
 
 		// Act.
-		register_outlet_navigation_4_circles_pattern();
-		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		register_outlet_navigation_price_tiers_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-price-tiers' );
 
 		// Assert.
 		$this->assertSame( 'Outlet navigation with circular price tier tiles', $pattern['title'] );
@@ -45,8 +45,8 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 		);
 
 		// Act.
-		register_outlet_navigation_4_circles_pattern();
-		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		register_outlet_navigation_price_tiers_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-price-tiers' );
 		$blocks  = parse_blocks( $pattern['content'] );
 		$grid    = $blocks[0]['innerBlocks'][0];
 
@@ -64,8 +64,8 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 		$term = wp_insert_term( 'outlet-price-25', OUTLET_SEARCH_INDEX_TAXONOMY );
 
 		// Act.
-		register_outlet_navigation_4_circles_pattern();
-		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		register_outlet_navigation_price_tiers_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-price-tiers' );
 		$blocks  = parse_blocks( $pattern['content'] );
 		$blocks  = $blocks[0]['innerBlocks'];
 
@@ -98,8 +98,8 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 		);
 
 		// Act.
-		register_outlet_navigation_4_circles_pattern();
-		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-4-circles' );
+		register_outlet_navigation_price_tiers_pattern();
+		$pattern = WP_Block_Patterns_Registry::get_instance()->get_registered( 'outletpro/outlet-navigation-price-tiers' );
 		$blocks  = parse_blocks( $pattern['content'] );
 		$items   = $blocks[0]['innerBlocks'][1]['attrs']['items'];
 
