@@ -10,6 +10,7 @@
 use function OutletPro\create_outlet_page;
 use function OutletPro\deinit_patterns;
 use function OutletPro\init_patterns;
+use function OutletPro\init_taxonomies;
 use function OutletPro\run_create_outlet_page_tool;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
@@ -21,6 +22,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_title_outlet(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
@@ -42,6 +44,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_slug_outlet(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -61,6 +66,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_draft_status(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
@@ -82,6 +88,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_outlet_shortcode_on_classic_theme(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'storefront' );
@@ -109,19 +116,20 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			),
 			$pages[0]->post_content
 		);
-		$this->assertStringContainsString( 'max_price=', $pages[0]->post_content );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-', $pages[0]->post_content );
 		$products_shortcode_position = strpos( $pages[0]->post_content, '[products outletpro="yes"' );
-		$filter_tiles_position       = strpos( $pages[0]->post_content, 'max_price=' );
+		$navigation_position         = strpos( $pages[0]->post_content, '"patternName":"outletpro/outlet-navigation-' );
 		$this->assertNotFalse( $products_shortcode_position );
-		$this->assertNotFalse( $filter_tiles_position );
+		$this->assertNotFalse( $navigation_position );
 		$this->assertLessThan(
 			$products_shortcode_position,
-			$filter_tiles_position
+			$navigation_position
 		);
 	}
 
 	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
@@ -151,25 +159,216 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertStringContainsString( '"order":"asc"', $pages[0]->post_content );
 		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
 		$this->assertStringNotContainsString( '"collection":"outletpro/product-collection/outlet"', $pages[0]->post_content );
-		$this->assertStringContainsString( 'max_price=', $pages[0]->post_content );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-', $pages[0]->post_content );
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertStringContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
 		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertStringNotContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
 		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
 		$sort_filter_position              = strpos( $pages[0]->post_content, 'outletpro/outlet-sort-filter' );
-		$filter_tiles_position             = strpos( $pages[0]->post_content, 'max_price=' );
+		$navigation_position               = strpos( $pages[0]->post_content, '"patternName":"outletpro/outlet-navigation-' );
 		$this->assertNotFalse( $product_collection_block_position );
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertNotFalse( $sort_filter_position );
 		version_compare( get_bloginfo( 'version' ), '7.0', '<' ) && $this->assertFalse( $sort_filter_position );
-		$this->assertNotFalse( $filter_tiles_position );
+		$this->assertNotFalse( $navigation_position );
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertLessThan(
 			$sort_filter_position,
-			$filter_tiles_position
+			$navigation_position
 		);
 		version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) && $this->assertLessThan( $product_collection_block_position, $sort_filter_position );
 	}
 
+	public function test_selects_navigation_with_1_top_level_category(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 1 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_2_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 2 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_3_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		$category_ids   = self::factory()->term->create_many( 3 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+		self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'parent'   => $category_ids[0],
+			)
+		);
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_4_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 4 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-4', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_5_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 5 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_6_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 6 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-6', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_7_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 7 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
+	public function test_selects_navigation_with_8_top_level_categories(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$category_count = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 8 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
 	public function test_creates_page_with_price_desc_sort_on_block_theme_when_store_default_is_price_desc(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
@@ -194,6 +393,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_date_desc_sort_on_block_theme_when_store_default_is_date_desc(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
@@ -218,6 +418,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_desc_sort_on_block_theme_when_store_default_is_popularity(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
@@ -242,6 +443,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_desc_sort_on_block_theme_when_store_default_is_rating(): void {
 		// Arrange.
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
@@ -266,6 +468,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_with_filtered_default_catalog_orderby_on_block_theme(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 		update_option( 'woocommerce_default_catalog_orderby', 'menu_order' );
@@ -290,6 +495,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_on_block_theme_when_canonical_term_missing(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 
@@ -310,6 +518,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_assigns_outlet_page_template_on_block_theme(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		switch_theme( 'twentytwentyfive' );
 		delete_option( OUTLET_PAGE_OPTION );
 
@@ -331,6 +542,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_returns_success_message(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -342,6 +556,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_saves_page_id_in_option(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -361,6 +578,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_does_not_create_duplicate_page_when_page_already_exists(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$original_page_id = get_option( OUTLET_PAGE_OPTION );
@@ -375,6 +595,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_returns_already_exists_message_when_page_already_exists(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		run_create_outlet_page_tool();
 
@@ -387,6 +610,9 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_creates_page_when_existing_page_is_trashed(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		$trashed_id = wp_insert_post(
 			array(

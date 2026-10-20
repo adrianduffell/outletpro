@@ -8,6 +8,9 @@
  */
 
 use function OutletPro\create_outlet_page;
+use function OutletPro\deinit_patterns;
+use function OutletPro\init_patterns;
+use function OutletPro\init_taxonomies;
 use function OutletPro\outlet_page_is_published;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
@@ -26,6 +29,9 @@ class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_when_page_is_in_draft_status(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 
@@ -38,6 +44,9 @@ class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_true_when_page_is_published(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = get_option( OUTLET_PAGE_OPTION );
@@ -52,6 +61,9 @@ class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_when_page_is_in_pending_status(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = get_option( OUTLET_PAGE_OPTION );
@@ -71,6 +83,9 @@ class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_after_page_is_trashed(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = get_option( OUTLET_PAGE_OPTION );
@@ -86,6 +101,9 @@ class Test_Outlet_Page_Is_Published extends WP_UnitTestCase {
 
 	public function test_returns_false_after_page_is_deleted(): void {
 		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		delete_option( OUTLET_PAGE_OPTION );
 		create_outlet_page();
 		$page_id = get_option( OUTLET_PAGE_OPTION );
