@@ -196,7 +196,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
 
 		// Assert.
-		$this->assertSame( 'outletpro/outlet-navigation-4-circles', $blocks[0]['attrs']['metadata']['patternName'] );
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
 	}
 
 	public function test_selects_navigation_with_2_top_level_categories(): void {
@@ -219,7 +219,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
 
 		// Assert.
-		$this->assertSame( 'outletpro/outlet-navigation-4-circles', $blocks[0]['attrs']['metadata']['patternName'] );
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
 	}
 
 	public function test_selects_navigation_with_3_top_level_categories(): void {

@@ -376,7 +376,7 @@ function create_outlet_page(): void {
 		case 0:
 		case 1:
 		case 2:
-			$navigation_pattern = 'outletpro/outlet-navigation-4-circles';
+			$navigation_pattern = 'outletpro/outlet-navigation-price-tiers';
 			break;
 		case 4:
 			$navigation_pattern = 'outletpro/outlet-navigation-4';
