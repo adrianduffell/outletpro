@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for conditionally_render_outlet_group_hook().
+ * Tests for conditionally_render_outlet_conditional_hook().
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
@@ -13,9 +13,9 @@ use function OutletPro\init_blocks;
 use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 
-class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
+class Test_Conditionally_Render_Outlet_Conditional_Hook extends WP_UnitTestCase {
 
-	public function test_renders_outlet_group_for_outlet_product(): void {
+	public function test_renders_outlet_conditional_for_outlet_product(): void {
 		// Arrange.
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
@@ -24,17 +24,17 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		deinit_blocks();
 		init_blocks();
-		$content = '<!-- wp:outletpro/outlet-group --><div class="wp-block-outletpro-outlet-group"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-group -->';
+		$content = '<!-- wp:outletpro/outlet-conditional --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-conditional -->';
 
 		// Act.
 		$result = do_blocks( $content );
 
 		// Assert.
-		$this->assertStringContainsString( 'wp-block-outletpro-outlet-group', $result );
+		$this->assertStringContainsString( 'wp-block-outletpro-outlet-conditional', $result );
 		$this->assertStringContainsString( 'Outlet content', $result );
 	}
 
-	public function test_does_not_render_outlet_group_for_non_outlet_product(): void {
+	public function test_does_not_render_outlet_conditional_for_non_outlet_product(): void {
 		// Arrange.
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
@@ -42,7 +42,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		deinit_blocks();
 		init_blocks();
-		$content = '<!-- wp:outletpro/outlet-group --><div class="wp-block-outletpro-outlet-group"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-group -->';
+		$content = '<!-- wp:outletpro/outlet-conditional --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-conditional -->';
 
 		// Act.
 		$result = do_blocks( $content );
@@ -61,7 +61,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		init_blocks();
 		$render_count = 0;
 		register_block_type(
-			'outletpro/outlet-group-test-inner',
+			'outletpro/outlet-conditional-test-inner',
 			array(
 				'render_callback' => static function () use ( &$render_count ): string {
 					++$render_count;
@@ -69,7 +69,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 				},
 			)
 		);
-		$content = '<!-- wp:outletpro/outlet-group --><div class="wp-block-outletpro-outlet-group"><!-- wp:outletpro/outlet-group-test-inner /--></div><!-- /wp:outletpro/outlet-group -->';
+		$content = '<!-- wp:outletpro/outlet-conditional --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:outletpro/outlet-conditional-test-inner /--></div><!-- /wp:outletpro/outlet-conditional -->';
 
 		// Act.
 		$result = do_blocks( $content );
@@ -96,7 +96,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'Regular content', $result );
 	}
 
-	public function test_renders_outlet_group_only_for_outlet_products_in_query_loop(): void {
+	public function test_renders_outlet_conditional_only_for_outlet_products_in_query_loop(): void {
 		// Arrange.
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
@@ -121,7 +121,7 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		deinit_blocks();
 		init_blocks();
 
-		$content = '<!-- wp:query {"query":{"perPage":2,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false}} --><div class="wp-block-query"><!-- wp:post-template --><!-- wp:post-title /--><!-- wp:outletpro/outlet-group --><div class="wp-block-outletpro-outlet-group"><!-- wp:paragraph --><p>Outlet-only marker</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-group --><!-- /wp:post-template --></div><!-- /wp:query -->';
+		$content = '<!-- wp:query {"query":{"perPage":2,"pages":0,"offset":0,"postType":"product","order":"asc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":false}} --><div class="wp-block-query"><!-- wp:post-template --><!-- wp:post-title /--><!-- wp:outletpro/outlet-conditional --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:paragraph --><p>Outlet-only marker</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-conditional --><!-- /wp:post-template --></div><!-- /wp:query -->';
 
 		// Act.
 		$result = do_blocks( $content );
@@ -141,6 +141,6 @@ class Test_Conditionally_Render_Outlet_Group_Hook extends WP_UnitTestCase {
 		deinit_blocks();
 
 		// Assert.
-		$this->assertFalse( has_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook' ) );
+		$this->assertFalse( has_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook' ) );
 	}
 }
