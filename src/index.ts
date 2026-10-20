@@ -17,7 +17,7 @@ import './blocks/outlet-conditional';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
 import './blocks/outlet-tile';
-import './blocks/outlet-tile-grid';
+import './blocks/outlet-tiles';
 import './blocks/outlet-menu';
 
 registerPlugin( 'outletpro-editor-preview', {

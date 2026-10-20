@@ -18,7 +18,7 @@ vi.mock( '@wordpress/block-editor', () => ( {
 
 test( 'passes the allowed tiles to the editor', () => {
 	// Arrange.
-	const blockProps = { className: 'tile-grid' };
+	const blockProps = { className: 'outlet-tiles' };
 	vi.mocked( useBlockProps, { partial: true } ).mockReturnValue( blockProps );
 	vi.mocked( useInnerBlocksProps, { partial: true } ).mockReturnValue( {} );
 

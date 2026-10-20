@@ -1,8 +1,8 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "outletpro/outlet-tile-grid",
-	"title": "Outlet Tile Grid",
+	"name": "outletpro/outlet-tiles",
+	"title": "Outlet Tiles",
 	"category": "woocommerce",
 	"description": "Add tiles to help customers browse the most important categories in the outlet.",
 	"allowedBlocks": [ "outletpro/outlet-tile" ],

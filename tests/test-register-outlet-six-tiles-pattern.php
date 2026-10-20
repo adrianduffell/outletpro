@@ -176,7 +176,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-menu', $blocks[1]['blockName'] );
-		$this->assertSame( 'outletpro/outlet-tile-grid', $blocks[0]['blockName'] );
+		$this->assertSame( 'outletpro/outlet-tiles', $blocks[0]['blockName'] );
 		$this->assertCount( 6, $blocks[0]['innerBlocks'] );
 	}
 
