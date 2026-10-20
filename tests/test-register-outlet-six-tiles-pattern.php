@@ -7,12 +7,59 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\get_pattern_content;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_6_pattern;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
+
+	public function test_uses_compact_stacked_mobile_tiles(): void {
+		// Arrange.
+		init_taxonomies();
+
+		// Act.
+		register_outlet_navigation_6_pattern();
+		$blocks      = parse_blocks( get_pattern_content( 'outletpro/outlet-navigation-6' ) );
+		$grid        = $blocks[0]['innerBlocks'][0];
+		$tile_styles = array_column( array_column( $grid['innerBlocks'], 'attrs' ), 'style' );
+
+		// Assert.
+		$this->assertSame(
+			array_fill(
+				0,
+				6,
+				array(
+					'dimensions' => array( 'minHeight' => '0' ),
+					'spacing'    => array(
+						'padding' => array(
+							'top'    => '0.5em',
+							'bottom' => '0.5em',
+						),
+					),
+				)
+			),
+			array_column( $tile_styles, '@mobile' )
+		);
+		$this->assertSame( 1, $grid['attrs']['style']['@mobile']['layout']['columnCount'] );
+		$this->assertSame( 'clamp(12px, 6vw, 45px)', $grid['attrs']['style']['@mobile']['typography']['fontSize'] );
+		$this->assertSame( 6, $grid['attrs']['layout']['columnCount'] );
+		$this->assertSame( 3, $grid['attrs']['style']['@tablet']['layout']['columnCount'] );
+		$this->assertSame(
+			array_fill(
+				0,
+				6,
+				array(
+					'top'    => '2em',
+					'right'  => '0.75em',
+					'bottom' => '2em',
+					'left'   => '0.75em',
+				)
+			),
+			array_column( array_column( $tile_styles, 'spacing' ), 'padding' )
+		);
+	}
 
 	public function test_selected_categories_follow_woocommerce_display_order(): void {
 		// Arrange.
@@ -176,7 +223,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-menu', $blocks[1]['blockName'] );
-		$this->assertSame( 'outletpro/outlet-tile-grid', $blocks[0]['blockName'] );
+		$this->assertSame( 'outletpro/outlet-tiles', $blocks[0]['blockName'] );
 		$this->assertCount( 6, $blocks[0]['innerBlocks'] );
 	}
 

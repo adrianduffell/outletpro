@@ -33,7 +33,7 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'woocommerce_cart_item_name', '<strong>Product</strong>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertStringStartsWith( '<div class="outletpro-badge-container">', $result );
+		$this->assertStringStartsWith( '<div><div class="outletpro-badge">', $result );
 		$this->assertStringContainsString( 'outletpro-badge', $result );
 		$this->assertStringEndsWith( '<strong>Product</strong>', $result );
 		$this->assertTrue( wp_style_is( 'outletpro-classic-badge', 'enqueued' ) );
@@ -74,7 +74,7 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'woocommerce_cart_item_name', '', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge">Clearance &amp; more</div></div>', $result );
+		$this->assertSame( '<div><div class="outletpro-badge">Clearance &amp; more</div></div>', $result );
 	}
 
 	public function test_prepends_badge_for_variation_of_outlet_product(): void {
@@ -144,7 +144,7 @@ class Test_Add_Classic_Cart_Badge_Hook extends WP_UnitTestCase {
 		$result = apply_filters( 'woocommerce_cart_item_name', '<span>Product</span>', array( 'data' => $product ), 'cart-item-key' );
 
 		// Assert.
-		$this->assertSame( '<div class="outletpro-badge-container"><div class="outletpro-badge"></div></div><span>Product</span>', $result );
+		$this->assertSame( '<div><div class="outletpro-badge"></div></div><span>Product</span>', $result );
 	}
 
 	/**

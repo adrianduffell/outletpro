@@ -88,7 +88,14 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 			),
 			'@mobile'    => array(
 				'dimensions' => array(
-					'aspectRatio' => '1',
+					'aspectRatio' => 'auto',
+					'minHeight'   => '0',
+				),
+				'spacing'    => array(
+					'padding' => array(
+						'top'    => '0.5em',
+						'bottom' => '0.5em',
+					),
 				),
 			),
 		),
@@ -134,7 +141,7 @@ $grid_attrs = array(
 				'columnCount' => 1,
 			),
 			'typography' => array(
-				'fontSize' => 'clamp(12px, 9vw, 45px)',
+				'fontSize' => 'clamp(12px, 6vw, 45px)',
 			),
 		),
 	),
@@ -188,8 +195,8 @@ foreach ( $facets as $facet ) {
 $menu_content = '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( $menu_attrs, JSON_UNESCAPED_SLASHES ) . ' /-->';
 // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Block attributes and inline styles are escaped above.
 echo '<!-- wp:group {"layout":{"type":"default"}} --><div class="wp-block-group">' .
-	'<!-- wp:outletpro/outlet-tile-grid ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
-	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tile-grid ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
-	'<!-- /wp:outletpro/outlet-tile-grid -->' .
+	'<!-- wp:outletpro/outlet-tiles ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
+	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tiles ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
+	'<!-- /wp:outletpro/outlet-tiles -->' .
 	$menu_content . '</div><!-- /wp:group -->';
 // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
