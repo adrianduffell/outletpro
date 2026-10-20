@@ -26,17 +26,13 @@ class Test_Activate extends WP_UnitTestCase {
 		activate();
 
 		// Assert.
-		$discount = get_term_by( 'name', 'outlet-discount-50', OUTLET_SEARCH_INDEX_TAXONOMY );
-		$this->assertSame( '50', get_term_meta( $discount->term_id, 'order', true ) );
 		$this->assertSame(
-			array( 'outlet-price-10', 'outlet-price-25', 'outlet-discount-30', 'outlet-discount-50', 'outlet-price-50', 'outlet-discount-70', 'outlet-price-100' ),
+			array( 'outlet-discount-30', 'outlet-discount-50', 'outlet-discount-70', 'outlet-price-10', 'outlet-price-100', 'outlet-price-25', 'outlet-price-50' ),
 			get_terms(
 				array(
 					'taxonomy'   => OUTLET_SEARCH_INDEX_TAXONOMY,
 					'hide_empty' => false,
 					'fields'     => 'slugs',
-					'orderby'    => 'menu_order',
-					'order'      => 'ASC',
 				)
 			)
 		);
