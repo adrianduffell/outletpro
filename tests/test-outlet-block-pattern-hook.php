@@ -29,7 +29,7 @@ class Test_Outlet_Block_Pattern_Hook extends WP_UnitTestCase {
 		$blocks = parse_blocks( $result );
 
 		// Assert.
-		$this->assertSame( 'outletpro/outlet-group', $blocks[0]['blockName'] );
+		$this->assertSame( 'outletpro/outlet-conditional', $blocks[0]['blockName'] );
 		$this->assertSame(
 			array(
 				'type'           => 'flex',
