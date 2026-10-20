@@ -73,7 +73,7 @@ const HTTP_NOT_FOUND = 404;
  *
  * @internal
  */
-const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790 );
+const ALLOWED_LICENSE_PRODUCT_IDS = array( 1279790, 1272656 );
 
 /**
  * Request-local cache group for license validation responses.
