@@ -153,7 +153,7 @@ test.each( [ true, false ] )( 'toggles All independently (%s)', ( showAll ) => {
 	} );
 } );
 
-test( 'previews available selections in saved order', () => {
+test( 'preserves unavailable selections while previewing saved order', () => {
 	// Arrange.
 	const settings = { outletproDiscountTiers: [ { id: 3, name: '30% off' } ] };
 	const categories = [ { id: 1, name: 'Home &amp; Garden' } ];
@@ -169,5 +169,5 @@ test( 'previews available selections in saved order', () => {
 	expect(
 		screen.getAllByRole( 'link' ).map( ( link ) => link.textContent )
 	).toEqual( [ '30% off', 'Home & Garden' ] );
-	expect( setAttributes ).toHaveBeenCalledWith( { items: [ 1, 3 ] } );
+	expect( setAttributes ).not.toHaveBeenCalled();
 } );

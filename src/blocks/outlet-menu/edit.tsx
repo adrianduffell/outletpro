@@ -75,6 +75,9 @@ export function Edit( {
 		const orderedItems = availableItems
 			.filter( ( item ) => items.includes( item.id ) )
 			.map( ( item ) => item.id );
+		if ( orderedItems.length !== items.length ) {
+			return;
+		}
 		if (
 			JSON.stringify( attributes.items ) ===
 			JSON.stringify( orderedItems )
