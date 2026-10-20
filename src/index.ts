@@ -13,9 +13,12 @@ import OutletPageEditorCallout from './page-editor-callout';
 import './settings-sidebar';
 import './outlet-toggle';
 import EditorPreview from './editor-preview';
-import './blocks/outlet-group';
+import './blocks/outlet-conditional';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
+import './blocks/outlet-tile';
+import './blocks/outlet-tiles';
+import './blocks/outlet-menu';
 
 registerPlugin( 'outletpro-editor-preview', {
 	render: EditorPreview,

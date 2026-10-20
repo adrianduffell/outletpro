@@ -51,7 +51,7 @@ export function ValidationMessage( {
 			const expiryDate = validationState.expiresAt
 				? new Intl.DateTimeFormat( undefined, {
 						dateStyle: 'long',
-				  } ).format( new Date( validationState.expiresAt ) )
+					} ).format( new Date( validationState.expiresAt ) )
 				: '';
 			if (
 				validationState.remaining === Infinity &&
@@ -74,19 +74,19 @@ export function ValidationMessage( {
 			}
 			const availableMessage = validationState.expiresAt
 				? /* translators: 1: remaining activations, 2: total activations, 3: localized license expiry date. */
-				  _n(
+					_n(
 						'✅ %1$d site activation available. Expires %3$s',
 						'✅ %1$d of %2$d site activations available. Expires %3$s',
 						validationState.remaining,
 						'outletpro'
-				  )
+					)
 				: /* translators: 1: remaining activations, 2: total activations. */
-				  _n(
+					_n(
 						'✅ %1$d site activation available',
 						'✅ %1$d of %2$d site activations available',
 						validationState.remaining,
 						'outletpro'
-				  );
+					);
 			return sprintf(
 				availableMessage,
 				validationState.remaining,

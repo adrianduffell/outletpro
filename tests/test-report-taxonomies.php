@@ -12,10 +12,66 @@ use function OutletPro\deinit_taxonomies;
 use function OutletPro\init_taxonomies;
 use function OutletPro\report_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
+use function OutletPro\truncate_outlet_search_index_taxonomy;
+use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Report_Taxonomies extends WP_UnitTestCase {
+
+	public function test_search_index_terms_are_unknown_when_taxonomy_not_registered(): void {
+		// Arrange.
+		deinit_taxonomies();
+
+		// Act.
+		$result = report_taxonomies();
+
+		// Assert.
+		$this->assertSame( 'Unknown', $result['outlet-search-index-terms'][1] );
+	}
+
+	public function test_search_index_terms_are_none_when_taxonomy_is_empty(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+
+		// Act.
+		$result = report_taxonomies();
+
+		// Assert.
+		$this->assertSame( 'None', $result['outlet-search-index-terms'][1] );
+	}
+
+	public function test_search_index_terms_include_product_counts_and_unused_terms(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		$price_term    = wp_insert_term( 'outlet-price-42', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$discount_term = wp_insert_term( 'outlet-discount-30', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$product_one   = WC_Helper_Product::create_simple_product();
+		$product_two   = WC_Helper_Product::create_simple_product();
+		wp_set_object_terms( $product_one->get_id(), array( $price_term['term_id'] ), OUTLET_SEARCH_INDEX_TAXONOMY );
+		wp_set_object_terms( $product_two->get_id(), array( $price_term['term_id'] ), OUTLET_SEARCH_INDEX_TAXONOMY );
+
+		// Act.
+		$result = report_taxonomies();
+
+		// Assert.
+		$this->assertSame( array( 'Search index', 'outlet-discount-30 (0), outlet-price-42 (2)' ), $result['outlet-search-index-terms'] );
+	}
+
+	public function test_search_index_reports_exact_malformed_term_names(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		wp_insert_term( 'Malformed Price Name!', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'different-slug' ) );
+
+		// Act.
+		$result = report_taxonomies();
+
+		// Assert.
+		$this->assertSame( array( 'Search index', 'Malformed Price Name! (0)' ), $result['outlet-search-index-terms'] );
+	}
 
 	public function test_taxonomy_registered_is_no_when_taxonomy_not_registered(): void {
 		// Arrange.

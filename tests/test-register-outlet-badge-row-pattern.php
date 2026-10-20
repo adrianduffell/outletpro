@@ -42,7 +42,7 @@ class Test_Register_Outlet_Badge_Row_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertCount( 1, $blocks );
-		$this->assertSame( 'outletpro/outlet-group', $blocks[0]['blockName'] );
+		$this->assertSame( 'outletpro/outlet-conditional', $blocks[0]['blockName'] );
 		$this->assertSame(
 			array(
 				'type'           => 'flex',

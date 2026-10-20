@@ -29,7 +29,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		$tiers = get_price_tiers();
 
 		// Assert.
-		$this->assertSame( array( 15, 30, 50 ), $tiers );
+		$this->assertSame( array( 15, 30, 50, 100 ), $tiers );
 	}
 
 	public function test_returns_price_tiers_in_numeric_order(): void {
@@ -43,7 +43,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		$tiers = get_price_tiers();
 
 		// Assert.
-		$this->assertSame( array( 50, 100, 200 ), $tiers );
+		$this->assertSame( array( 50, 100, 200, 400 ), $tiers );
 	}
 
 	public function test_includes_custom_price_tiers(): void {

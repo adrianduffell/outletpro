@@ -18,6 +18,9 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_block_editor(): void {
 	add_filter( 'block_editor_settings_all', 'OutletPro\append_block_editor_settings_hook', 10, 2 );
+	add_filter( 'block_editor_settings_all', 'OutletPro\append_product_category_editor_settings_hook' );
+	add_filter( 'block_editor_settings_all', 'OutletPro\append_price_tier_editor_settings_hook' );
+	add_filter( 'block_editor_settings_all', 'OutletPro\append_discount_tier_editor_settings_hook' );
 }
 
 /**
@@ -44,6 +47,111 @@ function append_block_editor_settings_hook( array $settings, \WP_Block_Editor_Co
 	}
 
 	$settings['wcOutletCanonicalTermId'] = $canonical_term->term_id;
+
+	return $settings;
+}
+
+/**
+ * Append price tiers to the block editor settings.
+ *
+ * Fired by `block_editor_settings_all`.
+ *
+ * @internal WordPress filter hook
+ *
+ * @param array<string, mixed> $settings Existing block editor settings.
+ * @return array<string, mixed> Modified block editor settings.
+ */
+function append_price_tier_editor_settings_hook( array $settings ): array {
+	$settings['outletproPriceTiers'] = array();
+
+	try {
+		$price_tiers = get_price_tiers();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet price tiers could not be retrieved for the editor.' );
+		return $settings;
+	}
+
+	foreach ( $price_tiers as $price ) {
+		$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+		if ( ! $term instanceof \WP_Term ) {
+			continue;
+		}
+		$tier       = new \stdClass();
+		$tier->id   = $term->term_id;
+		$tier->name = get_search_index_facet_nice_name( $term );
+
+		$settings['outletproPriceTiers'][] = $tier;
+	}
+
+	return $settings;
+}
+
+/**
+ * Append discount tiers to the block editor settings.
+ *
+ * Fired by `block_editor_settings_all`.
+ *
+ * @internal WordPress filter hook
+ *
+ * @param array<string, mixed> $settings Existing block editor settings.
+ * @return array<string, mixed> Modified block editor settings.
+ */
+function append_discount_tier_editor_settings_hook( array $settings ): array {
+	$settings['outletproDiscountTiers'] = array();
+
+	try {
+		$discount_tiers = get_discount_tiers();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet discount tiers could not be retrieved for the editor.' );
+		return $settings;
+	}
+
+	foreach ( $discount_tiers as $discount ) {
+		$term = get_term_by( 'slug', 'outlet-discount-' . $discount, OUTLET_SEARCH_INDEX_TAXONOMY );
+		if ( ! $term instanceof \WP_Term ) {
+			continue;
+		}
+		$tier       = new \stdClass();
+		$tier->id   = $term->term_id;
+		$tier->name = get_search_index_facet_nice_name( $term );
+
+		$settings['outletproDiscountTiers'][] = $tier;
+	}
+
+	return $settings;
+}
+
+/**
+ * Append product categories to the block editor settings.
+ *
+ * Fired by `block_editor_settings_all`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed> $settings Existing block editor settings.
+ * @return array<string, mixed> Modified block editor settings.
+ */
+function append_product_category_editor_settings_hook( array $settings ): array {
+	$settings['outletproProductCategories'] = array();
+	$terms                                  = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'hide_empty' => false,
+			'orderby'    => 'menu_order',
+			'order'      => 'ASC',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		wc_get_logger()->error( 'Product categories could not be retrieved for the editor.' );
+		return $settings;
+	}
+	foreach ( $terms as $term ) {
+		$category       = new \stdClass();
+		$category->id   = $term->term_id;
+		$category->name = $term->name;
+
+		$settings['outletproProductCategories'][] = $category;
+	}
 
 	return $settings;
 }

@@ -392,4 +392,69 @@ class Test_Filter_Outlet_Product_Collection_Hook extends WP_UnitTestCase {
 		$this->assertSame( 11, has_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook' ) );
 		$this->assertSame( 11, has_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook' ) );
 	}
+	public function test_outlet_category_is_not_added_to_non_outlet_product_collection_query(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		set_query_var( 'outlet_category', 'clothing' );
+		$query          = array( 'post_type' => 'product' );
+		$block          = new WP_Block( array( 'blockName' => 'core/query' ) );
+		$block->context = array(
+			'query' => array( 'outletpro' => false ),
+		);
+
+		// Act.
+		$result = apply_filters( 'query_loop_block_query_vars', $query, $block, 1 );
+
+		// Assert.
+		$this->assertSame( $query, $result );
+	}
+
+	public function test_collection_returns_only_matching_outlet_clothing_products(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		deinit_blocks();
+		init_blocks();
+		$clothing      = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'slug'     => 'clothing',
+			)
+		);
+		$shirts        = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'slug'     => 'shirts',
+				'parent'   => $clothing,
+			)
+		);
+		$shirt         = WC_Helper_Product::create_simple_product();
+		$shoes         = WC_Helper_Product::create_simple_product();
+		$regular_shirt = WC_Helper_Product::create_simple_product();
+		wp_set_object_terms( $shirt->get_id(), array( $shirts ), 'product_cat' );
+		wp_set_object_terms( $shoes->get_id(), 'shoes', 'product_cat' );
+		wp_set_object_terms( $regular_shirt->get_id(), array( $shirts ), 'product_cat' );
+		wp_set_object_terms( $shirt->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+		wp_set_object_terms( $shoes->get_id(), OUTLET_STATUS_CANONICAL_TERM, OUTLET_STATUS_TAXONOMY );
+
+		set_query_var( 'outlet_category', 'clothing' );
+		$block          = new WP_Block(
+			array(
+				'blockName' => 'core/query',
+				'attrs'     => array(),
+			)
+		);
+		$block->context = array( 'query' => array( 'outletpro' => true ) );
+		$query          = array(
+			'post_type' => 'product',
+			'fields'    => 'ids',
+		);
+
+		// Act.
+		$results = new WP_Query( apply_filters( 'query_loop_block_query_vars', $query, $block, 1 ) );
+
+		// Assert.
+		$this->assertSame( array( $shirt->get_id() ), $results->posts );
+	}
 }

@@ -17,6 +17,10 @@ class Test_Deinit_Patterns extends WP_UnitTestCase {
 		deinit_patterns();
 		init_patterns();
 		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-filter-tiles' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-3' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-6' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-4' ) );
+		$this->assertTrue( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-price-tiers' ) );
 		$this->assertTrue( \WP_Block_Pattern_Categories_Registry::get_instance()->is_registered( 'outletpro' ) );
 
 		// Act.
@@ -24,6 +28,10 @@ class Test_Deinit_Patterns extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-filter-tiles' ) );
+		$this->assertFalse( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-3' ) );
+		$this->assertFalse( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-6' ) );
+		$this->assertFalse( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-4' ) );
+		$this->assertFalse( \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-navigation-price-tiers' ) );
 		$this->assertFalse( \WP_Block_Pattern_Categories_Registry::get_instance()->is_registered( 'outletpro' ) );
 	}
 

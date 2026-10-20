@@ -105,8 +105,8 @@ class Test_Update_Search_Index_Hook extends WP_UnitTestCase {
 		init_products();
 
 		$product = WC_Helper_Product::create_simple_product();
-		$product->set_price( '100' );
-		$product->set_sale_price( '100' );
+		$product->set_price( '101' );
+		$product->set_sale_price( '101' );
 		$product->set_regular_price( '1000' );
 		add_to_outlet( $product );
 

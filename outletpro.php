@@ -9,12 +9,12 @@
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Requires Plugins: woocommerce
- * Requires at least: 6.9
+ * Requires at least: 7.0
  * Requires PHP: 7.4
  * Update URI: https://adrianduffell.store/outletpro
  *
- * WC requires at least: 10.8.0
- * WC tested up to: 11.0.0
+ * WC requires at least: 11.1.0
+ * WC tested up to: 11.2.1
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
@@ -50,6 +50,7 @@ require_once __DIR__ . '/includes/admin-menu-license.php';
 require_once __DIR__ . '/includes/admin-product-options.php';
 require_once __DIR__ . '/includes/admin-product-bulk-edit.php';
 require_once __DIR__ . '/includes/admin-page-list-table.php';
+require_once __DIR__ . '/includes/query-vars.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 // #ifdef LICENSE
@@ -92,6 +93,7 @@ function init_hook(): void {
 	init_settings();
 	init_taxonomies();
 	init_rest_api();
+	init_query_vars();
 	init_shortcodes();
 	init_patterns();
 	init_page();

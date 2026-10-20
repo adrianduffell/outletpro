@@ -74,11 +74,11 @@ export default function OutletPageEditorCallout(): JSX.Element | null {
 						? __(
 								'Manage the outlet badge and message with the outlet settings panel in the site editor.',
 								'outletpro'
-						  )
+							)
 						: __(
 								'Manage the outlet badge and message in the Customizer.',
 								'outletpro'
-						  ) }{ ' ' }
+							) }{ ' ' }
 				</p>
 				<p>
 					<a

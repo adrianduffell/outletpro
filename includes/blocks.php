@@ -17,13 +17,16 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_blocks(): void {
-	register_outlet_group_block();
+	register_outlet_conditional_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_tile_block();
+	register_outlet_tiles_block();
+	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
-	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook', 10, 2 );
+	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
 }
@@ -36,7 +39,7 @@ function init_blocks(): void {
 function deinit_blocks(): void {
 	$registry = \WP_Block_Type_Registry::get_instance();
 
-	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_group_hook' );
+	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook' );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
@@ -54,12 +57,12 @@ function deinit_blocks(): void {
 }
 
 /**
- * Register the outlet group block type.
+ * Register the outlet conditional block type.
  *
  * @internal
  */
-function register_outlet_group_block(): void {
-	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-group/' );
+function register_outlet_conditional_block(): void {
+	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-conditional/' );
 }
 
 /**
@@ -74,6 +77,164 @@ function register_outlet_badge_block(): void {
 			'render_callback' => 'OutletPro\render_outlet_badge_callback',
 		)
 	);
+}
+
+/**
+ * Register the Outlet Tile block.
+ *
+ * @internal
+ */
+function register_outlet_tile_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-tile/',
+		array(
+			'render_callback' => 'OutletPro\render_outlet_tile_callback',
+		)
+	);
+}
+
+/**
+ * Render the Outlet Tile block.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ * @return string Rendered tile markup.
+ */
+function render_outlet_tile_callback( array $attributes ): string {
+	$term_id = $attributes['category'] ?? null;
+	if ( ! is_int( $term_id ) ) {
+		return '';
+	}
+	if ( $term_id < 1 ) {
+		return '';
+	}
+	$term = get_term( $term_id );
+	if ( ! $term instanceof \WP_Term ) {
+		return '';
+	}
+
+	try {
+		$href = get_outlet_permalink_with_filter( $term );
+	} catch ( \RuntimeException $e ) {
+		\wc_get_logger()->error( 'Outlet page permalink could not be retrieved.' );
+		return '';
+	}
+	if ( null === $href ) {
+		return '';
+	}
+
+	$name                = 'product_cat' === $term->taxonomy ? $term->name : get_search_index_facet_nice_name( $term );
+	$badge_markup        = '';
+	$display_badge_label = $attributes['displayOutletBadgeLabel'] ?? true;
+	if ( true === $display_badge_label ) {
+		try {
+			$badge_label = get_outlet_badge_label();
+		} catch ( \UnexpectedValueException $e ) {
+			\wc_get_logger()->error( 'Outlet badge label could not be retrieved.' );
+			$badge_label = null;
+		}
+		if ( is_string( $badge_label ) ) {
+			if ( '' !== $badge_label ) {
+				$badge_markup = '<div class="outletpro-tile-tagline" style="font-size:0.75em">' . esc_html( $badge_label ) . '</div>';
+			}
+		}
+	}
+
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'href' => esc_url( $href ),
+		)
+	);
+
+	return '<a ' . $wrapper_attributes . '><div class="outletpro-tile-text">' . esc_html( $name ) . '</div>' . $badge_markup . '</a>';
+}
+
+/**
+ * Register the Outlet Tiles block.
+ *
+ * Container for outlet tile blocks.
+ *
+ * @internal
+ */
+function register_outlet_tiles_block(): void {
+	register_block_type( plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-tiles/' );
+}
+
+/**
+ * Register the Outlet Menu block.
+ *
+ * @internal
+ */
+function register_outlet_menu_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-menu/',
+		array( 'render_callback' => 'OutletPro\render_outlet_menu_callback' )
+	);
+}
+
+/**
+ * Render the outlet menu block.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ * @return string|null Rendered menu markup, or null when items are invalid or the outlet page is unavailable.
+ */
+function render_outlet_menu_callback( array $attributes ): ?string {
+	$items = $attributes['items'] ?? array();
+	if ( ! is_array( $items ) ) {
+		return null;
+	}
+	if ( array_filter( $items, static fn( $id ): bool => is_int( $id ) && $id > 0 ) !== $items ) {
+		return null;
+	}
+
+	try {
+		$permalink = get_outlet_permalink();
+	} catch ( \RuntimeException $e ) {
+		return null;
+	}
+	if ( null === $permalink ) {
+		return null;
+	}
+
+	$terms = empty( $items ) ? array() : get_terms(
+		array(
+			'taxonomy'   => array( 'product_cat', OUTLET_SEARCH_INDEX_TAXONOMY ),
+			'include'    => $items,
+			'hide_empty' => false,
+			'orderby'    => 'include',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		return null;
+	}
+
+	$links = array();
+	if ( true === ( $attributes['showAll'] ?? false ) ) {
+		$links[] = array( __( 'All', 'outletpro' ), $permalink );
+	}
+	foreach ( $terms as $term ) {
+		$url = get_outlet_permalink_with_filter( $term );
+		if ( null === $url ) {
+			continue;
+		}
+		$name = $term->name;
+		if ( OUTLET_SEARCH_INDEX_TAXONOMY === $term->taxonomy ) {
+			$name = get_search_index_facet_nice_name( $term );
+		}
+		$links[] = array( $name, $url );
+	}
+
+	$link_styles          = wp_style_engine_get_styles(
+		array( 'typography' => array( 'textDecoration' => $attributes['style']['typography']['textDecoration'] ?? null ) )
+	);
+	$link_style_attribute = isset( $link_styles['css'] ) ? ' style="' . esc_attr( $link_styles['css'] ) . '"' : '';
+
+	$items = array_map(
+		static fn( array $link ): string => '<li><a href="' . esc_url( $link[1] ) . '"' . $link_style_attribute . '>' . esc_html( $link[0] ) . '</a></li>',
+		$links
+	);
+	return '<menu ' . get_block_wrapper_attributes( array( 'style' => 'list-style-type:none;' ) ) . '>' . join( ' ', $items ) . '</menu>';
 }
 
 /**
@@ -283,6 +444,34 @@ function filter_outlet_product_collection_hook( array $query, \WP_Block $block, 
 		'terms'    => $canonical_term instanceof \WP_Term ? $canonical_term->term_id : 0,
 	);
 
+	$category_filter = get_category_filter_query_param();
+	if ( null !== $category_filter ) {
+		$query['tax_query'][] = array(
+			'taxonomy'         => 'product_cat',
+			'field'            => 'slug',
+			'terms'            => $category_filter,
+			'include_children' => true,
+		);
+	}
+
+	$price_filter = get_price_filter_query_param();
+	if ( null !== $price_filter ) {
+		$query['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'field'    => 'slug',
+			'terms'    => $price_filter,
+		);
+	}
+
+	$discount_filter = get_discount_filter_query_param();
+	if ( null !== $discount_filter ) {
+		$query['tax_query'][] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'field'    => 'slug',
+			'terms'    => $discount_filter,
+		);
+	}
+
 	return $query;
 }
 
@@ -391,7 +580,7 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 }
 
 /**
- * Conditionally render Outlet Group block.
+ * Conditionally render Outlet Conditional block.
  *
  * The current post must be an outlet product for the block to render.
  *
@@ -402,8 +591,8 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
  * @param array<string, mixed> $parsed_block The parsed block data.
  * @return string|null Empty string when hidden, otherwise the existing pre-rendered content.
  */
-function conditionally_render_outlet_group_hook( ?string $pre_render, array $parsed_block ): ?string {
-	if ( 'outletpro/outlet-group' !== ( $parsed_block['blockName'] ?? null ) ) {
+function conditionally_render_outlet_conditional_hook( ?string $pre_render, array $parsed_block ): ?string {
+	if ( 'outletpro/outlet-conditional' !== ( $parsed_block['blockName'] ?? null ) ) {
 		return $pre_render;
 	}
 
@@ -417,7 +606,7 @@ function conditionally_render_outlet_group_hook( ?string $pre_render, array $par
 			return '';
 		}
 	} catch ( \Throwable $e ) {
-		wc_get_logger()->error( 'Outlet product status could not be determined in outlet group block.' );
+		wc_get_logger()->error( 'Outlet product status could not be determined in outlet conditional block.' );
 		return '';
 	}
 

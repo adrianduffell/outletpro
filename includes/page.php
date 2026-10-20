@@ -12,6 +12,68 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Returns the permalink for the outlet page.
+ *
+ * Returns null when the outlet page is not configured.
+ *
+ * @internal
+ * @throws \RuntimeException If the configured outlet page permalink cannot be retrieved.
+ */
+function get_outlet_permalink(): ?string {
+	$page_id = get_outlet_page_id();
+	if ( null === $page_id ) {
+		return null;
+	}
+
+	$permalink = get_permalink( $page_id );
+	if ( ! is_string( $permalink ) ) {
+		throw new \RuntimeException( 'Outlet page permalink could not be retrieved.' );
+	}
+
+	return $permalink;
+}
+
+/**
+ * Returns the outlet page permalink with a filter query param.
+ *
+ * @internal
+ * @param \WP_Term $term Product category or search index facet term.
+ */
+function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
+	$permalink = get_outlet_permalink();
+	if ( null === $permalink ) {
+		return null;
+	}
+
+	if ( 'product_cat' === $term->taxonomy ) {
+		return add_query_arg( 'outlet_category', $term->slug, $permalink );
+	}
+	if ( OUTLET_SEARCH_INDEX_TAXONOMY !== $term->taxonomy ) {
+		return null;
+	}
+
+	if ( 1 !== preg_match( '/^outlet-(price|discount)-([0-9]+)$/D', $term->slug, $matches ) ) {
+		return null;
+	}
+	$type   = $matches[1];
+	$amount = filter_var( $matches[2], FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+	if ( false === $amount ) {
+		return null;
+	}
+	if ( 'price' === $type ) {
+		return add_query_arg( 'outlet_price', $amount, $permalink );
+	}
+	if ( 'discount' === $type ) {
+		if ( $amount > 100 ) {
+			return null;
+		}
+		return add_query_arg( 'outlet_discount', $amount, $permalink );
+	}
+
+	return null;
+}
+
+/**
  * Helper to initialize page integrations.
  *
  * @internal

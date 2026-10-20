@@ -2,9 +2,6 @@ node_modules/
 build/
 vendor/
 AGENTS.md
-CLAUDE.md
-CHANGELOG.md
 README.md
 docs/glossary.md
 docs/public-api.md
-.github/CONTRIBUTING.md
