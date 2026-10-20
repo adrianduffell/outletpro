@@ -90,6 +90,12 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 				'dimensions' => array(
 					'minHeight' => '0',
 				),
+				'spacing'    => array(
+					'padding' => array(
+						'top'    => '0.5em',
+						'bottom' => '0.5em',
+					),
+				),
 			),
 		),
 		'layout'                  => array(
@@ -134,7 +140,7 @@ $grid_attrs = array(
 				'columnCount' => 1,
 			),
 			'typography' => array(
-				'fontSize' => 'clamp(12px, 9vw, 45px)',
+				'fontSize' => 'clamp(12px, 6vw, 45px)',
 			),
 		),
 	),

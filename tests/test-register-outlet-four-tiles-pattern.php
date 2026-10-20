@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\get_pattern_content;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_4_pattern;
 
@@ -67,5 +68,43 @@ class Test_Register_Outlet_Four_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertCount( 4, $items );
 		$this->assertContains( $category_id, $items );
 		$this->assertContains( 0, $items );
+	}
+
+	public function test_uses_compact_stacked_mobile_tiles(): void {
+		// Arrange.
+		init_taxonomies();
+
+		// Act.
+		register_outlet_navigation_4_pattern();
+		$blocks      = parse_blocks( get_pattern_content( 'outletpro/outlet-navigation-4' ) );
+		$grid        = $blocks[0]['innerBlocks'][0];
+		$tile_styles = array_column( array_column( $grid['innerBlocks'], 'attrs' ), 'style' );
+
+		// Assert.
+		$this->assertSame(
+			array_fill(
+				0,
+				4,
+				array(
+					'dimensions' => array(
+						'aspectRatio' => 'auto',
+						'minHeight'   => '0',
+					),
+					'spacing'    => array(
+						'padding' => array(
+							'top'    => '0.5em',
+							'bottom' => '0.5em',
+						),
+					),
+				)
+			),
+			array_column( $tile_styles, '@mobile' )
+		);
+		$this->assertSame( 1, $grid['attrs']['style']['@mobile']['layout']['columnCount'] );
+		$this->assertSame( 'clamp(12px, 6vw, 45px)', $grid['attrs']['style']['@mobile']['typography']['fontSize'] );
+		$this->assertSame( 4, $grid['attrs']['layout']['columnCount'] );
+		$this->assertSame( 2, $grid['attrs']['style']['@tablet']['layout']['columnCount'] );
+		$this->assertSame( array_fill( 0, 4, array( 'aspectRatio' => '1' ) ), array_column( $tile_styles, 'dimensions' ) );
+		$this->assertSame( array_fill( 0, 4, array( 'dimensions' => array( 'aspectRatio' => '1' ) ) ), array_column( $tile_styles, '@tablet' ) );
 	}
 }
