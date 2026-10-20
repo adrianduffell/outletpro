@@ -135,3 +135,21 @@ test.each( [
 	// Assert.
 	expect( selectFacets ).toThrow();
 } );
+
+test( 'selects product categories in editor setting order', () => {
+	// Arrange.
+	const categories = [
+		{ id: 3, name: 'Zebra' },
+		{ id: 1, name: 'Alpha' },
+	];
+	const { registry } = createEditorRegistry( {
+		outletproProductCategories: categories,
+	} );
+
+	// Act.
+	const result = registry.select( store ).getProductCategories();
+
+	// Assert.
+	expect( result ).toEqual( categories );
+	expect( registry.select( store ).getProductCategories() ).toBe( result );
+} );

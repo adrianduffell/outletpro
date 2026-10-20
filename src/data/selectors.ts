@@ -68,3 +68,10 @@ export const getDiscountFacets = createSearchIndexFacetSelector(
 			? settings.outletproDiscountTiers
 			: undefined
 );
+
+export const getProductCategories = createSearchIndexFacetSelector(
+	( settings ) =>
+		'outletproProductCategories' in settings
+			? settings.outletproProductCategories
+			: undefined
+);
