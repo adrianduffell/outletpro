@@ -4,7 +4,7 @@
 
 ## 1.1.0 (Unreleased)
 
-Adds modern category views for the Outlet Page, including a featured category
+Adds modern category views for the Outlet Page, including featured category
 tiles and a full menu. The tiles and menu may link to filtered views of the
 outlet by:
 
