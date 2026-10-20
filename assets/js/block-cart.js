@@ -54,7 +54,6 @@
 			badge.textContent = label;
 
 			const badgeContainer = document.createElement( 'div' );
-			badgeContainer.className = 'outletpro-badge-container';
 			badgeContainer.append( badge );
 			anchor.before( badgeContainer );
 		}

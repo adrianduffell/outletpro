@@ -24,6 +24,6 @@ body.single-product .outletpro-badge {
 	margin-bottom: 0.25em;
 }
 
-.outletpro-badge-container {
+.outletpro-cart-item div:has(> .outletpro-badge) {
 	width: 100%;
 }

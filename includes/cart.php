@@ -143,7 +143,7 @@ function display_cart_item_outlet_badge_hook( $product_name, $cart_item ): strin
 	wp_enqueue_style( 'outletpro-classic-badge' );
 
 	return sprintf(
-		'<div class="outletpro-badge-container"><div class="outletpro-badge">%s</div></div>',
+		'<div><div class="outletpro-badge">%s</div></div>',
 		esc_html( $label )
 	) . $product_name;
 }

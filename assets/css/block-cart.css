@@ -5,7 +5,7 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-.outletpro-badge-container {
+.outletpro-cart-item div:has(> .outletpro-badge) {
 	width: 100%;
 	font-size: var(--wp--preset--font-size--small, 14px);
 }
