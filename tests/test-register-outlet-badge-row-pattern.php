@@ -51,7 +51,8 @@ class Test_Register_Outlet_Badge_Row_Pattern extends WP_UnitTestCase {
 			),
 			$blocks[0]['attrs']['layout']
 		);
-		$this->assertSame( 'outlet-badge-row', $blocks[0]['attrs']['className'] );
+		$this->assertArrayNotHasKey( 'className', $blocks[0]['attrs'] );
+		$this->assertStringContainsString( '<div class="wp-block-outletpro-outlet-conditional">', $blocks[0]['innerHTML'] );
 		$this->assertCount( 1, $blocks[0]['innerBlocks'] );
 		$this->assertSame( 'outletpro/outlet-badge', $blocks[0]['innerBlocks'][0]['blockName'] );
 	}

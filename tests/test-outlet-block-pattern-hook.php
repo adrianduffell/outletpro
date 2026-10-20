@@ -38,7 +38,7 @@ class Test_Outlet_Block_Pattern_Hook extends WP_UnitTestCase {
 			),
 			$blocks[0]['attrs']['layout']
 		);
-		$this->assertSame( 'outlet-badge-row', $blocks[0]['attrs']['className'] );
+		$this->assertArrayNotHasKey( 'className', $blocks[0]['attrs'] );
 		$this->assertSame( 'outletpro/outlet-badge', $blocks[0]['innerBlocks'][0]['blockName'] );
 		$this->assertSame( 'core/post-title', $blocks[1]['blockName'] );
 
