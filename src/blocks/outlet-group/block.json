@@ -1,8 +1,8 @@
 {
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
-	"name": "outletpro/outlet-conditional",
-	"title": "Outlet Conditional",
+	"name": "outletpro/outlet-group",
+	"title": "Outlet Group",
 	"category": "woocommerce",
 	"description": "Conditionally displays contents for outlet products only.",
 	"supports": {

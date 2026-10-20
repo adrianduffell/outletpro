@@ -21,7 +21,7 @@ class Test_Init_Blocks extends WP_UnitTestCase {
 		$registry = WP_Block_Type_Registry::get_instance();
 
 		// Assert.
-		$this->assertTrue( $registry->is_registered( 'outletpro/outlet-conditional' ) );
+		$this->assertTrue( $registry->is_registered( 'outletpro/outlet-group' ) );
 		$this->assertTrue( $registry->is_registered( 'outletpro/outlet-badge' ) );
 		$this->assertTrue( $registry->is_registered( 'outletpro/outlet-message' ) );
 		$this->assertTrue( $registry->is_registered( 'outletpro/outlet-menu' ) );

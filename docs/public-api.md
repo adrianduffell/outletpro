@@ -314,7 +314,7 @@ Use the scale setting to control the height of the badge, and density (called "f
 
 \* Denotes modifiable in settings.
 
-### `outletpro/outlet-conditional`
+### `outletpro/outlet-group`
 
 A container for arbitrary blocks that renders only for outlet products. Added in 1.1.0.
 

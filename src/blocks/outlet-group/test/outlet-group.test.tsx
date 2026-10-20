@@ -40,7 +40,7 @@ jest.mock( '@wordpress/block-editor', () => ( {
 	),
 } ) );
 
-describe( 'Outlet Conditional', () => {
+describe( 'Outlet Group', () => {
 	test( 'allows blocks to be added inside the container', () => {
 		// Arrange.
 		const appenderName = 'Add block';
