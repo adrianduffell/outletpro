@@ -386,16 +386,6 @@ function seed_outlet_search_index_taxonomy(): void {
 		if ( is_wp_error( $result ) ) {
 			throw new \RuntimeException( 'Failed to seed outlet search index taxonomy.' );
 		}
-
-		$order       = preg_replace( '/\D/', '', $term );
-		$meta_result = add_term_meta( $result['term_id'], 'order', $order, true );
-		if ( is_wp_error( $meta_result ) ) {
-			\wc_get_logger()->error( 'Tier menu order could not be seeded.' );
-			throw new \RuntimeException( 'Failed to seed tier menu order.' );
-		}
-		if ( false === $meta_result ) {
-			throw new \RuntimeException( 'Failed to seed tier menu order.' );
-		}
 	}
 
 	// Manually re-index products.
