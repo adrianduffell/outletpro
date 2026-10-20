@@ -3,7 +3,7 @@
 Outlet uses the following terminology:
 
 | Name            | Definition                                                  |
-| --------------- | ------------------------------------------------------------|
+| --------------- | ----------------------------------------------------------- |
 | Outlet          | Shopping destination featuring discounts on clearance stock |
 | Outlet products | Products included in the store’s outlet                     |
 | Outlet badge    | Visual mark displayed on outlet products                    |
