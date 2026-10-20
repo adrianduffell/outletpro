@@ -44,8 +44,7 @@
 			"type": "object",
 			"default": {
 				"typography": {
-					"textDecoration": "none",
-					"fontSize": "var(--wp--preset--font-size--medium)"
+					"textDecoration": "none"
 				},
 				"spacing": {
 					"blockGap": "1em",
