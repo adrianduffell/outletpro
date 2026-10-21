@@ -4,7 +4,7 @@ Tags: outlet, clearance, final sale, discontinued products, offers
 Requires at least: 7.0
 Tested up to: 7.1.3
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -37,20 +37,9 @@ No. This plugin introduces a dedicated outlet, which you can name anything you l
 
 A draft outlet page named "Outlet" is automatically created when the extension is installed. Update it as needed and publish it to make it visible on your store.
 
-
 == Changelog ==
 
-= 1.0.2 =
-* Fixed: The field label was mis-aligned in the bulk editor.
-* Fixed: The outlet badge block’s label was reverting to the default value when empty.
-* Fixed: A PHP notice was displaying on the widget editor.
-* The settings sidebar no longer adds an icon to the full site editor toolbar.
-
-= 1.0.1 =
-* Add HPOS compatibility declaration
-
-= 1.0.0 =
-* Initial release.
+View the changelog on GitHub: https://github.com/adrianduffell/outlet-pro/blob/main/README.md
 
 == Known issues ==
 
