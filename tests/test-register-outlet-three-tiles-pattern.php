@@ -15,6 +15,24 @@ use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
+	public function test_applies_badge_colors_to_each_tile(): void {
+		// Arrange.
+		init_taxonomies();
+		update_option( OUTLET_BADGE_BG_COLOR_OPTION, '#ffff00' );
+		update_option( OUTLET_BADGE_TEXT_COLOR_OPTION, '#123456' );
+
+		// Act.
+		register_outlet_navigation_3_pattern();
+		$blocks      = parse_blocks( get_pattern_content( 'outletpro/outlet-navigation-3' ) );
+		$grid        = $blocks[0]['innerBlocks'][0];
+		$tile_styles = array_column( array_column( $grid['innerBlocks'], 'attrs' ), 'style' );
+
+		// Assert.
+		$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
+		$this->assertSame( array_fill( 0, 3, '#123456' ), array_column( array_column( $tile_styles, 'color' ), 'text' ) );
+		$this->assertSame( array_fill( 0, 3, '#ffff00' ), array_column( array_column( $tile_styles, 'color' ), 'background' ) );
+	}
+
 	public function test_leaves_unset_colors_unstyled(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Exercise missing and empty options with the same assertions.
 		foreach ( array( null, '' ) as $color ) {
 			// Arrange.
@@ -33,7 +51,8 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 			$grid    = $blocks[0]['innerBlocks'][0];
 
 			// Assert.
-			$this->assertEmpty( $grid['attrs']['style']['color']['text'] );
+			$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
+			$this->assertEmpty( $grid['innerBlocks'][0]['attrs']['style']['color']['text'] );
 			$this->assertEmpty( $grid['innerBlocks'][0]['attrs']['style']['color']['background'] );
 			$this->assertStringNotContainsString( 'has-text-color', $pattern['content'] );
 			$this->assertStringNotContainsString( 'color:', $pattern['content'] );
