@@ -37,20 +37,9 @@ No. This plugin introduces a dedicated outlet, which you can name anything you l
 
 A draft outlet page named "Outlet" is automatically created when the extension is installed. Update it as needed and publish it to make it visible on your store.
 
-
 == Changelog ==
 
-= 1.0.2 =
-* Fixed: The field label was mis-aligned in the bulk editor.
-* Fixed: The outlet badge block’s label was reverting to the default value when empty.
-* Fixed: A PHP notice was displaying on the widget editor.
-* The settings sidebar no longer adds an icon to the full site editor toolbar.
-
-= 1.0.1 =
-* Add HPOS compatibility declaration
-
-= 1.0.0 =
-* Initial release.
+View the changelog on GitHub: https://github.com/adrianduffell/outlet-pro/blob/main/CHANGELOG.md
 
 == Known issues ==
 
