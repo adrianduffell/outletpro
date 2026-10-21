@@ -51,7 +51,10 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 			'dimensions' => array(
 				'aspectRatio' => '1',
 			),
-			'color'      => array( 'background' => $bg_color ),
+			'color'      => array(
+				'background' => $bg_color,
+				'text'       => $text_color,
+			),
 			'spacing'    => array(
 				'blockGap' => '0',
 				'padding'  => array(
@@ -90,7 +93,6 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 $grid_attrs = array(
 	'align'  => 'full',
 	'style'  => array(
-		'color'      => array( 'text' => $text_color ),
 		'spacing'    => array(
 			'blockGap' => 'var:preset|spacing|70',
 			'margin'   => array(

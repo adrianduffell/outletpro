@@ -11,9 +11,29 @@ use function OutletPro\get_pattern_content;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_6_pattern;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
+use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
+use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
+
+	public function test_applies_badge_colors_to_each_tile(): void {
+		// Arrange.
+		init_taxonomies();
+		update_option( OUTLET_BADGE_BG_COLOR_OPTION, '#ffff00' );
+		update_option( OUTLET_BADGE_TEXT_COLOR_OPTION, '#123456' );
+
+		// Act.
+		register_outlet_navigation_6_pattern();
+		$blocks      = parse_blocks( get_pattern_content( 'outletpro/outlet-navigation-6' ) );
+		$grid        = $blocks[0]['innerBlocks'][0];
+		$tile_styles = array_column( array_column( $grid['innerBlocks'], 'attrs' ), 'style' );
+
+		// Assert.
+		$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
+		$this->assertSame( array_fill( 0, 6, '#123456' ), array_column( array_column( $tile_styles, 'color' ), 'text' ) );
+		$this->assertSame( array_fill( 0, 6, '#ffff00' ), array_column( array_column( $tile_styles, 'color' ), 'background' ) );
+	}
 
 	public function test_uses_compact_stacked_mobile_tiles(): void {
 		// Arrange.

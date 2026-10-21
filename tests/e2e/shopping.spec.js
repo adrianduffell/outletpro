@@ -226,6 +226,34 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	await expect( customerPage.locator( '#wpadminbar' ) ).toHaveCount( 0 );
 
+	// Check tile colors
+	const [ textColor, backgroundColor ] = await customerPage.evaluate(
+		( colors ) => {
+			const swatch = document.createElement( 'span' );
+			document.body.append( swatch );
+			const normalizedColors = colors.map( ( color ) => {
+				swatch.style.color = color;
+				return window.getComputedStyle( swatch ).color;
+			} );
+			swatch.remove();
+			return normalizedColors;
+		},
+		[
+			wpSettings.outletpro_badge_text_color,
+			wpSettings.outletpro_badge_bg_color,
+		]
+	);
+	const tiles = customerPage.locator( 'a.wp-block-outletpro-outlet-tile' );
+	await expect( tiles.first() ).toBeVisible();
+	for ( const tile of await tiles.all() ) {
+		await expect( tile ).toHaveCSS( 'color', textColor );
+		await expect( tile ).toHaveCSS( 'background-color', backgroundColor );
+		await tile.hover();
+		await expect( tile ).toHaveCSS( 'color', textColor );
+		await tile.focus();
+		await expect( tile ).toHaveCSS( 'color', textColor );
+	}
+
 	// Add an outlet product to the cart.
 	await customerPage
 		.getByRole( 'button', { name: /add to cart/i } )
