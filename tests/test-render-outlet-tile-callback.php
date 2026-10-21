@@ -43,6 +43,57 @@ class Test_Render_Outlet_Tile_Callback extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'outlet_category=clothing', $output );
 		$this->assertStringContainsString( 'Clothing', $output );
 		$this->assertStringContainsString( 'Last chance', $output );
+		$this->assertStringContainsString( 'text-decoration:none', $output );
+	}
+
+	public function test_uses_default_text_decoration_with_custom_styles(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$term_id = self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+		$content = '<!-- wp:outletpro/outlet-tile ' . wp_json_encode(
+			array(
+				'category' => $term_id,
+				'style'    => array(
+					'spacing'    => array( 'padding' => array( 'top' => '2em' ) ),
+					'typography' => array( 'textAlign' => 'center' ),
+				),
+			)
+		) . ' /-->';
+
+		// Act.
+		$output = do_blocks( $content );
+
+		// Assert.
+		$this->assertStringContainsString( 'text-decoration:none', $output );
+		$this->assertStringContainsString( 'padding-top:2em', $output );
+		$this->assertStringContainsString( 'has-text-align-center', $output );
+	}
+
+	public function test_renders_selected_text_decoration(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$term_id = self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+		$content = '<!-- wp:outletpro/outlet-tile ' . wp_json_encode(
+			array(
+				'category' => $term_id,
+				'style'    => array(
+					'typography' => array( 'textDecoration' => 'underline' ),
+				),
+			)
+		) . ' /-->';
+
+		// Act.
+		$output = do_blocks( $content );
+
+		// Assert.
+		$this->assertStringContainsString( 'text-decoration:underline', $output );
+		$this->assertStringNotContainsString( 'text-decoration:none', $output );
 	}
 
 	public function test_renders_price(): void {

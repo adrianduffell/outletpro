@@ -98,9 +98,11 @@ function register_outlet_tile_block(): void {
  *
  * @internal
  * @param array<string, mixed> $attributes Block attributes.
+ * @param string               $_content   Block inner content (unused).
+ * @param \WP_Block            $block      Block instance.
  * @return string Rendered tile markup.
  */
-function render_outlet_tile_callback( array $attributes ): string {
+function render_outlet_tile_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$term_id = $attributes['category'] ?? null;
 	if ( ! is_int( $term_id ) ) {
 		return '';
@@ -140,9 +142,15 @@ function render_outlet_tile_callback( array $attributes ): string {
 		}
 	}
 
+	$text_decoration = $attributes['style']['typography']['textDecoration'] ?? $block->block_type->attributes['style']['default']['typography']['textDecoration'];
+	$link_styles     = wp_style_engine_get_styles(
+		array( 'typography' => array( 'textDecoration' => $text_decoration ) )
+	);
+
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'href' => esc_url( $href ),
+			'href'  => esc_url( $href ),
+			'style' => $link_styles['css'] ?? '',
 		)
 	);
 
