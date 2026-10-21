@@ -107,6 +107,19 @@ function get_pattern_content( string $pattern_name ): string {
 }
 
 /**
+ * Get the preferred font size preset for outlet menus in patterns.
+ *
+ * @internal
+ * @return string Font size preset slug.
+ */
+function get_outlet_menu_font_size_preset(): string {
+	$font_sizes_by_origin = wp_get_global_settings( array( 'typography', 'fontSizes' ) );
+	$font_sizes           = array_merge( ...array_values( $font_sizes_by_origin ) );
+
+	return in_array( 'normal', array_column( $font_sizes, 'slug' ), true ) ? 'normal' : 'medium';
+}
+
+/**
  * Register the outlet navigation with three category tiles pattern.
  *
  * @internal

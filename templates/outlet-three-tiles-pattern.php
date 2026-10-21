@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\get_outlet_menu_font_size_preset;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
@@ -180,8 +181,9 @@ if ( is_wp_error( $facets ) ) {
 usort( $facets, static fn( WP_Term $a, WP_Term $b ): int => strnatcmp( $a->slug, $b->slug ) );
 
 $menu_attrs = array(
-	'showAll' => true,
-	'items'   => $menu_categories,
+	'fontSize' => get_outlet_menu_font_size_preset(),
+	'showAll'  => true,
+	'items'    => $menu_categories,
 );
 foreach ( $facets as $facet ) {
 	if ( ! preg_match( '/^outlet-(price|discount)-[0-9]+$/D', $facet->slug ) ) {
