@@ -64,7 +64,10 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 					'left'   => '0.75em',
 				),
 			),
-			'typography' => array( 'textAlign' => 'center' ),
+			'typography' => array(
+				'textAlign'      => 'center',
+				'textDecoration' => 'none',
+			),
 			'layout'     => array(
 				'selfStretch' => 'fill',
 			),

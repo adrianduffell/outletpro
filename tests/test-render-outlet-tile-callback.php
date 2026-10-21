@@ -46,7 +46,7 @@ class Test_Render_Outlet_Tile_Callback extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'text-decoration:none', $output );
 	}
 
-	public function test_uses_default_text_decoration_with_custom_styles(): void {
+	public function test_renders_custom_tile_styles(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
@@ -58,7 +58,10 @@ class Test_Render_Outlet_Tile_Callback extends WP_UnitTestCase {
 				'category' => $term_id,
 				'style'    => array(
 					'spacing'    => array( 'padding' => array( 'top' => '2em' ) ),
-					'typography' => array( 'textAlign' => 'center' ),
+					'typography' => array(
+						'textAlign'      => 'center',
+						'textDecoration' => 'none',
+					),
 				),
 			)
 		) . ' /-->';

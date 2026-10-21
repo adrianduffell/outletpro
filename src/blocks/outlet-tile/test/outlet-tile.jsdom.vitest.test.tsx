@@ -138,37 +138,3 @@ test( 'omits the disabled badge label from the preview', () => {
 	expect( screen.getByRole( 'link' ) ).toHaveTextContent( 'Under $25' );
 	expect( screen.queryByText( 'Sale & clearance' ) ).not.toBeInTheDocument();
 } );
-
-test.each< {
-	style: Attributes[ 'style' ];
-	expectedDecoration: string;
-} >( [
-	{ style: undefined, expectedDecoration: 'none' },
-	{ style: { typography: {} }, expectedDecoration: 'none' },
-	{
-		style: { typography: { textDecoration: 'underline' } },
-		expectedDecoration: 'underline',
-	},
-	{
-		style: { typography: { textDecoration: 'line-through' } },
-		expectedDecoration: 'line-through',
-	},
-] )(
-	'previews text decoration as $expectedDecoration',
-	( { style, expectedDecoration } ) => {
-		// Arrange.
-		const attributes: Attributes = {
-			category: 1,
-			displayOutletBadgeLabel: true,
-			style,
-		};
-
-		// Act.
-		renderTile( attributes );
-
-		// Assert.
-		expect( screen.getByRole( 'link' ) ).toHaveStyle( {
-			textDecoration: expectedDecoration,
-		} );
-	}
-);

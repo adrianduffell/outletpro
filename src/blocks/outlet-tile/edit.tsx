@@ -9,16 +9,11 @@ import { useEntityProp, useEntityRecords } from '@wordpress/core-data';
 import { useSelect } from '@wordpress/data';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
-import type { CSSProperties } from 'react';
 import { store as outletStore } from '../../data';
-import metadata from './block.json';
 
 type Attributes = {
 	category: number;
 	displayOutletBadgeLabel: boolean;
-	style?: {
-		typography?: { textDecoration?: CSSProperties[ 'textDecoration' ] };
-	};
 };
 
 type EditProps = {
@@ -32,7 +27,7 @@ type TileItem = { id: number; name: string };
 const EMPTY_ITEMS: TileItem[] = [];
 
 export function Edit( {
-	attributes: { category, displayOutletBadgeLabel, style },
+	attributes: { category, displayOutletBadgeLabel },
 	setAttributes,
 	__unstableLayoutClassNames,
 }: EditProps ): JSX.Element {
@@ -65,11 +60,6 @@ export function Edit( {
 	);
 	const blockProps = useBlockProps( {
 		className: __unstableLayoutClassNames,
-		style: {
-			textDecoration:
-				style?.typography?.textDecoration ??
-				metadata.attributes.style.default.typography.textDecoration,
-		},
 		href: window.location.href,
 		onClick: ( event: React.MouseEvent< HTMLAnchorElement > ) =>
 			event.preventDefault(),
