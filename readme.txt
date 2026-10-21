@@ -39,7 +39,7 @@ A draft outlet page named "Outlet" is automatically created when the extension i
 
 == Changelog ==
 
-View the changelog on GitHub: https://github.com/adrianduffell/outlet-pro/blob/main/README.md
+View the changelog on GitHub: https://github.com/adrianduffell/outlet-pro/blob/main/CHANGELOG.md
 
 == Known issues ==
 
