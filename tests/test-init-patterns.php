@@ -16,7 +16,7 @@ use function OutletPro\init_taxonomies;
 use const OutletPro\OUTLET_PAGE_OPTION;
 class Test_Init_Patterns extends WP_UnitTestCase {
 
-	public function test_navigation_patterns_set_menu_margins_and_padding(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Verify spacing across all four navigation patterns.
+	public function test_navigation_patterns_preserve_menu_styles(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Verify menu styles across all four navigation patterns.
 		// Arrange.
 		switch_theme( 'storefront' );
 		deinit_blocks();
@@ -44,18 +44,20 @@ class Test_Init_Patterns extends WP_UnitTestCase {
 			$this->assertSame( 'outletpro/outlet-menu', $menu['blockName'] );
 			$this->assertSame(
 				array(
-					'spacing' => array(
-						'margin'  => array(
+					'spacing'    => array(
+						'blockGap' => '1em',
+						'margin'   => array(
 							'top'    => '2.5rem',
 							'bottom' => '2.5rem',
 						),
-						'padding' => array(
+						'padding'  => array(
 							'top'    => '0',
 							'right'  => '0',
 							'bottom' => '0',
 							'left'   => '0',
 						),
 					),
+					'typography' => array( 'textDecoration' => 'none' ),
 				),
 				$menu['attrs']['style']
 			);
@@ -68,6 +70,7 @@ class Test_Init_Patterns extends WP_UnitTestCase {
 			$this->assertStringContainsString( 'padding-right:0', $output );
 			$this->assertStringContainsString( 'padding-bottom:0', $output );
 			$this->assertStringContainsString( 'padding-left:0', $output );
+			$this->assertStringContainsString( 'text-decoration:none', $output );
 		}
 	}
 

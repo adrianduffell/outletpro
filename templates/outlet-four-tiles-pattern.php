@@ -187,18 +187,20 @@ $menu_attrs = array(
 	'showAll'  => true,
 	'items'    => $menu_categories,
 	'style'    => array(
-		'spacing' => array(
-			'margin'  => array(
+		'spacing'    => array(
+			'blockGap' => '1em',
+			'margin'   => array(
 				'top'    => '2.5rem',
 				'bottom' => '2.5rem',
 			),
-			'padding' => array(
+			'padding'  => array(
 				'top'    => '0',
 				'right'  => '0',
 				'bottom' => '0',
 				'left'   => '0',
 			),
 		),
+		'typography' => array( 'textDecoration' => 'none' ),
 	),
 );
 foreach ( $facets as $facet ) {
