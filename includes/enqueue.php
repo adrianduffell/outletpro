@@ -68,6 +68,8 @@ function deinit_enqueue(): void {
 	wp_deregister_style( 'outletpro-badge-block' );
 	wp_dequeue_style( 'outletpro-tile-block' );
 	wp_deregister_style( 'outletpro-tile-block' );
+	wp_dequeue_style( 'outletpro-menu-block' );
+	wp_deregister_style( 'outletpro-menu-block' );
 }
 
 /**
@@ -308,6 +310,16 @@ function register_block_styles(): void {
 		'outletpro/outlet-tile',
 		array(
 			'handle' => 'outletpro-tile-block',
+			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+			'deps'   => array(),
+			'ver'    => $asset['version'],
+		)
+	);
+
+	wp_enqueue_block_style(
+		'outletpro/outlet-menu',
+		array(
+			'handle' => 'outletpro-menu-block',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 			'deps'   => array(),
 			'ver'    => $asset['version'],
