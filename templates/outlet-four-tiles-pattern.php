@@ -183,8 +183,9 @@ if ( is_wp_error( $facets ) ) {
 usort( $facets, static fn( WP_Term $a, WP_Term $b ): int => strnatcmp( $a->slug, $b->slug ) );
 
 $menu_attrs = array(
-	'showAll' => true,
-	'items'   => $menu_categories,
+	'fontSize' => 'small',
+	'showAll'  => true,
+	'items'    => $menu_categories,
 );
 foreach ( $facets as $facet ) {
 	if ( ! preg_match( '/^outlet-(price|discount)-[0-9]+$/D', $facet->slug ) ) {
