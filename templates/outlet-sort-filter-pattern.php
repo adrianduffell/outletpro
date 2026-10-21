@@ -13,8 +13,8 @@
 
 $outletpro_orderby_id = uniqid('outletpro-orderby-');
 ?>
-<!-- wp:group {"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
-<div class="wp-block-group"><!-- wp:html -->
+<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}},"layout":{"type":"flex","flexWrap":"nowrap","justifyContent":"right"}} -->
+<div class="wp-block-group" style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0"><!-- wp:html -->
 <style data-wp-block-html="css">
 body[data-resizable-iframe-connected]{
   text-align: right;
