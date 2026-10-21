@@ -15,7 +15,7 @@ use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 
 class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
-	public function test_applies_badge_colors_to_each_tile(): void {
+	public function test_applies_tile_styles(): void {
 		// Arrange.
 		init_taxonomies();
 		update_option( OUTLET_BADGE_BG_COLOR_OPTION, '#ffff00' );
@@ -31,6 +31,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
 		$this->assertSame( array_fill( 0, 3, '#123456' ), array_column( array_column( $tile_styles, 'color' ), 'text' ) );
 		$this->assertSame( array_fill( 0, 3, '#ffff00' ), array_column( array_column( $tile_styles, 'color' ), 'background' ) );
+		$this->assertSame( array_fill( 0, 3, 'none' ), array_column( array_column( $tile_styles, 'typography' ), 'textDecoration' ) );
 	}
 
 	public function test_leaves_unset_colors_unstyled(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Exercise missing and empty options with the same assertions.

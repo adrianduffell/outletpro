@@ -18,6 +18,9 @@
 				"dimensions": {
 					"minHeight": "200px"
 				},
+				"typography": {
+					"textDecoration": "none"
+				},
 				"spacing": {
 					"blockGap": "0",
 					"padding": {

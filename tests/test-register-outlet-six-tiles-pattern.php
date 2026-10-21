@@ -17,7 +17,7 @@ use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
-	public function test_applies_badge_colors_to_each_tile(): void {
+	public function test_applies_tile_styles(): void {
 		// Arrange.
 		init_taxonomies();
 		update_option( OUTLET_BADGE_BG_COLOR_OPTION, '#ffff00' );
@@ -33,6 +33,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
 		$this->assertSame( array_fill( 0, 6, '#123456' ), array_column( array_column( $tile_styles, 'color' ), 'text' ) );
 		$this->assertSame( array_fill( 0, 6, '#ffff00' ), array_column( array_column( $tile_styles, 'color' ), 'background' ) );
+		$this->assertSame( array_fill( 0, 6, 'none' ), array_column( array_column( $tile_styles, 'typography' ), 'textDecoration' ) );
 	}
 
 	public function test_uses_compact_stacked_mobile_tiles(): void {

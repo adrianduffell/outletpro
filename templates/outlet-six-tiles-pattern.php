@@ -72,6 +72,7 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 				'background' => $bg_color,
 				'text'       => $text_color,
 			),
+			'typography' => array( 'textDecoration' => 'none' ),
 			'spacing'    => array(
 				'blockGap' => '0',
 				'padding'  => array(
