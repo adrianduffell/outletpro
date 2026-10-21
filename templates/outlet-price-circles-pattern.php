@@ -168,6 +168,20 @@ $menu_attrs = array(
 	'fontSize' => 'small',
 	'showAll'  => true,
 	'items'    => $menu_categories,
+	'style'    => array(
+		'spacing' => array(
+			'margin'  => array(
+				'top'    => '2.5rem',
+				'bottom' => '2.5rem',
+			),
+			'padding' => array(
+				'top'    => '0',
+				'right'  => '0',
+				'bottom' => '0',
+				'left'   => '0',
+			),
+		),
+	),
 );
 foreach ( $facets as $facet ) {
 	if ( ! preg_match( '/^outlet-discount-[0-9]+$/D', $facet->slug ) ) {
