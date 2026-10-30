@@ -12,18 +12,19 @@ use function OutletPro\init_page;
 
 class Test_Deinit_Page extends WP_UnitTestCase {
 
-	public function test_template_is_unregistered_after_deinit_page(): void {
+	public function test_removes_catalog_hooks(): void {
 		// Arrange.
-		deinit_page();
 		init_page();
-		$template = get_block_template( 'outletpro//outlet-page', 'wp_template' );
-		$this->assertNotNull( $template );
 
 		// Act.
 		deinit_page();
 
 		// Assert.
-		$this->assertNull( get_block_template( 'outletpro//outlet-page', 'wp_template' ) );
+		$this->assertFalse( has_filter( 'request', 'OutletPro\\outlet_catalog_request_hook' ) );
+		$this->assertFalse( has_filter( 'pre_get_block_templates', 'OutletPro\\outlet_catalog_templates_hook' ) );
+		$this->assertFalse( has_filter( 'get_post_metadata', 'OutletPro\\outlet_catalog_metadata_hook' ) );
+		$this->assertFalse( has_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_catalog_breadcrumb_hook' ) );
+		$this->assertFalse( has_action( 'woocommerce_breadcrumb', 'OutletPro\\outlet_catalog_breadcrumb_fallback_hook' ) );
 	}
 
 	public function test_unregisters_all_templates_in_outletpro_namespace(): void {

@@ -60,6 +60,8 @@ require_once __DIR__ . '/includes/enqueue-license.php';
 // #endif
 require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
+require_once __DIR__ . '/includes/catalog.php';
+require_once __DIR__ . '/includes/catalog-template.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';

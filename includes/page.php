@@ -79,7 +79,7 @@ function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
  * @internal
  */
 function init_page(): void {
-	register_outlet_page_template();
+	init_catalog();
 }
 
 /**
@@ -88,6 +88,7 @@ function init_page(): void {
  * @internal
  */
 function deinit_page(): void {
+	deinit_catalog();
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
 	foreach ( $templates as $template_name => $template ) {
@@ -97,36 +98,6 @@ function deinit_page(): void {
 
 		unregister_block_template( $template_name );
 	}
-}
-
-/**
- * Register the outlet page template.
- *
- * @internal
- */
-function register_outlet_page_template(): void {
-	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-page.html';
-
-	if ( ! is_readable( $template_path ) ) {
-		return;
-	}
-
-	$template_content = file_get_contents( $template_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Loading local template file from plugin directory.
-
-	if ( false === $template_content ) {
-		return;
-	}
-
-	register_block_template(
-		'outletpro//outlet-page',
-		array(
-			'title'       => __( 'Outlet page', 'outletpro' ),
-			'description' => __( 'Wide page template for the outlet page.', 'outletpro' ),
-			'post_types'  => array( 'page' ),
-			'content'     => $template_content,
-			'plugin'      => 'outletpro',
-		)
-	);
 }
 
 /**
@@ -230,101 +201,7 @@ function create_outlet_page(): void {
 		);
 	}
 
-	if ( wp_is_block_theme() ) {
-		$orderby = apply_filters( 'woocommerce_default_catalog_orderby', get_option( 'woocommerce_default_catalog_orderby', 'menu_order' ) );
-
-		$parts    = explode( '-', $orderby );
-		$order_by = $parts[0] ?? 'menu_order';
-
-		switch ( $order_by ) {
-			case 'popularity':
-			case 'rating':
-			case 'date':
-				$order = $parts[1] ?? 'desc';
-				break;
-
-			case 'menu_order':
-			default:
-				$order = $parts[1] ?? 'asc';
-				break;
-		}
-
-		$block_attrs = wp_json_encode(
-			array(
-				'queryId'              => 1,
-				'query'                => array(
-					'perPage'                       => wc_get_default_products_per_row() * wc_get_default_product_rows_per_page(),
-					'pages'                         => 0,
-					'offset'                        => 0,
-					'postType'                      => 'product',
-					'order'                         => $order,
-					'orderBy'                       => $order_by,
-					'search'                        => '',
-					'exclude'                       => array(),
-					'inherit'                       => false,
-					'isProductCollectionBlock'      => true,
-					'outletpro'                     => true,
-					'featured'                      => false,
-					'woocommerceOnSale'             => false,
-					'woocommerceStockStatus'        => array( 'instock', 'outofstock', 'onbackorder' ),
-					'woocommerceAttributes'         => array(),
-					'woocommerceHandPickedProducts' => array(),
-					'filterable'                    => true,
-					'relatedBy'                     => array(
-						'categories' => true,
-						'tags'       => true,
-					),
-				),
-				'tagName'              => 'div',
-				'displayLayout'        => array(
-					'type'          => 'flex',
-					'columns'       => wc_get_default_products_per_row(),
-					'shrinkColumns' => true,
-				),
-				'dimensions'           => array(
-					'widthType' => 'fill',
-				),
-				'hideControls'         => array( 'inherit' ),
-				'queryContextIncludes' => array( 'collection' ),
-			)
-		);
-		// phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
-		$post_content = '<!-- wp:woocommerce/product-collection ' . $block_attrs . ' -->' . "\n" .
-			'<div class="wp-block-woocommerce-product-collection"><!-- wp:woocommerce/product-template -->' . "\n" .
-			'<!-- wp:woocommerce/product-image {"showSaleBadge":false,"imageSizing":"thumbnail","isDescendentOfQueryLoop":true} -->' . "\n" .
-			'<!-- wp:woocommerce/product-sale-badge {"align":"right"} /-->' . "\n" .
-			'<!-- /wp:woocommerce/product-image -->' . "\n\n" .
-			'<!-- wp:post-title {"textAlign":"center","isLink":true,"style":{"spacing":{"margin":{"bottom":"0.75rem","top":"0"}},"typography":{"lineHeight":"1.4"}},"fontSize":"medium","__woocommerceNamespace":"woocommerce/product-collection/product-title"} /-->' . "\n\n" .
-			'<!-- wp:woocommerce/product-price {"isDescendentOfQueryLoop":true,"textAlign":"center","fontSize":"small"} /-->' . "\n\n" .
-			'<!-- wp:woocommerce/product-button {"textAlign":"center","isDescendentOfQueryLoop":true,"fontSize":"small"} /-->' . "\n" .
-			'<!-- /wp:woocommerce/product-template -->' . "\n\n" .
-			'<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"center"}} -->' . "\n" .
-			'<!-- wp:query-pagination-previous /-->' . "\n\n" .
-			'<!-- wp:query-pagination-numbers /-->' . "\n\n" .
-			'<!-- wp:query-pagination-next /-->' . "\n" .
-			'<!-- /wp:query-pagination -->' . "\n\n" .
-			'<!-- wp:woocommerce/product-collection-no-results -->' . "\n" .
-			'<!-- wp:group {"layout":{"type":"flex","orientation":"vertical","justifyContent":"center","flexWrap":"wrap"}} -->' . "\n" .
-			'<div class="wp-block-group"><!-- wp:paragraph {"fontSize":"medium"} -->' . "\n" .
-			'<p class="has-medium-font-size"><strong>No results found</strong></p>' . "\n" .
-			'<!-- /wp:paragraph -->' . "\n\n" .
-			'<!-- wp:paragraph -->' . "\n" .
-			'<p>You can try <a href="#" class="wc-link-clear-any-filters">clearing any filters</a> or head to our <a href="#" class="wc-link-stores-home">store&#8217;s home</a></p>' . "\n" .
-			'<!-- /wp:paragraph --></div>' . "\n" .
-			'<!-- /wp:group -->' . "\n" .
-			'<!-- /wp:woocommerce/product-collection-no-results --></div>' . "\n" .
-			'<!-- /wp:woocommerce/product-collection -->';
-		// phpcs:enable
-	} else {
-		$products_per_row = wc_get_default_products_per_row();
-		$post_content     = '<!-- wp:shortcode -->' . "\n" .
-			sprintf(
-				'[products outletpro="yes" paginate="yes" columns="%d" limit="%d"]',
-				$products_per_row,
-				$products_per_row * wc_get_default_product_rows_per_page()
-			) . "\n" .
-			'<!-- /wp:shortcode -->';
-	}
+	$post_content = '';
 
 	$page_id = wp_insert_post(
 		array(
@@ -341,21 +218,6 @@ function create_outlet_page(): void {
 	}
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
-
-	if ( wp_is_block_theme() && version_compare( get_bloginfo( 'version' ), '7.0', '>=' ) ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
-		try {
-			$sort_filter_content = get_pattern_content( 'outletpro/outlet-sort-filter' );
-		} catch ( \InvalidArgumentException | \RuntimeException $e ) {
-			throw new \RuntimeException(
-				'Could not insert sort filter in outlet page.',
-				0,
-				$e // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Passing previous exception for chaining.
-			);
-		}
-		if ( '' !== $sort_filter_content ) {
-			$post_content = $sort_filter_content . "\n\n" . $post_content;
-		}
-	}
 
 	$categories = get_terms(
 		array(
@@ -403,13 +265,12 @@ function create_outlet_page(): void {
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException( 'Could not update outlet page content.' );
 	}
-
-	if ( wp_is_block_theme() ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
-		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
-		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( 'Could not set outlet page template.' );
-		}
+	$template = create_outlet_catalog_template();
+	if ( null === $template ) {
+		return;
 	}
+
+	update_post_meta( $page_id, '_wp_page_template', $template );
 }
 
 /**

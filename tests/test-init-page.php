@@ -12,17 +12,15 @@ use function OutletPro\init_page;
 
 class Test_Init_Page extends WP_UnitTestCase {
 
-	public function test_registers_outlet_page_template_when_template_api_is_available(): void {
+	public function test_registers_catalog_without_a_standalone_outlet_template(): void {
 		// Arrange.
 		deinit_page();
-		$this->assertNull( get_block_template( 'outletpro//outlet-page', 'wp_template' ) );
 
 		// Act.
 		init_page();
 
 		// Assert.
-		$template = get_block_template( 'outletpro//outlet-page', 'wp_template' );
-		$this->assertMatchesRegularExpression( '/outlet-page/', $template->id ); // The namespace differs in tests (default//outlet-page).
-		$this->assertSame( 'outletpro', $template->plugin );
+		$this->assertNotFalse( has_filter( 'request', 'OutletPro\\outlet_catalog_request_hook' ) );
+		$this->assertNull( get_block_template( 'outletpro//outlet-page', 'wp_template' ) );
 	}
 }
