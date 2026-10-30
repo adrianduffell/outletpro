@@ -21,10 +21,10 @@
 
 2026-06-07 - version 1.0.1
 
-Added - "WC requires at least" plugin header
-Added - "WC tested up to" plugin header
-Added - POS compatibility
+* Added - "WC requires at least" plugin header
+* Added - "WC tested up to" plugin header
+* Added - HPOS compatibility
 
 2026-06-07 - version 1.0.0
 
-Added - Initial release includes outlet page, badge, and message. Compatible with block and classic themes.
+* Added - Initial release includes outlet page, badge, and message. Compatible with block and classic themes.
