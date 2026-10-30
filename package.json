@@ -19,6 +19,7 @@
 		"lint:php": "vendor/bin/phpcs -s",
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip && zip -d outletpro.zip outletpro/package.json outletpro/README.md",
+		"plugin-zip:marketplace": "npm run plugin-zip && zip -d outletpro.zip outletpro/CHANGELOG.md && mv .marketplace outletpro && zip outletpro.zip outletpro/changelog.txt && mv outletpro .marketplace",
 		"preprocess": "./bin/preprocess.sh",
 		"preprocess:marketplace": "./bin/preprocess-marketplace.sh",
 		"start": "wp-scripts start",
