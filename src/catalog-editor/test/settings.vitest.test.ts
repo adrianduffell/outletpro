@@ -4,58 +4,7 @@
  */
 
 import { expect, test } from 'vitest';
-import { getCatalogEditorSettings, getCatalogEditorUrl } from '../settings';
-
-test( 'ordinary pages do not enable the catalog preview', () => {
-	// Arrange.
-	const settings = { supportsTemplateMode: true };
-
-	// Act.
-	const result = getCatalogEditorSettings( settings );
-
-	// Assert.
-	expect( result.isCatalog ).toBe( false );
-	expect( result.templateId ).toBeNull();
-} );
-
-test( 'catalog preview settings require booleans without coercion', () => {
-	// Arrange.
-	const settings = {
-		outletproCatalogPage: 'true',
-		outletproIsBlockTheme: 1,
-		supportsTemplateMode: true,
-	};
-
-	// Act.
-	const result = getCatalogEditorSettings( settings );
-
-	// Assert.
-	expect( result.isCatalog ).toBe( false );
-	expect( result.isBlockTheme ).toBe( false );
-	expect( result.supportsTemplateMode ).toBe( true );
-} );
-
-test( 'catalog preview retains its saved template identity', () => {
-	// Arrange.
-	const settings = {
-		outletproCatalogPage: true,
-		outletproIsBlockTheme: true,
-		supportsTemplateMode: true,
-		outletproCatalogTemplateId: 'purple//outlet-catalog',
-	};
-
-	// Act.
-	const result = getCatalogEditorSettings( settings );
-
-	// Assert.
-	expect( result ).toEqual( {
-		isCatalog: true,
-		isBlockTheme: true,
-		supportsTemplateMode: true,
-		templateId: 'purple//outlet-catalog',
-		previewContent: null,
-	} );
-} );
+import { getCatalogEditorUrl } from '../settings';
 
 test( 'catalog editing opens the saved template on subdirectory installs', () => {
 	// Arrange.

@@ -5,7 +5,7 @@
 
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'Outlet uses its saved catalog while keeping editable Page content', async ( {
+test( 'Outlet edits its introduction and navigation in the saved catalog template', async ( {
 	page,
 	admin,
 	editor,
@@ -19,6 +19,9 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 		path: '/wp/v2/themes',
 		params: { status: 'active' },
 	} );
+	const introText = theme.is_block_theme
+		? 'While supplies last'
+		: `Classic introduction ${ runId }`;
 	const category = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products/categories',
@@ -31,7 +34,9 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 			title: `Clearance ${ runId }`,
 			template: theme.is_block_theme ? 'outlet-catalog' : '',
 			status: 'publish',
-			content: `<!-- wp:paragraph --><p>Navigation ${ runId }</p><!-- /wp:paragraph -->`,
+			content: theme.is_block_theme
+				? ''
+				: `<!-- wp:paragraph --><p>${ introText }</p><!-- /wp:paragraph -->`,
 		},
 	} );
 	const products = [];
@@ -85,6 +90,9 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 			name: 'Breadcrumb',
 			exact: true,
 		} );
+		await expect(
+			storefront.getByRole( 'link', { name: 'Edit outlet template' } )
+		).toHaveCount( 0 );
 		await expect( breadcrumbs ).toBeVisible();
 		await expect( breadcrumbs ).toHaveText(
 			`Home / ${ outlet.title.raw ?? outlet.title.rendered }`
@@ -99,7 +107,7 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 			} )
 		).toBeVisible();
 		await expect(
-			storefront.getByText( `Navigation ${ runId }`, { exact: true } )
+			storefront.getByText( introText, { exact: true } )
 		).toBeVisible();
 		await expect(
 			storefront
@@ -112,6 +120,27 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 				exact: false,
 			} )
 		).toHaveCount( 0 );
+		if ( theme.is_block_theme ) {
+			const titleBox = await storefront
+				.getByRole( 'heading', {
+					name: outlet.title.raw ?? outlet.title.rendered,
+					exact: true,
+				} )
+				.boundingBox();
+			const introductionBox = await storefront
+				.locator( '.outletpro-navigation' )
+				.getByText( introText, { exact: true } )
+				.boundingBox();
+			const tilesBox = await storefront
+				.locator( '.wp-block-outletpro-outlet-tiles' )
+				.boundingBox();
+			expect( titleBox.y + titleBox.height ).toBeLessThanOrEqual(
+				introductionBox.y
+			);
+			expect(
+				introductionBox.y + introductionBox.height
+			).toBeLessThanOrEqual( tilesBox.y );
+		}
 		const navigationBox = await storefront
 			.locator( '.outletpro-navigation' )
 			.boundingBox();
@@ -177,7 +206,7 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 		url.searchParams.set( 'min_price', '10000' );
 		await storefront.goto( url.href );
 		await expect(
-			storefront.getByText( `Navigation ${ runId }`, { exact: true } )
+			storefront.getByText( introText, { exact: true } )
 		).toBeVisible();
 		await expect(
 			storefront.locator( '.wc-block-product, ul.products > li.product' )
@@ -194,77 +223,212 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 			storefront.locator( '.outletpro-navigation' )
 		).toHaveCount( 0 );
 
-		// The Page editor keeps navigation editable inside the full block template.
+		// The Page editor shows its guidance and a sidebar callout for the selected template.
 		await admin.visitAdminPage(
 			'post.php',
 			`post=${ outlet.id }&action=edit`
 		);
 		await expect(
-			editor.canvas.getByText( `Navigation ${ runId }`, { exact: true } )
-		).toBeVisible();
+			editor.canvas.locator( '.wp-block-template-part' )
+		).toHaveCount( 0 );
+		await expect(
+			editor.canvas.locator( '.wp-block-woocommerce-product-collection' )
+		).toHaveCount( 0 );
+		expect(
+			( await editor.getBlocks() ).map( ( block ) => block.name )
+		).toEqual( theme.is_block_theme ? [] : [ 'core/paragraph' ] );
+
 		if ( theme.is_block_theme ) {
+			const title = editor.canvas.getByRole( 'textbox', {
+				name: 'Add title',
+			} );
+			await expect( title ).toBeEditable();
 			await expect(
-				editor.canvas.locator( '.wp-block-template-part' ).first()
-			).toBeVisible();
-			await expect(
-				editor.canvas.locator(
-					'.wp-block-woocommerce-product-collection'
-				)
-			).toBeVisible();
-			await expect(
-				editor.canvas.getByText(
-					/unsupported|doesn.t include support/i
-				)
+				editor.canvas.getByRole( 'button', {
+					name: 'Add default block',
+				} )
 			).toHaveCount( 0 );
-			const registrations = await page.evaluate( () =>
-				[
-					'woocommerce/breadcrumbs',
-					'woocommerce/catalog-sorting',
-					'woocommerce/product-results-count',
-					'woocommerce/legacy-template',
-				].map( ( name ) =>
-					Boolean( window.wp.blocks.getBlockType( name ) )
-				)
-			);
-			expect( registrations ).toEqual( [ true, true, true, true ] );
+			await title.press( 'End' );
+			await title.press( 'Enter' );
+			expect( await editor.getBlocks() ).toEqual( [] );
 			await editor.openDocumentSettingsSidebar();
+			await page
+				.getByRole( 'tab', { name: 'Page', exact: true } )
+				.click();
 			await expect(
-				page.getByRole( 'link', { name: 'Edit catalog layout' } )
-			).toHaveAttribute( 'href', /postId=.*outlet-catalog/ );
-		} else {
+				page
+					.getByRole( 'region', { name: 'Editor settings' } )
+					.getByText( 'Template', { exact: true } )
+			).toBeVisible();
+			const outletNotice = page.locator( '.components-notice' ).filter( {
+				hasText: 'Displays products in the outlet.',
+			} );
+			await expect( outletNotice ).toHaveCount( 0 );
+			const sidebar = page.getByRole( 'region', {
+				name: 'Editor settings',
+			} );
+			const description = sidebar.locator(
+				'.outletpro-page-description'
+			);
+			await expect( description ).toHaveCount( 1 );
+			await expect( description.locator( ':scope > p' ) ).toHaveText(
+				'Displays products in the outlet.'
+			);
+			const headingBox = await sidebar
+				.locator( '.editor-post-card-panel__header' )
+				.boundingBox();
+			const descriptionBox = await description.boundingBox();
+			const featuredImageBox = await sidebar
+				.getByRole( 'button', {
+					name: 'Set featured image',
+					exact: true,
+				} )
+				.boundingBox();
+			expect( headingBox.y + headingBox.height ).toBeLessThanOrEqual(
+				descriptionBox.y
+			);
+			expect(
+				descriptionBox.y + descriptionBox.height
+			).toBeLessThanOrEqual( featuredImageBox.y );
+			await sidebar
+				.getByRole( 'button', { name: 'Close Settings' } )
+				.click();
+			await expect( description ).not.toBeVisible();
+			await editor.openDocumentSettingsSidebar();
+			await page
+				.getByRole( 'tab', { name: 'Page', exact: true } )
+				.click();
+			await expect( description ).toHaveCount( 1 );
+			await expect( description ).toBeVisible();
+			await page
+				.getByRole( 'tab', { name: 'Block', exact: true } )
+				.click();
+			await expect( description ).not.toBeVisible();
+			await page
+				.getByRole( 'tab', { name: 'Page', exact: true } )
+				.click();
+			await expect( description ).toHaveCount( 1 );
+			await expect( description ).toBeVisible();
+			const templateGuidance = page
+				.getByRole( 'region', { name: 'Editor settings' } )
+				.locator( '.outletpro-page-editor-callout' );
+			await expect( templateGuidance ).toHaveCount( 1 );
 			await expect(
-				editor.canvas.locator(
-					'.wp-block-woocommerce-product-collection'
-				)
+				description.locator( '.outletpro-page-editor-callout' )
+			).toHaveCount( 1 );
+			const messageBox = await description
+				.locator( ':scope > p' )
+				.boundingBox();
+			const calloutBox = await templateGuidance.boundingBox();
+			expect( messageBox.y + messageBox.height ).toBeLessThanOrEqual(
+				calloutBox.y
+			);
+			expect( calloutBox.y + calloutBox.height ).toBeLessThanOrEqual(
+				featuredImageBox.y
+			);
+			await expect(
+				templateGuidance.getByRole( 'heading', {
+					name: 'Outlet page template',
+				} )
+			).toBeVisible();
+			await expect( templateGuidance ).toContainText(
+				'Update the outlet page layout by editing the outlet template.'
+			);
+			await expect(
+				templateGuidance.getByRole( 'link', {
+					name: 'Edit outlet template',
+				} )
+			).toBeVisible();
+			await expect(
+				page.getByRole( 'link', { name: 'Edit outlet template' } )
+			).toHaveClass( /is-secondary/ );
+			await expect(
+				editor.canvas.getByText( introText, { exact: true } )
 			).toHaveCount( 0 );
+			await sidebar.locator( '.editor-post-card-panel' ).screenshot( {
+				path: `artifacts/catalog-${ theme.stylesheet }-description.png`,
+			} );
 		}
 		await page.screenshot( {
 			path: `artifacts/catalog-${ theme.stylesheet }-editor.png`,
 			fullPage: true,
 		} );
-		const navigation = editor.canvas.getByText( `Navigation ${ runId }`, {
-			exact: true,
-		} );
-		await navigation.fill( `Updated navigation ${ runId }` );
-		await page.getByRole( 'button', { name: 'Save', exact: true } ).click();
-		await expect(
-			page.getByRole( 'button', { name: 'Save', exact: true } )
-		).toBeDisabled();
 		if ( theme.is_block_theme ) {
 			const savedTemplate = await requestUtils.rest( {
 				path: `/wp/v2/templates/${ theme.stylesheet }//outlet-catalog`,
 				params: { context: 'edit' },
 			} );
 			expect( savedTemplate.content.raw ).toContain( 'wp:query-title' );
+			expect( savedTemplate.content.raw ).toContain(
+				'wp:outletpro/outlet-menu'
+			);
+			expect( savedTemplate.content.raw ).toContain(
+				'<p>While supplies last</p>'
+			);
 			expect( savedTemplate.content.raw ).toContain( '"inherit":true' );
 			expect( savedTemplate.content.raw ).not.toContain(
 				'"outletpro":true'
 			);
+			expect( savedTemplate.content.raw ).not.toContain(
+				'wp:post-content'
+			);
+
+			// The link opens the complete, editable template in the native Site Editor.
+			await page
+				.getByRole( 'link', { name: 'Edit outlet template' } )
+				.click();
+			const layoutPage = page;
+			try {
+				await expect(
+					layoutPage.locator( '.outletpro-page-description' )
+				).toHaveCount( 0 );
+				const layoutCanvas = layoutPage.frameLocator(
+					'iframe[name="editor-canvas"]'
+				);
+				await expect(
+					layoutCanvas.locator( '.wp-block-template-part' ).first()
+				).toBeVisible();
+				const introduction = layoutCanvas
+					.locator( '.outletpro-navigation' )
+					.getByText( introText, { exact: true } );
+				await expect( introduction ).toBeVisible();
+				await expect( introduction ).toHaveAttribute(
+					'contenteditable',
+					'true'
+				);
+				await expect
+					.poll( () =>
+						layoutPage.evaluate( () =>
+							window.wp.data
+								.select( 'core/block-editor' )
+								.canInsertBlockType( 'core/paragraph' )
+						)
+					)
+					.toBe( true );
+				await expect(
+					layoutCanvas.locator( '.wp-block-outletpro-outlet-menu' )
+				).toBeVisible();
+				await expect(
+					layoutCanvas.locator(
+						'.wp-block-woocommerce-product-collection'
+					)
+				).toBeVisible();
+				await expect(
+					layoutCanvas.getByText(
+						/unsupported|doesn.t include support/i
+					)
+				).toHaveCount( 0 );
+			} finally {
+				await admin.visitAdminPage(
+					'post.php',
+					`post=${ outlet.id }&action=edit`
+				);
+			}
 		}
 		url.searchParams.delete( 'min_price' );
 		await storefront.goto( url.href );
 		await expect(
-			storefront.getByText( `Updated navigation ${ runId }`, {
+			storefront.getByText( introText, {
 				exact: true,
 			} )
 		).toBeVisible();
@@ -278,7 +442,7 @@ test( 'Outlet uses its saved catalog while keeping editable Page content', async
 		renamedUrl.search = url.search;
 		await storefront.goto( renamedUrl.href );
 		await expect(
-			storefront.getByText( `Updated navigation ${ runId }`, {
+			storefront.getByText( introText, {
 				exact: true,
 			} )
 		).toBeVisible();

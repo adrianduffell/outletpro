@@ -4,35 +4,6 @@
  */
 
 /**
- * Read the Outlet's scoped settings without coercing unexpected values.
- *
- * @param settings Editor settings.
- */
-export function getCatalogEditorSettings( settings: object ) {
-	return {
-		isCatalog:
-			'outletproCatalogPage' in settings &&
-			settings.outletproCatalogPage === true,
-		isBlockTheme:
-			'outletproIsBlockTheme' in settings &&
-			settings.outletproIsBlockTheme === true,
-		supportsTemplateMode:
-			'supportsTemplateMode' in settings &&
-			settings.supportsTemplateMode === true,
-		previewContent:
-			'outletproCatalogPreview' in settings &&
-			typeof settings.outletproCatalogPreview === 'string'
-				? settings.outletproCatalogPreview
-				: null,
-		templateId:
-			'outletproCatalogTemplateId' in settings &&
-			typeof settings.outletproCatalogTemplateId === 'string'
-				? settings.outletproCatalogTemplateId
-				: null,
-	};
-}
-
-/**
  * Build a link to the saved Outlet catalog template.
  *
  * @param currentUrl Current editor URL.

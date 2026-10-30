@@ -6,26 +6,9 @@
 import { useSelect } from '@wordpress/data';
 import { PluginPostStatusInfo, store as editorStore } from '@wordpress/editor';
 import { __ } from '@wordpress/i18n';
-import { Icon, external, settings as SettingsIcon } from '@wordpress/icons';
-import { QUERY_PARAM as SETTINGS_SIDEBAR_QUERY_PARAM } from '../settings-sidebar/constants';
+import { Icon, external } from '@wordpress/icons';
 import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
-import './style.css';
-
-const WOOCOMMERCE_SINGLE_PRODUCT_TEMPLATE_ID =
-	'woocommerce/woocommerce//single-product';
-
-function buildSiteEditorUrl( currentUrl: string ): string {
-	const siteEditorUrl = new URL( 'site-editor.php', currentUrl );
-
-	siteEditorUrl.search = new URLSearchParams( {
-		postType: 'wp_template',
-		postId: WOOCOMMERCE_SINGLE_PRODUCT_TEMPLATE_ID,
-		canvas: 'edit',
-		[ SETTINGS_SIDEBAR_QUERY_PARAM ]: '1',
-	} ).toString();
-
-	return siteEditorUrl.href;
-}
+import { PageEditorCallout } from './callout';
 
 function buildCustomizerUrl( currentUrl: string ): string {
 	const customizerUrl = new URL( 'customize.php', currentUrl );
@@ -49,47 +32,33 @@ export default function OutletPageEditorCallout(): JSX.Element | null {
 	const [ outletPageId ] =
 		useUnsignedIntegerEntityProp( 'outletpro_page_id' );
 
-	if ( currentPostId !== outletPageId || outletPageId === undefined ) {
+	if ( isBlockTheme ) {
+		return null;
+	}
+	if ( outletPageId === undefined ) {
+		return null;
+	}
+	if ( currentPostId !== outletPageId ) {
 		return null;
 	}
 
-	const settingsUrl = isBlockTheme
-		? buildSiteEditorUrl( window.location.href )
-		: buildCustomizerUrl( window.location.href );
-
 	return (
 		<PluginPostStatusInfo>
-			<div className="outletpro-page-editor-callout">
-				<span
-					className="outletpro-page-editor-callout__icon"
-					role="img"
-					aria-label={ __( 'Outlet settings', 'outletpro' ) }
-				>
-					{ SettingsIcon }
-				</span>
-				<h3>{ __( 'Outlet settings', 'outletpro' ) }</h3>
-
+			<PageEditorCallout>
 				<p>
-					{ isBlockTheme
-						? __(
-								'Manage the outlet badge and message with the outlet settings panel in the site editor.',
-								'outletpro'
-							)
-						: __(
-								'Manage the outlet badge and message in the Customizer.',
-								'outletpro'
-							) }{ ' ' }
+					{ __(
+						'Manage the outlet badge and message in the Customizer.',
+						'outletpro'
+					) }
 				</p>
 				<p>
 					<a
-						className={ 'outletpro-button-link' }
-						href={ settingsUrl }
+						className="outletpro-button-link"
+						href={ buildCustomizerUrl( window.location.href ) }
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						{ isBlockTheme
-							? __( 'Open in site editor', 'outletpro' )
-							: __( 'Open in customizer', 'outletpro' ) }{ ' ' }
+						{ __( 'Open in customizer', 'outletpro' ) }{ ' ' }
 						<Icon
 							icon={ external }
 							size={ 16 }
@@ -97,7 +66,7 @@ export default function OutletPageEditorCallout(): JSX.Element | null {
 						/>
 					</a>
 				</p>
-			</div>
+			</PageEditorCallout>
 		</PluginPostStatusInfo>
 	);
 }

@@ -10,15 +10,45 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register template and Page-content integrations.
+ * Register catalog template and Page editor integrations.
  *
  * @internal
  */
 function init_catalog_templates(): void {
 	add_filter( 'archive_template_hierarchy', 'OutletPro\\outlet_catalog_hierarchy_hook' );
 	add_filter( 'page_template_hierarchy', 'OutletPro\\outlet_catalog_password_template_hook' );
-	add_filter( 'pre_render_block', 'OutletPro\\outlet_page_content_hook', 10, 2 );
-	add_filter( 'block_editor_settings_all', 'OutletPro\\outlet_catalog_editor_settings_hook', 10, 2 );
+	add_filter( 'block_editor_settings_all', 'OutletPro\\lock_outlet_page_editor_hook', 10, 2 );
+}
+
+/**
+ * Keep block-theme Outlet Page content in its editable template.
+ *
+ * Fired by `block_editor_settings_all`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed>     $settings Existing editor settings.
+ * @param \WP_Block_Editor_Context $context Current editor context.
+ * @return array<string, mixed> Modified editor settings.
+ */
+function lock_outlet_page_editor_hook( array $settings, \WP_Block_Editor_Context $context ): array {
+	if ( ! wp_is_block_theme() ) {
+		return $settings;
+	}
+	if ( 'core/edit-post' !== $context->name ) {
+		return $settings;
+	}
+	if ( ! $context->post instanceof \WP_Post ) {
+		return $settings;
+	}
+	if ( 'page' !== $context->post->post_type ) {
+		return $settings;
+	}
+	$page_id = filter_var( get_option( OUTLET_PAGE_OPTION ), FILTER_VALIDATE_INT );
+	if ( $context->post->ID !== $page_id ) {
+		return $settings;
+	}
+	$settings['templateLock'] = 'all';
+	return $settings;
 }
 
 /**
@@ -43,10 +73,11 @@ function get_shop_catalog_template(): \WP_Block_Template {
  * Existing Outlet template customizations are kept when another Page is created.
  *
  * @internal
+ * @param string $navigation Initial editable navigation blocks.
  * @return string|null Template slug, or null for classic themes.
  * @throws \RuntimeException When the template cannot be saved.
  */
-function create_outlet_catalog_template(): ?string {
+function create_outlet_catalog_template( string $navigation ): ?string {
 	if ( ! wp_is_block_theme() ) {
 		return null;
 	}
@@ -61,7 +92,7 @@ function create_outlet_catalog_template(): ?string {
 			'post_status'  => 'publish',
 			'post_name'    => 'outlet-catalog',
 			'post_title'   => __( 'Outlet catalog', 'outletpro' ),
-			'post_content' => wp_slash( compose_outlet_catalog_content( $shop->content ) ),
+			'post_content' => wp_slash( compose_outlet_catalog_content( $shop->content, $navigation ) ),
 		),
 		true
 	);
@@ -82,13 +113,13 @@ function create_outlet_catalog_template(): ?string {
  *
  * @internal
  * @param string $content Active shop template markup.
- * @param bool   $preview Whether to use an independent editor product query.
+ * @param string $navigation Initial editable navigation blocks.
  */
-function compose_outlet_catalog_content( string $content, bool $preview = false ): string {
-	$blocks  = prepare_outlet_catalog_blocks( resolve_pattern_blocks( parse_blocks( $content ) ), $preview );
+function compose_outlet_catalog_content( string $content, string $navigation ): string {
+	$blocks  = resolve_pattern_blocks( parse_blocks( $content ) );
 	$content = serialize_blocks( $blocks );
 	$heading = find_catalog_heading( $blocks );
-	$region  = '<!-- wp:post-content {"align":"wide","outletproPageContent":true} /-->';
+	$region  = '<!-- wp:group {"align":"wide","className":"outletpro-navigation","layout":{"type":"default"}} --><div class="wp-block-group alignwide outletpro-navigation"><!-- wp:paragraph --><p>While supplies last</p><!-- /wp:paragraph -->' . $navigation . '</div><!-- /wp:group -->';
 	if ( null !== $heading ) {
 		$offset = strpos( $content, $heading );
 		return substr_replace( $content, $region, $offset + strlen( $heading ), 0 );
@@ -108,33 +139,6 @@ function compose_outlet_catalog_content( string $content, bool $preview = false 
 }
 
 /**
- * Prepare inherited collections for outlet-only editor previews.
- *
- * @internal
- * @param array<array<string, mixed>> $blocks Parsed template blocks.
- * @param bool                        $preview Whether this is an editor preview.
- * @return array<array<string, mixed>> Prepared blocks.
- */
-function prepare_outlet_catalog_blocks( array $blocks, bool $preview ): array {
-	foreach ( $blocks as &$block ) {
-		if ( $preview && 'core/query-title' === $block['blockName'] ) {
-			$block['blockName']                      = 'core/post-title';
-			$block['attrs']['level']                 = 1;
-			$block['attrs']['outletproArchiveTitle'] = true;
-			unset( $block['attrs']['type'], $block['attrs']['showPrefix'] );
-		}
-		if ( 'woocommerce/product-collection' === $block['blockName'] && ! empty( $block['attrs']['query']['inherit'] ) ) {
-			if ( $preview ) {
-				$block['attrs']['query']['inherit']   = false;
-				$block['attrs']['query']['outletpro'] = true;
-			}
-		}
-		$block['innerBlocks'] = prepare_outlet_catalog_blocks( $block['innerBlocks'], $preview );
-	}
-	return $blocks;
-}
-
-/**
  * Find the archive heading without selecting individual product titles.
  *
  * @internal
@@ -142,9 +146,6 @@ function prepare_outlet_catalog_blocks( array $blocks, bool $preview ): array {
  */
 function find_catalog_heading( array $blocks ): ?string {
 	foreach ( $blocks as $block ) {
-		if ( ! empty( $block['attrs']['outletproArchiveTitle'] ) ) {
-			return serialize_block( $block );
-		}
 		if ( 'core/query-title' === $block['blockName'] && 'archive' === ( $block['attrs']['type'] ?? 'archive' ) ) {
 			return serialize_block( $block );
 		}
@@ -157,7 +158,7 @@ function find_catalog_heading( array $blocks ): ?string {
 }
 
 /**
- * Select the composed block template for outlet product archives.
+ * Prefer the Outlet Page's chosen template over the product archive layout.
  *
  * Fired by `archive_template_hierarchy`.
  *
@@ -166,9 +167,23 @@ function find_catalog_heading( array $blocks ): ?string {
  * @return string[] Template candidates.
  */
 function outlet_catalog_hierarchy_hook( array $templates ): array {
-	if ( wp_is_block_theme() && get_query_var( 'outletpro_catalog' ) ) {
-		array_unshift( $templates, 'outlet-catalog.php' );
+	if ( ! wp_is_block_theme() ) {
+		return $templates;
 	}
+	$page_id = get_query_var( 'outletpro_catalog' );
+	if ( ! is_int( $page_id ) ) {
+		return $templates;
+	}
+	$assigned = get_page_template_slug( $page_id );
+	if ( ! is_string( $assigned ) ) {
+		return $templates;
+	}
+	if ( '' !== $assigned ) {
+		array_unshift( $templates, $assigned );
+		return $templates;
+	}
+	$page = get_post( $page_id );
+	array_unshift( $templates, 'page-' . $page->post_name . '.php', 'page-' . $page_id . '.php', 'page.php' );
 	return $templates;
 }
 
@@ -182,45 +197,22 @@ function outlet_catalog_hierarchy_hook( array $templates ): array {
  * @return string[] Template candidates.
  */
 function outlet_catalog_password_template_hook( array $templates ): array {
-	if ( ! post_password_required() ) {
+	$page_id = filter_var( get_option( OUTLET_PAGE_OPTION ), FILTER_VALIDATE_INT );
+	if ( get_queried_object_id() !== $page_id ) {
 		return $templates;
 	}
-	return array_values( array_diff( $templates, array( 'outlet-catalog.php' ) ) );
+	if ( ! post_password_required( $page_id ) ) {
+		return $templates;
+	}
+	$assigned = get_page_template_slug( $page_id );
+	if ( ! is_string( $assigned ) ) {
+		return $templates;
+	}
+	return array_values( array_diff( $templates, array( $assigned, $assigned . '.php' ) ) );
 }
 
 /**
- * Render the explicitly marked navigation block using the Page's content.
- *
- * Fired by `pre_render_block`.
- *
- * @internal WordPress filter hook
- * @param string|null         $content Earlier rendered output.
- * @param array<string,mixed> $block Parsed block.
- */
-function outlet_page_content_hook( ?string $content, array $block ): ?string {
-	if ( 'core/post-content' !== $block['blockName'] ) {
-		return $content;
-	}
-	if ( empty( $block['attrs']['outletproPageContent'] ) ) {
-		return $content;
-	}
-	try {
-		$page = get_catalog_page();
-		if ( null === $page ) {
-			return $content;
-		}
-		if ( get_query_var( 'outletpro_catalog' ) !== $page->ID ) {
-			return $content;
-		}
-		return render_outlet_page_content( $page->ID );
-	} catch ( \RuntimeException $e ) {
-		wc_get_logger()->error( 'Outlet navigation could not be rendered.' );
-		return '';
-	}
-}
-
-/**
- * Render navigation while restoring the product loop's post context.
+ * Render Page content while restoring the product loop's post context.
  *
  * @internal
  * @param int $page_id Outlet Page ID.
@@ -247,36 +239,4 @@ function render_outlet_page_content( int $page_id ): string {
 			}
 		}
 	}
-}
-
-/**
- * Supply scoped editor configuration for the Outlet Page.
- *
- * Fired by `block_editor_settings_all`.
- *
- * @internal WordPress filter hook
- * @param array<string,mixed>      $settings Editor settings.
- * @param \WP_Block_Editor_Context $context Editor context.
- * @return array<string,mixed> Editor settings.
- */
-function outlet_catalog_editor_settings_hook( array $settings, \WP_Block_Editor_Context $context ): array {
-	if ( ! isset( $context->post ) ) {
-		return $settings;
-	}
-	try {
-		if ( get_outlet_page_id() !== $context->post->ID ) {
-			return $settings;
-		}
-		$settings['outletproCatalogPage'] = true;
-		if ( wp_is_block_theme() ) {
-			$template = get_block_template( get_stylesheet() . '//outlet-catalog' );
-			if ( $template instanceof \WP_Block_Template ) {
-				$settings['outletproCatalogTemplateId'] = $template->id;
-				$settings['outletproCatalogPreview']    = serialize_blocks( prepare_outlet_catalog_blocks( parse_blocks( $template->content ), true ) );
-			}
-		}
-	} catch ( \RuntimeException $e ) {
-		wc_get_logger()->error( 'Outlet catalog editor settings could not be retrieved.' );
-	}
-	return $settings;
 }

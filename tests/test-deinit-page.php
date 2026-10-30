@@ -23,6 +23,7 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 		$this->assertFalse( has_filter( 'request', 'OutletPro\\outlet_catalog_request_hook' ) );
 		$this->assertFalse( has_filter( 'pre_get_block_templates', 'OutletPro\\outlet_catalog_templates_hook' ) );
 		$this->assertFalse( has_filter( 'get_post_metadata', 'OutletPro\\outlet_catalog_metadata_hook' ) );
+		$this->assertFalse( has_filter( 'block_editor_settings_all', 'OutletPro\\lock_outlet_page_editor_hook' ) );
 		$this->assertFalse( has_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_catalog_breadcrumb_hook' ) );
 		$this->assertFalse( has_action( 'woocommerce_breadcrumb', 'OutletPro\\outlet_catalog_breadcrumb_fallback_hook' ) );
 	}

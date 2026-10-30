@@ -201,8 +201,6 @@ function create_outlet_page(): void {
 		);
 	}
 
-	$post_content = '';
-
 	$page_id = wp_insert_post(
 		array(
 			'post_title'  => __( 'Outlet', 'outletpro' ),
@@ -250,8 +248,13 @@ function create_outlet_page(): void {
 			$navigation_pattern = 'outletpro/outlet-navigation-3';
 	}
 	$navigation_content = get_pattern_content( $navigation_pattern );
-	if ( '' !== $navigation_content ) {
-		$post_content = $navigation_content . "\n\n" . $post_content;
+
+	$template = create_outlet_catalog_template( $navigation_content );
+	if ( null !== $template ) {
+		update_post_meta( $page_id, '_wp_page_template', $template );
+		$post_content = '';
+	} else {
+		$post_content = $navigation_content;
 	}
 
 	$result = wp_update_post(
@@ -265,12 +268,6 @@ function create_outlet_page(): void {
 	if ( is_wp_error( $result ) ) {
 		throw new \RuntimeException( 'Could not update outlet page content.' );
 	}
-	$template = create_outlet_catalog_template();
-	if ( null === $template ) {
-		return;
-	}
-
-	update_post_meta( $page_id, '_wp_page_template', $template );
 }
 
 /**

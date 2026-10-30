@@ -6,70 +6,44 @@
 import type { ReactNode } from 'react';
 import { render, screen } from '@testing-library/react';
 import { useSelect } from '@wordpress/data';
+import { expect, test, vi } from 'vitest';
 import useUnsignedIntegerEntityProp from '../../use-unsigned-integer-entity-prop';
-import { QUERY_PARAM } from '../../settings-sidebar/constants';
 import OutletPageEditorCallout from '../index';
 
-jest.mock( '@wordpress/data', () => ( {
-	useSelect: jest.fn(),
+vi.mock( '@wordpress/data', async ( importOriginal ) => ( {
+	...( await importOriginal< typeof import( '@wordpress/data' ) >() ),
+	useSelect: vi.fn(),
 } ) );
 
-jest.mock( '@wordpress/editor', () => ( {
+vi.mock( '@wordpress/editor', () => ( {
 	PluginPostStatusInfo: ( { children }: { children: ReactNode } ) => (
 		<aside>{ children }</aside>
 	),
 	store: {},
 } ) );
 
-jest.mock( '../../use-unsigned-integer-entity-prop', () => jest.fn() );
+vi.mock( '../../use-unsigned-integer-entity-prop', () => ( {
+	default: vi.fn(),
+} ) );
 
-const mockUseSelect = jest.mocked( useSelect );
-const mockUseUnsignedIntegerEntityProp = jest.mocked(
+const mockUseSelect = vi.mocked( useSelect );
+const mockUseUnsignedIntegerEntityProp = vi.mocked(
 	useUnsignedIntegerEntityProp
 );
 
-test( 'links to the Single Product template for a block theme', () => {
+test( 'block themes do not add a duplicate callout through the sidebar slot', () => {
 	// Arrange.
 	mockUseSelect.mockReturnValue( {
 		currentPostId: 37,
 		isBlockTheme: true,
+		templateId: 'theme//outlet-catalog',
 	} );
-	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, jest.fn() ] );
-	window.history.replaceState(
-		{},
-		'',
-		'/wp-admin/post.php?post=37&action=edit'
-	);
-
+	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, vi.fn() ] );
 	// Act.
-	render( <OutletPageEditorCallout /> );
+	const { container } = render( <OutletPageEditorCallout /> );
 
 	// Assert.
-	expect(
-		screen.getByRole( 'heading', { name: 'Outlet settings' } )
-	).toBeInTheDocument();
-	expect(
-		screen.getByRole( 'img', { name: 'Outlet settings' } )
-	).toBeInTheDocument();
-	const link = screen.getByRole( 'link', { name: 'Open in site editor' } );
-	const expectedUrl = new URL(
-		'/wp-admin/site-editor.php',
-		window.location.origin
-	);
-	expectedUrl.search = new URLSearchParams( {
-		postType: 'wp_template',
-		postId: 'woocommerce/woocommerce//single-product',
-		canvas: 'edit',
-		[ QUERY_PARAM ]: '1',
-	} ).toString();
-
-	expect( link ).toHaveAttribute( 'href', expectedUrl.href );
-	expect( link ).toHaveAttribute( 'target', '_blank' );
-	expect( link ).toHaveAttribute( 'rel', 'noopener noreferrer' );
-	expect( link.querySelector( 'svg' ) ).toHaveAttribute( 'width', '16' );
-	expect( link.querySelector( 'svg' ) ).toHaveAttribute( 'height', '16' );
-
-	window.history.replaceState( {}, '', '/' );
+	expect( container ).toBeEmptyDOMElement();
 } );
 
 test( 'links to the Outlet Pro Customizer section for a classic theme', () => {
@@ -78,7 +52,7 @@ test( 'links to the Outlet Pro Customizer section for a classic theme', () => {
 		currentPostId: 37,
 		isBlockTheme: false,
 	} );
-	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, jest.fn() ] );
+	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, vi.fn() ] );
 	window.history.replaceState(
 		{},
 		'',
@@ -97,7 +71,7 @@ test( 'links to the Outlet Pro Customizer section for a classic theme', () => {
 	const link = screen.getByRole( 'link', { name: 'Open in customizer' } );
 	expect( link ).toHaveAttribute(
 		'href',
-		'http://localhost/wp-admin/customize.php?autofocus%5Bsection%5D=outletpro'
+		`${ window.location.origin }/wp-admin/customize.php?autofocus%5Bsection%5D=outletpro`
 	);
 	expect( link ).toHaveAttribute( 'target', '_blank' );
 	expect( link ).toHaveAttribute( 'rel', 'noopener noreferrer' );
@@ -111,9 +85,9 @@ test( 'renders nothing when editing another page', () => {
 	// Arrange.
 	mockUseSelect.mockReturnValue( {
 		currentPostId: 42,
-		isBlockTheme: true,
+		isBlockTheme: false,
 	} );
-	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, jest.fn() ] );
+	mockUseUnsignedIntegerEntityProp.mockReturnValue( [ 37, vi.fn() ] );
 
 	// Act.
 	const { container } = render( <OutletPageEditorCallout /> );

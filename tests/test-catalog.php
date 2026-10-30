@@ -8,12 +8,79 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\compose_outlet_catalog_content;
 use function OutletPro\create_outlet_catalog_template;
+use function OutletPro\deinit_patterns;
 use function OutletPro\init_catalog;
+use function OutletPro\init_patterns;
 use function OutletPro\init_taxonomies;
 use function OutletPro\render_outlet_page_content;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Catalog extends WP_UnitTestCase {
+
+	public function test_password_protected_outlet_uses_the_normal_page_template(): void {
+		// Arrange.
+		init_catalog();
+		switch_theme( 'twentytwentyfive' );
+		add_theme_support( 'block-templates' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'     => 'page',
+				'post_password' => 'secret',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$template_id = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'alternate-outlet',
+				'post_content' => '<!-- wp:paragraph --><p>Protected layout</p><!-- /wp:paragraph -->',
+			)
+		);
+		wp_set_object_terms( $template_id, get_stylesheet(), 'wp_theme' );
+		update_post_meta( $page_id, '_wp_page_template', 'alternate-outlet' );
+		$this->go_to( get_permalink( $page_id ) );
+		$GLOBALS['post'] = get_post( $page_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Arrange the native Page template context.
+
+		// Act.
+		get_page_template();
+
+		// Assert.
+		$this->assertSame( get_stylesheet() . '//page', $GLOBALS['_wp_current_template_id'] );
+		$this->assertStringContainsString( 'wp:post-content', $GLOBALS['_wp_current_template_content'] );
+	}
+
+	public function test_outlet_uses_a_template_chosen_through_the_native_page_api(): void {
+		// Arrange.
+		init_catalog();
+		switch_theme( 'twentytwentyfive' );
+		add_theme_support( 'block-templates' );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$template_id = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'alternate-outlet',
+				'post_content' => '<!-- wp:paragraph --><p>Chosen layout</p><!-- /wp:paragraph -->',
+			)
+		);
+		wp_set_object_terms( $template_id, get_stylesheet(), 'wp_theme' );
+		$request = new WP_REST_Request( 'PUT', '/wp/v2/pages/' . $page_id );
+		$request->set_body_params( array( 'template' => 'alternate-outlet' ) );
+
+		// Act.
+		$response = rest_do_request( $request );
+		$this->go_to( get_permalink( $page_id ) );
+		get_archive_template();
+		$settings = get_block_editor_settings( array( 'supportsTemplateMode' => true ), new WP_Block_Editor_Context( array( 'post' => get_post( $page_id ) ) ) );
+
+		// Assert.
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertSame( get_stylesheet() . '//alternate-outlet', $GLOBALS['_wp_current_template_id'] );
+		$this->assertStringContainsString( 'Chosen layout', $GLOBALS['_wp_current_template_content'] );
+		$this->assertTrue( $settings['supportsTemplateMode'] );
+	}
+
 
 	public function test_outlet_uses_product_archive_and_preserves_its_page_identity(): void {
 		// Arrange.
@@ -272,17 +339,18 @@ class Test_Catalog extends WP_UnitTestCase {
 		$this->assertSame( 2, $GLOBALS['wp_query']->found_posts );
 	}
 
-	public function test_navigation_is_after_heading_and_before_filter_columns(): void {
+	public function test_intro_and_navigation_are_after_the_title_and_before_filters(): void {
 		// Arrange.
 		$template = '<!-- wp:group {"tagName":"main"} --><main><!-- wp:query-title {"type":"archive"} /--><!-- wp:columns --><div class="wp-block-columns"><!-- wp:column --><div class="wp-block-column"><!-- wp:paragraph --><p>Sidebar</p><!-- /wp:paragraph --></div><!-- /wp:column --><!-- wp:column --><div class="wp-block-column"><!-- wp:woocommerce/product-collection {"query":{"inherit":true}} /--></div><!-- /wp:column --></div><!-- /wp:columns --></main><!-- /wp:group -->';
 
 		// Act.
-		$content = compose_outlet_catalog_content( $template );
+		$content = compose_outlet_catalog_content( $template, '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
 
 		// Assert.
-		$this->assertLessThan( strpos( $content, 'wp:post-content' ), strpos( $content, 'wp:query-title' ) );
-		$this->assertLessThan( strpos( $content, 'wp:columns' ), strpos( $content, 'wp:post-content' ) );
-		$this->assertSame( 1, substr_count( $content, 'wp:post-content' ) );
+		$this->assertLessThan( strpos( $content, 'While supplies last' ), strpos( $content, 'wp:query-title' ) );
+		$this->assertLessThan( strpos( $content, 'Template navigation' ), strpos( $content, 'While supplies last' ) );
+		$this->assertLessThan( strpos( $content, 'wp:columns' ), strpos( $content, 'Template navigation' ) );
+		$this->assertStringNotContainsString( 'wp:post-content', $content );
 		$this->assertStringContainsString( '"inherit":true', $content );
 	}
 
@@ -291,22 +359,23 @@ class Test_Catalog extends WP_UnitTestCase {
 		$template = '<!-- wp:group {"tagName":"main"} --><main><!-- wp:paragraph --><p>Catalog</p><!-- /wp:paragraph --></main><!-- /wp:group -->';
 
 		// Act.
-		$content = compose_outlet_catalog_content( $template );
+		$content = compose_outlet_catalog_content( $template, '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
 
 		// Assert.
-		$this->assertStringContainsString( '<main><!-- wp:post-content', $content );
+		$this->assertStringContainsString( '<main><!-- wp:group', $content );
+		$this->assertStringContainsString( 'Template navigation', $content );
 	}
 
-	public function test_editor_preview_restricts_inherited_collection_only(): void {
+	public function test_copy_preserves_inherited_and_independent_product_queries(): void {
 		// Arrange.
 		$template = '<!-- wp:woocommerce/product-collection {"query":{"inherit":true}} /--><!-- wp:woocommerce/product-collection {"query":{"inherit":false,"featured":true}} /-->';
 
 		// Act.
-		$content = compose_outlet_catalog_content( $template, true );
+		$content = compose_outlet_catalog_content( $template, '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
 
 		// Assert.
-		$this->assertStringContainsString( '"inherit":false,"outletpro":true', $content );
-		$this->assertSame( 1, substr_count( $content, '"outletpro":true' ) );
+		$this->assertStringContainsString( '"inherit":true', $content );
+		$this->assertStringNotContainsString( '"outletpro":true', $content );
 		$this->assertStringContainsString( '"featured":true', $content );
 	}
 
@@ -334,6 +403,8 @@ class Test_Catalog extends WP_UnitTestCase {
 		// Arrange.
 		init_catalog();
 		switch_theme( 'twentytwentyfive' );
+		deinit_patterns();
+		init_patterns();
 		add_theme_support( 'block-templates' );
 		$this->assertTrue( wp_is_block_theme(), get_theme_root() );
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
@@ -346,7 +417,8 @@ class Test_Catalog extends WP_UnitTestCase {
 			)
 		);
 		wp_set_object_terms( $catalog_id, get_stylesheet(), 'wp_theme' );
-		create_outlet_catalog_template();
+		create_outlet_catalog_template( '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
+		update_post_meta( $page_id, '_wp_page_template', 'outlet-catalog' );
 		$this->go_to( get_permalink( $page_id ) );
 
 		// Act.
@@ -355,13 +427,15 @@ class Test_Catalog extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( ABSPATH . WPINC . '/template-canvas.php', $template );
 		$this->assertSame( get_stylesheet() . '//outlet-catalog', $GLOBALS['_wp_current_template_id'] );
-		$this->assertStringContainsString( 'outletproPageContent', $GLOBALS['_wp_current_template_content'] );
+		$this->assertStringContainsString( 'outletpro-navigation', $GLOBALS['_wp_current_template_content'] );
 	}
 
 	public function test_saved_outlet_layout_stays_independent_of_later_shop_edits(): void {
 		// Arrange.
 		init_catalog();
 		switch_theme( 'twentytwentyfive' );
+		deinit_patterns();
+		init_patterns();
 		$this->assertTrue( wp_is_block_theme(), get_theme_root() );
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
@@ -374,7 +448,7 @@ class Test_Catalog extends WP_UnitTestCase {
 			)
 		);
 		wp_set_object_terms( $template_id, get_stylesheet(), 'wp_theme' );
-		create_outlet_catalog_template();
+		create_outlet_catalog_template( '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
 		$first = get_block_template( get_stylesheet() . '//outlet-catalog' );
 		wp_update_post(
 			array(
@@ -457,26 +531,6 @@ class Test_Catalog extends WP_UnitTestCase {
 		}
 	}
 
-	public function test_marked_content_on_an_ordinary_page_does_not_expose_draft_navigation(): void {
-		// Arrange.
-		init_catalog();
-		$page_id = self::factory()->post->create(
-			array(
-				'post_type'    => 'page',
-				'post_status'  => 'draft',
-				'post_content' => 'Private navigation',
-			)
-		);
-		update_option( OUTLET_PAGE_OPTION, $page_id );
-		$ordinary = self::factory()->post->create( array( 'post_type' => 'page' ) );
-		$this->go_to( get_permalink( $ordinary ) );
-
-		// Act.
-		$content = render_block( parse_blocks( '<!-- wp:post-content {"outletproPageContent":true} /-->' )[0] );
-
-		// Assert.
-		$this->assertStringNotContainsString( 'Private navigation', $content );
-	}
 
 	public function test_shop_and_category_archives_keep_regular_products(): void {
 		// Arrange.
@@ -578,6 +632,8 @@ class Test_Catalog extends WP_UnitTestCase {
 		// Arrange.
 		init_catalog();
 		switch_theme( 'twentytwentyfive' );
+		deinit_patterns();
+		init_patterns();
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 		$source = self::factory()->post->create(
 			array(
@@ -587,13 +643,13 @@ class Test_Catalog extends WP_UnitTestCase {
 			)
 		);
 		wp_set_object_terms( $source, get_stylesheet(), 'wp_theme' );
-		create_outlet_catalog_template();
+		create_outlet_catalog_template( '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
 		$request = new WP_REST_Request( 'PUT', '/wp/v2/templates/' . get_stylesheet() . '//outlet-catalog' );
 		$request->set_body_params( array( 'content' => '<!-- wp:paragraph --><p>Independent layout</p><!-- /wp:paragraph -->' ) );
 
 		// Act.
 		$response = rest_do_request( $request );
-		create_outlet_catalog_template();
+		create_outlet_catalog_template( '<!-- wp:paragraph --><p>Template navigation</p><!-- /wp:paragraph -->' );
 
 		// Assert.
 		$this->assertSame( 200, $response->get_status() );

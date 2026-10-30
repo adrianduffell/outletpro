@@ -70,8 +70,7 @@ function deinit_catalog(): void {
 	remove_action( 'updated_option', 'OutletPro\\refresh_outlet_catalog_option_hook' );
 	remove_filter( 'archive_template_hierarchy', 'OutletPro\\outlet_catalog_hierarchy_hook' );
 	remove_filter( 'page_template_hierarchy', 'OutletPro\\outlet_catalog_password_template_hook' );
-	remove_filter( 'pre_render_block', 'OutletPro\\outlet_page_content_hook' );
-	remove_filter( 'block_editor_settings_all', 'OutletPro\\outlet_catalog_editor_settings_hook' );
+	remove_filter( 'block_editor_settings_all', 'OutletPro\\lock_outlet_page_editor_hook' );
 }
 
 /**
