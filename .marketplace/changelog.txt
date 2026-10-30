@@ -2,49 +2,29 @@
 
 2026-10-30 - version 1.1.0
 
-Added - Adds modern category views for the Outlet Page, including featured category
-tiles and a full menu. The tiles and menu may link to filtered views of the
-outlet by:
-
-- Product categories ( eg. Womens, Mens, Kids)
-- Price tiers (eg "Under $25")
-- Discount tiers (eg "50% off")
-
-Updated - The outlet badge is moved above the product name by default, as WooCommerce’s
-new Purple theme places the sale badge in the previous position below the
-price. Turns out placing it above the title works really well in combination
-with the sale badge with the price. Outlet Pro is also updated to support
-Purple fully.
-
-Updated - The plugin is updated to support a premium subscription sold through my store,
-which will enable users to start with a free trial and other goodies. A new
-welcome screen is added to activate the license key for this.
-
-Other - Other changes:
-
-- The cart badge now uses real HTML elements instead of CSS pseudo elements.
-- A badge is shown for outlet products in the product admin list table.
-- A link is added to the outlet page to customize the outlet settings.
-- The project is licensed under GPL v2 or later (previously GPL v3 or later).
+* Added - Adds modern category views for the Outlet Page, including featured category tiles and a full menu. The tiles and menu may link to filtered views of the outlet by:
+    * Product categories ( eg. Womens, Mens, Kids)
+    * Price tiers (eg "Under $25")
+    * Discount tiers (eg "50% off")
+* Updated - The outlet badge is moved above the product name by default, as WooCommerce’s new Purple theme places the sale badge in the previous position below the price. Turns out placing it above the title works really well in combination with the sale badge with the price. Outlet Pro is also updated to support Purple fully.
+* Fixed - The cart badge now uses real HTML elements instead of CSS pseudo elements.
+* Fixed - A badge is shown for outlet products in the product admin list table.
+* Fixed - A link is added to the outlet page to customize the outlet settings.
+* Fixed - The project is licensed under GPL v2 or later (previously GPL v3 or later).
 
 2026-08-04 - version 1.0.2
 
-Fixed - Maintenance release fixing the issues:
-
-- The field label was mis-aligned in the bulk editor.
-- The outlet badge block’s label was reverting to the default value when empty.
-- A PHP notice was displaying on the widget editor.
-- An icon for outlet settings was shown in the site editor toolbar.
+* Fixed - The field label was mis-aligned in the bulk editor.
+* Fixed - The outlet badge block’s label was reverting to the default value when empty.
+* Fixed - A PHP notice was displaying on the widget editor.
+* Fixed - An icon for outlet settings was shown in the site editor toolbar.
 
 2026-06-07 - version 1.0.1
 
-Added - Maintenance release adding WooCommerce declarations:
-
-- "WC requires at least" plugin header
-- "WC tested up to" plugin header
-- HPOS compatibility
+Added - "WC requires at least" plugin header
+Added - "WC tested up to" plugin header
+Added - POS compatibility
 
 2026-06-07 - version 1.0.0
 
-Added - Initial release includes outlet page, badge, and message. Compatible with
-block and classic themes.
+Added - Initial release includes outlet page, badge, and message. Compatible with block and classic themes.
