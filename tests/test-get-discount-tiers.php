@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\add_discount_tier;
 use function OutletPro\deinit_taxonomies;
 use function OutletPro\get_discount_tiers;
 use function OutletPro\register_outlet_search_index_taxonomy;
@@ -51,7 +52,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-discount-80', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 80 );
 
 		// Act.
 		$tiers = get_discount_tiers();
@@ -64,7 +65,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-discount-0', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 0 );
 
 		// Act.
 		$tiers = get_discount_tiers();

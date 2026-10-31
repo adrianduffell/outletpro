@@ -115,6 +115,77 @@ try {
 }
 ```
 
+### Price and discount tiers
+
+Manage the available tiers using numeric amounts, independently of how tiers are
+stored. Added in 1.1.0.
+
+- `OutletPro\add_price_tier( int $price ): void`
+- `OutletPro\get_price_tiers(): array`
+- `OutletPro\update_price_tier( int $price, int $new_price ): void`
+- `OutletPro\delete_price_tier( int $price ): void`
+- `OutletPro\add_discount_tier( int $discount ): void`
+- `OutletPro\get_discount_tiers(): array`
+- `OutletPro\update_discount_tier( int $discount, int $new_discount ): void`
+- `OutletPro\delete_discount_tier( int $discount ): void`
+
+Prices are non-negative integer thresholds in the store's currency. Discounts
+are integer percentages from 0 to 100 inclusive. The read functions return all
+configured amounts in numerical order, including tiers without products.
+
+Updates replace the existing amount with the new amount and preserve product
+assignments. Deletion removes the tier globally, including its product
+assignments. Adding, updating, or deleting a tier schedules outlet products for
+reindexing through Action Scheduler, so their tier assignments are recalculated.
+
+The mutation functions throw `\InvalidArgumentException` for amounts outside the
+supported range. All functions throw `\RuntimeException` on storage errors.
+Adding an existing tier, updating a tier to another tier's amount, or updating or
+deleting a missing tier also throws `\RuntimeException`.
+
+#### Batch operations
+
+`OutletPro\batch_price_tiers()` and `OutletPro\batch_discount_tiers()` accept
+three optional array parameters, in order: `$add`, `$update`, and `$delete`.
+All default to an empty array. Added in 1.1.0.
+
+```php
+OutletPro\batch_price_tiers(
+    array( 125, 150 ), // Add these amounts.
+    array( 50 => 60 ), // Map existing amounts to new amounts.
+    array( 100 )      // Delete these amounts.
+);
+```
+
+Batches validate every amount and operation before writing. Additions run first,
+then updates in array order, then deletions. Duplicate additions, missing tiers,
+and updates to occupied amounts throw `\RuntimeException`. Invalid amounts throw
+`\InvalidArgumentException`. Empty batches do nothing.
+
+Each batch temporarily pauses the registered product-reindex callbacks, restores
+their priorities in `finally`, and requests one reindex pass after changes.
+Existing pauses and nested batches are respected. Other taxonomy callbacks still
+run. A storage failure can leave earlier operations saved; those changes still
+request reindexing before the exception propagates. Batches do not roll back.
+
+#### Individual operations
+
+```php
+try {
+    OutletPro\add_price_tier( 125 );
+    OutletPro\update_price_tier( 125, 150 );
+    $prices = OutletPro\get_price_tiers();
+    OutletPro\delete_price_tier( 150 );
+
+    OutletPro\add_discount_tier( 40 );
+    OutletPro\update_discount_tier( 40, 45 );
+    $discounts = OutletPro\get_discount_tiers();
+    OutletPro\delete_discount_tier( 45 );
+} catch ( \Throwable $e ) {
+    // Handle exception
+}
+```
+
 ### Outlet page
 
 #### `OutletPro\get_outlet_page_id(): ?int`

@@ -384,25 +384,12 @@ function seed_outlet_search_index_taxonomy(): void {
 	remove_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 	remove_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 
-	$terms = array();
 	foreach ( DEFAULT_DISCOUNT_TIERS as $discount ) {
-		$terms[] = 'outlet-discount-' . $discount;
+		add_discount_tier( $discount );
 	}
 	$price_tiers = DEFAULT_PRICE_TIERS[ get_woocommerce_currency() ] ?? DEFAULT_PRICE_TIERS['USD'];
 	foreach ( $price_tiers as $price ) {
-		$terms[] = 'outlet-price-' . $price;
-	}
-
-	foreach ( $terms as $term ) {
-		if ( term_exists( $term, OUTLET_SEARCH_INDEX_TAXONOMY ) ) {
-			continue;
-		}
-
-		$result = wp_insert_term( $term, OUTLET_SEARCH_INDEX_TAXONOMY );
-
-		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( 'Failed to seed outlet search index taxonomy.' );
-		}
+		add_price_tier( $price );
 	}
 
 	// Manually re-index products.
@@ -681,11 +668,109 @@ function get_search_index_facet_nice_name( \WP_Term $term ): string {
 }
 
 /**
+ * Batch additions, updates, and deletions of outlet price tiers.
+ *
+ * Validates all operations before writing and requests one reindex afterward.
+ *
+ * @param int[]           $add Price thresholds to add.
+ * @param array<int, int> $update Existing thresholds mapped to new thresholds.
+ * @param int[]           $delete Price thresholds to delete.
+ * @throws \InvalidArgumentException If an amount is not a non-negative integer.
+ * @throws \RuntimeException If a tier operation is invalid or fails.
+ * @since 1.1.0
+ */
+function batch_price_tiers( array $add = array(), array $update = array(), array $delete = array() ): void {
+	if ( empty( $add ) && empty( $update ) && empty( $delete ) ) {
+		return;
+	}
+	validate_tier_batch( $add, $update, $delete, get_price_tiers() );
+	apply_tier_batch( $add, $update, $delete, 'OutletPro\add_price_tier', 'OutletPro\update_price_tier', 'OutletPro\delete_price_tier' );
+}
+
+/**
+ * Add an outlet price tier.
+ *
+ * @param int $price Non-negative price threshold in the store's currency.
+ * @throws \InvalidArgumentException If the price is negative.
+ * @throws \RuntimeException If the tier cannot be added, including duplicates.
+ * @since 1.1.0
+ */
+function add_price_tier( int $price ): void {
+	if ( $price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	$slug = 'outlet-price-' . $price;
+	if ( get_term_by( 'slug', $slug, OUTLET_SEARCH_INDEX_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet price tier could not be added.' );
+	}
+	$result = wp_insert_term( $slug, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet price tier could not be added.' );
+	}
+}
+
+/**
+ * Update an outlet price tier, preserving its product assignments.
+ *
+ * @param int $price Existing price threshold.
+ * @param int $new_price Non-negative replacement price threshold.
+ * @throws \InvalidArgumentException If either price is negative.
+ * @throws \RuntimeException If the tier cannot be found or updated.
+ * @since 1.1.0
+ */
+function update_price_tier( int $price, int $new_price ): void {
+	if ( $price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	if ( $new_price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( ! $term ) {
+		throw new \RuntimeException( 'Outlet price tier could not be found.' );
+	}
+	$slug   = 'outlet-price-' . $new_price;
+	$result = wp_update_term(
+		$term->term_id,
+		OUTLET_SEARCH_INDEX_TAXONOMY,
+		array(
+			'name' => $slug,
+			'slug' => $slug,
+		)
+	);
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet price tier could not be updated.' );
+	}
+}
+
+/**
+ * Delete an outlet price tier and its product assignments.
+ *
+ * @param int $price Price threshold to delete.
+ * @throws \InvalidArgumentException If the price is negative.
+ * @throws \RuntimeException If the tier cannot be found or deleted.
+ * @since 1.1.0
+ */
+function delete_price_tier( int $price ): void {
+	if ( $price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( ! $term ) {
+		throw new \RuntimeException( 'Outlet price tier could not be found.' );
+	}
+	$result = wp_delete_term( $term->term_id, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( true !== $result ) {
+		throw new \RuntimeException( 'Outlet price tier could not be deleted.' );
+	}
+}
+
+/**
  * Get the outlet price tiers in numerical order.
  *
  * @return int[] Price tier amounts
  * @throws \RuntimeException If the price tiers cannot be retrieved.
- * @internal
+ * @since 1.1.0
  */
 function get_price_tiers(): array {
 	$terms = get_terms(
@@ -725,11 +810,121 @@ function get_price_tiers(): array {
 }
 
 /**
+ * Batch additions, updates, and deletions of outlet discount tiers.
+ *
+ * Validates all operations before writing and requests one reindex afterward.
+ *
+ * @param int[]           $add Discount percentages to add.
+ * @param array<int, int> $update Existing percentages mapped to new percentages.
+ * @param int[]           $delete Discount percentages to delete.
+ * @throws \InvalidArgumentException If an amount is not an integer from zero to 100.
+ * @throws \RuntimeException If a tier operation is invalid or fails.
+ * @since 1.1.0
+ */
+function batch_discount_tiers( array $add = array(), array $update = array(), array $delete = array() ): void {
+	if ( empty( $add ) && empty( $update ) && empty( $delete ) ) {
+		return;
+	}
+	validate_tier_batch( $add, $update, $delete, get_discount_tiers(), 100 );
+	apply_tier_batch( $add, $update, $delete, 'OutletPro\add_discount_tier', 'OutletPro\update_discount_tier', 'OutletPro\delete_discount_tier' );
+}
+
+/**
+ * Add an outlet discount tier.
+ *
+ * @param int $discount Discount percentage between zero and 100.
+ * @throws \InvalidArgumentException If the discount is outside the percentage range.
+ * @throws \RuntimeException If the tier cannot be added, including duplicates.
+ * @since 1.1.0
+ */
+function add_discount_tier( int $discount ): void {
+	if ( $discount < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not be negative.' );
+	}
+	if ( $discount > 100 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not exceed 100.' );
+	}
+	$slug = 'outlet-discount-' . $discount;
+	if ( get_term_by( 'slug', $slug, OUTLET_SEARCH_INDEX_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet discount tier could not be added.' );
+	}
+	$result = wp_insert_term( $slug, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet discount tier could not be added.' );
+	}
+}
+
+/**
+ * Update an outlet discount tier, preserving its product assignments.
+ *
+ * @param int $discount Existing discount percentage.
+ * @param int $new_discount Replacement discount percentage between zero and 100.
+ * @throws \InvalidArgumentException If either discount is outside the percentage range.
+ * @throws \RuntimeException If the tier cannot be found or updated.
+ * @since 1.1.0
+ */
+function update_discount_tier( int $discount, int $new_discount ): void {
+	if ( $discount < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not be negative.' );
+	}
+	if ( $discount > 100 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not exceed 100.' );
+	}
+	if ( $new_discount < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not be negative.' );
+	}
+	if ( $new_discount > 100 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not exceed 100.' );
+	}
+	$term = get_term_by( 'slug', 'outlet-discount-' . $discount, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( ! $term ) {
+		throw new \RuntimeException( 'Outlet discount tier could not be found.' );
+	}
+	$slug   = 'outlet-discount-' . $new_discount;
+	$result = wp_update_term(
+		$term->term_id,
+		OUTLET_SEARCH_INDEX_TAXONOMY,
+		array(
+			'name' => $slug,
+			'slug' => $slug,
+		)
+	);
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet discount tier could not be updated.' );
+	}
+}
+
+/**
+ * Delete an outlet discount tier and its product assignments.
+ *
+ * @param int $discount Discount percentage to delete.
+ * @throws \InvalidArgumentException If the discount is outside the percentage range.
+ * @throws \RuntimeException If the tier cannot be found or deleted.
+ * @since 1.1.0
+ */
+function delete_discount_tier( int $discount ): void {
+	if ( $discount < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not be negative.' );
+	}
+	if ( $discount > 100 ) {
+		throw new \InvalidArgumentException( 'Outlet discount tier must not exceed 100.' );
+	}
+	$term = get_term_by( 'slug', 'outlet-discount-' . $discount, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( ! $term ) {
+		throw new \RuntimeException( 'Outlet discount tier could not be found.' );
+	}
+	$result = wp_delete_term( $term->term_id, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( true !== $result ) {
+		throw new \RuntimeException( 'Outlet discount tier could not be deleted.' );
+	}
+}
+
+/**
  * Get the outlet discount tiers in numerical order.
  *
  * @return int[] Discount tier amounts
  * @throws \RuntimeException If the discount tiers cannot be retrieved.
- * @internal
+ * @since 1.1.0
  */
 function get_discount_tiers(): array {
 	$terms = get_terms(
@@ -766,4 +961,114 @@ function get_discount_tiers(): array {
 	sort( $amounts, SORT_NUMERIC );
 
 	return $amounts;
+}
+
+/**
+ * Validate amounts and simulate a tier batch in execution order.
+ *
+ * @param int[]           $add Amounts to add.
+ * @param array<int, int> $update Existing amounts mapped to new amounts.
+ * @param int[]           $delete Amounts to delete.
+ * @param int[]           $existing Currently configured tier amounts.
+ * @param int|null        $maximum Largest permitted amount, or null for no limit.
+ * @throws \InvalidArgumentException If an amount is invalid.
+ * @throws \RuntimeException If an operation would fail against the tier set.
+ * @internal
+ */
+function validate_tier_batch( array $add, array $update, array $delete, array $existing, ?int $maximum = null ): void {
+	$amounts = array_merge( $add, array_keys( $update ), array_values( $update ), $delete );
+	foreach ( $amounts as $amount ) {
+		if ( ! is_int( $amount ) ) {
+			throw new \InvalidArgumentException( 'Outlet tier amount must be an integer.' );
+		}
+		if ( $amount < 0 ) {
+			throw new \InvalidArgumentException( 'Outlet tier amount must not be negative.' );
+		}
+		if ( null !== $maximum && $amount > $maximum ) {
+			throw new \InvalidArgumentException( 'Outlet tier amount exceeds its maximum.' );
+		}
+	}
+	foreach ( $add as $amount ) {
+		if ( in_array( $amount, $existing, true ) ) {
+			throw new \RuntimeException( 'Outlet tier could not be added.' );
+		}
+		$existing[] = $amount;
+	}
+	foreach ( $update as $amount => $new_amount ) {
+		$key = array_search( $amount, $existing, true );
+		if ( false === $key ) {
+			throw new \RuntimeException( 'Outlet tier could not be found.' );
+		}
+		if ( $amount !== $new_amount && in_array( $new_amount, $existing, true ) ) {
+			throw new \RuntimeException( 'Outlet tier could not be updated.' );
+		}
+		$existing[ $key ] = $new_amount;
+	}
+	foreach ( $delete as $amount ) {
+		$key = array_search( $amount, $existing, true );
+		if ( false === $key ) {
+			throw new \RuntimeException( 'Outlet tier could not be found.' );
+		}
+		unset( $existing[ $key ] );
+	}
+}
+
+/**
+ * Apply a validated tier batch while preserving reindex hook registrations.
+ *
+ * @param int[]           $add Amounts to add.
+ * @param array<int, int> $update Existing amounts mapped to new amounts.
+ * @param int[]           $delete Amounts to delete.
+ * @param callable        $add_tier Function to add one tier.
+ * @param callable        $update_tier Function to update one tier.
+ * @param callable        $delete_tier Function to delete one tier.
+ * @throws \Throwable If a tier operation fails.
+ * @internal
+ */
+function apply_tier_batch( array $add, array $update, array $delete, callable $add_tier, callable $update_tier, callable $delete_tier ): void {
+	$callback = 'OutletPro\reindex_all_outlet_products_hook';
+	$hooks    = array();
+	foreach ( array( 'created_', 'edited_', 'delete_' ) as $event ) {
+		$hook       = $event . OUTLET_SEARCH_INDEX_TAXONOMY;
+		$priorities = array();
+		$priority   = has_action( $hook, $callback );
+		while ( false !== $priority ) {
+			$priorities[] = $priority;
+			remove_action( $hook, $callback, $priority );
+			$priority = has_action( $hook, $callback );
+		}
+		$hooks[ $hook ] = array(
+			'priorities' => $priorities,
+			'count'      => did_action( $hook ),
+		);
+	}
+
+	try {
+		foreach ( $add as $amount ) {
+			$add_tier( $amount );
+		}
+		foreach ( $update as $amount => $new_amount ) {
+			$update_tier( $amount, $new_amount );
+		}
+		foreach ( $delete as $amount ) {
+			$delete_tier( $amount );
+		}
+	} finally {
+		$changed = false;
+		foreach ( $hooks as $hook => $state ) {
+			foreach ( $state['priorities'] as $priority ) {
+				add_action( $hook, $callback, $priority );
+			}
+			if ( empty( $state['priorities'] ) ) {
+				continue;
+			}
+			if ( did_action( $hook ) <= $state['count'] ) {
+				continue;
+			}
+			$changed = true;
+		}
+		if ( $changed ) {
+			reindex_all_outlet_products_hook();
+		}
+	}
 }
