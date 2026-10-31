@@ -23,6 +23,11 @@ function init_patterns(): void {
 	register_outlet_navigation_4_pattern();
 	register_outlet_navigation_price_tiers_pattern();
 	register_outlet_navigation_6_pattern();
+
+	if ( version_compare( get_bloginfo( 'version' ), '7.0', '<' ) ) {
+		return;
+	}
+
 	register_outlet_sort_filter_pattern();
 }
 

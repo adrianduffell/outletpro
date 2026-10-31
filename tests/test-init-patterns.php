@@ -108,15 +108,20 @@ class Test_Init_Patterns extends WP_UnitTestCase {
 		$this->assertTrue( $patterns->is_registered( 'outletpro/outlet-navigation-price-tiers' ) );
 	}
 
-	public function test_registers_outlet_sort_filter_pattern(): void {
+	public function test_registers_outlet_sort_filter_pattern_only_for_wp_7_plus(): void {
 		// Arrange.
-		deinit_patterns();
+		! \WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-sort-filter' )
+			|| \WP_Block_Patterns_Registry::get_instance()->unregister( 'outletpro/outlet-sort-filter' );
+
+		version_compare( get_bloginfo( 'version' ), '7.1', '<' )
+			|| $this->fail( 'With WP 7.1 released, remove the version gate in init_patterns().' );
 
 		// Act.
 		init_patterns();
 
 		// Assert.
-		$this->assertTrue(
+		$this->assertSame(
+			version_compare( get_bloginfo( 'version' ), '7.0', '>=' ),
 			\WP_Block_Patterns_Registry::get_instance()->is_registered( 'outletpro/outlet-sort-filter' )
 		);
 	}
