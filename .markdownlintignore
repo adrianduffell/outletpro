@@ -2,6 +2,5 @@ node_modules/
 build/
 vendor/
 AGENTS.md
-README.md
 docs/glossary.md
 docs/public-api.md
