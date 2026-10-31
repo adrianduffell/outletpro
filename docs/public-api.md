@@ -193,9 +193,14 @@ try {
 Fires when a product's outlet status changes.
 
 ```php
-add_action( 'outletpro_status_changed', function ( $product_id, $old_value, $new_value ) {
-    // React to the outlet status change.
-}, 10, 3 );
+add_action(
+    'outletpro_status_changed',
+    function ( $product_id, $old_value, $new_value ) {
+        // React to the outlet status change.
+    },
+    10,
+    3
+);
 ```
 
 | Parameter     | Type   | Description             |
