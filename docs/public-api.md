@@ -228,9 +228,9 @@ add_filter( 'outletpro_badge_single_product_hook', function ( $name ) {
 } );
 ```
 
-| Parameter | Type     | Description                                              |
-| --------- | -------- | -------------------------------------------------------- |
-| `$name`   | `string` | Hook name. Default `woocommerce_single_product_summary`. |
+| Parameter | Type     | Default                              | Description |
+| --------- | -------- | ------------------------------------ | ----------- |
+| `$name`   | `string` | `woocommerce_single_product_summary` | Hook name.  |
 
 Must return a non-empty string. Added in 1.0.0.
 
@@ -245,9 +245,9 @@ add_filter( 'outletpro_badge_single_product_priority', function ( $priority ) {
 } );
 ```
 
-| Parameter   | Type  | Description                  |
-| ----------- | ----- | ---------------------------- |
-| `$priority` | `int` | Hook priority. Default `1`. |
+| Parameter   | Type  | Default | Description   |
+| ----------- | ----- | ------- | ------------- |
+| `$priority` | `int` | `1`     | Hook priority |
 
 Must return an integer. Added in 1.0.0.
 
@@ -338,9 +338,9 @@ Displays the outlet message when the product is in the store’s outlet.
 Automatically inserted as the first child of the product meta block on the
 single product template (block themes). Added in 1.0.0.
 
-| Attribute  | Type     | Default | Description                                |
-| ---------- | -------- | ------- | ------------------------------------------ |
-| `fontSize` | `string` | `small` | Text size preset (e.g. `small`, `medium`). |
+| Attribute  | Type     | Default | Description      |
+| ---------- | -------- | ------- | ---------------- |
+| `fontSize` | `string` | `small` | Font size preset |
 
 ## REST API
 
@@ -377,9 +377,9 @@ the same parameter.
 GET /wp/v2/products?outletpro=true
 ```
 
-| Parameter   | Type      | Description                                                    |
-| ----------- | --------- | -------------------------------------------------------------- |
-| `outletpro` | `boolean` | When `true`, limits results to products in the store's outlet. |
+| Parameter   | Type      | Description                               |
+| ----------- | --------- | ----------------------------------------- |
+| `outletpro` | `boolean` | When `true`, returns outlet products only |
 
 Added in 1.0.0.
 
@@ -392,9 +392,9 @@ attribute.
 [products outletpro="true"]
 ```
 
-| Attribute   | Type                       | Description                                                    |
-| ----------- | -------------------------- | -------------------------------------------------------------- |
-| `outletpro` | `boolean` (`true`/`false`) | When `true`, limits results to products in the store’s outlet. |
+| Attribute   | Type      | Description                               |
+| ----------- | --------- | ----------------------------------------- |
+| `outletpro` | `boolean` | When `true`, returns outlet products only |
 
 Added in 1.0.0.
 
