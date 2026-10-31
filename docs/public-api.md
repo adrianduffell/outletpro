@@ -258,23 +258,17 @@ third-party enqueues.
 
 ### Styles
 
-#### `outletpro-classic-badge`
-
-Outlet badge stylesheet for classic themes. Added in 1.0.0.
-
-#### `outletpro-classic-message`
-
-Outlet message stylesheet for classic themes. Added in 1.0.0.
-
-#### `outletpro-block-cart`
-
-Stylesheet for outlet badges in block-based carts. Added in 1.1.0.
+| Handle                      | Description                       | Added |
+| --------------------------- | --------------------------------- | ----- |
+| `outletpro-classic-badge`   | Outlet badge for classic themes   | 1.0.0 |
+| `outletpro-classic-message` | Outlet message for classic themes | 1.0.0 |
+| `outletpro-block-cart`      | Outlet badge in block-based carts | 1.1.0 |
 
 ### Scripts
 
-#### `outletpro-block-cart`
-
-Inserts the badge into block-based carts. Added in 1.1.0.
+| Handle                 | Description                              | Added |
+| ---------------------- | ---------------------------------------- | ----- |
+| `outletpro-block-cart` | Inserts the badge into block-based carts | 1.1.0 |
 
 ## CSS classes
 
