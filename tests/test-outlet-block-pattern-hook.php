@@ -42,10 +42,7 @@ class Test_Outlet_Block_Pattern_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'outletpro/outlet-badge', $blocks[0]['innerBlocks'][0]['blockName'] );
 		$this->assertSame( 'core/post-title', $blocks[1]['blockName'] );
 
-		$expected_pattern_name = version_compare( get_bloginfo( 'version' ), '7.0', '>=' )
-			? 'outletpro/outlet-badge-row'
-			: null;
-		$this->assertSame( $expected_pattern_name, $blocks[0]['attrs']['metadata']['patternName'] ?? null );
+		$this->assertSame( 'outletpro/outlet-badge-row', $blocks[0]['attrs']['metadata']['patternName'] ?? null );
 	}
 
 	public function test_hooked_badge_outside_single_product_template_is_not_replaced_with_pattern(): void {
