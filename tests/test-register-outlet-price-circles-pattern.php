@@ -7,12 +7,15 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\deinit_blocks;
 use function OutletPro\get_pattern_content;
+use function OutletPro\init_blocks;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_price_tiers_pattern;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
@@ -94,6 +97,41 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( array( $term['term_id'], 0, 0, 0 ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
 		$this->assertSame( 'outletpro/outlet-menu', $blocks[1]['blockName'] );
+	}
+
+	public function test_excludes_uncategorized(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$uncategorized_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		$product_id       = self::factory()->post->create( array( 'post_type' => 'product' ) );
+		wp_set_object_terms( $product_id, array( $uncategorized_id ), 'product_cat' );
+		$this->assertSame(
+			array( $uncategorized_id ),
+			get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => false,
+					'fields'     => 'ids',
+				)
+			)
+		);
+
+		// Act.
+		register_outlet_navigation_price_tiers_pattern();
+		$content = do_blocks( get_pattern_content( 'outletpro/outlet-navigation-price-tiers' ) );
+
+		// Assert.
+		$this->assertStringNotContainsString( 'Uncategorized', $content );
 	}
 
 	public function test_menu_omits_price_tiers(): void {

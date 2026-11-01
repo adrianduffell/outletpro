@@ -7,11 +7,14 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\deinit_blocks;
 use function OutletPro\get_pattern_content;
+use function OutletPro\init_blocks;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_4_pattern;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Register_Outlet_Four_Tiles_Pattern extends WP_UnitTestCase {
 
@@ -89,6 +92,41 @@ class Test_Register_Outlet_Four_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertCount( 4, $items );
 		$this->assertContains( $category_id, $items );
 		$this->assertContains( 0, $items );
+	}
+
+	public function test_excludes_uncategorized(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$uncategorized_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		$product_id       = self::factory()->post->create( array( 'post_type' => 'product' ) );
+		wp_set_object_terms( $product_id, array( $uncategorized_id ), 'product_cat' );
+		$this->assertSame(
+			array( $uncategorized_id ),
+			get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => false,
+					'fields'     => 'ids',
+				)
+			)
+		);
+
+		// Act.
+		register_outlet_navigation_4_pattern();
+		$content = do_blocks( get_pattern_content( 'outletpro/outlet-navigation-4' ) );
+
+		// Assert.
+		$this->assertStringNotContainsString( 'Uncategorized', $content );
 	}
 
 	public function test_uses_compact_stacked_mobile_tiles(): void {
