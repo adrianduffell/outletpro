@@ -42,6 +42,14 @@ function _manually_load_plugin(): void {
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
+// Add woocommerce plugin translations used in tests.
+tests_add_filter(
+	'lang_dir_for_domain',
+	static fn( $path, string $domain ) => 'woocommerce' === $domain ? dirname( __DIR__ ) . '/fixtures/lang/' : $path,
+	10,
+	2
+);
+
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
 

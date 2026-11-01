@@ -47,6 +47,47 @@ class Test_Get_Uncategorized_Product_Category_Id extends WP_UnitTestCase {
 		$this->assertNull( $result );
 	}
 
+	public function test_returns_category_with_translated_name(): void {
+		// Arrange.
+		update_option( 'WPLANG', 'de_DE' );
+		switch_to_locale( 'de_DE' );
+		$category_id = self::factory()->term->create(
+			array(
+				'taxonomy' => 'product_cat',
+				'name'     => 'Ohne Kategorie',
+			)
+		);
+
+		// Act.
+		$result = get_uncategorized_product_category_id();
+		restore_previous_locale();
+
+		// Assert.
+		$this->assertSame( $category_id, $result );
+	}
+
+	public function test_uses_site_locale_for_translated_name(): void {
+		// Arrange.
+		update_option( 'WPLANG', 'en_US' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		update_user_meta( $user_id, 'locale', 'de_DE' );
+		wp_set_current_user( $user_id );
+		set_current_screen( 'dashboard' );
+		$category_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+
+		// Act.
+		$result = get_uncategorized_product_category_id();
+
+		// Assert.
+		$this->assertSame( $category_id, $result );
+	}
+
 	public function test_woocommerce_pot_contains_uncategorized_with_default_category_slug_context(): void {
 		// Arrange.
 		$woocommerce_pot = new PO();
