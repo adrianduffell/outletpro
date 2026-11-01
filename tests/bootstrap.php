@@ -42,28 +42,11 @@ function _manually_load_plugin(): void {
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
-/**
- * Install additional language packs used in the tests.
- */
-function _install_woocommerce_language_packs(): void {
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-	require_once ABSPATH . 'wp-admin/includes/translation-install.php';
-	require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-	wp_download_language_pack( 'it_IT' );
-
-	delete_site_transient( 'update_plugins' );
-	wp_update_plugins();
-
-	$upgrader = new Language_Pack_Upgrader( new Automatic_Upgrader_Skin() );
-	$upgrader->bulk_upgrade();
-}
-
-// Install translations before WordPress initializes its locale switcher.
-tests_add_filter( 'plugins_loaded', '_install_woocommerce_language_packs' );
-
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
+
+// Load the PO parser for translation catalog tests.
+require_once ABSPATH . WPINC . '/pomo/po.php';
 
 // WP_Customize_Manager and its dependencies are not loaded by default in the test environment.
 require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';

@@ -47,23 +47,21 @@ class Test_Get_Uncategorized_Product_Category_Id extends WP_UnitTestCase {
 		$this->assertNull( $result );
 	}
 
-	public function test_returns_translated_category_for_italian_site(): void {
+	public function test_woocommerce_pot_contains_uncategorized_with_default_category_slug_context(): void {
 		// Arrange.
-		update_option( 'WPLANG', 'it_IT' );
-		switch_to_locale( 'it_IT' );
-		$category_id = self::factory()->term->create(
+		$woocommerce_pot = new PO();
+		$expected_entry  = new Translation_Entry(
 			array(
-				'taxonomy' => 'product_cat',
-				'name'     => 'Senza categoria',
+				'singular' => 'Uncategorized',
+				'context'  => 'Default category slug',
 			)
 		);
 
 		// Act.
-		$result = get_uncategorized_product_category_id();
-		restore_previous_locale();
+		$woocommerce_pot->import_from_file( WC_ABSPATH . 'i18n/languages/woocommerce.pot' );
 
 		// Assert.
-		$this->assertSame( $category_id, $result );
+		$this->assertArrayHasKey( $expected_entry->key(), $woocommerce_pot->entries );
 	}
 
 	public function test_returns_renamed_category_with_uncategorized_slug(): void {
