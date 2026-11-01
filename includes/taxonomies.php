@@ -699,6 +699,7 @@ function get_uncategorized_product_category_id(): ?int {
 	$terms = get_terms(
 		array(
 			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
 			'name'       => $uncategorized_name,
 			'hide_empty' => false,
 			'fields'     => 'ids',
