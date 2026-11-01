@@ -681,15 +681,17 @@ function get_search_index_facet_nice_name( \WP_Term $term ): string {
 }
 
 /**
- * Get the Uncategorized product category ID using its translated slug.
+ * Returns the ID for the "Uncategorized" product category.
+ *
+ * Takes the site locale into account to match translated names.
  *
  * @internal
- * @return int|null Category ID, or null when no matching slug exists.
+ * @return int|null Category ID, or null when no matching name exists.
  * @throws \RuntimeException If product categories cannot be retrieved.
  */
 function get_uncategorized_product_category_id(): ?int {
 	$locale_switched    = switch_to_locale( get_locale() );
-	$uncategorized_slug = sanitize_title( _x( 'Uncategorized', 'Default category slug', 'woocommerce' ) ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Match WooCommerce's category translation.
+	$uncategorized_name = _x( 'Uncategorized', 'Default category slug', 'woocommerce' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Match WooCommerce's category translation.
 	if ( $locale_switched ) {
 		restore_previous_locale();
 	}
@@ -697,7 +699,7 @@ function get_uncategorized_product_category_id(): ?int {
 	$terms = get_terms(
 		array(
 			'taxonomy'   => 'product_cat',
-			'slug'       => $uncategorized_slug,
+			'name'       => $uncategorized_name,
 			'hide_empty' => false,
 			'fields'     => 'ids',
 		)

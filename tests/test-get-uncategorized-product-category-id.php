@@ -28,7 +28,7 @@ class Test_Get_Uncategorized_Product_Category_Id extends WP_UnitTestCase {
 		$this->assertSame( $category_id, $result );
 	}
 
-	public function test_returns_null_when_no_matching_slug_exists(): void {
+	public function test_returns_null_when_no_matching_name_exists(): void {
 		// Arrange.
 		$category_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
 			?? self::factory()->term->create(
@@ -37,7 +37,7 @@ class Test_Get_Uncategorized_Product_Category_Id extends WP_UnitTestCase {
 					'name'     => 'Uncategorized',
 				)
 			);
-		wp_update_term( $category_id, 'product_cat', array( 'slug' => 'uncategorized-specials' ) );
+		wp_update_term( $category_id, 'product_cat', array( 'name' => 'Uncategorized specials' ) );
 		update_option( 'default_product_cat', $category_id );
 
 		// Act.
@@ -64,16 +64,16 @@ class Test_Get_Uncategorized_Product_Category_Id extends WP_UnitTestCase {
 		$this->assertArrayHasKey( $expected_entry->key(), $woocommerce_pot->entries );
 	}
 
-	public function test_returns_renamed_category_with_uncategorized_slug(): void {
+	public function test_returns_uncategorized_category_with_custom_slug(): void {
 		// Arrange.
-		$category_id = get_term_by( 'slug', 'uncategorized', 'product_cat' )->term_id
+		$category_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
 			?? self::factory()->term->create(
 				array(
 					'taxonomy' => 'product_cat',
 					'name'     => 'Uncategorized',
 				)
 			);
-		wp_update_term( $category_id, 'product_cat', array( 'name' => 'Necklaces' ) );
+		wp_update_term( $category_id, 'product_cat', array( 'slug' => 'custom-category-slug' ) );
 
 		// Act.
 		$result = get_uncategorized_product_category_id();
