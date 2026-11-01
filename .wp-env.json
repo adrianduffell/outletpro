@@ -6,7 +6,7 @@
 		"wp-content/plugins/outletpro": "."
 	},
 	"themes": [
-		"WordPress/twentytwentyfive",
+		"https://downloads.wordpress.org/theme/purple.zip",
 		"https://downloads.wordpress.org/theme/storefront.zip"
 	],
 	"port": 1111,
