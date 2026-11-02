@@ -286,6 +286,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 
 	// Check the outlet message on the product page.
 	const message = customerPage.locator( 'main .outletpro-message' );
+	await expect( message ).toHaveCount( 1 );
 	await expect( message ).toBeVisible();
 	await expect( message ).toHaveText( wpSettings.outletpro_message );
 
