@@ -46,7 +46,9 @@ const SETTINGS_VERSION = '1';
  */
 const PLUGIN_FILE = __FILE__;
 
-require_once __DIR__ . '/migrate.php';
+// Run migrations on init.
+add_action( 'init', static fn() => require __DIR__ . '/migrate.php', 1 );
+
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
