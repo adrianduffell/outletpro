@@ -53,8 +53,9 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
-		$template       = new WP_Block_Template();
-		$template->slug = 'archive-product';
+		$template          = new WP_Block_Template();
+		$template->slug    = 'archive-product';
+		$template->content = '<!-- wp:woocommerce/product-meta /-->';
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $template );
@@ -67,8 +68,9 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
-		$template       = new WP_Block_Template();
-		$template->slug = 'single-product';
+		$template          = new WP_Block_Template();
+		$template->slug    = 'single-product';
+		$template->content = '<!-- wp:woocommerce/product-meta /-->';
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $template );
@@ -77,11 +79,14 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		$this->assertContains( 'outletpro/outlet-message', $result );
 	}
 
-	public function test_message_is_added_to_woo_hidden_single_product_pattern(): void {
+	public function test_message_is_added_to_single_product_pattern(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
-		$context = array( 'name' => 'purple/hidden-single-product' );
+		$context = array(
+			'name'    => 'theme/hidden-single-product',
+			'content' => '<!-- wp:woocommerce/product-meta /-->',
+		);
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', $context );
@@ -94,8 +99,9 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
-		$template       = new WP_Block_Template();
-		$template->slug = 'single-product';
+		$template          = new WP_Block_Template();
+		$template->slug    = 'single-product';
+		$template->content = '<!-- wp:woocommerce/product-meta /-->';
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array( 'core/paragraph' ), 'first_child', 'woocommerce/product-meta', $template );
@@ -123,13 +129,69 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
-		$template       = new WP_Block_Template();
-		$template->slug = 'single-product';
+		$template          = new WP_Block_Template();
+		$template->slug    = 'single-product';
+		$template->content = '<!-- wp:woocommerce/product-meta /-->';
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'last_child', 'woocommerce/product-meta', $template );
 
 		// Assert.
 		$this->assertNotContains( 'outletpro/outlet-message', $result );
+	}
+
+	public function test_message_is_inserted_after_add_to_cart_with_options(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$template          = new WP_Block_Template();
+		$template->slug    = 'single-product';
+		$template->content = '<!-- wp:woocommerce/add-to-cart-with-options /--><!-- wp:woocommerce/product-details /-->';
+
+		// Act.
+		$result = apply_block_hooks_to_content( $template->content, $template );
+		$blocks = parse_blocks( $result );
+
+		// Assert.
+		$this->assertSame(
+			array( 'woocommerce/add-to-cart-with-options', 'outletpro/outlet-message', 'woocommerce/product-details' ),
+			array_column( $blocks, 'blockName' )
+		);
+	}
+
+	public function test_message_is_inserted_after_add_to_cart_form(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$template          = new WP_Block_Template();
+		$template->slug    = 'single-product';
+		$template->content = '<!-- wp:woocommerce/add-to-cart-form /-->';
+
+		// Act.
+		$result = apply_block_hooks_to_content( $template->content, $template );
+		$blocks = parse_blocks( $result );
+
+		// Assert.
+		$this->assertSame(
+			array( 'woocommerce/add-to-cart-form', 'outletpro/outlet-message' ),
+			array_column( $blocks, 'blockName' )
+		);
+	}
+
+	public function test_message_is_inserted_once_when_multiple_anchors_exist(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$template          = new WP_Block_Template();
+		$template->slug    = 'single-product';
+		$template->content = '<!-- wp:woocommerce/add-to-cart-with-options /--><!-- wp:woocommerce/product-meta --><div class="wp-block-woocommerce-product-meta"><!-- wp:post-terms {"term":"product_cat"} /--></div><!-- /wp:woocommerce/product-meta -->';
+
+		// Act.
+		$result = apply_block_hooks_to_content( $template->content, $template );
+		$blocks = parse_blocks( $result );
+
+		// Assert.
+		$this->assertSame( 1, substr_count( $result, '<!-- wp:outletpro/outlet-message ' ) );
+		$this->assertSame( 'outletpro/outlet-message', $blocks[1]['innerBlocks'][0]['blockName'] );
 	}
 }

@@ -329,8 +329,7 @@ A container for arbitrary blocks that renders only for outlet products. Added in
 ### `outletpro/outlet-message`
 
 Displays the outlet message when the product is in the store’s outlet.
-Automatically inserted as the first child of the product meta block on the
-single product template (block themes). Added in 1.0.0.
+Automatically inserted on the single product template (block themes). Added in 1.0.0.
 
 | Attribute  | Type     | Default | Description      |
 | ---------- | -------- | ------- | ---------------- |

@@ -342,7 +342,14 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
 }
 
 /**
- * Auto-insert the outlet message block as the first child of the product meta block on the single product template.
+ * Auto-insert the outlet message block on the single product template.
+ *
+ * Anchors to the first matching block:
+ * - woocommerce/product-meta
+ * - woocommerce/add-to-cart-with-options
+ * - woocommerce/add-to-cart-form
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -353,11 +360,38 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'woocommerce/product-meta' !== $anchor_block || 'first_child' !== $relative_position ) {
+	$candidates = array(
+		'woocommerce/product-meta'             => 'first_child',
+		'woocommerce/add-to-cart-with-options' => 'after',
+		'woocommerce/add-to-cart-form'         => 'after',
+	);
+
+	// Block type is not a candidate.
+	if ( ! isset( $candidates[ $anchor_block ] ) ) {
+		return $hooked_blocks;
+	}
+
+	// Not the relative position for this block type.
+	if ( $candidates[ $anchor_block ] !== $relative_position ) {
 		return $hooked_blocks;
 	}
 
 	if ( ! is_single_product_context( $context ) ) {
+		return $hooked_blocks;
+	}
+
+	$content = $context instanceof \WP_Block_Template ? $context->content : ( $context['content'] ?? '' );
+
+	$matching_candidate = null;
+
+	foreach ( array_keys( $candidates ) as $candidate ) {
+		if ( has_block( $candidate, $content ) ) {
+			$matching_candidate = $candidate;
+			break;
+		}
+	}
+
+	if ( $anchor_block !== $matching_candidate ) {
 		return $hooked_blocks;
 	}
 
