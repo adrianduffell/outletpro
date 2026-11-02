@@ -179,6 +179,9 @@ jobs:
         OUTLETPRO_LICENSE_KEY: ${{ secrets.TEST_LICENSE_KEY }}
       run: npm run test:e2e -- ${{ matrix.build.e2e_flags }}
 
+    - name: Run Purple shopping E2E tests
+      run: THEME=purple npm run test:e2e -- tests/e2e/0-bootstrap-theme.spec.js tests/e2e/shopping.spec.js
+
     - name: Run classic theme shortcode E2E tests
       run: THEME=storefront STORE_PAGES=shortcode npm run test:e2e -- tests/e2e/0-bootstrap-theme.spec.js tests/e2e/0-bootstrap-store-pages.spec.js tests/e2e/shopping.spec.js
 
