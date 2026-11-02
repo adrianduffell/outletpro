@@ -33,12 +33,20 @@ defined( 'ABSPATH' ) || exit;
 const VERSION = '1.1.1-dev';
 
 /**
+ * Settings version.
+ *
+ * @internal
+ */
+const SETTINGS_VERSION = '1';
+
+/**
  * Plugin file path.
  *
  * @internal
  */
 const PLUGIN_FILE = __FILE__;
 
+require_once __DIR__ . '/migrate.php';
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
@@ -169,6 +177,7 @@ function activate(): void {
 
 	try {
 		seed_settings();
+		add_option( 'outletpro_settings_version', SETTINGS_VERSION, '', true );
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
 		seed_outlet_status_taxonomy();

@@ -44,6 +44,7 @@
 		"build",
 		"CHANGELOG.md",
 		"includes",
+		"migrate.php",
 		"templates",
 		"outletpro.php",
 		"readme.txt",
