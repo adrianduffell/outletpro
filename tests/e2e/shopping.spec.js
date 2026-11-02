@@ -284,6 +284,11 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 		.soft( badge, 'Product padding' )
 		.toHaveCSS( 'padding-top', fixture?.productPage?.padding );
 
+	// Check the outlet message on the product page.
+	const message = customerPage.locator( 'main .outletpro-message' );
+	await expect( message ).toBeVisible();
+	await expect( message ).toHaveText( wpSettings.outletpro_message );
+
 	// Check badge in the mini-cart (block themes only).
 	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.
 	const miniCartBadge = await getMiniCartBadge( customerPage );
