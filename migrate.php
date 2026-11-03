@@ -19,6 +19,19 @@ if ( version_compare( get_option( 'outletpro_db_version', '0' ), DB_VERSION, '>=
 	return;
 }
 
-// No migrations yet.
+if ( version_compare( get_option( 'outletpro_db_version', '1' ), '2', '<' ) ) {
+	if ( wp_is_block_theme() ) {
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
+	}
+	if ( wp_is_block_theme() ) {
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
+	}
+	if ( ! wp_is_block_theme() ) {
+		set_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_single_product_summary', 1 ) );
+	}
+	if ( ! wp_is_block_theme() ) {
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_product_meta_start', 1 ) );
+	}
+}
 
 update_option( 'outletpro_db_version', DB_VERSION, true );

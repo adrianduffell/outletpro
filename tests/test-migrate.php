@@ -47,12 +47,12 @@ class Test_Migrate extends WP_UnitTestCase {
 
 	public function test_noops_when_option_value_greater(): void {
 		// Arrange.
-		update_option( 'outletpro_db_version', '2' );
+		update_option( 'outletpro_db_version', '3' );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
-		$this->assertSame( '2', get_option( 'outletpro_db_version' ) );
+		$this->assertSame( '3', get_option( 'outletpro_db_version' ) );
 	}
 }
