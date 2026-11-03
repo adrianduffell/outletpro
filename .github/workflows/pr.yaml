@@ -137,8 +137,16 @@ jobs:
     - name: Run Woo setup tasks
       run: wp cron event run --due-now --path=/tmp/wordpress
 
+    - name: Patch purple theme for WordPress 7.0 compatibility
+      run: |
+        curl --fail --location --silent --show-error --output /tmp/purple.zip https://downloads.wordpress.org/theme/purple.zip
+        unzip -q /tmp/purple.zip -d /tmp
+        sed -i '/^Requires at least:/d' /tmp/purple/style.css
+        cd /tmp
+        zip -qr "$GITHUB_WORKSPACE/purple.zip" purple
+
     - name: Install WooCommerce themes
-      run: wp theme install purple storefront --ignore-requirements --path=/tmp/wordpress
+      run: wp theme install ./purple.zip storefront --path=/tmp/wordpress
 
     - name: Set up PHP 7.4
       uses: shivammathur/setup-php@v2
