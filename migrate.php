@@ -2,9 +2,9 @@
 /**
  * Database migrations.
  *
- * Migrations are run each time config items are added or removed. This includes
- * settings, theme mods, and taxonomies. All migrations should be backwards
- * compatible to allow the plugin to be rolled back to an earlier version.
+ * Migrations are run each time database-backed config items are added or removed.
+ * This includes settings, theme mods, and taxonomies. All migrations should be
+ * backwards compatible to allow the plugin to be rolled back to an earlier version.
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
