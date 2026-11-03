@@ -37,7 +37,7 @@ const VERSION = '1.1.1-dev';
  *
  * @internal
  */
-const SETTINGS_VERSION = '1';
+const SETTINGS_VERSION = '2';
 
 /**
  * Plugin file path.
@@ -63,6 +63,7 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/query-vars.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
+require_once __DIR__ . '/includes/theme-mods.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/settings-license.php';
 require_once __DIR__ . '/includes/admin-plugins-license.php';
@@ -179,6 +180,7 @@ function activate(): void {
 
 	try {
 		seed_settings();
+		seed_theme_mods();
 		add_option( 'outletpro_settings_version', SETTINGS_VERSION, '', true );
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
