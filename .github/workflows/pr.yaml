@@ -95,7 +95,7 @@ jobs:
 
     - name: Install WP-CLI
       run: |
-        WP_CLI_VERSION=2.10.0
+        WP_CLI_VERSION=2.12.0
         WP_CLI_PHAR="wp-cli-${WP_CLI_VERSION}.phar"
         WP_CLI_BASE_URL="https://github.com/wp-cli/wp-cli/releases/download/v${WP_CLI_VERSION}"
 
