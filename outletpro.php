@@ -102,6 +102,7 @@ function init_hook(): void {
 	init_update_plugin();
 	// #endif
 	init_settings();
+	init_theme_mods();
 	init_taxonomies();
 	init_rest_api();
 	init_query_vars();

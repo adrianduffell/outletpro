@@ -40,6 +40,35 @@ const SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD = 'outletpro_single_product
 const SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD = 'outletpro_single_product_badge_template_hook';
 
 /**
+ * Initialize theme mod integrations.
+ *
+ * @internal
+ */
+function init_theme_mods(): void {
+	add_action( 'after_switch_theme', 'OutletPro\after_switch_theme_hook' );
+}
+
+/**
+ * Remove theme mod integrations.
+ *
+ * @internal
+ */
+function deinit_theme_mods(): void {
+	remove_action( 'after_switch_theme', 'OutletPro\after_switch_theme_hook' );
+}
+
+/**
+ * Seed missing theme mods after switching themes.
+ *
+ * Fired by `after_switch_theme`.
+ *
+ * @internal WordPress action hook
+ */
+function after_switch_theme_hook(): void {
+	seed_theme_mods();
+}
+
+/**
  * Seed missing placement mods appropriate to the active theme's type.
  *
  * @internal
