@@ -33,11 +33,11 @@ defined( 'ABSPATH' ) || exit;
 const VERSION = '1.1.1-dev';
 
 /**
- * Settings version.
+ * Database version.
  *
  * @internal
  */
-const SETTINGS_VERSION = '1';
+const DB_VERSION = '1';
 
 /**
  * Plugin file path.
@@ -179,7 +179,7 @@ function activate(): void {
 
 	try {
 		seed_settings();
-		add_option( 'outletpro_settings_version', SETTINGS_VERSION, '', true );
+		add_option( 'outletpro_db_version', DB_VERSION, '', true );
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
 		seed_outlet_status_taxonomy();
