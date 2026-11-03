@@ -138,7 +138,7 @@ jobs:
       run: wp cron event run --due-now --path=/tmp/wordpress
 
     - name: Install WooCommerce themes
-      run: wp theme install purple storefront --path=/tmp/wordpress
+      run: wp theme install purple storefront --ignore-requirements --path=/tmp/wordpress
 
     - name: Set up PHP 7.4
       uses: shivammathur/setup-php@v2
