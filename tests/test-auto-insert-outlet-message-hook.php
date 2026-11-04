@@ -10,8 +10,25 @@
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
 use function OutletPro\register_outlet_message_block;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD;
 
 class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
+
+	public function test_does_not_insert_when_theme_mod_is_empty(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array() );
+		$template       = new WP_Block_Template();
+		$template->slug = 'single-product';
+		$content        = '<!-- wp:woocommerce/product-meta --><!-- wp:paragraph /--><!-- /wp:woocommerce/product-meta -->';
+
+		// Act.
+		$result = apply_block_hooks_to_content( $content, $template );
+
+		// Assert.
+		$this->assertFalse( has_block( 'outletpro/outlet-message', $result ) );
+	}
 
 	public function test_outlet_message_has_no_block_hooks_declaration(): void {
 		// Arrange.
@@ -29,6 +46,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', array() );
@@ -41,6 +59,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'first_child', 'woocommerce/product-meta', null );
@@ -53,6 +72,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
 
@@ -67,6 +87,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -81,6 +102,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 		$context = array( 'name' => 'purple/hidden-single-product' );
 
 		// Act.
@@ -94,6 +116,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -109,6 +132,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -123,6 +147,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 

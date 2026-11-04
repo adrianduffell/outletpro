@@ -33,11 +33,11 @@ defined( 'ABSPATH' ) || exit;
 const VERSION = '1.1.1-dev';
 
 /**
- * Settings version.
+ * Database version.
  *
  * @internal
  */
-const SETTINGS_VERSION = '1';
+const DB_VERSION = '2';
 
 /**
  * Plugin file path.
@@ -63,6 +63,7 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/query-vars.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
+require_once __DIR__ . '/includes/theme-mods.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/settings-license.php';
 require_once __DIR__ . '/includes/admin-plugins-license.php';
@@ -101,6 +102,7 @@ function init_hook(): void {
 	init_update_plugin();
 	// #endif
 	init_settings();
+	init_theme_mods();
 	init_taxonomies();
 	init_rest_api();
 	init_query_vars();
@@ -179,7 +181,8 @@ function activate(): void {
 
 	try {
 		seed_settings();
-		add_option( 'outletpro_settings_version', SETTINGS_VERSION, '', true );
+		seed_theme_mods();
+		add_option( 'outletpro_db_version', DB_VERSION, '', true );
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
 		seed_outlet_status_taxonomy();

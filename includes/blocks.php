@@ -267,7 +267,9 @@ function is_single_product_context( $context ): bool {
 }
 
 /**
- * Auto-insert the outlet badge block before the product name on the single product template.
+ * Auto-insert the outlet badge block on the single product template.
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -278,11 +280,11 @@ function is_single_product_context( $context ): bool {
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'core/post-title' !== $anchor_block || 'before' !== $relative_position ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) ) ) {
 		return $hooked_blocks;
 	}
 
@@ -342,7 +344,9 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
 }
 
 /**
- * Auto-insert the outlet message block as the first child of the product meta block on the single product template.
+ * Auto-insert the outlet message block on the single product template.
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -353,11 +357,11 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'woocommerce/product-meta' !== $anchor_block || 'first_child' !== $relative_position ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) ) ) {
 		return $hooked_blocks;
 	}
 

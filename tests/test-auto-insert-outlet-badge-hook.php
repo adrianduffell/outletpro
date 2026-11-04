@@ -10,8 +10,24 @@
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
 use function OutletPro\register_outlet_badge_block;
+use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 
 class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
+
+	public function test_does_not_insert_when_theme_mod_is_empty(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array() );
+		$template       = new WP_Block_Template();
+		$template->slug = 'single-product';
+
+		// Act.
+		$content = apply_block_hooks_to_content( '<!-- wp:post-title /-->', $template );
+
+		// Assert.
+		$this->assertFalse( has_block( 'outletpro/outlet-badge', $content ) );
+	}
 
 	public function test_outlet_badge_has_no_block_hooks_declaration(): void {
 		// Arrange.
