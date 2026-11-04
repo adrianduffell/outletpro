@@ -683,7 +683,7 @@ function get_search_index_facet_nice_name( \WP_Term $term ): string {
 /**
  * Returns the ID for the "Uncategorized" product category.
  *
- * Takes the site locale into account to match translated names.
+ * Matches the translated name for the site locale and the English name.
  *
  * @internal
  * @return int|null Category ID, or null when no matching name exists.
@@ -700,7 +700,7 @@ function get_uncategorized_product_category_id(): ?int {
 		array(
 			'taxonomy'   => 'product_cat',
 			'parent'     => 0,
-			'name'       => $uncategorized_name,
+			'name'       => array_unique( array( $uncategorized_name, 'Uncategorized' ) ),
 			'hide_empty' => false,
 			'fields'     => 'ids',
 		)

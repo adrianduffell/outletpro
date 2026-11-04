@@ -66,6 +66,28 @@ class Test_Get_Uncategorized_Product_Category_Id extends WP_UnitTestCase {
 		$this->assertSame( $category_id, $result );
 	}
 
+	public function test_returns_english_category_after_site_language_changes(): void {
+		// Arrange.
+		update_option( 'WPLANG', 'en_US' );
+		$category_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		update_option( 'WPLANG', 'de_DE' );
+		switch_to_locale( 'de_DE' );
+		$this->assertSame( 'Ohne Kategorie', _x( 'Uncategorized', 'Default category slug', 'woocommerce' ) ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Match WooCommerce's category translation.
+
+		// Act.
+		$result = get_uncategorized_product_category_id();
+		restore_previous_locale();
+
+		// Assert.
+		$this->assertSame( $category_id, $result );
+	}
+
 	public function test_uses_site_locale_for_translated_name(): void {
 		// Arrange.
 		update_option( 'WPLANG', 'en_US' );
