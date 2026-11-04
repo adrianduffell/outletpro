@@ -15,7 +15,7 @@ namespace OutletPro;
 
 defined( 'ABSPATH' ) || exit;
 
-if ( version_compare( get_option( 'outletpro_db_version', '0' ), DB_VERSION, '>=' ) ) {
+if ( version_compare( get_option( 'outletpro_db_version', '1' ), DB_VERSION, '>=' ) ) {
 	return;
 }
 
