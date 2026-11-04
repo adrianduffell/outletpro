@@ -42,8 +42,19 @@ function _manually_load_plugin(): void {
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
+// Add woocommerce plugin translations used in tests.
+tests_add_filter(
+	'lang_dir_for_domain',
+	static fn( $path, string $domain ) => 'woocommerce' === $domain ? dirname( __DIR__ ) . '/fixtures/lang/' : $path,
+	10,
+	2
+);
+
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
+
+// Load the PO parser for translation catalog tests.
+require_once ABSPATH . WPINC . '/pomo/po.php';
 
 // WP_Customize_Manager and its dependencies are not loaded by default in the test environment.
 require_once ABSPATH . WPINC . '/class-wp-customize-manager.php';

@@ -174,6 +174,37 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertLessThan( $product_collection_block_position, $sort_filter_position );
 	}
 
+	public function test_excludes_uncategorized_when_selecting_navigation(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+		$uncategorized_id = get_term_by( 'slug', 'uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		$category_count   = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'exclude'    => array( $uncategorized_id ),
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 2 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+		init_patterns();
+
+		// Act.
+		create_outlet_page();
+		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
+	}
+
 	public function test_selects_navigation_with_1_top_level_category(): void {
 		// Arrange.
 		init_taxonomies();
@@ -184,6 +215,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -207,6 +239,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -230,6 +263,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -259,6 +293,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -282,6 +317,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -305,6 +341,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -328,6 +365,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
@@ -351,6 +389,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			array(
 				'taxonomy'   => 'product_cat',
 				'parent'     => 0,
+				'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 				'hide_empty' => false,
 			)
 		);
