@@ -24,6 +24,7 @@ function init_blocks(): void {
 	register_outlet_tiles_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
@@ -40,6 +41,7 @@ function deinit_blocks(): void {
 
 	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook' );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
@@ -289,6 +291,40 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 	$hooked_blocks[] = 'outletpro/outlet-badge';
 
 	return $hooked_blocks;
+}
+
+/**
+ * Sets spacing for the auto-inserted outlet badge.
+ *
+ * Adds a small bottom margin in themes that support spacing preset 10, such
+ * as Purple, to work around a parent container with a zero `blockGap`.
+ *
+ * Fired by `hooked_block_outletpro/outlet-badge`.
+ *
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param array<string, mixed>|null $parsed_hooked_block Parsed outlet badge block, or null when suppressed.
+ * @param string                    $hooked_block_type   Hooked block name.
+ * @param string                    $relative_position   Position relative to the anchor block.
+ * @param array<string, mixed>      $parsed_anchor_block Parsed anchor block.
+ * @return array<string, mixed>|null Filtered outlet badge block, or null when suppressed.
+ */
+function set_outlet_badge_spacing_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block ): ?array {
+	if ( null === $parsed_hooked_block ) {
+		return null;
+	}
+
+	if ( 'before' !== $relative_position ) {
+		return $parsed_hooked_block;
+	}
+
+	if ( 'core/post-title' !== ( $parsed_anchor_block['blockName'] ?? null ) ) {
+		return $parsed_hooked_block;
+	}
+
+	$parsed_hooked_block['attrs']['style']['spacing']['margin']['bottom'] = 'var:preset|spacing|10';
+
+	return $parsed_hooked_block;
 }
 
 /**
