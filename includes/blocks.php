@@ -505,11 +505,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 		return '';
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes(
-		array(
-			'class' => 'outletpro-badge',
-		)
-	);
+	$wrapper_attributes = get_block_wrapper_attributes();
 
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
@@ -518,7 +514,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 	}
 
 	return sprintf(
-		'<div %1$s>%2$s</div>',
+		'<div %1$s><div class="outletpro-badge">%2$s</div></div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
 	);
