@@ -8,6 +8,9 @@
 	"usesContext": [ "postId" ],
 	"supports": {
 		"html": false,
+		"spacing": {
+			"margin": true
+		},
 		"color": {
 			"background": true,
 			"text": true,

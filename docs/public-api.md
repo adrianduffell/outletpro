@@ -187,6 +187,46 @@ try {
 }
 ```
 
+## Theme mods
+
+An empty array disables insertion. Added in 1.1.1.
+
+### outletpro_single_product_badge_block_hook
+
+A tuple containing the block type and relative position to hook the badge
+on the single product page.
+
+| Default                       |
+| ----------------------------- |
+| ['core/post-title', 'before'] |
+
+### outletpro_single_product_message_block_hook
+
+A tuple containing the block type and relative position to hook the message
+on the single product page.
+
+| Default                                     |
+| ------------------------------------------- |
+| ['woocommerce/product-meta', 'first_child'] |
+
+### outletpro_single_product_badge_template_hook
+
+A tuple containing the template hook name and priority to display
+the badge on the single product page.
+
+| Default                                   |
+| ----------------------------------------- |
+| ['woocommerce_single_product_summary', 1] |
+
+### outletpro_single_product_message_template_hook
+
+A tuple containing the template hook name and priority to display
+the message on the single product page.
+
+| Default                               |
+| ------------------------------------- |
+| ['woocommerce_product_meta_start', 1] |
+
 ## Hooks
 
 ### Actions

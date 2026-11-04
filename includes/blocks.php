@@ -24,7 +24,7 @@ function init_blocks(): void {
 	register_outlet_tiles_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
-	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
+	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
@@ -41,7 +41,7 @@ function deinit_blocks(): void {
 
 	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook' );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
-	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
@@ -267,7 +267,9 @@ function is_single_product_context( $context ): bool {
 }
 
 /**
- * Auto-insert the outlet badge block before the product name on the single product template.
+ * Auto-insert the outlet badge block on the single product template.
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -278,11 +280,11 @@ function is_single_product_context( $context ): bool {
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'core/post-title' !== $anchor_block || 'before' !== $relative_position ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) ) ) {
 		return $hooked_blocks;
 	}
 
@@ -292,26 +294,24 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 }
 
 /**
- * Replace the auto-inserted outlet badge with the Outlet Badge row pattern.
+ * Sets spacing for the auto-inserted outlet badge.
+ *
+ * Adds a small bottom margin in themes that support spacing preset 10, such
+ * as Purple, to work around a parent container with a zero `blockGap`.
  *
  * Fired by `hooked_block_outletpro/outlet-badge`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
- * @param array<string, mixed>|null     $parsed_hooked_block Parsed outlet badge block, or null when suppressed.
- * @param string                        $hooked_block_type   Hooked block name.
- * @param string                        $relative_position   Position relative to the anchor block.
- * @param array<string, mixed>          $parsed_anchor_block Parsed anchor block.
- * @param \WP_Block_Template|array|null $context             Block Hooks context.
- * @return array<string, mixed>|null Parsed pattern block, null to suppress insertion, or the original value.
+ * @param array<string, mixed>|null $parsed_hooked_block Parsed outlet badge block, or null when suppressed.
+ * @param string                    $hooked_block_type   Hooked block name.
+ * @param string                    $relative_position   Position relative to the anchor block.
+ * @param array<string, mixed>      $parsed_anchor_block Parsed anchor block.
+ * @return array<string, mixed>|null Filtered outlet badge block, or null when suppressed.
  */
-function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block, $context ): ?array {
+function set_outlet_badge_spacing_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block ): ?array {
 	if ( null === $parsed_hooked_block ) {
 		return null;
-	}
-
-	if ( 'outletpro/outlet-badge' !== $hooked_block_type ) {
-		return $parsed_hooked_block;
 	}
 
 	if ( 'before' !== $relative_position ) {
@@ -322,27 +322,15 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
 		return $parsed_hooked_block;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
-		return $parsed_hooked_block;
-	}
+	$parsed_hooked_block['attrs']['style']['spacing']['margin']['bottom'] = 'var:preset|spacing|10';
 
-	try {
-		$pattern_blocks = parse_blocks( get_pattern_content( 'outletpro/outlet-badge-row' ) );
-	} catch ( \Throwable $e ) {
-		\wc_get_logger()->error( 'Outlet Badge row pattern could not be retrieved' );
-		return null;
-	}
-
-	if ( 1 !== count( $pattern_blocks ) ) {
-		\wc_get_logger()->error( 'Outlet Badge row pattern has invalid content' );
-		return null;
-	}
-
-	return $pattern_blocks[0];
+	return $parsed_hooked_block;
 }
 
 /**
- * Auto-insert the outlet message block as the first child of the product meta block on the single product template.
+ * Auto-insert the outlet message block on the single product template.
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -353,11 +341,11 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'woocommerce/product-meta' !== $anchor_block || 'first_child' !== $relative_position ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) ) ) {
 		return $hooked_blocks;
 	}
 
@@ -501,11 +489,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 		return '';
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes(
-		array(
-			'class' => 'outletpro-badge',
-		)
-	);
+	$wrapper_attributes = get_block_wrapper_attributes();
 
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
@@ -514,7 +498,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 	}
 
 	return sprintf(
-		'<div %1$s>%2$s</div>',
+		'<div %1$s><div class="outletpro-badge">%2$s</div></div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
 	);

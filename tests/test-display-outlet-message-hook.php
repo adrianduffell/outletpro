@@ -12,8 +12,47 @@ use function OutletPro\init_taxonomies;
 use function OutletPro\init_woocommerce_template_hooks;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
+
+	// phpcs:ignore Generic.Commenting.DocComment.MissingShort -- Only test data and parameter types are documented.
+	/**
+	 * @dataProvider invalid_template_hooks
+	 * @param mixed $hook Invalid theme mod value.
+	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+	 */
+	public function test_rejects_invalid_template_hook( $hook ): void {
+		// Arrange.
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, $hook );
+
+		// Expect.
+		$this->expectException( InvalidArgumentException::class );
+
+		// Act.
+		init_woocommerce_template_hooks();
+	}
+
+	/**
+	 * Malformed template hook settings.
+	 *
+	 * @return array<int, array<int, mixed>>
+	 */
+	public static function invalid_template_hooks(): array {
+		return array(
+			array( 'woocommerce_product_meta_start' ),
+			array( array( 'woocommerce_product_meta_start' ) ),
+			array(
+				array(
+					'name'     => 'woocommerce_product_meta_start',
+					'priority' => 1,
+				),
+			),
+			array( array( '', 1 ) ),
+			array( array( 123, 1 ) ),
+			array( array( 'woocommerce_product_meta_start', '1' ) ),
+		);
+	}
 
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.

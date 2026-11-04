@@ -20,18 +20,18 @@ export function Edit(): JSX.Element {
 		'outletpro_badge_label'
 	) as EntityProp< string >;
 
-	const blockProps = useBlockProps( {
-		className: 'outletpro-badge',
-	} );
+	const blockProps = useBlockProps();
 
 	return (
-		<RichText
-			{ ...blockProps }
-			tagName="div"
-			value={ label ?? '' }
-			onChange={ ( value: string ) => setLabel( value ) }
-			allowedFormats={ [] }
-			placeholder={ __( 'Outlet badge', 'outletpro' ) }
-		/>
+		<div { ...blockProps }>
+			<RichText
+				className="outletpro-badge"
+				tagName="div"
+				value={ label ?? '' }
+				onChange={ ( value: string ) => setLabel( value ) }
+				allowedFormats={ [] }
+				placeholder={ __( 'Outlet badge', 'outletpro' ) }
+			/>
+		</div>
 	);
 }
