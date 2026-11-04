@@ -7,12 +7,15 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\deinit_blocks;
 use function OutletPro\get_pattern_content;
+use function OutletPro\init_blocks;
 use function OutletPro\init_taxonomies;
 use function OutletPro\register_outlet_navigation_6_pattern;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
@@ -172,7 +175,42 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 		$this->assertSame( array( $parent_category_id, 0, 0, 0, 0, 0 ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
 	}
 
-	public function test_tiles_include_default_category(): void {
+	public function test_excludes_uncategorized(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$uncategorized_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		$product_id       = self::factory()->post->create( array( 'post_type' => 'product' ) );
+		wp_set_object_terms( $product_id, array( $uncategorized_id ), 'product_cat' );
+		$this->assertSame(
+			array( $uncategorized_id ),
+			get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'hide_empty' => false,
+					'fields'     => 'ids',
+				)
+			)
+		);
+
+		// Act.
+		register_outlet_navigation_6_pattern();
+		$content = do_blocks( get_pattern_content( 'outletpro/outlet-navigation-6' ) );
+
+		// Assert.
+		$this->assertStringNotContainsString( 'Uncategorized', $content );
+	}
+
+	public function test_tiles_and_menu_include_renamed_default_category(): void {
 		// Arrange.
 		init_taxonomies();
 		$default_category_id = self::factory()->term->create(
@@ -182,7 +220,8 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 			)
 		);
 		update_option( 'default_product_cat', $default_category_id );
-		$product_id = self::factory()->post->create(
+		$category_id = self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+		$product_id  = self::factory()->post->create(
 			array(
 				'post_type'   => 'product',
 				'post_status' => 'publish',
@@ -197,7 +236,9 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 		$blocks  = $blocks[0]['innerBlocks'];
 
 		// Assert.
-		$this->assertContains( $default_category_id, array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
+		$this->assertSame( array( $default_category_id, $category_id, 0, 0, 0, 0 ), array_column( array_column( $blocks[0]['innerBlocks'], 'attrs' ), 'category' ) );
+		$this->assertContains( $default_category_id, $blocks[1]['attrs']['items'] );
+		$this->assertContains( $category_id, $blocks[1]['attrs']['items'] );
 	}
 
 	public function test_pattern_is_registered_with_expected_properties(): void {
@@ -333,6 +374,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 		$query       = array(
 			'taxonomy'   => 'product_cat',
 			'parent'     => 0,
+			'exclude'    => array( get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0 ),
 			'hide_empty' => false,
 			'fields'     => 'ids',
 			'orderby'    => 'menu_order',

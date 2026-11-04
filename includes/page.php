@@ -396,10 +396,13 @@ function create_outlet_page(): void {
 		}
 	}
 
+	$excluded_categories = array_filter( array( get_uncategorized_product_category_id() ) );
+
 	$categories = get_terms(
 		array(
 			'taxonomy'   => 'product_cat',
 			'parent'     => 0,
+			'exclude'    => $excluded_categories,
 			'hide_empty' => false,
 			'fields'     => 'ids',
 			'number'     => 7,

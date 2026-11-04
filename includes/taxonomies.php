@@ -681,6 +681,38 @@ function get_search_index_facet_nice_name( \WP_Term $term ): string {
 }
 
 /**
+ * Returns the ID for the "Uncategorized" product category.
+ *
+ * Matches the translated name for the site locale and the English name.
+ *
+ * @internal
+ * @return int|null Category ID, or null when no matching name exists.
+ * @throws \RuntimeException If product categories cannot be retrieved.
+ */
+function get_uncategorized_product_category_id(): ?int {
+	$locale_switched    = switch_to_locale( get_locale() );
+	$uncategorized_name = _x( 'Uncategorized', 'Default category slug', 'woocommerce' ); // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch -- Match WooCommerce's category translation.
+	if ( $locale_switched ) {
+		restore_previous_locale();
+	}
+
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'name'       => array_unique( array( $uncategorized_name, 'Uncategorized' ) ),
+			'hide_empty' => false,
+			'fields'     => 'ids',
+		)
+	);
+	if ( is_wp_error( $terms ) ) {
+		throw new \RuntimeException( 'Product categories could not be retrieved.' );
+	}
+
+	return $terms[0] ?? null;
+}
+
+/**
  * Get the outlet price tiers in numerical order.
  *
  * @return int[] Price tier amounts
