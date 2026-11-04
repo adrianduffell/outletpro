@@ -22,6 +22,10 @@
 		}
 	},
 	"attributes": {
+		"showOutletLink": {
+			"type": "boolean",
+			"default": false
+		},
 		"fontSize": {
 			"type": "string",
 			"default": "small"

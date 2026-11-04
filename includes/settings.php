@@ -524,7 +524,7 @@ function register_outlet_message_setting(): void {
 			'label'             => __( 'Outlet message', 'outletpro' ),
 			'description'       => __( 'Message displayed on outlet products.', 'outletpro' ),
 			'default'           => '',
-			'sanitize_callback' => 'sanitize_text_field',
+			'sanitize_callback' => 'wp_kses_post',
 			'show_in_rest'      => array(
 				'schema' => array(
 					'type' => 'string',

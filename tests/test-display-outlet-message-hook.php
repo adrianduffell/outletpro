@@ -12,6 +12,8 @@ use function OutletPro\init_taxonomies;
 use function OutletPro\init_woocommerce_template_hooks;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
@@ -56,13 +58,14 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
-		remove_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook', 1 );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD );
+		remove_action( 'woocommerce_single_product_summary', 'OutletPro\display_outlet_message_hook', 1 );
 
 		// Act.
 		init_woocommerce_template_hooks();
 
 		// Assert.
-		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook' ) );
+		$this->assertSame( 1, has_action( 'woocommerce_single_product_summary', 'OutletPro\display_outlet_message_hook' ) );
 	}
 
 	public function test_displays_message_for_outlet_product(): void {
@@ -86,14 +89,47 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		// Arrange.
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
-		update_option( OUTLET_MESSAGE_OPTION, 'Not eligible for change of mind returns' );
+		update_option( OUTLET_MESSAGE_OPTION, 'Not eligible for <strong>change of mind returns</strong>' );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_product_meta_start', 1 ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD, false );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$GLOBALS['post'] = get_post( $product->get_id() );
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/Not eligible for change of mind returns/' );
+		$this->expectOutputString( '<div class="outletpro-message">Not eligible for <strong>change of mind returns</strong></div>' );
+
+		// Act.
+		do_action( 'woocommerce_product_meta_start' );
+	}
+
+	public function test_appends_outlet_page_link_when_enabled(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'post_title'  => 'Last Chance & Final Sale',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_product_meta_start', 1 ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD, true );
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$GLOBALS['post'] = get_post( $product->get_id() );
+		init_woocommerce_template_hooks();
+
+		// Expect.
+		$this->expectOutputString(
+			'<div class="outletpro-message">Final sale. <a href="' . esc_url( get_permalink( $page_id ) ) . '">Shop all last chance &amp; final sale</a></div>'
+		);
 
 		// Act.
 		do_action( 'woocommerce_product_meta_start' );

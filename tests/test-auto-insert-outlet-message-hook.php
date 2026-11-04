@@ -21,7 +21,7 @@ class Test_Auto_Insert_Outlet_Message_Hook extends WP_UnitTestCase {
 		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array() );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
-		$content        = '<!-- wp:woocommerce/product-meta --><!-- wp:paragraph /--><!-- /wp:woocommerce/product-meta -->';
+		$content        = '<!-- wp:post-title /-->';
 
 		// Act.
 		$result = apply_block_hooks_to_content( $content, $template );

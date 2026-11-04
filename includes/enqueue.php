@@ -66,6 +66,8 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-editor' );
 	wp_dequeue_style( 'outletpro-badge-block' );
 	wp_deregister_style( 'outletpro-badge-block' );
+	wp_dequeue_style( 'outletpro-message-block' );
+	wp_deregister_style( 'outletpro-message-block' );
 	wp_dequeue_style( 'outletpro-tile-block' );
 	wp_deregister_style( 'outletpro-tile-block' );
 	wp_dequeue_style( 'outletpro-menu-block' );
@@ -278,8 +280,6 @@ function output_badge_style_css_variables_hook(): void {
 /**
  * Register stylesheets for blocks.
  *
- * The message block doesn't have any styles currently.
- *
  * @internal
  */
 function register_block_styles(): void {
@@ -300,6 +300,16 @@ function register_block_styles(): void {
 		'outletpro/outlet-badge',
 		array(
 			'handle' => 'outletpro-badge-block',
+			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+			'deps'   => array(),
+			'ver'    => $asset['version'],
+		)
+	);
+
+	wp_enqueue_block_style(
+		'outletpro/outlet-message',
+		array(
+			'handle' => 'outletpro-message-block',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 			'deps'   => array(),
 			'ver'    => $asset['version'],

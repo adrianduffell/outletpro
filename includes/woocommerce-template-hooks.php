@@ -80,7 +80,7 @@ function init_single_product_badge_template_hook(): void {
  * @throws \InvalidArgumentException When the setting is invalid.
  */
 function init_single_product_message_template_hook(): void {
-	$tuple = get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_product_meta_start', 1 ) );
+	$tuple = get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_single_product_summary', 1 ) );
 	if ( array() === $tuple ) {
 		return;
 	}
@@ -204,5 +204,9 @@ function display_outlet_message_hook(): void {
 
 	wp_enqueue_style( 'outletpro-classic-message' );
 
-	echo '<div class="outletpro-message">' . esc_html( $message ) . '</div>';
+	if ( true === get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD, false ) ) {
+		$message = append_outlet_page_link( $message );
+	}
+
+	echo '<div class="outletpro-message">' . wp_kses_post( $message ) . '</div>';
 }

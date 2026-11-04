@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\init_customizer;
 use function OutletPro\register_customizer_hook;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_BG_COLOUR_DEFAULT;
@@ -15,6 +16,7 @@ use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOUR_DEFAULT;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 
@@ -71,6 +73,28 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( '', $wp_customize->get_setting( OUTLET_MESSAGE_OPTION )->default );
+	}
+
+	public function test_registers_message_link_theme_mod_and_checkbox(): void {
+		// Arrange.
+		init_customizer();
+		$wp_customize = new WP_Customize_Manager();
+
+		// Act.
+		do_action( 'customize_register', $wp_customize );
+
+		// Assert.
+		$setting = $wp_customize->get_setting( SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD );
+		$control = $wp_customize->get_control( SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD );
+		$this->assertNotNull( $setting );
+		$this->assertNotNull( $control );
+		$this->assertSame( 'theme_mod', $setting->type );
+		$this->assertFalse( $setting->default );
+		$this->assertTrue( $setting->sanitize( '1' ) );
+		$this->assertFalse( $setting->sanitize( 'false' ) );
+		$this->assertSame( 'checkbox', $control->type );
+		$this->assertSame( 'Link to outlet page', $control->label );
+		$this->assertSame( 'outletpro', $control->section );
 	}
 
 	public function test_registers_badge_text_colour_setting(): void {

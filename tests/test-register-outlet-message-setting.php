@@ -62,4 +62,21 @@ class Test_Register_Outlet_Message_Setting extends WP_UnitTestCase {
 		// Assert.
 		$this->assertArrayHasKey( OUTLET_MESSAGE_OPTION, $response->get_data() );
 	}
+
+	public function test_sanitizes_html(): void {
+		// Arrange.
+		unregister_setting( 'outletpro', OUTLET_MESSAGE_OPTION );
+		register_outlet_message_setting();
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( OUTLET_MESSAGE_OPTION, '<strong>Final sale</strong> <a href="/returns/" onclick="alert(1)">Returns policy</a>' );
+
+		// Act.
+		$response = rest_do_request( $request );
+
+		// Assert.
+		$this->assertSame( 200, $response->get_status() );
+		$this->assertSame( '<strong>Final sale</strong> <a href="/returns/">Returns policy</a>', get_option( OUTLET_MESSAGE_OPTION ) );
+	}
 }

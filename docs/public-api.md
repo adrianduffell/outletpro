@@ -189,7 +189,7 @@ try {
 
 ## Theme mods
 
-An empty array disables insertion. Added in 1.1.1.
+For placement theme mods, an empty array disables insertion. Added in 1.1.1.
 
 ### outletpro_single_product_badge_block_hook
 
@@ -205,9 +205,13 @@ on the single product page.
 A tuple containing the block type and relative position to hook the message
 on the single product page.
 
-| Default                                     |
-| ------------------------------------------- |
-| ['woocommerce/product-meta', 'first_child'] |
+The default is selected when the theme mod is seeded, including blocks in
+referenced patterns.
+
+| Single product template | Default                                     |
+| ----------------------- | ------------------------------------------- |
+| Contains product meta   | ['woocommerce/product-meta', 'first_child'] |
+| No product meta         | ['woocommerce/product-details', 'after']    |
 
 ### outletpro_single_product_badge_template_hook
 
@@ -223,9 +227,19 @@ the badge on the single product page.
 A tuple containing the template hook name and priority to display
 the message on the single product page.
 
-| Default                               |
-| ------------------------------------- |
-| ['woocommerce_product_meta_start', 1] |
+| Default                                   |
+| ----------------------------------------- |
+| ['woocommerce_single_product_summary', 1] |
+
+### outletpro_single_product_message_show_outlet_link
+
+Whether the classic single product message includes a link to the outlet page.
+The label is "Shop all" followed by the outlet page title in lowercase.
+Controlled by **Link to outlet page** in Customizer → WooCommerce → Outlet.
+
+| Default |
+| ------- |
+| false   |
 
 ## Hooks
 

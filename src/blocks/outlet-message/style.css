@@ -1,0 +1,14 @@
+/**
+ * Outlet Message block styles.
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+.wp-block-outletpro-outlet-message {
+	font-weight: 600;
+}
+
+.wp-block-outletpro-outlet-message a {
+	font-weight: 300;
+	margin-left: 5px;
+}

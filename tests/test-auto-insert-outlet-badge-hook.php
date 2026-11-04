@@ -45,6 +45,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', array() );
@@ -57,6 +58,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 
 		// Act.
 		$result = apply_filters( 'hooked_block_types', array(), 'before', 'core/post-title', null );
@@ -69,6 +71,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
 
@@ -83,6 +86,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 
@@ -97,6 +101,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 		$context = array( 'name' => 'purple/hidden-single-product' );
 
 		// Act.
@@ -110,6 +115,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'archive-product';
 
@@ -124,6 +130,7 @@ class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 		$template       = new WP_Block_Template();
 		$template->slug = 'single-product';
 

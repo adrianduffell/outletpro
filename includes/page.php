@@ -34,6 +34,45 @@ function get_outlet_permalink(): ?string {
 }
 
 /**
+ * Append a Shop all link using the configured outlet page's lowercase title.
+ *
+ * Returns the original message when the outlet page is unavailable.
+ *
+ * @internal
+ * @param string $message Outlet message HTML.
+ */
+function append_outlet_page_link( string $message ): string {
+	$page_id = get_outlet_page_id();
+	if ( null === $page_id ) {
+		return $message;
+	}
+
+	$page = get_post( $page_id );
+	if ( ! $page instanceof \WP_Post ) {
+		return $message;
+	}
+
+	if ( 'page' !== $page->post_type ) {
+		return $message;
+	}
+
+	$title = wp_strip_all_tags( get_the_title( $page ) );
+	$title = function_exists( 'mb_strtolower' ) ? mb_strtolower( $title, 'UTF-8' ) : strtolower( $title );
+
+	return $message . sprintf(
+		' <a href="%1$s">%2$s</a>',
+		esc_url( get_permalink( $page ) ),
+		esc_html(
+			sprintf(
+				/* translators: %s: Outlet page title in lowercase. */
+				__( 'Shop all %s', 'outletpro' ),
+				$title
+			)
+		)
+	);
+}
+
+/**
  * Returns the outlet page permalink with a filter query param.
  *
  * @internal

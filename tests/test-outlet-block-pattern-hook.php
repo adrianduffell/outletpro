@@ -11,11 +11,15 @@ use function OutletPro\deinit_blocks;
 use function OutletPro\deinit_patterns;
 use function OutletPro\init_blocks;
 use function OutletPro\init_patterns;
+use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD;
 
 class Test_Outlet_Block_Pattern_Hook extends WP_UnitTestCase {
 
 	public function test_outlet_badge_row_pattern_is_inserted_by_default(): void {
 		// Arrange.
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array() );
 		deinit_blocks();
 		deinit_patterns();
 		init_patterns();
@@ -76,6 +80,8 @@ class Test_Outlet_Block_Pattern_Hook extends WP_UnitTestCase {
 
 	public function test_badge_is_not_inserted_when_outlet_badge_row_pattern_is_missing(): void {
 		// Arrange.
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array() );
 		deinit_blocks();
 		deinit_patterns();
 		init_blocks();

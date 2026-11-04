@@ -15,6 +15,7 @@ use function OutletPro\register_outlet_message_block;
 use function OutletPro\render_outlet_message_callback;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
@@ -49,7 +50,9 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		register_outlet_message_block();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
-		update_option( OUTLET_MESSAGE_OPTION, 'Not eligible for change of mind returns' );
+		update_option( OUTLET_MESSAGE_OPTION, 'Not eligible for <strong>change of mind returns</strong>' );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
 		$product = \WC_Helper_Product::create_simple_product();
 		add_to_outlet( $product );
 		$block = new WP_Block(
@@ -68,10 +71,47 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertStringContainsString( 'outletpro-message', $result );
-		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
+		$this->assertStringContainsString( 'Not eligible for <strong>change of mind returns</strong>', $result );
+		$this->assertStringNotContainsString( '<a ', $result );
 
 		// Cleanup.
 		delete_option( OUTLET_MESSAGE_OPTION );
+	}
+
+	public function test_appends_outlet_page_link_when_enabled(): void {
+		// Arrange.
+		deinit_blocks();
+		register_outlet_message_block();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'post_title'  => 'Last Chance & Final Sale',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$product = \WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			array(
+				'blockName' => 'outletpro/outlet-message',
+				'attrs'     => array( 'showOutletLink' => true ),
+			),
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertStringContainsString(
+			'Final sale. <a href="' . esc_url( get_permalink( $page_id ) ) . '">Shop all last chance &amp; final sale</a>',
+			$result
+		);
+		$this->assertSame( 'Final sale.', get_option( OUTLET_MESSAGE_OPTION ) );
 	}
 
 	public function test_message_uses_global_message_option(): void {
@@ -140,6 +180,19 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( \WP_Block_Type_Registry::get_instance()->is_registered( 'outletpro/outlet-message' ) );
+		$style = WP_Block_Styles_Registry::get_instance()->get_registered( 'outletpro/outlet-message', 'banner' );
+		$this->assertSame( 'Banner', $style['label'] );
+		$this->assertSame( '#00000005', $style['style_data']['color']['background'] );
+		$this->assertSame(
+			array(
+				'top'    => '1em',
+				'right'  => '1em',
+				'bottom' => '1em',
+				'left'   => '1em',
+			),
+			$style['style_data']['spacing']['padding']
+		);
+		$this->assertArrayNotHasKey( 'margin', $style['style_data']['spacing'] );
 	}
 
 	public function test_empty_option_returns_empty_string(): void {

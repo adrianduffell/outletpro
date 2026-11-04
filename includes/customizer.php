@@ -126,6 +126,24 @@ function register_customizer_hook( \WP_Customize_Manager $wp_customize ): void {
 	);
 
 	$wp_customize->add_setting(
+		SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD,
+		array(
+			'type'              => 'theme_mod',
+			'default'           => false,
+			'sanitize_callback' => 'wp_validate_boolean',
+		)
+	);
+
+	$wp_customize->add_control(
+		SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD,
+		array(
+			'label'   => __( 'Link to outlet page', 'outletpro' ),
+			'section' => 'outletpro',
+			'type'    => 'checkbox',
+		)
+	);
+
+	$wp_customize->add_setting(
 		OUTLET_BADGE_SCALE_OPTION,
 		array(
 			'type'              => 'option',

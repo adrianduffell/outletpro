@@ -32,6 +32,9 @@ if ( version_compare( get_option( 'outletpro_db_version', '1' ), '2', '<' ) ) {
 	if ( ! wp_is_block_theme() ) {
 		set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_product_meta_start', 1 ) );
 	}
+	if ( ! wp_is_block_theme() ) {
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_OUTLET_LINK_THEME_MOD, false );
+	}
 }
 
 update_option( 'outletpro_db_version', DB_VERSION, true );
