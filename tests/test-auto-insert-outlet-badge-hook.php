@@ -14,6 +14,25 @@ use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 
 class Test_Auto_Insert_Outlet_Badge_Hook extends WP_UnitTestCase {
 
+	public function test_badge_is_inserted_at_theme_mod_position(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/group', 'first_child' ) );
+		$context = array( 'name' => 'purple/hidden-single-product' );
+		$content = '<!-- wp:group --><div class="wp-block-group"><!-- wp:post-title /--></div><!-- /wp:group -->';
+
+		// Act.
+		$result = apply_block_hooks_to_content( $content, $context );
+		$blocks = parse_blocks( $result );
+
+		// Assert.
+		$this->assertCount( 1, $blocks );
+		$this->assertCount( 2, $blocks[0]['innerBlocks'] );
+		$this->assertSame( 'outletpro/outlet-badge', $blocks[0]['innerBlocks'][0]['blockName'] );
+		$this->assertSame( 'core/post-title', $blocks[0]['innerBlocks'][1]['blockName'] );
+	}
+
 	public function test_does_not_insert_when_theme_mod_is_empty(): void {
 		// Arrange.
 		deinit_blocks();
