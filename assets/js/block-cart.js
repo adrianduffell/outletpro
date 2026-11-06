@@ -61,7 +61,7 @@
 
 	insertBadges();
 
-	new window.MutationObserver( insertBadges ).observe( document.body, {
+	new window.MutationObserver( insertBadges ).observe( document, {
 		childList: true,
 		subtree: true,
 	} );

@@ -52,6 +52,8 @@ function deinit_enqueue(): void {
 	wp_deregister_style( 'outletpro-block-cart' );
 	wp_dequeue_script( 'outletpro-block-cart' );
 	wp_deregister_script( 'outletpro-block-cart' );
+	wp_dequeue_script( 'outletpro-block-cart-editor' );
+	wp_deregister_script( 'outletpro-block-cart-editor' );
 	wp_dequeue_style( 'outletpro-admin' );
 	wp_deregister_style( 'outletpro-admin' );
 	wp_dequeue_style( 'outletpro-admin-editor' );
@@ -117,9 +119,18 @@ function enqueue_admin_editor_styles_hook(): void {
 	 */
 	wp_enqueue_style(
 		'outletpro-admin-editor',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin-editor.css',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/block-cart.css',
 		array(),
 		VERSION
+	);
+
+	register_block_cart_scripts_hook();
+	wp_enqueue_script(
+		'outletpro-block-cart-editor',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-block-cart.js',
+		array( 'outletpro-block-cart' ),
+		VERSION,
+		true
 	);
 
 	$badge_style_options = array(
