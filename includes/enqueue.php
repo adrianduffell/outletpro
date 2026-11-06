@@ -124,11 +124,10 @@ function enqueue_admin_editor_styles_hook(): void {
 		VERSION
 	);
 
-	register_block_cart_scripts_hook();
 	wp_enqueue_script(
 		'outletpro-block-cart-editor',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-block-cart.js',
-		array( 'outletpro-block-cart' ),
+		array( 'wc-blocks-checkout' ),
 		VERSION,
 		true
 	);
