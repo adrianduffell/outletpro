@@ -1,5 +1,15 @@
 *** Outlet Pro Changelog ***
 
+2026-11-07 - version 1.1.1
+
+* Fixed - The "uncategorized" category could appear in outlet navigation patterns.
+* Fixed - The outlet message was not appearing in Purple theme.
+* Fixed - The outlet badge was flush against the title in Purple theme.
+* Fixed - Block badge auto-insertion could not be disabled properly.
+* Fixed - The badge was not displaying correctly in editor previews for cart blocks.
+* Update - Block theme auto-insertion is now controlled by theme mod settings.
+* Added - Margins can now be added to the message block in the editor.
+
 2026-10-30 - version 1.1.0
 
 * Added - Adds modern category views for the Outlet Page, including featured category tiles and a full menu. The tiles and menu may link to filtered views of the outlet by:
