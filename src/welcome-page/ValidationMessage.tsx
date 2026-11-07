@@ -58,18 +58,17 @@ export function ValidationMessage( {
 				validationState.expiresAt
 			) {
 				return sprintf(
-					/* translators: %s: localized license expiry date. */
-					__(
-						'✅ Unlimited site activations available. Expires %s',
-						'outletpro'
-					),
+					/* translators: 1: license variation name, 2: localized license expiry date. */
+					__( '✅ Valid %1$s. Expires %2$s', 'outletpro' ),
+					validationState.licenseName?.toLocaleLowerCase() ?? '',
 					expiryDate
 				);
 			}
 			if ( validationState.remaining === Infinity ) {
-				return __(
-					'✅ Unlimited site activations available',
-					'outletpro'
+				return sprintf(
+					/* translators: %s: license variation name. */
+					__( '✅ Valid %s', 'outletpro' ),
+					validationState.licenseName?.toLocaleLowerCase() ?? ''
 				);
 			}
 			const availableMessage = validationState.expiresAt
