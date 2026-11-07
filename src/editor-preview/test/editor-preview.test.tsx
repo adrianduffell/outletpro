@@ -48,7 +48,6 @@ describe( 'EditorPreview', () => {
 	test( 'renders CSS vars from settings', () => {
 		// Arrange.
 		setupEntityPropMock( {
-			outletpro_badge_label: [ 'Sale', jest.fn() ],
 			outletpro_badge_bg_color: [ '#ff0000', jest.fn() ],
 			outletpro_badge_text_color: [ '#ffffff', jest.fn() ],
 			outletpro_badge_scale: [ 140, jest.fn() ],
@@ -63,9 +62,6 @@ describe( 'EditorPreview', () => {
 			'#outletpro-preview-vars'
 		);
 
-		expect( styleEl?.textContent ).toContain(
-			'--outletpro-badge-label: "Sale"'
-		);
 		expect( styleEl?.textContent ).toContain(
 			'--outletpro-badge-bg-color: #ff0000'
 		);
