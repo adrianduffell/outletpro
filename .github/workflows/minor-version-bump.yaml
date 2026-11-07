@@ -80,7 +80,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           branch="minor-version-bump"
-          title="Minor version bump"
+          title="Bump version to $VERSION"
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
