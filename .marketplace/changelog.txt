@@ -2,11 +2,8 @@
 
 2026-10-30 - version 1.1.0
 
-* Added - Adds modern category views for the Outlet Page, including featured category tiles and a full menu. The tiles and menu may link to filtered views of the outlet by:
-    * Product categories ( eg. Womens, Mens, Kids)
-    * Price tiers (eg "Under $25")
-    * Discount tiers (eg "50% off")
-* Updated - The outlet badge is moved above the product name by default, as WooCommerce’s new Purple theme places the sale badge in the previous position below the price. Turns out placing it above the title works really well in combination with the sale badge with the price. Outlet Pro is also updated to support Purple fully.
+* New - Adds modern category views for the Outlet Page, including featured category tiles and a full menu. The tiles and menu may link to filtered views of the outlet by product categories ( eg. Womens, Mens, Kids), price tiers (eg "Under $25"), and discount tiers (eg "50% off").
+* Update - The outlet badge is moved above the product name by default, as WooCommerce’s new Purple theme places the sale badge in the previous position below the price. Turns out placing it above the title works really well in combination with the sale badge with the price. Outlet Pro is also updated to support Purple fully.
 * Fixed - The cart badge now uses real HTML elements instead of CSS pseudo elements.
 * Fixed - A badge is shown for outlet products in the product admin list table.
 * Fixed - A link is added to the outlet page to customize the outlet settings.
