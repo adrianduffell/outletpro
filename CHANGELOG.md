@@ -2,6 +2,21 @@
 
 © 2026 Adrian Duffell
 
+## 1.1.1 (2026-11-07)
+
+Maintenance release fixing the issues:
+
+- The "uncategorized" category could appear in outlet navigation patterns.
+- The outlet message was not appearing in Purple theme.
+- The outlet badge was flush against the title in Purple theme.
+- Block badge auto-insertion could not be disabled properly.
+- Badge was not displaying correctly in editor preview for cart blocks. 
+
+Other changes:
+
+- Block theme auto-insertion is now controlled by theme mod settings.
+- Margins can now be added to the message block in the editor.
+
 ## 1.1.0 (2026-10-21)
 
 Adds modern category views for the Outlet Page, including featured category
