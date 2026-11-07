@@ -20,7 +20,7 @@ const LICENSE_AVAILABLE = {
 const LICENSE_UNLIMITED = {
 	valid: true,
 	license_key: { activation_limit: null },
-	meta: { product_id: PRODUCT_ID },
+	meta: { product_id: PRODUCT_ID, variant_name: null },
 };
 const LICENSE_UNAVAILABLE = {
 	valid: true,
@@ -162,6 +162,7 @@ test( 'validates a license with unlimited capacity', async () => {
 		valid: true,
 		remaining: Infinity,
 		total: Infinity,
+		licenseName: '',
 	} );
 } );
 

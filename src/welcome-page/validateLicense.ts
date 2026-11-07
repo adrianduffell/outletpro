@@ -11,12 +11,18 @@ type ValidationResponse = {
 		expires_at?: string | null;
 		status?: string;
 	};
-	meta?: { product_id?: number };
+	meta?: { product_id?: number; variant_name?: string | null };
 };
 
 export type LicenseStatus =
 	| { valid: false; expiresAt?: string }
-	| { valid: true; remaining: number; total: number; expiresAt?: string };
+	| {
+			valid: true;
+			remaining: number;
+			total: number;
+			expiresAt?: string;
+			licenseName?: string;
+	  };
 
 const ALLOWED_LICENSE_PRODUCT_IDS = [ 1279790, 1272656 ];
 
@@ -82,10 +88,15 @@ export async function validateLicense(
 	const activationUsage = data.license_key?.activation_usage;
 	const expiry = typeof expiresAt === 'string' ? { expiresAt } : {};
 	if ( activationLimit === null ) {
+		const licenseName = data.meta.variant_name ?? '';
+		if ( typeof licenseName !== 'string' ) {
+			throw new Error( 'Unexpected license validation response' );
+		}
 		return {
 			valid: true,
 			remaining: Infinity,
 			total: Infinity,
+			licenseName,
 			...expiry,
 		};
 	}
