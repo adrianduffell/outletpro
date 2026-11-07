@@ -6,7 +6,7 @@
 
 Maintenance release fixing the issues:
 
-- The "uncategorized" category could appear outlet navigation patterns.
+- The "uncategorized" category could appear in outlet navigation patterns.
 - The outlet message was not appearing in Purple theme.
 - The outlet badge was flush against the title in Purple theme.
 - Block badge auto-insertion could not be disabled properly.
