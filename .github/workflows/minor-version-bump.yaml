@@ -48,11 +48,12 @@ jobs:
       - name: Update version
         run: |
           npm version minor --no-git-tag-version
-          VERSION=$(node -p 'require("./package.json").version')
+          VERSION="$(node -p 'require("./package.json").version')-dev"
+          npm version "$VERSION" --no-git-tag-version
 
           sed -E \
-            -e "s/^([[:space:]]*\*[[:space:]]*Version:).*/\1 $VERSION-dev/" \
-            -e "s/^const VERSION = '[^']*';$/const VERSION = '$VERSION-dev';/" \
+            -e "s/^([[:space:]]*\*[[:space:]]*Version:).*/\1 $VERSION/" \
+            -e "s/^const VERSION = '[^']*';$/const VERSION = '$VERSION';/" \
             outletpro.php > outletpro.php.tmp
           mv outletpro.php.tmp outletpro.php
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
@@ -60,8 +61,8 @@ jobs:
       - name: Check version
         run: |
           bash bin/version-check.sh
-          grep -Fx " * Version: $VERSION-dev" outletpro.php
-          grep -Fx "const VERSION = '$VERSION-dev';" outletpro.php
+          grep -Fx " * Version: $VERSION" outletpro.php
+          grep -Fx "const VERSION = '$VERSION';" outletpro.php
 
       - name: Check for changes
         id: changes
