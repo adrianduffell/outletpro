@@ -26,6 +26,7 @@ function init_blocks(): void {
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
@@ -43,6 +44,7 @@ function deinit_blocks(): void {
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
@@ -364,6 +366,35 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 	$hooked_blocks[] = 'outletpro/outlet-message';
 
 	return $hooked_blocks;
+}
+
+/**
+ * Applies the theme mod style to auto-inserted outlet messages.
+ *
+ * Fired by `hooked_block_outletpro/outlet-message`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed>|null $parsed_hooked_block Parsed outlet message block, or null when suppressed.
+ * @return array<string, mixed>|null Filtered outlet message block, or null when suppressed.
+ * @throws \UnexpectedValueException When the message block style is not a string.
+ */
+function set_outlet_message_style_hook( ?array $parsed_hooked_block ): ?array {
+	if ( null === $parsed_hooked_block ) {
+		return null;
+	}
+
+	$style = get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, '' );
+	if ( ! is_string( $style ) ) {
+		throw new \UnexpectedValueException( 'Outlet message block style must be a string.' );
+	}
+
+	if ( '' === $style ) {
+		return $parsed_hooked_block;
+	}
+
+	$parsed_hooked_block['attrs']['className'] = trim( ( $parsed_hooked_block['attrs']['className'] ?? '' ) . ' is-style-' . $style );
+
+	return $parsed_hooked_block;
 }
 
 /**

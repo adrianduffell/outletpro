@@ -9,6 +9,7 @@
 
 use const OutletPro\DB_VERSION;
 use const OutletPro\PLUGIN_FILE;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD;
 
 class Test_Migrate extends WP_UnitTestCase {
 
@@ -47,12 +48,24 @@ class Test_Migrate extends WP_UnitTestCase {
 
 	public function test_noops_when_option_value_greater(): void {
 		// Arrange.
-		update_option( 'outletpro_db_version', '3' );
+		update_option( 'outletpro_db_version', '9999' );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
-		$this->assertSame( '3', get_option( 'outletpro_db_version' ) );
+		$this->assertSame( '9999', get_option( 'outletpro_db_version' ) );
+	}
+
+	public function test_migrates_single_product_message_block_style(): void {
+		// Arrange.
+		update_option( 'outletpro_db_version', '2' );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD );
+
+		// Act.
+		require dirname( PLUGIN_FILE ) . '/migrate.php';
+
+		// Assert.
+		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 }
