@@ -21,9 +21,10 @@ class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 		$style = WP_Block_Styles_Registry::get_instance()->get_registered( 'outletpro/outlet-message', 'fine' );
 
 		// Assert.
-		$this->assertIsArray( $style );
-		$this->assertSame( 'Fine', $style['label'] );
-		$this->assertFalse( $style['is_default'] ?? false );
+		$this->assertSame(
+			'var:preset|font-size|small',
+			$style['style_data']['typography']['fontSize']
+		);
 	}
 
 	public function test_registers_notice_as_an_optional_message_style(): void {
