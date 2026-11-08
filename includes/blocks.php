@@ -527,8 +527,8 @@ function register_outlet_message_block(): void {
 			'name'       => 'notice',
 			'label'      => __( 'Notice', 'outletpro' ),
 			'style_data' => array(
-				'color'      => array( 'background' => '#00000005' ),
-				'spacing'    => array(
+				'color'   => array( 'background' => '#00000005' ),
+				'spacing' => array(
 					'padding' => array(
 						'top'    => '1em',
 						'right'  => '1em',
@@ -536,7 +536,6 @@ function register_outlet_message_block(): void {
 						'left'   => '1em',
 					),
 				),
-				'typography' => array( 'fontWeight' => '600' ),
 			),
 		)
 	);

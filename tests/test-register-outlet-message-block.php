@@ -26,7 +26,7 @@ class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 		$this->assertFalse( $style['is_default'] ?? false );
 	}
 
-	public function test_generates_notice_styles_with_padding_background_and_font_weight(): void {
+	public function test_generates_notice_styles_with_padding_and_background_without_font_weight(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_message_block();
@@ -45,7 +45,7 @@ class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 			preg_match( '/\.wp-block-outletpro-outlet-message[^{}]*\.is-style-notice[^{}]*\{([^}]+)\}/', $css, $matches )
 		);
 		$this->assertMatchesRegularExpression( '/background-color:\s*#00000005;/', $matches[1] );
-		$this->assertMatchesRegularExpression( '/font-weight:\s*600;/', $matches[1] );
+		$this->assertStringNotContainsString( 'font-weight:', $matches[1] );
 		$this->assertMatchesRegularExpression( '/padding-top:\s*1em;/', $matches[1] );
 		$this->assertMatchesRegularExpression( '/padding-right:\s*1em;/', $matches[1] );
 		$this->assertMatchesRegularExpression( '/padding-bottom:\s*1em;/', $matches[1] );
