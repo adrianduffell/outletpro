@@ -25,17 +25,21 @@ class Test_Deinit_Blocks extends WP_UnitTestCase {
 		$this->assertFalse( has_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' ) );
 	}
 
-	public function test_unregisters_message_notice_style(): void {
+	public function test_unregisters_message_styles(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_message_block();
 		$this->assertTrue( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'notice' ) );
+		$this->assertTrue( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'bold' ) );
+		$this->assertTrue( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'fine' ) );
 
 		// Act.
 		deinit_blocks();
 
 		// Assert.
 		$this->assertFalse( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'notice' ) );
+		$this->assertFalse( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'bold' ) );
+		$this->assertFalse( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'fine' ) );
 	}
 
 	public function test_block_is_unregistered_after_deinit_blocks(): void {
