@@ -8,8 +8,22 @@
  */
 
 use function OutletPro\deinit_blocks;
+use function OutletPro\register_outlet_message_block;
 
 class Test_Deinit_Blocks extends WP_UnitTestCase {
+
+	public function test_unregisters_message_banner_style(): void {
+		// Arrange.
+		deinit_blocks();
+		register_outlet_message_block();
+		$this->assertTrue( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'banner' ) );
+
+		// Act.
+		deinit_blocks();
+
+		// Assert.
+		$this->assertFalse( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'banner' ) );
+	}
 
 	public function test_block_is_unregistered_after_deinit_blocks(): void {
 		// Arrange.

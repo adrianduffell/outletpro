@@ -46,6 +46,10 @@ function deinit_blocks(): void {
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
+	if ( \WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'banner' ) ) {
+		unregister_block_style( 'outletpro/outlet-message', 'banner' );
+	}
+
 	// Unregister all blocks in the outletpro namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
 		if ( 0 !== strpos( $block_name, 'outletpro/' ) ) {
@@ -514,6 +518,26 @@ function register_outlet_message_block(): void {
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
 			'render_callback' => 'OutletPro\render_outlet_message_callback',
+		)
+	);
+
+	register_block_style(
+		'outletpro/outlet-message',
+		array(
+			'name'       => 'banner',
+			'label'      => __( 'Banner', 'outletpro' ),
+			'style_data' => array(
+				'color'      => array( 'background' => '#00000005' ),
+				'spacing'    => array(
+					'padding' => array(
+						'top'    => '1em',
+						'right'  => '1em',
+						'bottom' => '1em',
+						'left'   => '1em',
+					),
+				),
+				'typography' => array( 'fontWeight' => '600' ),
+			),
 		)
 	);
 }
