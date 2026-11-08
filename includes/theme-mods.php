@@ -19,6 +19,13 @@ defined( 'ABSPATH' ) || exit;
 const SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD = 'outletpro_single_product_message_block_hook';
 
 /**
+ * WordPress theme mod key used to store the style preset when rendered on the single product.
+ *
+ * @internal
+ */
+const SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD = 'outletpro_single_product_message_block_style';
+
+/**
  * WordPress theme mod key used to store the block hook for the single product badge block.
  *
  * @internal
@@ -69,7 +76,7 @@ function after_switch_theme_hook(): void {
 }
 
 /**
- * Seed missing placement mods appropriate to the active theme's type.
+ * Seed per-theme settings as theme mods.
  *
  * @internal
  */
@@ -86,6 +93,13 @@ function seed_theme_mods(): void {
 					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-details', 'after' ) );
 				} else {
 					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
+				}
+			}
+			if ( ! array_key_exists( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, $mods ) ) {
+				if ( 'purple' === get_template() ) {
+					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'notice' );
+				} else {
+					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, '' );
 				}
 			}
 			break;

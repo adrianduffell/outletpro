@@ -37,7 +37,7 @@ const VERSION = '1.2.0-dev';
  *
  * @internal
  */
-const DB_VERSION = '2';
+const DB_VERSION = '3';
 
 /**
  * Plugin file path.
@@ -180,6 +180,9 @@ function activate(): void {
 	\wc_get_logger()->info( 'Activating Outlet plugin.' );
 
 	try {
+		if ( false !== get_option( 'outletpro_db_version' ) ) {
+			require __DIR__ . '/migrate.php';
+		}
 		seed_settings();
 		seed_theme_mods();
 		add_option( 'outletpro_db_version', DB_VERSION, '', true );

@@ -8,9 +8,22 @@
  */
 
 use function OutletPro\deinit_blocks;
+use function OutletPro\init_blocks;
 use function OutletPro\register_outlet_message_block;
 
 class Test_Deinit_Blocks extends WP_UnitTestCase {
+
+	public function test_unregisters_message_style_hook(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+
+		// Act.
+		deinit_blocks();
+
+		// Assert.
+		$this->assertFalse( has_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' ) );
+	}
 
 	public function test_unregisters_message_notice_style(): void {
 		// Arrange.
