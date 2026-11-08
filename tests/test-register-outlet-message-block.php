@@ -28,6 +28,21 @@ class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 		$this->assertSame( '600', $style['style_data']['typography']['fontWeight'] );
 	}
 
+	public function test_registers_fine_style_for_outlet_message_block(): void {
+		// Arrange.
+		deinit_blocks();
+
+		// Act.
+		register_outlet_message_block();
+		$style = WP_Block_Styles_Registry::get_instance()->get_registered( 'outletpro/outlet-message', 'fine' );
+
+		// Assert.
+		$this->assertSame(
+			'var:preset|font-size|small',
+			$style['style_data']['typography']['fontSize']
+		);
+	}
+
 	public function test_registers_notice_as_an_optional_message_style(): void {
 		// Arrange.
 		deinit_blocks();

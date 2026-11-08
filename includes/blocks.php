@@ -54,6 +54,10 @@ function deinit_blocks(): void {
 		unregister_block_style( 'outletpro/outlet-message', 'bold' );
 	}
 
+	if ( \WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'fine' ) ) {
+		unregister_block_style( 'outletpro/outlet-message', 'fine' );
+	}
+
 	// Unregister all blocks in the outletpro namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
 		if ( 0 !== strpos( $block_name, 'outletpro/' ) ) {
@@ -534,6 +538,19 @@ function register_outlet_message_block(): void {
 				'typography' => array(
 					'fontSize'   => 'var:preset|font-size|small',
 					'fontWeight' => '600',
+				),
+			),
+		)
+	);
+
+	register_block_style(
+		'outletpro/outlet-message',
+		array(
+			'name'       => 'fine',
+			'label'      => __( 'Fine', 'outletpro' ),
+			'style_data' => array(
+				'typography' => array(
+					'fontSize' => 'var:preset|font-size|small',
 				),
 			),
 		)
