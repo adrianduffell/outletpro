@@ -372,9 +372,13 @@ Displays the outlet message when the product is in the store’s outlet.
 Automatically inserted as the first child of the product meta block on the
 single product template (block themes). Added in 1.0.0.
 
-| Attribute  | Type     | Default | Description      |
-| ---------- | -------- | ------- | ---------------- |
-| `fontSize` | `string` | `small` | Font size preset |
+Registered block styles:
+
+| Name | Description |
+| ----- | ---------- |
+| Bold | Bold font and small font-size |
+| Fine | Small font-size |
+| Notice | Small font-size on a padded, faint transparent background |
 
 ## REST API
 
