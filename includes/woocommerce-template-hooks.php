@@ -204,5 +204,5 @@ function display_outlet_message_hook(): void {
 
 	wp_enqueue_style( 'outletpro-classic-message' );
 
-	echo '<div class="outletpro-message">' . esc_html( $message ) . '</div>';
+	echo '<p class="outletpro-message">' . esc_html( $message ) . '</p>';
 }
