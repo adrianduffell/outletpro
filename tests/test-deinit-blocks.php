@@ -12,17 +12,17 @@ use function OutletPro\register_outlet_message_block;
 
 class Test_Deinit_Blocks extends WP_UnitTestCase {
 
-	public function test_unregisters_message_banner_style(): void {
+	public function test_unregisters_message_notice_style(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_message_block();
-		$this->assertTrue( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'banner' ) );
+		$this->assertTrue( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'notice' ) );
 
 		// Act.
 		deinit_blocks();
 
 		// Assert.
-		$this->assertFalse( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'banner' ) );
+		$this->assertFalse( WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'notice' ) );
 	}
 
 	public function test_block_is_unregistered_after_deinit_blocks(): void {

@@ -12,21 +12,21 @@ use function OutletPro\register_outlet_message_block;
 
 class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 
-	public function test_registers_banner_as_an_optional_message_style(): void {
+	public function test_registers_notice_as_an_optional_message_style(): void {
 		// Arrange.
 		deinit_blocks();
 
 		// Act.
 		register_outlet_message_block();
-		$style = WP_Block_Styles_Registry::get_instance()->get_registered( 'outletpro/outlet-message', 'banner' );
+		$style = WP_Block_Styles_Registry::get_instance()->get_registered( 'outletpro/outlet-message', 'notice' );
 
 		// Assert.
 		$this->assertIsArray( $style );
-		$this->assertSame( 'Banner', $style['label'] );
+		$this->assertSame( 'Notice', $style['label'] );
 		$this->assertFalse( $style['is_default'] ?? false );
 	}
 
-	public function test_generates_banner_styles_with_padding_background_and_font_weight(): void {
+	public function test_generates_notice_styles_with_padding_background_and_font_weight(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_message_block();
@@ -42,7 +42,7 @@ class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame(
 			1,
-			preg_match( '/\.wp-block-outletpro-outlet-message[^{}]*\.is-style-banner[^{}]*\{([^}]+)\}/', $css, $matches )
+			preg_match( '/\.wp-block-outletpro-outlet-message[^{}]*\.is-style-notice[^{}]*\{([^}]+)\}/', $css, $matches )
 		);
 		$this->assertMatchesRegularExpression( '/background-color:\s*#00000005;/', $matches[1] );
 		$this->assertMatchesRegularExpression( '/font-weight:\s*600;/', $matches[1] );
