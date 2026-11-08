@@ -9,6 +9,7 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\init_taxonomies;
+use function OutletPro\init_theme_mods;
 use function OutletPro\init_woocommerce_template_hooks;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
@@ -56,17 +57,19 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_hook_is_registered_after_init_woocommerce_template_hooks(): void {
 		// Arrange.
-		remove_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook', 1 );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD );
+		remove_action( 'woocommerce_single_product_summary', 'OutletPro\display_outlet_message_hook', 11 );
 
 		// Act.
 		init_woocommerce_template_hooks();
 
 		// Assert.
-		$this->assertSame( 1, has_action( 'woocommerce_product_meta_start', 'OutletPro\display_outlet_message_hook' ) );
+		$this->assertSame( 11, has_action( 'woocommerce_single_product_summary', 'OutletPro\display_outlet_message_hook' ) );
 	}
 
 	public function test_displays_message_for_outlet_product(): void {
 		// Arrange.
+		init_theme_mods();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_MESSAGE_OPTION, 'Not eligible for change of mind returns' );
@@ -84,6 +87,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_message_contains_outlet_text(): void {
 		// Arrange.
+		init_theme_mods();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_MESSAGE_OPTION, 'Not eligible for change of mind returns' );
@@ -101,6 +105,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_display_message_when_option_is_empty(): void {
 		// Arrange.
+		init_theme_mods();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		update_option( OUTLET_MESSAGE_OPTION, '' );
@@ -118,6 +123,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_display_message_when_option_does_not_exist(): void {
 		// Arrange.
+		init_theme_mods();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		delete_option( OUTLET_MESSAGE_OPTION );
@@ -135,6 +141,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_display_message_for_non_outlet_product(): void {
 		// Arrange.
+		init_theme_mods();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$product         = \WC_Helper_Product::create_simple_product();
@@ -150,6 +157,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 
 	public function test_does_not_display_message_when_post_is_not_a_product(): void {
 		// Arrange.
+		init_theme_mods();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$post_id         = self::factory()->post->create();

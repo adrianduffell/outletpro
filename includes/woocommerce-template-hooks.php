@@ -80,7 +80,7 @@ function init_single_product_badge_template_hook(): void {
  * @throws \InvalidArgumentException When the setting is invalid.
  */
 function init_single_product_message_template_hook(): void {
-	$tuple = get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_product_meta_start', 1 ) );
+	$tuple = get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_single_product_summary', 11 ) );
 	if ( array() === $tuple ) {
 		return;
 	}
