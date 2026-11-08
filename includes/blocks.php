@@ -50,6 +50,10 @@ function deinit_blocks(): void {
 		unregister_block_style( 'outletpro/outlet-message', 'notice' );
 	}
 
+	if ( \WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'fine' ) ) {
+		unregister_block_style( 'outletpro/outlet-message', 'fine' );
+	}
+
 	// Unregister all blocks in the outletpro namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
 		if ( 0 !== strpos( $block_name, 'outletpro/' ) ) {
@@ -518,6 +522,19 @@ function register_outlet_message_block(): void {
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
 			'render_callback' => 'OutletPro\render_outlet_message_callback',
+		)
+	);
+
+	register_block_style(
+		'outletpro/outlet-message',
+		array(
+			'name'       => 'fine',
+			'label'      => __( 'Fine', 'outletpro' ),
+			'style_data' => array(
+				'typography' => array(
+					'fontSize' => 'var:preset|font-size|small',
+				),
+			),
 		)
 	);
 
