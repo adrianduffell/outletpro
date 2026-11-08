@@ -99,7 +99,7 @@ function seed_theme_mods(): void {
 				if ( 'purple' === get_template() ) {
 					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'notice' );
 				} else {
-					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, '' );
+					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'bold' );
 				}
 			}
 			break;

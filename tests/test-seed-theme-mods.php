@@ -34,7 +34,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD ) );
 	}
 
-	public function test_seeds_single_product_message_block_style_with_empty_string_when_not_defined(): void {
+	public function test_seeds_single_product_message_block_style_when_not_defined(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
 		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) );
@@ -44,7 +44,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		seed_theme_mods();
 
 		// Assert.
-		$this->assertSame( '', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+		$this->assertSame( 'bold', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 
 	public function test_does_not_seed_single_product_message_block_style_when_already_defined(): void {

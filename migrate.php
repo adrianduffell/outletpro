@@ -35,7 +35,7 @@ if ( version_compare( get_option( 'outletpro_db_version', '1' ), '2', '<' ) ) {
 }
 
 if ( version_compare( get_option( 'outletpro_db_version', '1' ), '3', '<' ) ) {
-	set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, '' );
+	set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'fine' );
 }
 
 update_option( 'outletpro_db_version', DB_VERSION, true );

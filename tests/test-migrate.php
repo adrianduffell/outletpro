@@ -66,6 +66,6 @@ class Test_Migrate extends WP_UnitTestCase {
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
-		$this->assertSame( '', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 }
