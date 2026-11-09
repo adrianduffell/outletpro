@@ -689,11 +689,11 @@ function register_outlet_message_block(): void {
  *
  * @internal
  * @param array<string, mixed> $attributes Block attributes.
- * @param string               $_content   Block inner content (unused).
+ * @param string               $content    Rendered outlet link child.
  * @param \WP_Block            $block      Block instance.
  * @return string Rendered HTML, or empty string if the product is not in outlet.
  */
-function render_outlet_message_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function render_outlet_message_callback( array $attributes, string $content, \WP_Block $block ): string {
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
 
 	if ( ! $product_id ) {
@@ -716,17 +716,32 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 		return '';
 	}
 
-	$show_icon          = function_exists( 'wp_get_icon' ) && ( $attributes['showIcon'] ?? false );
-	$icon               = $show_icon ? wp_get_icon( 'core/info' ) : '';
+	$show_icon = function_exists( 'wp_get_icon' ) && ( $attributes['showIcon'] ?? false );
+	$icon      = $show_icon ? wp_get_icon( 'core/info' ) : '';
+	$has_link  = '' !== trim( $content );
+	$classes   = array( 'outletpro-message' );
+	if ( '' !== $icon ) {
+		$classes[] = 'outletpro-has-icon';
+	}
+	if ( $has_link ) {
+		$classes[] = 'outletpro-has-link';
+	}
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
-			'class' => '' !== $icon ? 'outletpro-message outletpro-has-icon' : 'outletpro-message',
+			'class' => implode( ' ', $classes ),
 		)
 	);
 
 	$message_html = wp_kses_post( $message );
-	if ( '' !== $icon ) {
+	$wrap_message = '' !== $icon;
+	if ( $has_link ) {
+		$wrap_message = true;
+	}
+	if ( $wrap_message ) {
 		$message_html = '<span>' . $message_html . '</span>';
+	}
+	if ( $has_link ) {
+		$message_html .= ' ' . $content;
 	}
 
 	return sprintf(

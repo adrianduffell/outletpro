@@ -3,7 +3,8 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-.wp-block-outletpro-outlet-message.outletpro-has-icon {
+.wp-block-outletpro-outlet-message.outletpro-has-icon,
+.wp-block-outletpro-outlet-message.outletpro-has-link {
 	display: flex;
 	align-items: center;
 }
