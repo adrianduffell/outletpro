@@ -15,8 +15,63 @@ use function OutletPro\register_outlet_message_block;
 use function OutletPro\render_outlet_message_callback;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
+
+	public function test_renders_an_inserted_link_inline_with_the_message_and_icon(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+				'post_title'  => 'Last Chance',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"showIcon":true} --><!-- wp:outletpro/outlet-link {"text":"Browse deals","style":{"typography":{"fontWeight":"300"}}} /--><!-- /wp:outletpro/outlet-message -->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*>.*<span>Final sale\.<\/span> <a [^>]*>Browse deals<\/a><\/p>$/s', $result );
+		$this->assertStringContainsString( 'outletpro-has-link', $result );
+		$this->assertStringContainsString( 'href="' . esc_url( get_permalink( $page_id ) ) . '"', $result );
+		$this->assertStringContainsString( 'font-weight:300', $result );
+	}
+
+	public function test_omits_an_unavailable_link_without_leaving_extra_whitespace(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		delete_option( OUTLET_PAGE_OPTION );
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message --><!-- wp:outletpro/outlet-link /--><!-- /wp:outletpro/outlet-message -->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*>Final sale\.<\/p>$/', $result );
+	}
 
 	public function test_returns_empty_string_when_product_not_in_outlet(): void {
 		// Arrange.

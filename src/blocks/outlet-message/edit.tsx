@@ -7,17 +7,22 @@ import { __ } from '@wordpress/i18n';
 import {
 	InspectorControls,
 	useBlockProps,
+	useInnerBlocksProps,
 	RichText,
 } from '@wordpress/block-editor';
 import { PanelBody, ToggleControl } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
-import { hasBlockSupport } from '@wordpress/blocks';
+import { createBlock, hasBlockSupport } from '@wordpress/blocks';
+import { useRegistry, useSelect } from '@wordpress/data';
 import { Icon, info } from '@wordpress/icons';
 
 type EditProps = {
+	clientId: string;
 	attributes: { showIcon: boolean };
 	setAttributes: ( attributes: { showIcon: boolean } ) => void;
 };
+
+type LinkBlock = { clientId: string; name: string };
 
 type EntityProp< T > = [
 	T | undefined,
@@ -26,9 +31,23 @@ type EntityProp< T > = [
 ];
 
 export function Edit( {
+	clientId,
 	attributes: { showIcon },
 	setAttributes,
 }: EditProps ): JSX.Element {
+	const registry = useRegistry();
+	const linkBlocks: LinkBlock[] = useSelect(
+		() =>
+			registry
+				.select( 'core/block-editor' )
+				.getBlocks( clientId )
+				.filter(
+					( block: LinkBlock ) =>
+						block.name === 'outletpro/outlet-link'
+				),
+		[ clientId, registry ]
+	);
+	const hasLink = linkBlocks.length > 0;
 	const [ message, setMessage ] = useEntityProp(
 		'root',
 		'site',
@@ -40,15 +59,24 @@ export function Edit( {
 		false
 	);
 	const hasIcon = supportsIcons && showIcon;
+	const classes = [ 'outletpro-message' ];
+	if ( hasIcon ) {
+		classes.push( 'outletpro-has-icon' );
+	}
+	if ( hasLink ) {
+		classes.push( 'outletpro-has-link' );
+	}
 	const blockProps = useBlockProps( {
-		className: hasIcon
-			? 'outletpro-message outletpro-has-icon'
-			: 'outletpro-message',
+		className: classes.join( ' ' ),
+	} );
+	const { children, ...innerBlocksProps } = useInnerBlocksProps( blockProps, {
+		allowedBlocks: [ 'outletpro/outlet-link' ],
+		renderAppender: false,
+		orientation: 'horizontal',
 	} );
 	const richText = (
 		<RichText
-			{ ...( hasIcon ? {} : blockProps ) }
-			tagName={ hasIcon ? 'span' : 'p' }
+			tagName={ hasIcon || hasLink ? 'span' : 'p' }
 			value={ message ?? '' }
 			onChange={ ( value: string ) => setMessage( value ) }
 			allowedFormats={ [] }
@@ -58,9 +86,9 @@ export function Edit( {
 
 	return (
 		<>
-			{ supportsIcons && (
-				<InspectorControls>
-					<PanelBody title={ __( 'Settings', 'outletpro' ) }>
+			<InspectorControls>
+				<PanelBody title={ __( 'Settings', 'outletpro' ) }>
+					{ supportsIcons && (
 						<ToggleControl
 							label={ __( 'Show icon', 'outletpro' ) }
 							checked={ showIcon }
@@ -73,17 +101,37 @@ export function Edit( {
 							) }
 							__nextHasNoMarginBottom
 						/>
-					</PanelBody>
-				</InspectorControls>
-			) }
-			{ hasIcon ? (
-				<p { ...blockProps }>
-					<Icon icon={ info } />
-					{ richText }
-				</p>
-			) : (
-				richText
-			) }
+					) }
+					<ToggleControl
+						label={ __( 'Show link to outlet page', 'outletpro' ) }
+						checked={ hasLink }
+						onChange={ ( value ) => {
+							const editor =
+								registry.dispatch( 'core/block-editor' );
+							if ( value ) {
+								editor.insertBlock(
+									createBlock( 'outletpro/outlet-link' ),
+									0,
+									clientId,
+									false
+								);
+								return;
+							}
+							editor.replaceInnerBlocks( clientId, [], false );
+						} }
+						help={ __(
+							'Display a link to the outlet page after the message.',
+							'outletpro'
+						) }
+						__nextHasNoMarginBottom
+					/>
+				</PanelBody>
+			</InspectorControls>
+			<div { ...innerBlocksProps }>
+				{ hasIcon && <Icon icon={ info } /> }
+				{ richText }
+				{ children }
+			</div>
 		</>
 	);
 }
