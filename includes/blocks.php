@@ -602,7 +602,7 @@ function render_outlet_link_callback( array $attributes ): string {
 
 	$text = $attributes['text'] ?? '';
 	if ( '' === trim( $text ) ) {
-		$title = wp_strip_all_tags( $title );
+		$title = html_entity_decode( wp_strip_all_tags( $title ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 		$title = function_exists( 'mb_strtolower' ) ? mb_strtolower( $title, 'UTF-8' ) : strtolower( $title );
 		$text  = sprintf(
 			/* translators: %s: Lowercase outlet page title. */

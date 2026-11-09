@@ -78,7 +78,7 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 			array(
 				'post_type'   => 'page',
 				'post_status' => 'publish',
-				'post_title'  => 'Last Chance',
+				'post_title'  => 'Last Chance &#201;COULEMENT',
 			)
 		);
 		update_option( OUTLET_PAGE_OPTION, $page_id );
@@ -87,7 +87,7 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 		$result = do_blocks( '<!-- wp:outletpro/outlet-link /-->' );
 
 		// Assert.
-		$this->assertStringContainsString( '>Shop all last chance</a>', $result );
+		$this->assertStringContainsString( '>Shop all last chance écoulement</a>', $result );
 	}
 
 	public function test_escapes_the_page_title(): void {
