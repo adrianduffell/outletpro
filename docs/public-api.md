@@ -382,8 +382,8 @@ Registered block styles:
 
 ### `outletpro/outlet-link`
 
-Displays a link to the outlet page. Defaults to localized string "Shop all
-`{outlet}`", where `{outlet}` is the title of the outlet page. Since 1.2.0.
+Displays a link to the outlet page. Defaults to localized string
+"Shop `{outlet}`", where `{outlet}` is the title of the outlet page. Since 1.2.0.
 
 | Attribute | Type     | Description                         |
 | --------- | -------- | ----------------------------------- |

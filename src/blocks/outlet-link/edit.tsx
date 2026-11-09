@@ -35,7 +35,7 @@ export function Edit( {
 	const defaultText = outletPage
 		? sprintf(
 				/* translators: %s: Lowercase outlet page title. */
-				__( 'Shop all %s', 'outletpro' ),
+				__( 'Shop %s', 'outletpro' ),
 				getTextContent(
 					create( { html: outletPage.title.rendered } )
 				).toLowerCase()

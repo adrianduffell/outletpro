@@ -606,7 +606,7 @@ function render_outlet_link_callback( array $attributes ): string {
 		$title = wc_strtolower( $title );
 		$text  = sprintf(
 			/* translators: %s: Lowercase outlet page title. */
-			__( 'Shop all %s', 'outletpro' ),
+			__( 'Shop %s', 'outletpro' ),
 			$title
 		);
 	}

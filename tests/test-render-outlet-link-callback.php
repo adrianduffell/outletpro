@@ -30,7 +30,7 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 		$result = do_blocks( '<!-- wp:outletpro/outlet-link {"text":"   "} /-->' );
 
 		// Assert.
-		$this->assertStringContainsString( '>Shop all outlet</a>', $result );
+		$this->assertStringContainsString( '>Shop outlet</a>', $result );
 	}
 
 	public function test_renders_nothing_when_outlet_page_is_non_public(): void {
@@ -87,7 +87,7 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 		$result = do_blocks( '<!-- wp:outletpro/outlet-link /-->' );
 
 		// Assert.
-		$this->assertStringContainsString( '>Shop all last chance écoulement</a>', $result );
+		$this->assertStringContainsString( '>Shop last chance écoulement</a>', $result );
 	}
 
 	public function test_escapes_the_page_title(): void {
@@ -107,7 +107,7 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 		$result = do_blocks( '<!-- wp:outletpro/outlet-link /-->' );
 
 		// Assert.
-		$this->assertStringContainsString( '>Shop all last chance &amp; final sale</a>', $result );
+		$this->assertStringContainsString( '>Shop last chance &amp; final sale</a>', $result );
 	}
 
 	public function test_registers_the_block(): void {
@@ -135,12 +135,14 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 		update_option( OUTLET_PAGE_OPTION, $page_id );
 
 		// Act.
-		$result = do_blocks( '<!-- wp:outletpro/outlet-link {"style":{"typography":{"fontWeight":"300"},"color":{"text":"#123456"},"spacing":{"margin":{"left":"5px"}}}} /-->' );
+		$result = do_blocks( '<!-- wp:outletpro/outlet-link {"style":{"typography":{"fontWeight":"300"},"color":{"text":"#123456"},"spacing":{"margin":{"left":"5px","right":"6px"},"padding":"7px"}}} /-->' );
 
 		// Assert.
 		$this->assertStringContainsString( 'font-weight:300', $result );
 		$this->assertStringContainsString( 'color:#123456', $result );
 		$this->assertStringContainsString( 'margin-left:5px', $result );
+		$this->assertStringContainsString( 'margin-right:6px', $result );
+		$this->assertStringContainsString( 'padding:7px', $result );
 		$this->assertMatchesRegularExpression( '/^<a\s[^>]*style="[^"]+"[^>]*>[^<]*<\/a>$/', $result );
 	}
 

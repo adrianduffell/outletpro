@@ -93,7 +93,7 @@ test( 'saves custom text for only the selected link instance', async () => {
 	} );
 	expect( preview ).toHaveAttribute( 'contenteditable', 'true' );
 	expect( preview ).toHaveClass( 'wp-block-outletpro-outlet-link' );
-	expect( preview ).toHaveTextContent( 'Shop all last chance & final sale' );
+	expect( preview ).toHaveTextContent( 'Shop last chance & final sale' );
 	expect(
 		registry
 			.select( 'core/block-editor' )
@@ -119,7 +119,7 @@ test( 'saves custom text for only the selected link instance', async () => {
 		await screen.findByText( 'Browse <Deals> & More', { selector: 'a' } )
 	).toHaveAttribute( 'href', 'https://example.com/outlet/' );
 	expect(
-		screen.getByText( 'Shop all last chance & final sale', {
+		screen.getByText( 'Shop last chance & final sale', {
 			selector: 'a',
 		} )
 	).toBeInTheDocument();
@@ -162,6 +162,6 @@ test( 'clearing custom text restores the current outlet page title', async () =>
 
 	// Assert.
 	expect(
-		await screen.findByText( 'Shop all new outlet', { selector: 'a' } )
+		await screen.findByText( 'Shop new outlet', { selector: 'a' } )
 	).toHaveAttribute( 'href', 'https://example.com/outlet/' );
 } );
