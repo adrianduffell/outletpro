@@ -551,14 +551,19 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
  * Register the outlet message block type.
  *
  * @internal
+ * @throws \RuntimeException If the message block could not be registered.
  */
 function register_outlet_message_block(): void {
-	register_block_type(
+	$block_type = register_block_type(
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
 			'render_callback' => 'OutletPro\render_outlet_message_callback',
 		)
 	);
+	if ( ! $block_type instanceof \WP_Block_Type ) {
+		throw new \RuntimeException( 'Outlet message block could not be registered.' );
+	}
+	$block_type->supports['outletproInfoIcon'] = function_exists( 'wp_get_icon' );
 
 	register_block_style(
 		'outletpro/outlet-message',
@@ -633,22 +638,30 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 		return '';
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes(
-		array(
-			'class' => 'outletpro-message',
-		)
-	);
-
 	$message = get_option( OUTLET_MESSAGE_OPTION );
 
 	if ( ! is_string( $message ) || '' === $message ) {
 		return '';
 	}
 
+	$show_icon          = function_exists( 'wp_get_icon' ) && ( $attributes['showIcon'] ?? false );
+	$icon               = $show_icon ? wp_get_icon( 'core/info' ) : '';
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'class' => '' !== $icon ? 'outletpro-message outletpro-has-icon' : 'outletpro-message',
+		)
+	);
+
+	$message_html = wp_kses_post( $message );
+	if ( '' !== $icon ) {
+		$message_html = '<span>' . $message_html . '</span>';
+	}
+
 	return sprintf(
-		'<p %1$s>%2$s</p>',
+		'<p %1$s>%2$s%3$s</p>',
 		$wrapper_attributes,
-		wp_kses_post( $message )
+		$icon,
+		$message_html
 	);
 }
 

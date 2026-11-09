@@ -12,6 +12,26 @@ use function OutletPro\register_outlet_message_block;
 
 class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 
+	public function test_hides_the_icon_by_default(): void {
+		// Arrange.
+		deinit_blocks();
+
+		// Act.
+		register_outlet_message_block();
+		$block = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-message' );
+
+		// Assert.
+		$this->assertSame(
+			array(
+				'type'    => 'boolean',
+				'default' => false,
+			),
+			$block->attributes['showIcon']
+		);
+		$this->assertSame( function_exists( 'wp_get_icon' ), $block->supports['outletproInfoIcon'] );
+		$this->assertSame( array(), $block->view_script_handles );
+	}
+
 	public function test_registers_bold_style_for_outlet_message_block(): void {
 		// Arrange.
 		deinit_blocks();

@@ -1,0 +1,14 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+.wp-block-outletpro-outlet-message.outletpro-has-icon {
+	display: flex;
+	align-items: center;
+}
+
+.wp-block-outletpro-outlet-message.outletpro-has-icon > svg {
+	flex-shrink: 0;
+	fill: currentcolor;
+}

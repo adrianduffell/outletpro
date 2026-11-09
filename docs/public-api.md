@@ -372,6 +372,12 @@ Displays the outlet message when the product is in the store’s outlet.
 Automatically inserted as the first child of the product meta block on the
 single product template (block themes). Added in 1.0.0.
 
+| Attribute | Type | Default | Description |
+| --------- | ---- | ------- | ----------- |
+| `showIcon` | `boolean` | `false` | Display a WordPress info icon. |
+
+The icon toggle requires WordPress's native icon API (WordPress 7.1 or later).
+
 Registered block styles:
 
 | Name | Description |
