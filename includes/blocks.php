@@ -359,7 +359,7 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 		return $hooked_blocks;
 	}
 
-	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-meta', 'first_child' ) ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-price', 'after' ) ) ) {
 		return $hooked_blocks;
 	}
 
