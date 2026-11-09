@@ -3,12 +3,15 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
+import { useState, type ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Edit } from '../edit';
 
 jest.mock( '@wordpress/block-editor', () => ( {
 	useBlockProps: jest.fn( ( props ) => props ?? {} ),
-	InspectorControls: jest.fn(),
+	InspectorControls: ( { children }: { children: ReactNode } ) => (
+		<div>{ children }</div>
+	),
 	RichText: jest.fn(
 		( {
 			value,
@@ -39,8 +42,25 @@ jest.mock( '@wordpress/blocks', () => ( {
 } ) );
 
 jest.mock( '@wordpress/components', () => ( {
-	PanelBody: jest.fn(),
-	ToggleControl: jest.fn(),
+	PanelBody: ( { children }: { children: ReactNode } ) => (
+		<div>{ children }</div>
+	),
+	ToggleControl: ( {
+		label,
+		checked,
+		onChange,
+	}: {
+		label: string;
+		checked: boolean;
+		onChange: ( value: boolean ) => void;
+	} ) => (
+		<input
+			type="checkbox"
+			aria-label={ label }
+			checked={ checked }
+			onChange={ ( event ) => onChange( event.target.checked ) }
+		/>
+	),
 } ) );
 
 import { useEntityProp } from '@wordpress/core-data';
@@ -51,6 +71,36 @@ const mockUseEntityProp = useEntityProp as jest.Mock;
 const mockRichText = RichText as jest.Mock;
 
 describe( 'Edit', () => {
+	test.each( [ false, true ] )( 'toggles Show icon from %s', ( showIcon ) => {
+		// Arrange.
+		jest.mocked( hasBlockSupport ).mockReturnValue( true );
+		mockUseEntityProp.mockReturnValue( [
+			'Final sale.',
+			jest.fn(),
+			undefined,
+		] );
+		function MessageWithAttributes() {
+			const [ attributes, setAttributes ] = useState( { showIcon } );
+			return (
+				<Edit
+					attributes={ attributes }
+					setAttributes={ setAttributes }
+				/>
+			);
+		}
+		const { container } = render( <MessageWithAttributes /> );
+
+		// Act.
+		fireEvent.click(
+			screen.getByRole( 'checkbox', { name: 'Show icon' } )
+		);
+
+		// Assert.
+		expect(
+			container.querySelectorAll( 'p.outletpro-has-icon > svg' )
+		).toHaveLength( showIcon ? 0 : 1 );
+	} );
+
 	test( 'renders the WordPress info icon when enabled', () => {
 		// Arrange.
 		mockRichText.mockClear();
@@ -99,6 +149,9 @@ describe( 'Edit', () => {
 
 		// Assert.
 		expect( container.querySelector( 'svg' ) ).not.toBeInTheDocument();
+		expect(
+			screen.queryByRole( 'checkbox', { name: 'Show icon' } )
+		).not.toBeInTheDocument();
 		expect( screen.getByDisplayValue( 'Final sale.' ) ).toBeInTheDocument();
 		const [ richTextProps ] = mockRichText.mock.calls[ 0 ];
 		expect( richTextProps.tagName ).toBe( 'p' );
