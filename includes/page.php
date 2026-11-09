@@ -34,6 +34,30 @@ function get_outlet_permalink(): ?string {
 }
 
 /**
+ * Returns the title of the outlet page.
+ *
+ * Returns null when the outlet page is unavailable.
+ *
+ * @internal
+ */
+function get_outlet_page_title(): ?string {
+	$page_id = get_outlet_page_id();
+	if ( null === $page_id ) {
+		return null;
+	}
+
+	$page = get_post( $page_id );
+	if ( ! $page instanceof \WP_Post ) {
+		return null;
+	}
+	if ( 'page' !== $page->post_type ) {
+		return null;
+	}
+
+	return get_the_title( $page );
+}
+
+/**
  * Returns the outlet page permalink with a filter query param.
  *
  * @internal
