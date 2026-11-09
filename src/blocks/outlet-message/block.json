@@ -11,6 +11,12 @@
 		"showIcon": {
 			"type": "boolean",
 			"default": false
+		},
+		"style": {
+			"type": "object",
+			"default": {
+				"spacing": { "blockGap": "0.75em" }
+			}
 		}
 	},
 	"supports": {
