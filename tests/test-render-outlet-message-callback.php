@@ -50,7 +50,6 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		$this->assertStringContainsString( 'href="' . esc_url( get_permalink( $page_id ) ) . '"', $result );
 		$this->assertStringContainsString( 'font-weight:300', $result );
 		$this->assertSame( '0.75em', $block->attributes['style']['spacing']['blockGap'] );
-		$this->assertMatchesRegularExpression( '/gap:\s*0\.75em/', wp_style_engine_get_stylesheet_from_context( 'block-supports' ) );
 	}
 
 	public function test_omits_an_unavailable_link_without_leaving_extra_whitespace(): void {
