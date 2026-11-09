@@ -5,12 +5,13 @@
 
 import { registerBlockType } from '@wordpress/blocks';
 import { Edit } from './edit';
+import { Save } from './save';
 import metadata from './block.json';
 import OutletMessageIcon from './icon';
 import './style.css';
 
 registerBlockType( metadata.name, {
 	edit: Edit,
-	save: () => null,
+	save: Save,
 	icon: OutletMessageIcon,
 } );

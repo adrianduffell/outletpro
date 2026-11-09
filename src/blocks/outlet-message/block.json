@@ -6,6 +6,7 @@
 	"category": "woocommerce",
 	"description": "Displays a message when a product is in the store’s outlet.",
 	"usesContext": [ "postId" ],
+	"allowedBlocks": [ "outletpro/outlet-link" ],
 	"attributes": {
 		"showIcon": {
 			"type": "boolean",
