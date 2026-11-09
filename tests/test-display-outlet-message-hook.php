@@ -81,7 +81,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '/outletpro-message/' );
+		$this->expectOutputString( '<p class="outletpro-message">Not eligible for change of mind returns</p>' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );
