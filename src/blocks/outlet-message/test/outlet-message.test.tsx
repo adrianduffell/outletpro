@@ -11,9 +11,13 @@ import { useRegistry } from '@wordpress/data';
 jest.mock( '@wordpress/block-editor', () => ( {
 	useBlockProps: jest.fn( ( props ) => props ?? {} ),
 	useInnerBlocksProps: jest.fn( ( props ) => props ?? {} ),
-	InspectorControls: ( { children }: { children: ReactNode } ) => (
-		<div>{ children }</div>
-	),
+	InspectorControls: ( {
+		children,
+		group,
+	}: {
+		children: ReactNode;
+		group?: string;
+	} ) => <div data-group={ group }>{ children }</div>,
 	RichText: jest.fn(
 		( {
 			value,
@@ -52,27 +56,38 @@ jest.mock( '@wordpress/data', () => {
 	};
 } );
 
-jest.mock( '@wordpress/components', () => ( {
-	PanelBody: ( { children }: { children: ReactNode } ) => (
-		<div>{ children }</div>
-	),
-	ToggleControl: ( {
-		label,
-		checked,
-		onChange,
-	}: {
-		label: string;
-		checked: boolean;
-		onChange: ( value: boolean ) => void;
-	} ) => (
-		<input
-			type="checkbox"
-			aria-label={ label }
-			checked={ checked }
-			onChange={ ( event ) => onChange( event.target.checked ) }
-		/>
-	),
-} ) );
+jest.mock( '@wordpress/components', () => {
+	const { dirname, join } = jest.requireActual( 'node:path' );
+	// Load the real control without the barrel's dependencies on mocked stores.
+	const { SelectControl } = jest.requireActual(
+		join(
+			dirname( require.resolve( '@wordpress/components' ) ),
+			'select-control/index.cjs'
+		)
+	);
+	return {
+		SelectControl,
+		PanelBody: ( { children }: { children: ReactNode } ) => (
+			<div>{ children }</div>
+		),
+		ToggleControl: ( {
+			label,
+			checked,
+			onChange,
+		}: {
+			label: string;
+			checked: boolean;
+			onChange: ( value: boolean ) => void;
+		} ) => (
+			<input
+				type="checkbox"
+				aria-label={ label }
+				checked={ checked }
+				onChange={ ( event ) => onChange( event.target.checked ) }
+			/>
+		),
+	};
+} );
 
 import { useEntityProp } from '@wordpress/core-data';
 import { RichText } from '@wordpress/block-editor';
@@ -98,13 +113,17 @@ function arrangeLinkBlocks(
 
 describe( 'Edit', () => {
 	test.each( [
-		[ false, false, 'p' ],
-		[ true, false, 'span' ],
-		[ false, true, 'span' ],
-		[ true, true, 'span' ],
+		[ false, false, false, 'p' ],
+		[ true, false, false, 'span' ],
+		[ false, true, false, 'span' ],
+		[ true, true, false, 'span' ],
+		[ false, false, true, 'strong' ],
+		[ true, false, true, 'strong' ],
+		[ false, true, true, 'strong' ],
+		[ true, true, true, 'strong' ],
 	] )(
-		'uses %s icon and %s link to choose %s markup',
-		( showIcon, showLink, tagName ) => {
+		'uses %s icon, %s link and %s strong markup to choose %s element',
+		( showIcon, showLink, strong, expectedTagName ) => {
 			// Arrange.
 			arrangeLinkBlocks(
 				showLink
@@ -119,13 +138,122 @@ describe( 'Edit', () => {
 			render(
 				<Edit
 					clientId="message"
-					attributes={ { showIcon } }
+					attributes={ { showIcon, strong } }
 					setAttributes={ jest.fn() }
 				/>
 			);
 
 			// Assert.
-			expect( mockRichText.mock.calls[ 0 ][ 0 ].tagName ).toBe( tagName );
+			expect( mockRichText.mock.calls[ 0 ][ 0 ] ).toEqual(
+				expect.objectContaining( {
+					tagName: expectedTagName,
+					className: strong ? 'outletpro-strong' : undefined,
+				} )
+			);
+			expect(
+				screen.getByDisplayValue( 'Final sale.' ).closest( 'p' ) !==
+					null
+			).toBe( strong && ! showIcon && ! showLink );
+		}
+	);
+
+	test( 'offers the message HTML elements in Advanced with Default selected', () => {
+		// Arrange.
+		arrangeLinkBlocks();
+		jest.mocked( hasBlockSupport ).mockReturnValue( true );
+		mockUseEntityProp.mockReturnValue( [ 'Final sale.', jest.fn() ] );
+
+		// Act.
+		render(
+			<Edit
+				clientId="message"
+				attributes={ { showIcon: false } }
+				setAttributes={ jest.fn() }
+			/>
+		);
+
+		// Assert.
+		const control = screen.getByRole( 'combobox', {
+			name: 'HTML element',
+		} );
+		expect( control ).toHaveValue( '' );
+		expect(
+			control.closest( '[data-group="advanced"]' )
+		).toBeInTheDocument();
+		expect( screen.getByRole( 'option', { name: 'Default' } ) ).toHaveValue(
+			''
+		);
+		expect(
+			screen.getByRole( 'option', { name: '<strong>' } )
+		).toHaveValue( 'strong' );
+		expect(
+			screen.queryByRole( 'checkbox', { name: 'Emphasize text' } )
+		).not.toBeInTheDocument();
+	} );
+
+	test.each( [
+		[ false, true ],
+		[ true, false ],
+	] )(
+		'changes strong from %s to %s through the HTML element control while preserving the message, icon and link',
+		( strong, nextStrong ) => {
+			// Arrange.
+			const { insertBlock, replaceInnerBlocks } = arrangeLinkBlocks( [
+				{ clientId: 'link', name: 'outletpro/outlet-link' },
+			] );
+			jest.mocked( hasBlockSupport ).mockReturnValue( true );
+			const setMessage = jest.fn();
+			mockUseEntityProp.mockReturnValue( [ 'Final sale.', setMessage ] );
+			const setAttributes = jest.fn();
+			const props = {
+				clientId: 'message',
+				attributes: { showIcon: true, strong },
+				setAttributes,
+			};
+			const { container, rerender } = render( <Edit { ...props } /> );
+			const control = screen.getByRole( 'combobox', {
+				name: 'HTML element',
+			} );
+			expect( control ).toHaveValue( strong ? 'strong' : '' );
+
+			// Act.
+			fireEvent.change( control, {
+				target: { value: nextStrong ? 'strong' : '' },
+			} );
+			rerender(
+				<Edit
+					{ ...props }
+					attributes={ {
+						...props.attributes,
+						strong: nextStrong,
+					} }
+				/>
+			);
+
+			// Assert.
+			expect( setAttributes ).toHaveBeenCalledWith( {
+				strong: nextStrong,
+			} );
+			expect( control ).toHaveValue( nextStrong ? 'strong' : '' );
+			expect(
+				screen.queryByText(
+					'Display the message with a HTML strong tag.'
+				) !== null
+			).toBe( nextStrong );
+			expect(
+				screen.getByDisplayValue( 'Final sale.' )
+			).toBeInTheDocument();
+			expect( setMessage ).not.toHaveBeenCalled();
+			expect(
+				container.querySelector( 'div.outletpro-has-icon > svg' )
+			).toBeInTheDocument();
+			expect(
+				screen.getByRole( 'checkbox', {
+					name: 'Show link to outlet page',
+				} )
+			).toBeChecked();
+			expect( insertBlock ).not.toHaveBeenCalled();
+			expect( replaceInnerBlocks ).not.toHaveBeenCalled();
 		}
 	);
 
@@ -198,7 +326,12 @@ describe( 'Edit', () => {
 				<Edit
 					clientId="message"
 					attributes={ attributes }
-					setAttributes={ setAttributes }
+					setAttributes={ ( updates ) =>
+						setAttributes( ( current ) => ( {
+							...current,
+							...updates,
+						} ) )
+					}
 				/>
 			);
 		}
@@ -266,7 +399,9 @@ describe( 'Edit', () => {
 		);
 
 		// Assert.
-		expect( container.querySelector( 'svg' ) ).not.toBeInTheDocument();
+		expect(
+			container.querySelector( 'div.outletpro-message > svg' )
+		).not.toBeInTheDocument();
 		expect(
 			screen.queryByRole( 'checkbox', { name: 'Show icon' } )
 		).not.toBeInTheDocument();

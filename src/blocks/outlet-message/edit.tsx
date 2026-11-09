@@ -10,7 +10,7 @@ import {
 	useInnerBlocksProps,
 	RichText,
 } from '@wordpress/block-editor';
-import { PanelBody, ToggleControl } from '@wordpress/components';
+import { PanelBody, SelectControl, ToggleControl } from '@wordpress/components';
 import { useEntityProp } from '@wordpress/core-data';
 import { createBlock, hasBlockSupport } from '@wordpress/blocks';
 import { useRegistry, useSelect } from '@wordpress/data';
@@ -18,8 +18,8 @@ import { Icon, info } from '@wordpress/icons';
 
 type EditProps = {
 	clientId: string;
-	attributes: { showIcon: boolean };
-	setAttributes: ( attributes: { showIcon: boolean } ) => void;
+	attributes: { showIcon: boolean; strong?: boolean };
+	setAttributes: ( attributes: Partial< EditProps[ 'attributes' ] > ) => void;
 };
 
 type LinkBlock = { clientId: string; name: string };
@@ -32,7 +32,7 @@ type EntityProp< T > = [
 
 export function Edit( {
 	clientId,
-	attributes: { showIcon },
+	attributes: { showIcon, strong = false },
 	setAttributes,
 }: EditProps ): JSX.Element {
 	const registry = useRegistry();
@@ -76,7 +76,12 @@ export function Edit( {
 	} );
 	const richText = (
 		<RichText
-			tagName={ hasIcon || hasLink ? 'span' : 'p' }
+			tagName={
+				( strong && 'strong' ) ||
+				( ( hasIcon || hasLink ) && 'span' ) ||
+				'p'
+			}
+			className={ strong ? 'outletpro-strong' : undefined }
 			value={ message ?? '' }
 			onChange={ ( value: string ) => setMessage( value ) }
 			allowedFormats={ [] }
@@ -127,9 +132,36 @@ export function Edit( {
 					/>
 				</PanelBody>
 			</InspectorControls>
+			<InspectorControls group="advanced">
+				<SelectControl< '' | 'strong' >
+					label={ __( 'HTML element', 'outletpro' ) }
+					value={ strong ? 'strong' : '' }
+					options={ [
+						{ label: __( 'Default', 'outletpro' ), value: '' },
+						{ label: '<strong>', value: 'strong' },
+					] }
+					onChange={ ( value ) =>
+						setAttributes( { strong: value === 'strong' } )
+					}
+					help={
+						strong
+							? __(
+									'Display the message with a HTML strong tag.',
+									'outletpro'
+								)
+							: undefined
+					}
+					__next40pxDefaultSize
+					__nextHasNoMarginBottom
+				/>
+			</InspectorControls>
 			<div { ...innerBlocksProps }>
 				{ hasIcon && <Icon icon={ info } /> }
-				{ richText }
+				{ strong && ! hasIcon && ! hasLink ? (
+					<p>{ richText }</p>
+				) : (
+					richText
+				) }
 				{ children }
 			</div>
 		</>

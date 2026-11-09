@@ -11,6 +11,10 @@
 		"showIcon": {
 			"type": "boolean",
 			"default": false
+		},
+		"strong": {
+			"type": "boolean",
+			"default": false
 		}
 	},
 	"supports": {
