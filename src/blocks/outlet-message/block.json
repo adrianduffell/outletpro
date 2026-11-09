@@ -15,7 +15,12 @@
 	"supports": {
 		"html": false,
 		"spacing": {
-			"margin": true
+			"margin": true,
+			"blockGap": true
+		},
+		"layout": {
+			"default": { "type": "flex", "flexWrap": "nowrap" },
+			"allowEditing": false
 		},
 		"color": {
 			"background": true,
