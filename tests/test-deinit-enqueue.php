@@ -154,6 +154,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( wp_style_is( 'outletpro-tile-block', 'registered' ) );
 	}
 
+	public function test_deregisters_message_block_styles(): void {
+		// Arrange.
+		wp_register_style( 'outletpro-message-block', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'outletpro-message-block', 'registered' ) );
+	}
+
 	public function test_deregisters_block_cart_style(): void {
 		// Arrange.
 		wp_register_style( 'outletpro-block-cart', false, array(), 'test' );

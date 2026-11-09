@@ -69,12 +69,18 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'outletpro-message', $result );
 		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+		$processor = new WP_HTML_Tag_Processor( $result );
+		$this->assertTrue( $processor->next_tag( 'p' ) );
+		$this->assertFalse( $processor->has_class( 'outletpro-has-icon' ) );
+		$this->assertFalse( $processor->next_tag( 'svg' ) );
+		$this->assertStringNotContainsString( 'wp-block-outletpro-outlet-message__icon', $result );
 
 		// Cleanup.
 		delete_option( OUTLET_MESSAGE_OPTION );
 	}
 
-	public function test_message_uses_global_message_option(): void {
+	public function test_enabling_the_icon_preserves_the_global_message(): void {
 		// Arrange.
 		deinit_blocks();
 		register_outlet_message_block();
@@ -86,7 +92,10 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'outletpro/outlet-message',
-				'attrs'        => array(),
+				'attrs'        => array(
+					'showIcon'  => true,
+					'className' => 'is-style-bold',
+				),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),
@@ -100,6 +109,10 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'Final sale — no returns.', $result );
 		$this->assertStringNotContainsString( 'Not eligible for change of mind returns', $result );
+		$this->assertStringContainsString( wp_get_icon( 'core/info' ), $result );
+		$this->assertStringContainsString( 'outletpro-has-icon', $result );
+		$this->assertStringContainsString( '<span>Final sale — no returns.</span>', $result );
+		$this->assertMatchesRegularExpression( '/<p\b[^>]*><svg\b[\s\S]*<\/svg>\s*<span>Final sale — no returns\.<\/span><\/p>/', $result );
 
 		// Cleanup.
 		delete_option( OUTLET_MESSAGE_OPTION );

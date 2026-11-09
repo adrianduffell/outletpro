@@ -6,6 +6,12 @@
 	"category": "woocommerce",
 	"description": "Displays a message when a product is in the store’s outlet.",
 	"usesContext": [ "postId" ],
+	"attributes": {
+		"showIcon": {
+			"type": "boolean",
+			"default": false
+		}
+	},
 	"supports": {
 		"html": false,
 		"spacing": {
