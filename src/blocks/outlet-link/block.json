@@ -10,7 +10,7 @@
 	},
 	"supports": {
 		"html": false,
-		"spacing": { "margin": [ "left" ] },
+		"spacing": { "margin": true, "padding": true },
 		"color": {
 			"text": true
 		},
