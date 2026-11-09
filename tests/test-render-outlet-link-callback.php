@@ -156,4 +156,17 @@ class Test_Render_Outlet_Link_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( '', $result );
 	}
+
+	public function test_renders_nothing_when_outlet_page_option_is_invalid(): void {
+		// Arrange.
+		deinit_blocks();
+		register_outlet_link_block();
+		update_option( OUTLET_PAGE_OPTION, 0 );
+
+		// Act.
+		$result = do_blocks( '<!-- wp:outletpro/outlet-link /-->' );
+
+		// Assert.
+		$this->assertSame( '', $result );
+	}
 }

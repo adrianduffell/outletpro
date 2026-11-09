@@ -567,18 +567,35 @@ function register_outlet_link_block(): void {
  * @param array<string, mixed> $attributes Block attributes.
  */
 function render_outlet_link_callback( array $attributes ): string {
-	$page_id = get_outlet_page_id();
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page ID could not be retrieved.' );
+		return '';
+	}
 	if ( null === $page_id ) {
 		return '';
 	}
 	if ( ! is_post_publicly_viewable( $page_id ) ) {
 		return '';
 	}
-	$permalink = get_outlet_permalink();
+
+	try {
+		$permalink = get_outlet_permalink();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page permalink could not be retrieved.' );
+		return '';
+	}
 	if ( null === $permalink ) {
 		return '';
 	}
-	$title = get_outlet_page_title();
+
+	try {
+		$title = get_outlet_page_title();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page title could not be retrieved.' );
+		return '';
+	}
 	if ( null === $title ) {
 		return '';
 	}
