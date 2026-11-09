@@ -5,7 +5,6 @@
 
 import { RichText, useBlockProps } from '@wordpress/block-editor';
 import { useEntityRecord } from '@wordpress/core-data';
-import { decodeEntities } from '@wordpress/html-entities';
 import { __, sprintf } from '@wordpress/i18n';
 import { create, getTextContent, toHTMLString } from '@wordpress/rich-text';
 import useUnsignedIntegerEntityProp from '../../use-unsigned-integer-entity-prop';
@@ -37,7 +36,9 @@ export function Edit( {
 		? sprintf(
 				/* translators: %s: Lowercase outlet page title. */
 				__( 'Shop all %s', 'outletpro' ),
-				decodeEntities( outletPage.title.rendered ).toLowerCase()
+				getTextContent(
+					create( { html: outletPage.title.rendered } )
+				).toLowerCase()
 			)
 		: '';
 	const displayText = text?.trim() ? text : defaultText;

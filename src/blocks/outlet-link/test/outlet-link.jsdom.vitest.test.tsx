@@ -62,7 +62,7 @@ function renderLinks( attributes: { text?: string }[] ) {
 	registry.dispatch( coreStore ).receiveEntityRecords( 'postType', 'page', {
 		id: 42,
 		link: 'https://example.com/outlet/',
-		title: { rendered: 'Last Chance &amp; Final Sale' },
+		title: { rendered: '<em>Last Chance</em> &amp; Final Sale' },
 	} );
 	const blocks = attributes.map( ( attrs ) =>
 		createBlock( metadata.name, attrs )
