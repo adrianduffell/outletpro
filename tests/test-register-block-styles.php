@@ -7,13 +7,46 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_blocks;
+use function OutletPro\init_taxonomies;
 use function OutletPro\register_block_styles;
 use function OutletPro\register_outlet_menu_block;
+use function OutletPro\register_outlet_message_block;
 use function OutletPro\register_outlet_tile_block;
+use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Register_Block_Styles extends WP_UnitTestCase {
+
+	public function test_enqueues_message_styles_when_the_message_renders(): void {
+		// Arrange.
+		switch_theme( 'purple' );
+		set_current_screen( 'front' );
+		deinit_blocks();
+		register_outlet_message_block();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message /-->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+		wp_dequeue_style( 'outletpro-message-block' );
+		wp_deregister_style( 'outletpro-message-block' );
+		add_filter( 'should_load_block_assets_on_demand', '__return_true' );
+		register_block_styles();
+		remove_filter( 'should_load_block_assets_on_demand', '__return_true' );
+
+		// Act.
+		$block->render();
+
+		// Assert.
+		$this->assertTrue( wp_style_is( 'outletpro-message-block', 'enqueued' ) );
+	}
 
 	public function test_enqueues_menu_styles_when_a_menu_renders_without_tiles(): void {
 		// Arrange.

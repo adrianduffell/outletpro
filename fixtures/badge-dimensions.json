@@ -1,4 +1,20 @@
 {
+	"purple": {
+		"1280x720": {
+			"productPage": {
+				"fontSize": "13.28px",
+				"padding": "4.83086px"
+			},
+			"cartPage": {
+				"fontSize": "11.5217px",
+				"padding": "4.19063px"
+			},
+			"checkoutPage": {
+				"fontSize": "11.5217px",
+				"padding": "4.19063px"
+			}
+		}
+	},
 	"twentytwentyfive": {
 		"1280x720": {
 			"productPage": {

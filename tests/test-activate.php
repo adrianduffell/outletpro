@@ -11,10 +11,22 @@ use function OutletPro\activate;
 use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
+use const OutletPro\DB_VERSION;
 use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 class Test_Activate extends WP_UnitTestCase {
+
+	public function test_seeds_the_db_version(): void {
+		// Arrange.
+		delete_option( 'outletpro_db_version' );
+
+		// Act.
+		activate();
+
+		// Assert.
+		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
+	}
 
 	public function test_seeds_outlet_search_indexes_on_activation(): void {
 		// Arrange.

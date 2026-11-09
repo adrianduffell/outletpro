@@ -24,38 +24,6 @@ describe( 'buildPreviewStyles', () => {
 		expect( result ).toMatch( /^:root \{ .+ \}$/ );
 	} );
 
-	test( 'serializes label as a JSON string', () => {
-		const result = buildPreviewStyles( { label: 'Sale' } );
-
-		expect( result ).toContain( '--outletpro-badge-label: "Sale"' );
-	} );
-
-	test( 'escapes special characters in label', () => {
-		const resultQuote = buildPreviewStyles( { label: 'Bob"s Sale' } );
-		const resultNewline = buildPreviewStyles( {
-			label: 'A "quote"\nand newline',
-		} );
-
-		expect( resultQuote ).toContain(
-			'--outletpro-badge-label: "Bob\\"s Sale"'
-		);
-		expect( resultNewline ).toContain(
-			'--outletpro-badge-label: "A \\"quote\\"\\nand newline"'
-		);
-	} );
-
-	test( 'uses none for label when undefined', () => {
-		const result = buildPreviewStyles( {} );
-
-		expect( result ).toContain( '--outletpro-badge-label: none' );
-	} );
-
-	test( 'uses none for label when empty string', () => {
-		const result = buildPreviewStyles( { label: '' } );
-
-		expect( result ).toContain( '--outletpro-badge-label: none' );
-	} );
-
 	test.each( [
 		[ 'bgColor', '#ff0000' ],
 		[ 'textColor', '#ffffff' ],
@@ -74,7 +42,6 @@ describe( 'buildPreviewStyles', () => {
 
 	test( 'includes all CSS vars when all settings are provided', () => {
 		const result = buildPreviewStyles( {
-			label: 'Sale',
 			bgColor: '#ff0000',
 			textColor: '#ffffff',
 			fontWeight: '700',
@@ -86,7 +53,6 @@ describe( 'buildPreviewStyles', () => {
 			density: 60,
 		} );
 
-		expect( result ).toContain( '--outletpro-badge-label: "Sale"' );
 		expect( result ).toContain( '--outletpro-badge-bg-color: #ff0000' );
 		expect( result ).toContain( '--outletpro-badge-text-color: #ffffff' );
 		expect( result ).toContain( '--outletpro-badge-font-weight: 700' );
@@ -150,11 +116,11 @@ describe( 'buildPreviewStyles', () => {
 
 	test( 'joins declarations with semicolons', () => {
 		const result = buildPreviewStyles( {
-			label: 'Sale',
+			scale: 120,
 			bgColor: '#ff0000',
 		} );
 
-		expect( result ).toContain( '--outletpro-badge-label: "Sale";' );
+		expect( result ).toContain( '--outletpro-badge-scale: 120;' );
 
 		expect( result ).toContain( '--outletpro-badge-bg-color: #ff0000;' );
 	} );

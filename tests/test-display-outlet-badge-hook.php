@@ -12,6 +12,7 @@ use function OutletPro\init_taxonomies;
 use function OutletPro\init_woocommerce_template_hooks;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
+use const OutletPro\SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
@@ -49,6 +50,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_display_badge_using_custom_single_product_hook_name(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		set_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_after_add_to_cart_form', 17 ) );
 		add_filter(
 			'outletpro_badge_single_product_hook',
 			static function () {
@@ -70,6 +72,7 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 
 	public function test_display_badge_using_custom_single_product_hook_priority(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
+		set_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_single_product_summary', 17 ) );
 		add_filter(
 			'outletpro_badge_single_product_priority',
 			static function () {

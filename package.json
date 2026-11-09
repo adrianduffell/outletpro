@@ -1,11 +1,11 @@
 {
 	"name": "outletpro",
-	"version": "1.1.0-dev",
+	"version": "1.2.0-dev",
 	"private": true,
 	"license": "GPL-2.0-or-later",
 	"type": "module",
 	"engines": {
-		"node": "24.21.0"
+		"node": "24.22.2"
 	},
 	"scripts": {
 		"build": "wp-scripts build",
@@ -19,11 +19,12 @@
 		"lint:php": "vendor/bin/phpcs -s",
 		"lint:php:fix": "vendor/bin/phpcbf",
 		"plugin-zip": "wp-scripts plugin-zip && zip -d outletpro.zip outletpro/package.json outletpro/README.md",
+		"plugin-zip:marketplace": "npm run plugin-zip && zip -d outletpro.zip outletpro/CHANGELOG.md && mv .marketplace outletpro && zip outletpro.zip outletpro/changelog.txt && mv outletpro .marketplace",
 		"preprocess": "./bin/preprocess.sh",
 		"preprocess:marketplace": "./bin/preprocess-marketplace.sh",
 		"start": "wp-scripts start",
 		"test:e2e": "wp-scripts test-playwright",
-		"test:e2e:block": "THEME=twentytwentyfive STORE_PAGES=block npm run test:e2e",
+		"test:e2e:block": "THEME=purple STORE_PAGES=block npm run test:e2e",
 		"test:e2e:classic": "THEME=storefront STORE_PAGES=shortcode npm run test:e2e",
 		"test:unit": "npm run test:unit:jest && npm run test:unit:vitest",
 		"test:unit:jest": "wp-scripts test-unit-jest --config jest.config.cjs",
@@ -43,6 +44,7 @@
 		"build",
 		"CHANGELOG.md",
 		"includes",
+		"migrate.php",
 		"templates",
 		"outletpro.php",
 		"readme.txt",
@@ -76,6 +78,7 @@
 		"@wordpress/jest-preset-default": "^14.2.0",
 		"@wordpress/plugins": "^7.57.0",
 		"@wordpress/prettier-config": "^4.57.0",
+		"@wordpress/rich-text": "^7.57.0",
 		"@wordpress/scripts": "^36.1.0",
 		"@wordpress/ui": "^0.24.0",
 		"babel-jest": "^30.5.0",

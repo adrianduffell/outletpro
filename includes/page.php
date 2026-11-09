@@ -34,6 +34,30 @@ function get_outlet_permalink(): ?string {
 }
 
 /**
+ * Returns the title of the outlet page.
+ *
+ * Returns null when the outlet page is unavailable.
+ *
+ * @internal
+ */
+function get_outlet_page_title(): ?string {
+	$page_id = get_outlet_page_id();
+	if ( null === $page_id ) {
+		return null;
+	}
+
+	$page = get_post( $page_id );
+	if ( ! $page instanceof \WP_Post ) {
+		return null;
+	}
+	if ( 'page' !== $page->post_type ) {
+		return null;
+	}
+
+	return get_the_title( $page );
+}
+
+/**
  * Returns the outlet page permalink with a filter query param.
  *
  * @internal
@@ -217,10 +241,13 @@ function create_outlet_page(): void {
 
 	update_option( OUTLET_PAGE_OPTION, $page_id );
 
+	$excluded_categories = array_filter( array( get_uncategorized_product_category_id() ) );
+
 	$categories = get_terms(
 		array(
 			'taxonomy'   => 'product_cat',
 			'parent'     => 0,
+			'exclude'    => $excluded_categories,
 			'hide_empty' => false,
 			'fields'     => 'ids',
 			'number'     => 7,

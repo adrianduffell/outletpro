@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Outlet Pro
  * Description: Adds an outlet to WooCommerce. Move old stock quickly with an outlet page, badge, and message.
- * Version: 1.1.0-dev
+ * Version: 1.2.0-dev
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
  * Text Domain: outletpro
@@ -30,7 +30,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const VERSION = '1.1.0-dev';
+const VERSION = '1.2.0-dev';
+
+/**
+ * Database version.
+ *
+ * @internal
+ */
+const DB_VERSION = '3';
 
 /**
  * Plugin file path.
@@ -38,6 +45,9 @@ const VERSION = '1.1.0-dev';
  * @internal
  */
 const PLUGIN_FILE = __FILE__;
+
+// Run migrations on init.
+add_action( 'init', static fn() => require __DIR__ . '/migrate.php', 1 );
 
 require_once __DIR__ . '/includes/activate.php';
 require_once __DIR__ . '/includes/system-status.php';
@@ -53,6 +63,7 @@ require_once __DIR__ . '/includes/admin-page-list-table.php';
 require_once __DIR__ . '/includes/query-vars.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
+require_once __DIR__ . '/includes/theme-mods.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/settings-license.php';
 require_once __DIR__ . '/includes/admin-plugins-license.php';
@@ -93,6 +104,7 @@ function init_hook(): void {
 	init_update_plugin();
 	// #endif
 	init_settings();
+	init_theme_mods();
 	init_taxonomies();
 	init_rest_api();
 	init_query_vars();
@@ -170,7 +182,12 @@ function activate(): void {
 	\wc_get_logger()->info( 'Activating Outlet plugin.' );
 
 	try {
+		if ( false !== get_option( 'outletpro_db_version' ) ) {
+			require __DIR__ . '/migrate.php';
+		}
 		seed_settings();
+		seed_theme_mods();
+		add_option( 'outletpro_db_version', DB_VERSION, '', true );
 		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
 		seed_outlet_status_taxonomy();

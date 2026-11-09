@@ -163,6 +163,7 @@ test( 'transitions to available for a license with unlimited capacity', async ()
 		valid: true,
 		remaining: Infinity,
 		total: Infinity,
+		licenseName: 'Annual subscription',
 	} );
 	const { result } = renderHook( () => useLicenseValidation() );
 
@@ -175,6 +176,7 @@ test( 'transitions to available for a license with unlimited capacity', async ()
 			status: 'available',
 			remaining: Infinity,
 			total: Infinity,
+			licenseName: 'Annual subscription',
 		} )
 	);
 	expect( result.current.canActivate ).toBe( true );

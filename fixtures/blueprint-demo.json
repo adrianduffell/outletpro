@@ -51,7 +51,7 @@
 			"step": "installPlugin",
 			"pluginData": {
 				"resource": "url",
-				"url": "https://api.adrianduffell.store/demo.zip"
+				"url": "https://github.com/adrianduffell/outletpro/releases/latest/download/outletpro.zip"
 			},
 			"options": {
 				"activate": true

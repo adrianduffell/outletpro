@@ -15,8 +15,63 @@ use function OutletPro\register_outlet_message_block;
 use function OutletPro\render_outlet_message_callback;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
+
+	public function test_renders_an_inserted_link_inline_with_the_message_and_icon(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'publish',
+				'post_title'  => 'Last Chance',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"showIcon":true} --><!-- wp:outletpro/outlet-link {"text":"Browse deals","style":{"typography":{"fontWeight":"300"}}} /--><!-- /wp:outletpro/outlet-message -->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*>.*<span>Final sale\.<\/span> <a [^>]*>Browse deals<\/a><\/p>$/s', $result );
+		$this->assertStringContainsString( 'outletpro-has-link', $result );
+		$this->assertStringContainsString( 'href="' . esc_url( get_permalink( $page_id ) ) . '"', $result );
+		$this->assertStringContainsString( 'font-weight:300', $result );
+	}
+
+	public function test_omits_an_unavailable_link_without_leaving_extra_whitespace(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		delete_option( OUTLET_PAGE_OPTION );
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message --><!-- wp:outletpro/outlet-link /--><!-- /wp:outletpro/outlet-message -->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*>Final sale\.<\/p>$/', $result );
+	}
 
 	public function test_returns_empty_string_when_product_not_in_outlet(): void {
 		// Arrange.
@@ -69,13 +124,24 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'outletpro-message', $result );
 		$this->assertStringContainsString( 'Not eligible for change of mind returns', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+		$processor = new WP_HTML_Tag_Processor( $result );
+		$this->assertTrue( $processor->next_tag( 'p' ) );
+		$this->assertFalse( $processor->has_class( 'outletpro-has-icon' ) );
+		$this->assertFalse( $processor->next_tag( 'svg' ) );
+		$this->assertStringNotContainsString( 'wp-block-outletpro-outlet-message__icon', $result );
 
 		// Cleanup.
 		delete_option( OUTLET_MESSAGE_OPTION );
 	}
 
-	public function test_message_uses_global_message_option(): void {
+	// phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Version-specific skip guard.
+	public function test_enabling_the_icon_preserves_the_global_message(): void {
 		// Arrange.
+		if ( ! function_exists( 'wp_get_icon' ) ) {
+			$this->markTestSkipped( 'The WordPress icon API is unavailable.' );
+		}
+
 		deinit_blocks();
 		register_outlet_message_block();
 		init_taxonomies();
@@ -86,7 +152,10 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		$block = new WP_Block(
 			array(
 				'blockName'    => 'outletpro/outlet-message',
-				'attrs'        => array(),
+				'attrs'        => array(
+					'showIcon'  => true,
+					'className' => 'is-style-bold',
+				),
 				'innerBlocks'  => array(),
 				'innerHTML'    => '',
 				'innerContent' => array(),
@@ -100,9 +169,42 @@ class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 		// Assert.
 		$this->assertStringContainsString( 'Final sale — no returns.', $result );
 		$this->assertStringNotContainsString( 'Not eligible for change of mind returns', $result );
+		$this->assertStringContainsString( wp_get_icon( 'core/info' ), $result );
+		$this->assertStringContainsString( 'outletpro-has-icon', $result );
+		$this->assertStringContainsString( '<span>Final sale — no returns.</span>', $result );
+		$this->assertMatchesRegularExpression( '/<p\b[^>]*><svg\b[\s\S]*<\/svg>\s*<span>Final sale — no returns\.<\/span><\/p>/', $result );
 
 		// Cleanup.
 		delete_option( OUTLET_MESSAGE_OPTION );
+	}
+
+	// phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Version-specific skip guard.
+	public function test_returns_plain_message_when_the_icon_api_is_unavailable(): void {
+		// Arrange.
+		if ( function_exists( 'wp_get_icon' ) ) {
+			$this->markTestSkipped( 'The WordPress icon API is available.' );
+		}
+
+		deinit_blocks();
+		register_outlet_message_block();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale — no returns.' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"showIcon":true} /-->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertStringContainsString( 'Final sale — no returns.', $result );
+		$this->assertStringNotContainsString( '<svg', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+		$this->assertStringNotContainsString( 'outletpro-has-icon', $result );
 	}
 
 	public function test_returns_empty_string_when_post_id_is_zero(): void {

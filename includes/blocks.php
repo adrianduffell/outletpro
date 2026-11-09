@@ -20,12 +20,14 @@ function init_blocks(): void {
 	register_outlet_conditional_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_link_block();
 	register_outlet_tile_block();
 	register_outlet_tiles_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
-	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10, 5 );
+	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
@@ -41,10 +43,23 @@ function deinit_blocks(): void {
 
 	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook' );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
-	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\outlet_block_pattern_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
+
+	if ( \WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'notice' ) ) {
+		unregister_block_style( 'outletpro/outlet-message', 'notice' );
+	}
+
+	if ( \WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'bold' ) ) {
+		unregister_block_style( 'outletpro/outlet-message', 'bold' );
+	}
+
+	if ( \WP_Block_Styles_Registry::get_instance()->is_registered( 'outletpro/outlet-message', 'fine' ) ) {
+		unregister_block_style( 'outletpro/outlet-message', 'fine' );
+	}
 
 	// Unregister all blocks in the outletpro namespace.
 	foreach ( $registry->get_all_registered() as $block_name => $block_type ) {
@@ -267,7 +282,9 @@ function is_single_product_context( $context ): bool {
 }
 
 /**
- * Auto-insert the outlet badge block before the product name on the single product template.
+ * Auto-insert the outlet badge block on the single product template.
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -278,11 +295,11 @@ function is_single_product_context( $context ): bool {
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'core/post-title' !== $anchor_block || 'before' !== $relative_position ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) ) ) {
 		return $hooked_blocks;
 	}
 
@@ -292,26 +309,24 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 }
 
 /**
- * Replace the auto-inserted outlet badge with the Outlet Badge row pattern.
+ * Sets spacing for the auto-inserted outlet badge.
+ *
+ * Adds a small bottom margin in themes that support spacing preset 10, such
+ * as Purple, to work around a parent container with a zero `blockGap`.
  *
  * Fired by `hooked_block_outletpro/outlet-badge`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
- * @param array<string, mixed>|null     $parsed_hooked_block Parsed outlet badge block, or null when suppressed.
- * @param string                        $hooked_block_type   Hooked block name.
- * @param string                        $relative_position   Position relative to the anchor block.
- * @param array<string, mixed>          $parsed_anchor_block Parsed anchor block.
- * @param \WP_Block_Template|array|null $context             Block Hooks context.
- * @return array<string, mixed>|null Parsed pattern block, null to suppress insertion, or the original value.
+ * @param array<string, mixed>|null $parsed_hooked_block Parsed outlet badge block, or null when suppressed.
+ * @param string                    $hooked_block_type   Hooked block name.
+ * @param string                    $relative_position   Position relative to the anchor block.
+ * @param array<string, mixed>      $parsed_anchor_block Parsed anchor block.
+ * @return array<string, mixed>|null Filtered outlet badge block, or null when suppressed.
  */
-function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block, $context ): ?array {
+function set_outlet_badge_spacing_hook( $parsed_hooked_block, $hooked_block_type, $relative_position, $parsed_anchor_block ): ?array {
 	if ( null === $parsed_hooked_block ) {
 		return null;
-	}
-
-	if ( 'outletpro/outlet-badge' !== $hooked_block_type ) {
-		return $parsed_hooked_block;
 	}
 
 	if ( 'before' !== $relative_position ) {
@@ -322,27 +337,15 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
 		return $parsed_hooked_block;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
-		return $parsed_hooked_block;
-	}
+	$parsed_hooked_block['attrs']['style']['spacing']['margin']['bottom'] = 'var:preset|spacing|10';
 
-	try {
-		$pattern_blocks = parse_blocks( get_pattern_content( 'outletpro/outlet-badge-row' ) );
-	} catch ( \Throwable $e ) {
-		\wc_get_logger()->error( 'Outlet Badge row pattern could not be retrieved' );
-		return null;
-	}
-
-	if ( 1 !== count( $pattern_blocks ) ) {
-		\wc_get_logger()->error( 'Outlet Badge row pattern has invalid content' );
-		return null;
-	}
-
-	return $pattern_blocks[0];
+	return $parsed_hooked_block;
 }
 
 /**
- * Auto-insert the outlet message block as the first child of the product meta block on the single product template.
+ * Auto-insert the outlet message block on the single product template.
+ *
+ * Fired by `hooked_block_types`.
  *
  * @internal WordPress filter hook
  * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
@@ -353,17 +356,46 @@ function outlet_block_pattern_hook( $parsed_hooked_block, $hooked_block_type, $r
  * @return string[] Filtered hooked block names.
  */
 function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
-	if ( 'woocommerce/product-meta' !== $anchor_block || 'first_child' !== $relative_position ) {
+	if ( ! is_single_product_context( $context ) ) {
 		return $hooked_blocks;
 	}
 
-	if ( ! is_single_product_context( $context ) ) {
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-price', 'after' ) ) ) {
 		return $hooked_blocks;
 	}
 
 	$hooked_blocks[] = 'outletpro/outlet-message';
 
 	return $hooked_blocks;
+}
+
+/**
+ * Applies the theme mod style to auto-inserted outlet messages.
+ *
+ * Fired by `hooked_block_outletpro/outlet-message`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed>|null $parsed_hooked_block Parsed outlet message block, or null when suppressed.
+ * @return array<string, mixed>|null Filtered outlet message block, or null when suppressed.
+ * @throws \UnexpectedValueException When the message block style is not a string.
+ */
+function set_outlet_message_style_hook( ?array $parsed_hooked_block ): ?array {
+	if ( null === $parsed_hooked_block ) {
+		return null;
+	}
+
+	$style = get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, '' );
+	if ( ! is_string( $style ) ) {
+		throw new \UnexpectedValueException( 'Outlet message block style must be a string.' );
+	}
+
+	if ( '' === $style ) {
+		return $parsed_hooked_block;
+	}
+
+	$parsed_hooked_block['attrs']['className'] = trim( ( $parsed_hooked_block['attrs']['className'] ?? '' ) . ' is-style-' . $style );
+
+	return $parsed_hooked_block;
 }
 
 /**
@@ -501,11 +533,7 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 		return '';
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes(
-		array(
-			'class' => 'outletpro-badge',
-		)
-	);
+	$wrapper_attributes = get_block_wrapper_attributes();
 
 	$label = get_option( OUTLET_BADGE_LABEL_OPTION );
 
@@ -514,9 +542,80 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 	}
 
 	return sprintf(
-		'<div %1$s>%2$s</div>',
+		'<div %1$s><div class="outletpro-badge">%2$s</div></div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
+	);
+}
+
+/**
+ * Register the outlet link block type.
+ *
+ * @internal
+ */
+function register_outlet_link_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-link/',
+		array( 'render_callback' => 'OutletPro\render_outlet_link_callback' )
+	);
+}
+
+/**
+ * Render the outlet link.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ */
+function render_outlet_link_callback( array $attributes ): string {
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page ID could not be retrieved.' );
+		return '';
+	}
+	if ( null === $page_id ) {
+		return '';
+	}
+	if ( ! is_post_publicly_viewable( $page_id ) ) {
+		return '';
+	}
+
+	try {
+		$permalink = get_outlet_permalink();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page permalink could not be retrieved.' );
+		return '';
+	}
+	if ( null === $permalink ) {
+		return '';
+	}
+
+	try {
+		$title = get_outlet_page_title();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page title could not be retrieved.' );
+		return '';
+	}
+	if ( null === $title ) {
+		return '';
+	}
+
+	$text = $attributes['text'] ?? '';
+	if ( '' === trim( $text ) ) {
+		$title = html_entity_decode( wp_strip_all_tags( $title ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$title = wc_strtolower( $title );
+		$text  = sprintf(
+			/* translators: %s: Lowercase outlet page title. */
+			__( 'Shop %s', 'outletpro' ),
+			$title
+		);
+	}
+
+	return sprintf(
+		'<a %1$s href="%2$s">%3$s</a>',
+		get_block_wrapper_attributes(),
+		esc_url( $permalink ),
+		esc_html( $text )
 	);
 }
 
@@ -524,12 +623,63 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
  * Register the outlet message block type.
  *
  * @internal
+ * @throws \RuntimeException If the message block could not be registered.
  */
 function register_outlet_message_block(): void {
-	register_block_type(
+	$block_type = register_block_type(
 		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-message/',
 		array(
 			'render_callback' => 'OutletPro\render_outlet_message_callback',
+		)
+	);
+	if ( ! $block_type instanceof \WP_Block_Type ) {
+		throw new \RuntimeException( 'Outlet message block could not be registered.' );
+	}
+	$block_type->supports['outletproInfoIcon'] = function_exists( 'wp_get_icon' );
+
+	register_block_style(
+		'outletpro/outlet-message',
+		array(
+			'name'       => 'bold',
+			'label'      => __( 'Bold', 'outletpro' ),
+			'style_data' => array(
+				'typography' => array(
+					'fontSize'   => 'var:preset|font-size|small',
+					'fontWeight' => '600',
+				),
+			),
+		)
+	);
+
+	register_block_style(
+		'outletpro/outlet-message',
+		array(
+			'name'       => 'fine',
+			'label'      => __( 'Fine', 'outletpro' ),
+			'style_data' => array(
+				'typography' => array(
+					'fontSize' => 'var:preset|font-size|small',
+				),
+			),
+		)
+	);
+
+	register_block_style(
+		'outletpro/outlet-message',
+		array(
+			'name'       => 'notice',
+			'label'      => __( 'Notice', 'outletpro' ),
+			'style_data' => array(
+				'color'   => array( 'background' => '#00000005' ),
+				'spacing' => array(
+					'padding' => array(
+						'top'    => '1em',
+						'right'  => '1em',
+						'bottom' => '1em',
+						'left'   => '1em',
+					),
+				),
+			),
 		)
 	);
 }
@@ -539,11 +689,11 @@ function register_outlet_message_block(): void {
  *
  * @internal
  * @param array<string, mixed> $attributes Block attributes.
- * @param string               $_content   Block inner content (unused).
+ * @param string               $content    Rendered outlet link child.
  * @param \WP_Block            $block      Block instance.
  * @return string Rendered HTML, or empty string if the product is not in outlet.
  */
-function render_outlet_message_callback( array $attributes, string $_content, \WP_Block $block ): string { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
+function render_outlet_message_callback( array $attributes, string $content, \WP_Block $block ): string {
 	$product_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
 
 	if ( ! $product_id ) {
@@ -560,22 +710,45 @@ function render_outlet_message_callback( array $attributes, string $_content, \W
 		return '';
 	}
 
-	$wrapper_attributes = get_block_wrapper_attributes(
-		array(
-			'class' => 'outletpro-message',
-		)
-	);
-
 	$message = get_option( OUTLET_MESSAGE_OPTION );
 
 	if ( ! is_string( $message ) || '' === $message ) {
 		return '';
 	}
 
+	$show_icon = function_exists( 'wp_get_icon' ) && ( $attributes['showIcon'] ?? false );
+	$icon      = $show_icon ? wp_get_icon( 'core/info' ) : '';
+	$has_link  = '' !== trim( $content );
+	$classes   = array( 'outletpro-message' );
+	if ( '' !== $icon ) {
+		$classes[] = 'outletpro-has-icon';
+	}
+	if ( $has_link ) {
+		$classes[] = 'outletpro-has-link';
+	}
+	$wrapper_attributes = get_block_wrapper_attributes(
+		array(
+			'class' => implode( ' ', $classes ),
+		)
+	);
+
+	$message_html = wp_kses_post( $message );
+	$wrap_message = '' !== $icon;
+	if ( $has_link ) {
+		$wrap_message = true;
+	}
+	if ( $wrap_message ) {
+		$message_html = '<span>' . $message_html . '</span>';
+	}
+	if ( $has_link ) {
+		$message_html .= ' ' . $content;
+	}
+
 	return sprintf(
-		'<p %1$s>%2$s</p>',
+		'<p %1$s>%2$s%3$s</p>',
 		$wrapper_attributes,
-		wp_kses_post( $message )
+		$icon,
+		$message_html
 	);
 }
 

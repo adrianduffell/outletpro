@@ -4,7 +4,6 @@
  */
 
 type BuildPreviewStylesParams = {
-	label?: string;
 	bgColor?: string;
 	textColor?: string;
 	fontWeight?: string;
@@ -30,9 +29,6 @@ export function buildPreviewStyles(
 	};
 
 	const declarations = [
-		`--outletpro-badge-label: ${
-			settings.label ? JSON.stringify( settings.label ) : 'none'
-		}`,
 		`--outletpro-badge-scale: ${ settings.scale ?? 'unset' }`,
 		`--outletpro-badge-density: ${ settings.density ?? 'unset' }`,
 		...Object.entries( entries ).map(

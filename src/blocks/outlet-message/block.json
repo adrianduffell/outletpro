@@ -6,8 +6,19 @@
 	"category": "woocommerce",
 	"description": "Displays a message when a product is in the store’s outlet.",
 	"usesContext": [ "postId" ],
+	"allowedBlocks": [ "outletpro/outlet-link" ],
+	"attributes": {
+		"showIcon": {
+			"type": "boolean",
+			"default": false
+		}
+	},
 	"supports": {
 		"html": false,
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
 		"color": {
 			"background": true,
 			"text": true,
@@ -16,12 +27,6 @@
 		"typography": {
 			"fontSize": true,
 			"__experimentalFontWeight": true
-		}
-	},
-	"attributes": {
-		"fontSize": {
-			"type": "string",
-			"default": "small"
 		}
 	},
 	"textdomain": "outletpro"

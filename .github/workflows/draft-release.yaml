@@ -1,0 +1,104 @@
+name: Create Draft Release
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+concurrency: draft-release
+
+jobs:
+    draft-release:
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Check out main
+              uses: actions/checkout@v5
+              with:
+                  ref: main
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v5
+              with:
+                  node-version-file: package.json
+                  cache: npm
+
+            - name: Read release version
+              run: |
+                  RELEASE_VERSION=$(node -p "require('./package.json').version.replace(/-dev$/, '')")
+                  if [[ ! "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+                    echo "Error: Expected a release version in major.minor.patch format."
+                    exit 1
+                  fi
+                  echo "RELEASE_VERSION=$RELEASE_VERSION" >> "$GITHUB_ENV"
+
+            - name: Verify changelog
+              run: |
+                  if ! awk -v version="$RELEASE_VERSION" '
+                    /^## / && $2 == version { found = 1; exit }
+                    END { exit !found }
+                  ' CHANGELOG.md; then
+                    echo "Error: No changelog entry found for the release." >&2
+                    exit 1
+                  fi
+
+            - name: Create release branch
+              run: git switch -c "release/$RELEASE_VERSION"
+
+            - name: Update version
+              run: |
+                  npm version "$RELEASE_VERSION" --no-git-tag-version
+                  sed -i -E \
+                    -e "s/^([[:space:]]*\* Version: ).*/\1$RELEASE_VERSION/" \
+                    -e "s/^const VERSION = '.*';/const VERSION = '$RELEASE_VERSION';/" \
+                    outletpro.php
+                  bash bin/version-check.sh
+
+            - name: Commit version update
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add package.json package-lock.json outletpro.php
+                  git commit -m "Update version to $RELEASE_VERSION"
+
+            - name: Install build dependencies
+              run: |
+                  sudo apt-get install -y unifdef
+                  npm ci
+
+            - name: Preprocess regular build
+              run: npm run preprocess
+
+            - name: Build
+              run: npm run build
+
+            - name: Create plugin ZIP
+              run: npm run plugin-zip
+
+            - name: Extract release notes
+              run: |
+                  awk -v version="$RELEASE_VERSION" '
+                    /^## / {
+                      if (found) exit
+                      found = ($2 == version)
+                      next
+                    }
+                    found { print }
+                  ' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
+
+            - name: Tag and push release
+              run: |
+                  git tag "$RELEASE_VERSION"
+                  git push --atomic origin "release/$RELEASE_VERSION" "$RELEASE_VERSION"
+
+            - name: Create draft release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  gh release create "$RELEASE_VERSION" outletpro.zip \
+                    --draft \
+                    --verify-tag \
+                    --title "Outlet Pro $RELEASE_VERSION" \
+                    --notes-file "$RUNNER_TEMP/release-notes.md"

@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\get_price_tiers;
+use function OutletPro\get_uncategorized_product_category_id;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
@@ -140,10 +141,18 @@ $grid_attrs = array(
 
 $grid_styles = wp_style_engine_get_styles( $grid_attrs['style'] );
 
+try {
+	$excluded_categories = array_filter( array( get_uncategorized_product_category_id() ) );
+} catch ( Throwable $e ) {
+	wc_get_logger()->error( 'Uncategorized product category could not be retrieved.' );
+	return;
+}
+
 $menu_categories = get_terms(
 	array(
 		'taxonomy'   => 'product_cat',
 		'parent'     => 0,
+		'exclude'    => $excluded_categories,
 		'hide_empty' => false,
 		'orderby'    => 'menu_order',
 		'order'      => 'ASC',

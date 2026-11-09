@@ -1,0 +1,99 @@
+name: Bump minor version
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: minor-version-bump
+  cancel-in-progress: false
+
+jobs:
+  minor-version-bump:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Check for existing branch
+        run: |
+          existing_branch=$(git ls-remote --heads origin refs/heads/minor-version-bump)
+          if [ -n "$existing_branch" ]; then
+            echo "::error::The minor-version-bump branch already exists."
+            exit 1
+          fi
+
+      - name: Check for existing pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          open_prs=$(gh pr list --head minor-version-bump --state open --json number --jq length)
+          if [ "$open_prs" -gt 0 ]; then
+            echo "::error::A minor version bump pull request is already open."
+            exit 1
+          fi
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: package.json
+
+      - name: Update version
+        run: |
+          npm version minor --no-git-tag-version
+          VERSION="$(node -p 'require("./package.json").version')-dev"
+          npm version "$VERSION" --no-git-tag-version
+
+          sed -E \
+            -e "s/^([[:space:]]*\*[[:space:]]*Version:).*/\1 $VERSION/" \
+            -e "s/^const VERSION = '[^']*';$/const VERSION = '$VERSION';/" \
+            outletpro.php > outletpro.php.tmp
+          mv outletpro.php.tmp outletpro.php
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Check version
+        run: |
+          bash bin/version-check.sh
+          grep -Fx " * Version: $VERSION" outletpro.php
+          grep -Fx "const VERSION = '$VERSION';" outletpro.php
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet -- outletpro.php package.json package-lock.json; then
+            echo "Version is already up to date."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          branch="minor-version-bump"
+          title="Bump version to $VERSION"
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git switch -c "$branch"
+          git add outletpro.php package.json package-lock.json
+          git commit -m "Bump version to $VERSION"
+          git push --set-upstream origin "$branch"
+
+          printf 'Bumps the development version of Outlet Pro to the next minor version, %s.\n' \
+            "$VERSION" > "$RUNNER_TEMP/bump-version-pr.md"
+
+          gh pr create \
+            --title "$title" \
+            --body-file "$RUNNER_TEMP/bump-version-pr.md" \
+            --base main \
+            --head "$branch"

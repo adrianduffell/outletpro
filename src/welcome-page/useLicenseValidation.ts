@@ -14,6 +14,7 @@ export type ValidationState =
 			remaining: number;
 			total: number;
 			expiresAt?: string;
+			licenseName?: string;
 	  }
 	| { status: 'unavailable'; total: number };
 
@@ -52,6 +53,7 @@ export function useLicenseValidation() {
 						status: 'available',
 						remaining: validation.remaining,
 						total: validation.total,
+						licenseName: validation.licenseName,
 						...expiry,
 					};
 				}

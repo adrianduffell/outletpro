@@ -18,16 +18,10 @@ defined( 'ABSPATH' ) || exit;
  */
 function init_patterns(): void {
 	register_outlet_block_pattern_category();
-	register_outlet_badge_row_pattern();
 	register_outlet_navigation_3_pattern();
 	register_outlet_navigation_4_pattern();
 	register_outlet_navigation_price_tiers_pattern();
 	register_outlet_navigation_6_pattern();
-
-	if ( version_compare( get_bloginfo( 'version' ), '7.0', '<' ) ) {
-		return;
-	}
-
 	register_outlet_sort_filter_pattern();
 }
 
@@ -216,24 +210,6 @@ function register_outlet_sort_filter_pattern(): void {
 			'content'       => get_outlet_sort_filter_pattern_content(),
 			'categories'    => array( 'outletpro' ),
 			'viewportWidth' => 180,
-		)
-	);
-}
-
-/**
- * Registers the "Outlet Badge row" block pattern.
- *
- * @internal
- */
-function register_outlet_badge_row_pattern(): void {
-	register_block_pattern(
-		'outletpro/outlet-badge-row',
-		array(
-			'title'         => __( 'Outlet Badge row', 'outletpro' ),
-			'description'   => __( 'Displays the outlet badge in a row, aligned left.', 'outletpro' ),
-			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-badge-row-pattern.html',
-			'categories'    => array( 'outletpro' ),
-			'viewportWidth' => 320,
 		)
 	);
 }

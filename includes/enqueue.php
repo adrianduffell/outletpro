@@ -52,6 +52,8 @@ function deinit_enqueue(): void {
 	wp_deregister_style( 'outletpro-block-cart' );
 	wp_dequeue_script( 'outletpro-block-cart' );
 	wp_deregister_script( 'outletpro-block-cart' );
+	wp_dequeue_script( 'outletpro-block-cart-editor' );
+	wp_deregister_script( 'outletpro-block-cart-editor' );
 	wp_dequeue_style( 'outletpro-admin' );
 	wp_deregister_style( 'outletpro-admin' );
 	wp_dequeue_style( 'outletpro-admin-editor' );
@@ -66,6 +68,8 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-editor' );
 	wp_dequeue_style( 'outletpro-badge-block' );
 	wp_deregister_style( 'outletpro-badge-block' );
+	wp_dequeue_style( 'outletpro-message-block' );
+	wp_deregister_style( 'outletpro-message-block' );
 	wp_dequeue_style( 'outletpro-tile-block' );
 	wp_deregister_style( 'outletpro-tile-block' );
 	wp_dequeue_style( 'outletpro-menu-block' );
@@ -117,9 +121,17 @@ function enqueue_admin_editor_styles_hook(): void {
 	 */
 	wp_enqueue_style(
 		'outletpro-admin-editor',
-		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/admin-editor.css',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/css/block-cart.css',
 		array(),
 		VERSION
+	);
+
+	wp_enqueue_script(
+		'outletpro-block-cart-editor',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-block-cart.js',
+		array( 'wc-blocks-checkout' ),
+		VERSION,
+		true
 	);
 
 	$badge_style_options = array(
@@ -278,8 +290,6 @@ function output_badge_style_css_variables_hook(): void {
 /**
  * Register stylesheets for blocks.
  *
- * The message block doesn't have any styles currently.
- *
  * @internal
  */
 function register_block_styles(): void {
@@ -300,6 +310,16 @@ function register_block_styles(): void {
 		'outletpro/outlet-badge',
 		array(
 			'handle' => 'outletpro-badge-block',
+			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+			'deps'   => array(),
+			'ver'    => $asset['version'],
+		)
+	);
+
+	wp_enqueue_block_style(
+		'outletpro/outlet-message',
+		array(
+			'handle' => 'outletpro-message-block',
 			'src'    => plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
 			'deps'   => array(),
 			'ver'    => $asset['version'],
