@@ -16,6 +16,7 @@ import EditorPreview from './editor-preview';
 import './blocks/outlet-conditional';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
+import './blocks/outlet-link';
 import './blocks/outlet-tile';
 import './blocks/outlet-tiles';
 import './blocks/outlet-menu';

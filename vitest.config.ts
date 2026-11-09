@@ -15,6 +15,7 @@ export default defineConfig( {
 			{
 				test: {
 					name: 'jsdom',
+					server: { deps: { inline: [ /@wordpress\// ] } },
 					environment: 'jsdom',
 					include: [ 'src/**/*.jsdom.vitest.test.{ts,tsx,js,jsx}' ],
 					setupFiles: [ './vitest.setup.ts' ],

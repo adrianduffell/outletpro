@@ -20,6 +20,7 @@ function init_blocks(): void {
 	register_outlet_conditional_block();
 	register_outlet_badge_block();
 	register_outlet_message_block();
+	register_outlet_link_block();
 	register_outlet_tile_block();
 	register_outlet_tiles_block();
 	register_outlet_menu_block();
@@ -544,6 +545,77 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 		'<div %1$s><div class="outletpro-badge">%2$s</div></div>',
 		$wrapper_attributes,
 		wp_kses_post( $label )
+	);
+}
+
+/**
+ * Register the outlet link block type.
+ *
+ * @internal
+ */
+function register_outlet_link_block(): void {
+	register_block_type(
+		plugin_dir_path( __DIR__ ) . 'build/blocks/outlet-link/',
+		array( 'render_callback' => 'OutletPro\render_outlet_link_callback' )
+	);
+}
+
+/**
+ * Render the outlet link.
+ *
+ * @internal
+ * @param array<string, mixed> $attributes Block attributes.
+ */
+function render_outlet_link_callback( array $attributes ): string {
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page ID could not be retrieved.' );
+		return '';
+	}
+	if ( null === $page_id ) {
+		return '';
+	}
+	if ( ! is_post_publicly_viewable( $page_id ) ) {
+		return '';
+	}
+
+	try {
+		$permalink = get_outlet_permalink();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page permalink could not be retrieved.' );
+		return '';
+	}
+	if ( null === $permalink ) {
+		return '';
+	}
+
+	try {
+		$title = get_outlet_page_title();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet page title could not be retrieved.' );
+		return '';
+	}
+	if ( null === $title ) {
+		return '';
+	}
+
+	$text = $attributes['text'] ?? '';
+	if ( '' === trim( $text ) ) {
+		$title = html_entity_decode( wp_strip_all_tags( $title ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$title = wc_strtolower( $title );
+		$text  = sprintf(
+			/* translators: %s: Lowercase outlet page title. */
+			__( 'Shop %s', 'outletpro' ),
+			$title
+		);
+	}
+
+	return sprintf(
+		'<a %1$s href="%2$s">%3$s</a>',
+		get_block_wrapper_attributes(),
+		esc_url( $permalink ),
+		esc_html( $text )
 	);
 }
 
