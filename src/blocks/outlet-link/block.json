@@ -1,0 +1,23 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "outletpro/outlet-link",
+	"title": "Outlet Link",
+	"category": "woocommerce",
+	"description": "Links to the outlet page.",
+	"attributes": {
+		"text": { "type": "string", "role": "content" }
+	},
+	"supports": {
+		"html": false,
+		"spacing": { "margin": [ "left" ] },
+		"color": {
+			"text": true
+		},
+		"typography": {
+			"fontSize": true,
+			"__experimentalFontWeight": true
+		}
+	},
+	"textdomain": "outletpro"
+}

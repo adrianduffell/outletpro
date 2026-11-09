@@ -380,6 +380,15 @@ Registered block styles:
 | Fine | Small font-size |
 | Notice | Small font-size on a padded, faint transparent background |
 
+### `outletpro/outlet-link`
+
+Displays a link to the outlet page. Defaults to localized string "Shop all
+`{outlet}`", where `{outlet}` is the title of the outlet page. Since 1.2.0.
+
+| Attribute | Type     | Description                         |
+| --------- | -------- | ----------------------------------- |
+| `text`    | `string` | Custom text to override the default |
+
 ## REST API
 
 ### WooCommerce Store API cart items
