@@ -236,11 +236,6 @@ describe( 'Edit', () => {
 			} );
 			expect( control ).toHaveValue( nextStrong ? 'strong' : '' );
 			expect(
-				screen.queryByText(
-					'Display the message with a HTML strong tag.'
-				) !== null
-			).toBe( nextStrong );
-			expect(
 				screen.getByDisplayValue( 'Final sale.' )
 			).toBeInTheDocument();
 			expect( setMessage ).not.toHaveBeenCalled();

@@ -143,14 +143,6 @@ export function Edit( {
 					onChange={ ( value ) =>
 						setAttributes( { strong: value === 'strong' } )
 					}
-					help={
-						strong
-							? __(
-									'Display the message with a HTML strong tag.',
-									'outletpro'
-								)
-							: undefined
-					}
 					__next40pxDefaultSize
 					__nextHasNoMarginBottom
 				/>
