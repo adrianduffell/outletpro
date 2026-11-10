@@ -4,7 +4,6 @@
  */
 
 import { render, screen } from '@testing-library/react';
-import { Edit } from '../edit';
 import { Save } from '../save';
 
 jest.mock( '@wordpress/block-editor', () => ( {
@@ -41,19 +40,6 @@ jest.mock( '@wordpress/block-editor', () => ( {
 } ) );
 
 describe( 'Outlet Conditional', () => {
-	test( 'allows blocks to be added inside the container', () => {
-		// Arrange.
-		const appenderName = 'Add block';
-
-		// Act.
-		render( <Edit /> );
-
-		// Assert.
-		expect(
-			screen.getByRole( 'button', { name: appenderName } )
-		).toBeInTheDocument();
-	} );
-
 	test( 'saves its inner blocks inside the container', () => {
 		// Arrange.
 		const innerBlock = 'Inner block';

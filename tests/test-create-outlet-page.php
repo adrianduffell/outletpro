@@ -9,16 +9,14 @@
 
 use function OutletPro\create_outlet_page;
 use function OutletPro\deinit_patterns;
+use function OutletPro\get_outlet_page_id;
 use function OutletPro\init_patterns;
 use function OutletPro\init_taxonomies;
 use function OutletPro\run_create_outlet_page_tool;
+use const OutletPro\OUTLET_MESSAGE_OPTION;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Create_Outlet_Page extends WP_UnitTestCase {
-
-	public function filter_default_catalog_orderby_for_test(): string {
-		return 'date-desc';
-	}
 
 	public function test_creates_page_with_title_outlet(): void {
 		// Arrange.
@@ -86,98 +84,66 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertSame( 'draft', $pages[0]->post_status );
 	}
 
-	public function test_creates_page_with_outlet_shortcode_on_classic_theme(): void {
+	public function test_creates_navigation_without_embedded_catalog_on_classic_theme(): void {
 		// Arrange.
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
-		$products_per_row  = wc_get_default_products_per_row();
-		$products_per_page = $products_per_row * wc_get_default_product_rows_per_page();
 
 		// Act.
 		create_outlet_page();
 
 		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString(
-			sprintf(
-				'[products outletpro="yes" paginate="yes" columns="%d" limit="%d"]',
-				$products_per_row,
-				$products_per_page
-			),
-			$pages[0]->post_content
-		);
-		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-', $pages[0]->post_content );
-		$products_shortcode_position = strpos( $pages[0]->post_content, '[products outletpro="yes"' );
-		$navigation_position         = strpos( $pages[0]->post_content, '"patternName":"outletpro/outlet-navigation-' );
-		$this->assertNotFalse( $products_shortcode_position );
-		$this->assertNotFalse( $navigation_position );
-		$this->assertLessThan(
-			$products_shortcode_position,
-			$navigation_position
-		);
+		$page = get_post( get_outlet_page_id() );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-', $page->post_content );
+		$this->assertStringNotContainsString( 'wp:woocommerce/product-collection', $page->post_content );
+		$this->assertStringNotContainsString( '[products', $page->post_content );
+		$this->assertStringNotContainsString( 'outletpro/outlet-sort-filter', $page->post_content );
 	}
 
-	public function test_creates_page_with_product_collection_block_on_block_theme(): void {
+	public function test_seeds_navigation_in_a_template_part_without_copying_the_catalog(): void {
 		// Arrange.
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
+		$source = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'archive-product',
+				'post_content' => '<!-- wp:query-title {"type":"archive"} /-->',
+			)
+		);
+		wp_set_object_terms( $source, get_stylesheet(), 'wp_theme' );
 		delete_option( OUTLET_PAGE_OPTION );
-		delete_option( 'woocommerce_default_catalog_orderby' );
-		$products_per_row  = wc_get_default_products_per_row();
-		$products_per_page = $products_per_row * wc_get_default_product_rows_per_page();
+		update_option( OUTLET_MESSAGE_OPTION, 'A product-specific message' );
 
 		// Act.
 		create_outlet_page();
 
 		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( 'wp:woocommerce/product-collection', $pages[0]->post_content );
-		$this->assertStringNotContainsString( '"taxQuery"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"outletpro":true', $pages[0]->post_content );
-		$this->assertStringContainsString( '"filterable":true', $pages[0]->post_content );
-		$this->assertStringContainsString( sprintf( '"perPage":%d', $products_per_page ), $pages[0]->post_content );
-		$this->assertStringContainsString( sprintf( '"columns":%d', $products_per_row ), $pages[0]->post_content );
-		$this->assertStringContainsString( '"order":"asc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"menu_order"', $pages[0]->post_content );
-		$this->assertStringNotContainsString( '"collection":"outletpro/product-collection/outlet"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-', $pages[0]->post_content );
-		$this->assertStringContainsString( '"patternName":"outletpro/outlet-sort-filter"', $pages[0]->post_content );
-		$product_collection_block_position = strpos( $pages[0]->post_content, 'wp:woocommerce/product-collection' );
-		$sort_filter_position              = strpos( $pages[0]->post_content, 'outletpro/outlet-sort-filter' );
-		$navigation_position               = strpos( $pages[0]->post_content, '"patternName":"outletpro/outlet-navigation-' );
-		$this->assertNotFalse( $product_collection_block_position );
-		$this->assertNotFalse( $sort_filter_position );
-		$this->assertNotFalse( $navigation_position );
-		$this->assertLessThan(
-			$sort_filter_position,
-			$navigation_position
-		);
-		$this->assertLessThan( $product_collection_block_position, $sort_filter_position );
+		$page = get_post( get_outlet_page_id() );
+		$this->assertStringNotContainsString( '"patternName":"outletpro/outlet-navigation-', $page->post_content );
+		$this->assertSame( '', $page->post_content );
+		$this->assertSame( '', get_page_template_slug( $page->ID ) );
+		$this->assertNull( get_block_template( get_stylesheet() . '//outlet-catalog' ) );
+		$template = get_block_template( get_stylesheet() . '//outletpro-outlet-page', 'wp_template_part' );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-', $template->content );
+		$this->assertStringContainsString( 'wp:outletpro/outlet-menu', $template->content );
+		$this->assertStringNotContainsString( '<p>While supplies last</p>', $template->content );
+		$this->assertStringNotContainsString( 'A product-specific message', $template->content );
+		$this->assertStringNotContainsString( 'wp:woocommerce/product-collection', $page->post_content );
+		$this->assertStringNotContainsString( '[products', $page->post_content );
+		$this->assertStringNotContainsString( 'outletpro/outlet-sort-filter', $page->post_content );
 	}
 
 	public function test_excludes_uncategorized_when_selecting_navigation(): void {
 		// Arrange.
 		init_taxonomies();
 		deinit_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$uncategorized_id = get_term_by( 'slug', 'uncategorized', 'product_cat' )->term_id
 			?? self::factory()->term->create(
@@ -205,11 +171,53 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
 	}
 
+	public function test_excludes_uncategorized_when_selecting_block_template_navigation(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		switch_theme( 'twentytwentyfive' );
+		$source = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'archive-product',
+				'post_content' => '<!-- wp:query-title {"type":"archive"} /-->',
+			)
+		);
+		wp_set_object_terms( $source, get_stylesheet(), 'wp_theme' );
+		delete_option( OUTLET_PAGE_OPTION );
+		$uncategorized_id = get_term_by( 'slug', 'uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		$category_count   = wp_count_terms(
+			array(
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'exclude'    => array( $uncategorized_id ),
+				'hide_empty' => false,
+			)
+		);
+		self::factory()->term->create_many( 2 - $category_count, array( 'taxonomy' => 'product_cat' ) );
+		init_patterns();
+
+		// Act.
+		create_outlet_page();
+
+		// Assert.
+		$template = get_block_template( get_stylesheet() . '//outletpro-outlet-page', 'wp_template_part' );
+		$this->assertStringContainsString( '"patternName":"outletpro/outlet-navigation-price-tiers"', $template->content );
+		$this->assertSame( '', get_post_field( 'post_content', get_outlet_page_id() ) );
+	}
+
 	public function test_selects_navigation_with_1_top_level_category(): void {
 		// Arrange.
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -223,7 +231,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -234,6 +242,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -247,7 +256,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -258,6 +267,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -277,7 +287,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -288,6 +298,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -301,7 +312,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-4', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -312,6 +323,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -325,7 +337,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -336,6 +348,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -349,7 +362,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-6', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -360,6 +373,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -373,7 +387,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -384,6 +398,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
+		switch_theme( 'storefront' );
 		delete_option( OUTLET_PAGE_OPTION );
 		$category_count = wp_count_terms(
 			array(
@@ -397,137 +412,10 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 		// Act.
 		create_outlet_page();
-		$blocks = parse_blocks( get_post_field( 'post_content', get_option( OUTLET_PAGE_OPTION ) ) );
+		$blocks = parse_blocks( get_post_field( 'post_content', get_outlet_page_id() ) );
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
-	}
-
-	public function test_creates_page_with_price_desc_sort_on_block_theme_when_store_default_is_price_desc(): void {
-		// Arrange.
-		init_taxonomies();
-		deinit_patterns();
-		init_patterns();
-		switch_theme( 'twentytwentyfive' );
-		delete_option( OUTLET_PAGE_OPTION );
-		update_option( 'woocommerce_default_catalog_orderby', 'price-desc' );
-
-		// Act.
-		create_outlet_page();
-
-		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"price"', $pages[0]->post_content );
-	}
-
-	public function test_creates_page_with_date_desc_sort_on_block_theme_when_store_default_is_date_desc(): void {
-		// Arrange.
-		init_taxonomies();
-		deinit_patterns();
-		init_patterns();
-		switch_theme( 'twentytwentyfive' );
-		delete_option( OUTLET_PAGE_OPTION );
-		update_option( 'woocommerce_default_catalog_orderby', 'date-desc' );
-
-		// Act.
-		create_outlet_page();
-
-		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"date"', $pages[0]->post_content );
-	}
-
-	public function test_creates_page_with_desc_sort_on_block_theme_when_store_default_is_popularity(): void {
-		// Arrange.
-		init_taxonomies();
-		deinit_patterns();
-		init_patterns();
-		switch_theme( 'twentytwentyfive' );
-		delete_option( OUTLET_PAGE_OPTION );
-		update_option( 'woocommerce_default_catalog_orderby', 'popularity' );
-
-		// Act.
-		create_outlet_page();
-
-		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"popularity"', $pages[0]->post_content );
-	}
-
-	public function test_creates_page_with_desc_sort_on_block_theme_when_store_default_is_rating(): void {
-		// Arrange.
-		init_taxonomies();
-		deinit_patterns();
-		init_patterns();
-		switch_theme( 'twentytwentyfive' );
-		delete_option( OUTLET_PAGE_OPTION );
-		update_option( 'woocommerce_default_catalog_orderby', 'rating' );
-
-		// Act.
-		create_outlet_page();
-
-		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"rating"', $pages[0]->post_content );
-	}
-
-	public function test_creates_page_with_filtered_default_catalog_orderby_on_block_theme(): void {
-		// Arrange.
-		init_taxonomies();
-		deinit_patterns();
-		init_patterns();
-		switch_theme( 'twentytwentyfive' );
-		delete_option( OUTLET_PAGE_OPTION );
-		update_option( 'woocommerce_default_catalog_orderby', 'menu_order' );
-		add_filter( 'woocommerce_default_catalog_orderby', array( $this, 'filter_default_catalog_orderby_for_test' ) );
-
-		// Act.
-		create_outlet_page();
-
-		// Assert.
-		$pages = get_posts(
-			array(
-				'post_type'   => 'page',
-				'post_status' => 'draft',
-				'name'        => 'outlet',
-			)
-		);
-		remove_filter( 'woocommerce_default_catalog_orderby', array( $this, 'filter_default_catalog_orderby_for_test' ) );
-		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"order":"desc"', $pages[0]->post_content );
-		$this->assertStringContainsString( '"orderBy":"date"', $pages[0]->post_content );
 	}
 
 	public function test_creates_page_on_block_theme_when_canonical_term_missing(): void {
@@ -536,6 +424,14 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
+		$source = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'archive-product',
+				'post_content' => '<!-- wp:query-title {"type":"archive"} /-->',
+			)
+		);
+		wp_set_object_terms( $source, get_stylesheet(), 'wp_theme' );
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -550,15 +446,23 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 			)
 		);
 		$this->assertNotEmpty( $pages );
-		$this->assertStringContainsString( '"outletpro":true', $pages[0]->post_content );
+		$this->assertSame( '', $pages[0]->post_content );
 	}
 
-	public function test_assigns_outlet_page_template_on_block_theme(): void {
+	public function test_does_not_assign_a_separate_outlet_template_on_block_themes(): void {
 		// Arrange.
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		switch_theme( 'twentytwentyfive' );
+		$source = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'archive-product',
+				'post_content' => '<!-- wp:query-title {"type":"archive"} /-->',
+			)
+		);
+		wp_set_object_terms( $source, get_stylesheet(), 'wp_theme' );
 		delete_option( OUTLET_PAGE_OPTION );
 
 		// Act.
@@ -574,7 +478,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		);
 		$this->assertNotEmpty( $pages );
 		$template = get_post_meta( $pages[0]->ID, '_wp_page_template', true );
-		$this->assertSame( 'outlet-page', $template );
+		$this->assertSame( '', $template );
 	}
 
 	public function test_returns_success_message(): void {

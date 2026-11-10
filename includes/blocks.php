@@ -28,6 +28,8 @@ function init_blocks(): void {
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_section_hook' );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
@@ -46,6 +48,8 @@ function deinit_blocks(): void {
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
+	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_section_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
@@ -755,7 +759,7 @@ function render_outlet_message_callback( array $attributes, string $content, \WP
 /**
  * Conditionally render Outlet Conditional block.
  *
- * The current post must be an outlet product for the block to render.
+ * Match the current outlet product or the configured Outlet catalog request.
  *
  * Fired by `pre_render_block`.
  *
@@ -767,6 +771,20 @@ function render_outlet_message_callback( array $attributes, string $content, \WP
 function conditionally_render_outlet_conditional_hook( ?string $pre_render, array $parsed_block ): ?string {
 	if ( 'outletpro/outlet-conditional' !== ( $parsed_block['blockName'] ?? null ) ) {
 		return $pre_render;
+	}
+	$condition_type = $parsed_block['attrs']['conditionType'] ?? 'product';
+	if ( 'page' === $condition_type ) {
+		$page_id = filter_var( get_option( OUTLET_PAGE_OPTION ), FILTER_VALIDATE_INT, array( 'options' => array( 'min_range' => 1 ) ) );
+		if ( false === $page_id ) {
+			return '';
+		}
+		if ( get_query_var( 'outletpro_catalog' ) !== $page_id ) {
+			return '';
+		}
+		return $pre_render;
+	}
+	if ( 'product' !== $condition_type ) {
+		return '';
 	}
 
 	$product = wc_get_product( get_the_ID() );

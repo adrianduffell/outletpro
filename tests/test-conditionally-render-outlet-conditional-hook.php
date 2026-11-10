@@ -12,8 +12,104 @@ use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
 use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Conditionally_Render_Outlet_Conditional_Hook extends WP_UnitTestCase {
+
+	public function test_page_condition_renders_on_outlet_pagination_independently_of_the_loop_product(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$this->go_to( add_query_arg( 'paged', 2, get_permalink( $page_id ) ) );
+		$product         = WC_Helper_Product::create_simple_product();
+		$GLOBALS['post'] = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Prove page mode does not use the product-loop context.
+		$content         = '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:paragraph --><p>Outlet page content</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-conditional -->';
+
+		// Act.
+		$result = do_blocks( $content );
+
+		// Assert.
+		$this->assertSame( 2, get_query_var( 'paged' ) );
+		$this->assertStringContainsString( 'Outlet page content', $result );
+	}
+
+	public function test_page_condition_skips_its_children_outside_the_outlet(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Count child rendering without mocking internal block rendering.
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$this->go_to( '/' );
+		$render_count = 0;
+		register_block_type(
+			'outletpro/test-page-child',
+			array(
+				'render_callback' => static function () use ( &$render_count ): string {
+					++$render_count;
+					return 'Unexpected child';
+				},
+			)
+		);
+		$content = '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:outletpro/test-page-child /--></div><!-- /wp:outletpro/outlet-conditional -->';
+
+		// Act.
+		$result = do_blocks( $content );
+
+		// Assert.
+		$this->assertSame( '', $result );
+		$this->assertSame( 0, $render_count );
+	}
+
+	public function test_page_condition_renders_in_an_authorized_draft_preview(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$this->go_to(
+			add_query_arg(
+				array(
+					'page_id' => $page_id,
+					'preview' => 'true',
+				),
+				home_url( '/' )
+			)
+		);
+		$content = '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional">Preview</div><!-- /wp:outletpro/outlet-conditional -->';
+
+		// Act.
+		$result = do_blocks( $content );
+
+		// Assert.
+		$this->assertStringContainsString( 'Preview', $result );
+	}
+
+	public function test_explicit_product_condition_keeps_existing_behavior(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$GLOBALS['post'] = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Arrange the product context.
+		deinit_blocks();
+		init_blocks();
+		$content = '<!-- wp:outletpro/outlet-conditional {"conditionType":"product"} --><div class="wp-block-outletpro-outlet-conditional">Product content</div><!-- /wp:outletpro/outlet-conditional -->';
+
+		// Act.
+		$result = do_blocks( $content );
+
+		// Assert.
+		$this->assertStringContainsString( 'Product content', $result );
+	}
 
 	public function test_renders_outlet_conditional_for_outlet_product(): void {
 		// Arrange.

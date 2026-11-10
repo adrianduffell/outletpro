@@ -12,6 +12,13 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * WordPress theme mod key for the Outlet page section's block hook.
+ *
+ * @internal
+ */
+const OUTLET_PAGE_BLOCK_HOOK_THEME_MOD = 'outletpro_outlet_page_block_hook';
+
+/**
  * WordPress theme mod key used to store the block hook for the single product message block.
  *
  * @internal
@@ -85,6 +92,9 @@ function seed_theme_mods(): void {
 
 	switch ( wp_is_block_theme() ) {
 		case true:
+			if ( ! array_key_exists( OUTLET_PAGE_BLOCK_HOOK_THEME_MOD, $mods ) ) {
+				set_theme_mod( OUTLET_PAGE_BLOCK_HOOK_THEME_MOD, array( 'core/term-description', 'after' ) );
+			}
 			if ( ! array_key_exists( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, $mods ) ) {
 				set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
 			}

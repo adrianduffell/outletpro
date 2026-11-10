@@ -23,6 +23,7 @@ function init_patterns(): void {
 	register_outlet_navigation_price_tiers_pattern();
 	register_outlet_navigation_6_pattern();
 	register_outlet_sort_filter_pattern();
+	register_outlet_page_section_pattern();
 }
 
 /**
@@ -224,6 +225,65 @@ function register_outlet_block_pattern_category(): void {
 		'outletpro',
 		array(
 			'label' => __( 'Outlet', 'outletpro' ),
+		)
+	);
+}
+
+/**
+ * Select initial navigation from the store's top-level product categories.
+ *
+ * @internal
+ * @throws \RuntimeException When product categories cannot be retrieved.
+ */
+function get_outlet_navigation_content(): string {
+	$excluded_categories = array_filter( array( get_uncategorized_product_category_id() ) );
+
+	$categories = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'exclude'    => $excluded_categories,
+			'hide_empty' => false,
+			'fields'     => 'ids',
+			'number'     => 7,
+		)
+	);
+	if ( is_wp_error( $categories ) ) {
+		wc_get_logger()->error( 'Product categories could not be retrieved.' );
+		throw new \RuntimeException( 'Product categories could not be retrieved.' );
+	}
+
+	$category_count = count( $categories );
+	switch ( $category_count ) {
+		case 0:
+		case 1:
+		case 2:
+			$navigation_pattern = 'outletpro/outlet-navigation-price-tiers';
+			break;
+		case 4:
+			$navigation_pattern = 'outletpro/outlet-navigation-4';
+			break;
+		case 6:
+			$navigation_pattern = 'outletpro/outlet-navigation-6';
+			break;
+		default:
+			$navigation_pattern = 'outletpro/outlet-navigation-3';
+	}
+	return get_pattern_content( $navigation_pattern );
+}
+
+/**
+ * Register the Outlet section for manual placement in the Site Editor.
+ *
+ * @internal
+ */
+function register_outlet_page_section_pattern(): void {
+	register_block_pattern(
+		'outletpro/outlet-page-section',
+		array(
+			'title'      => __( 'Outlet page section', 'outletpro' ),
+			'categories' => array( 'outletpro' ),
+			'content'    => get_outlet_page_section_content(),
 		)
 	);
 }
