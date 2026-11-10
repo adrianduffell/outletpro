@@ -12,6 +12,24 @@ use function OutletPro\register_outlet_message_block;
 
 class Test_Register_Outlet_Message_Block extends WP_UnitTestCase {
 
+	public function test_disables_strong_markup_by_default(): void {
+		// Arrange.
+		deinit_blocks();
+
+		// Act.
+		register_outlet_message_block();
+		$block = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-message' );
+
+		// Assert.
+		$this->assertSame(
+			array(
+				'type'    => 'boolean',
+				'default' => false,
+			),
+			$block->attributes['strong']
+		);
+	}
+
 	public function test_hides_the_icon_by_default(): void {
 		// Arrange.
 		deinit_blocks();

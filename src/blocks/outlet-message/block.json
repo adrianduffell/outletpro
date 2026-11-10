@@ -12,6 +12,10 @@
 			"type": "boolean",
 			"default": false
 		},
+		"strong": {
+			"type": "boolean",
+			"default": false
+		},
 		"style": {
 			"type": "object",
 			"default": {

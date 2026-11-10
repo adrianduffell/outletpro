@@ -733,12 +733,12 @@ function render_outlet_message_callback( array $attributes, string $content, \WP
 	);
 
 	$message_html = wp_kses_post( $message );
-	$wrap_message = '' !== $icon;
-	if ( $has_link ) {
-		$wrap_message = true;
-	}
+	$strong       = $attributes['strong'] ?? false;
+	$wrap_message = '' !== $icon || $has_link || $strong;
 	if ( $wrap_message ) {
-		$message_html = '<span>' . $message_html . '</span>';
+		$message_html = $strong
+			? '<strong class="outletpro-strong">' . $message_html . '</strong>'
+			: '<span>' . $message_html . '</span>';
 	}
 	if ( $has_link ) {
 		$message_html .= ' ' . $content;

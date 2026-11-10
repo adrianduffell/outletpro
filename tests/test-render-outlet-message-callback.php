@@ -19,6 +19,108 @@ use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Render_Outlet_Message_Callback extends WP_UnitTestCase {
 
+	public function test_wraps_an_emphasized_message_in_strong_inside_the_paragraph(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"strong":true} /-->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*><strong class="outletpro-strong">Final sale\.<\/strong><\/p>$/', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+	}
+
+	// phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Version-specific skip guard.
+	public function test_replaces_the_span_with_strong_beside_an_icon(): void {
+		// Arrange.
+		if ( ! function_exists( 'wp_get_icon' ) ) {
+			$this->markTestSkipped( 'The WordPress icon API is unavailable.' );
+		}
+
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"strong":true,"showIcon":true} /-->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*><svg\b.*<\/svg>\s*<strong class="outletpro-strong">Final sale\.<\/strong><\/p>$/s', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+	}
+
+	public function test_emphasizes_only_the_message_beside_a_link(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"strong":true} --><!-- wp:outletpro/outlet-link {"text":"Browse deals"} /--><!-- /wp:outletpro/outlet-message -->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*><strong class="outletpro-strong">Final sale\.<\/strong> <a [^>]*>Browse deals<\/a><\/p>$/', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+	}
+
+	// phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Version-specific skip guard.
+	public function test_emphasizes_only_the_message_beside_both_an_icon_and_link(): void {
+		// Arrange.
+		if ( ! function_exists( 'wp_get_icon' ) ) {
+			$this->markTestSkipped( 'The WordPress icon API is unavailable.' );
+		}
+
+		deinit_blocks();
+		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_MESSAGE_OPTION, 'Final sale.' );
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			parse_blocks( '<!-- wp:outletpro/outlet-message {"strong":true,"showIcon":true} --><!-- wp:outletpro/outlet-link {"text":"Browse deals"} /--><!-- /wp:outletpro/outlet-message -->' )[0],
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertMatchesRegularExpression( '/^<p[^>]*><svg\b.*<\/svg>\s*<strong class="outletpro-strong">Final sale\.<\/strong> <a [^>]*>Browse deals<\/a><\/p>$/s', $result );
+		$this->assertStringNotContainsString( '<span', $result );
+	}
+
 	public function test_renders_an_inserted_link_inline_with_the_message_and_icon(): void {
 		// Arrange.
 		deinit_blocks();
