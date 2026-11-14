@@ -79,7 +79,7 @@
 		"@wordpress/plugins": "^7.57.0",
 		"@wordpress/prettier-config": "^4.57.0",
 		"@wordpress/rich-text": "^7.57.0",
-		"@wordpress/scripts": "^36.1.0",
+		"@wordpress/scripts": "^37.1.0",
 		"@wordpress/ui": "^0.24.0",
 		"babel-jest": "^30.5.0",
 		"eslint-plugin-jest": "^29.17.0",
