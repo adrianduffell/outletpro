@@ -15,5 +15,12 @@ const config = defineConfig( {
 		...baseConfig.use,
 		screenshot: process.env.SCREENSHOT || baseConfig.use.screenshot,
 	},
+	projects: baseConfig.projects.map( ( project ) => ( {
+		...project,
+		use: {
+			...project.use,
+			deviceScaleFactor: 2,
+		},
+	} ) ),
 } );
 export default config;
