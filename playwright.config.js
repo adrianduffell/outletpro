@@ -11,5 +11,9 @@ import baseConfig from '@wordpress/scripts/config/playwright.config.js';
 const config = defineConfig( {
 	...baseConfig,
 	testDir: './tests/e2e',
+	use: {
+		...baseConfig.use,
+		screenshot: process.env.SCREENSHOT || baseConfig.use.screenshot,
+	},
 } );
 export default config;
