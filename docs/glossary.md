@@ -6,12 +6,11 @@ Outlet uses the following terminology:
 | --------------- | --------------------------------------------------------- |
 | Outlet          | Shopping destination featuring deals on overstocked items |
 | Outlet page     | WordPress page containing the outlet                      |
-| Outlet products | Products included in the store’s outlet                   |
+| Outlet products | Products included in the outlet                           |
 | Outlet badge    | Visual mark displayed on outlet products                  |
 | Outlet message  | Optional message shown on outlet products                 |
 
 ❌ Don't use:
 
-- The outlet
 - Outlet section
 - Mark as outlet
