@@ -14,7 +14,9 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 
 	public function test_template_is_unregistered_after_deinit_page(): void {
 		// Arrange.
+		update_option( 'outletpro_legacy_page_template_enabled', 1 );
 		deinit_page();
+		$this->setExpectedDeprecated( 'OutletPro\register_outlet_page_template' );
 		init_page();
 		$template = get_block_template( 'outletpro//outlet-page', 'wp_template' );
 		$this->assertNotNull( $template );

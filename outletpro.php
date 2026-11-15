@@ -37,7 +37,7 @@ const VERSION = '1.2.0-dev';
  *
  * @internal
  */
-const DB_VERSION = '3';
+const DB_VERSION = '4';
 
 /**
  * Plugin file path.

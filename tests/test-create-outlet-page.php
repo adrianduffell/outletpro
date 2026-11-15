@@ -555,6 +555,7 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 
 	public function test_assigns_outlet_page_template_on_block_theme(): void {
 		// Arrange.
+		update_option( 'outletpro_legacy_page_template_enabled', 1 );
 		init_taxonomies();
 		deinit_patterns();
 		init_patterns();

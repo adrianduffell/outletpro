@@ -103,6 +103,10 @@ function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
  * @internal
  */
 function init_page(): void {
+	if ( ! in_array( get_option( 'outletpro_legacy_page_template_enabled', '0' ), array( 1, '1' ), true ) ) {
+		return;
+	}
+
 	register_outlet_page_template();
 }
 
@@ -126,9 +130,12 @@ function deinit_page(): void {
 /**
  * Register the outlet page template.
  *
+ * @deprecated 1.2.0
  * @internal
  */
 function register_outlet_page_template(): void {
+	_deprecated_function( __FUNCTION__, '1.2.0' );
+
 	$template_path = dirname( PLUGIN_FILE ) . '/templates/outlet-page.html';
 
 	if ( ! is_readable( $template_path ) ) {
@@ -431,11 +438,16 @@ function create_outlet_page(): void {
 		throw new \RuntimeException( 'Could not update outlet page content.' );
 	}
 
-	if ( wp_is_block_theme() ) { //phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
-		$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
-		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( 'Could not set outlet page template.' );
-		}
+	if ( ! wp_is_block_theme() ) {
+		return;
+	}
+	if ( ! in_array( get_option( 'outletpro_legacy_page_template_enabled', '0' ), array( 1, '1' ), true ) ) {
+		return;
+	}
+
+	$result = update_post_meta( $page_id, '_wp_page_template', 'outlet-page' );
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Could not set outlet page template.' );
 	}
 }
 
