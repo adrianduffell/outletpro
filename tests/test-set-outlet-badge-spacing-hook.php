@@ -13,6 +13,22 @@ use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 
 class Test_Set_Outlet_Badge_Spacing_Hook extends WP_UnitTestCase {
 
+	public function test_badge_after_grouped_child_title_has_no_added_margin(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$template       = new WP_Block_Template();
+		$template->slug = 'grouped-product-add-to-cart-with-options';
+
+		// Act.
+		$result = apply_block_hooks_to_content( '<!-- wp:woocommerce/add-to-cart-with-options-grouped-product-item-label /-->', $template );
+		$blocks = parse_blocks( $result );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-badge', $blocks[1]['blockName'] );
+		$this->assertArrayNotHasKey( 'style', $blocks[1]['attrs'] );
+	}
+
 	public function test_badge_above_title_has_bottom_margin(): void {
 		// Arrange.
 		deinit_blocks();

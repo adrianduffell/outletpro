@@ -25,6 +25,7 @@ function init_blocks(): void {
 	register_outlet_tiles_block();
 	register_outlet_menu_block();
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_grouped_product_badge_hook', 10, 3 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
@@ -43,6 +44,7 @@ function deinit_blocks(): void {
 
 	remove_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook' );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
+	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_grouped_product_badge_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
@@ -309,6 +311,31 @@ function auto_insert_outlet_badge_hook( $hooked_blocks, $relative_position, $anc
 }
 
 /**
+ * Auto-insert the outlet badge block after grouped child product titles.
+ *
+ * Fired by `hooked_block_types`.
+ *
+ * @internal WordPress filter hook
+ * @param string[]    $hooked_blocks     Block names hooked to the anchor at this position.
+ * @param string      $relative_position Position relative to the anchor block.
+ * @param string|null $anchor_block      Anchor block name, or null for freeform content.
+ * @return string[] Filtered hooked block names.
+ */
+function auto_insert_grouped_product_badge_hook( array $hooked_blocks, string $relative_position, ?string $anchor_block ): array {
+	if ( 'woocommerce/add-to-cart-with-options-grouped-product-item-label' !== $anchor_block ) {
+		return $hooked_blocks;
+	}
+
+	if ( 'after' !== $relative_position ) {
+		return $hooked_blocks;
+	}
+
+	$hooked_blocks[] = 'outletpro/outlet-badge';
+
+	return $hooked_blocks;
+}
+
+/**
  * Sets spacing for the auto-inserted outlet badge.
  *
  * Adds a small bottom margin in themes that support spacing preset 10, such
@@ -526,6 +553,10 @@ function render_outlet_badge_callback( array $attributes, string $_content, \WP_
 	$product = wc_get_product( $product_id );
 
 	if ( ! $product instanceof \WC_Product ) {
+		return '';
+	}
+
+	if ( $product->is_type( 'grouped' ) ) {
 		return '';
 	}
 

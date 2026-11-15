@@ -48,6 +48,24 @@ class Test_Display_Outlet_Badge_Hook extends WP_UnitTestCase {
 		do_action( 'woocommerce_single_product_summary' );
 	}
 
+	public function test_outputs_no_parent_badge_for_outlet_grouped_product(): void {
+		// Arrange.
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance' );
+		$product = WC_Helper_Product::create_grouped_product();
+		add_to_outlet( $product );
+		$GLOBALS['post']    = get_post( $product->get_id() );
+		$GLOBALS['product'] = $product;
+		init_woocommerce_template_hooks();
+
+		// Expect.
+		$this->expectOutputRegex( '/^(?!.*outletpro-badge).*/s' );
+
+		// Act.
+		do_action( 'woocommerce_single_product_summary' );
+	}
+
 	public function test_display_badge_using_custom_single_product_hook_name(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded
 		// Arrange.
 		set_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_after_add_to_cart_form', 17 ) );

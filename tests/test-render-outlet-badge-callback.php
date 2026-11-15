@@ -18,6 +18,30 @@ use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 
 class Test_Render_Outlet_Badge_Callback extends WP_UnitTestCase {
 
+	public function test_returns_empty_string_for_outlet_grouped_product(): void {
+		// Arrange.
+		deinit_blocks();
+		register_outlet_badge_block();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance' );
+		$product = WC_Helper_Product::create_grouped_product();
+		add_to_outlet( $product );
+		$block = new WP_Block(
+			array(
+				'blockName' => 'outletpro/outlet-badge',
+				'attrs'     => array(),
+			),
+			array( 'postId' => $product->get_id() )
+		);
+
+		// Act.
+		$result = $block->render();
+
+		// Assert.
+		$this->assertSame( '', $result );
+	}
+
 	public function test_returns_empty_string_when_product_not_in_outlet(): void {
 		// Arrange.
 		deinit_blocks();

@@ -20,6 +20,40 @@ defined( 'ABSPATH' ) || exit;
 function init_woocommerce_template_hooks(): void {
 	init_single_product_badge_template_hook();
 	init_single_product_message_template_hook();
+	add_filter( 'woocommerce_grouped_product_list_column_label', 'OutletPro\add_grouped_product_badge_hook', 10, 2 );
+}
+
+/**
+ * Append an outlet badge after a grouped child product's title.
+ *
+ * Fired by `woocommerce_grouped_product_list_column_label`.
+ *
+ * @internal WordPress filter hook
+ * @param string      $label   Child product label HTML.
+ * @param \WC_Product $product Child product.
+ * @return string Child product label with its outlet badge, when applicable.
+ */
+function add_grouped_product_badge_hook( string $label, \WC_Product $product ): string {
+	if ( ! taxonomy_exists( OUTLET_STATUS_TAXONOMY ) ) {
+		return $label;
+	}
+
+	if ( ! is_outlet( $product ) ) {
+		return $label;
+	}
+
+	$badge_label = get_option( OUTLET_BADGE_LABEL_OPTION );
+	if ( ! is_string( $badge_label ) ) {
+		return $label;
+	}
+
+	if ( '' === $badge_label ) {
+		return $label;
+	}
+
+	wp_enqueue_style( 'outletpro-classic-badge' );
+
+	return $label . '<span class="outletpro-badge">' . esc_html( $badge_label ) . '</span>';
 }
 
 /**
@@ -153,6 +187,10 @@ function display_outlet_badge_hook(): void {
 	$product = wc_get_product( get_the_ID() );
 
 	if ( ! $product instanceof \WC_Product ) {
+		return;
+	}
+
+	if ( $product->is_type( 'grouped' ) ) {
 		return;
 	}
 
