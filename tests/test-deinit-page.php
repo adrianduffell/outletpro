@@ -9,6 +9,7 @@
 
 use function OutletPro\deinit_page;
 use function OutletPro\init_page;
+use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Deinit_Page extends WP_UnitTestCase {
 
@@ -70,5 +71,24 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertNull( get_block_template( 'outletpro//outlet-page', 'wp_template' ) );
+	}
+
+	public function test_deinitialization_restores_page_requests(): void {
+		// Arrange.
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type' => 'page',
+				'post_name' => 'outlet',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+
+		// Act.
+		deinit_page();
+		$this->go_to( get_permalink( $page_id ) );
+
+		// Assert.
+		$this->assertTrue( is_page( $page_id ) );
+		$this->assertEmpty( get_query_var( 'outletpro' ) );
 	}
 }

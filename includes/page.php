@@ -104,6 +104,8 @@ function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
  */
 function init_page(): void {
 	register_outlet_page_template();
+	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
+	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
 }
 
 /**
@@ -112,6 +114,9 @@ function init_page(): void {
  * @internal
  */
 function deinit_page(): void {
+	remove_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
+	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
 	foreach ( $templates as $template_name => $template ) {
@@ -463,4 +468,136 @@ function outlet_page_is_published(): bool {
 
 	return $page instanceof \WP_Post
 		&& 'publish' === $page->post_status;
+}
+
+/**
+ * Prepare requests for the outlet page.
+ *
+ * Responds with a product archive to ensure a product catalog template is returned.
+ *
+ * Fired by `request`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed> $vars Parsed request variables.
+ * @return array<string, mixed> Request variables.
+ */
+function filter_outlet_page_request_hook( array $vars ): array {
+	if ( is_admin() ) {
+		return $vars;
+	}
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+		return $vars;
+	}
+	if ( null === $page_id ) {
+		return $vars;
+	}
+	$page = get_post( $page_id );
+	if ( ! $page instanceof \WP_Post ) {
+		return $vars;
+	}
+	if ( 'page' !== $page->post_type ) {
+		return $vars;
+	}
+	if ( 'trash' === $page->post_status ) {
+		return $vars;
+	}
+	$matches_path = ( $vars['pagename'] ?? null ) === get_page_uri( $page );
+	$matches_id   = filter_var( $vars['page_id'] ?? null, FILTER_VALIDATE_INT ) === $page->ID;
+	if ( ! $matches_path && ! $matches_id ) {
+		return $vars;
+	}
+	if ( 'outlet-page' === get_page_template_slug( $page ) ) {
+		return $vars;
+	}
+	if ( 'publish' !== $page->post_status ) {
+		if ( empty( $vars['preview'] ) ) {
+			return $vars;
+		}
+		if ( ! current_user_can( 'edit_post', $page->ID ) ) {
+			return $vars;
+		}
+	}
+	if ( post_password_required( $page ) ) {
+		return $vars;
+	}
+	unset( $vars['pagename'], $vars['page_id'], $vars['name'] );
+	$vars['post_type'] = 'product';
+	$vars['outletpro'] = true;
+	return $vars;
+}
+
+/**
+ * Prepare the main query.
+ *
+ * Note: This needs to be done after WooCommerce's pre_get_posts to prevent
+ * clashes with the shop page.
+ *
+ * Fired by `pre_get_posts`.
+ *
+ * @internal WordPress action hook
+ * @param \WP_Query $query Main product query.
+ */
+function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
+	if ( ! $query->is_main_query() ) {
+		return;
+	}
+	if ( true !== $query->get( 'outletpro' ) ) {
+		return;
+	}
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+		return;
+	}
+	if ( null === $page_id ) {
+		return;
+	}
+	// Use product archive semantics for the Outlet Page.
+	$query->is_page              = false;
+	$query->is_singular          = false;
+	$query->is_home              = false;
+	$query->is_archive           = true;
+	$query->is_post_type_archive = true;
+	$outlet_clauses              = array(
+		'relation' => 'AND',
+		array(
+			'taxonomy' => OUTLET_STATUS_TAXONOMY,
+			'field'    => 'slug',
+			'terms'    => array( OUTLET_STATUS_CANONICAL_TERM ),
+		),
+	);
+	$facets                      = array(
+		'product_cat' => get_category_filter_query_param(),
+	);
+	foreach ( $facets as $taxonomy => $slug ) {
+		if ( null === $slug ) {
+			continue;
+		}
+		$outlet_clauses[] = array(
+			'taxonomy' => $taxonomy,
+			'field'    => 'slug',
+			'terms'    => array( $slug ),
+		);
+	}
+	foreach ( array( get_price_filter_query_param(), get_discount_filter_query_param() ) as $slug ) {
+		if ( null === $slug ) {
+			continue;
+		}
+		$outlet_clauses[] = array(
+			'taxonomy' => OUTLET_SEARCH_INDEX_TAXONOMY,
+			'field'    => 'slug',
+			'terms'    => array( $slug ),
+		);
+	}
+	$existing = $query->get( 'tax_query' );
+	if ( ! empty( $existing ) ) {
+		$outlet_clauses[] = $existing;
+	}
+	$query->set( 'tax_query', $outlet_clauses ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Indexed product facets.
+	$query->queried_object    = get_post( $page_id );
+	$query->queried_object_id = $page_id;
 }
