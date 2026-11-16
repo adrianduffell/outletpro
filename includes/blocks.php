@@ -781,13 +781,17 @@ function conditionally_render_outlet_conditional_hook( ?string $pre_render, arra
 			if ( null === $page_id ) {
 				return '';
 			}
-			if ( get_queried_object_id() !== $page_id ) {
+			$queried_object = get_queried_object();
+			if ( ! $queried_object instanceof \WP_Post ) {
 				return '';
 			}
-			if ( 'page' !== get_post_type( $page_id ) ) {
+			if ( $queried_object->ID !== $page_id ) {
 				return '';
 			}
-			return post_password_required( $page_id ) ? '' : $pre_render;
+			if ( 'page' !== $queried_object->post_type ) {
+				return '';
+			}
+			return post_password_required( $queried_object ) ? '' : $pre_render;
 
 		default:
 			$product = wc_get_product( get_the_ID() );

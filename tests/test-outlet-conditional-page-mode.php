@@ -11,6 +11,51 @@ use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Conditional_Page_Mode extends WP_UnitTestCase {
 
+	public function test_page_condition_hides_on_a_taxonomy_archive_with_the_same_numeric_id(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$term = self::factory()->term->create_and_get( array( 'taxonomy' => 'category' ) );
+		$this->go_to( get_term_link( $term ) );
+		// Arrange overlapping IDs from WordPress's independent post and term tables.
+		$query                    = $GLOBALS['wp_query'];
+		$queried_object           = $query->get_queried_object();
+		$queried_object->term_id  = $page_id;
+		$query->queried_object_id = $page_id;
+
+		// Act.
+		$result = do_blocks( '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional">Page content</div><!-- /wp:outletpro/outlet-conditional -->' );
+
+		// Assert.
+		$this->assertSame( $page_id, get_queried_object_id() );
+		$this->assertSame( '', $result );
+	}
+
+	public function test_page_condition_hides_on_an_author_archive_with_the_same_numeric_id(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		$user_id = self::factory()->user->create();
+		self::factory()->post->create( array( 'post_author' => $user_id ) );
+		$this->go_to( get_author_posts_url( $user_id ) );
+		// Arrange overlapping IDs from WordPress's independent post and user tables.
+		$query                    = $GLOBALS['wp_query'];
+		$queried_object           = $query->get_queried_object();
+		$queried_object->ID       = $page_id;
+		$query->queried_object_id = $page_id;
+
+		// Act.
+		$result = do_blocks( '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional">Page content</div><!-- /wp:outletpro/outlet-conditional -->' );
+
+		// Assert.
+		$this->assertSame( $page_id, get_queried_object_id() );
+		$this->assertSame( '', $result );
+	}
+
 	public function test_page_condition_hides_content_when_the_configured_id_is_corrupt(): void {
 		// Arrange.
 		deinit_blocks();
