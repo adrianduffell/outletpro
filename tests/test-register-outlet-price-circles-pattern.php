@@ -49,6 +49,7 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'Outlet navigation with circular price tier tiles', $pattern['title'] );
+		$this->assertSame( array( 'outlet-hero' ), $pattern['templateTypes'] );
 	}
 
 	public function test_selects_the_four_lowest_price_tiers(): void {

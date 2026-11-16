@@ -110,6 +110,7 @@ function register_outlet_navigation_3_pattern(): void {
 		'outletpro/outlet-navigation-3',
 		array(
 			'title'         => __( 'Outlet navigation with three category tiles', 'outletpro' ),
+			'templateTypes' => array( 'outlet-hero' ),
 			'description'   => __( 'Displays three tiles and a menu.', 'outletpro' ),
 			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-three-tiles-pattern.php',
 			'categories'    => array( 'outletpro' ),
@@ -128,6 +129,7 @@ function register_outlet_navigation_4_pattern(): void {
 		'outletpro/outlet-navigation-4',
 		array(
 			'title'         => __( 'Outlet navigation with four category tiles', 'outletpro' ),
+			'templateTypes' => array( 'outlet-hero' ),
 			'description'   => __( 'Displays four tiles and a menu.', 'outletpro' ),
 			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-four-tiles-pattern.php',
 			'categories'    => array( 'outletpro' ),
@@ -146,6 +148,7 @@ function register_outlet_navigation_price_tiers_pattern(): void {
 		'outletpro/outlet-navigation-price-tiers',
 		array(
 			'title'         => __( 'Outlet navigation with circular price tier tiles', 'outletpro' ),
+			'templateTypes' => array( 'outlet-hero' ),
 			'description'   => __( 'Displays four price tier tiles and a menu.', 'outletpro' ),
 			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-price-circles-pattern.php',
 			'categories'    => array( 'outletpro' ),
@@ -164,6 +167,7 @@ function register_outlet_navigation_6_pattern(): void {
 		'outletpro/outlet-navigation-6',
 		array(
 			'title'         => __( 'Outlet navigation with six category tiles', 'outletpro' ),
+			'templateTypes' => array( 'outlet-hero' ),
 			'description'   => __( 'Displays six tiles and a menu.', 'outletpro' ),
 			'filePath'      => dirname( PLUGIN_FILE ) . '/templates/outlet-six-tiles-pattern.php',
 			'categories'    => array( 'outletpro' ),

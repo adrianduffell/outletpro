@@ -251,6 +251,7 @@ class Test_Register_Outlet_Six_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'Outlet navigation with six category tiles', $pattern['title'] );
+		$this->assertSame( array( 'outlet-hero' ), $pattern['templateTypes'] );
 		$this->assertSame( 'Displays six tiles and a menu.', $pattern['description'] );
 		$this->assertSame( array( 'outletpro' ), $pattern['categories'] );
 	}

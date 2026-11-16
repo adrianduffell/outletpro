@@ -71,6 +71,7 @@ require_once __DIR__ . '/includes/enqueue-license.php';
 // #endif
 require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
+require_once __DIR__ . '/includes/template-parts.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';
@@ -108,6 +109,7 @@ function init_hook(): void {
 	init_query_vars();
 	init_shortcodes();
 	init_patterns();
+	init_template_parts();
 	init_page();
 	init_blocks();
 	init_block_editor();
