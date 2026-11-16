@@ -583,7 +583,7 @@ function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
 }
 
 /**
- * Keep Outlet term links on the configured Page URL.
+ * Replaces the canonical term URL with the outlet page URL.
  *
  * Fired by `term_link`.
  *
