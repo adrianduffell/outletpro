@@ -4,7 +4,14 @@
 	"name": "outletpro/outlet-conditional",
 	"title": "Outlet Conditional",
 	"category": "woocommerce",
-	"description": "Conditionally displays contents for outlet products only.",
+	"description": "Displays contents when included on the outlet page or an outlet product.",
+	"attributes": {
+		"conditionType": {
+			"type": "string",
+			"enum": [ "product", "page" ],
+			"default": "product"
+		}
+	},
 	"supports": {
 		"html": false,
 		"align": [ "wide", "full" ],

@@ -755,7 +755,8 @@ function render_outlet_message_callback( array $attributes, string $content, \WP
 /**
  * Conditionally render Outlet Conditional block.
  *
- * The current post must be an outlet product for the block to render.
+ * The current post must be an outlet product or page for the block to render,
+ * depending on the conditionType attribute for the block.
  *
  * Fired by `pre_render_block`.
  *
@@ -769,19 +770,35 @@ function conditionally_render_outlet_conditional_hook( ?string $pre_render, arra
 		return $pre_render;
 	}
 
-	$product = wc_get_product( get_the_ID() );
-	if ( ! $product instanceof \WC_Product ) {
-		return '';
-	}
+	switch ( $parsed_block['attrs']['conditionType'] ?? 'product' ) {
+		case 'page':
+			try {
+				$page_id = get_outlet_page_id();
+			} catch ( \UnexpectedValueException $e ) {
+				wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+				return '';
+			}
+			if ( null === $page_id ) {
+				return '';
+			}
+			if ( get_queried_object_id() !== $page_id ) {
+				return '';
+			}
+			if ( 'page' !== get_post_type( $page_id ) ) {
+				return '';
+			}
+			return post_password_required( $page_id ) ? '' : $pre_render;
 
-	try {
-		if ( ! is_outlet( $product ) ) {
-			return '';
-		}
-	} catch ( \Throwable $e ) {
-		wc_get_logger()->error( 'Outlet product status could not be determined in outlet conditional block.' );
-		return '';
+		default:
+			$product = wc_get_product( get_the_ID() );
+			if ( ! $product instanceof \WC_Product ) {
+				return '';
+			}
+			try {
+				return is_outlet( $product ) ? $pre_render : '';
+			} catch ( \Throwable $e ) {
+				wc_get_logger()->error( 'Outlet product status could not be determined in outlet conditional block.' );
+				return '';
+			}
 	}
-
-	return $pre_render;
 }

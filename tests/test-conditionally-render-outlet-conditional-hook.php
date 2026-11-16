@@ -27,11 +27,15 @@ class Test_Conditionally_Render_Outlet_Conditional_Hook extends WP_UnitTestCase 
 		$content = '<!-- wp:outletpro/outlet-conditional --><div class="wp-block-outletpro-outlet-conditional"><!-- wp:paragraph --><p>Outlet content</p><!-- /wp:paragraph --></div><!-- /wp:outletpro/outlet-conditional -->';
 
 		// Act.
-		$result = do_blocks( $content );
+		$result          = do_blocks( $content );
+		$explicit_result = do_blocks( str_replace( '<!-- wp:outletpro/outlet-conditional -->', '<!-- wp:outletpro/outlet-conditional {"conditionType":"product"} -->', $content ) );
+		$fallback_result = do_blocks( str_replace( '<!-- wp:outletpro/outlet-conditional -->', '<!-- wp:outletpro/outlet-conditional {"conditionType":"unknown"} -->', $content ) );
 
 		// Assert.
 		$this->assertStringContainsString( 'wp-block-outletpro-outlet-conditional', $result );
 		$this->assertStringContainsString( 'Outlet content', $result );
+		$this->assertSame( $result, $explicit_result );
+		$this->assertSame( $result, $fallback_result );
 	}
 
 	public function test_does_not_render_outlet_conditional_for_non_outlet_product(): void {
