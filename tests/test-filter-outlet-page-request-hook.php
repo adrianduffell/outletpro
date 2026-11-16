@@ -13,6 +13,34 @@ use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 
+	public function test_paginated_outlet_page_url(): void {
+		// Arrange.
+		init_taxonomies();
+		$page_id = self::factory()->post->create(
+			array(
+				'post_type' => 'page',
+				'post_name' => 'clearance',
+			)
+		);
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		update_option( 'posts_per_page', 1 );
+		update_option( 'woocommerce_catalog_rows', 1 );
+		update_option( 'woocommerce_catalog_columns', 1 );
+		$first  = WC_Helper_Product::create_simple_product();
+		$second = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $first );
+		add_to_outlet( $second );
+		$this->set_permalink_structure( '/%postname%/' );
+
+		// Act.
+		$this->go_to( trailingslashit( get_permalink( $page_id ) ) . 'page/2/' );
+
+		// Assert.
+		$this->assertSame( $page_id, get_queried_object_id() );
+		$this->assertSame( 2, get_query_var( 'paged' ) );
+		$this->assertSame( 2, $GLOBALS['wp_query']->found_posts );
+	}
+
 	public function test_legacy_outlet_template_keeps_its_page_query(): void {
 		// Arrange.
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
