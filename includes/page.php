@@ -106,6 +106,8 @@ function init_page(): void {
 	register_outlet_page_template();
 	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	add_filter( 'woocommerce_page_title', 'OutletPro\\outlet_page_title_hook' );
+	add_filter( 'post_type_archive_title', 'OutletPro\\outlet_page_title_hook' );
 }
 
 /**
@@ -116,6 +118,8 @@ function init_page(): void {
 function deinit_page(): void {
 	remove_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	remove_filter( 'woocommerce_page_title', 'OutletPro\\outlet_page_title_hook' );
+	remove_filter( 'post_type_archive_title', 'OutletPro\\outlet_page_title_hook' );
 
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
@@ -600,4 +604,20 @@ function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
 	$query->set( 'tax_query', $outlet_clauses ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Indexed product facets.
 	$query->queried_object    = get_post( $page_id );
 	$query->queried_object_id = $page_id;
+}
+
+/**
+ * Use the outlet page title in product archives.
+ *
+ * Fired by `woocommerce_page_title` and `post_type_archive_title`.
+ *
+ * @internal WordPress filter hook
+ * @param string $title Original archive title.
+ */
+function outlet_page_title_hook( string $title ): string {
+	if ( true !== get_query_var( 'outletpro' ) ) {
+		return $title;
+	}
+
+	return get_the_title( get_queried_object_id() );
 }
