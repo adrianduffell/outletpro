@@ -106,6 +106,7 @@ function init_page(): void {
 	register_outlet_page_template();
 	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	add_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	add_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10, 2 );
 }
 
@@ -117,6 +118,7 @@ function init_page(): void {
 function deinit_page(): void {
 	remove_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	remove_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	remove_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10 );
 
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
@@ -580,6 +582,30 @@ function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
 		$outlet_clauses[] = $existing;
 	}
 	$query->set( 'tax_query', $outlet_clauses ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Indexed product facets.
+}
+
+/**
+ * Use the outlet page title in the canonical term archive.
+ *
+ * Fired by `single_term_title`.
+ *
+ * @internal WordPress filter hook
+ * @param string $title Original term title.
+ */
+function outlet_page_title_hook( string $title ): string {
+	if ( true !== get_query_var( 'outletpro' ) ) {
+		return $title;
+	}
+	try {
+		$page_title = get_outlet_page_title();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+		return $title;
+	}
+	if ( null === $page_title ) {
+		return $title;
+	}
+	return $page_title;
 }
 
 /**
