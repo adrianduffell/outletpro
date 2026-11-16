@@ -791,7 +791,10 @@ function conditionally_render_outlet_conditional_hook( ?string $pre_render, arra
 			if ( 'page' !== $queried_object->post_type ) {
 				return '';
 			}
-			return post_password_required( $queried_object ) ? '' : $pre_render;
+			if ( post_password_required( $queried_object ) ) {
+				return '';
+			}
+			return $pre_render;
 
 		default:
 			$product = wc_get_product( get_the_ID() );
