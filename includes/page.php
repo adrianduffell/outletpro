@@ -649,7 +649,10 @@ function outlet_page_breadcrumb_hook( array $crumbs ): array {
 	}
 	$label         = get_taxonomy( OUTLET_STATUS_TAXONOMY )->labels->name;
 	$shop_id       = wc_get_page_id( 'shop' );
-	$front_page_id = filter_var( get_option( 'page_on_front' ), FILTER_VALIDATE_INT );
+	$front_page_id = 0;
+	if ( 'page' === get_option( 'show_on_front' ) ) {
+		$front_page_id = filter_var( get_option( 'page_on_front' ), FILTER_VALIDATE_INT );
+	}
 	foreach ( $crumbs as $index => $crumb ) {
 		if ( $label !== $crumb[0] ) {
 			continue;

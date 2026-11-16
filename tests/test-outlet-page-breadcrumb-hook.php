@@ -18,7 +18,7 @@ class Test_Outlet_Page_Breadcrumb_Hook extends WP_UnitTestCase {
 	/**
 	 * @dataProvider permalink_styles
 	 */
-	public function test_outlet_breadcrumbs_follow_shop_instead_of_the_internal_taxonomy_label( string $permalink_structure, string $product_base ): void {
+	public function test_outlet_breadcrumbs_keep_shop_when_homepage_shows_latest_posts( string $permalink_structure, string $product_base ): void {
 		// Arrange.
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
@@ -40,7 +40,8 @@ class Test_Outlet_Page_Breadcrumb_Hook extends WP_UnitTestCase {
 		update_option( 'woocommerce_shop_page_id', $shop_id );
 		update_option( 'woocommerce_permalinks', array( 'product_base' => $product_base ) );
 		update_option( 'show_on_front', 'posts' );
-		update_option( 'page_on_front', 0 );
+		// Switching back to latest posts leaves the previous front-page ID stored.
+		update_option( 'page_on_front', $shop_id );
 		$this->set_permalink_structure( $permalink_structure );
 		$this->go_to( get_permalink( $page_id ) );
 		$breadcrumbs = new WC_Breadcrumb();
