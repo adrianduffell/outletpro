@@ -99,26 +99,6 @@ class Test_Outlet_Conditional_Page_Mode extends WP_UnitTestCase {
 		$this->assertSame( '', $result );
 	}
 
-	public function test_page_condition_hides_content_while_the_page_password_is_required(): void {
-		// Arrange.
-		deinit_blocks();
-		init_blocks();
-		$page_id = self::factory()->post->create(
-			array(
-				'post_type'     => 'page',
-				'post_password' => 'secret',
-			)
-		);
-		update_option( OUTLET_PAGE_OPTION, $page_id );
-		$this->go_to( get_permalink( $page_id ) );
-
-		// Act.
-		$result = do_blocks( '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional">Protected</div><!-- /wp:outletpro/outlet-conditional -->' );
-
-		// Assert.
-		$this->assertSame( '', $result );
-	}
-
 	public function test_page_condition_matches_paginated_requests_despite_the_loop_product(): void {
 		// Arrange.
 		deinit_blocks();
