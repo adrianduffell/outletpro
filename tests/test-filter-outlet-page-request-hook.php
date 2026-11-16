@@ -10,6 +10,8 @@
 use function OutletPro\add_to_outlet;
 use function OutletPro\init_taxonomies;
 use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 
@@ -36,7 +38,9 @@ class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 		$this->go_to( trailingslashit( get_permalink( $page_id ) ) . 'page/2/' );
 
 		// Assert.
-		$this->assertSame( $page_id, get_queried_object_id() );
+		$this->assertTrue( is_tax( OUTLET_STATUS_TAXONOMY, OUTLET_STATUS_CANONICAL_TERM ) );
+		$this->assertSame( get_permalink( $page_id ), get_term_link( get_queried_object() ) );
+		$this->assertSame( trailingslashit( get_permalink( $page_id ) ) . 'page/2/', get_pagenum_link( 2, false ) );
 		$this->assertSame( 2, get_query_var( 'paged' ) );
 		$this->assertSame( 2, $GLOBALS['wp_query']->found_posts );
 	}
@@ -78,7 +82,7 @@ class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( $was_page );
-		$this->assertTrue( is_post_type_archive( 'product' ) );
+		$this->assertTrue( is_tax( OUTLET_STATUS_TAXONOMY, OUTLET_STATUS_CANONICAL_TERM ) );
 		$this->assertTrue( get_query_var( 'outletpro' ) );
 		$this->assertSame( array( $product->get_id() ), wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' ) );
 	}
@@ -98,7 +102,7 @@ class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 		$this->go_to( add_query_arg( 'page_id', $page_id, home_url( '/' ) ) );
 
 		// Assert.
-		$this->assertFalse( is_post_type_archive( 'product' ) );
+		$this->assertFalse( is_product_taxonomy() );
 		$this->assertEmpty( get_query_var( 'outletpro' ) );
 	}
 
@@ -205,7 +209,7 @@ class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( get_query_var( 'outletpro' ) );
 	}
 
-	public function test_trashed_outlet_page_does_not_become_a_product_archive(): void {
+	public function test_trashed_outlet_page_does_not_become_an_outlet_archive(): void {
 		// Arrange.
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		wp_trash_post( $page_id );
@@ -215,7 +219,7 @@ class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 		$this->go_to( add_query_arg( 'page_id', $page_id, home_url( '/' ) ) );
 
 		// Assert.
-		$this->assertFalse( is_post_type_archive( 'product' ) );
+		$this->assertFalse( is_product_taxonomy() );
 		$this->assertEmpty( get_query_var( 'outletpro' ) );
 	}
 }
