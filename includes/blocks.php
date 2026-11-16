@@ -772,23 +772,7 @@ function conditionally_render_outlet_conditional_hook( ?string $pre_render, arra
 
 	switch ( $parsed_block['attrs']['conditionType'] ?? 'product' ) {
 		case 'page':
-			try {
-				$page_id = get_outlet_page_id();
-			} catch ( \UnexpectedValueException $e ) {
-				wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
-				return '';
-			}
-			if ( null === $page_id ) {
-				return '';
-			}
-			$queried_object = get_queried_object();
-			if ( ! $queried_object instanceof \WP_Post ) {
-				return '';
-			}
-			if ( $queried_object->ID !== $page_id ) {
-				return '';
-			}
-			if ( 'page' !== $queried_object->post_type ) {
+			if ( ! is_tax( OUTLET_STATUS_TAXONOMY, OUTLET_STATUS_CANONICAL_TERM ) ) {
 				return '';
 			}
 			return $pre_render;

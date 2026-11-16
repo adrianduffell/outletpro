@@ -106,6 +106,7 @@ function init_page(): void {
 	register_outlet_page_template();
 	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	add_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10, 2 );
 }
 
 /**
@@ -116,6 +117,7 @@ function init_page(): void {
 function deinit_page(): void {
 	remove_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	remove_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10 );
 
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
@@ -473,7 +475,7 @@ function outlet_page_is_published(): bool {
 /**
  * Prepare requests for the outlet page.
  *
- * Responds with a product archive to ensure a product catalog template is returned.
+ * Responds with the existing Outlet term archive at the configured Page URL.
  *
  * Fired by `request`.
  *
@@ -523,8 +525,9 @@ function filter_outlet_page_request_hook( array $vars ): array {
 	if ( post_password_required( $page ) ) {
 		return $vars;
 	}
-	unset( $vars['pagename'], $vars['page_id'], $vars['name'] );
-	$vars['post_type'] = 'product';
+	unset( $vars['pagename'], $vars['page_id'], $vars['name'], $vars['post_type'] );
+	$vars['taxonomy']  = OUTLET_STATUS_TAXONOMY;
+	$vars['term']      = OUTLET_STATUS_CANONICAL_TERM;
 	$vars['outletpro'] = true;
 	return $vars;
 }
@@ -532,8 +535,7 @@ function filter_outlet_page_request_hook( array $vars ): array {
 /**
  * Prepare the main query.
  *
- * Note: This needs to be done after WooCommerce's pre_get_posts to prevent
- * clashes with the shop page.
+ * Runs after WooCommerce's pre_get_posts to preserve its query arguments.
  *
  * Fired by `pre_get_posts`.
  *
@@ -547,30 +549,10 @@ function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
 	if ( true !== $query->get( 'outletpro' ) ) {
 		return;
 	}
-	try {
-		$page_id = get_outlet_page_id();
-	} catch ( \UnexpectedValueException $e ) {
-		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
-		return;
-	}
-	if ( null === $page_id ) {
-		return;
-	}
-	// Use product archive semantics for the Outlet Page.
-	$query->is_page              = false;
-	$query->is_singular          = false;
-	$query->is_home              = false;
-	$query->is_archive           = true;
-	$query->is_post_type_archive = true;
-	$outlet_clauses              = array(
-		'relation' => 'AND',
-		array(
-			'taxonomy' => OUTLET_STATUS_TAXONOMY,
-			'field'    => 'slug',
-			'terms'    => array( OUTLET_STATUS_CANONICAL_TERM ),
-		),
-	);
-	$facets                      = array(
+	// Set this after query parsing so Outlet remains a term archive, not Shop.
+	$query->set( 'post_type', 'product' );
+	$outlet_clauses = array( 'relation' => 'AND' );
+	$facets         = array(
 		'product_cat' => get_category_filter_query_param(),
 	);
 	foreach ( $facets as $taxonomy => $slug ) {
@@ -598,6 +580,28 @@ function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
 		$outlet_clauses[] = $existing;
 	}
 	$query->set( 'tax_query', $outlet_clauses ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Indexed product facets.
-	$query->queried_object    = get_post( $page_id );
-	$query->queried_object_id = $page_id;
+}
+
+/**
+ * Replaces the canonical term URL with the outlet page URL.
+ *
+ * Fired by `term_link`.
+ *
+ * @internal WordPress filter hook
+ * @param string   $url Original term URL.
+ * @param \WP_Term $term Linked term.
+ */
+function outlet_page_term_link_hook( string $url, \WP_Term $term ): string {
+	if ( OUTLET_STATUS_TAXONOMY !== $term->taxonomy ) {
+		return $url;
+	}
+	if ( OUTLET_STATUS_CANONICAL_TERM !== $term->slug ) {
+		return $url;
+	}
+	try {
+		return get_outlet_permalink() ?? $url;
+	} catch ( \UnexpectedValueException | \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet Page URL could not be retrieved.' );
+		return $url;
+	}
 }

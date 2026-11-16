@@ -9,7 +9,10 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\init_taxonomies;
+use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
+use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Outlet_Page_Pre_Get_Posts_Hook extends WP_UnitTestCase {
 
@@ -73,16 +76,22 @@ class Test_Outlet_Page_Pre_Get_Posts_Hook extends WP_UnitTestCase {
 		$this->assertEmpty( get_query_var( 'outletpro' ) );
 	}
 
-	public function test_queried_object_id_is_outlet_page_id(): void {
+	public function test_outlet_remains_a_term_archive_with_a_product_post_type_parameter(): void {
 		// Arrange.
 		init_taxonomies();
+		seed_outlet_status_taxonomy();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
 
 		// Act.
-		$this->go_to( get_permalink( $page_id ) );
+		$this->go_to( add_query_arg( 'post_type', 'product', get_permalink( $page_id ) ) );
 
 		// Assert.
-		$this->assertSame( $page_id, get_queried_object_id() );
+		$this->assertInstanceOf( WP_Term::class, get_queried_object() );
+		$this->assertSame( get_queried_object()->term_id, get_queried_object_id() );
+		$this->assertTrue( is_tax( OUTLET_STATUS_TAXONOMY, OUTLET_STATUS_CANONICAL_TERM ) );
+		$this->assertTrue( is_product_taxonomy() );
+		$this->assertFalse( is_post_type_archive() );
+		$this->assertFalse( is_shop() );
 	}
 }

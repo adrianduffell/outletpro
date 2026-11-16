@@ -5,8 +5,11 @@
  * @package OutletPro
  */
 
+use function OutletPro\add_to_outlet;
 use function OutletPro\deinit_blocks;
 use function OutletPro\init_blocks;
+use function OutletPro\init_taxonomies;
+use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Outlet_Conditional_Page_Mode extends WP_UnitTestCase {
@@ -103,10 +106,17 @@ class Test_Outlet_Conditional_Page_Mode extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
+		update_option( 'woocommerce_catalog_rows', 1 );
+		update_option( 'woocommerce_catalog_columns', 1 );
+		$first   = WC_Helper_Product::create_simple_product();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $first );
+		add_to_outlet( $product );
 		$this->go_to( add_query_arg( 'paged', 2, get_permalink( $page_id ) ) );
-		$product         = WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Arrange a product-loop context.
 		$content         = '<!-- wp:outletpro/outlet-conditional {"conditionType":"page"} --><div class="wp-block-outletpro-outlet-conditional">Page content</div><!-- /wp:outletpro/outlet-conditional -->';
 
@@ -148,6 +158,8 @@ class Test_Outlet_Conditional_Page_Mode extends WP_UnitTestCase {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
 		$page_id = self::factory()->post->create(
 			array(
