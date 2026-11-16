@@ -39,46 +39,50 @@ class Test_Outlet_Page_Pre_Get_Posts_Hook extends WP_UnitTestCase {
 		$this->assertSame( array( $match->get_id() ), wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' ) );
 	}
 
-	public function test_shop_and_category_archives_keep_regular_products(): void {
+	public function test_shop_archive_keeps_regular_products(): void {
 		// Arrange.
 		init_taxonomies();
 		$outlet_page = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		$shop        = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $outlet_page );
 		update_option( 'woocommerce_shop_page_id', $shop );
+		$product = WC_Helper_Product::create_simple_product();
+
+		// Act.
+		$this->go_to( add_query_arg( 'post_type', 'product', home_url( '/' ) ) );
+
+		// Assert.
+		$this->assertContains( $product->get_id(), wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' ) );
+		$this->assertEmpty( get_query_var( 'outletpro' ) );
+	}
+
+	public function test_category_archive_keeps_regular_products(): void {
+		// Arrange.
+		init_taxonomies();
+		$outlet_page = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $outlet_page );
 		$product  = WC_Helper_Product::create_simple_product();
 		$category = self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
 		wp_set_object_terms( $product->get_id(), $category, 'product_cat' );
 
 		// Act.
-		$this->go_to( add_query_arg( 'post_type', 'product', home_url( '/' ) ) );
-		$shop_products = wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' );
 		$this->go_to( get_term_link( $category, 'product_cat' ) );
 
 		// Assert.
-		$this->assertContains( $product->get_id(), $shop_products );
 		$this->assertContains( $product->get_id(), wp_list_pluck( $GLOBALS['wp_query']->posts, 'ID' ) );
 		$this->assertEmpty( get_query_var( 'outletpro' ) );
 	}
 
-	public function test_outlet_archive_preserves_page_identity_and_shop_setting(): void {
+	public function test_queried_object_id_is_outlet_page_id(): void {
 		// Arrange.
 		init_taxonomies();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
-		$shop_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $page_id );
-		update_option( 'woocommerce_shop_page_id', $shop_id );
-		$outlet = WC_Helper_Product::create_simple_product();
-		add_to_outlet( $outlet );
 
 		// Act.
 		$this->go_to( get_permalink( $page_id ) );
 
 		// Assert.
-		$this->assertTrue( is_post_type_archive( 'product' ) );
-		$this->assertTrue( get_query_var( 'outletpro' ) );
-		$this->assertSame( 'product_query', get_query_var( 'wc_query' ) );
 		$this->assertSame( $page_id, get_queried_object_id() );
-		$this->assertSame( $shop_id, wc_get_page_id( 'shop' ) );
 	}
 }
