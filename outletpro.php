@@ -199,7 +199,6 @@ function activate(): void {
 		seed_outlet_search_index_taxonomy();
 		create_outlet_page();
 		if ( ! wp_is_block_theme() ) {
-			// The plugin may have loaded after widgets_init during activation.
 			register_classic_outlet_sidebar();
 			seed_outlet_hero_widgets();
 		}
