@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\activate;
+use function OutletPro\deinit_widgets;
 use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
@@ -77,7 +78,7 @@ class Test_Activate extends WP_UnitTestCase {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
 		remove_theme_mod( 'wp_classic_sidebars' );
-		unregister_sidebar( OUTLET_HERO_WIDGET_AREA );
+		deinit_widgets();
 		wp_set_sidebars_widgets( array( 'wp_inactive_widgets' => array() ) );
 		$before = get_option( 'widget_block' );
 

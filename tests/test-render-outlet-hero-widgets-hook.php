@@ -7,6 +7,7 @@
 
 use function OutletPro\add_to_outlet;
 use function OutletPro\init_taxonomies;
+use function OutletPro\init_widgets;
 use function OutletPro\init_woocommerce_template_hooks;
 use function OutletPro\seed_outlet_status_taxonomy;
 use const OutletPro\OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD;
@@ -22,6 +23,7 @@ class Test_Render_Outlet_Hero_Widgets_Hook extends WP_UnitTestCase {
 	public function test_saved_widgets_render_in_the_outlet_archive_header( int $page_number ): void {
 		// Arrange.
 		switch_theme( 'storefront' );
+		init_widgets();
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
 		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
@@ -60,6 +62,7 @@ class Test_Render_Outlet_Hero_Widgets_Hook extends WP_UnitTestCase {
 	public function test_other_requests_do_not_render_outlet_widgets(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
+		init_widgets();
 		update_option( 'widget_block', array( 2 => array( 'content' => '<!-- wp:paragraph --><p>Saved hero</p><!-- /wp:paragraph -->' ) ) );
 		$GLOBALS['wp_registered_widgets'] = array();
 		wp_widgets_init();

@@ -17,6 +17,36 @@ defined( 'ABSPATH' ) || exit;
 const OUTLET_HERO_WIDGET_AREA = 'outlet-hero';
 
 /**
+ * Initialize widgets.
+ *
+ * @internal
+ */
+function init_widgets(): void {
+	add_action( 'widgets_init', 'OutletPro\\widgets_init_hook' );
+}
+
+/**
+ * De-Initialize widgets.
+ *
+ * @internal
+ */
+function deinit_widgets(): void {
+	remove_action( 'widgets_init', 'OutletPro\\widgets_init_hook' );
+	unregister_sidebar( OUTLET_HERO_WIDGET_AREA );
+}
+
+/**
+ * Register widget areas for classic themes.
+ *
+ * Fired by `widgets_init`.
+ *
+ * @internal WordPress action hook
+ */
+function widgets_init_hook(): void {
+	register_classic_outlet_sidebar();
+}
+
+/**
  * Register the outlet hero widget area.
  *
  * @internal

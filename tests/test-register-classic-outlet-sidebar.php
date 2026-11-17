@@ -5,6 +5,7 @@
  * @package OutletPro
  */
 
+use function OutletPro\init_widgets;
 use function OutletPro\register_classic_outlet_sidebar;
 use const OutletPro\OUTLET_HERO_WIDGET_AREA;
 
@@ -14,6 +15,7 @@ class Test_Register_Classic_Outlet_Sidebar extends WP_UnitTestCase {
 		// Arrange.
 		switch_theme( 'storefront' );
 		unregister_sidebar( OUTLET_HERO_WIDGET_AREA );
+		init_widgets();
 
 		// Act.
 		wp_widgets_init();

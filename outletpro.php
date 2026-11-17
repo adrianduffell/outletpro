@@ -168,26 +168,15 @@ function admin_init_hook(): void {
  * @internal WordPress action hook
  */
 function woocommerce_loaded_hook(): void {
-	add_action( 'widgets_init', 'OutletPro\\widgets_init_hook' );
 	add_action( 'init', 'OutletPro\init_hook', 20 );
 	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
-}
-
-add_action( 'woocommerce_loaded', 'OutletPro\woocommerce_loaded_hook' );
-
-/**
- * Register widget areas for classic themes.
- *
- * Fired by `widgets_init`.
- *
- * @internal WordPress action hook
- */
-function widgets_init_hook(): void {
 	if ( wp_is_block_theme() ) {
 		return;
 	}
-	register_classic_outlet_sidebar();
+	init_widgets();
 }
+
+add_action( 'woocommerce_loaded', 'OutletPro\woocommerce_loaded_hook' );
 
 /**
  * Plugin activation hook.
