@@ -74,6 +74,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'Outlet navigation with three category tiles', $pattern['title'] );
+		$this->assertSame( array( 'outlet-hero' ), $pattern['templateTypes'] );
 		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
 	}
 

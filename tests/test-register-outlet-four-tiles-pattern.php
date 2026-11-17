@@ -47,6 +47,7 @@ class Test_Register_Outlet_Four_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'Outlet navigation with four category tiles', $pattern['title'] );
+		$this->assertSame( array( 'outlet-hero' ), $pattern['templateTypes'] );
 	}
 
 	public function test_selects_the_top_four_categories_in_menu_order(): void {
