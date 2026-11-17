@@ -28,6 +28,8 @@ function init_blocks(): void {
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hero_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook' );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
@@ -46,6 +48,8 @@ function deinit_blocks(): void {
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
+	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hero_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
@@ -69,6 +73,52 @@ function deinit_blocks(): void {
 
 		unregister_block_type( $block_name );
 	}
+}
+
+/**
+ * Add the Outlet section at the configured catalog anchor.
+ *
+ * Fired by `hooked_block_types`.
+ *
+ * @internal WordPress filter hook
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param string[]                      $hooked_blocks Existing hooked blocks.
+ * @param string                        $relative_position Position relative to the anchor.
+ * @param string                        $anchor_block Anchor block name.
+ * @param \WP_Block_Template|array|null $context Template or pattern context.
+ * @return string[] Hooked blocks.
+ */
+function auto_insert_outlet_page_hero_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
+	if ( ! is_product_catalog_context( $context ) ) {
+		return $hooked_blocks;
+	}
+	if ( array( $anchor_block, $relative_position ) !== get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, array( 'core/term-description', 'after' ) ) ) {
+		return $hooked_blocks;
+	}
+	$hooked_blocks[] = 'outletpro/outlet-conditional';
+	return $hooked_blocks;
+}
+
+/**
+ * Populate the hooked conditional with its page condition and template part.
+ *
+ * Fired by `hooked_block_outletpro/outlet-conditional`.
+ *
+ * @internal WordPress filter hook
+ * @param array<string, mixed>|null $parsed_hooked_block Hooked block or suppression marker.
+ * @return array<string, mixed>|null Populated block.
+ */
+function populate_outlet_page_hero_hook( ?array $parsed_hooked_block ): ?array {
+	if ( null === $parsed_hooked_block ) {
+		return null;
+	}
+	$attributes = array(
+		'slug'  => 'outlet-hero',
+		'theme' => get_stylesheet(),
+		'align' => 'wide',
+	);
+	$content    = '<!-- wp:outletpro/outlet-conditional {"conditionType":"page","align":"wide","layout":{"type":"default"}} --><div class="wp-block-outletpro-outlet-conditional alignwide"><!-- wp:template-part ' . wp_json_encode( $attributes ) . ' /--></div><!-- /wp:outletpro/outlet-conditional -->';
+	return parse_blocks( $content )[0];
 }
 
 /**
@@ -279,6 +329,39 @@ function is_single_product_context( $context ): bool {
 	}
 
 	return false !== strpos( $context_name, 'single-product' );
+}
+
+/**
+ * Returns whether block hooks context is the product catalog.
+ *
+ * @internal
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param \WP_Block_Template|array|null $context Template or pattern context.
+ */
+function is_product_catalog_context( $context ): bool {
+	if ( $context instanceof \WP_Block_Template ) {
+		if ( false === strpos( $context->slug, 'archive-product' ) ) {
+			return false;
+		}
+		return true;
+	}
+	if ( ! is_array( $context ) ) {
+		return false;
+	}
+	$context_name = $context['name'] ?? null;
+	if ( is_string( $context_name ) ) {
+		if ( false !== strpos( $context_name, 'archive-product' ) ) {
+			return true;
+		}
+	}
+	$template_types = $context['templateTypes'] ?? array();
+	if ( ! is_array( $template_types ) ) {
+		return false;
+	}
+	if ( ! in_array( 'archive-product', $template_types, true ) ) {
+		return false;
+	}
+	return true;
 }
 
 /**

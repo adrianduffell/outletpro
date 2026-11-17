@@ -13,6 +13,19 @@ use function OutletPro\register_outlet_message_block;
 
 class Test_Deinit_Blocks extends WP_UnitTestCase {
 
+	public function test_unregisters_outlet_page_block_hooks(): void {
+		// Arrange.
+		deinit_blocks();
+		init_blocks();
+
+		// Act.
+		deinit_blocks();
+
+		// Assert.
+		$this->assertFalse( has_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hero_hook' ) );
+		$this->assertFalse( has_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook' ) );
+	}
+
 	public function test_unregisters_message_style_hook(): void {
 		// Arrange.
 		deinit_blocks();
