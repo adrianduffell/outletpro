@@ -29,7 +29,7 @@ function init_blocks(): void {
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hero_hook', 10, 4 );
-	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook' );
+	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook', 10, 5 );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
@@ -105,12 +105,23 @@ function auto_insert_outlet_page_hero_hook( $hooked_blocks, $relative_position, 
  * Fired by `hooked_block_outletpro/outlet-conditional`.
  *
  * @internal WordPress filter hook
- * @param array<string, mixed>|null $parsed_hooked_block Hooked block or suppression marker.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint
+ * @param array<string, mixed>|null     $parsed_hooked_block Hooked block or suppression marker.
+ * @param string                        $hooked_block_type Hooked block name.
+ * @param string                        $relative_position Position relative to the anchor.
+ * @param array<string, mixed>          $parsed_anchor_block Parsed anchor block.
+ * @param \WP_Block_Template|array|null $context Template or pattern context.
  * @return array<string, mixed>|null Populated block.
  */
-function populate_outlet_page_hero_hook( ?array $parsed_hooked_block ): ?array {
+function populate_outlet_page_hero_hook( ?array $parsed_hooked_block, string $hooked_block_type, string $relative_position, array $parsed_anchor_block, $context ): ?array {
 	if ( null === $parsed_hooked_block ) {
 		return null;
+	}
+	if ( ! is_product_catalog_context( $context ) ) {
+		return $parsed_hooked_block;
+	}
+	if ( array( $parsed_anchor_block['blockName'], $relative_position ) !== get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, array( 'core/term-description', 'after' ) ) ) {
+		return $parsed_hooked_block;
 	}
 	$attributes = array(
 		'slug'  => 'outlet-hero',

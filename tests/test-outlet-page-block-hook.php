@@ -133,14 +133,22 @@ class Test_Outlet_Page_Block_Hook extends WP_UnitTestCase {
 		init_blocks();
 		set_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, array( 'core/term-description', 'after' ) );
 		register_block_type( 'example/peer', array( 'block_hooks' => array( 'core/term-description' => 'after' ) ) );
+		$conditional              = WP_Block_Type_Registry::get_instance()->get_registered( 'outletpro/outlet-conditional' );
+		$conditional->block_hooks = array( 'core/term-description' => 'before' );
 
 		// Act.
-		$content = apply_block_hooks_to_content( '<!-- wp:term-description /-->', array( 'name' => 'example/archive-product' ) );
+		$content                  = apply_block_hooks_to_content( '<!-- wp:term-description /-->', array( 'name' => 'example/archive-product' ) );
+		$conditional->block_hooks = array( 'core/term-description' => 'after' );
+		$product                  = apply_block_hooks_to_content( '<!-- wp:term-description /-->', array( 'name' => 'example/single-product' ) );
+		$conditional->block_hooks = array();
 		unregister_block_type( 'example/peer' );
 
 		// Assert.
 		$this->assertTrue( has_block( 'example/peer', $content ) );
 		$this->assertTrue( has_block( 'outletpro/outlet-conditional', $content ) );
+		$this->assertSame( array(), parse_blocks( $content )[0]['attrs'] );
+		$this->assertSame( array(), parse_blocks( $product )[1]['attrs'] );
+		$this->assertSame( 1, substr_count( $content, '"slug":"outlet-hero"' ) );
 	}
 
 	public function test_earlier_suppression_is_preserved(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Restore the suppression filter even when template processing fails.
