@@ -54,6 +54,13 @@ const SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD = 'outletpro_single_product
 const SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD = 'outletpro_single_product_badge_template_hook';
 
 /**
+ * WordPress theme mod key used to store the template hook for the outlet hero widgets.
+ *
+ * @internal
+ */
+const OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD = 'outletpro_outlet_hero_template_hook';
+
+/**
  * Initialize theme mod integrations.
  *
  * @internal
@@ -117,6 +124,9 @@ function seed_theme_mods(): void {
 			}
 			break;
 		case false:
+			if ( ! array_key_exists( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD, $mods ) ) {
+				set_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_archive_description', 5 ) );
+			}
 			if ( ! array_key_exists( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, $mods ) ) {
 				set_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_single_product_summary', 1 ) );
 			}
