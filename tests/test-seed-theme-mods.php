@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\seed_theme_mods;
+use const OutletPro\PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD;
@@ -19,6 +20,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 	public function test_seeds_block_theme_mods(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD );
@@ -28,6 +30,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		seed_theme_mods();
 
 		// Assert.
+		$this->assertSame( array( 'core/term-description', 'after' ), get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'core/post-title', 'before' ), get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce/product-price', 'after' ), get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD ) );
@@ -76,6 +79,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 	public function test_seeds_classic_theme_mods(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
+		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD );
@@ -85,6 +89,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		seed_theme_mods();
 
 		// Assert.
+		$this->assertFalse( get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce_single_product_summary', 1 ), get_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD ) );
@@ -94,6 +99,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 	public function test_preserves_existing_block_theme_mods(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
+		set_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, array( 'core/query-title', 'before' ) );
 		set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/group', 'after' ) );
 		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array() );
 
@@ -101,8 +107,21 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		seed_theme_mods();
 
 		// Assert.
+		$this->assertSame( array( 'core/query-title', 'before' ), get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'core/group', 'after' ), get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array(), get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );
+	}
+
+	public function test_preserves_disabled_outlet_page_hook(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		set_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, array() );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertSame( array(), get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
 	}
 
 	public function test_preserves_existing_classic_theme_mods(): void {
