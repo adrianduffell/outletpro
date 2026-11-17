@@ -5,52 +5,147 @@
  * @package OutletPro
  */
 
-use function OutletPro\get_uncategorized_product_category_id;
 use function OutletPro\select_outlet_navigation_pattern;
 
 class Test_Select_Outlet_Navigation_Pattern extends WP_UnitTestCase {
 
-	public function test_navigation_matches_top_level_category_counts(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Exercise each category-count boundary with independently arranged categories.
+	public function test_selects_price_tiers_without_product_categories(): void {
 		// Arrange.
-		$uncategorized = get_uncategorized_product_category_id() ?? self::factory()->term->create(
-			array(
-				'taxonomy' => 'product_cat',
-				'name'     => 'Uncategorized',
-			)
-		);
-		update_option( 'default_product_cat', $uncategorized );
-		$categories = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => false,
-				'fields'     => 'ids',
-				'exclude'    => array( $uncategorized ),
-			)
-		);
-		foreach ( $categories as $category ) {
-			wp_delete_term( $category, 'product_cat' );
-		}
+		$uncategorized_id = get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id ?? 0;
+		delete_option( 'default_product_cat' );
+		wp_delete_term( $uncategorized_id, 'product_cat' );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $pattern );
+	}
+
+	public function test_selects_price_tiers_with_one_top_level_category(): void {
+		// Arrange.
+		self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $pattern );
+	}
+
+	public function test_selects_price_tiers_with_two_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 2, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $pattern );
+	}
+
+	public function test_selects_three_tiles_with_three_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 3, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $pattern );
+	}
+
+	public function test_selects_four_tiles_with_four_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 4, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-4', $pattern );
+	}
+
+	public function test_selects_three_tiles_with_five_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 5, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $pattern );
+	}
+
+	public function test_selects_six_tiles_with_six_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 6, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-6', $pattern );
+	}
+
+	public function test_selects_three_tiles_with_seven_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 7, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $pattern );
+	}
+
+	public function test_selects_three_tiles_with_eight_top_level_categories(): void {
+		// Arrange.
+		self::factory()->term->create_many( 8, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $pattern );
+	}
+
+	public function test_excludes_uncategorized_category(): void {
+		// Arrange.
+		get_term_by( 'name', 'Uncategorized', 'product_cat' )->term_id
+			?? self::factory()->term->create(
+				array(
+					'taxonomy' => 'product_cat',
+					'name'     => 'Uncategorized',
+				)
+			);
+		self::factory()->term->create_many( 2, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', $pattern );
+	}
+
+	public function test_excludes_child_categories(): void {
+		// Arrange.
+		$category_ids = self::factory()->term->create_many( 3, array( 'taxonomy' => 'product_cat' ) );
 		self::factory()->term->create(
 			array(
 				'taxonomy' => 'product_cat',
-				'parent'   => $uncategorized,
+				'parent'   => $category_ids[0],
 			)
 		);
-		$expected = array( 'price-tiers', 'price-tiers', 'price-tiers', '3', '4', '3', '6', '3', '3' );
-		foreach ( $expected as $count => $suffix ) {
-			if ( 0 < $count ) {
-				self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
-			}
 
-			// Act.
-			$pattern = select_outlet_navigation_pattern();
+		// Act.
+		$pattern = select_outlet_navigation_pattern();
 
-			// Assert.
-			$this->assertSame( 'outletpro/outlet-navigation-' . $suffix, $pattern );
-		}
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', $pattern );
 	}
 
-	public function test_category_lookup_errors_throw(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Remove the query filter even when the expected exception is thrown.
+	public function test_category_lookup_errors_throw(): void {
 		// Arrange.
 		$failure = static fn( array $terms, array $taxonomies, array $args ) => ! empty( $args['name'] ) ? $terms : new WP_Error( 'lookup_failed', 'Category lookup failed.' );
 		add_filter( 'get_terms', $failure, 10, 3 );
@@ -60,10 +155,6 @@ class Test_Select_Outlet_Navigation_Pattern extends WP_UnitTestCase {
 		$this->expectExceptionMessage( 'Product categories could not be retrieved.' );
 
 		// Act.
-		try {
-			select_outlet_navigation_pattern();
-		} finally {
-			remove_filter( 'get_terms', $failure );
-		}
+		select_outlet_navigation_pattern();
 	}
 }
