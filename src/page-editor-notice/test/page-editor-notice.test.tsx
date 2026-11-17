@@ -22,15 +22,48 @@ const mockDispatch = data.dispatch as unknown as jest.Mock;
 const mockSelect = data.select as unknown as jest.Mock;
 
 describe( 'OutletEmptyNotice', () => {
-	beforeEach( () => {
-		mockApiFetch.mockClear();
-		mockDispatch.mockClear();
-		mockSelect.mockClear();
+	test( 'does not fetch settings when the editor store is unavailable', async () => {
+		// Arrange.
+		jest.resetAllMocks();
+		mockSelect.mockReturnValue( undefined );
+
+		// Act.
+		await act( async () => {
+			render( <OutletEmptyNotice /> );
+		} );
+
+		// Assert.
+		expect( mockApiFetch ).not.toHaveBeenCalled();
+		expect( mockDispatch ).not.toHaveBeenCalled();
 	} );
+
+	test.each( [ 'post', 'wp_template', 'wp_template_part' ] )(
+		'does not fetch settings when editing a %s',
+		async ( postType ) => {
+			// Arrange.
+			jest.resetAllMocks();
+			mockSelect.mockReturnValue( {
+				getCurrentPostType: () => postType,
+			} );
+
+			// Act.
+			await act( async () => {
+				render( <OutletEmptyNotice /> );
+			} );
+
+			// Assert.
+			expect( mockApiFetch ).not.toHaveBeenCalled();
+			expect( mockDispatch ).not.toHaveBeenCalled();
+		}
+	);
 
 	test( 'does not create notice when settings fetch fails', async () => {
 		// Arrange.
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		jest.resetAllMocks();
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 5,
+		} );
 		mockApiFetch.mockRejectedValueOnce( new Error( 'Network error' ) );
 
 		// Act.
@@ -44,7 +77,11 @@ describe( 'OutletEmptyNotice', () => {
 
 	test( 'does not create notice when current post is not the outlet page', async () => {
 		// Arrange.
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 99 } );
+		jest.resetAllMocks();
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 99,
+		} );
 		mockApiFetch.mockResolvedValueOnce( { outletpro_page_id: 5 } );
 
 		// Act.
@@ -58,7 +95,11 @@ describe( 'OutletEmptyNotice', () => {
 
 	test( 'does not create notice when outlet page is not configured', async () => {
 		// Arrange.
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		jest.resetAllMocks();
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 5,
+		} );
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
@@ -72,7 +113,11 @@ describe( 'OutletEmptyNotice', () => {
 
 	test( 'does not create notice when outlet products exist', async () => {
 		// Arrange.
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		jest.resetAllMocks();
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 5,
+		} );
 		mockApiFetch
 			.mockResolvedValueOnce( { outletpro_page_id: 5 } )
 			.mockResolvedValueOnce( [ { id: 1 } ] );
@@ -88,8 +133,12 @@ describe( 'OutletEmptyNotice', () => {
 
 	test( 'creates warning notice when on outlet page with no products', async () => {
 		// Arrange.
+		jest.resetAllMocks();
 		const mockCreateNotice = jest.fn();
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 5,
+		} );
 		mockDispatch.mockReturnValue( { createNotice: mockCreateNotice } );
 		mockApiFetch
 			.mockResolvedValueOnce( { outletpro_page_id: 5 } )
@@ -107,8 +156,12 @@ describe( 'OutletEmptyNotice', () => {
 
 	test( 'notice action navigates to the product list screen', async () => {
 		// Arrange.
+		jest.resetAllMocks();
 		const mockCreateNotice = jest.fn();
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 5,
+		} );
 		mockDispatch.mockReturnValue( { createNotice: mockCreateNotice } );
 		mockApiFetch
 			.mockResolvedValueOnce( { outletpro_page_id: 5 } )
@@ -142,7 +195,11 @@ describe( 'OutletEmptyNotice', () => {
 
 	test( 'renders null', async () => {
 		// Arrange.
-		mockSelect.mockReturnValue( { getCurrentPostId: () => 5 } );
+		jest.resetAllMocks();
+		mockSelect.mockReturnValue( {
+			getCurrentPostType: () => 'page',
+			getCurrentPostId: () => 5,
+		} );
 		mockApiFetch.mockResolvedValueOnce( {} );
 
 		// Act.
