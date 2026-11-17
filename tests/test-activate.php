@@ -8,10 +8,12 @@
  */
 
 use function OutletPro\activate;
+use function OutletPro\deinit_widgets;
 use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
 use const OutletPro\DB_VERSION;
+use const OutletPro\OUTLET_HERO_WIDGET_AREA;
 use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
@@ -70,5 +72,40 @@ class Test_Activate extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertNotFalse( get_option( ACTIVATED_AT_OPTION ) );
+	}
+
+	public function test_block_theme_does_not_register_or_seed_the_hero_widget_area(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( 'wp_classic_sidebars' );
+		deinit_widgets();
+		wp_set_sidebars_widgets( array( 'wp_inactive_widgets' => array() ) );
+		$before = get_option( 'widget_block' );
+
+		// Act.
+		wp_widgets_init();
+		activate();
+
+		// Assert.
+		$this->assertFalse( is_registered_sidebar( OUTLET_HERO_WIDGET_AREA ) );
+		$this->assertSame( $before, get_option( 'widget_block' ) );
+	}
+
+	public function test_reactivation_registers_and_seeds_an_empty_hero_area_after_widget_initialization(): void {
+		// Arrange.
+		switch_theme( 'storefront' );
+		$GLOBALS['wp_registered_widgets'] = array();
+		wp_widgets_init();
+		unregister_sidebar( OUTLET_HERO_WIDGET_AREA );
+		update_option( ACTIVATED_AT_OPTION, time() );
+		update_option( 'widget_block', array() );
+		wp_set_sidebars_widgets( array( OUTLET_HERO_WIDGET_AREA => array() ) );
+
+		// Act.
+		activate();
+
+		// Assert.
+		$this->assertTrue( is_registered_sidebar( OUTLET_HERO_WIDGET_AREA ) );
+		$this->assertCount( 1, wp_get_sidebars_widgets()[ OUTLET_HERO_WIDGET_AREA ] );
 	}
 }

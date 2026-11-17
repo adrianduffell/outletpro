@@ -4,7 +4,6 @@
  */
 
 import { createRegistrySelector, createSelector } from '@wordpress/data';
-import { store as editorStore } from '@wordpress/editor';
 
 export type SearchIndexFacet = { id: number; name: string };
 
@@ -51,7 +50,7 @@ function createSearchIndexFacetSelector(
 ) {
 	return createRegistrySelector( ( select ) => {
 		const readSetting = () =>
-			getSetting( select( editorStore ).getEditorSettings() );
+			getSetting( select( 'core/block-editor' ).getSettings() );
 		return createSelector(
 			() => validateSearchIndexFacets( readSetting() ),
 			() => [ readSetting() ]

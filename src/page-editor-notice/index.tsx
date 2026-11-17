@@ -13,10 +13,13 @@ const NOTICE_ID = 'outletpro-empty';
 export function OutletEmptyNotice(): null {
 	useEffect( () => {
 		async function maybeShowNotice() {
-			const currentPostId = select(
-				'core/editor'
-			).getCurrentPostId() as number;
-
+			const editor = select( 'core/editor' );
+			if ( ! editor ) {
+				return;
+			}
+			if ( editor.getCurrentPostType() !== 'page' ) {
+				return;
+			}
 			// Fetch the outlet page ID from the WP settings REST API.
 			let settings: { outletpro_page_id?: number };
 			try {
@@ -27,10 +30,10 @@ export function OutletEmptyNotice(): null {
 				return;
 			}
 
-			if (
-				! settings.outletpro_page_id ||
-				currentPostId !== settings.outletpro_page_id
-			) {
+			if ( ! settings.outletpro_page_id ) {
+				return;
+			}
+			if ( editor.getCurrentPostId() !== settings.outletpro_page_id ) {
 				return;
 			}
 
