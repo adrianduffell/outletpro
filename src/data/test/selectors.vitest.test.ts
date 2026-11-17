@@ -3,19 +3,15 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-import { expect, test, vi } from 'vitest';
+import { expect, test } from 'vitest';
 import { createReduxStore, createRegistry } from '@wordpress/data';
 import { store } from '../index';
-
-vi.mock( '@wordpress/editor', () => ( {
-	store: { name: 'core/editor' },
-} ) );
 
 type Settings = Record< string, unknown >;
 
 function createEditorRegistry( settings: Settings ) {
 	const registry = createRegistry();
-	const editor = createReduxStore( 'core/editor', {
+	const editor = createReduxStore( 'core/block-editor', {
 		reducer: (
 			state = settings,
 			action: { type: string; settings?: Settings }
@@ -26,7 +22,7 @@ function createEditorRegistry( settings: Settings ) {
 				settings: value,
 			} ),
 		},
-		selectors: { getEditorSettings: ( state: Settings ) => state },
+		selectors: { getSettings: ( state: Settings ) => state },
 	} );
 	registry.register( editor );
 	registry.register( store );
