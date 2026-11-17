@@ -93,7 +93,10 @@ function seed_theme_mods(): void {
 	switch ( wp_is_block_theme() ) {
 		case true:
 			if ( ! array_key_exists( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, $mods ) ) {
-				set_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, array( 'core/term-description', 'after' ) );
+				$block_hook = select_outlet_page_hero_anchor();
+				if ( null !== $block_hook ) {
+					set_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, $block_hook );
+				}
 			}
 			if ( ! array_key_exists( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, $mods ) ) {
 				set_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD, array( 'core/post-title', 'before' ) );
@@ -122,4 +125,65 @@ function seed_theme_mods(): void {
 			}
 			break;
 	}
+}
+
+/**
+ * Selects the block hook anchor for auto-inserting the outlet page hero.
+ *
+ * Selects store notices when an archive title exists and the notices are below
+ * the term description, or below the title if no description exists.
+ *
+ * Otherwise, selects term description.
+ *
+ * The hero is inserted after the selected anchor.
+ *
+ * Returns null when the catalog template is missing.
+ *
+ * @internal
+ * @return string[]|null Anchor block name and relative position, or null when the template is missing.
+ */
+function select_outlet_page_hero_anchor(): ?array {
+	$catalog_template = get_block_template( get_stylesheet() . '//archive-product' );
+	if ( null === $catalog_template ) {
+		return null;
+	}
+
+	$default              = array( 'core/term-description', 'after' );
+	$blocks               = resolve_pattern_blocks( parse_blocks( $catalog_template->content ) );
+	$anchors              = get_catalog_anchor_order( $blocks );
+	$title_position       = array_search( 'core/query-title', $anchors, true );
+	$description_position = array_search( 'core/term-description', $anchors, true );
+	$notices_position     = array_search( 'woocommerce/store-notices', $anchors, true );
+	if ( false === $title_position ) {
+		return $default;
+	}
+	if ( false === $notices_position ) {
+		return $default;
+	}
+	$reference_position = $description_position;
+	if ( false === $reference_position ) {
+		$reference_position = $title_position;
+	}
+	if ( $notices_position > $reference_position ) {
+		return array( 'woocommerce/store-notices', 'after' );
+	}
+	return $default;
+}
+
+/**
+ * Read catalog landmark blocks in document order, including nested containers.
+ *
+ * @internal
+ * @param array<array<string, mixed>> $blocks Parsed catalog blocks.
+ * @return string[] Landmark block names.
+ */
+function get_catalog_anchor_order( array $blocks ): array {
+	$anchors = array();
+	foreach ( $blocks as $block ) {
+		if ( in_array( $block['blockName'], array( 'core/query-title', 'core/term-description', 'woocommerce/store-notices' ), true ) ) {
+			$anchors[] = $block['blockName'];
+		}
+		$anchors = array_merge( $anchors, get_catalog_anchor_order( $block['innerBlocks'] ) );
+	}
+	return $anchors;
 }

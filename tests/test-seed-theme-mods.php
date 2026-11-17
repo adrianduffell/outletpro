@@ -17,9 +17,63 @@ use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 
+	public function test_skips_hero_anchor_but_seeds_other_mods_when_catalog_template_is_missing(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Restore the template filter even if seeding fails.
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD );
+		add_filter( 'get_block_template', '__return_null' );
+
+		// Act.
+		try {
+			seed_theme_mods();
+		} finally {
+			remove_filter( 'get_block_template', '__return_null' );
+		}
+
+		// Assert.
+		$this->assertArrayNotHasKey( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, get_theme_mods() );
+		$this->assertSame( array( 'core/post-title', 'before' ), get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
+	}
+
+	public function test_seeds_hero_anchor_when_catalog_template_becomes_available(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Restore the template filter even if seeding fails.
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
+		add_filter( 'get_block_template', '__return_null' );
+		try {
+			seed_theme_mods();
+		} finally {
+			remove_filter( 'get_block_template', '__return_null' );
+		}
+
+		$id = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'archive-product',
+				'post_content' => '<!-- wp:query-title /--><!-- wp:term-description /--><!-- wp:woocommerce/store-notices /-->',
+			)
+		);
+		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertSame( array( 'woocommerce/store-notices', 'after' ), get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
+	}
+
 	public function test_seeds_block_theme_mods(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
+		$id = self::factory()->post->create(
+			array(
+				'post_type'    => 'wp_template',
+				'post_name'    => 'archive-product',
+				'post_content' => '<!-- wp:term-description /-->',
+			)
+		);
+		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
 		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
