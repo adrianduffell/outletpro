@@ -231,3 +231,48 @@ function register_outlet_block_pattern_category(): void {
 		)
 	);
 }
+
+/**
+ * Select an outlet navigation using store heuristics.
+ *
+ * The heuristics are:
+ * - Default: Outlet navigation with three category tiles.
+ * - 0-2 top-level product categories: Outlet navigation with circular price tier tiles.
+ * - 4 top-level product categories: Outlet navigation with four category tiles.
+ * - 6 top-level product categories: Outlet navigation with six category tiles.
+ *
+ * Product category counts exclude the uncategorized category.
+ *
+ * @internal
+ * @throws \RuntimeException When product categories cannot be retrieved.
+ */
+function select_outlet_navigation_pattern(): string {
+	$excluded_categories = array_filter( array( get_uncategorized_product_category_id() ) );
+
+	$categories = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'exclude'    => $excluded_categories,
+			'hide_empty' => false,
+			'fields'     => 'ids',
+			'number'     => 7,
+		)
+	);
+	if ( is_wp_error( $categories ) ) {
+		throw new \RuntimeException( 'Product categories could not be retrieved.' );
+	}
+
+	switch ( count( $categories ) ) {
+		case 0:
+		case 1:
+		case 2:
+			return 'outletpro/outlet-navigation-price-tiers';
+		case 4:
+			return 'outletpro/outlet-navigation-4';
+		case 6:
+			return 'outletpro/outlet-navigation-6';
+		default:
+			return 'outletpro/outlet-navigation-3';
+	}
+}
