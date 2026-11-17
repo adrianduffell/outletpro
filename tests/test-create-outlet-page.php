@@ -82,6 +82,28 @@ class Test_Create_Outlet_Page extends WP_UnitTestCase {
 		$this->assertSame( 'draft', $pages[0]->post_status );
 	}
 
+	public function test_creates_page_with_empty_content(): void {
+		// Arrange.
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
+		delete_option( OUTLET_PAGE_OPTION );
+
+		// Act.
+		create_outlet_page();
+
+		// Assert.
+		$pages = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_status' => 'draft',
+				'name'        => 'outlet',
+			)
+		);
+		$this->assertNotEmpty( $pages );
+		$this->assertSame( '', $pages[0]->post_content );
+	}
+
 	public function test_returns_success_message(): void {
 		// Arrange.
 		init_taxonomies();
