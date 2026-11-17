@@ -98,11 +98,12 @@ function outlet_hero_file_template_hook( ?\WP_Block_Template $template, string $
 	}
 	// Use select_outlet_navigation_pattern() once it is available on main.
 	$pattern = 'outletpro/outlet-navigation-3';
-	if ( ! \WP_Block_Patterns_Registry::get_instance()->is_registered( $pattern ) ) {
+	try {
+		$navigation = get_pattern_content( $pattern );
+	} catch ( \InvalidArgumentException | \RuntimeException $e ) {
 		wc_get_logger()->error( 'Outlet hero default could not be retrieved.' );
 		return null;
 	}
-	$navigation = get_comment_delimited_block_content( 'core/pattern', array( 'slug' => $pattern ), '' );
 
 	$part                 = new \WP_Block_Template();
 	$part->id             = get_stylesheet() . '//outlet-hero';

@@ -27,8 +27,10 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'Outlet page hero', $part->title );
 		$this->assertSame( 'plugin', $part->source );
 		$this->assertCount( 1, $blocks );
-		$this->assertSame( 'core/pattern', $blocks[0]['blockName'] );
-		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['slug'] );
+		$this->assertSame( 'core/group', $blocks[0]['blockName'] );
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
+		$this->assertSame( 'Outlet navigation with three category tiles', $blocks[0]['attrs']['metadata']['name'] );
+		$this->assertStringNotContainsString( '<!-- wp:pattern ', $part->content );
 	}
 
 	public function test_does_not_supply_a_whole_template(): void {
@@ -88,6 +90,26 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
 		deinit_patterns();
+		init_template_parts();
+
+		// Act.
+		$part = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
+
+		// Assert.
+		$this->assertNull( $part );
+	}
+
+	public function test_empty_navigation_returns_no_default(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		deinit_patterns();
+		register_block_pattern(
+			'outletpro/outlet-navigation-3',
+			array(
+				'title'   => 'Empty navigation',
+				'content' => '',
+			)
+		);
 		init_template_parts();
 
 		// Act.
