@@ -108,6 +108,7 @@ function init_page(): void {
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
 	add_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	add_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10, 2 );
+	add_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_page_breadcrumb_hook' );
 }
 
 /**
@@ -120,6 +121,7 @@ function deinit_page(): void {
 	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
 	remove_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	remove_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10 );
+	remove_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_page_breadcrumb_hook' );
 
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
@@ -630,4 +632,40 @@ function outlet_page_term_link_hook( string $url, \WP_Term $term ): string {
 		wc_get_logger()->error( 'Outlet Page URL could not be retrieved.' );
 		return $url;
 	}
+}
+
+/**
+ * Filters breadcrumbs to place the outlet page within the shop page.
+ *
+ * Fired by `woocommerce_get_breadcrumb`.
+ *
+ * @internal WooCommerce filter hook
+ * @param array<array{string,string}> $crumbs Native breadcrumb trail.
+ * @return array<array{string,string}> Outlet breadcrumb trail.
+ */
+function outlet_page_breadcrumb_hook( array $crumbs ): array {
+	if ( ! is_tax( OUTLET_STATUS_TAXONOMY, OUTLET_STATUS_CANONICAL_TERM ) ) {
+		return $crumbs;
+	}
+	$label         = get_taxonomy( OUTLET_STATUS_TAXONOMY )->labels->name;
+	$shop_id       = wc_get_page_id( 'shop' );
+	$front_page_id = 0;
+	if ( 'page' === get_option( 'show_on_front' ) ) {
+		$front_page_id = filter_var( get_option( 'page_on_front' ), FILTER_VALIDATE_INT );
+	}
+	foreach ( $crumbs as $index => $crumb ) {
+		if ( $label !== $crumb[0] ) {
+			continue;
+		}
+		if ( '' !== $crumb[1] ) {
+			continue;
+		}
+		if ( 0 < $shop_id && $shop_id !== $front_page_id ) {
+			$crumbs[ $index ] = array( get_the_title( $shop_id ), get_permalink( $shop_id ) );
+		} else {
+			unset( $crumbs[ $index ] );
+		}
+		break;
+	}
+	return array_values( $crumbs );
 }
