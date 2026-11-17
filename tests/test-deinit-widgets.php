@@ -22,6 +22,7 @@ class Test_Deinit_Widgets extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertFalse( has_action( 'widgets_init', 'OutletPro\\widgets_init_hook' ) );
+		$this->assertFalse( has_action( 'after_switch_theme', 'OutletPro\\seed_outlet_hero_widgets_after_switch_theme_hook' ) );
 		$this->assertFalse( is_registered_sidebar( OUTLET_HERO_WIDGET_AREA ) );
 	}
 }

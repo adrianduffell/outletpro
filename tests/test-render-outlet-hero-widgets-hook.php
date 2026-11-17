@@ -18,7 +18,8 @@ class Test_Render_Outlet_Hero_Widgets_Hook extends WP_UnitTestCase {
 
 	// phpcs:ignore Generic.Commenting.DocComment.MissingShort -- PHPUnit data provider metadata.
 	/**
-	 * @dataProvider outlet_archive_pages
+	 * @testWith [1]
+	 *           [2]
 	 */
 	public function test_saved_widgets_render_in_the_outlet_archive_header( int $page_number ): void {
 		// Arrange.
@@ -45,18 +46,6 @@ class Test_Render_Outlet_Hero_Widgets_Hook extends WP_UnitTestCase {
 
 		// Act.
 		woocommerce_product_taxonomy_archive_header();
-	}
-
-	/**
-	 * Provide Outlet archive page numbers.
-	 *
-	 * @return array<string, array{int}> Archive pages.
-	 */
-	public static function outlet_archive_pages(): array {
-		return array(
-			'first page'  => array( 1 ),
-			'second page' => array( 2 ),
-		);
 	}
 
 	public function test_other_requests_do_not_render_outlet_widgets(): void {

@@ -23,6 +23,7 @@ const OUTLET_HERO_WIDGET_AREA = 'outlet-hero';
  */
 function init_widgets(): void {
 	add_action( 'widgets_init', 'OutletPro\\widgets_init_hook' );
+	add_action( 'after_switch_theme', 'OutletPro\\seed_outlet_hero_widgets_after_switch_theme_hook', 10, 2 );
 }
 
 /**
@@ -32,6 +33,7 @@ function init_widgets(): void {
  */
 function deinit_widgets(): void {
 	remove_action( 'widgets_init', 'OutletPro\\widgets_init_hook' );
+	remove_action( 'after_switch_theme', 'OutletPro\\seed_outlet_hero_widgets_after_switch_theme_hook' );
 	unregister_sidebar( OUTLET_HERO_WIDGET_AREA );
 }
 
@@ -44,6 +46,26 @@ function deinit_widgets(): void {
  */
 function widgets_init_hook(): void {
 	register_classic_outlet_sidebar();
+}
+
+/**
+ * Seed hero widgets when switching from a block theme to a classic theme.
+ *
+ * Fired by `after_switch_theme` for classic themes.
+ *
+ * @internal WordPress action hook
+ * @param string    $_old_name Previous theme name.
+ * @param \WP_Theme $old_theme Previous theme.
+ */
+function seed_outlet_hero_widgets_after_switch_theme_hook( string $_old_name, \WP_Theme $old_theme ): void {
+	if ( ! $old_theme->is_block_theme() ) {
+		return;
+	}
+	try {
+		seed_outlet_hero_widgets();
+	} catch ( \InvalidArgumentException | \RuntimeException $e ) {
+		wc_get_logger()->error( 'Outlet hero widgets could not be initialized.' );
+	}
 }
 
 /**
