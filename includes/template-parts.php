@@ -96,9 +96,8 @@ function outlet_hero_file_template_hook( ?\WP_Block_Template $template, string $
 	if ( get_stylesheet() . '//outlet-hero' !== $id ) {
 		return null;
 	}
-	// Use select_outlet_navigation_pattern() once it is available on main.
-	$pattern = 'outletpro/outlet-navigation-3';
 	try {
+		$pattern    = select_outlet_navigation_pattern();
 		$navigation = get_pattern_content( $pattern );
 	} catch ( \InvalidArgumentException | \RuntimeException $e ) {
 		wc_get_logger()->error( 'Outlet hero default could not be retrieved.' );

@@ -7,6 +7,7 @@
 
 use function OutletPro\deinit_patterns;
 use function OutletPro\init_patterns;
+use function OutletPro\init_taxonomies;
 use function OutletPro\init_template_parts;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
@@ -15,6 +16,7 @@ class Test_Filter_Block_Templates extends WP_UnitTestCase {
 	public function test_lists_the_default_without_creating_a_post_or_requiring_a_page(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		init_template_parts();

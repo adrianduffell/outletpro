@@ -8,6 +8,7 @@
 use function OutletPro\deinit_patterns;
 use function OutletPro\deinit_template_parts;
 use function OutletPro\init_patterns;
+use function OutletPro\init_taxonomies;
 use function OutletPro\init_template_parts;
 
 class Test_Deinit_Template_Parts extends WP_UnitTestCase {
@@ -15,6 +16,7 @@ class Test_Deinit_Template_Parts extends WP_UnitTestCase {
 	public function test_removes_default_discovery_and_lookup(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
+		init_taxonomies();
 		deinit_patterns();
 		init_patterns();
 		init_template_parts();
