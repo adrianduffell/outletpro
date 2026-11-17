@@ -20,6 +20,22 @@ defined( 'ABSPATH' ) || exit;
 function init_woocommerce_template_hooks(): void {
 	init_single_product_badge_template_hook();
 	init_single_product_message_template_hook();
+	init_outlet_hero_template_hook();
+}
+
+/**
+ * Register the outlet hero widgets at the active theme's configured hook and priority.
+ *
+ * @internal
+ * @throws \InvalidArgumentException When the setting is invalid.
+ */
+function init_outlet_hero_template_hook(): void {
+	$tuple = get_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_archive_description', 5 ) );
+	if ( array() === $tuple ) {
+		return;
+	}
+
+	add_action( get_tuple_template_hook_name( $tuple ), 'OutletPro\\render_outlet_hero_widgets_hook', get_tuple_template_hook_priority( $tuple ) );
 }
 
 /**

@@ -72,6 +72,7 @@ require_once __DIR__ . '/includes/enqueue-license.php';
 require_once __DIR__ . '/includes/patterns.php';
 require_once __DIR__ . '/includes/page.php';
 require_once __DIR__ . '/includes/template-parts.php';
+require_once __DIR__ . '/includes/widgets.php';
 require_once __DIR__ . '/includes/tools.php';
 require_once __DIR__ . '/includes/setup-task.php';
 require_once __DIR__ . '/includes/admin-product-list-table.php';
@@ -167,11 +168,26 @@ function admin_init_hook(): void {
  * @internal WordPress action hook
  */
 function woocommerce_loaded_hook(): void {
+	add_action( 'widgets_init', 'OutletPro\\widgets_init_hook' );
 	add_action( 'init', 'OutletPro\init_hook', 20 );
 	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
 }
 
 add_action( 'woocommerce_loaded', 'OutletPro\woocommerce_loaded_hook' );
+
+/**
+ * Register widget areas for classic themes.
+ *
+ * Fired by `widgets_init`.
+ *
+ * @internal WordPress action hook
+ */
+function widgets_init_hook(): void {
+	if ( wp_is_block_theme() ) {
+		return;
+	}
+	register_classic_outlet_sidebar();
+}
 
 /**
  * Plugin activation hook.
@@ -193,6 +209,11 @@ function activate(): void {
 		seed_outlet_status_taxonomy();
 		seed_outlet_search_index_taxonomy();
 		create_outlet_page();
+		if ( ! wp_is_block_theme() ) {
+			// The plugin may have loaded after widgets_init during activation.
+			register_classic_outlet_sidebar();
+			seed_outlet_hero_widgets();
+		}
 		seed_activated_at_option();
 	} catch ( \RuntimeException $e ) {
 		\wc_get_logger()->error( $e->getMessage() );
