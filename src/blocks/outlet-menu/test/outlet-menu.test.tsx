@@ -9,14 +9,9 @@ import {
 	createRegistry,
 	RegistryProvider,
 } from '@wordpress/data';
-import { store as editorStore } from '@wordpress/editor';
 import type { PropsWithChildren } from 'react';
 import { Edit } from '../edit';
 import { store as outletStore } from '../../../data';
-
-jest.mock( '@wordpress/editor', () => ( {
-	store: { name: 'core/editor' },
-} ) );
 
 jest.mock( '@wordpress/block-editor', () => ( {
 	InspectorControls: ( { children }: PropsWithChildren ) => children,
@@ -51,14 +46,13 @@ function renderMenu(
 	const registry = createRegistry();
 	registry.register( outletStore );
 	registry.register(
-		createReduxStore( editorStore.name, {
+		createReduxStore( 'core/block-editor', {
 			reducer: () => ( {
 				...settings,
 				outletproProductCategories: categories,
 			} ),
 			selectors: {
-				getEditorSettings: ( state: Record< string, unknown > ) =>
-					state,
+				getSettings: ( state: Record< string, unknown > ) => state,
 			},
 		} )
 	);

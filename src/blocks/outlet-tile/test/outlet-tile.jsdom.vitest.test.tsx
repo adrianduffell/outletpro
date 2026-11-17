@@ -15,7 +15,6 @@ import type { PropsWithChildren } from 'react';
 import { Edit } from '../edit';
 import { store as outletStore } from '../../../data';
 
-vi.mock( '@wordpress/editor', () => ( { store: { name: 'core/editor' } } ) );
 vi.mock( '@wordpress/core-data', () => ( {
 	useEntityProp: vi.fn(),
 	useEntityRecords: vi.fn(),
@@ -31,12 +30,12 @@ function renderTile( attributes: Attributes ) {
 	const registry = createRegistry();
 	registry.register( outletStore );
 	registry.register(
-		createReduxStore( 'core/editor', {
+		createReduxStore( 'core/block-editor', {
 			reducer: () => ( {
 				outletproPriceTiers: [ { id: 2, name: 'Under $25' } ],
 				outletproDiscountTiers: [ { id: 3, name: '50% off' } ],
 			} ),
-			selectors: { getEditorSettings: ( state: object ) => state },
+			selectors: { getSettings: ( state: object ) => state },
 		} )
 	);
 	vi.mocked( useEntityRecords, { partial: true } ).mockReturnValue( {
