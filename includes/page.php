@@ -109,6 +109,7 @@ function init_page(): void {
 	add_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	add_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10, 2 );
 	add_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_page_breadcrumb_hook' );
+	add_action( 'admin_bar_menu', 'OutletPro\\admin_bar_hook', 81 );
 }
 
 /**
@@ -122,6 +123,7 @@ function deinit_page(): void {
 	remove_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	remove_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10 );
 	remove_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_page_breadcrumb_hook' );
+	remove_action( 'admin_bar_menu', 'OutletPro\\admin_bar_hook', 81 );
 
 	$templates = \WP_Block_Templates_Registry::get_instance()->get_all_registered();
 
@@ -416,6 +418,43 @@ function outlet_page_pre_get_posts_hook( \WP_Query $query ): void {
 		$outlet_clauses[] = $existing;
 	}
 	$query->set( 'tax_query', $outlet_clauses ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Indexed product facets.
+}
+
+/**
+ * Adds an edit page link on the admin toolbar for the outlet page.
+ *
+ * Fired by `admin_bar_menu`.
+ *
+ * @internal WordPress action hook
+ * @param \WP_Admin_Bar $admin_bar Toolbar instance.
+ */
+function admin_bar_hook( \WP_Admin_Bar $admin_bar ): void {
+	if ( is_admin() ) {
+		return;
+	}
+	if ( true !== get_query_var( 'outletpro' ) ) {
+		return;
+	}
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+		return;
+	}
+	if ( null === $page_id ) {
+		return;
+	}
+	$edit_link = get_edit_post_link( $page_id );
+	if ( ! $edit_link ) {
+		return;
+	}
+	$admin_bar->add_node(
+		array(
+			'id'    => 'edit',
+			'title' => get_post_type_object( 'page' )->labels->edit_item,
+			'href'  => $edit_link,
+		)
+	);
 }
 
 /**
