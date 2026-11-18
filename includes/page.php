@@ -104,6 +104,7 @@ function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
  */
 function init_page(): void {
 	register_outlet_page_template();
+	add_filter( 'get_post_metadata', 'OutletPro\\outlet_page_template_metadata_hook', 10, 4 );
 	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
 	add_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
@@ -118,6 +119,7 @@ function init_page(): void {
  * @internal
  */
 function deinit_page(): void {
+	remove_filter( 'get_post_metadata', 'OutletPro\\outlet_page_template_metadata_hook' );
 	remove_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
 	remove_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
@@ -134,6 +136,52 @@ function deinit_page(): void {
 
 		unregister_block_template( $template_name );
 	}
+}
+
+/**
+ * Expose the shared Product Catalog template for the outlet page in block themes.
+ *
+ * Leaves saved metadata unchanged and preserves the legacy outlet page template.
+ *
+ * Fired by `get_post_metadata`.
+ *
+ * @internal WordPress filter hook
+ * @param mixed  $value    Short-circuited metadata value, or null.
+ * @param int    $post_id  Post ID.
+ * @param string $meta_key Metadata key.
+ * @param bool   $single   Whether to return a single value.
+ * @return mixed Filtered metadata value, or the original short-circuit value.
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint
+ */
+function outlet_page_template_metadata_hook( $value, int $post_id, string $meta_key, bool $single ) {
+	if ( null !== $value ) {
+		return $value;
+	}
+	if ( '_wp_page_template' !== $meta_key ) {
+		return $value;
+	}
+	if ( ! wp_is_block_theme() ) {
+		return $value;
+	}
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+		return $value;
+	}
+	if ( $post_id !== $page_id ) {
+		return $value;
+	}
+	if ( 'page' !== get_post_type( $post_id ) ) {
+		return $value;
+	}
+	// Reading all metadata skips this key-specific override and avoids recursion.
+	$metadata = get_post_meta( $post_id );
+	if ( 'outlet-page' === ( $metadata['_wp_page_template'][0] ?? null ) ) {
+		return $value;
+	}
+	return $single ? 'archive-product' : array( 'archive-product' );
 }
 
 /**

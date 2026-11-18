@@ -10,6 +10,7 @@ import './welcome-page';
 // #endif
 import './page-editor-notice';
 import OutletPageEditorCallout from './page-editor-callout';
+import PageTemplateEditor from './page-template-editor';
 import './settings-sidebar';
 import './outlet-toggle';
 import EditorPreview from './editor-preview';
@@ -26,6 +27,9 @@ registerPlugin( 'outletpro-editor-preview', {
 } );
 
 if ( window.location.pathname.endsWith( '/post.php' ) ) {
+	registerPlugin( 'outletpro-page-template-editor', {
+		render: PageTemplateEditor,
+	} );
 	registerPlugin( 'outletpro-page-editor-callout', {
 		render: OutletPageEditorCallout,
 	} );
