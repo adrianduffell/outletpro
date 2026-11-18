@@ -1,0 +1,9 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+.outletpro-page-description > p {
+	margin: 4px 0 0;
+	color: #757575;
+}
