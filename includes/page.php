@@ -351,9 +351,6 @@ function filter_outlet_page_request_hook( array $vars ): array {
 		return $vars;
 	}
 	if ( 'publish' !== $page->post_status ) {
-		if ( empty( $vars['preview'] ) ) {
-			return $vars;
-		}
 		if ( ! current_user_can( 'edit_post', $page->ID ) ) {
 			return $vars;
 		}

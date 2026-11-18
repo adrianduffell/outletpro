@@ -121,15 +121,7 @@ class Test_Filter_Outlet_Page_Request_Hook extends WP_UnitTestCase {
 		add_to_outlet( $product );
 
 		// Act.
-		$this->go_to(
-			add_query_arg(
-				array(
-					'page_id' => $page_id,
-					'preview' => 'true',
-				),
-				home_url( '/' )
-			)
-		);
+		$this->go_to( add_query_arg( 'page_id', $page_id, home_url( '/' ) ) );
 
 		// Assert.
 		$this->assertTrue( get_query_var( 'outletpro' ) );
