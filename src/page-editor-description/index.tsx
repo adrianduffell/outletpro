@@ -53,11 +53,12 @@ function PageDescription(): JSX.Element | null {
 }
 
 export default function OutletPageEditorDescription(): JSX.Element | null {
-	const { postId, postType } = useSelect( ( select ) => {
+	const { postId, postType, template } = useSelect( ( select ) => {
 		const editor = select( editorStore );
 		return {
 			postId: editor.getCurrentPostId(),
 			postType: editor.getCurrentPostType(),
+			template: editor.getEditedPostAttribute( 'template' ),
 		};
 	}, [] );
 	const [ outletPageId ] =
@@ -70,6 +71,9 @@ export default function OutletPageEditorDescription(): JSX.Element | null {
 		return null;
 	}
 	if ( postId !== outletPageId ) {
+		return null;
+	}
+	if ( template === 'outlet-page' ) {
 		return null;
 	}
 	return <PageDescription />;

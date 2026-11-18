@@ -39,7 +39,10 @@ const sidebar = (
 );
 const description = 'Displays the store’s outlet products.';
 
-function renderDescription( settings: Record< string, unknown > = {} ) {
+function renderDescription(
+	settings: Record< string, unknown > = {},
+	template = ''
+) {
 	const { result } = renderHook( useRegistry );
 	const registry = createRegistry( {}, result.current );
 	registry.register( coreStore );
@@ -55,6 +58,7 @@ function renderDescription( settings: Record< string, unknown > = {} ) {
 		id: 42,
 		type: 'page',
 		status: 'publish',
+		template,
 	} );
 	registry.dispatch( 'core/editor' ).setEditedPost( 'page', 42 );
 	registry.dispatch( editorStore ).updateEditorSettings( settings );
@@ -98,6 +102,47 @@ test.each( [
 
 	// Act.
 	renderDescription( settings );
+
+	// Assert.
+	expect( await panel.findByText( description ) ).toBeVisible();
+} );
+
+test( 'hides the description for legacy outlet pages', () => {
+	// Arrange.
+	vi.mocked( apiFetch ).mockResolvedValue( {} );
+	const panel = render( sidebar );
+
+	// Act.
+	renderDescription( {}, 'outlet-page' );
+
+	// Assert.
+	expect( panel.queryByText( description ) ).toBeNull();
+	expect(
+		panel.container.querySelector( '.outletpro-page-description' )
+	).toBeNull();
+} );
+
+test( 'updates the description when the page template changes', async () => {
+	// Arrange.
+	vi.mocked( apiFetch ).mockResolvedValue( {} );
+	const panel = render( sidebar );
+	const { registry } = renderDescription();
+	await panel.findByText( description );
+
+	// Act.
+	act( () => {
+		registry
+			.dispatch( editorStore )
+			.editPost( { template: 'outlet-page' } );
+	} );
+
+	// Assert.
+	expect( panel.queryByText( description ) ).toBeNull();
+
+	// Act.
+	act( () => {
+		registry.dispatch( editorStore ).editPost( { template: '' } );
+	} );
 
 	// Assert.
 	expect( await panel.findByText( description ) ).toBeVisible();
