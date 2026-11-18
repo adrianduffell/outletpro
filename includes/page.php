@@ -106,6 +106,7 @@ function init_page(): void {
 	register_outlet_page_template();
 	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	add_action( 'wp', 'OutletPro\\outlet_page_post_global_hook' );
 	add_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	add_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10, 2 );
 	add_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_page_breadcrumb_hook' );
@@ -120,6 +121,7 @@ function init_page(): void {
 function deinit_page(): void {
 	remove_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	remove_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
+	remove_action( 'wp', 'OutletPro\\outlet_page_post_global_hook' );
 	remove_filter( 'single_term_title', 'OutletPro\\outlet_page_title_hook' );
 	remove_filter( 'term_link', 'OutletPro\\outlet_page_term_link_hook', 10 );
 	remove_filter( 'woocommerce_get_breadcrumb', 'OutletPro\\outlet_page_breadcrumb_hook' );
@@ -134,6 +136,42 @@ function deinit_page(): void {
 
 		unregister_block_template( $template_name );
 	}
+}
+
+/**
+ * Sets the global post variable for the outlet page.
+ *
+ * Fired by `wp`, after WordPress has initialized the request globals.
+ *
+ * @internal WordPress action hook
+ */
+function outlet_page_post_global_hook(): void {
+	if ( is_admin() ) {
+		return;
+	}
+	if ( true !== get_query_var( 'outletpro' ) ) {
+		return;
+	}
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet Page ID could not be retrieved.' );
+		return;
+	}
+	if ( null === $page_id ) {
+		return;
+	}
+	$page = get_post( $page_id );
+	if ( ! $page instanceof \WP_Post ) {
+		wc_get_logger()->error( 'Outlet Page could not be retrieved.' );
+		return;
+	}
+	if ( 'page' !== $page->post_type ) {
+		wc_get_logger()->error( 'Outlet Page could not be retrieved.' );
+		return;
+	}
+	$GLOBALS['post'] = $page; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- 🤠
+	setup_postdata( $page );
 }
 
 /**
