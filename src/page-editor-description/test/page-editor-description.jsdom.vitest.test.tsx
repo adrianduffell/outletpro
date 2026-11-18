@@ -37,8 +37,7 @@ const sidebar = (
 		<div>Outlet settings</div>
 	</section>
 );
-const description =
-	'Displays outlet products using the product catalog template.';
+const description = 'Displays the store’s outlet products.';
 
 function renderDescription( settings: Record< string, unknown > = {} ) {
 	const { result } = renderHook( useRegistry );

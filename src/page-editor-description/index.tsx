@@ -47,12 +47,7 @@ function PageDescription(): JSX.Element | null {
 	}
 
 	return createPortal(
-		<p>
-			{ __(
-				'Displays outlet products using the product catalog template.',
-				'outletpro'
-			) }
-		</p>,
+		<p>{ __( 'Displays the store’s outlet products.', 'outletpro' ) }</p>,
 		mountNode
 	);
 }
