@@ -8,6 +8,7 @@ Outlet uses the following terminology:
 | Outlet page     | WordPress page containing the outlet                      |
 | Outlet products | Products included in the store’s outlet                   |
 | Outlet badge    | Visual mark displayed on outlet products                  |
+| Outlet hero     | Hero section on the outlet page                           |
 | Outlet message  | Optional message shown on outlet products                 |
 
 ❌ Don't use:
