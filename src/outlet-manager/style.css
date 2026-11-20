@@ -1,0 +1,528 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+@import "@wordpress/dataviews/build-style/style.css";
+
+body.outletpro-manager-screen #adminmenumain,
+body.outletpro-manager-screen #wpfooter,
+body.outletpro-manager-screen #screen-meta-links,
+body.outletpro-manager-screen #screen-meta {
+	display: none;
+}
+
+.outletpro-manager {
+	--wp-admin-theme-color: #3858e9;
+	--wp-admin-theme-color-darker-10: #2145e6;
+	--wp-admin-theme-color-darker-20: #183ad6;
+	position: fixed;
+	inset: var(--wp-admin--admin-bar--height, 32px) 0 0;
+	z-index: 99990;
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	color: #1e1e1e;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-size: 13px;
+}
+
+/* Match WordPress's editor header and compact button metrics. */
+.outletpro-manager-header {
+	height: 64px;
+	box-sizing: border-box;
+	flex-shrink: 0;
+	display: grid;
+	grid-template-columns: 32px 2fr 2.5fr 2fr 64px;
+	gap: 16px;
+	align-items: center;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.outletpro-manager-header .components-accessible-toolbar,
+.outletpro-manager-header .components-toolbar-group {
+	border: 0;
+	min-height: 0;
+	padding: 0;
+}
+
+.outletpro-manager-header .components-toolbar-group {
+	display: flex;
+	gap: 8px;
+}
+
+.outletpro-manager-header .components-button {
+	height: 32px;
+	min-width: 32px;
+	font-size: 13px;
+	border-radius: 2px;
+}
+
+.outletpro-manager .outletpro-manager-header .components-button.has-icon {
+	box-sizing: border-box;
+	width: 32px;
+	min-width: 32px;
+	padding: 0;
+}
+
+.outletpro-manager .outletpro-manager-header .components-button.is-primary,
+.outletpro-manager .outletpro-manager-header .components-button.is-secondary {
+	box-sizing: border-box;
+	padding: 4px 12px;
+}
+
+.outletpro-manager-header .components-button svg {
+	width: 24px;
+	height: 24px;
+}
+
+.outletpro-manager-navigation {
+	grid-column: 1;
+	margin-left: 8px;
+	margin-right: -8px;
+}
+
+.outletpro-manager-document.components-button {
+	grid-column: 3;
+	justify-self: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: min(100%, 450px);
+	min-width: 0;
+	padding: 4px 12px;
+	background: #f0f0f0;
+	color: #1e1e1e;
+	border-radius: 4px;
+	font-weight: 400;
+}
+
+.outletpro-manager-document.components-button:hover {
+	background: #e0e0e0;
+	color: #1e1e1e;
+}
+
+.outletpro-manager-document-title {
+	max-width: 70%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.outletpro-manager-document-icon {
+	position: absolute;
+	left: 12px;
+	color: #757575;
+}
+
+.outletpro-manager-document-type {
+	padding-left: 4px;
+}
+
+.outletpro-manager-header .outletpro-manager-header-actions {
+	grid-column: 4 / -1;
+	justify-self: end;
+	padding-right: 8px;
+}
+
+.outletpro-manager-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	flex: 1;
+	min-height: 0;
+	position: relative;
+}
+
+.outletpro-manager-layout.is-sidebar-open {
+	grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+.outletpro-manager-workspace {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	min-width: 0;
+	min-height: 0;
+}
+
+.outletpro-manager-products {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+.outletpro-manager-products-panel {
+	border: 0;
+}
+
+.outletpro-manager-products-panel.components-panel > .components-panel__body {
+	margin: 0;
+	border: 0;
+}
+
+.outletpro-manager-products-panel:has(> .is-opened),
+.outletpro-manager-products-panel > .is-opened,
+.outletpro-manager-products-content:not([hidden]) {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+.outletpro-manager-products-panel .components-panel__body-title {
+	flex-shrink: 0;
+}
+
+.outletpro-manager-help {
+	flex-shrink: 0;
+	color: #757575;
+	line-height: 1.6;
+	margin: 0 0 24px;
+}
+
+.outletpro-manager-product-browser {
+	display: flex;
+	flex: 1;
+	min-width: 0;
+	min-height: 0;
+}
+
+.outletpro-manager-product-controls {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.outletpro-manager-membership-filter {
+	flex-shrink: 0;
+}
+
+.outletpro-manager-product-search {
+	flex: 1 1 240px;
+	min-width: 200px;
+	max-width: 320px;
+}
+
+.outletpro-manager-view-options {
+	margin-left: auto;
+}
+
+.outletpro-manager-product-name {
+	color: #1e1e1e;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.outletpro-manager-product-image {
+	display: block;
+	width: 48px;
+	height: 48px;
+	object-fit: contain;
+}
+
+.outletpro-manager .dataviews-view-table__cell-content-wrapper:has(> .outletpro-manager-product-image) {
+	min-width: 0;
+}
+
+.outletpro-manager .dataviews-view-table td {
+	vertical-align: middle;
+}
+
+.outletpro-manager .dataviews-view-table__cell-content-wrapper.dataviews-view-table__cell-align-center {
+	max-width: none;
+}
+
+.outletpro-manager .dataviews-view-table thead {
+	z-index: 2;
+}
+
+a.outletpro-manager-product-name:hover {
+	color: var(--wp-admin-theme-color);
+}
+
+.outletpro-manager-outlet-cell {
+	display: flex;
+	align-items: center;
+}
+
+.outletpro-manager .dataviews-view-table th:has(.outletpro-manager-outlet-heading),
+.outletpro-manager .dataviews-view-table td:has(.outletpro-manager-outlet-cell) {
+	position: sticky;
+	inset-inline-end: 0;
+	z-index: 1;
+	background-color: var(--wp-dataviews-color-background, #fff);
+	box-shadow: -1px 0 0 #ddd;
+}
+
+.outletpro-manager-price {
+	white-space: nowrap;
+}
+
+.outletpro-manager-price del {
+	margin-right: 4px;
+	opacity: 0.6;
+}
+
+.outletpro-manager-price ins {
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.outletpro-manager .components-notice {
+	flex-shrink: 0;
+	margin: 0 0 16px;
+}
+
+.outletpro-manager-snackbars {
+	position: fixed;
+	bottom: 16px;
+	left: 16px;
+	width: calc(100% - 32px);
+	z-index: 3;
+}
+
+.outletpro-manager-details {
+	box-sizing: border-box;
+	border-left: 1px solid #ddd;
+	overflow: hidden;
+	background: #fff;
+}
+
+.outletpro-manager-review {
+	display: flex;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.outletpro-manager-review-prompt {
+	padding: 16px 16px 4px;
+	border-bottom: 1px solid #ddd;
+}
+
+.outletpro-manager-review-prompt > strong {
+	display: block;
+	margin-bottom: 12px;
+}
+
+.outletpro-manager-review-page {
+	padding: 16px;
+	border-bottom: 1px solid #ddd;
+}
+
+.outletpro-manager-review dd {
+	margin: 4px 0 16px;
+	overflow-wrap: anywhere;
+}
+
+.outletpro-manager-review-products {
+	margin: 0;
+	padding: 16px;
+	list-style: none;
+}
+
+.outletpro-manager-review-products li {
+	margin: 0 0 16px;
+	overflow-wrap: anywhere;
+}
+
+.outletpro-manager-review-actions {
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+	gap: 8px;
+	box-sizing: border-box;
+	height: 64px;
+	padding: 16px;
+	border-bottom: 1px solid #ddd;
+}
+
+.outletpro-manager-review-actions .components-button {
+	flex: 1;
+	justify-content: center;
+}
+
+.outletpro-manager-sidebar-tabs {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.outletpro-manager-sidebar-heading {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	height: 48px;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	border-bottom: 1px solid #ddd;
+	padding-right: 8px;
+}
+
+.outletpro-manager-sidebar-heading [role="tab"] {
+	height: 48px;
+	padding: 0 16px;
+}
+
+.outletpro-manager-sidebar-close.components-button {
+	width: 32px;
+	min-width: 32px;
+	height: 32px;
+	margin-left: auto;
+	padding: 0;
+}
+
+.outletpro-manager-sidebar-panel {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+}
+
+.outletpro-manager-sidebar-content {
+	padding: 16px;
+}
+
+.outletpro-manager-page-card {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	min-height: 24px;
+}
+
+.outletpro-manager-page-card h2 {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	padding: 2px 0;
+	font-size: 13px;
+	font-weight: 600;
+	line-height: 20px;
+	overflow-wrap: anywhere;
+}
+
+.outletpro-manager-page-icon {
+	flex: 0 0 24px;
+}
+
+.outletpro-manager-page-actions {
+	flex: 0 0 24px;
+}
+
+.outletpro-manager-page-actions .components-button {
+	width: 24px;
+	min-width: 24px;
+	height: 24px;
+	padding: 0;
+}
+
+.outletpro-manager-page-description {
+	margin: 4px 0 16px;
+	color: #757575;
+	line-height: 20px;
+}
+
+.outletpro-manager-status-value {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.outletpro-manager-status-value svg {
+	flex-shrink: 0;
+}
+
+.outletpro-manager-status-editor {
+	min-width: 220px;
+}
+
+.outletpro-manager-rename-actions {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 24px;
+}
+
+.outletpro-manager-appearance.components-panel__body,
+.outletpro-manager-tier-panel.components-panel__body {
+	margin: 0;
+	padding: 16px;
+	border: 0;
+	border-top: 1px solid #ddd;
+}
+
+.outletpro-manager-tier-list {
+	margin: 8px 0 0 24px;
+	padding: 0;
+	list-style: none;
+}
+
+.outletpro-manager-tier-list li {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	box-sizing: border-box;
+	min-height: 32px;
+	margin: 0;
+	padding: 4px 0;
+}
+
+.outletpro-manager-tier-list svg {
+	flex-shrink: 0;
+}
+
+.outletpro-manager .outletpro-manager-add-tier.components-button {
+	width: 24px;
+	min-width: 24px;
+	height: 24px;
+	margin: 8px 0 0 24px;
+	padding: 0;
+	border-radius: 2px;
+	background: #1e1e1e;
+	color: #fff;
+}
+
+.outletpro-manager-appearance .outletpro-manager-help {
+	margin-bottom: 16px;
+}
+
+@media (max-width: 960px) {
+
+	.outletpro-manager-layout.is-sidebar-open {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.outletpro-manager-details {
+		position: absolute;
+		inset: 0 0 0 auto;
+		width: 280px;
+		z-index: 2;
+		box-shadow: -4px 0 12px #00000008;
+	}
+
+	.outletpro-manager-document-type {
+		display: none;
+	}
+}
+
+@media (max-width: 782px) {
+
+	.outletpro-manager-header {
+		grid-template-columns: 32px minmax(0, 1fr) auto;
+		gap: 8px;
+	}
+
+	.outletpro-manager-document.components-button {
+		grid-column: 2;
+	}
+
+	.outletpro-manager-document-icon {
+		display: none;
+	}
+
+	.outletpro-manager-header-actions {
+		grid-column: 3;
+	}
+}

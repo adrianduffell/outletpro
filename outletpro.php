@@ -54,6 +54,8 @@ require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/products.php';
 require_once __DIR__ . '/includes/rest-api.php';
+require_once __DIR__ . '/includes/outlet-manager-rest.php';
+require_once __DIR__ . '/includes/admin-outlet-manager.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/admin-menu-license.php';
 // #endif
@@ -107,6 +109,7 @@ function init_hook(): void {
 	init_theme_mods();
 	init_taxonomies();
 	init_rest_api();
+	add_action( 'rest_api_init', 'OutletPro\\register_outlet_manager_routes_hook' );
 	init_query_vars();
 	init_shortcodes();
 	init_patterns();
@@ -153,6 +156,7 @@ function admin_init_hook(): void {
 	// #endif
 	init_admin_product_options();
 	init_admin_product_bulk_edit();
+	init_outlet_manager();
 	init_system_status();
 	init_tools();
 	init_admin_page_list_table();
