@@ -5,7 +5,7 @@
 
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
-test( 'can bulk add products to the store’s outlet', async ( {
+test( 'can bulk include products in outlet', async ( {
 	page,
 	admin,
 	requestUtils,
@@ -47,7 +47,7 @@ test( 'can bulk add products to the store’s outlet', async ( {
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 
-	// Assert: both products should now be in the store’s outlet.
+	// Assert
 	for ( const product of [ product1, product2 ] ) {
 		await admin.visitAdminPage(
 			'post.php',
@@ -60,12 +60,12 @@ test( 'can bulk add products to the store’s outlet', async ( {
 	}
 } );
 
-test( 'can bulk remove products from the store’s outlet', async ( {
+test( 'can bulk remove products from outlet', async ( {
 	page,
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: create a product and add it to the store’s outlet.
+	// Arrange
 	const runId = Date.now();
 	const product = await requestUtils.rest( {
 		method: 'POST',
@@ -99,7 +99,7 @@ test( 'can bulk remove products from the store’s outlet', async ( {
 	await page.locator( '#bulk_edit' ).click();
 	await page.waitForLoadState( 'networkidle' );
 
-	// Assert: the product should no longer be in the store’s outlet.
+	// Assert
 	await admin.visitAdminPage(
 		'post.php',
 		`post=${ product.id }&action=edit`
