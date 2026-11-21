@@ -508,6 +508,8 @@ function add_to_outlet( \WC_Product $product ): void {
 /**
  * Count the number of published outlet products.
  *
+ * An outlet product must be published to be counted.
+ *
  * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @since 1.0.0
  */
@@ -546,6 +548,8 @@ function count_outlet(): int {
  * Returns true when the store has no outlet products.
  *
  * More performant than count_outlet() because it uses no_found_rows to skip the SQL row count.
+ *
+ * Excludes non-published products.
  *
  * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @since 1.0.0
