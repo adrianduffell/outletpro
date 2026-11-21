@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for select_outlet_page_hero_anchor().
+ * Tests for select_outlet_hero_anchor().
  *
  * @package OutletPro
  */
@@ -9,10 +9,10 @@ use function OutletPro\deinit_blocks;
 use function OutletPro\get_catalog_anchor_order;
 use function OutletPro\init_blocks;
 use function OutletPro\seed_theme_mods;
-use function OutletPro\select_outlet_page_hero_anchor;
+use function OutletPro\select_outlet_hero_anchor;
 use const OutletPro\PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD;
 
-class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
+class Test_Select_Outlet_Hero_Anchor extends WP_UnitTestCase {
 
 	public function test_landmarks_are_read_in_order_across_nested_groups_and_columns(): void {
 		// Arrange.
@@ -98,7 +98,7 @@ class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
 		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
 
 		// Act.
-		$anchor = select_outlet_page_hero_anchor();
+		$anchor = select_outlet_hero_anchor();
 
 		// Assert.
 		$this->assertSame( array( 'core/term-description', 'after' ), $anchor );
@@ -110,7 +110,7 @@ class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
 
 		// Act.
 		try {
-			$anchor = select_outlet_page_hero_anchor();
+			$anchor = select_outlet_hero_anchor();
 		} finally {
 			remove_filter( 'get_block_template', '__return_null' );
 		}
@@ -132,7 +132,7 @@ class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
 		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
 
 		// Act.
-		$anchor = select_outlet_page_hero_anchor();
+		$anchor = select_outlet_hero_anchor();
 
 		// Assert.
 		$this->assertSame( array( 'core/term-description', 'after' ), $anchor );
@@ -151,7 +151,7 @@ class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
 		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
 
 		// Act.
-		$anchor = select_outlet_page_hero_anchor();
+		$anchor = select_outlet_hero_anchor();
 
 		// Assert.
 		$this->assertSame( array( 'core/term-description', 'after' ), $anchor );
@@ -170,7 +170,7 @@ class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
 		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
 
 		// Act.
-		$anchor = select_outlet_page_hero_anchor();
+		$anchor = select_outlet_hero_anchor();
 
 		// Assert.
 		$this->assertSame( array( 'core/term-description', 'after' ), $anchor );
@@ -189,7 +189,7 @@ class Test_Select_Outlet_Page_Hero_Anchor extends WP_UnitTestCase {
 		wp_set_object_terms( $id, get_stylesheet(), 'wp_theme' );
 
 		// Act.
-		$anchor = select_outlet_page_hero_anchor();
+		$anchor = select_outlet_hero_anchor();
 
 		// Assert.
 		$this->assertSame( array( 'core/term-description', 'after' ), $anchor );

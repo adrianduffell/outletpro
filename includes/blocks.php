@@ -28,8 +28,8 @@ function init_blocks(): void {
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
-	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hero_hook', 10, 4 );
-	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook', 10, 5 );
+	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_hero_hook', 10, 4 );
+	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_hero_hook', 10, 5 );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
 	add_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	add_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11, 3 );
@@ -48,8 +48,8 @@ function deinit_blocks(): void {
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
-	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_page_hero_hook', 10 );
-	remove_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_page_hero_hook' );
+	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_hero_hook', 10 );
+	remove_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_hero_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
 	remove_filter( 'query_loop_block_query_vars', 'OutletPro\filter_outlet_product_collection_hook', 11 );
 
@@ -88,7 +88,7 @@ function deinit_blocks(): void {
  * @param \WP_Block_Template|array|null $context Template or pattern context.
  * @return string[] Hooked blocks.
  */
-function auto_insert_outlet_page_hero_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
+function auto_insert_outlet_hero_hook( $hooked_blocks, $relative_position, $anchor_block, $context ): array {
 	if ( ! is_product_catalog_context( $context ) ) {
 		return $hooked_blocks;
 	}
@@ -113,7 +113,7 @@ function auto_insert_outlet_page_hero_hook( $hooked_blocks, $relative_position, 
  * @param \WP_Block_Template|array|null $context Template or pattern context.
  * @return array<string, mixed>|null Populated block.
  */
-function populate_outlet_page_hero_hook( ?array $parsed_hooked_block, string $hooked_block_type, string $relative_position, array $parsed_anchor_block, $context ): ?array {
+function populate_outlet_hero_hook( ?array $parsed_hooked_block, string $hooked_block_type, string $relative_position, array $parsed_anchor_block, $context ): ?array {
 	if ( null === $parsed_hooked_block ) {
 		return null;
 	}

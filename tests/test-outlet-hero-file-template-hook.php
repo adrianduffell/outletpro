@@ -26,7 +26,7 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( get_stylesheet() . '//outlet-hero', $part->id );
-		$this->assertSame( 'Outlet page hero', $part->title );
+		$this->assertSame( 'Outlet hero', $part->title );
 		$this->assertSame( 'plugin', $part->source );
 		$this->assertCount( 1, $blocks );
 		$this->assertSame( 'core/group', $blocks[0]['blockName'] );
