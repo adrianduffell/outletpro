@@ -100,7 +100,7 @@ function seed_theme_mods(): void {
 	switch ( wp_is_block_theme() ) {
 		case true:
 			if ( ! array_key_exists( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, $mods ) ) {
-				$block_hook = select_outlet_page_hero_anchor();
+				$block_hook = select_outlet_hero_anchor();
 				if ( null !== $block_hook ) {
 					set_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, $block_hook );
 				}
@@ -138,7 +138,7 @@ function seed_theme_mods(): void {
 }
 
 /**
- * Selects the block hook anchor for auto-inserting the outlet page hero.
+ * Selects the block hook anchor for auto-inserting the outlet hero.
  *
  * Selects store notices when an archive title exists and the notices are below
  * the term description, or below the title if no description exists.
@@ -152,7 +152,7 @@ function seed_theme_mods(): void {
  * @internal
  * @return string[]|null Anchor block name and relative position, or null when the template is missing.
  */
-function select_outlet_page_hero_anchor(): ?array {
+function select_outlet_hero_anchor(): ?array {
 	$catalog_template = get_block_template( get_stylesheet() . '//archive-product' );
 	if ( null === $catalog_template ) {
 		return null;

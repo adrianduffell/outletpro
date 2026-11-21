@@ -30,7 +30,7 @@ function deinit_template_parts(): void {
 }
 
 /**
- * Adds the outlet page hero template part to the available block templates.
+ * Adds the outlet hero template part to the available block templates.
  *
  * Fired by `get_block_templates`.
  *
@@ -109,7 +109,7 @@ function outlet_hero_file_template_hook( ?\WP_Block_Template $template, string $
 	$part->theme          = get_stylesheet();
 	$part->slug           = 'outlet-hero';
 	$part->type           = 'wp_template_part';
-	$part->title          = __( 'Outlet page hero', 'outletpro' );
+	$part->title          = __( 'Outlet hero', 'outletpro' );
 	$part->description    = __( 'Hero section for the outlet page.', 'outletpro' );
 	$part->source         = 'plugin';
 	$part->origin         = 'plugin';
