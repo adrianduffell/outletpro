@@ -103,7 +103,9 @@ function get_outlet_permalink_with_filter( \WP_Term $term ): ?string {
  * @internal
  */
 function init_page(): void {
-	register_outlet_page_template();
+	if ( 'yes' === get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) ) {
+		register_outlet_page_template();
+	}
 	add_filter( 'request', 'OutletPro\\filter_outlet_page_request_hook' );
 	add_action( 'pre_get_posts', 'OutletPro\\outlet_page_pre_get_posts_hook', 20 );
 	add_action( 'wp', 'OutletPro\\outlet_page_post_global_hook' );
@@ -177,6 +179,7 @@ function outlet_page_post_global_hook(): void {
 /**
  * Register the outlet page template.
  *
+ * @deprecated 1.2.0 Use the product catalog template.
  * @internal
  */
 function register_outlet_page_template(): void {

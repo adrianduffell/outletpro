@@ -13,9 +13,11 @@ use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
 use const OutletPro\DB_VERSION;
+use const OutletPro\LEGACY_OUTLET_PAGE_TEMPLATE_OPTION;
 use const OutletPro\OUTLET_HERO_WIDGET_AREA;
 use const OutletPro\OUTLET_PAGE_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
+use const OutletPro\PLUGIN_FILE;
 
 class Test_Activate extends WP_UnitTestCase {
 
@@ -27,6 +29,32 @@ class Test_Activate extends WP_UnitTestCase {
 		activate();
 
 		// Assert.
+		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
+	}
+
+	public function test_new_install_does_not_enable_legacy_outlet_page_template(): void {
+		// Arrange.
+		delete_option( 'outletpro_db_version' );
+		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
+
+		// Act.
+		activate();
+		require dirname( PLUGIN_FILE ) . '/migrate.php';
+
+		// Assert.
+		$this->assertFalse( get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
+	}
+
+	public function test_reactivation_enables_legacy_outlet_page_template_for_existing_installs(): void {
+		// Arrange.
+		update_option( 'outletpro_db_version', '2' );
+		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
+
+		// Act.
+		activate();
+
+		// Assert.
+		$this->assertSame( 'yes', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
 	}
 

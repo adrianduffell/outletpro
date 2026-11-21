@@ -9,6 +9,7 @@
 
 use function OutletPro\deinit_page;
 use function OutletPro\init_page;
+use const OutletPro\LEGACY_OUTLET_PAGE_TEMPLATE_OPTION;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Deinit_Page extends WP_UnitTestCase {
@@ -16,6 +17,7 @@ class Test_Deinit_Page extends WP_UnitTestCase {
 	public function test_template_is_unregistered_after_deinit_page(): void {
 		// Arrange.
 		deinit_page();
+		update_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION, 'yes' );
 		init_page();
 		$template = get_block_template( 'outletpro//outlet-page', 'wp_template' );
 		$this->assertNotNull( $template );

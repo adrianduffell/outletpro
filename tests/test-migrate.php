@@ -8,6 +8,7 @@
  */
 
 use const OutletPro\DB_VERSION;
+use const OutletPro\LEGACY_OUTLET_PAGE_TEMPLATE_OPTION;
 use const OutletPro\PLUGIN_FILE;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD;
 
@@ -16,34 +17,40 @@ class Test_Migrate extends WP_UnitTestCase {
 	public function test_migrates_when_option_is_missing(): void {
 		// Arrange.
 		delete_option( 'outletpro_db_version' );
+		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
+		$this->assertSame( 'yes', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 
 	public function test_migrates_when_option_value_smaller(): void {
 		// Arrange.
 		update_option( 'outletpro_db_version', '0' );
+		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
+		$this->assertSame( 'yes', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 
 	public function test_noops_when_values_match(): void {
 		// Arrange.
 		update_option( 'outletpro_db_version', DB_VERSION );
+		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
+		$this->assertFalse( get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 
 	public function test_noops_when_option_value_greater(): void {
@@ -67,5 +74,30 @@ class Test_Migrate extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+	}
+
+	public function test_enables_legacy_outlet_page_template_for_existing_installs(): void {
+		// Arrange.
+		update_option( 'outletpro_db_version', '2' );
+		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
+
+		// Act.
+		require dirname( PLUGIN_FILE ) . '/migrate.php';
+
+		// Assert.
+		$this->assertSame( 'yes', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
+		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
+	}
+
+	public function test_preserves_disabled_legacy_outlet_page_template_on_migration(): void {
+		// Arrange.
+		update_option( 'outletpro_db_version', '2' );
+		update_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION, 'no' );
+
+		// Act.
+		require dirname( PLUGIN_FILE ) . '/migrate.php';
+
+		// Assert.
+		$this->assertSame( 'no', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 }
