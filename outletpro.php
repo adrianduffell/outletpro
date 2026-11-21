@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Outlet Pro
- * Description: Adds an outlet to WooCommerce. Move old stock quickly with an outlet page, badge, and message.
+ * Description: WooCommerce extension to add a modern outlet page.
  * Version: 1.2.0-dev
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
