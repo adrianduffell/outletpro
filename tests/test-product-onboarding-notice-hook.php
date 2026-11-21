@@ -317,7 +317,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
-	public function test_empty_state_notice_contains_outlet_section_is_empty_message(): void {
+	public function test_empty_state_notice_contains_no_outlet_products_message(): void {
 		// Arrange.
 		init_admin_product_list_table();
 		set_current_screen( 'edit-product' );
@@ -327,7 +327,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 
 		// Expect.
-		$this->expectOutputRegex( '/The store’s outlet is empty\./' );
+		$this->expectOutputRegex( '/There are no outlet products\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -349,7 +349,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/The store’s outlet has 1 product\./' );
+		$this->expectOutputRegex( '/There is 1 outlet product\..*Make it visible on the store by editing and publishing the outlet page\./s' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -373,7 +373,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page(); // Creates page as draft.
 
 		// Expect.
-		$this->expectOutputRegex( '/The store’s outlet has 2 products\./' );
+		$this->expectOutputRegex( '/There are 2 outlet products\./' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -392,7 +392,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		delete_option( OUTLET_PAGE_OPTION ); // No outlet page registered.
 
 		// Expect.
-		$this->expectOutputRegex( '/Tip: add it to a page or post using the outlet block\./' );
+		$this->expectOutputRegex( '/There is 1 outlet product\..*Tip: display outlet products on a page or post using the outlet block\./s' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -416,7 +416,7 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_publish_post( $page_id );
 
 		// Expect.
-		$this->expectOutputRegex( '/The store’s outlet is ready\./' );
+		$this->expectOutputRegex( '/The outlet page is ready\./' );
 
 		// Act.
 		do_action( 'admin_notices' );

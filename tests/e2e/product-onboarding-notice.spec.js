@@ -51,7 +51,7 @@ test( 'notice still shows when an outlet product exists but no page is configure
 	admin,
 	requestUtils,
 } ) => {
-	// Arrange: create a product and add it to the store’s outlet via the admin UI.
+	// Arrange: create a product and give it outlet status via the admin UI.
 	const product = await requestUtils.rest( {
 		method: 'POST',
 		path: '/wc/v3/products',

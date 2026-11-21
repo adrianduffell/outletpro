@@ -57,7 +57,7 @@ export function OutletEmptyNotice(): null {
 
 			( dispatch( 'core/notices' ) as any ).createNotice(
 				'warning',
-				'The store’s outlet is empty. Include products to see them on this page.',
+				'There are no outlet products. Include products to display them on this page.',
 				{
 					id: NOTICE_ID,
 					isDismissible: false,

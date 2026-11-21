@@ -151,7 +151,9 @@ describe( 'OutletEmptyNotice', () => {
 
 		// Assert.
 		const [ , message ] = mockCreateNotice.mock.calls[ 0 ];
-		expect( message ).toContain( 'empty' );
+		expect( message ).toBe(
+			'There are no outlet products. Include products to display them on this page.'
+		);
 	} );
 
 	test( 'notice action navigates to the product list screen', async () => {

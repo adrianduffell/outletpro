@@ -38,7 +38,7 @@ function init_setup_task(): void {
 			}
 
 			public function get_content(): string {
-				return __( 'Move old stock quickly with the store’s outlet.', 'outletpro' );
+				return __( 'Clear your overstocked products.', 'outletpro' );
 			}
 
 			public function get_time(): string {
