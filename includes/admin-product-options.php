@@ -50,19 +50,25 @@ function add_product_checkbox_hook(): void {
 	);
 
 	// Custom help text under the field.
-	$settings_url = admin_url( 'admin.php' ); // todo: add link to settings page when it exists.
+	try {
+		$page_id = get_outlet_page_id();
+	} catch ( \UnexpectedValueException $e ) {
+		wc_get_logger()->error( 'Outlet page ID could not be retrieved.' );
+		$page_id = null;
+	}
+	$page_url = null === $page_id ? null : get_edit_post_link( $page_id );
 
-	$link = settings_screen_enabled()
+	$link = $page_url
 		? sprintf(
 			' <a href="%s" class="outletpro-button-link">%s</a>',
-			esc_url( $settings_url ),
-			esc_html__( 'Edit settings', 'outletpro' )
+			esc_url( $page_url ),
+			esc_html__( 'Edit page', 'outletpro' )
 		)
 		: '';
 
 	printf(
 		'<div class="outletpro-status-help">%s%s</div><!-- .outletpro-status-help -->',
-		esc_html__( 'Sell remaining stock in the store’s outlet. Included products display a badge and message.', 'outletpro' ),
+		esc_html__( 'Sell remaining stock on the outlet page.', 'outletpro' ),
 		wp_kses_post( $link )
 	);
 	echo '</div><!-- .outletpro-status-panel -->';
