@@ -296,7 +296,7 @@ const SettingsSidebar = () => {
 						rows={ 2 }
 						__nextHasNoMarginBottom={ true }
 						help={ __(
-							'Displayed for products included in the outlet.',
+							'Displayed for outlet products.',
 							'outletpro'
 						) }
 					/>
