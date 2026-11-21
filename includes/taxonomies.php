@@ -716,6 +716,84 @@ function get_uncategorized_product_category_id(): ?int {
 }
 
 /**
+ * Add an outlet price tier.
+ *
+ * @param int $price Non-negative price threshold in the store's currency.
+ * @throws \InvalidArgumentException If the price is negative.
+ * @throws \RuntimeException If the tier cannot be added, including duplicates.
+ * @internal
+ */
+function add_price_tier( int $price ): void {
+	if ( $price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	$slug = 'outlet-price-' . $price;
+	if ( get_term_by( 'slug', $slug, OUTLET_SEARCH_INDEX_TAXONOMY ) ) {
+		throw new \RuntimeException( 'Outlet price tier could not be added.' );
+	}
+	$result = wp_insert_term( $slug, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet price tier could not be added.' );
+	}
+}
+
+/**
+ * Update an outlet price tier.
+ *
+ * @param int $price Existing price threshold.
+ * @param int $new_price Non-negative replacement price threshold.
+ * @throws \InvalidArgumentException If either price is negative.
+ * @throws \RuntimeException If the tier cannot be found or updated.
+ * @internal
+ */
+function update_price_tier( int $price, int $new_price ): void {
+	if ( $price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	if ( $new_price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( ! $term ) {
+		throw new \RuntimeException( 'Outlet price tier could not be found.' );
+	}
+	$slug   = 'outlet-price-' . $new_price;
+	$result = wp_update_term(
+		$term->term_id,
+		OUTLET_SEARCH_INDEX_TAXONOMY,
+		array(
+			'name' => $slug,
+			'slug' => $slug,
+		)
+	);
+	if ( is_wp_error( $result ) ) {
+		throw new \RuntimeException( 'Outlet price tier could not be updated.' );
+	}
+}
+
+/**
+ * Delete an outlet price tier.
+ *
+ * @param int $price Price threshold to delete.
+ * @throws \InvalidArgumentException If the price is negative.
+ * @throws \RuntimeException If the tier cannot be found or deleted.
+ * @internal
+ */
+function delete_price_tier( int $price ): void {
+	if ( $price < 0 ) {
+		throw new \InvalidArgumentException( 'Outlet price tier must not be negative.' );
+	}
+	$term = get_term_by( 'slug', 'outlet-price-' . $price, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( ! $term ) {
+		throw new \RuntimeException( 'Outlet price tier could not be found.' );
+	}
+	$result = wp_delete_term( $term->term_id, OUTLET_SEARCH_INDEX_TAXONOMY );
+	if ( true !== $result ) {
+		throw new \RuntimeException( 'Outlet price tier could not be deleted.' );
+	}
+}
+
+/**
  * Get the outlet price tiers in numerical order.
  *
  * @return int[] Price tier amounts
@@ -757,6 +835,47 @@ function get_price_tiers(): array {
 	sort( $amounts, SORT_NUMERIC );
 
 	return $amounts;
+}
+
+/**
+ * Batch changes of outlet price tiers.
+ *
+ * Pauses re-indexing until the batch changes are made.
+ *
+ * @param int[]           $add Price thresholds to add.
+ * @param array<int, int> $update Existing thresholds mapped to new thresholds.
+ * @param int[]           $delete Price thresholds to delete.
+ * @throws \InvalidArgumentException If an amount is invalid.
+ * @internal
+ */
+function batch_price_tiers( array $add = array(), array $update = array(), array $delete = array() ): void {
+	$prices = array_merge( $add, array_keys( $update ), array_values( $update ), $delete );
+	foreach ( $prices as $price ) {
+		if ( ! is_int( $price ) ) {
+			throw new \InvalidArgumentException( 'Outlet price tier must be an integer.' );
+		}
+	}
+
+	remove_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+	remove_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+	remove_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+
+	try {
+		foreach ( $add as $price ) {
+			add_price_tier( $price );
+		}
+		foreach ( $update as $price => $new_price ) {
+			update_price_tier( $price, $new_price );
+		}
+		foreach ( $delete as $price ) {
+			delete_price_tier( $price );
+		}
+	} finally {
+		add_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		add_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		add_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		reindex_all_outlet_products_hook();
+	}
 }
 
 /**
