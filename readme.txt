@@ -39,13 +39,3 @@ A draft outlet page named "Outlet" is automatically created when the extension i
 == Changelog ==
 
 View the changelog on GitHub: https://github.com/adrianduffell/outlet-pro/blob/main/CHANGELOG.md
-
-== Known issues ==
-
-= PHP notice =
-
-A PHP notice appears briefly in the page editor when WP_DEBUG is enabled due to a core WordPress issue. See https://core.trac.wordpress.org/ticket/62407. Workaround: disable WP_DEBUG (https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/).
-
-= Pattern inserter =
-
-The pattern inserter displays incorrect margins due to the same issue above. Use the same workaround.
