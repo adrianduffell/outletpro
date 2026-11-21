@@ -21,7 +21,7 @@ Other changes:
 
 Adds modern category views for the Outlet Page, including featured category
 tiles and a full menu. The tiles and menu may link to filtered views of the
-outlet by:
+outlet page by:
 
 - Product categories ( eg. Womens, Mens, Kids)
 - Price tiers (eg "Under $25")
