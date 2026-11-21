@@ -27,6 +27,13 @@
 * When a WP_Error is encountered, consider logging before throwing an exception
   as the context won't be transferred to the exception.
 
+## DB Migrations
+
+Increment `DB_VERSION` when a migration is required for the next release. Check
+that it hasn't already been incremented for that release by comparing `VERSION`
+with the "Last updated" comment on `DB_VERSION`, ignoring the `-dev` suffix.
+Update the "Last updated" comment whenever `DB_VERSION` is incremented.
+
 ## Pull Requests
 
 * PRs should be fewer than 500 lines in size.
