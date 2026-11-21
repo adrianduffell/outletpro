@@ -849,7 +849,7 @@ function get_price_tiers(): array {
  * @internal
  */
 function batch_price_tiers( array $add = array(), array $update = array(), array $delete = array() ): void {
-	$prices = array_merge( $add, array_keys( $update ), array_values( $update ), $delete );
+	$prices = array_merge( array_values( $add ), array_keys( $update ), array_values( $update ), array_values( $delete ) );
 	foreach ( $prices as $price ) {
 		if ( ! is_int( $price ) ) {
 			throw new \InvalidArgumentException( 'Outlet price tier must be an integer.' );
