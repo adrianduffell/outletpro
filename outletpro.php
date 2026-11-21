@@ -35,6 +35,8 @@ const VERSION = '1.2.0-dev';
 /**
  * Database version.
  *
+ * Last updated in Outlet Pro 1.2.0.
+ *
  * @internal
  */
 const DB_VERSION = '3';
