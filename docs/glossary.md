@@ -14,5 +14,6 @@ Outlet uses the following terminology:
 ❌ Don't use:
 
 - The outlet
+- The store’s outlet
 - Outlet section
 - Mark as outlet
