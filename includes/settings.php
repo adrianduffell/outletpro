@@ -26,6 +26,13 @@ const OUTLET_MESSAGE_OPTION = 'outletpro_message';
 const OUTLET_PAGE_OPTION = 'outletpro_page_id';
 
 /**
+ * WordPress option key used to enable the legacy outlet page template.
+ *
+ * @internal
+ */
+const LEGACY_OUTLET_PAGE_TEMPLATE_OPTION = 'legacy_outlet_page_template';
+
+/**
  * WordPress option key used to store the badge label text.
  *
  * @internal
