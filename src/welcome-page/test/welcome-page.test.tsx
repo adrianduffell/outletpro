@@ -352,6 +352,11 @@ test( 'shows success message after valid license key is saved', async () => {
 
 	// Assert.
 	expect( screen.getByText( /Success!/i ) ).toBeInTheDocument();
+	expect(
+		screen.getByText(
+			'Outlet Pro is now set up. Get started by adding your first outlet product.'
+		)
+	).toBeInTheDocument();
 	expect( mockApiFetch ).toHaveBeenCalledWith( {
 		path: '/wp/v2/settings',
 		method: 'POST',
@@ -478,8 +483,6 @@ test( 'reset mode success view omits getting started guidance', async () => {
 		screen.queryByRole( 'link', { name: /Get Started/i } )
 	).not.toBeInTheDocument();
 	expect(
-		screen.queryByText(
-			/Get started by including your first product in the store's outlet/i
-		)
+		screen.queryByText( /Get started by adding your first outlet product/i )
 	).not.toBeInTheDocument();
 } );
