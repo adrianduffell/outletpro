@@ -43,6 +43,7 @@ Other changes:
 - A badge is shown for outlet products in the product admin list table.
 - A link is added to the outlet page to customize the outlet settings.
 - The project is licensed under GPL v2 or later (previously GPL v3 or later).
+- The badge block now supports margin spacing.
 
 ## 1.0.2 (2026-08-04)
 
