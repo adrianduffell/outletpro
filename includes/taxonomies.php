@@ -378,39 +378,9 @@ function seed_outlet_search_index_taxonomy(): void {
 		return;
 	}
 
-	// Pause search index during seeding.
-	remove_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
-	remove_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
-	remove_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
-
-	$terms = array();
-	foreach ( DEFAULT_DISCOUNT_TIERS as $discount ) {
-		$terms[] = 'outlet-discount-' . $discount;
-	}
+	batch_discount_tiers( DEFAULT_DISCOUNT_TIERS );
 	$price_tiers = DEFAULT_PRICE_TIERS[ get_woocommerce_currency() ] ?? DEFAULT_PRICE_TIERS['USD'];
-	foreach ( $price_tiers as $price ) {
-		$terms[] = 'outlet-price-' . $price;
-	}
-
-	foreach ( $terms as $term ) {
-		if ( term_exists( $term, OUTLET_SEARCH_INDEX_TAXONOMY ) ) {
-			continue;
-		}
-
-		$result = wp_insert_term( $term, OUTLET_SEARCH_INDEX_TAXONOMY );
-
-		if ( is_wp_error( $result ) ) {
-			throw new \RuntimeException( 'Failed to seed outlet search index taxonomy.' );
-		}
-	}
-
-	// Manually re-index products.
-	reindex_all_outlet_products_hook();
-
-	// Unpause search index.
-	add_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
-	add_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
-	add_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	batch_price_tiers( $price_tiers );
 }
 
 /**
