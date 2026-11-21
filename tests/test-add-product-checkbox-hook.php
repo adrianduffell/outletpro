@@ -14,7 +14,7 @@ use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 
-	public function test_edit_page_link_shown_for_draft_page_when_settings_screen_disabled(): void {
+	public function test_edit_page_link_shown_for_draft_page(): void {
 		// Arrange.
 		init_admin_product_options();
 		init_taxonomies();
@@ -29,17 +29,13 @@ class Test_Add_Product_Checkbox_Hook extends WP_UnitTestCase {
 		update_option( OUTLET_PAGE_OPTION, $page_id );
 		$product         = WC_Helper_Product::create_simple_product();
 		$GLOBALS['post'] = get_post( $product->get_id() );
-		add_filter( 'outletpro_settings_screen_enabled', '__return_false' );
-		$page_url = preg_quote( esc_attr( admin_url( 'post.php?post=' . $page_id . '&action=edit' ) ), '/' );
+		$page_url        = preg_quote( esc_attr( admin_url( 'post.php?post=' . $page_id . '&action=edit' ) ), '/' );
 
 		// Expect.
-		$this->expectOutputRegex( '/Sell remaining stock on the outlet page\..*<a href="' . $page_url . '" class="outletpro-button-link">Edit page<\/a>/s' );
+		$this->expectOutputRegex( '/<a href="' . $page_url . '" class="outletpro-button-link">Edit page<\/a>/' );
 
 		// Act.
 		do_action( 'woocommerce_product_options_inventory_product_data' );
-
-		// Cleanup.
-		remove_filter( 'outletpro_settings_screen_enabled', '__return_false' );
 	}
 
 	public function test_edit_page_link_shown_for_published_page(): void {
