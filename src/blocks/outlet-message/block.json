@@ -4,7 +4,7 @@
 	"name": "outletpro/outlet-message",
 	"title": "Outlet Message",
 	"category": "woocommerce",
-	"description": "Displays a message when a product is in the store’s outlet.",
+	"description": "Displays a message for outlet products.",
 	"usesContext": [ "postId" ],
 	"allowedBlocks": [ "outletpro/outlet-link" ],
 	"attributes": {
