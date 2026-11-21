@@ -10,7 +10,7 @@ incompatible changes are made.
 
 #### `OutletPro\is_outlet( \WC_Product $product ): bool`
 
-Check if a product is in the store’s outlet.
+Check if a product is an outlet product.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -28,7 +28,7 @@ try {
 
 #### `OutletPro\add_to_outlet( \WC_Product $product ): void`
 
-Add a product to the store’s outlet.
+Include product in outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -46,7 +46,7 @@ try {
 
 #### `OutletPro\remove_from_outlet( \WC_Product $product ): void`
 
-Remove a product from the store’s outlet.
+Remove product from outlet.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -85,7 +85,7 @@ try {
 
 #### `OutletPro\count_outlet(): int`
 
-Count the number of published products in the store’s outlet.
+Count the number of outlet products in the store.
 
 Throws exception on error. Added in 1.0.0.
 
@@ -99,7 +99,7 @@ try {
 
 #### `OutletPro\outlet_empty(): bool`
 
-Check if the store’s outlet has no published products.
+Check if the store has no outlet products.
 
 More performant than `count_outlet()` because it skips the SQL `COUNT(*)`.
 
@@ -331,7 +331,7 @@ classic theme template hooks. Added in 1.0.0.
 
 ### `outletpro/outlet-badge`
 
-Displays a outlet badge when the product is in the store’s outlet. Automatically
+Displays a badge for outlet products. Automatically
 inserted before the product name on the single product template (block themes).
 Added in 1.0.0.
 
@@ -368,7 +368,7 @@ A container for arbitrary blocks that renders only for outlet products. Added in
 
 ### `outletpro/outlet-message`
 
-Displays the outlet message when the product is in the store’s outlet.
+Displays the message for outlet products
 Automatically inserted as the first child of the product meta block on the
 single product template (block themes). Added in 1.0.0.
 
