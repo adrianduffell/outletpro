@@ -14,8 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Non-public taxonomy used to represent the outlet status of products.
  *
- * Used with a canonical term for internal flagging of products belonging
- * in the outlet.
+ * Used with a canonical term to flag outlet products.
  *
  * @internal
  */
@@ -29,7 +28,7 @@ const OUTLET_STATUS_TAXONOMY = 'outletpro_status';
 const OUTLET_SEARCH_INDEX_TAXONOMY = 'outletpro_search_index';
 
 /**
- * Canonical term for products belonging in the outlet.
+ * Canonical term for outlet products.
  *
  * @internal
  */
@@ -459,7 +458,7 @@ function truncate_outlet_search_index_taxonomy(): void {
 }
 
 /**
- * Check if a product is in the outlet.
+ * Check if a product is an outlet product.
  *
  * @param \WC_Product $product The product to check.
  * @throws \RuntimeException If the outlet status taxonomy does not exist.
@@ -484,12 +483,12 @@ function is_outlet( \WC_Product $product ): bool {
 }
 
 /**
- * Add a product to the outlet.
+ * Include product in outlet.
  *
  * Schedules a search index update after adding the product.
  *
  * @param \WC_Product $product Product to update.
- * @throws \RuntimeException If the store’s outlet status taxonomy does not exist or the term assignment fails.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist or the term assignment fails.
  * @since 1.0.0
  */
 function add_to_outlet( \WC_Product $product ): void {
@@ -544,11 +543,11 @@ function count_outlet(): int {
 }
 
 /**
- * Check if the store’s outlet is empty.
+ * Returns true when the store has no outlet products.
  *
  * More performant than count_outlet() because it uses no_found_rows to skip the SQL row count.
  *
- * @throws \RuntimeException If the store’s outlet status taxonomy does not exist.
+ * @throws \RuntimeException If the outlet status taxonomy does not exist.
  * @since 1.0.0
  */
 function outlet_empty(): bool {
@@ -584,7 +583,7 @@ function outlet_empty(): bool {
 }
 
 /**
- * Remove a product from the store’s outlet.
+ * Remove product from outlet.
  *
  * Schedules clearing the search index after removal.
  *
@@ -607,13 +606,13 @@ function remove_from_outlet( \WC_Product $product ): void {
 }
 
 /**
- * Sets the store’s outlet status for a product.
+ * Sets outlet status for a product.
  *
  * For performance, this function checks the currently stored state and only updates the
  * outlet status when a change in value is required.
  *
  * @param \WC_Product $product The product to update.
- * @param bool        $new_value Whether to include the product in the store’s outlet.
+ * @param bool        $new_value Whether the product is an outlet product.
  * @throws \RuntimeException If setting the status fails.
  * @since 1.0.0
  */
