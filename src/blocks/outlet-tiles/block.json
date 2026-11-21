@@ -4,7 +4,7 @@
 	"name": "outletpro/outlet-tiles",
 	"title": "Outlet Tiles",
 	"category": "woocommerce",
-	"description": "Add tiles to help customers browse the most important categories in the outlet.",
+	"description": "Add tiles to help customers browse outlet product categories.",
 	"allowedBlocks": [ "outletpro/outlet-tile" ],
 	"supports": {
 		"html": false,
