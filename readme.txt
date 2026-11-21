@@ -7,7 +7,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Move old stock easily by adding a dedicated outlet to WooCommerce.
+WooCommerce extension to add a modern outlet page.
 
 == Description ==
 
