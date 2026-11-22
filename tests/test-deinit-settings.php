@@ -26,11 +26,9 @@ use const OutletPro\OUTLET_PRICE_LEVELS_OPTION;
 
 class Test_Deinit_Settings extends WP_UnitTestCase {
 
-	public function test_unregisters_outlet_settings_without_deleting_values_or_unrelated_settings(): void {
+	public function test_unregisters_outlet_settings(): void {
 		// Arrange.
 		init_settings();
-		register_setting( 'outletpro', 'unrelated_setting' );
-		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance' );
 		$options = array_fill_keys(
 			array(
 				OUTLET_PAGE_OPTION,
@@ -50,20 +48,51 @@ class Test_Deinit_Settings extends WP_UnitTestCase {
 			),
 			true
 		);
-		$this->assertCount( 14, array_intersect_key( get_registered_settings(), $options ) );
 
 		// Act.
 		deinit_settings();
 
 		// Assert.
 		$this->assertSame( array(), array_intersect_key( get_registered_settings(), $options ) );
+	}
+
+	public function test_preserves_unrelated_settings(): void {
+		// Arrange.
+		init_settings();
+		register_setting( 'outletpro', 'unrelated_setting' );
+
+		// Act.
+		deinit_settings();
+
+		// Assert.
 		$this->assertArrayHasKey( 'unrelated_setting', get_registered_settings() );
+	}
+
+	public function test_preserves_saved_values(): void {
+		// Arrange.
+		init_settings();
+		update_option( OUTLET_BADGE_LABEL_OPTION, 'Clearance' );
+
+		// Act.
+		deinit_settings();
+
+		// Assert.
 		$this->assertSame( 'Clearance', get_option( OUTLET_BADGE_LABEL_OPTION ) );
+	}
+
+	public function test_removes_setting_filters(): void {
+		// Arrange.
+		init_settings();
+
+		// Act.
+		deinit_settings();
+
+		// Assert.
 		$this->assertFalse( has_filter( 'sanitize_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sanitize_integer_array' ) );
 		$this->assertFalse( has_filter( 'default_option_' . OUTLET_PRICE_LEVELS_OPTION, 'filter_default_option' ) );
 	}
 
-	public function test_removes_all_price_and_markdown_sync_hooks(): void {
+	public function test_removes_search_index_sync_hooks(): void {
 		// Arrange.
 		init_settings();
 

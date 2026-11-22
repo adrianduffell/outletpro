@@ -18,9 +18,80 @@ use const OutletPro\OUTLET_BADGE_FONT_WEIGHT_OPTION;
 use const OutletPro\OUTLET_BADGE_LABEL_OPTION;
 use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
+use const OutletPro\OUTLET_MARKDOWN_LEVELS_OPTION;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\OUTLET_PRICE_LEVELS_OPTION;
 
 class Test_Seed_Settings extends WP_UnitTestCase {
+
+	public function test_seeds_price_levels_from_the_catalog(): void {
+		// Arrange.
+		delete_option( OUTLET_PRICE_LEVELS_OPTION );
+		WC_Helper_Product::create_simple_product( true, array( 'regular_price' => '70' ) );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( array( 10, 25, 50, 100 ), get_option( OUTLET_PRICE_LEVELS_OPTION ) );
+	}
+
+	public function test_seeds_larger_price_levels_for_a_higher_priced_catalog(): void {
+		// Arrange.
+		delete_option( OUTLET_PRICE_LEVELS_OPTION );
+		WC_Helper_Product::create_simple_product( true, array( 'regular_price' => '10000' ) );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( array( 2000, 3000, 5000, 10000 ), get_option( OUTLET_PRICE_LEVELS_OPTION ) );
+	}
+
+	public function test_seeds_fallback_price_levels_for_an_empty_catalog(): void {
+		// Arrange.
+		delete_option( OUTLET_PRICE_LEVELS_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( array( 10, 25, 50, 100 ), get_option( OUTLET_PRICE_LEVELS_OPTION, null ) );
+	}
+
+	public function test_preserves_existing_price_levels(): void {
+		// Arrange.
+		update_option( OUTLET_PRICE_LEVELS_OPTION, array( 20, 80 ) );
+		WC_Helper_Product::create_simple_product( true, array( 'regular_price' => '70' ) );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( array( 20, 80 ), get_option( OUTLET_PRICE_LEVELS_OPTION ) );
+	}
+
+	public function test_seeds_default_markdown_levels(): void {
+		// Arrange.
+		delete_option( OUTLET_MARKDOWN_LEVELS_OPTION );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( array( 30, 50, 70 ), get_option( OUTLET_MARKDOWN_LEVELS_OPTION ) );
+	}
+
+	public function test_preserves_existing_markdown_levels(): void {
+		// Arrange.
+		update_option( OUTLET_MARKDOWN_LEVELS_OPTION, array( 20, 60 ) );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( array( 20, 60 ), get_option( OUTLET_MARKDOWN_LEVELS_OPTION ) );
+	}
 
 	public function test_sets_badge_label_default_when_option_does_not_exist(): void {
 		// Arrange.
