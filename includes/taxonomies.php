@@ -718,8 +718,8 @@ function get_uncategorized_product_category_id(): ?int {
 /**
  * Calculate delta batch operations needed when facets change.
  *
- * @param int[] $old_values Old facet values
- * @param int[] $new_values New facet values
+ * @param int[] $old_values Old facet values.
+ * @param int[] $new_values New facet values.
  * @return array{add: int[], update: array<int, int>, delete: int[]} Delta batch operations
  * @internal
  */
