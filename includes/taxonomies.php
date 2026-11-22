@@ -686,6 +686,35 @@ function get_uncategorized_product_category_id(): ?int {
 }
 
 /**
+ * Calculate delta batch operations needed when facets change.
+ *
+ * @param int[] $old_values Old facet values.
+ * @param int[] $new_values New facet values.
+ * @return array{add: int[], update: array<int, int>, delete: int[]} Delta batch operations
+ * @internal
+ */
+function calculate_facet_delta( array $old_values, array $new_values ): array {
+	$delete = array_diff( $old_values, $new_values );
+	$add    = array_diff( $new_values, $old_values );
+	$update = array();
+
+	foreach ( $delete as $index => $amount ) {
+		if ( ! array_key_exists( $index, $add ) ) {
+			continue;
+		}
+
+		$update[ $amount ] = $add[ $index ];
+		unset( $delete[ $index ], $add[ $index ] );
+	}
+
+	return array(
+		'add'    => array_values( $add ),
+		'update' => $update,
+		'delete' => array_values( $delete ),
+	);
+}
+
+/**
  * Add an outlet price tier.
  *
  * @param int $price Non-negative price threshold in the store's currency.
