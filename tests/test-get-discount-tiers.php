@@ -7,6 +7,8 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\add_discount_tier;
+use function OutletPro\add_price_tier;
 use function OutletPro\deinit_taxonomies;
 use function OutletPro\get_discount_tiers;
 use function OutletPro\register_outlet_search_index_taxonomy;
@@ -36,9 +38,9 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-discount-5', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-discount-30', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-discount-100', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 5 );
+		add_discount_tier( 30 );
+		add_discount_tier( 100 );
 
 		// Act.
 		$tiers = get_discount_tiers();
@@ -51,7 +53,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-discount-80', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 80 );
 
 		// Act.
 		$tiers = get_discount_tiers();
@@ -64,7 +66,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-discount-0', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 0 );
 
 		// Act.
 		$tiers = get_discount_tiers();
@@ -77,7 +79,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-price-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_price_tier( 50 );
 
 		// Act.
 		$tiers = get_discount_tiers();
@@ -91,7 +93,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		wp_insert_term( 'outlet-discount-invalid', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-discount-30', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 30 );
 
 		// Act.
 		$tiers = get_discount_tiers();
@@ -105,7 +107,7 @@ class Test_Get_Discount_Tiers extends WP_UnitTestCase {
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		wp_insert_term( 'outlet-discount-50-percent', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-discount-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 50 );
 
 		// Act.
 		$tiers = get_discount_tiers();
