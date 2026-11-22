@@ -193,13 +193,13 @@ function activate(): void {
 		if ( false !== get_option( 'outletpro_db_version' ) ) {
 			require __DIR__ . '/migrate.php';
 		}
+		init_taxonomies(); // Needed since init hook does not run on activation.
+		init_settings(); // Register option hooks before seeding search index settings.
 		seed_settings();
 		seed_theme_mods();
 		add_option( 'outletpro_db_version', DB_VERSION, '', true );
-		init_taxonomies(); // Needed since init hook does not run on activation.
 		init_patterns(); // Needed to create the outlet page.
 		seed_outlet_status_taxonomy();
-		seed_outlet_search_index_taxonomy();
 		create_outlet_page();
 		if ( ! wp_is_block_theme() ) {
 			register_classic_outlet_sidebar();

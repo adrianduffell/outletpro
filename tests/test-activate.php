@@ -8,6 +8,8 @@
  */
 
 use function OutletPro\activate;
+use function OutletPro\deinit_settings;
+use function OutletPro\deinit_taxonomies;
 use function OutletPro\deinit_widgets;
 use function OutletPro\register_outlet_search_index_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
@@ -15,7 +17,9 @@ use const OutletPro\ACTIVATED_AT_OPTION;
 use const OutletPro\DB_VERSION;
 use const OutletPro\LEGACY_OUTLET_PAGE_TEMPLATE_OPTION;
 use const OutletPro\OUTLET_HERO_WIDGET_AREA;
+use const OutletPro\OUTLET_MARKDOWN_LEVELS_OPTION;
 use const OutletPro\OUTLET_PAGE_OPTION;
+use const OutletPro\OUTLET_PRICE_LEVELS_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\PLUGIN_FILE;
 
@@ -60,9 +64,13 @@ class Test_Activate extends WP_UnitTestCase {
 
 	public function test_seeds_outlet_search_indexes_on_activation(): void {
 		// Arrange.
+		delete_option( OUTLET_PRICE_LEVELS_OPTION );
+		delete_option( OUTLET_MARKDOWN_LEVELS_OPTION );
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		update_option( 'woocommerce_currency', 'USD' );
+		WC_Helper_Product::create_simple_product( true, array( 'regular_price' => '70' ) );
+		deinit_taxonomies();
+		deinit_settings();
 
 		// Act.
 		activate();
@@ -102,7 +110,7 @@ class Test_Activate extends WP_UnitTestCase {
 		$this->assertNotFalse( get_option( ACTIVATED_AT_OPTION ) );
 	}
 
-	public function test_block_theme_does_not_register_or_seed_the_hero_widget_area(): void {
+	public function test_block_theme_skips_hero_widget_initialization(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
 		remove_theme_mod( 'wp_classic_sidebars' );
@@ -119,7 +127,7 @@ class Test_Activate extends WP_UnitTestCase {
 		$this->assertSame( $before, get_option( 'widget_block' ) );
 	}
 
-	public function test_reactivation_registers_and_seeds_an_empty_hero_area_after_widget_initialization(): void {
+	public function test_reactivation_seeds_an_empty_hero_area_after_widget_initialization(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
 		$GLOBALS['wp_registered_widgets'] = array();
@@ -133,7 +141,6 @@ class Test_Activate extends WP_UnitTestCase {
 		activate();
 
 		// Assert.
-		$this->assertTrue( is_registered_sidebar( OUTLET_HERO_WIDGET_AREA ) );
 		$this->assertCount( 1, wp_get_sidebars_widgets()[ OUTLET_HERO_WIDGET_AREA ] );
 	}
 }

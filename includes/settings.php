@@ -320,6 +320,8 @@ function seed_settings(): void {
 	add_option( OUTLET_BADGE_SCALE_OPTION, 166 );
 	add_option( OUTLET_BADGE_DENSITY_OPTION, 50 );
 	add_option( OUTLET_MESSAGE_OPTION, get_default_outlet_message() );
+	add_option( OUTLET_PRICE_LEVELS_OPTION, get_default_outlet_price_levels() ?? array( 10, 25, 50, 100 ) );
+	add_option( OUTLET_MARKDOWN_LEVELS_OPTION, DEFAULT_DISCOUNT_TIERS );
 }
 
 /**
@@ -766,4 +768,51 @@ function get_outlet_badge_label(): ?string {
 	}
 
 	return $value;
+}
+
+/**
+ * Get default outlet price levels.
+ *
+ * Samples up to 200 products on the store and determines price levels from the
+ * median price.
+ *
+ * @internal
+ * @return int[]|null Four ascending price thresholds, or null when no eligible products exist.
+ */
+function get_default_outlet_price_levels(): ?array {
+	$allowed_values = array( 10, 15, 20, 25, 30, 40, 50, 75, 100, 200, 250, 400, 500, 1000, 2000, 2500, 3000, 5000, 10000, 25000, 30000, 50000, 100000, 250000, 500000, 1000000, 2500000, 5000000, 10000000 );
+
+	$products = wc_get_products(
+		array(
+			'type'         => array_merge( array_diff( array_keys( wc_get_product_types() ), array( 'variable' ) ), array( 'variation' ) ),
+			'status'       => 'publish',
+			'meta_key'     => '_regular_price', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Filter eligible regular prices before sampling.
+			'meta_value'   => 1, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Exclude prices below one before sampling.
+			'meta_compare' => '>=',
+			'meta_type'    => 'NUMERIC',
+			'limit'        => 200,
+			'orderby'      => 'rand',
+		)
+	);
+	if ( empty( $products ) ) {
+		return null;
+	}
+
+	$prices = array();
+	foreach ( $products as $product ) {
+		$prices[] = $product->get_regular_price( 'edit' );
+	}
+
+	sort( $prices, SORT_NUMERIC );
+	$count      = count( $prices );
+	$median     = ( $prices[ intdiv( $count - 1, 2 ) ] + $prices[ intdiv( $count, 2 ) ] ) / 2;
+	$anchor     = $median * 0.7;
+	$raw_levels = array( $anchor / 4, $anchor / 2, $anchor, $anchor * 2 );
+	$levels     = array();
+	foreach ( array_reverse( $raw_levels, true ) as $index => $raw_level ) {
+		$candidates     = array_slice( $allowed_values, $index );
+		$levels[]       = nearest( $raw_level, ...$candidates );
+		$allowed_values = array_slice( $allowed_values, 0, array_search( end( $levels ), $allowed_values, true ) );
+	}
+	return array_reverse( $levels );
 }
