@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\batch_discount_tiers;
+use function OutletPro\deinit_settings;
 use function OutletPro\get_discount_tiers;
 use function OutletPro\get_price_tiers;
 use function OutletPro\init_settings;
@@ -23,7 +24,7 @@ class Test_Outlet_Markdown_Levels_Setting extends WP_UnitTestCase {
 	public function test_adding_option_creates_facets_through_initialized_hooks(): void {
 		// Arrange.
 		init_taxonomies();
-		remove_action( 'add_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook' );
+		deinit_settings();
 		init_settings();
 		delete_option( OUTLET_MARKDOWN_LEVELS_OPTION );
 		truncate_outlet_search_index_taxonomy();

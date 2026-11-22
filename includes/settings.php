@@ -251,6 +251,36 @@ function init_settings(): void {
 }
 
 /**
+ * Unregister settings and remove option sync hooks.
+ *
+ * @internal
+ */
+function deinit_settings(): void {
+	unregister_setting( 'outletpro', OUTLET_PAGE_OPTION );
+	unregister_setting( 'outletpro', OUTLET_MARKDOWN_LEVELS_OPTION );
+	unregister_setting( 'outletpro', OUTLET_PRICE_LEVELS_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_LABEL_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_TEXT_COLOR_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_BG_COLOR_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_COLOR_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_STYLE_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_WIDTH_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_BORDER_RADIUS_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_FONT_WEIGHT_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_SCALE_OPTION );
+	unregister_setting( 'outletpro', OUTLET_BADGE_DENSITY_OPTION );
+	unregister_setting( 'outletpro', OUTLET_MESSAGE_OPTION );
+
+	remove_action( 'update_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook' );
+	remove_action( 'add_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook' );
+	remove_action( 'delete_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook' );
+
+	remove_action( 'update_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook' );
+	remove_action( 'add_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook' );
+	remove_action( 'delete_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook' );
+}
+
+/**
  * Get the default outlet message based on the store's country.
  *
  * Returns "Only while supplies last" for US and Canada, and
