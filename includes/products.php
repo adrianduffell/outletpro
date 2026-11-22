@@ -58,7 +58,7 @@ function update_search_index_hook( \WC_Product $product ): void {
 /**
  * Schedule outlet products for re-indexing in batches of 100 after search index terms change.
  *
- * Fired by `created_outletpro_search_index`, `edited_outletpro_search_index`, and `delete_outletpro_search_index`.
+ * Fired by `created_outletpro_search_index`, `edited_outletpro_search_index`, `delete_outletpro_search_index`, and `shutdown`.
  *
  * @internal WordPress action hook
  */

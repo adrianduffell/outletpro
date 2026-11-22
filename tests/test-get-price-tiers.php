@@ -7,6 +7,8 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\add_discount_tier;
+use function OutletPro\add_price_tier;
 use function OutletPro\deinit_taxonomies;
 use function OutletPro\get_price_tiers;
 use function OutletPro\register_outlet_search_index_taxonomy;
@@ -50,7 +52,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-price-125', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_price_tier( 125 );
 
 		// Act.
 		$tiers = get_price_tiers();
@@ -63,7 +65,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-price-0', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_price_tier( 0 );
 
 		// Act.
 		$tiers = get_price_tiers();
@@ -76,7 +78,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		// Arrange.
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
-		wp_insert_term( 'outlet-discount-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_discount_tier( 50 );
 
 		// Act.
 		$tiers = get_price_tiers();
@@ -90,7 +92,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		wp_insert_term( 'outlet-price-invalid', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-price-25', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_price_tier( 25 );
 
 		// Act.
 		$tiers = get_price_tiers();
@@ -104,7 +106,7 @@ class Test_Get_Price_Tiers extends WP_UnitTestCase {
 		register_outlet_search_index_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		wp_insert_term( 'outlet-price-25-dollars', OUTLET_SEARCH_INDEX_TAXONOMY );
-		wp_insert_term( 'outlet-price-50', OUTLET_SEARCH_INDEX_TAXONOMY );
+		add_price_tier( 50 );
 
 		// Act.
 		$tiers = get_price_tiers();

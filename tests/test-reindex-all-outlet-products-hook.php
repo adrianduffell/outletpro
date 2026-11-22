@@ -7,16 +7,67 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\add_price_tier;
 use function OutletPro\add_to_outlet;
+use function OutletPro\batch_discount_tiers;
+use function OutletPro\batch_price_tiers;
+use function OutletPro\delete_price_tier;
 use function OutletPro\init_products;
 use function OutletPro\init_taxonomies;
 use function OutletPro\seed_outlet_status_taxonomy;
 use function OutletPro\truncate_outlet_search_index_taxonomy;
-use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
+use function OutletPro\update_price_tier;
 use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
+
+	public function test_request_without_batches_does_not_reindex(): void {
+		// Arrange.
+		remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 ); // Preserve PHPUnit's output buffer.
+		remove_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		init_taxonomies();
+		init_products();
+		seed_outlet_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		as_unschedule_all_actions( 'outletpro_reindex_search_facets_batch', null, 'outletpro' );
+
+		// Act.
+		do_action( 'shutdown' );
+
+		// Assert.
+		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets_batch', null, 'outletpro' ) );
+	}
+
+	public function test_reindexes_once_after_both_batches(): void {
+		// Arrange.
+		remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 ); // Preserve PHPUnit's output buffer.
+		remove_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		init_taxonomies();
+		init_products();
+		seed_outlet_status_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		as_unschedule_all_actions( 'outletpro_reindex_search_facets_batch', null, 'outletpro' );
+
+		// Act.
+		batch_price_tiers( array( 50, 100 ) );
+		batch_discount_tiers( array( 30, 50, 70 ) );
+		do_action( 'shutdown' );
+
+		// Assert.
+		$actions = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets_batch',
+				'group'  => 'outletpro',
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			)
+		);
+		$this->assertCount( 1, $actions );
+		$this->assertSame( array( array( $product->get_id() ) ), reset( $actions )->get_args() );
+	}
 
 	public function test_adding_search_index_term_queues_every_outlet_product(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Verify scheduling for each product status.
 		// Arrange.
@@ -36,7 +87,7 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		$non_outlet = WC_Helper_Product::create_simple_product();
 
 		// Act.
-		wp_insert_term( 'New price tier', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-25' ) );
+		add_price_tier( 25 );
 
 		// Assert.
 		$product_ids = array_map( static fn( WC_Product $product ): int => $product->get_id(), $products );
@@ -58,7 +109,7 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		init_products();
-		$term     = wp_insert_term( 'Old price tier', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-50' ) );
+		add_price_tier( 50 );
 		$products = array();
 		foreach ( array( 'publish', 'draft', 'private', 'pending' ) as $status ) {
 			$product = WC_Helper_Product::create_simple_product();
@@ -71,7 +122,7 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		$non_outlet = WC_Helper_Product::create_simple_product();
 
 		// Act.
-		wp_update_term( $term['term_id'], OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-25' ) );
+		update_price_tier( 50, 25 );
 
 		// Assert.
 		$product_ids = array_map( static fn( WC_Product $product ): int => $product->get_id(), $products );
@@ -93,7 +144,7 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		seed_outlet_status_taxonomy();
 		truncate_outlet_search_index_taxonomy();
 		init_products();
-		$term     = wp_insert_term( 'Old price tier', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-50' ) );
+		add_price_tier( 50 );
 		$products = array();
 		foreach ( array( 'publish', 'draft', 'private', 'pending' ) as $status ) {
 			$product = WC_Helper_Product::create_simple_product();
@@ -106,7 +157,7 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		$non_outlet = WC_Helper_Product::create_simple_product();
 
 		// Act.
-		wp_delete_term( $term['term_id'], OUTLET_SEARCH_INDEX_TAXONOMY );
+		delete_price_tier( 50 );
 
 		// Assert.
 		$product_ids = array_map( static fn( WC_Product $product ): int => $product->get_id(), $products );
@@ -158,7 +209,7 @@ class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
 		}
 
 		// Act.
-		wp_insert_term( 'New price tier', OUTLET_SEARCH_INDEX_TAXONOMY, array( 'slug' => 'outlet-price-25' ) );
+		add_price_tier( 25 );
 
 		// Assert.
 		$actions = as_get_scheduled_actions(
