@@ -88,6 +88,24 @@ class Test_Outlet_Markdown_Levels_Setting extends WP_UnitTestCase {
 		$this->assertSame( array( 30, 50, 80 ), get_discount_tiers() );
 	}
 
+	public function test_unsorted_levels_preserve_renamed_facet_id(): void {
+		// Arrange.
+		init_taxonomies();
+		register_outlet_markdown_levels_setting();
+		truncate_outlet_search_index_taxonomy();
+		update_option( OUTLET_MARKDOWN_LEVELS_OPTION, array( 30, 50, 70 ) );
+		$term   = get_term_by( 'slug', 'outlet-discount-70', OUTLET_SEARCH_INDEX_TAXONOMY );
+		$values = array( 80, 50, 30 );
+
+		// Act.
+		update_option( OUTLET_MARKDOWN_LEVELS_OPTION, $values );
+
+		// Assert.
+		$this->assertSame( $term->term_id, get_term_by( 'slug', 'outlet-discount-80', OUTLET_SEARCH_INDEX_TAXONOMY )->term_id );
+		$this->assertSame( array( 30, 50, 80 ), get_discount_tiers() );
+		$this->assertSame( $values, get_option( OUTLET_MARKDOWN_LEVELS_OPTION ) );
+	}
+
 	public function test_unchanged_option_does_not_synchronize_facets(): void {
 		// Arrange.
 		init_taxonomies();

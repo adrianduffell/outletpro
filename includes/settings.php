@@ -318,7 +318,8 @@ function register_outlet_markdown_levels_setting(): void {
 function sync_outlet_markdown_levels_hook(): void {
 	try {
 		$values = get_option( OUTLET_MARKDOWN_LEVELS_OPTION );
-		$delta  = calculate_facet_delta( get_discount_tiers(), $values );
+		sort( $values, SORT_NUMERIC );
+		$delta = calculate_facet_delta( get_discount_tiers(), $values );
 		if ( array() === array_filter( $delta ) ) {
 			return;
 		}
