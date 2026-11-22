@@ -23,6 +23,7 @@ function init_products(): void {
 	add_action( 'created_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 	add_action( 'edited_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
 	add_action( 'delete_' . OUTLET_SEARCH_INDEX_TAXONOMY, 'OutletPro\reindex_all_outlet_products_hook' );
+	add_action( 'shutdown', 'OutletPro\reindex_dirty_search_index_hook' );
 }
 
 /**
@@ -103,6 +104,22 @@ function reindex_all_outlet_products_hook(): void {
 		$batch_size = count( $query->posts );
 		++$page;
 	} while ( 100 === $batch_size );
+}
+
+/**
+ * Request a full outlet re-index when search index changes are pending.
+ *
+ * Fired by `shutdown`.
+ *
+ * @internal WordPress action hook
+ */
+function reindex_dirty_search_index_hook(): void {
+	if ( 'yes' !== get_option( 'outletpro_search_index_dirty' ) ) {
+		return;
+	}
+
+	delete_option( 'outletpro_search_index_dirty' );
+	reindex_all_outlet_products_hook();
 }
 
 /**

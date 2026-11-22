@@ -40,6 +40,21 @@ class Test_Batch_Price_Tiers extends WP_UnitTestCase {
 		$this->assertSame( array( 30 ), get_discount_tiers() );
 	}
 
+	public function test_marks_search_index_dirty(): void {
+		// Arrange.
+		init_taxonomies();
+		truncate_outlet_search_index_taxonomy();
+		add_price_tier( 50 );
+		add_price_tier( 100 );
+		delete_option( 'outletpro_search_index_dirty' );
+
+		// Act.
+		batch_price_tiers( array( 125 ), array( 50 => 60 ), array( 100 ) );
+
+		// Assert.
+		$this->assertSame( 'yes', get_option( 'outletpro_search_index_dirty' ) );
+	}
+
 	public function test_rejects_non_integer_value(): void {
 		// Arrange.
 		init_taxonomies();
