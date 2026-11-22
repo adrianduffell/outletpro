@@ -299,7 +299,7 @@ function register_outlet_markdown_levels_setting(): void {
 					'uniqueItems' => true,
 					'items'       => array(
 						'type'    => 'integer',
-						'minimum' => 0,
+						'minimum' => 1,
 						'maximum' => 100,
 					),
 				),

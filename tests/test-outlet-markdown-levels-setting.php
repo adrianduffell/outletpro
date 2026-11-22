@@ -173,6 +173,20 @@ class Test_Outlet_Markdown_Levels_Setting extends WP_UnitTestCase {
 		$this->assertSame( array(), get_discount_tiers() );
 	}
 
+	public function test_rest_rejects_zero_markdown_level(): void {
+		// Arrange.
+		register_outlet_markdown_levels_setting();
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$request = new WP_REST_Request( 'POST', '/wp/v2/settings' );
+		$request->set_param( OUTLET_MARKDOWN_LEVELS_OPTION, array( 0, 30 ) );
+
+		// Act.
+		$response = rest_do_request( $request );
+
+		// Assert.
+		$this->assertSame( 400, $response->get_status() );
+	}
+
 	public function test_missing_option_defaults_to_empty_list(): void {
 		// Arrange.
 		register_outlet_markdown_levels_setting();
