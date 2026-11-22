@@ -872,7 +872,7 @@ function batch_price_tiers( array $add = array(), array $update = array(), array
 		add_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
-		update_option( 'outletpro_search_index_dirty', 'yes', false );
+		add_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 	}
 }
 
@@ -1045,6 +1045,6 @@ function batch_discount_tiers( array $add = array(), array $update = array(), ar
 		add_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
-		update_option( 'outletpro_search_index_dirty', 'yes', false );
+		add_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 	}
 }
