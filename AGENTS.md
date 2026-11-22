@@ -58,6 +58,8 @@ with _hook suffix, add @internal and Fired by docblocks, hardcode namespace`.
 * New JavaScript unit tests use Vitest.
 * Tests should be in the global namespace. Deliberately add `use` statements to
   import the namespaced classes, functions, and constants used in the tests.
+* PHPUnit tests should test one function per file.
+* Name PHPUnit test files and classes after the function.
 * Each test is self-contained. Never use shared `setUp` / `tearDown` or similar
   variants in PHPUnit, nor `test.beforeEach` / `test.afterEach` in Playwright.
   Each test is responsible for arranging the environment to be the exact state
