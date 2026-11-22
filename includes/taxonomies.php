@@ -1052,3 +1052,72 @@ function batch_discount_tiers( array $add = array(), array $update = array(), ar
 		reindex_all_outlet_products_hook();
 	}
 }
+
+/**
+ * Batch changes of outlet search facets.
+ *
+ * Pauses re-indexing until the batch changes are made.
+ *
+ * @param int[]           $price_add Price facets to add.
+ * @param array<int, int> $price_update Existing price facets mapped to new facets.
+ * @param int[]           $price_delete Price facets to delete.
+ * @param int[]           $discount_add Discount facets to add.
+ * @param array<int, int> $discount_update Existing discount facets mapped to new facets.
+ * @param int[]           $discount_delete Discount facets to delete.
+ * @throws \InvalidArgumentException If an amount is invalid.
+ * @internal
+ */
+function batch_search_facets(
+	array $price_add = array(),
+	array $price_update = array(),
+	array $price_delete = array(),
+	array $discount_add = array(),
+	array $discount_update = array(),
+	array $discount_delete = array()
+): void {
+	$amounts = array_merge(
+		array_values( $price_add ),
+		array_keys( $price_update ),
+		array_values( $price_update ),
+		array_values( $price_delete ),
+		array_values( $discount_add ),
+		array_keys( $discount_update ),
+		array_values( $discount_update ),
+		array_values( $discount_delete )
+	);
+	foreach ( $amounts as $amount ) {
+		if ( ! is_int( $amount ) ) {
+			throw new \InvalidArgumentException( 'Outlet search facet must be an integer.' );
+		}
+	}
+
+	remove_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+	remove_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+	remove_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+
+	try {
+		foreach ( $price_add as $price ) {
+			add_price_tier( $price );
+		}
+		foreach ( $price_update as $price => $new_price ) {
+			update_price_tier( $price, $new_price );
+		}
+		foreach ( $price_delete as $price ) {
+			delete_price_tier( $price );
+		}
+		foreach ( $discount_add as $discount ) {
+			add_discount_tier( $discount );
+		}
+		foreach ( $discount_update as $discount => $new_discount ) {
+			update_discount_tier( $discount, $new_discount );
+		}
+		foreach ( $discount_delete as $discount ) {
+			delete_discount_tier( $discount );
+		}
+	} finally {
+		add_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		add_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		add_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		reindex_all_outlet_products_hook();
+	}
+}
