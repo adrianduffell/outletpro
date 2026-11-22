@@ -33,6 +33,13 @@ const OUTLET_PAGE_OPTION = 'outletpro_page_id';
 const OUTLET_MARKDOWN_LEVELS_OPTION = 'outletpro_markdown_levels';
 
 /**
+ * WordPress option key used to store price levels (in the store's currency).
+ *
+ * @internal
+ */
+const OUTLET_PRICE_LEVELS_OPTION = 'outletpro_price_levels';
+
+/**
  * WordPress option key used to enable the legacy outlet page template.
  *
  * @internal
@@ -221,6 +228,7 @@ function settings_screen_enabled(): bool {
 function init_settings(): void {
 	register_outlet_page_setting();
 	register_outlet_markdown_levels_setting();
+	register_outlet_price_levels_setting();
 	register_outlet_badge_label_setting();
 	register_outlet_badge_text_color_setting();
 	register_outlet_badge_bg_color_setting();
@@ -236,6 +244,10 @@ function init_settings(): void {
 	add_action( 'update_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook', 10, 0 );
 	add_action( 'add_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook', 10, 0 );
 	add_action( 'delete_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook', 10, 0 );
+
+	add_action( 'update_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook', 10, 0 );
+	add_action( 'add_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook', 10, 0 );
+	add_action( 'delete_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook', 10, 0 );
 }
 
 /**
@@ -326,6 +338,54 @@ function sync_outlet_markdown_levels_hook(): void {
 		batch_discount_tiers( $delta['add'], $delta['update'], $delta['delete'] );
 	} catch ( \Throwable $e ) {
 		wc_get_logger()->error( 'Markdown levels could not be synchronized with discount facets.' );
+	}
+}
+
+/**
+ * Register the price levels setting.
+ *
+ * @internal
+ */
+function register_outlet_price_levels_setting(): void {
+	register_setting(
+		'outletpro',
+		OUTLET_PRICE_LEVELS_OPTION,
+		array(
+			'type'              => 'array',
+			'default'           => array(),
+			'sanitize_callback' => 'OutletPro\sanitize_integer_array',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type'        => 'array',
+					'uniqueItems' => true,
+					'items'       => array(
+						'type'    => 'integer',
+						'minimum' => 1,
+					),
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Sync search index facets when the price levels change.
+ *
+ * Fired by `update_option_outletpro_price_levels`, `add_option_outletpro_price_levels`, and `delete_option_outletpro_price_levels`.
+ *
+ * @internal WordPress action hook
+ */
+function sync_outlet_price_levels_hook(): void {
+	try {
+		$values = get_option( OUTLET_PRICE_LEVELS_OPTION );
+		sort( $values, SORT_NUMERIC );
+		$delta = calculate_facet_delta( get_price_tiers(), $values );
+		if ( array() === array_filter( $delta ) ) {
+			return;
+		}
+		batch_price_tiers( $delta['add'], $delta['update'], $delta['delete'] );
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Price levels could not be synchronized with price facets.' );
 	}
 }
 
