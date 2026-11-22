@@ -840,8 +840,6 @@ function get_price_tiers(): array {
 /**
  * Batch changes of outlet price tiers.
  *
- * Pauses re-indexing while the batch changes are made. Marks the search index dirty for re-indexing at shutdown.
- *
  * @param int[]           $add Price thresholds to add.
  * @param array<int, int> $update Existing thresholds mapped to new thresholds.
  * @param int[]           $delete Price thresholds to delete.
@@ -1014,8 +1012,6 @@ function get_discount_tiers(): array {
 
 /**
  * Batch changes of outlet discount tiers.
- *
- * Pauses re-indexing while the batch changes are made. Marks the search index dirty for re-indexing at shutdown.
  *
  * @param int[]           $add Discount percentages to add.
  * @param array<int, int> $update Existing percentages mapped to new percentages.
