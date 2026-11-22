@@ -9,6 +9,8 @@
 
 use function OutletPro\add_price_tier;
 use function OutletPro\add_to_outlet;
+use function OutletPro\batch_discount_tiers;
+use function OutletPro\batch_price_tiers;
 use function OutletPro\delete_price_tier;
 use function OutletPro\init_products;
 use function OutletPro\init_taxonomies;
@@ -19,6 +21,53 @@ use const OutletPro\OUTLET_STATUS_CANONICAL_TERM;
 use const OutletPro\OUTLET_STATUS_TAXONOMY;
 
 class Test_Reindex_All_Outlet_Products_Hook extends WP_UnitTestCase {
+
+	public function test_request_without_batches_does_not_reindex(): void {
+		// Arrange.
+		remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 ); // Preserve PHPUnit's output buffer.
+		remove_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		init_taxonomies();
+		init_products();
+		seed_outlet_status_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		as_unschedule_all_actions( 'outletpro_reindex_search_facets_batch', null, 'outletpro' );
+
+		// Act.
+		do_action( 'shutdown' );
+
+		// Assert.
+		$this->assertFalse( as_has_scheduled_action( 'outletpro_reindex_search_facets_batch', null, 'outletpro' ) );
+	}
+
+	public function test_reindexes_once_after_both_batches(): void {
+		// Arrange.
+		remove_action( 'shutdown', 'wp_ob_end_flush_all', 1 ); // Preserve PHPUnit's output buffer.
+		remove_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
+		init_taxonomies();
+		init_products();
+		seed_outlet_status_taxonomy();
+		truncate_outlet_search_index_taxonomy();
+		$product = WC_Helper_Product::create_simple_product();
+		add_to_outlet( $product );
+		as_unschedule_all_actions( 'outletpro_reindex_search_facets_batch', null, 'outletpro' );
+
+		// Act.
+		batch_price_tiers( array( 50, 100 ) );
+		batch_discount_tiers( array( 30, 50, 70 ) );
+		do_action( 'shutdown' );
+
+		// Assert.
+		$actions = as_get_scheduled_actions(
+			array(
+				'hook'   => 'outletpro_reindex_search_facets_batch',
+				'group'  => 'outletpro',
+				'status' => ActionScheduler_Store::STATUS_PENDING,
+			)
+		);
+		$this->assertCount( 1, $actions );
+		$this->assertSame( array( array( $product->get_id() ) ), reset( $actions )->get_args() );
+	}
 
 	public function test_adding_search_index_term_queues_every_outlet_product(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Verify scheduling for each product status.
 		// Arrange.

@@ -840,8 +840,6 @@ function get_price_tiers(): array {
 /**
  * Batch changes of outlet price tiers.
  *
- * Pauses re-indexing until the batch changes are made.
- *
  * @param int[]           $add Price thresholds to add.
  * @param array<int, int> $update Existing thresholds mapped to new thresholds.
  * @param int[]           $delete Price thresholds to delete.
@@ -874,7 +872,7 @@ function batch_price_tiers( array $add = array(), array $update = array(), array
 		add_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
-		reindex_all_outlet_products_hook();
+		add_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 	}
 }
 
@@ -1015,8 +1013,6 @@ function get_discount_tiers(): array {
 /**
  * Batch changes of outlet discount tiers.
  *
- * Pauses re-indexing until the batch changes are made.
- *
  * @param int[]           $add Discount percentages to add.
  * @param array<int, int> $update Existing percentages mapped to new percentages.
  * @param int[]           $delete Discount percentages to delete.
@@ -1049,6 +1045,6 @@ function batch_discount_tiers( array $add = array(), array $update = array(), ar
 		add_action( 'created_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'edited_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 		add_action( 'delete_outletpro_search_index', 'OutletPro\reindex_all_outlet_products_hook', 10 );
-		reindex_all_outlet_products_hook();
+		add_action( 'shutdown', 'OutletPro\reindex_all_outlet_products_hook', 10 );
 	}
 }
