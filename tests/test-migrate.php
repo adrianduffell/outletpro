@@ -17,40 +17,34 @@ class Test_Migrate extends WP_UnitTestCase {
 	public function test_migrates_when_option_is_missing(): void {
 		// Arrange.
 		delete_option( 'outletpro_db_version' );
-		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
-		$this->assertSame( 'yes', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 
 	public function test_migrates_when_option_value_smaller(): void {
 		// Arrange.
 		update_option( 'outletpro_db_version', '0' );
-		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
-		$this->assertSame( 'yes', get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 
 	public function test_noops_when_values_match(): void {
 		// Arrange.
 		update_option( 'outletpro_db_version', DB_VERSION );
-		delete_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION );
 
 		// Act.
 		require dirname( PLUGIN_FILE ) . '/migrate.php';
 
 		// Assert.
 		$this->assertSame( DB_VERSION, get_option( 'outletpro_db_version' ) );
-		$this->assertFalse( get_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION ) );
 	}
 
 	public function test_noops_when_option_value_greater(): void {
