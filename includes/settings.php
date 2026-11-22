@@ -26,6 +26,13 @@ const OUTLET_MESSAGE_OPTION = 'outletpro_message';
 const OUTLET_PAGE_OPTION = 'outletpro_page_id';
 
 /**
+ * WordPress option key used to store markdown levels (as percentages).
+ *
+ * @internal
+ */
+const OUTLET_MARKDOWN_LEVELS_OPTION = 'outletpro_markdown_levels';
+
+/**
  * WordPress option key used to enable the legacy outlet page template.
  *
  * @internal
@@ -183,6 +190,21 @@ function sanitize_unsigned_integer( $value ): ?int {
 }
 
 /**
+ * Sanitize an array of integers.
+ *
+ * @param mixed $values Values to sanitize.
+ * @return int[] Unique integers in input order, with sequential indexes.
+ * @internal
+ * @phpcsSuppress SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
+ */
+function sanitize_integer_array( $values ): array {
+	if ( ! is_array( $values ) ) {
+		return array();
+	}
+	return array_values( array_unique( array_filter( $values, 'is_int' ) ) );
+}
+
+/**
  * Check whether the settings screen is enabled.
  *
  * @internal
@@ -198,6 +220,7 @@ function settings_screen_enabled(): bool {
  */
 function init_settings(): void {
 	register_outlet_page_setting();
+	register_outlet_markdown_levels_setting();
 	register_outlet_badge_label_setting();
 	register_outlet_badge_text_color_setting();
 	register_outlet_badge_bg_color_setting();
@@ -209,6 +232,10 @@ function init_settings(): void {
 	register_outlet_badge_scale_setting();
 	register_outlet_badge_density_setting();
 	register_outlet_message_setting();
+
+	add_action( 'update_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook', 10, 0 );
+	add_action( 'add_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook', 10, 0 );
+	add_action( 'delete_option_' . OUTLET_MARKDOWN_LEVELS_OPTION, 'OutletPro\sync_outlet_markdown_levels_hook', 10, 0 );
 }
 
 /**
@@ -251,6 +278,54 @@ function seed_settings(): void {
 	add_option( OUTLET_BADGE_SCALE_OPTION, 166 );
 	add_option( OUTLET_BADGE_DENSITY_OPTION, 50 );
 	add_option( OUTLET_MESSAGE_OPTION, get_default_outlet_message() );
+}
+
+/**
+ * Register the markdown levels setting.
+ *
+ * @internal
+ */
+function register_outlet_markdown_levels_setting(): void {
+	register_setting(
+		'outletpro',
+		OUTLET_MARKDOWN_LEVELS_OPTION,
+		array(
+			'type'              => 'array',
+			'default'           => array(),
+			'sanitize_callback' => 'OutletPro\sanitize_integer_array',
+			'show_in_rest'      => array(
+				'schema' => array(
+					'type'        => 'array',
+					'uniqueItems' => true,
+					'items'       => array(
+						'type'    => 'integer',
+						'minimum' => 0,
+						'maximum' => 100,
+					),
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Sync search index facets when the markdown levels change.
+ *
+ * Fired by `update_option_outletpro_markdown_levels`, `add_option_outletpro_markdown_levels`, and `delete_option_outletpro_markdown_levels`.
+ *
+ * @internal WordPress action hook
+ */
+function sync_outlet_markdown_levels_hook(): void {
+	try {
+		$values = get_option( OUTLET_MARKDOWN_LEVELS_OPTION );
+		$delta  = calculate_facet_delta( get_discount_tiers(), $values );
+		if ( array() === array_filter( $delta ) ) {
+			return;
+		}
+		batch_discount_tiers( $delta['add'], $delta['update'], $delta['delete'] );
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Markdown levels could not be synchronized with discount facets.' );
+	}
 }
 
 /**
