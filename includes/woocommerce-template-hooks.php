@@ -220,5 +220,10 @@ function display_outlet_message_hook(): void {
 
 	wp_enqueue_style( 'outletpro-classic-message' );
 
-	echo '<p class="outletpro-message"><strong class="outletpro-strong">' . esc_html( $message ) . '</strong></p>';
+	$link = '';
+	if ( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, true ) ) {
+		$link = do_blocks( '<!-- wp:outletpro/outlet-link /-->' );
+	}
+
+	echo '<p class="outletpro-message"><strong class="outletpro-strong">' . esc_html( $message ) . '</strong>' . ( '' !== $link ? ' ' . wp_kses_post( $link ) : '' ) . '</p>';
 }
