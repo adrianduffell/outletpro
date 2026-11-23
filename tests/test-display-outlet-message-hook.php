@@ -67,7 +67,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		$this->assertSame( 11, has_action( 'woocommerce_single_product_summary', 'OutletPro\display_outlet_message_hook' ) );
 	}
 
-	public function test_displays_message_for_outlet_product(): void {
+	public function test_wraps_message_in_strong_for_outlet_product(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD );
@@ -81,7 +81,7 @@ class Test_Display_Outlet_Message_Hook extends WP_UnitTestCase {
 		init_woocommerce_template_hooks();
 
 		// Expect.
-		$this->expectOutputRegex( '~<p class="outletpro-message">Not eligible for change of mind returns</p>~' );
+		$this->expectOutputRegex( '~<p class="outletpro-message"><strong class="outletpro-strong">Not eligible for change of mind returns</strong></p>~' );
 
 		// Act.
 		do_action( 'woocommerce_single_product_summary' );

@@ -220,5 +220,5 @@ function display_outlet_message_hook(): void {
 
 	wp_enqueue_style( 'outletpro-classic-message' );
 
-	echo '<p class="outletpro-message">' . esc_html( $message ) . '</p>';
+	echo '<p class="outletpro-message"><strong class="outletpro-strong">' . esc_html( $message ) . '</strong></p>';
 }
