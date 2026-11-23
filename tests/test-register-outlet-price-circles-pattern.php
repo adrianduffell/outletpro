@@ -34,8 +34,7 @@ class Test_Register_Outlet_Price_Circles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
-		$this->assertSame( array_fill( 0, 4, '#123456' ), array_column( array_column( $tile_styles, 'color' ), 'text' ) );
-		$this->assertSame( array_fill( 0, 4, '#ffff00' ), array_column( array_column( $tile_styles, 'color' ), 'background' ) );
+		$this->assertEmpty( array_column( $tile_styles, 'color' ) );
 		$this->assertSame( array_fill( 0, 4, 'none' ), array_column( array_column( $tile_styles, 'typography' ), 'textDecoration' ) );
 	}
 

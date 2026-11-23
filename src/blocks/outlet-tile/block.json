@@ -42,6 +42,10 @@
 	},
 	"supports": {
 		"__experimentalStyle": {
+			"color": {
+				"background": "var:preset|color|outletpro-badge-bg-color",
+				"text": "var:preset|color|outletpro-badge-text-color"
+			},
 			"spacing": {
 				"blockGap": "0"
 			}

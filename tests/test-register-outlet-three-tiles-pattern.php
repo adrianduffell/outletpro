@@ -32,8 +32,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
-		$this->assertSame( array_fill( 0, 3, '#123456' ), array_column( array_column( $tile_styles, 'color' ), 'text' ) );
-		$this->assertSame( array_fill( 0, 3, '#ffff00' ), array_column( array_column( $tile_styles, 'color' ), 'background' ) );
+		$this->assertEmpty( array_column( $tile_styles, 'color' ) );
 		$this->assertSame( array_fill( 0, 3, 'none' ), array_column( array_column( $tile_styles, 'typography' ), 'textDecoration' ) );
 	}
 
@@ -56,8 +55,7 @@ class Test_Register_Outlet_Three_Tiles_Pattern extends WP_UnitTestCase {
 
 			// Assert.
 			$this->assertArrayNotHasKey( 'color', $grid['attrs']['style'] );
-			$this->assertEmpty( $grid['innerBlocks'][0]['attrs']['style']['color']['text'] );
-			$this->assertEmpty( $grid['innerBlocks'][0]['attrs']['style']['color']['background'] );
+			$this->assertArrayNotHasKey( 'color', $grid['innerBlocks'][0]['attrs']['style'] );
 			$this->assertStringNotContainsString( 'has-text-color', $pattern['content'] );
 			$this->assertStringNotContainsString( 'color:', $pattern['content'] );
 		}
