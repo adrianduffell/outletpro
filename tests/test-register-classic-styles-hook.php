@@ -34,5 +34,6 @@ class Test_Register_Classic_Styles_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertTrue( wp_style_is( 'outletpro-classic-message', 'registered' ) );
+		$this->assertStringEndsWith( 'assets/css/classic-message.css', wp_styles()->registered['outletpro-classic-message']->src );
 	}
 }

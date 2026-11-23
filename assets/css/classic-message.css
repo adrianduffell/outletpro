@@ -5,6 +5,7 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-.outletpro-message {
-	font-weight: 700;
+/* Low specificity to allow theme strong styles to have precedence. */
+:where(.outletpro-message .outletpro-strong) {
+	font-weight: 600;
 }
