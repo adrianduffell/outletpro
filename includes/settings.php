@@ -248,6 +248,11 @@ function init_settings(): void {
 	add_action( 'update_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook', 10, 0 );
 	add_action( 'add_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook', 10, 0 );
 	add_action( 'delete_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook', 10, 0 );
+
+	add_action( 'add_option_' . OUTLET_BADGE_BG_COLOR_OPTION, 'wp_clean_theme_json_cache' );
+	add_action( 'update_option_' . OUTLET_BADGE_BG_COLOR_OPTION, 'wp_clean_theme_json_cache' );
+	add_action( 'add_option_' . OUTLET_BADGE_TEXT_COLOR_OPTION, 'wp_clean_theme_json_cache' );
+	add_action( 'update_option_' . OUTLET_BADGE_TEXT_COLOR_OPTION, 'wp_clean_theme_json_cache' );
 }
 
 /**
@@ -278,6 +283,11 @@ function deinit_settings(): void {
 	remove_action( 'update_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook' );
 	remove_action( 'add_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook' );
 	remove_action( 'delete_option_' . OUTLET_PRICE_LEVELS_OPTION, 'OutletPro\sync_outlet_price_levels_hook' );
+
+	remove_action( 'add_option_' . OUTLET_BADGE_BG_COLOR_OPTION, 'wp_clean_theme_json_cache' );
+	remove_action( 'update_option_' . OUTLET_BADGE_BG_COLOR_OPTION, 'wp_clean_theme_json_cache' );
+	remove_action( 'add_option_' . OUTLET_BADGE_TEXT_COLOR_OPTION, 'wp_clean_theme_json_cache' );
+	remove_action( 'update_option_' . OUTLET_BADGE_TEXT_COLOR_OPTION, 'wp_clean_theme_json_cache' );
 }
 
 /**

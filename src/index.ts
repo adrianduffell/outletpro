@@ -14,6 +14,7 @@ import OutletPageEditorDescription from './page-editor-description';
 import './settings-sidebar';
 import './outlet-toggle';
 import EditorPreview from './editor-preview';
+import BadgeColorPalette from './badge-color-palette';
 import './blocks/outlet-conditional';
 import './blocks/outlet-badge';
 import './blocks/outlet-message';
@@ -24,6 +25,10 @@ import './blocks/outlet-menu';
 
 registerPlugin( 'outletpro-editor-preview', {
 	render: EditorPreview,
+} );
+
+registerPlugin( 'outletpro-badge-color-palette', {
+	render: BadgeColorPalette,
 } );
 
 if ( window.location.pathname.endsWith( '/post.php' ) ) {
