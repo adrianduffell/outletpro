@@ -134,7 +134,7 @@
 		display: none;
 	}
 
-	.outletpro-editor-header-actions {
+	.outletpro-editor-header .outletpro-editor-header-actions {
 		grid-column: 3;
 	}
 }
