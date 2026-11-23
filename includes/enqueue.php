@@ -430,3 +430,18 @@ function enqueue_build_assets_hook(): void {
 		true
 	);
 }
+
+/**
+ * Enqueue outlet editor assets
+ *
+ * Fired by `admin_enqueue_scripts`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_outlet_editor_hook(): void {
+	$asset = require plugin_dir_path( PLUGIN_FILE ) . 'build/outlet-editor.asset.php';
+	wp_enqueue_script( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.js', $asset['dependencies'], $asset['version'], true );
+	wp_enqueue_style( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/style-outlet-editor.css', array( 'wp-components' ), $asset['version'] );
+	wp_enqueue_style( 'outletpro-outlet-editor-components', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.css', array( 'outletpro-outlet-editor' ), $asset['version'] );
+	wp_set_script_translations( 'outletpro-outlet-editor', 'outletpro' );
+}
