@@ -16,6 +16,7 @@ use function OutletPro\truncate_outlet_search_index_taxonomy;
 use const OutletPro\ACTIVATED_AT_OPTION;
 use const OutletPro\DB_VERSION;
 use const OutletPro\LEGACY_OUTLET_PAGE_TEMPLATE_OPTION;
+use const OutletPro\OUTLET_HERO_PATTERN_THEME_MOD;
 use const OutletPro\OUTLET_HERO_WIDGET_AREA;
 use const OutletPro\OUTLET_MARKDOWN_LEVELS_OPTION;
 use const OutletPro\OUTLET_PAGE_OPTION;
@@ -24,6 +25,38 @@ use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 use const OutletPro\PLUGIN_FILE;
 
 class Test_Activate extends WP_UnitTestCase {
+
+	public function test_seeds_the_outlet_hero_pattern_on_activation(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		self::factory()->term->create_many( 4, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		activate();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-4', get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
+	}
+
+	public function test_does_not_publish_the_outlet_hero_on_activation(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+
+		// Act.
+		activate();
+
+		// Assert.
+		$this->assertEmpty(
+			get_posts(
+				array(
+					'post_type' => 'wp_template_part',
+					'name'      => 'outlet-hero',
+				)
+			)
+		);
+	}
 
 	public function test_seeds_the_db_version(): void {
 		// Arrange.

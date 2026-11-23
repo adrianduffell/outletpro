@@ -10,6 +10,7 @@ use function OutletPro\deinit_template_parts;
 use function OutletPro\init_patterns;
 use function OutletPro\init_taxonomies;
 use function OutletPro\init_template_parts;
+use const OutletPro\OUTLET_HERO_PATTERN_THEME_MOD;
 
 class Test_Deinit_Template_Parts extends WP_UnitTestCase {
 
@@ -20,6 +21,7 @@ class Test_Deinit_Template_Parts extends WP_UnitTestCase {
 		deinit_patterns();
 		init_patterns();
 		init_template_parts();
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-3' );
 		$this->assertInstanceOf( WP_Block_Template::class, get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' ) );
 
 		// Act.

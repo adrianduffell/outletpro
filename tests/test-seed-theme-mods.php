@@ -8,6 +8,7 @@
  */
 
 use function OutletPro\seed_theme_mods;
+use const OutletPro\OUTLET_HERO_PATTERN_THEME_MOD;
 use const OutletPro\OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD;
 use const OutletPro\PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
@@ -17,6 +18,54 @@ use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_Seed_Theme_Mods extends WP_UnitTestCase {
+
+	public function test_seeds_the_outlet_hero_pattern(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		self::factory()->term->create_many( 4, array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-4', get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
+	}
+
+	public function test_preserves_the_outlet_hero_pattern_after_categories_change(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		self::factory()->term->create_many( 3, array( 'taxonomy' => 'product_cat' ) );
+		seed_theme_mods();
+		self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-3', get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
+	}
+
+	public function test_keeps_separate_outlet_hero_patterns_for_each_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		self::factory()->term->create_many( 3, array( 'taxonomy' => 'product_cat' ) );
+		seed_theme_mods();
+		switch_theme( 'purple' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
+
+		// Act.
+		seed_theme_mods();
+		$purple_pattern = get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		switch_theme( 'twentytwentyfive' );
+
+		// Assert.
+		$this->assertSame( 'outletpro/outlet-navigation-4', $purple_pattern );
+		$this->assertSame( 'outletpro/outlet-navigation-3', get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
+	}
 
 	public function test_skips_hero_anchor_but_seeds_other_mods_when_catalog_template_is_missing(): void { // phpcs:ignore Generic.Metrics.NestingLevel.MaxExceeded -- Restore the template filter even if seeding fails.
 		// Arrange.
@@ -136,6 +185,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 	public function test_seeds_classic_theme_mods(): void {
 		// Arrange.
 		switch_theme( 'storefront' );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
 		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
@@ -147,6 +197,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		seed_theme_mods();
 
 		// Assert.
+		$this->assertFalse( get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );

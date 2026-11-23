@@ -9,6 +9,8 @@ use function OutletPro\deinit_patterns;
 use function OutletPro\init_patterns;
 use function OutletPro\init_taxonomies;
 use function OutletPro\init_template_parts;
+use function OutletPro\seed_theme_mods;
+use const OutletPro\OUTLET_HERO_PATTERN_THEME_MOD;
 
 class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 
@@ -19,6 +21,7 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		init_patterns();
 		init_template_parts();
 		self::factory()->term->create_many( 3, array( 'taxonomy' => 'product_cat' ) );
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-3' );
 
 		// Act.
 		$part   = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
@@ -28,6 +31,8 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		$this->assertSame( get_stylesheet() . '//outlet-hero', $part->id );
 		$this->assertSame( 'Outlet hero', $part->title );
 		$this->assertSame( 'plugin', $part->source );
+		$this->assertSame( 'plugin', $part->origin );
+		$this->assertSame( 'outletpro', $part->plugin );
 		$this->assertCount( 1, $blocks );
 		$this->assertSame( 'core/group', $blocks[0]['blockName'] );
 		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
@@ -42,6 +47,7 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		init_patterns();
 		init_template_parts();
 		self::factory()->term->create_many( 4, array( 'taxonomy' => 'product_cat' ) );
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-4' );
 
 		// Act.
 		$part   = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
@@ -59,6 +65,7 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		init_patterns();
 		init_template_parts();
 		self::factory()->term->create_many( 2, array( 'taxonomy' => 'product_cat' ) );
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-price-tiers' );
 
 		// Act.
 		$part   = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
@@ -126,6 +133,7 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		switch_theme( 'twentytwentyfive' );
 		deinit_patterns();
 		init_template_parts();
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-3' );
 
 		// Act.
 		$part = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
@@ -147,6 +155,7 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 			)
 		);
 		init_template_parts();
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-3' );
 
 		// Act.
 		$part = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
@@ -155,18 +164,24 @@ class Test_Outlet_Hero_File_Template_Hook extends WP_UnitTestCase {
 		$this->assertNull( $part );
 	}
 
-	public function test_category_lookup_failure_returns_no_default(): void {
+	public function test_renders_the_seeded_design_after_categories_change(): void {
 		// Arrange.
 		switch_theme( 'twentytwentyfive' );
+		init_taxonomies();
+		deinit_patterns();
+		init_patterns();
 		init_template_parts();
-		$failure = static fn( array $terms, array $taxonomies ) => in_array( 'product_cat', $taxonomies, true ) ? new WP_Error( 'lookup_failed' ) : $terms;
-		add_filter( 'get_terms', $failure, 10, 2 );
+		remove_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD );
+		self::factory()->term->create_many( 3, array( 'taxonomy' => 'product_cat' ) );
+		seed_theme_mods();
+		self::factory()->term->create( array( 'taxonomy' => 'product_cat' ) );
 
 		// Act.
-		$part = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
+		$part   = get_block_file_template( get_stylesheet() . '//outlet-hero', 'wp_template_part' );
+		$blocks = parse_blocks( $part->content );
 
 		// Assert.
-		$this->assertNull( $part );
+		$this->assertSame( 'outletpro/outlet-navigation-3', $blocks[0]['attrs']['metadata']['patternName'] );
 	}
 
 	public function test_classic_themes_do_not_receive_a_default(): void {
