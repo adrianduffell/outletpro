@@ -93,6 +93,7 @@ export default function EditorNavigation( {
 						/>
 					) }
 					<ToolbarButton
+						id="outletpro-editor-settings-toggle"
 						ref={ settingsButton }
 						icon={ drawerRight }
 						label={ __( 'Page settings', 'outletpro' ) }

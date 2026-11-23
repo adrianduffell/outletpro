@@ -12,6 +12,8 @@ import type { PageRecord } from './types';
 export default function useOutletPage( pageId: number ) {
 	const [ page, setPage ] = useState< PageRecord | null >( null );
 	const [ error, setError ] = useState( '' );
+	const [ title, setTitle ] = useState( '' );
+	const [ slug, setSlug ] = useState( '' );
 	useEffect( () => {
 		const controller = new AbortController();
 		setPage( null );
@@ -25,6 +27,8 @@ export default function useOutletPage( pageId: number ) {
 					return;
 				}
 				setPage( record );
+				setTitle( record.title.raw );
+				setSlug( record.slug );
 			} )
 			.catch( ( failure: unknown ) => {
 				if ( controller.signal.aborted ) {
@@ -44,5 +48,27 @@ export default function useOutletPage( pageId: number ) {
 			} );
 		return () => controller.abort();
 	}, [ pageId ] );
-	return { page, error };
+	async function save( status?: 'publish' | 'draft' ) {
+		if ( page === null ) {
+			throw new Error( 'Outlet page details are unavailable.' );
+		}
+		const record = await apiFetch< PageRecord >( {
+			path: `/wp/v2/pages/${ pageId }`,
+			method: 'POST',
+			data: {
+				title,
+				slug,
+				...( status === undefined ? {} : { status } ),
+				...( status === 'publish'
+					? { date: new Date().toISOString() }
+					: {} ),
+			},
+		} );
+		setPage( record );
+		setTitle( record.title.raw );
+		setSlug( record.slug );
+	}
+	const dirty =
+		page !== null && ( title !== page.title.raw || slug !== page.slug );
+	return { page, error, title, slug, setTitle, setSlug, dirty, save };
 }
