@@ -1,0 +1,61 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+.outletpro-editor {
+	--wp-admin-theme-color: #3858e9;
+	--wp-admin-theme-color-darker-10: #2145e6;
+	--wp-admin-theme-color-darker-20: #183ad6;
+	position: fixed;
+	inset: var(--wp-admin--admin-bar--height, 32px) 0 0;
+	z-index: 99990;
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	color: #1e1e1e;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-size: 13px;
+}
+
+.outletpro-editor-layout {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	flex: 1;
+	min-height: 0;
+	position: relative;
+}
+
+.outletpro-editor-layout.is-sidebar-open {
+	grid-template-columns: minmax(0, 1fr) 280px;
+}
+
+.outletpro-editor-workspace {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	min-width: 0;
+	min-height: 0;
+}
+
+.outletpro-editor-details {
+	box-sizing: border-box;
+	border-left: 1px solid #ddd;
+	overflow: auto;
+	background: #fff;
+}
+
+@media (max-width: 960px) {
+
+	.outletpro-editor-layout.is-sidebar-open {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.outletpro-editor-details {
+		position: absolute;
+		inset: 0 0 0 auto;
+		width: 280px;
+		z-index: 2;
+		box-shadow: -4px 0 12px #00000008;
+	}
+}
