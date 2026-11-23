@@ -8,8 +8,6 @@
  */
 
 use function OutletPro\get_uncategorized_product_category_id;
-use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
-use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 use const OutletPro\OUTLET_SEARCH_INDEX_TAXONOMY;
 
 defined( 'ABSPATH' ) || exit;
@@ -59,9 +57,6 @@ if ( ! empty( $terms ) ) {
 	}
 }
 
-$bg_color   = get_option( OUTLET_BADGE_BG_COLOR_OPTION, null );
-$text_color = get_option( OUTLET_BADGE_TEXT_COLOR_OPTION, null );
-
 $tiles = array();
 
 // Pad with blank tiles when there is not enough content.
@@ -76,10 +71,6 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 			),
 			'dimensions' => array(
 				'minHeight' => '150px',
-			),
-			'color'      => array(
-				'background' => $bg_color,
-				'text'       => $text_color,
 			),
 			'typography' => array( 'textDecoration' => 'none' ),
 			'spacing'    => array(
