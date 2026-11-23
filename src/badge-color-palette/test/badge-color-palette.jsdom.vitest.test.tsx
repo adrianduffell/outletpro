@@ -26,8 +26,8 @@ test.each( [
 		description: 'cleared colors',
 		background: '',
 		text: '',
-		expectedBackground: '#000000',
-		expectedText: '#FFFFFF',
+		expectedBackground: '#FFFFFF',
+		expectedText: '#000000',
 	},
 ] )( 'updates the palette from $description', ( values ) => {
 	// Arrange.
@@ -46,8 +46,14 @@ test.each( [
 						palette: {
 							theme: [
 								...themeColors,
-								{ slug: 'outletpro-badge-bg-color', color: '#ff0000' },
-								{ slug: 'outletpro-badge-text-color', color: '#ffffff' },
+								{
+									slug: 'outletpro-badge-bg-color',
+									color: '#ff0000',
+								},
+								{
+									slug: 'outletpro-badge-text-color',
+									color: '#ffffff',
+								},
 							],
 						},
 					},
@@ -86,9 +92,13 @@ test.each( [
 	);
 
 	// Assert.
-	const base = registry.select( coreStore ).__experimentalGetCurrentThemeBaseGlobalStyles();
+	const base = registry
+		.select( coreStore )
+		.__experimentalGetCurrentThemeBaseGlobalStyles();
 	expect( base.settings.color.palette.theme ).toEqual( themeColors );
-	expect( base.settings.blocks[ 'outletpro/outlet-tile' ].color.palette.theme ).toEqual( [
+	expect(
+		base.settings.blocks[ 'outletpro/outlet-tile' ].color.palette.theme
+	).toEqual( [
 		{ slug: 'accent', color: '#0000ff' },
 		{
 			slug: 'outletpro-badge-bg-color',

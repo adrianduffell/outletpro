@@ -42,13 +42,13 @@ export default function BadgeColorPalette() {
 					if ( bgColor === undefined ) {
 						return preset;
 					}
-					color = bgColor || '#000000';
+					color = bgColor || '#FFFFFF';
 					break;
 				case 'outletpro-badge-text-color':
 					if ( textColor === undefined ) {
 						return preset;
 					}
-					color = textColor || '#FFFFFF';
+					color = textColor || '#000000';
 					break;
 				default:
 					return preset;

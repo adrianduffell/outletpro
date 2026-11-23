@@ -7,8 +7,8 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\deinit_settings;
 use function OutletPro\deinit_blocks;
+use function OutletPro\deinit_settings;
 use function OutletPro\init_blocks;
 use function OutletPro\init_settings;
 use function OutletPro\init_theme_json;

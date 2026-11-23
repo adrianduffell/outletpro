@@ -55,12 +55,12 @@ function append_badge_color_presets_hook( \WP_Theme_JSON_Data $theme_json ): \WP
 	$palette['outletpro-badge-bg-color']   = array(
 		'slug'  => 'outletpro-badge-bg-color',
 		'name'  => __( 'Outlet badge background color', 'outletpro' ),
-		'color' => empty( $bg_color ) ? '#000000' : $bg_color,
+		'color' => empty( $bg_color ) ? '#FFFFFF' : $bg_color,
 	);
 	$palette['outletpro-badge-text-color'] = array(
 		'slug'  => 'outletpro-badge-text-color',
 		'name'  => __( 'Outlet badge text color', 'outletpro' ),
-		'color' => empty( $text_color ) ? '#FFFFFF' : $text_color,
+		'color' => empty( $text_color ) ? '#000000' : $text_color,
 	);
 
 	return $theme_json->update_with(
