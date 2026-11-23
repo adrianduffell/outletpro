@@ -19,6 +19,8 @@ export default function EditorFrame( {
 	actions,
 	notices,
 	disabled = false,
+	review,
+	onCloseReview,
 }: {
 	title?: string;
 	link?: string;
@@ -27,6 +29,8 @@ export default function EditorFrame( {
 	actions?: ReactNode;
 	notices?: ReactNode;
 	disabled?: boolean;
+	review?: ReactNode;
+	onCloseReview?: () => void;
 } ) {
 	const [ settingsOpen, setSettingsOpen ] = useState(
 		() => window.matchMedia( '(min-width: 960px)' ).matches
@@ -62,8 +66,15 @@ export default function EditorFrame( {
 				<EditorNavigation
 					title={ title }
 					link={ link }
-					settingsOpen={ settingsOpen }
-					onToggleSettings={ () => setSettingsOpen( ! settingsOpen ) }
+					settingsOpen={ settingsOpen || Boolean( review ) }
+					onToggleSettings={ () => {
+						if ( review ) {
+							onCloseReview?.();
+							setSettingsOpen( true );
+							return;
+						}
+						setSettingsOpen( ! settingsOpen );
+					} }
 					settingsButton={ settingsButton }
 					disabled={ disabled }
 					actions={ actions }
@@ -72,7 +83,8 @@ export default function EditorFrame( {
 			workspace={ workspace }
 			notices={ notices }
 			sidebar={
-				settingsOpen && (
+				review ??
+				( settingsOpen && (
 					<div ref={ settingsPanel }>
 						<div className="outletpro-editor-sidebar-heading">
 							<h2>{ __( 'Page', 'outletpro' ) }</h2>
@@ -85,7 +97,7 @@ export default function EditorFrame( {
 						</div>
 						{ settings }
 					</div>
-				)
+				) )
 			}
 		/>
 	);
