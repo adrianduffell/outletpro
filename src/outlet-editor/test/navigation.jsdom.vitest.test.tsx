@@ -5,7 +5,6 @@
 
 import { fireEvent, render } from '@testing-library/react';
 import { createRegistry, RegistryProvider } from '@wordpress/data';
-// eslint-disable-next-line import/no-extraneous-dependencies -- Exercise the WordPress-provided Commands store already resolved in the lockfile.
 import { store as commandsStore } from '@wordpress/commands';
 import { expect, test, vi } from 'vitest';
 import EditorFrame from '../EditorFrame';

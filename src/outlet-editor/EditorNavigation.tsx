@@ -10,7 +10,6 @@ import {
 	ToolbarGroup,
 	ToolbarButton,
 } from '@wordpress/components';
-// eslint-disable-next-line import/no-extraneous-dependencies -- WordPress supplies this external; it is already resolved in the lockfile.
 import { store as commandsStore } from '@wordpress/commands';
 import { useDispatch } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
