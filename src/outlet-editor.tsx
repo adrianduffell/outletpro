@@ -5,13 +5,26 @@
 
 import { createRoot } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import EditorFrame from './outlet-editor/EditorFrame';
+import OutletEditor from './outlet-editor/OutletEditor';
+import type { EditorConfig } from './outlet-editor/types';
 import './outlet-editor/style.css';
 
 const container = document.getElementById( 'outletpro-outlet-editor' );
 if ( container !== null ) {
 	try {
-		createRoot( container ).render( <EditorFrame /> );
+		const config: EditorConfig = JSON.parse(
+			container.dataset.config ?? ''
+		);
+		if ( ! Number.isInteger( config.pageId ) ) {
+			throw new Error( 'Outlet page ID is invalid.' );
+		}
+		if ( config.pageId < 1 ) {
+			throw new Error( 'Outlet page ID is invalid.' );
+		}
+		if ( typeof config.canPublish !== 'boolean' ) {
+			throw new Error( 'Outlet publishing permission is invalid.' );
+		}
+		createRoot( container ).render( <OutletEditor config={ config } /> );
 	} catch ( error ) {
 		// eslint-disable-next-line no-console -- Log system failures at the screen boundary.
 		console.error( 'Outlet editor could not be initialized.', error );

@@ -1,0 +1,26 @@
+.outletpro-editor-page-details {
+	padding: 16px;
+}
+
+.outletpro-editor-page-card {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.outletpro-editor-page-card h2 {
+	flex: 1;
+	margin: 0;
+	font-size: 13px;
+	line-height: 20px;
+	overflow-wrap: anywhere;
+}
+
+.outletpro-editor-page-details p {
+	color: #757575;
+}
+
+.outletpro-editor-page-details dd {
+	margin: 4px 0 16px;
+	overflow-wrap: anywhere;
+}
