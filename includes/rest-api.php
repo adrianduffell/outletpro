@@ -202,8 +202,13 @@ function append_outletpro_product_field_hook( \WP_REST_Response $response, \WC_P
 			return $response;
 		}
 	}
-	$data                           = $response->get_data();
-	$data['outletpro']['is_outlet'] = is_outlet( $product );
+	$data = $response->get_data();
+	try {
+		$data['outletpro']['is_outlet'] = is_outlet( $product );
+	} catch ( \Throwable $e ) {
+		wc_get_logger()->error( 'Outlet product membership could not be retrieved.' );
+		return $response;
+	}
 	$response->set_data( $data );
 	return $response;
 }
