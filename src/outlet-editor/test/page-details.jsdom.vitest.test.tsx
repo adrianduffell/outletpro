@@ -55,7 +55,9 @@ test( 'shows a failed page load and does not offer a retry', async () => {
 	const view = render( <PageDetails { ...result.current } /> );
 
 	// Assert.
-	expect( within( view.container ).getByText( failure.message ) ).toBeVisible();
+	expect(
+		within( view.container ).getByText( failure.message )
+	).toBeVisible();
 	expect( view.queryByRole( 'button' ) ).not.toBeInTheDocument();
 	expect( log ).toHaveBeenCalledWith(
 		'Outlet page details could not be retrieved.',
