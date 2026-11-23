@@ -9,6 +9,8 @@ import { registerPlugin } from '@wordpress/plugins';
 import useSettings from '../../use-settings';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
+// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+import { __experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients } from '@wordpress/block-editor';
 import { COMPLEMENTARY_AREA, QUERY_PARAM, SIDEBAR_NAME } from '../constants';
 
 beforeEach( () => {
@@ -240,6 +242,7 @@ jest.mock( '@wordpress/components', () => ( {
 } ) );
 
 jest.mock( '@wordpress/block-editor', () => ( {
+	__experimentalUseMultipleOriginColorsAndGradients: jest.fn(),
 	PanelColorSettings: ( {
 		title,
 		colorSettings,
@@ -290,6 +293,7 @@ jest.mock( '@wordpress/i18n', () => ( {
 
 const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseSettings = useSettings as jest.Mock;
+const mockUsePalette = useMultipleOriginColorsAndGradients as jest.Mock;
 const mockUseDispatch = jest.mocked( useDispatch );
 const mockUseSelect = useSelect as jest.Mock;
 const mockTabPanel = TabPanel as unknown as jest.Mock;
@@ -323,6 +327,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'registers the sidebar plugin with expected name and render function', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 
@@ -343,6 +348,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function renders nothing when site record is not available', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( false );
 		jest.isolateModules( () => {
 			require( '../index' );
@@ -359,6 +365,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'does not register plugin on post.php', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const originalPathname = window.location.pathname;
 		window.history.pushState( {}, '', '/wp-admin/post.php' );
 
@@ -380,6 +387,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'does not register plugin on post-new.php', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const originalPathname = window.location.pathname;
 		window.history.pushState( {}, '', '/wp-admin/post-new.php' );
 
@@ -401,6 +409,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function outputs the sidebar title', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
@@ -420,6 +429,7 @@ describe( 'settings-sidebar registration', () => {
 		const enableComplementaryArea = jest.fn();
 		mockUseDispatch.mockReturnValue( { enableComplementaryArea } );
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		window.history.replaceState(
@@ -445,6 +455,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function outputs all panel sections', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
@@ -466,6 +477,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'badge label control shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setLabel = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -490,6 +502,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'badge label control is empty when setting is empty', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -513,6 +526,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'badge label control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setLabel = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -537,6 +551,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'font scale control reflects stored scale value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -560,6 +575,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'font scale control allows undefined scale value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setScale = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -584,6 +600,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'font scale control calls setter when changed from undefined', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setScale = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -608,6 +625,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'font scale control uses accepted range and step', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -632,6 +650,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'font weight control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setFontWeight = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -656,6 +675,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'text color control shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -679,6 +699,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'background color control is empty when setting is empty', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -702,6 +723,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'border radius control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setBorderRadius = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -728,6 +750,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'font scale control calls scale setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setScale = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -752,6 +775,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'density control reflects stored density value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -775,6 +799,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'density control allows undefined density value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setDensity = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -799,6 +824,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'density control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setDensity = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -823,6 +849,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'density control uses accepted range and step', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -847,6 +874,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'text color control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setTextColor = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -871,6 +899,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'background color control calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setBgColor = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -895,6 +924,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'border control calls setters when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setBorderColor = jest.fn();
 		const setBorderStyle = jest.fn();
 		const setBorderWidth = jest.fn();
@@ -927,6 +957,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'border control auto-applies solid style when width > 1 and style is not set', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setBorderStyle = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -955,6 +986,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'border control does not overwrite user-set style when width > 1', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setBorderStyle = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -983,6 +1015,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function outputs the badge tab description', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
@@ -1004,6 +1037,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function outputs the badge tab', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
@@ -1021,6 +1055,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'border control is not visible when feature flag is disabled', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		// Do NOT set localStorage flag — bordersEnabled should be false.
@@ -1041,6 +1076,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'border radius control shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -1064,6 +1100,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function outputs the message tab', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
@@ -1083,6 +1120,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'render function outputs the message tab description', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( { ...createInitialSettings() } );
 		jest.isolateModules( () => {
@@ -1122,6 +1160,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'message textarea shows stored value', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setMessage = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
@@ -1166,6 +1205,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'message textarea is empty when setting is not set', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {
 			...createInitialSettings(),
@@ -1209,6 +1249,7 @@ describe( 'settings-sidebar registration', () => {
 	test( 'message textarea calls setter when changed', () => {
 		// Arrange.
 		mockRegisterPlugin.mockClear();
+		mockUsePalette.mockReturnValue( { colors: [] } );
 		const setMessage = jest.fn();
 		mockUseSelect.mockReturnValue( true );
 		mockUseSettings.mockReturnValue( {

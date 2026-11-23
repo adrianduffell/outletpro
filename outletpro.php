@@ -67,6 +67,7 @@ require_once __DIR__ . '/includes/query-vars.php';
 require_once __DIR__ . '/includes/shortcodes.php';
 require_once __DIR__ . '/includes/settings.php';
 require_once __DIR__ . '/includes/theme-mods.php';
+require_once __DIR__ . '/includes/theme-json.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/settings-license.php';
 require_once __DIR__ . '/includes/admin-plugins-license.php';
@@ -171,6 +172,7 @@ function admin_init_hook(): void {
  * @internal WordPress action hook
  */
 function woocommerce_loaded_hook(): void {
+	init_theme_json();
 	add_action( 'init', 'OutletPro\init_hook', 20 );
 	add_action( 'admin_init', 'OutletPro\admin_init_hook' );
 	if ( wp_is_block_theme() ) {

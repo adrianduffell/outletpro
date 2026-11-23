@@ -15,7 +15,11 @@ import {
 	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
 	__experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
-import { PanelColorSettings } from '@wordpress/block-editor';
+import {
+	PanelColorSettings,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
+} from '@wordpress/block-editor';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect, useMemo } from '@wordpress/element';
@@ -25,6 +29,7 @@ import { registerPlugin } from '@wordpress/plugins';
 import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
 import { COMPLEMENTARY_AREA, SIDEBAR_NAME, QUERY_PARAM } from './constants';
+import { excludeBadgeColorPresets } from './exclude-badge-color-presets';
 
 type FontWeightOption = {
 	name: string;
@@ -65,6 +70,7 @@ const withSiteRecord = ( Component: React.ComponentType ) => () => {
 
 const SettingsSidebar = () => {
 	const { enableComplementaryArea } = useDispatch( 'core/interface' );
+	const { colors } = useMultipleOriginColorsAndGradients();
 
 	useEffect( () => {
 		const query = new URLSearchParams( window.location.search );
@@ -147,6 +153,7 @@ const SettingsSidebar = () => {
 			<PanelColorSettings
 				title={ __( 'Color', 'outletpro' ) }
 				initialOpen={ false }
+				colors={ excludeBadgeColorPresets( colors ) }
 				colorSettings={ [
 					{
 						value: textColor,
