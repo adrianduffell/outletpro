@@ -7,16 +7,16 @@
  * @license GNU General Public License v2.0 or later
  */
 
-use function OutletPro\uses_outlet_editor;
+use function OutletPro\is_outlet_editor_page;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
-class Test_Uses_Outlet_Editor extends WP_UnitTestCase {
+class Test_Is_Outlet_Editor_Page extends WP_UnitTestCase {
 	public function test_accepts_the_configured_archive_page(): void {
 		// Arrange.
 		$id = $this->factory->post->create( array( 'post_type' => 'page' ) );
 		update_option( OUTLET_PAGE_OPTION, $id );
 		// Act.
-		$result = uses_outlet_editor( get_post( $id ) );
+		$result = is_outlet_editor_page( get_post( $id ) );
 		// Assert.
 		$this->assertTrue( $result );
 	}
@@ -28,8 +28,8 @@ class Test_Uses_Outlet_Editor extends WP_UnitTestCase {
 		update_option( OUTLET_PAGE_OPTION, $id );
 		update_post_meta( $id, '_wp_page_template', 'outlet-page' );
 		// Act.
-		$legacy    = uses_outlet_editor( get_post( $id ) );
-		$unrelated = uses_outlet_editor( get_post( $other ) );
+		$legacy    = is_outlet_editor_page( get_post( $id ) );
+		$unrelated = is_outlet_editor_page( get_post( $other ) );
 		// Assert.
 		$this->assertFalse( $legacy );
 		$this->assertFalse( $unrelated );
@@ -46,9 +46,9 @@ class Test_Uses_Outlet_Editor extends WP_UnitTestCase {
 		);
 		update_option( OUTLET_PAGE_OPTION, $id );
 		// Act.
-		$post_result = uses_outlet_editor( get_post( $id ) );
+		$post_result = is_outlet_editor_page( get_post( $id ) );
 		update_option( OUTLET_PAGE_OPTION, $trash );
-		$trash_result = uses_outlet_editor( get_post( $trash ) );
+		$trash_result = is_outlet_editor_page( get_post( $trash ) );
 		// Assert.
 		$this->assertFalse( $post_result );
 		$this->assertFalse( $trash_result );

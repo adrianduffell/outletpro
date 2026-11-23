@@ -1,6 +1,6 @@
 <?php
 /**
- * Dedicated outlet page editing screen.
+ * Functions for the outlet page editor.
  *
  * @package OutletPro
  * @copyright 2026 Adrian Duffell
@@ -12,7 +12,7 @@ namespace OutletPro;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Initialize the dedicated admin screen.
+ * Initialize the outlet editor.
  *
  * @internal
  */
@@ -21,12 +21,12 @@ function init_outlet_editor(): void {
 }
 
 /**
- * Determine whether a page uses the archive-based outlet screen.
+ * Returns whether a page is managed with the outlet editor.
  *
  * @param \WP_Post $post Candidate page.
  * @internal
  */
-function uses_outlet_editor( \WP_Post $post ): bool {
+function is_outlet_editor_page( \WP_Post $post ): bool {
 	if ( 'page' !== $post->post_type ) {
 		return false;
 	}
@@ -40,7 +40,7 @@ function uses_outlet_editor( \WP_Post $post ): bool {
 }
 
 /**
- * Register replacement after WordPress's early replace_editor screen probe.
+ * Register outlet editor.
  *
  * Fired by `load-post.php`.
  *
@@ -61,7 +61,7 @@ function load_outlet_editor_hook(): void {
 		return;
 	}
 	try {
-		if ( ! uses_outlet_editor( $post ) ) {
+		if ( ! is_outlet_editor_page( $post ) ) {
 			return;
 		}
 	} catch ( \UnexpectedValueException $e ) {
@@ -78,7 +78,7 @@ function load_outlet_editor_hook(): void {
 }
 
 /**
- * Scope the fullscreen editor layout to the editor.
+ * Add body classes for outlet editor.
  *
  * Fired by `admin_body_class`.
  *
@@ -90,7 +90,7 @@ function outlet_editor_body_class_hook( string $classes ): string {
 }
 
 /**
- * Render the editor at the page's existing edit URL.
+ * Render the editor.
  *
  * Fired by `replace_editor` after the load-post.php registration.
  *
@@ -102,7 +102,7 @@ function replace_outlet_editor_hook( bool $replace, \WP_Post $post ): bool {
 	if ( $replace ) {
 		return true;
 	}
-	if ( ! uses_outlet_editor( $post ) ) {
+	if ( ! is_outlet_editor_page( $post ) ) {
 		return false;
 	}
 	if ( ! current_user_can( 'edit_post', $post->ID ) ) {
@@ -127,7 +127,7 @@ function replace_outlet_editor_hook( bool $replace, \WP_Post $post ): bool {
 }
 
 /**
- * Load the dedicated editor bundle without block editor dependencies.
+ * Enqueue outlet editor assets
  *
  * Fired by `admin_enqueue_scripts` on the replacement screen.
  *
