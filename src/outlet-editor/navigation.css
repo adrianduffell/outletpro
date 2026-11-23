@@ -1,0 +1,140 @@
+/* Match WordPress's editor header and compact button metrics. */
+.outletpro-editor-header {
+	height: 64px;
+	box-sizing: border-box;
+	flex-shrink: 0;
+	display: grid;
+	grid-template-columns: 32px 2fr 2.5fr 2fr 64px;
+	gap: 16px;
+	align-items: center;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.outletpro-editor-header .components-accessible-toolbar,
+.outletpro-editor-header .components-toolbar-group {
+	border: 0;
+	min-height: 0;
+	padding: 0;
+}
+
+.outletpro-editor-header .components-toolbar-group {
+	display: flex;
+	gap: 8px;
+}
+
+.outletpro-editor-header .components-button {
+	height: 32px;
+	min-width: 32px;
+	font-size: 13px;
+	border-radius: 2px;
+}
+
+.outletpro-editor .outletpro-editor-header .components-button.has-icon {
+	box-sizing: border-box;
+	width: 32px;
+	min-width: 32px;
+	padding: 0;
+}
+
+.outletpro-editor .outletpro-editor-header .components-button.is-primary,
+.outletpro-editor .outletpro-editor-header .components-button.is-secondary {
+	box-sizing: border-box;
+	padding: 4px 12px;
+}
+
+.outletpro-editor-header .components-button svg {
+	width: 24px;
+	height: 24px;
+}
+
+.outletpro-editor-navigation {
+	grid-column: 1;
+	margin-left: 8px;
+	margin-right: -8px;
+}
+
+.outletpro-editor-document.components-button {
+	grid-column: 3;
+	justify-self: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: min(100%, 450px);
+	min-width: 0;
+	padding: 4px 12px;
+	background: #f0f0f0;
+	color: #1e1e1e;
+	border-radius: 4px;
+	font-weight: 400;
+}
+
+.outletpro-editor-document.components-button:hover {
+	background: #e0e0e0;
+	color: #1e1e1e;
+}
+
+.outletpro-editor-document-title {
+	max-width: 70%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.outletpro-editor-document-icon {
+	position: absolute;
+	left: 12px;
+	color: #757575;
+}
+
+.outletpro-editor-document-type {
+	padding-left: 4px;
+}
+
+.outletpro-editor-header .outletpro-editor-header-actions {
+	grid-column: 4 / -1;
+	justify-self: end;
+	padding-right: 8px;
+}
+
+
+.outletpro-editor-sidebar-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	height: 48px;
+	padding: 0 8px 0 16px;
+	border-bottom: 1px solid #ddd;
+}
+
+.outletpro-editor-sidebar-heading h2 {
+	margin: 0;
+	font-size: 13px;
+}
+
+@media (max-width: 960px) {
+
+	.outletpro-editor-document-type {
+		display: none;
+	}
+}
+
+@media (max-width: 782px) {
+
+	.outletpro-editor-header {
+		grid-template-columns: 32px minmax(0, 1fr) auto;
+		gap: 8px;
+	}
+
+	.outletpro-editor-document.components-button {
+		grid-column: 2;
+	}
+
+	.outletpro-editor-document-icon {
+		display: none;
+	}
+
+	.outletpro-editor-header .outletpro-editor-header-actions {
+		grid-column: 3;
+	}
+}
