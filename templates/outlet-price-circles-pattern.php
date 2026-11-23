@@ -86,7 +86,6 @@ foreach ( array_pad( $terms, $column_count, null ) as $tile_term ) {
 }
 
 $grid_attrs = array(
-	'align'  => 'full',
 	'style'  => array(
 		'spacing'    => array(
 			'blockGap' => 'var:preset|spacing|70',
@@ -200,7 +199,7 @@ $menu_content = '<!-- wp:outletpro/outlet-menu ' . wp_json_encode( $menu_attrs, 
 // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- Block attributes and inline styles are escaped above.
 echo '<!-- wp:group {"style":{"spacing":{"padding":{"top":"0","right":"0","bottom":"0","left":"0"}}},"layout":{"type":"default"}} --><div class="wp-block-group" style="padding-top:0;padding-right:0;padding-bottom:0;padding-left:0">' .
 	'<!-- wp:outletpro/outlet-tiles ' . wp_json_encode( $grid_attrs, JSON_UNESCAPED_SLASHES ) . ' -->' . "\n" .
-	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tiles alignfull ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
+	'<div class="' . esc_attr( trim( 'wp-block-outletpro-outlet-tiles ' . ( $grid_styles['classnames'] ?? '' ) ) ) . '" style="' . esc_attr( $grid_styles['css'] ) . '">' . implode( "\n\n", $tiles ) . '</div>' . "\n" .
 	'<!-- /wp:outletpro/outlet-tiles -->' .
 	$menu_content . '</div><!-- /wp:group -->';
 // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
