@@ -58,7 +58,7 @@ class Test_Get_Rest_Field_Callback extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 200, $response->get_status() );
-		$this->assertArrayNotHasKey( 'is_outlet', $response->get_data()['outletpro'] );
+		$this->assertSame( '{}', wp_json_encode( $response->get_data()['outletpro'] ) );
 	}
 
 	/**

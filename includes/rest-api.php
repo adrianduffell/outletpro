@@ -99,15 +99,15 @@ function register_outletpro_rest_field_hook(): void {
  * Get outletpro REST field.
  *
  * @param array<string, mixed> $data Prepared REST product data.
- * @return array{is_outlet?: bool} Field data; is_outlet is omitted when unavailable.
+ * @return array{is_outlet: bool}|\stdClass Field data, or an empty object when unavailable.
  * @internal REST field callback
  */
-function get_rest_field_callback( array $data ): array {
+function get_rest_field_callback( array $data ) { // phpcs:ignore SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint -- PHP 7.4 cannot express array|stdClass.
 	try {
 		return array( 'is_outlet' => is_outlet( wc_get_product( $data['id'] ) ) );
 	} catch ( \Throwable $e ) {
 		wc_get_logger()->error( 'Outlet product status could not be retrieved.' );
-		return array();
+		return new \stdClass();
 	}
 }
 
