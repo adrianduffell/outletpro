@@ -36,18 +36,21 @@ test.each( [
 	const data = registry.dispatch( coreStore );
 	data.receiveCurrentTheme( { stylesheet: 'test-theme' } );
 	data.receiveEntityRecords( 'root', 'theme', { stylesheet: 'test-theme' } );
+	const themeColors = [ { slug: 'accent', color: '#0000ff' } ];
 	data.__experimentalReceiveThemeBaseGlobalStyles( 'test-theme', {
 		settings: {
-			color: {
-				palette: {
-					theme: [
-						{ slug: 'accent', color: '#0000ff' },
-						{ slug: 'outletpro-badge-bg-color', color: '#ff0000' },
-						{
-							slug: 'outletpro-badge-text-color',
-							color: '#ffffff',
+			color: { palette: { theme: themeColors } },
+			blocks: {
+				'outletpro/outlet-tile': {
+					color: {
+						palette: {
+							theme: [
+								...themeColors,
+								{ slug: 'outletpro-badge-bg-color', color: '#ff0000' },
+								{ slug: 'outletpro-badge-text-color', color: '#ffffff' },
+							],
 						},
-					],
+					},
 				},
 			},
 		},
@@ -83,12 +86,9 @@ test.each( [
 	);
 
 	// Assert.
-	expect(
-		registry
-			.select( coreStore )
-			.__experimentalGetCurrentThemeBaseGlobalStyles().settings.color
-			.palette.theme
-	).toEqual( [
+	const base = registry.select( coreStore ).__experimentalGetCurrentThemeBaseGlobalStyles();
+	expect( base.settings.color.palette.theme ).toEqual( themeColors );
+	expect( base.settings.blocks[ 'outletpro/outlet-tile' ].color.palette.theme ).toEqual( [
 		{ slug: 'accent', color: '#0000ff' },
 		{
 			slug: 'outletpro-badge-bg-color',

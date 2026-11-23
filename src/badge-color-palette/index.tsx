@@ -30,7 +30,8 @@ export default function BadgeColorPalette() {
 		if ( ! stylesheet ) {
 			return;
 		}
-		const palette = base?.settings?.color?.palette?.theme;
+		const tile = base?.settings?.blocks?.[ 'outletpro/outlet-tile' ];
+		const palette = tile?.color?.palette?.theme;
 		if ( ! palette ) {
 			return;
 		}
@@ -66,9 +67,15 @@ export default function BadgeColorPalette() {
 			...base,
 			settings: {
 				...base.settings,
-				color: {
-					...base.settings.color,
-					palette: { ...base.settings.color.palette, theme: colors },
+				blocks: {
+					...base.settings.blocks,
+					'outletpro/outlet-tile': {
+						...tile,
+						color: {
+							...tile.color,
+							palette: { ...tile.color.palette, theme: colors },
+						},
+					},
 				},
 			},
 		} );

@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
  * @internal
  */
 function init_theme_json(): void {
-	add_filter( 'wp_theme_json_data_theme', 'OutletPro\append_badge_color_presets_hook' );
+	add_filter( 'wp_theme_json_data_blocks', 'OutletPro\append_badge_color_presets_hook' );
 }
 
 /**
@@ -26,13 +26,13 @@ function init_theme_json(): void {
  * @internal
  */
 function deinit_theme_json(): void {
-	remove_filter( 'wp_theme_json_data_theme', 'OutletPro\append_badge_color_presets_hook' );
+	remove_filter( 'wp_theme_json_data_blocks', 'OutletPro\append_badge_color_presets_hook' );
 }
 
 /**
- * Append badge colors to the theme palette.
+ * Append badge colors to the outlet tile palette.
  *
- * Fired by `wp_theme_json_data_theme`.
+ * Fired by `wp_theme_json_data_blocks`.
  *
  * @internal WordPress filter hook
  *
@@ -40,7 +40,14 @@ function deinit_theme_json(): void {
  * @return \WP_Theme_JSON_Data Modified theme JSON data.
  */
 function append_badge_color_presets_hook( \WP_Theme_JSON_Data $theme_json ): \WP_Theme_JSON_Data {
-	$palette = array_column( $theme_json->get_data()['settings']['color']['palette']['theme'] ?? array(), null, 'slug' );
+	$settings = \WP_Theme_JSON_Resolver::get_theme_data()->get_settings();
+	$palette  = array_column(
+		$settings['blocks']['outletpro/outlet-tile']['color']['palette']['theme']
+			?? $settings['color']['palette']['theme']
+			?? array(),
+		null,
+		'slug'
+	);
 
 	$bg_color   = get_option( OUTLET_BADGE_BG_COLOR_OPTION, '' );
 	$text_color = get_option( OUTLET_BADGE_TEXT_COLOR_OPTION, '' );
@@ -60,7 +67,11 @@ function append_badge_color_presets_hook( \WP_Theme_JSON_Data $theme_json ): \WP
 		array(
 			'version'  => 3,
 			'settings' => array(
-				'color' => array( 'palette' => array_values( $palette ) ),
+				'blocks' => array(
+					'outletpro/outlet-tile' => array(
+						'color' => array( 'palette' => array( 'theme' => array_values( $palette ) ) ),
+					),
+				),
 			),
 		)
 	);
