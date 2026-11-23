@@ -9,6 +9,7 @@ use function OutletPro\deinit_patterns;
 use function OutletPro\init_patterns;
 use function OutletPro\init_taxonomies;
 use function OutletPro\init_template_parts;
+use const OutletPro\OUTLET_HERO_PATTERN_THEME_MOD;
 use const OutletPro\OUTLET_PAGE_OPTION;
 
 class Test_Filter_Block_Templates extends WP_UnitTestCase {
@@ -21,6 +22,7 @@ class Test_Filter_Block_Templates extends WP_UnitTestCase {
 		init_patterns();
 		init_template_parts();
 		delete_option( OUTLET_PAGE_OPTION );
+		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-3' );
 
 		// Act.
 		$parts = get_block_templates( array( 'slug__in' => array( 'outlet-hero' ) ), 'wp_template_part' );

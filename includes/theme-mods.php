@@ -61,6 +61,13 @@ const SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD = 'outletpro_single_product_b
 const OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD = 'outletpro_outlet_hero_template_hook';
 
 /**
+ * WordPress theme mod key used to store the outlet hero's selected pattern.
+ *
+ * @internal
+ */
+const OUTLET_HERO_PATTERN_THEME_MOD = 'outletpro_outlet_hero_pattern';
+
+/**
  * Initialize theme mod integrations.
  *
  * @internal
@@ -86,19 +93,27 @@ function deinit_theme_mods(): void {
  * @internal WordPress action hook
  */
 function after_switch_theme_hook(): void {
-	seed_theme_mods();
+	try {
+		seed_theme_mods();
+	} catch ( \RuntimeException $e ) {
+		wc_get_logger()->error( 'Theme mods could not be seeded.' );
+	}
 }
 
 /**
  * Seed per-theme settings as theme mods.
  *
  * @internal
+ * @throws \RuntimeException If product categories cannot be retrieved.
  */
 function seed_theme_mods(): void {
 	$mods = get_theme_mods();
 
 	switch ( wp_is_block_theme() ) {
 		case true:
+			if ( ! array_key_exists( OUTLET_HERO_PATTERN_THEME_MOD, $mods ) ) {
+				set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, select_outlet_navigation_pattern() );
+			}
 			if ( ! array_key_exists( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD, $mods ) ) {
 				$block_hook = select_outlet_hero_anchor();
 				if ( null !== $block_hook ) {
@@ -134,6 +149,51 @@ function seed_theme_mods(): void {
 				set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_single_product_summary', 11 ) );
 			}
 			break;
+	}
+}
+
+/**
+ * Select an outlet navigation using store heuristics.
+ *
+ * The heuristics are:
+ * - Default: Outlet navigation with three category tiles.
+ * - 0-2 top-level product categories: Outlet navigation with circular price tier tiles.
+ * - 4 top-level product categories: Outlet navigation with four category tiles.
+ * - 6 top-level product categories: Outlet navigation with six category tiles.
+ *
+ * Product category counts exclude the uncategorized category.
+ *
+ * @internal
+ * @throws \RuntimeException When product categories cannot be retrieved.
+ */
+function select_outlet_navigation_pattern(): string {
+	$excluded_categories = array_filter( array( get_uncategorized_product_category_id() ) );
+
+	$categories = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'exclude'    => $excluded_categories,
+			'hide_empty' => false,
+			'fields'     => 'ids',
+			'number'     => 7,
+		)
+	);
+	if ( is_wp_error( $categories ) ) {
+		throw new \RuntimeException( 'Product categories could not be retrieved.' );
+	}
+
+	switch ( count( $categories ) ) {
+		case 0:
+		case 1:
+		case 2:
+			return 'outletpro/outlet-navigation-price-tiers';
+		case 4:
+			return 'outletpro/outlet-navigation-4';
+		case 6:
+			return 'outletpro/outlet-navigation-6';
+		default:
+			return 'outletpro/outlet-navigation-3';
 	}
 }
 
