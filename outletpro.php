@@ -57,6 +57,7 @@ require_once __DIR__ . '/includes/system-status.php';
 require_once __DIR__ . '/includes/taxonomies.php';
 require_once __DIR__ . '/includes/products.php';
 require_once __DIR__ . '/includes/rest-api.php';
+require_once __DIR__ . '/includes/admin-outlet-editor.php';
 // #ifdef LICENSE
 require_once __DIR__ . '/includes/admin-menu-license.php';
 // #endif
@@ -157,6 +158,7 @@ function admin_init_hook(): void {
 	// #endif
 	init_admin_product_options();
 	init_admin_product_bulk_edit();
+	init_outlet_editor();
 	init_system_status();
 	init_tools();
 	init_admin_page_list_table();
