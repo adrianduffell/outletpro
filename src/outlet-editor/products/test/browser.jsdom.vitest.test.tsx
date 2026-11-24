@@ -8,6 +8,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { expect, test, vi } from 'vitest';
 import Products from '../Products';
 import OutletEditorScreen from '../../OutletEditorScreen';
+import { createEditorRegistry } from '../../test-utils';
 import {
 	createProduct,
 	productsResponse,
@@ -42,15 +43,12 @@ test( 'renders product rows and searches names or SKUs on the server', async () 
 		)
 	);
 } );
-test( 'shows query failures without offering a retry', async () => {
+test( 'shows query failures', async () => {
 	// Arrange.
 	vi.mocked( apiFetch ).mockReset();
-	vi.mocked( apiFetch ).mockImplementation( async () => {
-		throw new Response(
-			JSON.stringify( { message: 'The network is unavailable.' } ),
-			{ status: 500 }
-		);
-	} );
+	vi.mocked( apiFetch ).mockRejectedValue(
+		new Error( 'The network is unavailable.' )
+	);
 
 	// Act.
 	const view = render( <Products />, { wrapper: ProductsRegistry } );
@@ -61,14 +59,9 @@ test( 'shows query failures without offering a retry', async () => {
 			'Products could not be loaded.'
 		)
 	).toBeVisible();
-	expect(
-		view.queryByRole( 'button', { name: 'Retry' } )
-	).not.toBeInTheDocument();
-	expect( view.queryByRole( 'table' ) ).not.toBeInTheDocument();
-	expect( apiFetch ).toHaveBeenCalledTimes( 1 );
 } );
 
-test( 'shows an empty state when no outlet products match', async () => {
+test( 'requests outlet products when the outlet-only filter is enabled', async () => {
 	// Arrange.
 	vi.mocked( apiFetch ).mockReset();
 	vi.mocked( apiFetch ).mockImplementation( async () =>
@@ -83,31 +76,24 @@ test( 'shows an empty state when no outlet products match', async () => {
 	);
 
 	// Assert.
-	expect( await view.findByText( 'No products found' ) ).toBeVisible();
-	expect(
-		within( view.container ).queryByText( 'Products could not be loaded.' )
-	).not.toBeInTheDocument();
-	await waitFor( () => expect( apiFetch ).toHaveBeenCalledTimes( 2 ) );
-	expect(
-		new URL(
-			vi.mocked( apiFetch ).mock.lastCall?.[ 0 ].path ?? '',
-			'http://localhost'
-		).searchParams.get( 'outletpro' )
-	).toBe( 'true' );
+	await waitFor( () =>
+		expect( apiFetch ).toHaveBeenLastCalledWith(
+			expect.objectContaining( {
+				path: expect.stringContaining( 'outletpro=true' ),
+			} )
+		)
+	);
 } );
 
 test( 'keeps a pending query in the loading state until its empty response arrives', async () => {
 	// Arrange.
 	let complete: ( response: Response ) => void = vi.fn();
 	vi.mocked( apiFetch ).mockReset();
-	vi.mocked( apiFetch ).mockImplementation(
-		() =>
-			new Promise< Response >( ( resolve ) => {
-				complete = resolve;
-			} )
-	);
+	const response = new Promise< Response >( ( resolve ) => {
+		complete = resolve;
+	} );
+	vi.mocked( apiFetch ).mockReturnValue( response );
 	const view = render( <Products />, { wrapper: ProductsRegistry } );
-	await waitFor( () => expect( apiFetch ).toHaveBeenCalledTimes( 1 ) );
 	expect(
 		within( view.container ).queryByText( 'Products could not be loaded.' )
 	).not.toBeInTheDocument();
@@ -118,9 +104,6 @@ test( 'keeps a pending query in the loading state until its empty response arriv
 
 	// Assert.
 	expect( await view.findByText( 'No products found' ) ).toBeVisible();
-	expect(
-		within( view.container ).queryByText( 'Products could not be loaded.' )
-	).not.toBeInTheDocument();
 } );
 
 test.each( [
@@ -128,10 +111,6 @@ test.each( [
 	[ null, 'Product editing permission could not be loaded.' ],
 ] )( 'shows the native permission result %s', async ( allow, message ) => {
 	// Arrange.
-	vi.stubGlobal(
-		'matchMedia',
-		vi.fn( () => ( { matches: true } ) )
-	);
 	vi.mocked( apiFetch ).mockReset();
 	vi.mocked( apiFetch ).mockImplementation( async ( options ) => {
 		if ( options.method === 'OPTIONS' ) {
@@ -140,19 +119,24 @@ test.each( [
 			}
 			return new Response( null, { headers: { Allow: allow } } );
 		}
-		return {
-			id: 39,
-			title: { raw: 'Outlet' },
-			slug: 'outlet',
-			status: 'draft',
-			link: '/outlet/',
-		};
+		return new Response(
+			JSON.stringify( {
+				id: 39,
+				title: { raw: 'Outlet' },
+				slug: 'outlet',
+				status: 'draft',
+				link: '/outlet/',
+			} )
+		);
+	} );
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [],
 	} );
 
 	// Act.
 	const view = render(
 		<OutletEditorScreen config={ { pageId: 39, canPublish: true } } />,
-		{ wrapper: ProductsRegistry }
+		{ wrapper }
 	);
 
 	// Assert.

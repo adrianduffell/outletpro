@@ -26,13 +26,21 @@ export function getProductFields(): Field< RestProduct >[] {
 		{
 			id: 'outlet',
 			label: __( 'Outlet', 'outletpro' ),
+			header: (
+				<span className="outletpro-editor-outlet-heading">
+					{ __( 'Outlet', 'outletpro' ) }
+				</span>
+			),
 			enableHiding: false,
 			enableSorting: false,
 			filterBy: false,
-			render: ( { item } ) =>
-				item.outletpro.is_outlet
-					? __( 'Yes', 'outletpro' )
-					: __( 'No', 'outletpro' ),
+			render: ( { item } ) => (
+				<div className="outletpro-editor-outlet-cell">
+					{ item.outletpro.is_outlet
+						? __( 'Yes', 'outletpro' )
+						: __( 'No', 'outletpro' ) }
+				</div>
+			),
 		},
 	];
 }
