@@ -117,7 +117,11 @@ export default function MarkdownLevels( {
 									} );
 								} }
 							>
-								{ `${ level }% off` }
+								{ sprintf(
+									/* translators: %d: markdown percentage. */
+									__( '%d%% off', 'outletpro' ),
+									level
+								) }
 							</Button>
 							<DropdownMenu
 								className="outletpro-markdown-level-menu"
