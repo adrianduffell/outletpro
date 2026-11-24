@@ -24,6 +24,7 @@ class Test_Enqueue_Outlet_Editor_Hook extends WP_UnitTestCase {
 		$this->assertContains( 'wp-components', wp_styles()->registered['outletpro-outlet-editor']->deps );
 		$this->assertContains( 'wp-editor', wp_styles()->registered['outletpro-outlet-editor']->deps );
 		$this->assertContains( 'wp-commands', wp_scripts()->registered['outletpro-outlet-editor']->deps );
+		$this->assertContains( 'wc-settings', wp_scripts()->registered['outletpro-outlet-editor']->deps );
 		$this->assertSame( $has_core_data_styles, in_array( 'wp-core-data', wp_styles()->registered['outletpro-outlet-editor']->deps, true ) );
 		$this->assertSame( $has_core_data_styles, wp_style_is( 'wp-core-data', 'enqueued' ) );
 	}

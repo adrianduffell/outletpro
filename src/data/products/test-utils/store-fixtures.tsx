@@ -9,11 +9,28 @@ import { useState } from '@wordpress/element';
 import type { ReactNode } from 'react';
 import type { RestProduct } from '../types';
 import { registerProductEntity } from '..';
+import { PRODUCT_ENTITY } from '../product-entity';
 
-export function createProductsRegistry() {
+export function createProductsRegistry( products: RestProduct[] = [] ) {
 	const registry = createRegistry();
 	registry.register( coreStore );
 	registerProductEntity( registry );
+	registry
+		.dispatch( coreStore )
+		.receiveEntityRecords(
+			PRODUCT_ENTITY.kind,
+			PRODUCT_ENTITY.name,
+			products
+		);
+	for ( const product of products ) {
+		registry
+			.dispatch( coreStore )
+			.finishResolution( 'getEntityRecord', [
+				PRODUCT_ENTITY.kind,
+				PRODUCT_ENTITY.name,
+				product.id,
+			] );
+	}
 	return registry;
 }
 

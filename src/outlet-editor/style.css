@@ -52,6 +52,22 @@ body.outletpro-editor-screen #screen-meta {
 	background: #fff;
 }
 
+.outletpro-editor .components-snackbar-list {
+	position: fixed;
+	bottom: 16px;
+	left: 0;
+	right: 0;
+	padding-inline: 16px;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	pointer-events: none;
+}
+
+.outletpro-editor .components-snackbar {
+	margin-inline: auto;
+}
+
 @media (max-width: 960px) {
 
 	.outletpro-editor-layout.is-sidebar-open {
