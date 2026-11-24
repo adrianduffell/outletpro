@@ -98,7 +98,7 @@ test.each( cases )( 'retains $kind edits', async ( level ) => {
 		{ wrapper }
 	);
 	await view.findByRole( 'button', { name: level.before } );
-	await view.findByRole( 'button', { name: 'Edit slug' } );
+	await view.findByRole( 'button', { name: 'outlet' } );
 	// Act.
 	fireEvent.click( view.getByRole( 'button', { name: level.before } ) );
 	fireEvent.change( view.getByRole( 'spinbutton' ), {
@@ -177,10 +177,8 @@ test.each( cases )( 'saves $kind edits', async ( level ) => {
 	expect(
 		view.getByRole( 'button', { name: 'Rename page' } )
 	).toBeDisabled();
-	expect( view.getByRole( 'button', { name: 'Edit slug' } ) ).toBeDisabled();
-	expect(
-		view.getByRole( 'button', { name: 'Change status' } )
-	).toBeDisabled();
+	expect( view.getByRole( 'button', { name: 'outlet' } ) ).toBeDisabled();
+	expect( view.getByRole( 'button', { name: 'Draft' } ) ).toBeDisabled();
 	expect( view.getByRole( 'button', { name: 'Publish' } ) ).toBeDisabled();
 	await act( async () => {
 		if ( completion.resolve === undefined ) {

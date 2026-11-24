@@ -82,7 +82,9 @@ test( 'includes product edits in native review and saves only selected products'
 	const scarf = view.getByRole( 'checkbox', {
 		name: 'Include Scarf & hat in outlet',
 	} );
-	const slugButton = await view.findByRole( 'button', { name: 'Edit slug' } );
+	const slugButton = await view.findByRole( 'button', {
+		name: 'outlet',
+	} );
 	const save = within(
 		view.getByRole( 'toolbar', { name: 'Page actions' } )
 	).getByRole( 'button', { name: 'Save' } );
@@ -111,9 +113,9 @@ test( 'includes product edits in native review and saves only selected products'
 			data: { id: 1, outletpro: { is_outlet: true } },
 		},
 	] );
-	expect(
-		view.getByRole( 'button', { name: 'Edit slug' } )
-	).toHaveTextContent( 'sale' );
+	expect( view.getByRole( 'button', { name: 'sale' } ) ).toHaveTextContent(
+		'sale'
+	);
 	expect( scarf ).toBeChecked();
 	expect( save ).toBeEnabled();
 	fireEvent.click( save );

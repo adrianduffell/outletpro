@@ -34,15 +34,27 @@ test( 'loads page details through the authenticated WordPress edit context', asy
 	// Act.
 	const { result } = renderHook( () => useOutletPage( 39 ), { wrapper } );
 	await waitFor( () => expect( result.current.page ).toEqual( page ) );
-	const view = render( <PageDetails { ...result.current } /> );
+	const view = render(
+		<PageDetails
+			{ ...result.current }
+			onTitleChange={ result.current.setTitle }
+			onSlugChange={ result.current.setSlug }
+			onStatusChange={ result.current.setStatus }
+		/>
+	);
 	// Assert.
 	expect( apiFetch ).toHaveBeenCalledWith( {
 		path: '/wp/v2/pages/39?context=edit',
 		parse: false,
 	} );
 	expect( view.getByRole( 'heading', { name: 'Clearance' } ) ).toBeVisible();
-	expect( view.getByText( 'Draft', { exact: true } ) ).toBeVisible();
-	expect( view.getByText( 'clearance', { exact: true } ) ).toBeVisible();
+	expect( view.getByRole( 'button', { name: 'Draft' } ) ).toHaveTextContent(
+		'Draft'
+	);
+	expect(
+		view.getByRole( 'button', { name: 'clearance' } )
+	).toHaveTextContent( 'clearance' );
+	expect( view.getByRole( 'button', { name: 'Rename page' } ) ).toBeVisible();
 } );
 
 test( 'stages page edits without writing and clears dirty state when restored', async () => {

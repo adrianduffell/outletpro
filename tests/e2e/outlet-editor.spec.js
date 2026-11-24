@@ -236,7 +236,7 @@ test( 'changes the outlet slug', async ( { page } ) => {
 	// Arrange.
 	const slug = `editor-${ new URL( page.url() ).searchParams.get( 'post' ) }`;
 	// Act.
-	await page.getByRole( 'button', { name: 'Edit slug' } ).click();
+	await page.getByRole( 'button', { name: 'Not set', exact: true } ).click();
 	await page.getByRole( 'textbox', { name: 'Slug' } ).fill( slug );
 	await page.getByRole( 'textbox', { name: 'Slug' } ).press( 'Enter' );
 	// Assert.
@@ -262,7 +262,7 @@ test( 'cancels saving without losing changes', async ( { page } ) => {
 	// Assert.
 	await expect( save ).toBeFocused();
 	await expect(
-		page.getByRole( 'button', { name: 'Edit slug' } )
+		page.getByRole( 'button', { name: slug, exact: true } )
 	).toHaveText( slug );
 	await expect(
 		page.getByRole( 'checkbox', {
@@ -307,7 +307,7 @@ test( 'saves selected changes', async ( { page } ) => {
 		page.getByText( 'No products found', { exact: true } )
 	).toBeVisible();
 	await expect(
-		page.getByRole( 'button', { name: 'Edit slug' } )
+		page.getByRole( 'button', { name: slug, exact: true } )
 	).toHaveText( slug );
 	await expect( save ).toBeEnabled();
 } );
@@ -432,7 +432,9 @@ test( 'unpublishes the outlet page', async ( { page } ) => {
 		.getByRole( 'toolbar', { name: 'Page actions' } )
 		.getByRole( 'button', { name: 'Save', exact: true } );
 	// Act.
-	await sidebar.getByRole( 'button', { name: 'Change status' } ).click();
+	await sidebar
+		.getByRole( 'button', { name: 'Published', exact: true } )
+		.click();
 	const draft = page
 		.getByRole( 'dialog', { name: 'Status', exact: true } )
 		.getByRole( 'radio', { name: 'Draft', exact: true } );

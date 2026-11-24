@@ -129,7 +129,6 @@ export default function PageDetails( {
 					{ onStatusChange ? (
 						<PageDetailsPopover
 							title={ __( 'Status', 'outletpro' ) }
-							label={ __( 'Change status', 'outletpro' ) }
 							value={ statusLabel }
 							icon={ statusIcons[ status ] }
 							anchor={ statusAnchor }
@@ -172,7 +171,6 @@ export default function PageDetails( {
 					{ onSlugChange ? (
 						<PageDetailsPopover
 							title={ __( 'Slug', 'outletpro' ) }
-							label={ __( 'Edit slug', 'outletpro' ) }
 							value={ slug || __( 'Not set', 'outletpro' ) }
 							disabled={ disabled }
 						>

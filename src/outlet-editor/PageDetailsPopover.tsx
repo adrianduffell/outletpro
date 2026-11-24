@@ -22,7 +22,7 @@ export default function PageDetailsPopover( {
 	children,
 }: {
 	title: string;
-	label: string;
+	label?: string;
 	value?: string;
 	icon?: ComponentProps< typeof Button >[ 'icon' ];
 	anchor?: HTMLElement | null;
