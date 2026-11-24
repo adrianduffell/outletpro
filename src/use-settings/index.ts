@@ -5,6 +5,7 @@
 
 import useStringEntityProp from '../use-string-entity-prop';
 import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
+import useMarkdownLevelsEntityProp from './use-array-unsigned-integers-entity-prop';
 
 export type Settings = {
 	label: string | undefined;
@@ -29,6 +30,8 @@ export type Settings = {
 	setDensity: ( value: number | undefined ) => void;
 	message: string | undefined;
 	setMessage: ( value: string | undefined ) => void;
+	markdownLevels: number[] | undefined;
+	setMarkdownLevels: ( value: number[] | undefined ) => void;
 };
 
 const useSettings = (): Settings => {
@@ -61,6 +64,9 @@ const useSettings = (): Settings => {
 		'outletpro_badge_density'
 	);
 	const [ message, setMessage ] = useStringEntityProp( 'outletpro_message' );
+	const [ markdownLevels, setMarkdownLevels ] = useMarkdownLevelsEntityProp(
+		'outletpro_markdown_levels'
+	);
 
 	return {
 		label,
@@ -85,6 +91,8 @@ const useSettings = (): Settings => {
 		setDensity,
 		message,
 		setMessage,
+		markdownLevels,
+		setMarkdownLevels,
 	};
 };
 
