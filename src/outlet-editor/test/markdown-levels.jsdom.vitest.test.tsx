@@ -3,7 +3,13 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-import { fireEvent, render, within } from '@testing-library/react';
+import {
+	act,
+	fireEvent,
+	render,
+	waitFor,
+	within,
+} from '@testing-library/react';
 import { useState } from '@wordpress/element';
 import { expect, test, vi } from 'vitest';
 import MarkdownLevels from '../MarkdownLevels';
@@ -21,6 +27,18 @@ function TestPanel( { initialLevels }: { initialLevels: number[] } ) {
 			<output aria-label="Levels">{ JSON.stringify( levels ) }</output>
 		</>
 	);
+}
+
+function renderPanel( initialLevels: number[] ) {
+	vi.stubGlobal(
+		'matchMedia',
+		vi.fn( () => ( {
+			matches: true,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+		} ) )
+	);
+	return render( <TestPanel initialLevels={ initialLevels } /> );
 }
 
 test( 'shows a load error without editable defaults', () => {
@@ -49,15 +67,7 @@ test.each( [ '', '0', '101', '1.5', '30' ] )(
 	'keeps invalid or duplicate input "%s" out of the controlled list',
 	( value ) => {
 		// Arrange.
-		vi.stubGlobal(
-			'matchMedia',
-			vi.fn( () => ( {
-				matches: true,
-				addListener: vi.fn(),
-				removeListener: vi.fn(),
-			} ) )
-		);
-		const view = render( <TestPanel initialLevels={ [ 30, 50 ] } /> );
+		const view = renderPanel( [ 30, 50 ] );
 		// Act.
 		fireEvent.click(
 			view.getByRole( 'button', { name: 'Add markdown level' } )
@@ -76,37 +86,38 @@ test.each( [ '', '0', '101', '1.5', '30' ] )(
 
 test( 'adds only on confirmation and removes every level through its options menu', () => {
 	// Arrange.
-	vi.stubGlobal(
-		'matchMedia',
-		vi.fn( () => ( {
-			matches: true,
-			addListener: vi.fn(),
-			removeListener: vi.fn(),
-		} ) )
-	);
-	const view = render( <TestPanel initialLevels={ [ 30, 50 ] } /> );
+	const view = renderPanel( [ 30, 50 ] );
 	const add = view.getByRole( 'button', { name: 'Add markdown level' } );
+	const edited = view.getByRole( 'button', { name: '30% off' } );
 	// Act.
+	fireEvent.click( edited );
+	fireEvent.change( view.getByRole( 'spinbutton' ), {
+		target: { value: '95' },
+	} );
+	fireEvent.keyDown( view.getByRole( 'spinbutton' ), {
+		key: 'Escape',
+		keyCode: 27,
+	} );
 	fireEvent.click( add );
 	expect( view.getByRole( 'spinbutton' ) ).toHaveValue( null );
 	fireEvent.change( view.getByRole( 'spinbutton' ), {
-		target: { value: '10' },
+		target: { value: '30' },
 	} );
 	expect(
-		view.queryByRole( 'button', { name: '10% off' } )
+		view.queryByRole( 'button', { name: '30% off' } )
 	).not.toBeInTheDocument();
 	fireEvent.click( view.getByRole( 'button', { name: 'Cancel' } ) );
 	expect( add ).toHaveFocus();
 	fireEvent.click( add );
 	expect( view.getByRole( 'spinbutton' ) ).toHaveValue( null );
 	fireEvent.change( view.getByRole( 'spinbutton' ), {
-		target: { value: '10' },
+		target: { value: '30' },
 	} );
 	fireEvent.click( view.getByRole( 'button', { name: 'Add' } ) );
 	expect( view.getByRole( 'status', { name: 'Levels' } ) ).toHaveTextContent(
-		'[10,30,50]'
+		'[30,50,95]'
 	);
-	for ( const level of [ 10, 30, 50 ] ) {
+	for ( const level of [ 30, 50, 95 ] ) {
 		fireEvent.click(
 			view.getAllByRole( 'button', { name: 'Options' } )[ 0 ]
 		);
@@ -125,17 +136,9 @@ test( 'adds only on confirmation and removes every level through its options men
 	expect( add ).toHaveFocus();
 } );
 
-test( 'keeps edits in place until closing and restores focus after sorting', () => {
+test( 'keeps edits local until closing and restores focus after sorting', () => {
 	// Arrange.
-	vi.stubGlobal(
-		'matchMedia',
-		vi.fn( () => ( {
-			matches: true,
-			addListener: vi.fn(),
-			removeListener: vi.fn(),
-		} ) )
-	);
-	const view = render( <TestPanel initialLevels={ [ 30, 50, 70 ] } /> );
+	const view = renderPanel( [ 30, 50, 70 ] );
 	// Act.
 	fireEvent.click( view.getByRole( 'button', { name: '30% off' } ) );
 	expect( view.getByRole( 'spinbutton' ) ).toHaveValue( 30 );
@@ -153,7 +156,10 @@ test( 'keeps edits in place until closing and restores focus after sorting', () 
 			view
 				.getAllByRole( 'button', { name: /^\d+% off$/ } )
 				.map( ( button ) => button.textContent )
-		).toEqual( [ `${ value }% off`, '50% off', '70% off' ] );
+		).toEqual( [ '30% off', '50% off', '70% off' ] );
+		expect(
+			view.getByRole( 'status', { name: 'Levels' } )
+		).toHaveTextContent( '[30,50,70]' );
 	}
 	fireEvent.keyDown( view.getByRole( 'spinbutton' ), {
 		key: 'Escape',
@@ -170,7 +176,7 @@ test( 'keeps edits in place until closing and restores focus after sorting', () 
 		} );
 	}
 	expect( view.getByRole( 'status', { name: 'Levels' } ) ).toHaveTextContent(
-		'[50,70,30]'
+		'[50,70,95]'
 	);
 	fireEvent.click( view.getByRole( 'button', { name: 'Close' } ) );
 	// Assert.
@@ -203,3 +209,38 @@ test( 'displays saved levels in numeric order without changing the supplied list
 	expect( levels ).toEqual( [ 100, 50, 5 ] );
 	expect( change ).not.toHaveBeenCalled();
 } );
+
+test.each( [ 'level', 'options' ] )(
+	'keeps focus on the same logical row when closing onto another row’s %s button',
+	async ( target ) => {
+		// Arrange.
+		const view = renderPanel( [ 30, 50, 70 ] );
+		const edited = view.getByRole( 'button', { name: '30% off' } );
+		fireEvent.click( edited );
+		fireEvent.change( view.getByRole( 'spinbutton' ), {
+			target: { value: '95' },
+		} );
+		await waitFor( () =>
+			expect( view.getByRole( 'spinbutton' ) ).toHaveFocus()
+		);
+		const focused =
+			target === 'level'
+				? view.getByRole( 'button', { name: '50% off' } )
+				: view.getAllByRole( 'button', { name: 'Options' } )[ 1 ];
+		// Act.
+		act( () => focused.focus() );
+		await waitFor( () =>
+			expect( view.queryByRole( 'dialog' ) ).not.toBeInTheDocument()
+		);
+		// Assert.
+		expect( focused.closest( '.outletpro-markdown-level-row' ) ).toBe(
+			view
+				.getByRole( 'button', { name: '50% off' } )
+				.closest( '.outletpro-markdown-level-row' )
+		);
+		expect( focused ).toHaveFocus();
+		expect(
+			view.getByRole( 'status', { name: 'Levels' } )
+		).toHaveTextContent( '[50,70,95]' );
+	}
+);

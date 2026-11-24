@@ -11,7 +11,7 @@ import {
 	PanelBody,
 	Spinner,
 } from '@wordpress/components';
-import { useRef, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { moreVertical, plus, tag } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import LevelPopover from './LevelPopover';
@@ -28,29 +28,29 @@ export default function MarkdownLevels( {
 	onChange: ( levels: number[] ) => void;
 	disabled: boolean;
 } ) {
-	const [ editing, setEditing ] = useState< {
-		index: number | 'add';
-		anchor: HTMLButtonElement;
-		levels: number[];
-	} | null >( null );
+	const [ editing, setEditing ] = useState<
+		| { level: 'add'; anchor: HTMLButtonElement }
+		| { level: number; anchor: HTMLButtonElement; value: number }
+		| null
+	>( null );
+	const focusAfterClose = useRef< number | null >( null );
+	const pendingChange = useRef< ( () => void ) | null >( null );
+	useEffect( () => () => pendingChange.current?.(), [] );
 	const add = useRef< HTMLButtonElement >( null );
-	const rows = useRef< ( HTMLButtonElement | null )[] >( [] );
 	const levels =
-		editing?.levels ??
-		( unsortedLevels === null
+		unsortedLevels === null
 			? null
-			: [ ...unsortedLevels ].sort(
-					( first, second ) => first - second
-				) );
+			: [ ...unsortedLevels ].sort( ( first, second ) => first - second );
 	const popoverTitle =
-		editing?.index === 'add'
+		editing?.level === 'add'
 			? __( 'Add markdown level', 'outletpro' )
 			: __( 'Markdown level', 'outletpro' );
-	function removeLevel( removedIndex: number ) {
+	function removeLevel( removedLevel: number ) {
 		if ( levels === null ) {
 			throw new Error( 'Markdown levels are unavailable.' );
 		}
-		onChange( levels.filter( ( _, index ) => index !== removedIndex ) );
+		pendingChange.current = null;
+		onChange( levels.filter( ( level ) => level !== removedLevel ) );
 		setEditing( null );
 		add.current?.focus();
 	}
@@ -58,20 +58,16 @@ export default function MarkdownLevels( {
 		if ( editing === null ) {
 			return;
 		}
-		let anchor = editing.anchor;
-		if ( editing.index !== 'add' ) {
-			const sorted = [ ...editing.levels ].sort(
-				( first, second ) => first - second
-			);
-			anchor =
-				rows.current[
-					sorted.indexOf( editing.levels[ editing.index ] )
-				] ?? anchor;
-			onChange( sorted );
-		}
 		if ( restoreFocus ) {
-			anchor.focus();
+			if ( editing.level === 'add' ) {
+				editing.anchor.focus();
+			} else {
+				focusAfterClose.current = editing.value;
+			}
 		}
+		const change = pendingChange.current;
+		pendingChange.current = null;
+		change?.();
 		setEditing( null );
 	}
 	return (
@@ -88,30 +84,36 @@ export default function MarkdownLevels( {
 			{ ! error && levels === null && <Spinner /> }
 			{ ! error && levels !== null && (
 				<>
-					{ levels.map( ( level, index ) => (
+					{ levels.map( ( level ) => (
 						<div
-							key={ index }
+							key={ level }
 							className="outletpro-markdown-level-row"
 						>
 							<Button
 								ref={ ( element ) => {
-									rows.current[ index ] = element;
+									if (
+										element &&
+										focusAfterClose.current === level
+									) {
+										element.focus();
+										focusAfterClose.current = null;
+									}
 								} }
 								className="outletpro-markdown-level"
 								icon={ tag }
 								disabled={ disabled }
 								aria-haspopup="dialog"
 								aria-expanded={
-									editing?.index === index &&
+									editing?.level === level &&
 									editing.anchor !== add.current
 								}
 								onClick={ (
 									event: MouseEvent< HTMLButtonElement >
 								) => {
 									setEditing( {
-										index,
+										level,
 										anchor: event.currentTarget,
-										levels,
+										value: level,
 									} );
 								} }
 							>
@@ -133,7 +135,7 @@ export default function MarkdownLevels( {
 											level
 										),
 										isDisabled: disabled,
-										onClick: () => removeLevel( index ),
+										onClick: () => removeLevel( level ),
 									},
 								] }
 							/>
@@ -153,9 +155,8 @@ export default function MarkdownLevels( {
 							event: MouseEvent< HTMLButtonElement >
 						) => {
 							setEditing( {
-								index: 'add',
+								level: 'add',
 								anchor: event.currentTarget,
-								levels,
 							} );
 						} }
 					/>
@@ -163,21 +164,21 @@ export default function MarkdownLevels( {
 			) }
 			{ editing !== null && levels !== null && (
 				<LevelPopover
-					key={ editing.index }
+					key={ editing.level }
 					anchor={ editing.anchor }
 					title={ popoverTitle }
 					label={ __( 'Percentage', 'outletpro' ) }
 					min={ 1 }
 					max={ 100 }
-					mode={ editing.index === 'add' ? 'add' : 'edit' }
+					mode={ editing.level === 'add' ? 'add' : 'edit' }
 					initialValue={
-						editing.index === 'add' ? '' : levels[ editing.index ]
+						editing.level === 'add' ? '' : editing.value
 					}
 					disabled={ disabled }
 					validate={ ( value ) =>
 						levels.some(
-							( level, index ) =>
-								index !== editing.index && level === value
+							( level ) =>
+								level !== editing.level && level === value
 						)
 							? __(
 									'This markdown level already exists.',
@@ -186,7 +187,7 @@ export default function MarkdownLevels( {
 							: undefined
 					}
 					onChange={ ( value ) => {
-						if ( editing.index === 'add' ) {
+						if ( editing.level === 'add' ) {
 							onChange(
 								[ ...levels, value ].sort(
 									( first, second ) => first - second
@@ -194,11 +195,15 @@ export default function MarkdownLevels( {
 							);
 							return;
 						}
-						const nextLevels = levels.map( ( level, index ) =>
-							index === editing.index ? value : level
-						);
-						setEditing( { ...editing, levels: nextLevels } );
-						onChange( nextLevels );
+						pendingChange.current = () =>
+							onChange(
+								levels
+									.map( ( level ) =>
+										level === editing.level ? value : level
+									)
+									.sort( ( first, second ) => first - second )
+							);
+						setEditing( { ...editing, value } );
 					} }
 					onClose={ () => closePopover( true ) }
 					onFocusOutside={ () => closePopover( false ) }
