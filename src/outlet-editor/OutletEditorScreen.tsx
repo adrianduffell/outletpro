@@ -33,7 +33,7 @@ export default function OutletEditorScreen( {
 	return (
 		<OutletEditor
 			config={ config }
-			workspace={ () => {
+			workspace={ ( state ) => {
 				if ( permissions.error ) {
 					return (
 						<Notice status="error" isDismissible={ false }>
@@ -57,7 +57,7 @@ export default function OutletEditorScreen( {
 						</Notice>
 					);
 				}
-				return <Products />;
+				return <Products disabled={ state.disabled } />;
 			} }
 		/>
 	);

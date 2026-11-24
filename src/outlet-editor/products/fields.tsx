@@ -7,6 +7,7 @@ import type { Field } from '@wordpress/dataviews/wp';
 import { RawHTML } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
+import OutletToggle from './OutletToggle';
 import { getStockLabel } from './stock';
 import type { Product } from './types';
 
@@ -105,13 +106,7 @@ export function getProductFields(): Field< Product >[] {
 			enableHiding: false,
 			enableSorting: false,
 			filterBy: false,
-			render: ( { item } ) => (
-				<div className="outletpro-editor-outlet-cell">
-					{ item.outlet
-						? __( 'Yes', 'outletpro' )
-						: __( 'No', 'outletpro' ) }
-				</div>
-			),
+			render: OutletToggle,
 		},
 	];
 }

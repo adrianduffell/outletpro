@@ -9,6 +9,5 @@ export type Product = RestProduct & {
 	image: string | null;
 	price: string;
 	age_days: number | null;
-	outlet: boolean;
 	canEdit: boolean;
 };
