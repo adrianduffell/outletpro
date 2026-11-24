@@ -1,0 +1,90 @@
+/**
+ * Outlet settings sidebar styles.
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+.outlet-badge-preset {
+	display: block;
+	width: fit-content;
+	border-radius: var(--outletpro-badge-border-radius, unset);
+	font-weight: var(--outletpro-badge-font-weight, unset);
+	font-size: calc(var(--outletpro-context-font-size, 1em) * (1cap / 1em) * var(--outletpro-badge-scale) / 100 * var(--outletpro-badge-density) / 100 / (1cap / 1em));
+	padding: calc(1cap * (100 - var(--outletpro-badge-density)) / var(--outletpro-badge-density) / 2);
+	line-height: 1;
+	text-box-trim: trim-both;
+	text-box-edge: cap alphabetic;
+}
+
+.outletpro-badge-presets__trigger:focus:not(:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
+.outletpro-badge-presets-popover .components-popover__content {
+	width: 400px;
+	max-width: calc(100vw - 32px);
+	max-height: calc(100dvh - 32px);
+	padding: 16px;
+	overflow-y: auto;
+}
+
+.outletpro-badge-presets__header {
+	margin-bottom: 16px;
+}
+
+.outletpro-badge-presets__header h2 {
+	margin: 0;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.outletpro-badge-presets__grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 16px;
+}
+
+.outletpro-badge-presets-popover .outletpro-badge-presets__choice.components-button {
+	display: grid;
+	place-items: center;
+	aspect-ratio: 4 / 3;
+	width: 100%;
+	height: auto;
+	min-width: 0;
+	padding: 16px;
+	border: 1px solid #ddd;
+	background: #fff;
+	color: #1e1e1e;
+}
+
+.outletpro-badge-presets-popover .outletpro-badge-presets__choice.components-button:hover {
+	background: #fff;
+	color: #1e1e1e;
+}
+
+.outletpro-badge-presets-popover .outletpro-badge-presets__choice.components-button[aria-pressed="true"] {
+	padding: 15px;
+	border: 2px solid var(--wp-admin-theme-color, #3858e9);
+	background: #fff;
+	color: #1e1e1e;
+}
+
+.outletpro-badge-presets-popover.is-expanded .components-popover__content {
+	width: auto;
+	max-width: none;
+	max-height: none;
+	overflow-y: auto;
+}
+
+.outletpro-badge-presets-popover.is-expanded .outletpro-badge-presets__header {
+	display: none;
+}
+
+@media (max-width: 480px) {
+
+	.outletpro-badge-presets__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+

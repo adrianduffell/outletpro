@@ -11,6 +11,9 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { TabPanel } from '@wordpress/components';
 import { COMPLEMENTARY_AREA, QUERY_PARAM, SIDEBAR_NAME } from '../constants';
 
+// Keep the renderer and isolated sidebar modules on the same React instance.
+jest.mock( 'react', () => jest.requireActual( 'react' ) );
+
 beforeEach( () => {
 	mockRegisterPlugin.mockClear();
 	mockUseDispatch.mockReturnValue( {
@@ -45,6 +48,25 @@ jest.mock( '@wordpress/element', () => ( {
 } ) );
 
 jest.mock( '@wordpress/components', () => ( {
+	// Load real layouts without initializing controls that use mocked data APIs.
+	...jest.requireActual(
+		require
+			.resolve( '@wordpress/components' )
+			.replace( /index\.cjs$/, 'flex/index.cjs' )
+	),
+	// Picker interactions use real WordPress controls in the Vitest suite.
+	Dropdown: ( {
+		renderToggle,
+	}: {
+		renderToggle: ( props: { onToggle: () => void } ) => ReactNode;
+	} ) => renderToggle( { onToggle: jest.fn() } ),
+	Button: ( {
+		children,
+		onClick,
+	}: {
+		children: ReactNode;
+		onClick: () => void;
+	} ) => <button onClick={ onClick }>{ children }</button>,
 	BaseControl: ( { children }: { children: ReactNode } ) => (
 		<div>{ children }</div>
 	),
@@ -284,10 +306,6 @@ jest.mock( '@wordpress/editor', () => ( {
 	PluginSidebarMoreMenuItem: () => null,
 } ) );
 
-jest.mock( '@wordpress/i18n', () => ( {
-	__: jest.fn( ( text: string ) => text ),
-} ) );
-
 const mockRegisterPlugin = registerPlugin as jest.Mock;
 const mockUseSettings = useSettings as jest.Mock;
 const mockUseDispatch = jest.mocked( useDispatch );
@@ -457,6 +475,10 @@ describe( 'settings-sidebar registration', () => {
 
 		// Assert.
 		expect( screen.getByText( 'Label' ) ).toBeInTheDocument();
+		expect( screen.getByText( 'Design' ) ).toBeInTheDocument();
+		expect(
+			screen.getByRole( 'button', { name: 'Custom' } )
+		).toBeInTheDocument();
 		expect( screen.getByText( 'Typography' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Color' ) ).toBeInTheDocument();
 		expect( screen.getByText( 'Dimensions' ) ).toBeInTheDocument();
