@@ -5,7 +5,8 @@
 
 import { createRoot } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import OutletEditor from './outlet-editor/OutletEditor';
+import OutletEditorScreen from './outlet-editor/OutletEditorScreen';
+import { registerProductEntity } from './data/products';
 import type { EditorConfig } from './outlet-editor/types';
 import './outlet-editor/style.css';
 
@@ -24,10 +25,11 @@ if ( container !== null ) {
 		if ( typeof config.canPublish !== 'boolean' ) {
 			throw new Error( 'Outlet publishing permission is invalid.' );
 		}
-		createRoot( container ).render( <OutletEditor config={ config } /> );
-	} catch ( error ) {
-		// eslint-disable-next-line no-console -- Log system failures at the screen boundary.
-		console.error( 'Outlet editor could not be initialized.', error );
+		registerProductEntity();
+		createRoot( container ).render(
+			<OutletEditorScreen config={ config } />
+		);
+	} catch {
 		container.textContent = __(
 			'The outlet editor could not be loaded. Reload the page before continuing.',
 			'outletpro'

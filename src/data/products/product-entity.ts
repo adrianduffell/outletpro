@@ -3,6 +3,9 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
+import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
+
 export type ProductQuery = {
 	page: number;
 	per_page: number;
@@ -34,6 +37,8 @@ export const PRODUCT_FIELDS = [
 export const PRODUCT_ENTITY = {
 	kind: 'outletpro',
 	name: 'product',
+	label: __( 'Products', 'outletpro' ),
+	getTitle: ( record: { name: string } ) => decodeEntities( record.name ),
 	baseURL: '/wc/v3/products',
 	baseURLParams: { context: 'edit', _fields: PRODUCT_FIELDS },
 	supportsPagination: true,
