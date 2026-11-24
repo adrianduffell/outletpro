@@ -1,0 +1,39 @@
+.outletpro-markdown-level-row {
+	display: flex;
+	align-items: center;
+	margin: 0 0 4px 24px;
+}
+
+.outletpro-markdown-levels .outletpro-markdown-level {
+	display: flex;
+	gap: 8px;
+	flex: 1;
+	min-width: 0;
+	justify-content: flex-start;
+	font-weight: 400;
+}
+
+.outletpro-markdown-level-menu {
+	opacity: 0;
+	pointer-events: none;
+}
+
+.outletpro-markdown-level-row:hover .outletpro-markdown-level-menu,
+.outletpro-markdown-level-row:focus-within .outletpro-markdown-level-menu,
+.outletpro-markdown-level-menu:has([aria-expanded="true"]) {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+@media (hover: none) {
+
+	.outletpro-markdown-level-menu {
+		opacity: 1;
+		pointer-events: auto;
+	}
+}
+
+.outletpro-markdown-levels > .components-button.is-primary {
+	margin: 8px 0 8px 24px;
+	background: #1e1e1e;
+}
