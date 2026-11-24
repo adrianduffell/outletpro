@@ -82,9 +82,9 @@ export default function EditorFrame( {
 			}
 			workspace={ workspace }
 			notices={ notices }
+			review={ review }
 			sidebar={
-				review ??
-				( settingsOpen && (
+				settingsOpen && (
 					<div ref={ settingsPanel }>
 						<div className="outletpro-editor-sidebar-heading">
 							<h2>{ __( 'Page', 'outletpro' ) }</h2>
@@ -97,7 +97,7 @@ export default function EditorFrame( {
 						</div>
 						{ settings }
 					</div>
-				) )
+				)
 			}
 		/>
 	);

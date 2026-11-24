@@ -69,7 +69,6 @@ body.outletpro-editor-screen #screen-meta {
 }
 
 @media (max-width: 960px) {
-
 	.outletpro-editor-layout.is-sidebar-open {
 		grid-template-columns: minmax(0, 1fr);
 	}
@@ -81,4 +80,11 @@ body.outletpro-editor-screen #screen-meta {
 		z-index: 2;
 		box-shadow: -4px 0 12px #00000008;
 	}
+}
+
+.outletpro-editor-review {
+	position: absolute;
+	inset: 0 0 0 auto;
+	width: min(280px, 100%);
+	z-index: 3;
 }

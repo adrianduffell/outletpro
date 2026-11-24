@@ -10,18 +10,20 @@ export default function EditorShell( {
 	header,
 	workspace,
 	sidebar,
+	review,
 	notices,
 }: {
 	header?: ReactNode;
 	workspace?: ReactNode;
 	sidebar?: ReactNode;
+	review?: ReactNode;
 	notices?: ReactNode;
 } ) {
 	return (
 		<div className="outletpro-editor">
 			{ header }
 			<div
-				className={ `outletpro-editor-layout${ sidebar ? ' is-sidebar-open' : '' }` }
+				className={ `outletpro-editor-layout${ sidebar || review ? ' is-sidebar-open' : '' }` }
 			>
 				<main
 					className="outletpro-editor-workspace"
@@ -29,7 +31,7 @@ export default function EditorShell( {
 				>
 					{ workspace }
 				</main>
-				{ sidebar && (
+				{ ! review && sidebar && (
 					<aside
 						id="outletpro-editor-sidebar"
 						className="outletpro-editor-details"
@@ -39,6 +41,15 @@ export default function EditorShell( {
 					</aside>
 				) }
 			</div>
+			{ review && (
+				<aside
+					id="outletpro-editor-sidebar"
+					className="outletpro-editor-details outletpro-editor-review"
+					aria-label={ __( 'Review changes', 'outletpro' ) }
+				>
+					{ review }
+				</aside>
+			) }
 			{ notices }
 		</div>
 	);
