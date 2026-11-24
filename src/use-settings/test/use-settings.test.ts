@@ -6,10 +6,12 @@
 import useStringEntityProp from '../../use-string-entity-prop';
 import useUnsignedIntegerEntityProp from '../../use-unsigned-integer-entity-prop';
 import { renderHook } from '@testing-library/react';
+import { useEntityProp } from '@wordpress/core-data';
 import useSettings from '../';
 
 jest.mock( '../../use-string-entity-prop', () => jest.fn() );
 jest.mock( '../../use-unsigned-integer-entity-prop', () => jest.fn() );
+jest.mock( '@wordpress/core-data', () => ( { useEntityProp: jest.fn() } ) );
 
 const mockUseStringEntityProp = useStringEntityProp as jest.Mock;
 const mockUseUnsignedIntegerEntityProp =
@@ -22,6 +24,11 @@ function setupMock(
 		[ undefined, jest.fn() ],
 	]
 ) {
+	jest.mocked( useEntityProp ).mockReturnValue( [
+		undefined,
+		jest.fn(),
+		undefined,
+	] );
 	mockUseStringEntityProp.mockImplementation( ( key: string ) => {
 		return [ overrides[ key ], jest.fn() ];
 	} );
@@ -128,6 +135,11 @@ describe( 'useSettings', () => {
 
 	test( 'exposes setLabel setter from entity prop', () => {
 		// Arrange.
+		jest.mocked( useEntityProp ).mockReturnValue( [
+			undefined,
+			jest.fn(),
+			undefined,
+		] );
 		const setLabel = jest.fn();
 		mockUseStringEntityProp.mockImplementation( ( key: string ) => {
 			if ( key === 'outletpro_badge_label' ) {
@@ -149,6 +161,11 @@ describe( 'useSettings', () => {
 
 	test( 'exposes setters wired to the correct entity prop key', () => {
 		// Arrange.
+		jest.mocked( useEntityProp ).mockReturnValue( [
+			undefined,
+			jest.fn(),
+			undefined,
+		] );
 		const setters: Record< string, jest.Mock > = {};
 		const keyToSetter: Record< string, string > = {
 			outletpro_badge_label: 'setLabel',
