@@ -230,9 +230,7 @@ test.each( [ 'draft', 'publish' ] )(
 		expect( view.getByRole( 'textbox', { name: 'Slug' } ) ).toHaveValue(
 			'sale'
 		);
-		expect(
-			registry.select( coreStore ).getEntityRecordEdits( 'root', 'site' )
-		).toEqual( { outletpro_markdown_levels: [ 40 ] } );
+		expect( view.getByRole( 'button', { name: '40% off' } ) ).toBeVisible();
 		expect( apiFetch ).toHaveBeenCalledTimes( 1 );
 	}
 );

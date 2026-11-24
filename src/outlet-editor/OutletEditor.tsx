@@ -17,7 +17,10 @@ import { __ } from '@wordpress/i18n';
 import { InlineNotices, SnackbarNotices } from '@wordpress/notices';
 import EditorFrame from './EditorFrame';
 import PageDetails from './PageDetails';
+import MarkdownLevels from './MarkdownLevels';
 import useOutletPage from './useOutletPage';
+import useSettings from '../use-settings';
+import { getErrorMessage } from './error-message';
 import type { EditorConfig } from './types';
 
 export type EditorState = { busy: boolean; disabled: boolean };
@@ -33,16 +36,26 @@ export default function OutletEditor( {
 	settingsPanels?: ( state: EditorState ) => ReactNode;
 } ) {
 	const details = useOutletPage( config.pageId );
+	const { markdownLevels, setMarkdownLevels } = useSettings();
 	const { editEntityRecord } = useDispatch( coreStore );
 	const registry = useRegistry();
 	const { isDirty } = useEntitiesSavedStatesIsDirty();
-	const busy = useSelect(
+	const { busy, settingsFailure } = useSelect(
 		( select ) => {
 			const core = select( coreStore );
-			return (
-				core.isSavingEntityRecord( 'root', 'site' ) ||
-				core.isSavingEntityRecord( 'postType', 'page', config.pageId )
-			);
+			return {
+				busy:
+					core.isSavingEntityRecord( 'root', 'site' ) ||
+					core.isSavingEntityRecord(
+						'postType',
+						'page',
+						config.pageId
+					),
+				settingsFailure: core.getResolutionError( 'getEntityRecord', [
+					'root',
+					'site',
+				] ),
+			};
 		},
 		[ config.pageId ]
 	);
@@ -154,6 +167,22 @@ export default function OutletEditor( {
 								? () => review( 'draft' )
 								: undefined
 						}
+					/>
+					<MarkdownLevels
+						levels={ markdownLevels ?? null }
+						error={
+							settingsFailure
+								? getErrorMessage(
+										settingsFailure,
+										__(
+											'Markdown levels could not be loaded.',
+											'outletpro'
+										)
+									)
+								: ''
+						}
+						onChange={ setMarkdownLevels }
+						disabled={ busy }
 					/>
 					{ settingsPanels?.( state ) }
 				</>

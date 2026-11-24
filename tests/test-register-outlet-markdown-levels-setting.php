@@ -24,6 +24,7 @@ class Test_Register_Outlet_Markdown_Levels_Setting extends WP_UnitTestCase {
 		$settings = get_registered_settings();
 		$this->assertSame(
 			array(
+				'title'       => 'Markdown Levels',
 				'type'        => 'array',
 				'uniqueItems' => true,
 				'items'       => array(

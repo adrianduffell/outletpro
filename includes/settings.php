@@ -349,6 +349,7 @@ function register_outlet_markdown_levels_setting(): void {
 			'sanitize_callback' => 'OutletPro\sanitize_integer_array',
 			'show_in_rest'      => array(
 				'schema' => array(
+					'title'       => __( 'Markdown Levels', 'outletpro' ),
 					'type'        => 'array',
 					'uniqueItems' => true,
 					'items'       => array(
