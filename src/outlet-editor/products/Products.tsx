@@ -12,6 +12,7 @@ import { getProductFields } from './fields';
 import type { ProductQuery } from '../../data/products/product-entity';
 import useProducts from '../../data/products/useProducts';
 import './style.css';
+import { getProductRow } from './presentation';
 
 export default function Products() {
 	const [ outletOnly, setOutletOnly ] = useState( false );
@@ -20,11 +21,30 @@ export default function Products() {
 		page: 1,
 		perPage: 25,
 		search: '',
-		fields: [ 'name', 'sku', 'outlet' ],
+		fields: [
+			'image',
+			'name',
+			'sku',
+			'total_sales',
+			'age_days',
+			'price',
+			'stock_status',
+			'outlet',
+		],
 		layout: {
 			styles: {
+				image: {
+					width: 48,
+					minWidth: 48,
+					maxWidth: 48,
+					align: 'center',
+				},
 				name: { align: 'start' },
 				sku: { align: 'center' },
+				total_sales: { align: 'center' },
+				age_days: { align: 'center' },
+				price: { align: 'center' },
+				stock_status: { align: 'center' },
 				outlet: { align: 'center' },
 			},
 		},
@@ -43,7 +63,8 @@ export default function Products() {
 		}
 		return params;
 	}, [ view, outletOnly ] );
-	const { records, totalItems, loading, error } = useProducts( query );
+	const { records, permissions, totalItems, loading, error } =
+		useProducts( query );
 	const totalPages = Math.ceil(
 		( totalItems ?? 0 ) / ( view.perPage ?? 25 )
 	);
@@ -94,7 +115,12 @@ export default function Products() {
 
 							<div className="outletpro-editor-product-browser">
 								<DataViews
-									data={ records ?? [] }
+									data={ ( records ?? [] ).map( ( record ) =>
+										getProductRow(
+											record,
+											permissions[ record.id ]
+										)
+									) }
 									fields={ fields }
 									getItemId={ ( item ) => item.id.toString() }
 									view={ view }

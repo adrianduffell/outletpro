@@ -75,6 +75,30 @@
 	margin-left: auto;
 }
 
+.outletpro-editor-product-name {
+	color: #1e1e1e;
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.outletpro-editor-product-image {
+	display: block;
+	width: 48px;
+	height: 48px;
+	object-fit: contain;
+}
+
+.outletpro-editor-products
+.dataviews-view-table__cell-content-wrapper:has(
+	> .outletpro-editor-product-image
+) {
+	min-width: 0;
+}
+
+.outletpro-editor-products .dataviews-view-table td {
+	vertical-align: middle;
+}
+
 .outletpro-editor-products
 .dataviews-view-table__cell-content-wrapper.dataviews-view-table__cell-align-center {
 	max-width: none;
@@ -82,6 +106,10 @@
 
 .outletpro-editor-products .dataviews-view-table thead {
 	z-index: 2;
+}
+
+a.outletpro-editor-product-name:hover {
+	color: var(--wp-admin-theme-color);
 }
 
 .outletpro-editor-outlet-cell {
@@ -100,6 +128,20 @@ td:has(.outletpro-editor-outlet-cell) {
 	z-index: 1;
 	background-color: var(--wp-dataviews-color-background, #fff);
 	box-shadow: -1px 0 0 #ddd;
+}
+
+.outletpro-editor-price {
+	white-space: nowrap;
+}
+
+.outletpro-editor-price del {
+	margin-right: 4px;
+	opacity: 0.6;
+}
+
+.outletpro-editor-price ins {
+	text-decoration: none;
+	font-weight: 600;
 }
 
 @media (max-width: 600px) {
