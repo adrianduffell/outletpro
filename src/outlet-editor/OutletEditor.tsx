@@ -17,7 +17,7 @@ import { __ } from '@wordpress/i18n';
 import { InlineNotices, SnackbarNotices } from '@wordpress/notices';
 import EditorFrame from './EditorFrame';
 import PageDetails from './PageDetails';
-import MarkdownLevels from './MarkdownLevels';
+import { MarkdownLevels, PriceLevels } from './level-panels';
 import useOutletPage from './useOutletPage';
 import useSettings from '../use-settings';
 import { getErrorMessage } from './error-message';
@@ -36,7 +36,8 @@ export default function OutletEditor( {
 	settingsPanels?: ( state: EditorState ) => ReactNode;
 } ) {
 	const details = useOutletPage( config.pageId );
-	const { markdownLevels, setMarkdownLevels } = useSettings();
+	const { markdownLevels, setMarkdownLevels, priceLevels, setPriceLevels } =
+		useSettings();
 	const { editEntityRecord } = useDispatch( coreStore );
 	const registry = useRegistry();
 	const { isDirty } = useEntitiesSavedStatesIsDirty();
@@ -182,6 +183,22 @@ export default function OutletEditor( {
 								: ''
 						}
 						onChange={ setMarkdownLevels }
+						disabled={ busy }
+					/>
+					<PriceLevels
+						levels={ priceLevels ?? null }
+						error={
+							settingsFailure
+								? getErrorMessage(
+										settingsFailure,
+										__(
+											'Price levels could not be loaded.',
+											'outletpro'
+										)
+									)
+								: ''
+						}
+						onChange={ setPriceLevels }
 						disabled={ busy }
 					/>
 					{ settingsPanels?.( state ) }

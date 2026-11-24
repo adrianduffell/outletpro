@@ -8,9 +8,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { store as coreStore } from '@wordpress/core-data';
 import { expect, test, vi } from 'vitest';
 import useSettings from '..';
-import useArrayUnsignedIntegersEntityProp, {
-	assertArrayUnsignedIntegersValue,
-} from '../use-array-unsigned-integers-entity-prop';
+import { assertArrayUnsignedIntegersValue } from '../use-array-unsigned-integers-entity-prop';
 import { createSettingsRegistry } from '../test-utils';
 
 vi.mock( '@wordpress/api-fetch', () => ( { default: vi.fn() } ) );
@@ -109,19 +107,16 @@ test.each( [
 	).toBeUndefined();
 } );
 
-test( 'edits the supplied setting key without imposing range or uniqueness rules', () => {
+test( 'edits price levels without imposing range or uniqueness rules', () => {
 	// Arrange.
 	const { registry, wrapper } = createSettingsRegistry( {
 		outletpro_price_levels: [ 10, 25 ],
 	} );
-	const { result } = renderHook(
-		() => useArrayUnsignedIntegersEntityProp( 'outletpro_price_levels' ),
-		{ wrapper }
-	);
+	const { result } = renderHook( useSettings, { wrapper } );
 	// Act.
-	act( () => result.current[ 1 ]( [ 0, 250, 250 ] ) );
+	act( () => result.current.setPriceLevels( [ 0, 250, 250 ] ) );
 	// Assert.
-	expect( result.current[ 0 ] ).toEqual( [ 0, 250, 250 ] );
+	expect( result.current.priceLevels ).toEqual( [ 0, 250, 250 ] );
 	expect(
 		registry.select( coreStore ).getEntityRecordEdits( 'root', 'site' )
 	).toEqual( { outletpro_price_levels: [ 0, 250, 250 ] } );

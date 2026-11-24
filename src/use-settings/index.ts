@@ -5,7 +5,7 @@
 
 import useStringEntityProp from '../use-string-entity-prop';
 import useUnsignedIntegerEntityProp from '../use-unsigned-integer-entity-prop';
-import useMarkdownLevelsEntityProp from './use-array-unsigned-integers-entity-prop';
+import useArrayUnsignedIntegersEntityProp from './use-array-unsigned-integers-entity-prop';
 
 export type Settings = {
 	label: string | undefined;
@@ -32,6 +32,8 @@ export type Settings = {
 	setMessage: ( value: string | undefined ) => void;
 	markdownLevels: number[] | undefined;
 	setMarkdownLevels: ( value: number[] | undefined ) => void;
+	priceLevels: number[] | undefined;
+	setPriceLevels: ( value: number[] | undefined ) => void;
 };
 
 const useSettings = (): Settings => {
@@ -64,8 +66,11 @@ const useSettings = (): Settings => {
 		'outletpro_badge_density'
 	);
 	const [ message, setMessage ] = useStringEntityProp( 'outletpro_message' );
-	const [ markdownLevels, setMarkdownLevels ] = useMarkdownLevelsEntityProp(
-		'outletpro_markdown_levels'
+	const [ markdownLevels, setMarkdownLevels ] =
+		useArrayUnsignedIntegersEntityProp( 'outletpro_markdown_levels' );
+
+	const [ priceLevels, setPriceLevels ] = useArrayUnsignedIntegersEntityProp(
+		'outletpro_price_levels'
 	);
 
 	return {
@@ -93,6 +98,8 @@ const useSettings = (): Settings => {
 		setMessage,
 		markdownLevels,
 		setMarkdownLevels,
+		priceLevels,
+		setPriceLevels,
 	};
 };
 

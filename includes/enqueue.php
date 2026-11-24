@@ -461,7 +461,7 @@ function enqueue_outlet_editor_hook(): void {
 		wp_style_add_data( 'wp-core-data', 'rtl', 'replace' );
 		$style_dependencies[] = 'wp-core-data';
 	}
-	wp_enqueue_script( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.js', $asset['dependencies'], $asset['version'], true );
+	wp_enqueue_script( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.js', array_merge( $asset['dependencies'], array( 'wc-settings' ) ), $asset['version'], true );
 	wp_enqueue_style( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/style-outlet-editor.css', $style_dependencies, $asset['version'] );
 	wp_enqueue_style( 'outletpro-outlet-editor-components', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.css', array( 'outletpro-outlet-editor' ), $asset['version'] );
 	wp_set_script_translations( 'outletpro-outlet-editor', 'outletpro' );

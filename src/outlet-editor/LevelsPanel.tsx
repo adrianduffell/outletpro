@@ -13,20 +13,39 @@ import {
 } from '@wordpress/components';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { moreVertical, plus, tag } from '@wordpress/icons';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import LevelPopover from './LevelPopover';
 import './markdown-levels.css';
 
-export default function MarkdownLevels( {
-	levels: unsortedLevels,
-	error,
-	onChange,
-	disabled,
-}: {
+export type LevelsProps = {
 	levels: number[] | null;
 	error: string;
 	onChange: ( levels: number[] ) => void;
 	disabled: boolean;
+};
+
+export default function LevelsPanel( {
+	levels: unsortedLevels,
+	error,
+	onChange,
+	disabled,
+	labels,
+	formatLevel,
+	formatRemoveLabel,
+	min,
+	max,
+}: LevelsProps & {
+	labels: {
+		title: string;
+		add: string;
+		edit: string;
+		input: string;
+		duplicate: string;
+	};
+	formatLevel: ( level: number ) => string;
+	formatRemoveLabel: ( level: number ) => string;
+	min: number;
+	max?: number;
 } ) {
 	const [ editing, setEditing ] = useState<
 		| { level: 'add'; anchor: HTMLButtonElement }
@@ -41,13 +60,10 @@ export default function MarkdownLevels( {
 		unsortedLevels === null
 			? null
 			: [ ...unsortedLevels ].sort( ( first, second ) => first - second );
-	const popoverTitle =
-		editing?.level === 'add'
-			? __( 'Add markdown level', 'outletpro' )
-			: __( 'Markdown level', 'outletpro' );
+	const popoverTitle = editing?.level === 'add' ? labels.add : labels.edit;
 	function removeLevel( removedLevel: number ) {
 		if ( levels === null ) {
-			throw new Error( 'Markdown levels are unavailable.' );
+			throw new Error( 'Levels are unavailable.' );
 		}
 		pendingChange.current = null;
 		onChange( levels.filter( ( level ) => level !== removedLevel ) );
@@ -72,7 +88,7 @@ export default function MarkdownLevels( {
 	}
 	return (
 		<PanelBody
-			title={ __( 'Markdown Levels', 'outletpro' ) }
+			title={ labels.title }
 			initialOpen
 			className="outletpro-markdown-levels"
 		>
@@ -114,11 +130,7 @@ export default function MarkdownLevels( {
 									} );
 								} }
 							>
-								{ sprintf(
-									/* translators: %d: markdown percentage. */
-									__( '%d%% off', 'outletpro' ),
-									level
-								) }
+								{ formatLevel( level ) }
 							</Button>
 							<DropdownMenu
 								className="outletpro-markdown-level-menu"
@@ -127,14 +139,7 @@ export default function MarkdownLevels( {
 								toggleProps={ { disabled } }
 								controls={ [
 									{
-										title: sprintf(
-											/* translators: %d: markdown percentage. */
-											__(
-												'Remove %d%% off',
-												'outletpro'
-											),
-											level
-										),
+										title: formatRemoveLabel( level ),
 										isDisabled: disabled,
 										onClick: () => removeLevel( level ),
 									},
@@ -145,7 +150,7 @@ export default function MarkdownLevels( {
 					<Button
 						ref={ add }
 						icon={ plus }
-						label={ __( 'Add markdown level', 'outletpro' ) }
+						label={ labels.add }
 						variant="primary"
 						disabled={ disabled }
 						aria-haspopup="dialog"
@@ -166,9 +171,9 @@ export default function MarkdownLevels( {
 					key={ editing.level }
 					anchor={ editing.anchor }
 					title={ popoverTitle }
-					label={ __( 'Percentage', 'outletpro' ) }
-					min={ 1 }
-					max={ 100 }
+					label={ labels.input }
+					min={ min }
+					max={ max }
 					mode={ editing.level === 'add' ? 'add' : 'edit' }
 					initialValue={
 						editing.level === 'add' ? '' : editing.value
@@ -179,10 +184,7 @@ export default function MarkdownLevels( {
 							( level ) =>
 								level !== editing.level && level === value
 						)
-							? __(
-									'This markdown level already exists.',
-									'outletpro'
-								)
+							? labels.duplicate
 							: undefined
 					}
 					onChange={ ( value ) => {

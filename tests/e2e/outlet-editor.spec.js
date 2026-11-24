@@ -6,20 +6,20 @@
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
 async function visitOutletEditor( admin, requestUtils ) {
+	await requestUtils.rest( {
+		method: 'POST',
+		path: '/wp/v2/settings',
+		data: {
+			outletpro_markdown_levels: [ 30, 50, 70 ],
+			outletpro_price_levels: [ 10, 25, 50 ],
+		},
+	} );
 	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
 	await admin.visitAdminPage(
 		'post.php',
 		`post=${ settings.outletpro_page_id }&action=edit`
 	);
 }
-
-test.beforeAll( async ( { requestUtils } ) => {
-	await requestUtils.rest( {
-		method: 'POST',
-		path: '/wp/v2/settings',
-		data: { outletpro_markdown_levels: [ 30, 50, 70 ] },
-	} );
-} );
 
 test( 'edits the outlet page through the styled shell', async ( {
 	page,
@@ -213,6 +213,7 @@ test( 'deletes a markdown level', async ( { page, admin, requestUtils } ) => {
 	// Act.
 	await page.getByRole( 'button', { name: /^70% off$/ } ).hover();
 	await page
+		.getByRole( 'region', { name: 'Markdown Levels' } )
 		.getByRole( 'button', { name: 'Options', exact: true } )
 		.last()
 		.click();
@@ -234,4 +235,41 @@ test( 'deletes a markdown level', async ( { page, admin, requestUtils } ) => {
 			page.getByRole( 'button', { name: level, exact: true } )
 		).toBeVisible();
 	}
+} );
+
+test( 'adds, edits, and removes price levels through native saving', async ( {
+	page,
+	admin,
+	requestUtils,
+} ) => {
+	// Arrange.
+	await visitOutletEditor( admin, requestUtils );
+	const prices = page.getByRole( 'region', { name: 'Price Levels' } );
+	const levels = prices.getByRole( 'button', { name: /^Under / } );
+	// Act.
+	await prices.getByRole( 'button', { name: 'Add price level' } ).click();
+	await page.getByRole( 'spinbutton', { name: 'Price' } ).fill( '1250' );
+	await page.getByRole( 'button', { name: 'Add', exact: true } ).click();
+	await saveChanges( page );
+	await page.reload();
+	await expect( levels ).toHaveCount( 4 );
+	await levels.last().click();
+	await page.getByRole( 'spinbutton', { name: 'Price' } ).fill( '1500' );
+	await page.getByRole( 'spinbutton', { name: 'Price' } ).press( 'Enter' );
+	await expect( levels.last() ).toBeFocused();
+	await saveChanges( page );
+	await page.reload();
+	await levels.last().hover();
+	await prices
+		.getByRole( 'button', { name: 'Options', exact: true } )
+		.last()
+		.click();
+	await page.getByRole( 'menuitem', { name: /^Remove Under / } ).click();
+	await saveChanges( page );
+	await page.reload();
+	// Assert.
+	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	expect( settings.outletpro_price_levels ).toEqual( [ 10, 25, 50 ] );
+	expect( settings.outletpro_markdown_levels ).toEqual( [ 30, 50, 70 ] );
+	await expect( levels ).toHaveCount( 3 );
 } );

@@ -7,11 +7,20 @@ import { store as commandsStore } from '@wordpress/commands';
 import { store as blockEditorStore } from '@wordpress/block-editor';
 import { store as coreStore } from '@wordpress/core-data';
 import { store as noticesStore } from '@wordpress/notices';
+import { vi } from 'vitest';
 import { createSettingsRegistry } from '../use-settings/test-utils';
 
+export const currency = {
+	symbol: '£',
+	priceFormat: '%1$s%2$s',
+	thousandSeparator: ',',
+};
+
 export function createEditorRegistry( settings?: Record< string, unknown > ) {
+	vi.stubGlobal( 'wc', { wcSettings: { CURRENCY: currency } } );
 	const { registry, wrapper } = createSettingsRegistry( settings, {
 		outletpro_markdown_levels: 'Markdown Levels',
+		outletpro_price_levels: 'Price Levels',
 	} );
 	registry.register( commandsStore );
 	registry.register( blockEditorStore );
