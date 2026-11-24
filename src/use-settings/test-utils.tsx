@@ -7,15 +7,20 @@ import type { ReactNode } from 'react';
 import { store as coreStore } from '@wordpress/core-data';
 import { createRegistry, RegistryProvider } from '@wordpress/data';
 
-export function createSettingsRegistry( settings?: Record< string, unknown > ) {
+export function createSettingsRegistry(
+	settings?: Record< string, unknown >,
+	labels: Record< string, string > = {}
+) {
 	const registry = createRegistry();
 	registry.register( coreStore );
 	registry.dispatch( coreStore ).addEntities( [
 		{
 			kind: 'root',
 			name: 'site',
+			label: 'Site',
 			key: false,
 			baseURL: '/wp/v2/settings',
+			meta: { labels },
 		},
 	] );
 	registry

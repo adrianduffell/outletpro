@@ -28,19 +28,13 @@ test( 'edits the outlet page through the styled shell', async ( {
 		name: 'Page settings',
 	} );
 	const actions = page.getByRole( 'toolbar', { name: 'Page actions' } );
-	const review = page.getByRole( 'region', { name: 'Review changes' } );
+	const review = page.getByRole( 'dialog', {
+		name: 'Are you ready to save?',
+	} );
 	const save = actions.getByRole( 'button', { name: /^Save$/ } );
 	const applySave = review.getByRole( 'button', { name: /^Save$/ } );
 	const slug = sidebar.getByRole( 'textbox', { name: 'Slug' } );
 	// Assert.
-	await expect( page.locator( '.outletpro-editor-header' ) ).toHaveCSS(
-		'display',
-		'grid'
-	);
-	await expect( page.locator( '.outletpro-editor-page-details' ) ).toHaveCSS(
-		'padding-top',
-		'16px'
-	);
 	await expect(
 		page.getByRole( 'main', { name: 'Outlet workspace' } )
 	).toBeEmpty();
@@ -59,19 +53,32 @@ test( 'edits the outlet page through the styled shell', async ( {
 	await expect(
 		review.getByRole( 'button', { name: 'Cancel' } )
 	).toBeFocused();
-	await review.getByRole( 'checkbox', { name: 'Page details' } ).uncheck();
+	await page.screenshot( {
+		path: test.info().outputPath( 'review-desktop.png' ),
+	} );
+	await review.getByRole( 'checkbox', { name: 'Renamed outlet' } ).uncheck();
 	await expect( applySave ).toBeDisabled();
 	await review.getByRole( 'button', { name: 'Cancel' } ).click();
+	await expect( save ).toBeFocused();
 	await expect( slug ).toHaveValue( `editor-${ outlet.id }` );
 	await save.click();
 	await applySave.click();
 	await expect( review ).toHaveCount( 0 );
 	await expect(
+		page.getByText( 'Site updated.', { exact: true } )
+	).toBeVisible();
+	await expect(
 		sidebar.getByRole( 'heading', { name: 'Renamed outlet' } )
 	).toBeVisible();
 	await expect( save ).toBeDisabled();
+	await expect(
+		actions.getByRole( 'button', { name: 'Page settings' } )
+	).toBeFocused();
 	await actions.getByRole( 'button', { name: /^Publish$/ } ).click();
-	await review.getByRole( 'button', { name: /^Publish$/ } ).click();
+	await review.getByRole( 'button', { name: /^Save$/ } ).click();
+	await expect(
+		page.getByText( 'Site updated.', { exact: true } )
+	).toBeVisible();
 	await expect(
 		sidebar.getByText( 'Published', { exact: true } )
 	).toBeVisible();

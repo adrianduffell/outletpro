@@ -5,75 +5,58 @@
 
 import type { MouseEvent, ReactNode } from 'react';
 import { Button, Notice } from '@wordpress/components';
+import { store as coreStore } from '@wordpress/core-data';
+import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
+import {
+	EntitiesSavedStates,
+	UnsavedChangesWarning,
+	useEntitiesSavedStatesIsDirty,
+} from '@wordpress/editor';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { InlineNotices, SnackbarNotices } from '@wordpress/notices';
 import EditorFrame from './EditorFrame';
 import PageDetails from './PageDetails';
-import ReviewChanges from './ReviewChanges';
 import useOutletPage from './useOutletPage';
-import useEditorChanges from './useEditorChanges';
 import type { EditorConfig } from './types';
-import type { ChangeSelection, ChangeSource } from './changes';
 
-export type EditorState = { busy: boolean; failed: boolean; disabled: boolean };
-
-const statusDescriptions = {
-	publish: __( 'Publish page', 'outletpro' ),
-	draft: __( 'Unpublish page', 'outletpro' ),
-};
+export type EditorState = { busy: boolean; disabled: boolean };
+type ReviewedEntity = { kind: string; name: string; key?: number | string };
 
 export default function OutletEditor( {
 	config,
 	workspace,
 	settingsPanels,
-	changeSources = [],
 }: {
 	config: EditorConfig;
 	workspace?: ( state: EditorState ) => ReactNode;
 	settingsPanels?: ( state: EditorState ) => ReactNode;
-	changeSources?: ChangeSource[];
 } ) {
 	const details = useOutletPage( config.pageId );
-	const [ reviewing, setReviewing ] = useState( false );
-	const [ status, setStatus ] = useState< 'publish' | 'draft' | undefined >();
-	const trigger = useRef< HTMLElement | null >( null );
-	const pageSource: ChangeSource = {
-		id: 'page',
-		label: __( 'Page details', 'outletpro' ),
-		changes:
-			details.dirty || status !== undefined
-				? [
-						{
-							id: 'details',
-							label: __( 'Page details', 'outletpro' ),
-							description: status && statusDescriptions[ status ],
-							details: (
-								<dl>
-									<dt>{ __( 'Name', 'outletpro' ) }</dt>
-									<dd>{ details.title }</dd>
-									<dt>{ __( 'Slug', 'outletpro' ) }</dt>
-									<dd>{ details.slug }</dd>
-								</dl>
-							),
-						},
-					]
-				: [],
-		save: async () => {
-			if ( status !== undefined && ! config.canPublish ) {
-				throw new Error( 'Outlet page publishing is not permitted.' );
-			}
-			await details.save( status );
+	const { editEntityRecord } = useDispatch( coreStore );
+	const registry = useRegistry();
+	const { isDirty } = useEntitiesSavedStatesIsDirty();
+	const busy = useSelect(
+		( select ) => {
+			const core = select( coreStore );
+			return (
+				core.isSavingEntityRecord( 'root', 'site' ) ||
+				core.isSavingEntityRecord( 'postType', 'page', config.pageId )
+			);
 		},
-	};
-	const sources = [ ...changeSources, pageSource ];
-	const editor = useEditorChanges( sources );
-	const state = {
-		busy: editor.busy,
-		failed: editor.failed,
-		disabled: editor.busy || editor.failed,
-	};
+		[ config.pageId ]
+	);
+	const [ reviewing, setReviewing ] = useState( false );
+	const trigger = useRef< HTMLElement | null >( null );
+	const pendingStatus = useRef< { status: unknown; date: unknown } | null >(
+		null
+	);
+	const state = { busy, disabled: busy };
 	useEffect( () => {
 		if ( reviewing ) {
+			return;
+		}
+		if ( busy ) {
 			return;
 		}
 		if ( trigger.current === null ) {
@@ -84,47 +67,76 @@ export default function OutletEditor( {
 			! trigger.current.hasAttribute( 'disabled' )
 		) {
 			trigger.current.focus();
-			return;
+		} else {
+			document
+				.getElementById( 'outletpro-editor-settings-toggle' )
+				?.focus();
 		}
-		document.getElementById( 'outletpro-editor-settings-toggle' )?.focus();
-	}, [ reviewing ] );
+	}, [ reviewing, busy ] );
 	function review( nextStatus?: 'publish' | 'draft', button?: HTMLElement ) {
 		trigger.current =
 			button ??
 			document.getElementById( 'outletpro-editor-settings-toggle' );
-		setStatus( nextStatus );
+		if ( nextStatus !== undefined ) {
+			if ( ! config.canPublish ) {
+				throw new Error( 'Outlet page publishing is not permitted.' );
+			}
+			if ( details.page === null ) {
+				throw new Error( 'Outlet page details are unavailable.' );
+			}
+			const edits = registry
+				.select( coreStore )
+				.getEntityRecordEdits( 'postType', 'page', config.pageId );
+			pendingStatus.current = {
+				status: edits?.status,
+				date: edits?.date,
+			};
+			editEntityRecord( 'postType', 'page', config.pageId, {
+				status: nextStatus,
+				...( nextStatus === 'publish'
+					? { date: new Date().toISOString() }
+					: {} ),
+			} );
+		}
 		setReviewing( true );
 	}
-	function closeReview() {
-		setReviewing( false );
-		setStatus( undefined );
-	}
-	async function save( selected: ChangeSelection ) {
-		if ( await editor.save( selected ) ) {
-			closeReview();
+	function closeReview( savedEntities?: ReviewedEntity[] ) {
+		const pageSelected = savedEntities?.some(
+			( entity ) =>
+				entity.kind === 'postType' &&
+				entity.name === 'page' &&
+				entity.key === config.pageId
+		);
+		if ( ! pageSelected ) {
+			if ( pendingStatus.current !== null ) {
+				editEntityRecord(
+					'postType',
+					'page',
+					config.pageId,
+					pendingStatus.current
+				);
+			}
 		}
+		pendingStatus.current = null;
+		setReviewing( false );
 	}
 	return (
 		<EditorFrame
 			title={ details.title || undefined }
 			link={ details.page?.link }
-			disabled={ state.disabled }
+			disabled={ busy }
+			notices={
+				<>
+					<InlineNotices />
+					<SnackbarNotices />
+				</>
+			}
 			workspace={
 				<>
+					<UnsavedChangesWarning />
 					{ details.error && (
 						<Notice status="error" isDismissible={ false }>
 							{ details.error }
-						</Notice>
-					) }
-					{ editor.failed && (
-						<Notice status="error" isDismissible={ false }>
-							<p>
-								{ __(
-									'Changes could not be saved. Reload the editor before continuing.',
-									'outletpro'
-								) }
-							</p>
-							{ editor.error }
 						</Notice>
 					) }
 					{ workspace?.( state ) }
@@ -134,7 +146,7 @@ export default function OutletEditor( {
 				<>
 					<PageDetails
 						{ ...details }
-						disabled={ state.disabled }
+						disabled={ busy }
 						onTitleChange={ details.setTitle }
 						onSlugChange={ details.setSlug }
 						onUnpublish={
@@ -151,12 +163,8 @@ export default function OutletEditor( {
 					<Button
 						variant="primary"
 						size="compact"
-						disabled={
-							details.page === null ||
-							state.disabled ||
-							! editor.dirty
-						}
-						isBusy={ editor.busy }
+						disabled={ details.page === null || busy || ! isDirty }
+						isBusy={ busy }
 						onClick={ ( event: MouseEvent< HTMLButtonElement > ) =>
 							review( undefined, event.currentTarget )
 						}
@@ -169,7 +177,7 @@ export default function OutletEditor( {
 							<Button
 								variant="secondary"
 								size="compact"
-								disabled={ state.disabled }
+								disabled={ busy }
 								onClick={ (
 									event: MouseEvent< HTMLButtonElement >
 								) => review( 'publish', event.currentTarget ) }
@@ -181,14 +189,7 @@ export default function OutletEditor( {
 			}
 			review={
 				reviewing ? (
-					<ReviewChanges
-						sources={ sources }
-						busy={ editor.busy }
-						failed={ editor.failed }
-						publishing={ status === 'publish' }
-						onSave={ save }
-						onClose={ closeReview }
-					/>
+					<EntitiesSavedStates close={ closeReview } renderDialog />
 				) : undefined
 			}
 			onCloseReview={ closeReview }

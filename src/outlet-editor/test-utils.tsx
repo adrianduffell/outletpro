@@ -4,12 +4,28 @@
  */
 
 import { store as commandsStore } from '@wordpress/commands';
+import { store as blockEditorStore } from '@wordpress/block-editor';
 import { store as coreStore } from '@wordpress/core-data';
+import { store as noticesStore } from '@wordpress/notices';
 import { createSettingsRegistry } from '../use-settings/test-utils';
 
 export function createEditorRegistry( settings?: Record< string, unknown > ) {
-	const { registry, wrapper } = createSettingsRegistry( settings );
+	const { registry, wrapper } = createSettingsRegistry( settings, {
+		outletpro_markdown_levels: 'Markdown Levels',
+	} );
 	registry.register( commandsStore );
+	registry.register( blockEditorStore );
+	registry.register( noticesStore );
+	registry
+		.dispatch( coreStore )
+		.receiveEntityRecords( 'root', '__unstableBase', { home: '/' } );
+	registry
+		.dispatch( coreStore )
+		.finishResolution( 'getEntityRecord', [
+			'root',
+			'__unstableBase',
+			undefined,
+		] );
 	registry.dispatch( coreStore ).addEntities( [
 		{
 			kind: 'postType',
