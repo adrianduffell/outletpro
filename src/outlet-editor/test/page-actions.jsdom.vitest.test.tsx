@@ -7,6 +7,7 @@ import { fireEvent, render, within } from '@testing-library/react';
 import apiFetch from '@wordpress/api-fetch';
 import { expect, test, vi } from 'vitest';
 import OutletEditor from '../OutletEditor';
+import { createEditorRegistry } from '../test-utils';
 
 vi.mock( '@wordpress/api-fetch', () => ( { default: vi.fn() } ) );
 
@@ -28,15 +29,19 @@ test( 'reviews and saves renamed page details through the pages REST API', async
 	);
 	vi.mocked( apiFetch ).mockReset();
 	vi.mocked( apiFetch )
-		.mockResolvedValueOnce( page() )
+		.mockResolvedValueOnce( new Response( JSON.stringify( page() ) ) )
 		.mockResolvedValueOnce( {
 			...page(),
 			title: { raw: 'Clearance' },
 			slug: 'sale',
 			link: '/sale/',
 		} );
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [],
+	} );
 	const view = render(
-		<OutletEditor config={ { pageId: 39, canPublish: true } } />
+		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
+		{ wrapper }
 	);
 	await view.findByRole( 'textbox', { name: 'Slug' } );
 
@@ -64,8 +69,8 @@ test( 'reviews and saves renamed page details through the pages REST API', async
 	await view.findByRole( 'textbox', { name: 'Slug' } );
 	expect( apiFetch ).toHaveBeenLastCalledWith( {
 		path: '/wp/v2/pages/39',
-		method: 'POST',
-		data: { title: 'Clearance', slug: 'sale' },
+		method: 'PUT',
+		data: { id: 39, title: 'Clearance', slug: 'sale' },
 	} );
 	expect( view.getByRole( 'link', { name: 'View outlet' } ) ).toHaveAttribute(
 		'href',
@@ -81,11 +86,15 @@ test( 'publishes and unpublishes through the shared review flow', async () => {
 	);
 	vi.mocked( apiFetch ).mockReset();
 	vi.mocked( apiFetch )
-		.mockResolvedValueOnce( page() )
+		.mockResolvedValueOnce( new Response( JSON.stringify( page() ) ) )
 		.mockResolvedValueOnce( page( 'publish' ) )
 		.mockResolvedValueOnce( page() );
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [],
+	} );
 	const view = render(
-		<OutletEditor config={ { pageId: 39, canPublish: true } } />
+		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
+		{ wrapper }
 	);
 	fireEvent.click( await view.findByRole( 'button', { name: 'Publish' } ) );
 
@@ -107,18 +116,17 @@ test( 'publishes and unpublishes through the shared review flow', async () => {
 	expect( await view.findByText( 'Draft', { exact: true } ) ).toBeVisible();
 	expect( apiFetch ).toHaveBeenNthCalledWith( 2, {
 		path: '/wp/v2/pages/39',
-		method: 'POST',
+		method: 'PUT',
 		data: {
-			title: 'Outlet',
-			slug: 'outlet',
+			id: 39,
 			status: 'publish',
 			date: expect.any( String ),
 		},
 	} );
 	expect( apiFetch ).toHaveBeenLastCalledWith( {
 		path: '/wp/v2/pages/39',
-		method: 'POST',
-		data: { title: 'Outlet', slug: 'outlet', status: 'draft' },
+		method: 'PUT',
+		data: { id: 39, status: 'draft' },
 	} );
 } );
 
@@ -128,11 +136,18 @@ test( 'hides publishing controls when publishing is not permitted', async () => 
 		'matchMedia',
 		vi.fn( () => ( { matches: true } ) )
 	);
-	vi.mocked( apiFetch ).mockResolvedValueOnce( page( 'publish' ) );
+	vi.mocked( apiFetch ).mockReset();
+	vi.mocked( apiFetch ).mockResolvedValueOnce(
+		new Response( JSON.stringify( page( 'publish' ) ) )
+	);
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [],
+	} );
 
 	// Act.
 	const view = render(
-		<OutletEditor config={ { pageId: 39, canPublish: false } } />
+		<OutletEditor config={ { pageId: 39, canPublish: false } } />,
+		{ wrapper }
 	);
 	await view.findByRole( 'textbox', { name: 'Slug' } );
 
@@ -154,7 +169,7 @@ test( 'stops before publishing when a feature save fails', async () => {
 	const log = vi.spyOn( console, 'error' ).mockImplementation( () => {} );
 	vi.mocked( apiFetch ).mockReset();
 	vi.mocked( apiFetch )
-		.mockResolvedValueOnce( page() )
+		.mockResolvedValueOnce( new Response( JSON.stringify( page() ) ) )
 		.mockRejectedValueOnce( { message: 'Panel failed.' } );
 	const source = {
 		id: 'feature',
@@ -164,11 +179,15 @@ test( 'stops before publishing when a feature save fails', async () => {
 			await apiFetch( { path: '/feature', method: 'POST' } );
 		},
 	};
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [],
+	} );
 	const view = render(
 		<OutletEditor
 			config={ { pageId: 39, canPublish: true } }
 			changeSources={ [ source ] }
-		/>
+		/>,
+		{ wrapper }
 	);
 	fireEvent.click( await view.findByRole( 'button', { name: 'Publish' } ) );
 
