@@ -4,7 +4,7 @@
  */
 
 import type { ReactNode } from 'react';
-import { Button } from '@wordpress/components';
+import { Button, TabPanel } from '@wordpress/components';
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { close } from '@wordpress/icons';
@@ -16,6 +16,7 @@ export default function EditorFrame( {
 	link,
 	workspace,
 	settings,
+	badgeSettings,
 	actions,
 	notices,
 	disabled = false,
@@ -26,6 +27,7 @@ export default function EditorFrame( {
 	link?: string;
 	workspace?: ReactNode;
 	settings?: ReactNode;
+	badgeSettings?: ReactNode;
 	actions?: ReactNode;
 	notices?: ReactNode;
 	disabled?: boolean;
@@ -37,6 +39,7 @@ export default function EditorFrame( {
 	);
 	const settingsButton = useRef< HTMLButtonElement >( null );
 	const settingsPanel = useRef< HTMLDivElement >( null );
+	const [ activeTab, setActiveTab ] = useState( 'page' );
 	function closeSettings() {
 		setSettingsOpen( false );
 		settingsButton.current?.focus();
@@ -85,17 +88,35 @@ export default function EditorFrame( {
 			sidebar={
 				review ??
 				( settingsOpen && (
-					<div ref={ settingsPanel }>
-						<div className="outletpro-editor-sidebar-heading">
-							<h2>{ __( 'Page', 'outletpro' ) }</h2>
-							<Button
-								icon={ close }
-								label={ __( 'Close settings', 'outletpro' ) }
-								onClick={ closeSettings }
-								size="compact"
-							/>
-						</div>
-						{ settings }
+					<div
+						ref={ settingsPanel }
+						className="outletpro-editor-settings"
+					>
+						<TabPanel
+							initialTabName={ activeTab }
+							onSelect={ setActiveTab }
+							tabs={ [
+								{
+									name: 'page',
+									title: __( 'Page', 'outletpro' ),
+								},
+								{
+									name: 'badge',
+									title: __( 'Badge', 'outletpro' ),
+								},
+							] }
+						>
+							{ ( tab ) =>
+								tab.name === 'badge' ? badgeSettings : settings
+							}
+						</TabPanel>
+						<Button
+							className="outletpro-editor-close-settings"
+							icon={ close }
+							label={ __( 'Close settings', 'outletpro' ) }
+							onClick={ closeSettings }
+							size="compact"
+						/>
 					</div>
 				) )
 			}
