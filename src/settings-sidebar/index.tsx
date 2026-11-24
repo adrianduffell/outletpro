@@ -24,6 +24,7 @@ import { __ } from '@wordpress/i18n';
 import { registerPlugin } from '@wordpress/plugins';
 import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
+import BadgePresets from './BadgePresets';
 import { COMPLEMENTARY_AREA, SIDEBAR_NAME, QUERY_PARAM } from './constants';
 
 type FontWeightOption = {
@@ -75,6 +76,7 @@ const SettingsSidebar = () => {
 		enableComplementaryArea( 'core', COMPLEMENTARY_AREA );
 	}, [ enableComplementaryArea ] );
 
+	const outletSettings = useSettings();
 	const {
 		label,
 		setLabel,
@@ -98,7 +100,7 @@ const SettingsSidebar = () => {
 		setDensity,
 		message,
 		setMessage,
-	} = useSettings();
+	} = outletSettings;
 
 	const border = {
 		color: borderColor || undefined,
@@ -123,12 +125,13 @@ const SettingsSidebar = () => {
 	const renderBadgeSettings = () => (
 		<>
 			<PanelBody>
-				<p style={ { marginBottom: 0 } }>
+				<p style={ { marginBottom: 16 } }>
 					{ __(
 						'Customize the appearance of the outlet badge. Changes apply to the whole site.',
 						'outletpro'
 					) }
 				</p>
+				<BadgePresets settings={ outletSettings } />
 			</PanelBody>
 
 			<PanelBody title={ __( 'Label', 'outletpro' ) } initialOpen>

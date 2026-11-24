@@ -282,6 +282,17 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( wp_script_is( 'outletpro-editor', 'registered' ) );
 	}
 
+	public function test_deregisters_build_style(): void {
+		// Arrange.
+		wp_register_style( 'outletpro-editor', false, array(), 'test' );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_style_is( 'outletpro-editor', 'registered' ) );
+	}
+
 	public function test_safely_handles_build_script_not_registered(): void {
 		// Arrange - 'outletpro-editor' is not registered.
 

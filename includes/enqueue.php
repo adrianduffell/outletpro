@@ -66,6 +66,8 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-welcome-page' );
 	wp_dequeue_script( 'outletpro-editor' );
 	wp_deregister_script( 'outletpro-editor' );
+	wp_dequeue_style( 'outletpro-editor' );
+	wp_deregister_style( 'outletpro-editor' );
 	wp_dequeue_style( 'outletpro-badge-block' );
 	wp_deregister_style( 'outletpro-badge-block' );
 	wp_dequeue_style( 'outletpro-message-block' );
@@ -428,6 +430,18 @@ function enqueue_build_assets_hook(): void {
 		array_merge( $deps, array( 'wc-blocks-registry' ) ),
 		$asset['version'],
 		true
+	);
+
+	/**
+	 * Block editor UI stylesheet.
+	 *
+	 * @internal
+	 */
+	wp_enqueue_style(
+		'outletpro-editor',
+		plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css',
+		array( 'wp-components' ),
+		$asset['version']
 	);
 }
 
