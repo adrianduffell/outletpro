@@ -41,7 +41,8 @@ vendor/
 # PHPUnit
 .phpunit.result.cache
 
-# PHPCS local overrides
+# Local overrides
+.wp-env.override.json
 phpcs.xml
 
 # wp-env test artifacts
