@@ -77,6 +77,11 @@ const test = base.extend( {
 				path: '/wc/v3/products/batch',
 				data: { delete: products.map( ( product ) => product.id ) },
 			} );
+			await requestUtils.rest( {
+				method: 'DELETE',
+				path: `/wp/v2/pages/${ outlet.id }`,
+				params: { force: true },
+			} );
 		},
 		{ scope: 'worker' },
 	],
@@ -218,7 +223,9 @@ test( 'renames the outlet page', async ( { page } ) => {
 	await page
 		.getByRole( 'textbox', { name: 'Name', exact: true } )
 		.fill( 'Renamed outlet' );
-	await page.getByRole( 'button', { name: 'Done', exact: true } ).click();
+	await page
+		.getByRole( 'textbox', { name: 'Name', exact: true } )
+		.press( 'Enter' );
 	// Assert.
 	await expect(
 		sidebar.getByRole( 'heading', { name: 'Renamed outlet' } )
@@ -229,7 +236,9 @@ test( 'changes the outlet slug', async ( { page } ) => {
 	// Arrange.
 	const slug = `editor-${ new URL( page.url() ).searchParams.get( 'post' ) }`;
 	// Act.
+	await page.getByRole( 'button', { name: 'Not set', exact: true } ).click();
 	await page.getByRole( 'textbox', { name: 'Slug' } ).fill( slug );
+	await page.getByRole( 'textbox', { name: 'Slug' } ).press( 'Enter' );
 	// Assert.
 	await expect(
 		page
@@ -252,9 +261,9 @@ test( 'cancels saving without losing changes', async ( { page } ) => {
 	await review.getByRole( 'button', { name: 'Cancel' } ).click();
 	// Assert.
 	await expect( save ).toBeFocused();
-	await expect( page.getByRole( 'textbox', { name: 'Slug' } ) ).toHaveValue(
-		slug
-	);
+	await expect(
+		page.getByRole( 'button', { name: slug, exact: true } )
+	).toHaveText( slug );
 	await expect(
 		page.getByRole( 'checkbox', {
 			name: 'Include Outlet editor product 01 in outlet',
@@ -297,9 +306,9 @@ test( 'saves selected changes', async ( { page } ) => {
 	await expect(
 		page.getByText( 'No products found', { exact: true } )
 	).toBeVisible();
-	await expect( page.getByRole( 'textbox', { name: 'Slug' } ) ).toHaveValue(
-		slug
-	);
+	await expect(
+		page.getByRole( 'button', { name: slug, exact: true } )
+	).toHaveText( slug );
 	await expect( save ).toBeEnabled();
 } );
 
@@ -389,6 +398,9 @@ test( 'sorts products by name', async ( { page } ) => {
 
 test( 'publishes the outlet page', async ( { page } ) => {
 	// Arrange.
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
 	const review = page.getByRole( 'dialog', {
 		name: 'Are you ready to save?',
 	} );
@@ -399,6 +411,8 @@ test( 'publishes the outlet page', async ( { page } ) => {
 		.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
 	// Assert.
+	await expect( save ).not.toHaveClass( /is-busy/ );
+	await expect( save ).toBeDisabled();
 	await expect(
 		page
 			.getByRole( 'complementary', { name: 'Page settings' } )
@@ -414,12 +428,24 @@ test( 'unpublishes the outlet page', async ( { page } ) => {
 	const review = page.getByRole( 'dialog', {
 		name: 'Are you ready to save?',
 	} );
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
 	// Act.
 	await sidebar
-		.getByRole( 'button', { name: 'Unpublish', exact: true } )
+		.getByRole( 'button', { name: 'Published', exact: true } )
 		.click();
+	const draft = page
+		.getByRole( 'dialog', { name: 'Status', exact: true } )
+		.getByRole( 'radio', { name: 'Draft', exact: true } );
+	await draft.check();
+	await expect( review ).toHaveCount( 0 );
+	await draft.press( 'Escape' );
+	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
 	// Assert.
+	await expect( save ).not.toHaveClass( /is-busy/ );
+	await expect( save ).toBeDisabled();
 	await expect( sidebar.getByText( 'Draft', { exact: true } ) ).toBeVisible();
 } );
 

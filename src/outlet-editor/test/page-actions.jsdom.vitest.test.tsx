@@ -48,16 +48,24 @@ test( 'reviews and saves renamed page details through the pages REST API', async
 		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
 		{ wrapper }
 	);
-	await view.findByRole( 'textbox', { name: 'Slug' } );
+	await view.findByRole( 'button', { name: 'outlet' } );
 
 	// Act.
 	fireEvent.click( view.getByRole( 'button', { name: 'Rename page' } ) );
 	fireEvent.change( view.getByRole( 'textbox', { name: 'Name' } ), {
 		target: { value: 'Clearance' },
 	} );
-	fireEvent.click( view.getByRole( 'button', { name: 'Done' } ) );
+	fireEvent.keyDown( view.getByRole( 'textbox', { name: 'Name' } ), {
+		key: 'Escape',
+		keyCode: 27,
+	} );
+	fireEvent.click( view.getByRole( 'button', { name: 'outlet' } ) );
 	fireEvent.change( view.getByRole( 'textbox', { name: 'Slug' } ), {
 		target: { value: 'sale' },
+	} );
+	fireEvent.keyDown( view.getByRole( 'textbox', { name: 'Slug' } ), {
+		key: 'Escape',
+		keyCode: 27,
 	} );
 	fireEvent.click(
 		within(
@@ -72,7 +80,7 @@ test( 'reviews and saves renamed page details through the pages REST API', async
 
 	// Assert.
 	await within( view.container ).findByText( 'Site updated.' );
-	await view.findByRole( 'textbox', { name: 'Slug' } );
+	await view.findByRole( 'button', { name: 'sale' } );
 	expect( apiFetch ).toHaveBeenLastCalledWith( {
 		path: '/wp/v2/pages/39',
 		method: 'PUT',
@@ -117,7 +125,17 @@ test( 'publishes and unpublishes through the shared review flow', async () => {
 		).getByRole( 'button', { name: 'Save' } )
 	);
 	await view.findByText( 'Published', { exact: true } );
-	fireEvent.click( view.getByRole( 'button', { name: 'Unpublish' } ) );
+	fireEvent.click( view.getByRole( 'button', { name: 'Published' } ) );
+	fireEvent.click( view.getByRole( 'radio', { name: 'Draft' } ) );
+	fireEvent.keyDown( view.getByRole( 'radio', { name: 'Draft' } ), {
+		key: 'Escape',
+		keyCode: 27,
+	} );
+	fireEvent.click(
+		within(
+			view.getByRole( 'toolbar', { name: 'Page actions' } )
+		).getByRole( 'button', { name: 'Save' } )
+	);
 	fireEvent.click(
 		within(
 			view.getByRole( 'dialog', { name: 'Are you ready to save?' } )
@@ -165,15 +183,70 @@ test( 'hides publishing controls when publishing is not permitted', async () => 
 		<OutletEditor config={ { pageId: 39, canPublish: false } } />,
 		{ wrapper }
 	);
-	await view.findByRole( 'textbox', { name: 'Slug' } );
+	await view.findByRole( 'button', { name: 'outlet' } );
 
 	// Assert.
 	expect(
 		view.queryByRole( 'button', { name: 'Publish' } )
 	).not.toBeInTheDocument();
 	expect(
-		view.queryByRole( 'button', { name: 'Unpublish' } )
+		view.queryByRole( 'button', { name: 'Published' } )
 	).not.toBeInTheDocument();
+} );
+
+test( 'keeps the selected status when cancelling save review', async () => {
+	// Arrange.
+	vi.stubGlobal(
+		'matchMedia',
+		vi.fn( () => ( {
+			matches: true,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+		} ) )
+	);
+	const scheduled = { ...page( 'future' ), date: '2030-01-01T12:00:00' };
+	vi.mocked( apiFetch )
+		.mockReset()
+		.mockResolvedValueOnce( new Response( JSON.stringify( scheduled ) ) );
+	const { registry, wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [],
+	} );
+	const view = render(
+		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
+		{ wrapper }
+	);
+	fireEvent.click( await view.findByRole( 'button', { name: 'Scheduled' } ) );
+	const current = view.getByRole( 'radio', { name: 'Scheduled' } );
+	expect( current ).toBeChecked();
+	expect( current ).toBeDisabled();
+	fireEvent.click( view.getByRole( 'radio', { name: 'Published' } ) );
+	fireEvent.keyDown( view.getByRole( 'radio', { name: 'Published' } ), {
+		key: 'Escape',
+		keyCode: 27,
+	} );
+	// Act.
+	fireEvent.click(
+		within(
+			view.getByRole( 'toolbar', { name: 'Page actions' } )
+		).getByRole( 'button', { name: 'Save' } )
+	);
+	fireEvent.click(
+		within(
+			view.getByRole( 'dialog', { name: 'Are you ready to save?' } )
+		).getByRole( 'button', { name: 'Cancel' } )
+	);
+	// Assert.
+	expect(
+		registry
+			.select( coreStore )
+			.getEntityRecordEdits( 'postType', 'page', 39 )
+	).toEqual( { status: 'publish' } );
+	expect(
+		registry
+			.select( coreStore )
+			.getEditedEntityRecord( 'postType', 'page', 39 )
+	).toMatchObject( { date: scheduled.date } );
+	expect( apiFetch ).toHaveBeenCalledTimes( 1 );
 } );
 test.each( [ 'draft', 'publish' ] )(
 	'cancels publishing intent without discarding drafts for a %s page',
@@ -199,9 +272,15 @@ test.each( [ 'draft', 'publish' ] )(
 			<OutletEditor config={ { pageId: 39, canPublish: true } } />,
 			{ wrapper }
 		);
-		await view.findByRole( 'textbox', { name: 'Slug' } );
+		fireEvent.click(
+			await view.findByRole( 'button', { name: 'outlet' } )
+		);
 		fireEvent.change( view.getByRole( 'textbox', { name: 'Slug' } ), {
 			target: { value: 'sale' },
+		} );
+		fireEvent.keyDown( view.getByRole( 'textbox', { name: 'Slug' } ), {
+			key: 'Escape',
+			keyCode: 27,
 		} );
 		act( () => {
 			registry
@@ -211,9 +290,19 @@ test.each( [ 'draft', 'publish' ] )(
 				} );
 		} );
 		// Act.
+		if ( status === 'publish' ) {
+			fireEvent.click(
+				view.getByRole( 'button', { name: 'Published' } )
+			);
+			fireEvent.click( view.getByRole( 'radio', { name: 'Draft' } ) );
+			fireEvent.keyDown( view.getByRole( 'radio', { name: 'Draft' } ), {
+				key: 'Escape',
+				keyCode: 27,
+			} );
+		}
 		fireEvent.click(
 			view.getByRole( 'button', {
-				name: status === 'draft' ? 'Publish' : 'Unpublish',
+				name: 'Publish',
 			} )
 		);
 		fireEvent.click(
@@ -226,10 +315,14 @@ test.each( [ 'draft', 'publish' ] )(
 			registry
 				.select( coreStore )
 				.getEntityRecordEdits( 'postType', 'page', 39 )
-		).toEqual( { slug: 'sale' } );
-		expect( view.getByRole( 'textbox', { name: 'Slug' } ) ).toHaveValue(
-			'sale'
+		).toEqual(
+			status === 'publish'
+				? { slug: 'sale', status: 'draft' }
+				: { slug: 'sale' }
 		);
+		expect(
+			view.getByRole( 'button', { name: 'sale' } )
+		).toHaveTextContent( 'sale' );
 		expect( view.getByRole( 'button', { name: '40% off' } ) ).toBeVisible();
 		expect( apiFetch ).toHaveBeenCalledTimes( 1 );
 	}
@@ -256,9 +349,13 @@ test( 'excludes publishing without discarding other page edits', async () => {
 		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
 		{ wrapper }
 	);
-	await view.findByRole( 'textbox', { name: 'Slug' } );
+	fireEvent.click( await view.findByRole( 'button', { name: 'outlet' } ) );
 	fireEvent.change( view.getByRole( 'textbox', { name: 'Slug' } ), {
 		target: { value: 'sale' },
+	} );
+	fireEvent.keyDown( view.getByRole( 'textbox', { name: 'Slug' } ), {
+		key: 'Escape',
+		keyCode: 27,
 	} );
 	act( () => {
 		registry
@@ -268,7 +365,17 @@ test( 'excludes publishing without discarding other page edits', async () => {
 			} );
 	} );
 	// Act.
-	fireEvent.click( view.getByRole( 'button', { name: 'Publish' } ) );
+	fireEvent.click( view.getByRole( 'button', { name: 'Draft' } ) );
+	fireEvent.click( view.getByRole( 'radio', { name: 'Published' } ) );
+	fireEvent.keyDown( view.getByRole( 'radio', { name: 'Published' } ), {
+		key: 'Escape',
+		keyCode: 27,
+	} );
+	fireEvent.click(
+		within(
+			view.getByRole( 'toolbar', { name: 'Page actions' } )
+		).getByRole( 'button', { name: 'Save' } )
+	);
 	const review = within(
 		view.getByRole( 'dialog', { name: 'Are you ready to save?' } )
 	);
@@ -280,7 +387,7 @@ test( 'excludes publishing without discarding other page edits', async () => {
 		registry
 			.select( coreStore )
 			.getEntityRecordEdits( 'postType', 'page', 39 )
-	).toEqual( { slug: 'sale' } );
+	).toEqual( { slug: 'sale', status: 'publish' } );
 	expect( apiFetch ).toHaveBeenCalledTimes( 2 );
 	expect( apiFetch ).toHaveBeenLastCalledWith( {
 		path: '/wp/v2/settings',
