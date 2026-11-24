@@ -1,0 +1,120 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+@import "@wordpress/dataviews/build-style/style.css";
+
+.outletpro-editor-products {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.outletpro-editor-products-panel {
+	border: 0;
+}
+
+.outletpro-editor-products-panel.components-panel > .components-panel__body {
+	margin: 0;
+	border: 0;
+}
+
+.outletpro-editor-products-panel:has(> .is-opened),
+.outletpro-editor-products-panel > .is-opened,
+.outletpro-editor-products-content:not([hidden]) {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+}
+
+.outletpro-editor-products-panel .components-panel__body-title {
+	flex-shrink: 0;
+}
+
+.outletpro-editor-help {
+	flex-shrink: 0;
+	color: #757575;
+	line-height: 1.6;
+	margin: 0 0 24px;
+}
+
+.outletpro-editor-product-browser {
+	display: flex;
+	flex: 1;
+	min-width: 0;
+	min-height: 0;
+	border: 0;
+	margin: 0;
+	padding: 0;
+}
+
+.outletpro-editor-product-controls {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	flex-shrink: 0;
+	gap: 12px;
+	margin-bottom: 16px;
+}
+
+.outletpro-editor-membership-filter {
+	flex-shrink: 0;
+}
+
+.outletpro-editor-product-search {
+	flex: 1 1 240px;
+	min-width: 200px;
+	max-width: 320px;
+}
+
+.outletpro-editor-view-options {
+	margin-left: auto;
+}
+
+.outletpro-editor-products
+.dataviews-view-table__cell-content-wrapper.dataviews-view-table__cell-align-center {
+	max-width: none;
+}
+
+.outletpro-editor-products .dataviews-view-table thead {
+	z-index: 2;
+}
+
+.outletpro-editor-outlet-cell {
+	display: flex;
+	align-items: center;
+}
+
+.outletpro-editor-products
+.dataviews-view-table
+th:has(.outletpro-editor-outlet-heading),
+.outletpro-editor-products
+.dataviews-view-table
+td:has(.outletpro-editor-outlet-cell) {
+	position: sticky;
+	inset-inline-end: 0;
+	z-index: 1;
+	background-color: var(--wp-dataviews-color-background, #fff);
+	box-shadow: -1px 0 0 #ddd;
+}
+
+@media (max-width: 600px) {
+
+	.outletpro-editor-product-controls {
+		gap: 8px;
+	}
+
+	.outletpro-editor-product-search {
+		flex-basis: 100%;
+		max-width: none;
+		min-width: 0;
+	}
+
+	.outletpro-editor-products-content:not([hidden]) {
+		padding: 0;
+	}
+}

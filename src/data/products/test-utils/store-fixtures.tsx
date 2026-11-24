@@ -3,6 +3,7 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
+import { store as commandsStore } from '@wordpress/commands';
 import { store as coreStore } from '@wordpress/core-data';
 import { createRegistry, RegistryProvider } from '@wordpress/data';
 import { useState } from '@wordpress/element';
@@ -13,6 +14,7 @@ import { registerProductEntity } from '..';
 export function createProductsRegistry() {
 	const registry = createRegistry();
 	registry.register( coreStore );
+	registry.register( commandsStore );
 	registerProductEntity( registry );
 	return registry;
 }

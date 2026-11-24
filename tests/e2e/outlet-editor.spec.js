@@ -52,8 +52,8 @@ test( 'edits the outlet page through the styled shell', async ( {
 	const slug = sidebar.getByRole( 'textbox', { name: 'Slug' } );
 	// Assert.
 	await expect(
-		page.getByRole( 'main', { name: 'Outlet workspace' } )
-	).toBeEmpty();
+		page.getByRole( 'region', { name: 'Outlet products' } )
+	).toBeVisible();
 	await sidebar.getByRole( 'button', { name: 'Close settings' } ).click();
 	await expect(
 		actions.getByRole( 'button', { name: 'Page settings' } )
