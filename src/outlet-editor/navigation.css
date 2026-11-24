@@ -97,19 +97,26 @@
 	padding-right: 8px;
 }
 
+.outletpro-editor-settings {
+	position: relative;
+}
 
-.outletpro-editor-sidebar-heading {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	height: 48px;
-	padding: 0 8px 0 16px;
+.outletpro-editor-settings .components-tab-panel__tabs {
+	padding-right: 48px;
 	border-bottom: 1px solid #ddd;
 }
 
-.outletpro-editor-sidebar-heading h2 {
+.outletpro-editor-close-settings.components-button {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
+.outletpro-editor-badge-settings {
+	min-width: 0;
 	margin: 0;
-	font-size: 13px;
+	padding: 0;
+	border: 0;
 }
 
 @media (max-width: 960px) {

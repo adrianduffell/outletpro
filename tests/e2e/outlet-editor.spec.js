@@ -638,6 +638,97 @@ test( 'removes a price level', async ( { page, requestUtils } ) => {
 	).toEqual( markdownLevels );
 } );
 
+test( 'edits and saves global badge settings from the Badge tab', async ( {
+	page,
+	requestUtils,
+} ) => {
+	// Arrange.
+	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
+	const review = page.getByRole( 'dialog', {
+		name: 'Are you ready to save?',
+	} );
+	try {
+		// Act.
+		await page.getByRole( 'tab', { name: 'Page' } ).press( 'ArrowRight' );
+		const badge = page.getByRole( 'tabpanel', { name: 'Badge' } );
+		await badge.getByRole( 'button', { name: /Change design:/ } ).click();
+
+		// Assert.
+		const presets = page.getByRole( 'group', { name: 'Presets' } );
+		await expect( presets ).toHaveCSS( 'display', 'grid' );
+		await expect(
+			page.locator(
+				'.outletpro-badge-presets-popover .components-popover__content'
+			)
+		).toHaveCSS( 'width', '400px' );
+		await page.screenshot( {
+			path: test.info().outputPath( 'badge-design-desktop.png' ),
+		} );
+
+		// Act.
+		await page
+			.getByRole( 'button', { name: 'Clearance', exact: true } )
+			.click();
+		await badge
+			.getByRole( 'textbox', { name: 'Label' } )
+			.fill( 'Clearance specials' );
+		await page.getByRole( 'tab', { name: 'Page' } ).click();
+		await expect(
+			page.getByRole( 'button', { name: 'Add markdown level' } )
+		).toBeVisible();
+		await page.getByRole( 'tab', { name: 'Badge' } ).click();
+		await save.click();
+		await review
+			.getByRole( 'button', { name: 'Save', exact: true } )
+			.click();
+		await expect( review ).toHaveCount( 0 );
+		await expect( save ).toBeDisabled();
+		await page.reload();
+		await page.getByRole( 'tab', { name: 'Badge' } ).click();
+
+		// Assert.
+		await expect(
+			badge.getByRole( 'textbox', { name: 'Label' } )
+		).toHaveValue( 'Clearance specials' );
+		await expect(
+			badge.getByText( /Changes apply to the whole site/ )
+		).toBeVisible();
+		const savedSettings = await requestUtils.rest( {
+			path: '/wp/v2/settings',
+		} );
+		expect( savedSettings.outletpro_badge_label ).toBe(
+			'Clearance specials'
+		);
+		expect( savedSettings.outletpro_badge_text_color ).toBe( '#222' );
+		expect( savedSettings.outletpro_badge_bg_color ).toBe( '#FFEE85' );
+		await page.setViewportSize( { width: 390, height: 844 } );
+		await expect(
+			badge.getByRole( 'textbox', { name: 'Label' } )
+		).toBeInViewport();
+		await badge.getByRole( 'button', { name: /Change design:/ } ).click();
+		await expect( presets ).toHaveCSS( 'display', 'grid' );
+		await page.screenshot( {
+			path: test.info().outputPath( 'badge-design-mobile.png' ),
+		} );
+	} finally {
+		await requestUtils.rest( {
+			method: 'POST',
+			path: '/wp/v2/settings',
+			data: {
+				outletpro_badge_label: settings.outletpro_badge_label,
+				outletpro_badge_text_color: settings.outletpro_badge_text_color,
+				outletpro_badge_bg_color: settings.outletpro_badge_bg_color,
+			},
+		} );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		await page.reload();
+		await expect( page.getByRole( 'row' ).nth( 1 ) ).toBeVisible();
+	}
+} );
+
 test( 'shows a product loading error', async ( { page } ) => {
 	// Arrange.
 	await page.route( '**/*', async ( route ) => {

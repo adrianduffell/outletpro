@@ -66,6 +66,10 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-welcome-page' );
 	wp_dequeue_script( 'outletpro-editor' );
 	wp_deregister_script( 'outletpro-editor' );
+	wp_dequeue_style( 'outletpro-outlet-editor-components' );
+	wp_deregister_style( 'outletpro-outlet-editor-components' );
+	wp_dequeue_style( 'outletpro-outlet-editor' );
+	wp_deregister_style( 'outletpro-outlet-editor' );
 	wp_dequeue_style( 'outletpro-editor' );
 	wp_deregister_style( 'outletpro-editor' );
 	wp_dequeue_style( 'outletpro-badge-block' );
@@ -453,8 +457,10 @@ function enqueue_build_assets_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_outlet_editor_hook(): void {
-	$asset              = require plugin_dir_path( PLUGIN_FILE ) . 'build/outlet-editor.asset.php';
-	$style_dependencies = array( 'wp-components', 'wp-editor' );
+	$asset = require plugin_dir_path( PLUGIN_FILE ) . 'build/outlet-editor.asset.php';
+	// The build places shared badge settings styles in the block editor stylesheet.
+	wp_enqueue_style( 'outletpro-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/style-index.css', array( 'wp-components' ), $asset['version'] );
+	$style_dependencies = array( 'wp-components', 'wp-editor', 'outletpro-editor' );
 	// WordPress 7.2 moved review styles into the core-data stylesheet.
 	if ( is_wp_version_compatible( '7.2' ) ) {
 		wp_enqueue_style( 'wp-core-data', includes_url( 'css/dist/core-data/style.css' ), array( 'wp-components' ), get_bloginfo( 'version' ) );
