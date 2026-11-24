@@ -453,9 +453,16 @@ function enqueue_build_assets_hook(): void {
  * @internal WordPress action hook
  */
 function enqueue_outlet_editor_hook(): void {
-	$asset = require plugin_dir_path( PLUGIN_FILE ) . 'build/outlet-editor.asset.php';
+	$asset              = require plugin_dir_path( PLUGIN_FILE ) . 'build/outlet-editor.asset.php';
+	$style_dependencies = array( 'wp-components', 'wp-editor' );
+	// WordPress 7.2 moved review styles into the core-data stylesheet.
+	if ( is_wp_version_compatible( '7.2' ) ) {
+		wp_enqueue_style( 'wp-core-data', includes_url( 'css/dist/core-data/style.css' ), array( 'wp-components' ), get_bloginfo( 'version' ) );
+		wp_style_add_data( 'wp-core-data', 'rtl', 'replace' );
+		$style_dependencies[] = 'wp-core-data';
+	}
 	wp_enqueue_script( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.js', $asset['dependencies'], $asset['version'], true );
-	wp_enqueue_style( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/style-outlet-editor.css', array( 'wp-components' ), $asset['version'] );
+	wp_enqueue_style( 'outletpro-outlet-editor', plugin_dir_url( PLUGIN_FILE ) . 'build/style-outlet-editor.css', $style_dependencies, $asset['version'] );
 	wp_enqueue_style( 'outletpro-outlet-editor-components', plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.css', array( 'outletpro-outlet-editor' ), $asset['version'] );
 	wp_set_script_translations( 'outletpro-outlet-editor', 'outletpro' );
 }

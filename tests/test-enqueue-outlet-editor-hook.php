@@ -14,6 +14,7 @@ class Test_Enqueue_Outlet_Editor_Hook extends WP_UnitTestCase {
 		// Arrange.
 		set_current_screen( 'page' );
 		add_action( 'admin_enqueue_scripts', 'OutletPro\\enqueue_outlet_editor_hook' );
+		$has_core_data_styles = is_wp_version_compatible( '7.2' );
 		// Act.
 		do_action( 'admin_enqueue_scripts', 'post.php' );
 		// Assert.
@@ -21,6 +22,9 @@ class Test_Enqueue_Outlet_Editor_Hook extends WP_UnitTestCase {
 		$this->assertSame( plugin_dir_url( PLUGIN_FILE ) . 'build/outlet-editor.css', wp_styles()->registered['outletpro-outlet-editor-components']->src );
 		$this->assertStringEndsWith( '/build/style-outlet-editor.css', wp_styles()->registered['outletpro-outlet-editor']->src );
 		$this->assertContains( 'wp-components', wp_styles()->registered['outletpro-outlet-editor']->deps );
+		$this->assertContains( 'wp-editor', wp_styles()->registered['outletpro-outlet-editor']->deps );
 		$this->assertContains( 'wp-commands', wp_scripts()->registered['outletpro-outlet-editor']->deps );
+		$this->assertSame( $has_core_data_styles, in_array( 'wp-core-data', wp_styles()->registered['outletpro-outlet-editor']->deps, true ) );
+		$this->assertSame( $has_core_data_styles, wp_style_is( 'wp-core-data', 'enqueued' ) );
 	}
 }
