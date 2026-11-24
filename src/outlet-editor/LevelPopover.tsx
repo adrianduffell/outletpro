@@ -29,7 +29,7 @@ export default function LevelPopover( {
 	title: string;
 	label: string;
 	min: number;
-	max: number;
+	max?: number;
 	mode: 'add' | 'edit';
 	initialValue: number | '';
 	validate?: ( value: number ) => string | undefined;
@@ -44,20 +44,25 @@ export default function LevelPopover( {
 		typeof value === 'number' &&
 		Number.isInteger( value ) &&
 		value >= min &&
-		value <= max;
+		( max === undefined || value <= max );
 	let validationError = '';
 	if ( value !== '' ) {
-		validationError = validNumber
-			? ( validate?.( value ) ?? '' )
-			: sprintf(
-					/* translators: 1: minimum level, 2: maximum level. */
-					__(
-						'Enter a whole number from %1$d to %2$d.',
-						'outletpro'
-					),
-					min,
-					max
-				);
+		if ( validNumber ) {
+			validationError = validate?.( value ) ?? '';
+		} else if ( max === undefined ) {
+			validationError = sprintf(
+				/* translators: %d: minimum level. */
+				__( 'Enter a whole number of at least %d.', 'outletpro' ),
+				min
+			);
+		} else {
+			validationError = sprintf(
+				/* translators: 1: minimum level, 2: maximum level. */
+				__( 'Enter a whole number from %1$d to %2$d.', 'outletpro' ),
+				min,
+				max
+			);
+		}
 	}
 	const valid = validNumber && ! validationError;
 	return (

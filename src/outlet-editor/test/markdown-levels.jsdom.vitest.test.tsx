@@ -12,7 +12,32 @@ import {
 } from '@testing-library/react';
 import { useState } from '@wordpress/element';
 import { expect, test, vi } from 'vitest';
-import MarkdownLevels from '../MarkdownLevels';
+import { MarkdownLevels, PriceLevels } from '../level-panels';
+import { currency } from '../test-utils';
+
+test.each( [ '0', '30', '1250' ] )( 'validates price input %s', ( value ) => {
+	// Arrange.
+	vi.stubGlobal( 'wc', { wcSettings: { CURRENCY: currency } } );
+	const change = vi.fn();
+	const view = render(
+		<PriceLevels
+			levels={ [ 30 ] }
+			error=""
+			disabled={ false }
+			onChange={ change }
+		/>
+	);
+	// Act.
+	fireEvent.click( view.getByRole( 'button', { name: 'Add price level' } ) );
+	const input = view.getByRole( 'spinbutton', { name: 'Price' } );
+	fireEvent.change( input, { target: { value } } );
+	fireEvent.click( view.getByRole( 'button', { name: 'Add' } ) );
+	// Assert.
+	expect( input ).not.toHaveAttribute( 'max' );
+	expect( change.mock.calls ).toEqual(
+		value === '1250' ? [ [ [ 30, 1250 ] ] ] : []
+	);
+} );
 
 function TestPanel( { initialLevels }: { initialLevels: number[] } ) {
 	const [ levels, setLevels ] = useState( initialLevels );

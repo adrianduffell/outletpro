@@ -399,6 +399,7 @@ function register_outlet_price_levels_setting(): void {
 			'sanitize_callback' => 'OutletPro\sanitize_integer_array',
 			'show_in_rest'      => array(
 				'schema' => array(
+					'title'       => __( 'Price Levels', 'outletpro' ),
 					'type'        => 'array',
 					'uniqueItems' => true,
 					'items'       => array(
