@@ -24,6 +24,16 @@ export default function useProducts( query: ProductQuery ) {
 				! data.hasFinishedResolution( 'getEntityRecords', args );
 			return {
 				records: products,
+				permissions: Object.fromEntries(
+					( products ?? [] ).map( ( product ) => [
+						product.id,
+						data.canUser( 'update', {
+							kind: PRODUCT_ENTITY.kind,
+							name: PRODUCT_ENTITY.name,
+							id: product.id,
+						} ) === true,
+					] )
+				),
 				totalItems: data.getEntityRecordsTotalItems(
 					PRODUCT_ENTITY.kind,
 					PRODUCT_ENTITY.name,

@@ -29,7 +29,7 @@ test( 'renders product rows and searches names or SKUs on the server', async () 
 		productsResponse( [ createProduct() ] )
 	);
 	const view = render( <Products />, { wrapper: ProductsRegistry } );
-	expect( await view.findByRole( 'row', { name: /Hat HAT/ } ) ).toBeVisible();
+	expect( await view.findByRole( 'row', { name: /Hat/ } ) ).toBeVisible();
 	// Act.
 	fireEvent.change( view.getByRole( 'searchbox' ), {
 		target: { value: 'SKU-123' },
@@ -143,4 +143,65 @@ test.each( [
 	expect(
 		await within( view.container ).findByText( message )
 	).toBeVisible();
+} );
+
+test( 'presents native product details and permits links according to REST permissions', async () => {
+	// Arrange.
+	const allowed = createProduct( {
+		name: 'Alpha &amp; Beta',
+		sku: 'SKU-1',
+		total_sales: 1234,
+		manage_stock: true,
+		stock_quantity: 8,
+		price_html:
+			'<del aria-hidden="true">£18</del><span class="screen-reader-text">Original price: £18</span><ins>£12</ins>',
+	} );
+	const denied = createProduct( {
+		id: 2,
+		name: 'Restricted',
+		_links: {
+			self: [
+				{
+					href: '/wc/v3/products/2',
+					targetHints: { allow: [ 'GET' ] },
+				},
+			],
+		},
+	} );
+	const imageless = createProduct( { id: 3, name: 'No image', images: [] } );
+	vi.mocked( apiFetch ).mockReset();
+	vi.mocked( apiFetch ).mockImplementation( async () =>
+		productsResponse( [ allowed, denied, imageless ] )
+	);
+	// Act.
+	const view = render( <Products />, { wrapper: ProductsRegistry } );
+	const row = await view.findByRole( 'row', { name: /Alpha & Beta/ } );
+	// Assert.
+	expect(
+		within( row ).getByRole( 'link', { name: 'Alpha & Beta' } )
+	).toHaveAttribute( 'href', 'post.php?post=1&action=edit' );
+	expect( within( row ).getByText( 'SKU-1' ) ).toBeVisible();
+	expect( within( row ).getByText( '1,234' ) ).toBeVisible();
+	expect( within( row ).getByText( 'In stock (8)' ) ).toBeVisible();
+	expect( row.querySelector( 'img' ) ).toHaveAttribute(
+		'src',
+		'/hat-small.jpg'
+	);
+	expect(
+		( await view.findByRole( 'row', { name: /No image/ } ) ).querySelector(
+			'img'
+		)
+	).not.toBeInTheDocument();
+	expect( row.querySelector( 'del' ) ).toHaveAttribute(
+		'aria-hidden',
+		'true'
+	);
+	expect( row.querySelector( 'ins' ) ).toHaveTextContent( '£12' );
+	expect(
+		within(
+			await view.findByRole( 'row', { name: /Restricted/ } )
+		).queryByRole( 'link' )
+	).not.toBeInTheDocument();
+	expect( view.getAllByRole( 'columnheader' ) ).toHaveLength( 8 );
+	expect( apiFetch ).toHaveBeenCalledTimes( 1 );
 } );
