@@ -14,7 +14,7 @@ import './style.css';
 const PRESETS = [
 	{
 		id: 'last-chance',
-		name: __( 'Last Chance', 'outletpro' ),
+		name: __( 'Last chance', 'outletpro' ),
 		textColor: '#FFFFFF',
 		bgColor: '#F81240',
 	},

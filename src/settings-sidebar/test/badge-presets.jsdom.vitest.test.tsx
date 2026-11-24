@@ -15,7 +15,7 @@ vi.mock( '@wordpress/api-fetch', () => ( { default: vi.fn() } ) );
 
 const presets = [
 	{
-		name: 'Last Chance',
+		name: 'Last chance',
 		textColor: '#FFFFFF',
 		bgColor: '#F81240',
 	},
@@ -58,7 +58,7 @@ function renderPicker(
 		{ kind: 'root', name: 'site', key: false, baseURL: '/wp/v2/settings' },
 	] );
 	const settings = {
-		outletpro_badge_label: 'Last Chance',
+		outletpro_badge_label: 'Last chance',
 		outletpro_badge_text_color: '#FFFFFF',
 		outletpro_badge_bg_color: '#F81240',
 		outletpro_badge_font_weight: '700',
@@ -165,6 +165,9 @@ test( 'updates the design name when settings change', async () => {
 	const view = renderPicker();
 
 	// Assert.
+	expect(
+		view.getByRole( 'button', { name: 'Last chance', pressed: true } )
+	).toBeVisible();
 	// Initial focus stays off the cards to avoid a second highlighted design.
 	await waitFor( () => expect( view.getByRole( 'dialog' ) ).toHaveFocus() );
 
@@ -202,10 +205,10 @@ test.each( [ 'Close', 'Escape' ] )(
 		);
 
 		// Assert.
-		expect( view.trigger ).toHaveTextContent( 'Last Chance' );
+		expect( view.trigger ).toHaveTextContent( 'Last chance' );
 		expect(
 			view.getByRole( 'button', {
-				name: 'Last Chance',
+				name: 'Last chance',
 				pressed: true,
 			} )
 		).toBeVisible();
