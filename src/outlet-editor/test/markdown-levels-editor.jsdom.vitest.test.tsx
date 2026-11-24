@@ -1,0 +1,174 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+import {
+	act,
+	fireEvent,
+	render,
+	waitFor,
+	within,
+} from '@testing-library/react';
+import apiFetch from '@wordpress/api-fetch';
+import { expect, test, vi } from 'vitest';
+import OutletEditor from '../OutletEditor';
+import { createEditorRegistry } from '../test-utils';
+
+vi.mock( '@wordpress/api-fetch', () => ( { default: vi.fn() } ) );
+
+function page() {
+	return {
+		id: 39,
+		title: { raw: 'Outlet' },
+		slug: 'outlet',
+		status: 'draft',
+		link: '/outlet/',
+	};
+}
+
+test( 'shows settings load failures in the sidebar', async () => {
+	// Arrange.
+	vi.stubGlobal(
+		'matchMedia',
+		vi.fn( () => ( {
+			matches: true,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+		} ) )
+	);
+	const failure = { message: 'Settings access denied.' };
+	vi.mocked( apiFetch ).mockReset();
+	vi.mocked( apiFetch ).mockImplementation( async ( options ) => {
+		if ( options.path === '/wp/v2/settings' ) {
+			throw failure;
+		}
+		return new Response( JSON.stringify( page() ) );
+	} );
+	const { wrapper } = createEditorRegistry();
+	// Act.
+	const view = render(
+		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
+		{ wrapper }
+	);
+	// Assert.
+	expect(
+		await within( view.container ).findByText( failure.message )
+	).toBeVisible();
+	expect(
+		view.queryByRole( 'button', { name: 'Add markdown level' } )
+	).not.toBeInTheDocument();
+} );
+
+test( 'retains unsaved markdown edits when the sidebar closes', async () => {
+	// Arrange.
+	vi.stubGlobal(
+		'matchMedia',
+		vi.fn( () => ( {
+			matches: true,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+		} ) )
+	);
+	vi.mocked( apiFetch )
+		.mockReset()
+		.mockResolvedValueOnce( new Response( JSON.stringify( page() ) ) );
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [ 30 ],
+	} );
+	const view = render(
+		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
+		{ wrapper }
+	);
+	await view.findByRole( 'button', { name: '30% off' } );
+	// Act.
+	fireEvent.click( view.getByRole( 'button', { name: '30% off' } ) );
+	fireEvent.change( view.getByRole( 'spinbutton' ), {
+		target: { value: '40' },
+	} );
+	fireEvent.click( view.getByRole( 'button', { name: 'Close settings' } ) );
+	fireEvent.click( view.getByRole( 'button', { name: 'Page settings' } ) );
+	// Assert.
+	expect(
+		await view.findByRole( 'button', { name: '40% off' } )
+	).toBeVisible();
+	expect(
+		within(
+			view.getByRole( 'toolbar', { name: 'Page actions' } )
+		).getByRole( 'button', { name: 'Save' } )
+	).toBeEnabled();
+	expect( apiFetch ).not.toHaveBeenCalledWith(
+		expect.objectContaining( {
+			method: expect.stringMatching( /^(POST|PUT|PATCH|DELETE)$/ ),
+		} )
+	);
+} );
+
+test( 'disables editor controls during saving and restores focus afterward', async () => {
+	// Arrange.
+	vi.stubGlobal(
+		'matchMedia',
+		vi.fn( () => ( {
+			matches: true,
+			addListener: vi.fn(),
+			removeListener: vi.fn(),
+		} ) )
+	);
+	const completion: {
+		resolve?: ( value: Record< string, unknown > ) => void;
+	} = {};
+	const response = new Promise< Record< string, unknown > >( ( resolve ) => {
+		completion.resolve = resolve;
+	} );
+	vi.mocked( apiFetch )
+		.mockReset()
+		.mockResolvedValueOnce( new Response( JSON.stringify( page() ) ) )
+		.mockReturnValueOnce( response );
+	const { wrapper } = createEditorRegistry( {
+		outletpro_markdown_levels: [ 30 ],
+	} );
+	const view = render(
+		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
+		{ wrapper }
+	);
+	await view.findByRole( 'button', { name: 'Add markdown level' } );
+	// Act.
+	fireEvent.click(
+		view.getByRole( 'button', { name: 'Add markdown level' } )
+	);
+	fireEvent.change( view.getByRole( 'spinbutton', { name: 'Percentage' } ), {
+		target: { value: '40' },
+	} );
+	fireEvent.click( view.getByRole( 'button', { name: 'Add' } ) );
+	fireEvent.click(
+		within(
+			view.getByRole( 'toolbar', { name: 'Page actions' } )
+		).getByRole( 'button', { name: 'Save' } )
+	);
+	fireEvent.click(
+		within(
+			view.getByRole( 'dialog', { name: 'Are you ready to save?' } )
+		).getByRole( 'button', { name: 'Save' } )
+	);
+	// Assert.
+	await waitFor( () =>
+		expect( view.getByRole( 'button', { name: '40% off' } ) ).toBeDisabled()
+	);
+	expect(
+		view.getByRole( 'button', { name: 'Rename page' } )
+	).toBeDisabled();
+	expect( view.getByRole( 'textbox', { name: 'Slug' } ) ).toBeDisabled();
+	expect( view.getByRole( 'button', { name: 'Publish' } ) ).toBeDisabled();
+	await act( async () => {
+		if ( completion.resolve === undefined ) {
+			throw new Error( 'The pending save could not be completed.' );
+		}
+		completion.resolve( { outletpro_markdown_levels: [ 40 ] } );
+	} );
+	await waitFor( () =>
+		expect(
+			view.getByRole( 'button', { name: 'Page settings' } )
+		).toHaveFocus()
+	);
+	expect( view.getByRole( 'button', { name: '40% off' } ) ).toBeEnabled();
+} );

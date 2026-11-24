@@ -5,6 +5,22 @@
 
 import { test, expect } from '@wordpress/e2e-test-utils-playwright';
 
+async function visitOutletEditor( admin, requestUtils ) {
+	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	await admin.visitAdminPage(
+		'post.php',
+		`post=${ settings.outletpro_page_id }&action=edit`
+	);
+}
+
+test.beforeAll( async ( { requestUtils } ) => {
+	await requestUtils.rest( {
+		method: 'POST',
+		path: '/wp/v2/settings',
+		data: { outletpro_markdown_levels: [ 30, 50, 70 ] },
+	} );
+} );
+
 test( 'edits the outlet page through the styled shell', async ( {
 	page,
 	admin,
@@ -103,4 +119,119 @@ test( 'edits the outlet page through the styled shell', async ( {
 		path: '/wp/v2/settings',
 		data: { outletpro_page_id: settings.outletpro_page_id },
 	} );
+} );
+
+async function saveChanges( page ) {
+	const actions = page.getByRole( 'toolbar', { name: 'Page actions' } );
+	await actions.getByRole( 'button', { name: /^Save$/ } ).click();
+	const review = page.getByRole( 'dialog', {
+		name: 'Are you ready to save?',
+	} );
+	await review.getByRole( 'button', { name: /^Save$/ } ).click();
+	await expect( review ).toHaveCount( 0 );
+	await expect(
+		page.getByText( 'Site updated.', { exact: true } )
+	).toBeVisible();
+}
+
+test( 'views markdown levels', async ( { page, admin, requestUtils } ) => {
+	// Act.
+	await visitOutletEditor( admin, requestUtils );
+	// Assert.
+	await expect(
+		page.getByRole( 'button', { name: 'Add markdown level' } )
+	).toBeVisible();
+	await expect(
+		page.getByRole( 'button', { name: /^\d+% off$/ } )
+	).toHaveText( [ '30% off', '50% off', '70% off' ] );
+} );
+
+test( 'adds a markdown level', async ( { page, admin, requestUtils } ) => {
+	// Arrange.
+	await visitOutletEditor( admin, requestUtils );
+	const levels = page.getByRole( 'button', { name: /^\d+% off$/ } );
+	await expect( levels.first() ).toBeVisible();
+	const initialLevels = await levels.allTextContents();
+	// Act.
+	await page.getByRole( 'button', { name: 'Add markdown level' } ).click();
+	await page.getByRole( 'spinbutton', { name: 'Percentage' } ).fill( '40' );
+	await page.getByRole( 'button', { name: 'Add', exact: true } ).click();
+	await saveChanges( page );
+	await page.reload();
+	// Assert.
+	await expect(
+		page.getByRole( 'button', { name: /^40% off$/ } )
+	).toBeVisible();
+	await expect( levels ).toHaveCount( initialLevels.length + 1 );
+	for ( const level of initialLevels ) {
+		await expect(
+			page.getByRole( 'button', { name: level, exact: true } )
+		).toBeVisible();
+	}
+} );
+
+test( 'edits a markdown level', async ( { page, admin, requestUtils } ) => {
+	// Arrange.
+	await visitOutletEditor( admin, requestUtils );
+	const levels = page.getByRole( 'button', { name: /^\d+% off$/ } );
+	await expect( levels.first() ).toBeVisible();
+	const initialLevels = await levels.allTextContents();
+	// Act.
+	await page.getByRole( 'button', { name: /^30% off$/ } ).press( 'Enter' );
+	const percentage = page.getByRole( 'spinbutton', { name: 'Percentage' } );
+	await expect( percentage ).toBeFocused();
+	await percentage.fill( '60' );
+	await percentage.press( 'Enter' );
+	await expect(
+		page.getByRole( 'button', { name: /^60% off$/ } )
+	).toBeFocused();
+	await saveChanges( page );
+	await page.reload();
+	// Assert.
+	await expect(
+		page.getByRole( 'button', { name: /^60% off$/ } )
+	).toBeVisible();
+	await expect(
+		page.getByRole( 'button', { name: /^30% off$/ } )
+	).toHaveCount( 0 );
+	await expect( levels ).toHaveCount( initialLevels.length );
+	for ( const level of initialLevels.filter(
+		( label ) => label !== '30% off'
+	) ) {
+		await expect(
+			page.getByRole( 'button', { name: level, exact: true } )
+		).toBeVisible();
+	}
+} );
+
+test( 'deletes a markdown level', async ( { page, admin, requestUtils } ) => {
+	// Arrange.
+	await visitOutletEditor( admin, requestUtils );
+	const levels = page.getByRole( 'button', { name: /^\d+% off$/ } );
+	await expect( levels.first() ).toBeVisible();
+	const initialLevels = await levels.allTextContents();
+	// Act.
+	await page.getByRole( 'button', { name: /^70% off$/ } ).hover();
+	await page
+		.getByRole( 'button', { name: 'Options', exact: true } )
+		.last()
+		.click();
+	await page.getByRole( 'menuitem', { name: 'Remove 70% off' } ).click();
+	await saveChanges( page );
+	await page.reload();
+	// Assert.
+	await expect(
+		page.getByRole( 'button', { name: 'Add markdown level' } )
+	).toBeVisible();
+	await expect(
+		page.getByRole( 'button', { name: /^70% off$/ } )
+	).toHaveCount( 0 );
+	await expect( levels ).toHaveCount( initialLevels.length - 1 );
+	for ( const level of initialLevels.filter(
+		( label ) => label !== '70% off'
+	) ) {
+		await expect(
+			page.getByRole( 'button', { name: level, exact: true } )
+		).toBeVisible();
+	}
 } );
