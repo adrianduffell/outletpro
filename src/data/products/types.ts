@@ -17,6 +17,6 @@ export type RestProduct = {
 	stock_quantity: number | null;
 	total_sales: number;
 	categories: { id: number; name: string }[];
-	outletpro: { is_outlet: boolean };
+	outletpro: { is_outlet?: boolean };
 	_links?: { self?: { href: string; targetHints?: { allow: string[] } }[] };
 };
