@@ -49,8 +49,20 @@ function createSearchIndexFacetSelector(
 	getSetting: ( settings: object ) => unknown
 ) {
 	return createRegistrySelector( ( select ) => {
-		const readSetting = () =>
-			getSetting( select( 'core/block-editor' ).getSettings() );
+		const readSetting = () => {
+			const setting = getSetting(
+				select( 'core/block-editor' ).getSettings()
+			);
+			if ( setting !== undefined ) {
+				return setting;
+			}
+			// Page and Site editors filter custom settings out of the block editor store.
+			const editorSettings = select( 'core/editor' )?.getEditorSettings();
+			if ( editorSettings === undefined ) {
+				return undefined;
+			}
+			return getSetting( editorSettings );
+		};
 		return createSelector(
 			() => validateSearchIndexFacets( readSetting() ),
 			() => [ readSetting() ]
