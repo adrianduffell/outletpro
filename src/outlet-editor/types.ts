@@ -5,6 +5,8 @@
 
 export type EditorConfig = { pageId: number; canPublish: boolean };
 
+export type EditablePageStatus = 'draft' | 'publish';
+
 export type PageRecord = {
 	id: number;
 	title: { raw: string };

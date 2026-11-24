@@ -64,16 +64,19 @@ test( 'stages page edits without writing and clears dirty state when restored', 
 	act( () => {
 		result.current.setTitle( 'Clearance' );
 		result.current.setSlug( 'sale' );
+		result.current.setStatus( 'publish' );
 	} );
 	// Assert.
 	expect( result.current.title ).toBe( 'Clearance' );
 	expect( result.current.slug ).toBe( 'sale' );
+	expect( result.current.status ).toBe( 'publish' );
 	expect( result.current.dirty ).toBe( true );
 	expect( result.current.page ).toEqual( page );
 	expect( apiFetch ).toHaveBeenCalledTimes( 1 );
 	act( () => {
 		result.current.setTitle( 'Outlet' );
 		result.current.setSlug( 'outlet' );
+		result.current.setStatus( 'draft' );
 	} );
 	expect( result.current.dirty ).toBe( false );
 } );
@@ -106,6 +109,66 @@ test( 'saves publication status and date through core-data', async () => {
 	);
 	expect( result.current.page?.status ).toBe( 'publish' );
 	expect( result.current.dirty ).toBe( false );
+} );
+
+test( 'preserves the original publication date when saving a published page', async () => {
+	// Arrange.
+	const page = {
+		id: 39,
+		title: { raw: 'Outlet' },
+		slug: 'outlet',
+		status: 'publish',
+		date: '2025-01-01T12:00:00',
+		link: '/outlet/',
+	};
+	vi.mocked( apiFetch )
+		.mockReset()
+		.mockResolvedValueOnce( new Response( JSON.stringify( page ) ) )
+		.mockResolvedValueOnce( { ...page, slug: 'sale' } );
+	const { wrapper } = createEditorRegistry();
+	const { result } = renderHook( () => useOutletPage( 39 ), { wrapper } );
+	await waitFor( () => expect( result.current.page ).toEqual( page ) );
+	// Act.
+	act( () => result.current.setSlug( 'sale' ) );
+	await act( () => result.current.save() );
+	// Assert.
+	expect( apiFetch ).toHaveBeenLastCalledWith(
+		expect.objectContaining( {
+			method: 'PUT',
+			data: { id: 39, slug: 'sale' },
+		} )
+	);
+	expect( result.current.page ).toEqual( { ...page, slug: 'sale' } );
+} );
+
+test( 'clears publication intent when restoring a draft after a failed save', async () => {
+	// Arrange.
+	const page = {
+		id: 39,
+		title: { raw: 'Outlet' },
+		slug: 'outlet',
+		status: 'draft',
+		link: '/outlet/',
+	};
+	vi.mocked( apiFetch )
+		.mockReset()
+		.mockResolvedValueOnce( new Response( JSON.stringify( page ) ) )
+		.mockRejectedValueOnce( new Error( 'Publication failed.' ) );
+	const { wrapper } = createEditorRegistry();
+	const { result } = renderHook( () => useOutletPage( 39 ), { wrapper } );
+	await waitFor( () => expect( result.current.page ).toEqual( page ) );
+	act( () => result.current.setStatus( 'publish' ) );
+	// Act.
+	await act( async () => {
+		await expect( result.current.save() ).rejects.toThrow(
+			'Publication failed.'
+		);
+	} );
+	act( () => result.current.setStatus( 'draft' ) );
+	// Assert.
+	expect( result.current.dirty ).toBe( false );
+	expect( result.current.status ).toBe( 'draft' );
+	expect( result.current.page ).toEqual( page );
 } );
 
 test( 'shows a failed page load and does not offer a retry', async () => {

@@ -6,7 +6,7 @@
 import type { MouseEvent, ReactNode } from 'react';
 import { Button, Notice } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
-import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	EntitiesSavedStates,
 	UnsavedChangesWarning,
@@ -38,7 +38,6 @@ export default function OutletEditor( {
 	const details = useOutletPage( config.pageId );
 	const { markdownLevels, setMarkdownLevels } = useSettings();
 	const { editEntityRecord } = useDispatch( coreStore );
-	const registry = useRegistry();
 	const { isDirty } = useEntitiesSavedStatesIsDirty();
 	const { busy, settingsFailure } = useSelect(
 		( select ) => {
@@ -94,23 +93,8 @@ export default function OutletEditor( {
 			if ( ! config.canPublish ) {
 				throw new Error( 'Outlet page publishing is not permitted.' );
 			}
-			if ( details.page === null ) {
-				throw new Error( 'Outlet page details are unavailable.' );
-			}
-			const edits = registry
-				.select( coreStore )
-				.getEntityRecordEdits( 'postType', 'page', config.pageId );
-			pendingStatus.current = {
-				status: edits?.status,
-				date: edits?.date,
-			};
-			editEntityRecord( 'postType', 'page', config.pageId, {
-				status: nextStatus,
-				...( nextStatus === 'publish'
-					? { date: new Date().toISOString() }
-					: {} ),
-			} );
 		}
+		pendingStatus.current = details.prepareSave( nextStatus );
 		setReviewing( true );
 	}
 	function closeReview( savedEntities?: ReviewedEntity[] ) {
@@ -162,10 +146,8 @@ export default function OutletEditor( {
 						disabled={ busy }
 						onTitleChange={ details.setTitle }
 						onSlugChange={ details.setSlug }
-						onUnpublish={
-							config.canPublish
-								? () => review( 'draft' )
-								: undefined
+						onStatusChange={
+							config.canPublish ? details.setStatus : undefined
 						}
 					/>
 					<MarkdownLevels
@@ -201,7 +183,7 @@ export default function OutletEditor( {
 						{ __( 'Save', 'outletpro' ) }
 					</Button>
 					{ details.page !== null &&
-						details.page.status !== 'publish' &&
+						details.status !== 'publish' &&
 						config.canPublish && (
 							<Button
 								variant="secondary"

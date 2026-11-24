@@ -157,7 +157,10 @@ test( 'disables editor controls during saving and restores focus afterward', asy
 	expect(
 		view.getByRole( 'button', { name: 'Rename page' } )
 	).toBeDisabled();
-	expect( view.getByRole( 'textbox', { name: 'Slug' } ) ).toBeDisabled();
+	expect( view.getByRole( 'button', { name: 'Edit slug' } ) ).toBeDisabled();
+	expect(
+		view.getByRole( 'button', { name: 'Change status' } )
+	).toBeDisabled();
 	expect( view.getByRole( 'button', { name: 'Publish' } ) ).toBeDisabled();
 	await act( async () => {
 		if ( completion.resolve === undefined ) {

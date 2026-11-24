@@ -1,5 +1,7 @@
 .outletpro-editor-page-details {
 	padding: 16px;
+	font-size: 13px;
+	line-height: 20px;
 }
 
 .outletpro-editor-page-card {
@@ -17,10 +19,83 @@
 }
 
 .outletpro-editor-page-details p {
+	margin: 12px 0 16px;
 	color: #757575;
+	font-size: inherit;
+	line-height: inherit;
 }
 
-.outletpro-editor-page-details dd {
-	margin: 4px 0 16px;
+.outletpro-editor-page-properties {
+	display: grid;
+	grid-template-columns: 38% minmax(0, 1fr);
+	align-items: start;
+	margin: 0;
+}
+
+.outletpro-editor-page-properties dt,
+.outletpro-editor-page-properties dd {
+	margin: 0;
 	overflow-wrap: anywhere;
+}
+
+.outletpro-editor-page-properties dt {
+	display: block;
+	padding: 6px 0;
+}
+
+.outletpro-editor-page-properties dd > span {
+	display: block;
+	padding: 6px 8px;
+}
+
+.outletpro-editor-page-dropdown {
+	max-width: 100%;
+}
+
+.outletpro-editor-page-details .outletpro-editor-page-value {
+	height: auto;
+	min-height: 32px;
+	max-width: 100%;
+	padding: 6px 8px;
+	font-weight: 400;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.outletpro-editor-page-card .outletpro-editor-page-value {
+	padding: 0;
+	min-width: 32px;
+}
+
+.outletpro-editor-page-card > svg {
+	flex-shrink: 0;
+}
+
+.outletpro-editor-page-popover .components-popover__content {
+	box-sizing: border-box;
+	width: 280px;
+	max-width: calc(100vw - 32px);
+	padding: 16px;
+}
+
+.outletpro-editor-page-popover-form {
+	margin-top: 16px;
+}
+
+.outletpro-editor-status-popover .components-popover__content {
+	width: 320px;
+}
+
+.outletpro-editor-page-properties .outletpro-editor-page-status {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.outletpro-editor-page-status-field .outletpro-editor-page-value {
+	padding-top: 4px;
+	padding-bottom: 4px;
+	color: inherit;
+	font-weight: 500;
 }

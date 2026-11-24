@@ -49,7 +49,12 @@ test( 'edits the outlet page through the styled shell', async ( {
 	} );
 	const save = actions.getByRole( 'button', { name: /^Save$/ } );
 	const applySave = review.getByRole( 'button', { name: /^Save$/ } );
-	const slug = sidebar.getByRole( 'textbox', { name: 'Slug' } );
+	const slugButton = sidebar.getByRole( 'button', { name: 'Edit slug' } );
+	const slugPopover = page.getByRole( 'dialog', {
+		name: 'Slug',
+		exact: true,
+	} );
+	const slug = slugPopover.getByRole( 'textbox', { name: 'Slug' } );
 	// Assert.
 	await expect(
 		page.getByRole( 'main', { name: 'Outlet workspace' } )
@@ -63,8 +68,18 @@ test( 'edits the outlet page through the styled shell', async ( {
 	await page
 		.getByRole( 'textbox', { name: 'Name', exact: true } )
 		.fill( 'Renamed outlet' );
-	await page.getByRole( 'button', { name: 'Done', exact: true } ).click();
+	await page
+		.getByRole( 'textbox', { name: 'Name', exact: true } )
+		.press( 'Enter' );
+	await expect(
+		sidebar.getByRole( 'button', { name: 'Rename page' } )
+	).toBeFocused();
+	await slugButton.click();
+	await expect( slug ).toBeFocused();
 	await slug.fill( `editor-${ outlet.id }` );
+	await slug.press( 'Escape' );
+	await expect( slugButton ).toBeFocused();
+	await expect( sidebar ).toBeVisible();
 	await save.click();
 	await expect(
 		review.getByRole( 'button', { name: 'Cancel' } )
@@ -76,7 +91,7 @@ test( 'edits the outlet page through the styled shell', async ( {
 	await expect( applySave ).toBeDisabled();
 	await review.getByRole( 'button', { name: 'Cancel' } ).click();
 	await expect( save ).toBeFocused();
-	await expect( slug ).toHaveValue( `editor-${ outlet.id }` );
+	await expect( slugButton ).toHaveText( `editor-${ outlet.id }` );
 	await save.click();
 	await applySave.click();
 	await expect( review ).toHaveCount( 0 );
@@ -92,6 +107,8 @@ test( 'edits the outlet page through the styled shell', async ( {
 	).toBeFocused();
 	await actions.getByRole( 'button', { name: /^Publish$/ } ).click();
 	await review.getByRole( 'button', { name: /^Save$/ } ).click();
+	await expect( save ).not.toHaveClass( /is-busy/ );
+	await expect( save ).toBeDisabled();
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
 	).toBeVisible();
@@ -104,20 +121,41 @@ test( 'edits the outlet page through the styled shell', async ( {
 	await expect(
 		actions.getByRole( 'link', { name: 'View outlet' } )
 	).toHaveAttribute( 'href', published.link );
-	await sidebar.getByRole( 'button', { name: /^Unpublish$/ } ).click();
-	await applySave.click();
+	await sidebar.getByRole( 'button', { name: 'Change status' } ).click();
+	const statusPopover = page.getByRole( 'dialog', {
+		name: 'Status',
+		exact: true,
+	} );
+	const draft = statusPopover.getByRole( 'radio', {
+		name: 'Draft',
+		exact: true,
+	} );
+	await draft.check();
+	await expect( review ).toHaveCount( 0 );
+	await draft.press( 'Escape' );
+	await saveChanges( page );
 	await expect( sidebar.getByText( 'Draft', { exact: true } ) ).toBeVisible();
 	await page.screenshot( {
 		path: test.info().outputPath( 'shell-desktop.png' ),
 	} );
+	await page.getByRole( 'button', { name: 'Dismiss this notice' } ).click();
 	await page.setViewportSize( { width: 390, height: 844 } );
 	await expect( save ).toBeInViewport();
-	await expect( slug ).toBeInViewport();
-
+	await expect( slugButton ).toBeInViewport();
+	await sidebar.getByRole( 'button', { name: 'Change status' } ).click();
+	await expect( statusPopover ).toBeInViewport();
+	await expect(
+		statusPopover.getByRole( 'radio', { name: 'Published', exact: true } )
+	).toBeInViewport();
+	await statusPopover.getByRole( 'button', { name: 'Close' } ).click();
 	await requestUtils.rest( {
 		method: 'POST',
 		path: '/wp/v2/settings',
 		data: { outletpro_page_id: settings.outletpro_page_id },
+	} );
+	await requestUtils.rest( {
+		method: 'DELETE',
+		path: `/wp/v2/pages/${ outlet.id }?force=true`,
 	} );
 } );
 
@@ -132,6 +170,12 @@ async function saveChanges( page ) {
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
 	).toBeVisible();
+	await expect(
+		actions.getByRole( 'button', { name: /^Save$/ } )
+	).not.toHaveClass( /is-busy/ );
+	await expect(
+		actions.getByRole( 'button', { name: /^Save$/ } )
+	).toBeDisabled();
 }
 
 test( 'views markdown levels', async ( { page, admin, requestUtils } ) => {
