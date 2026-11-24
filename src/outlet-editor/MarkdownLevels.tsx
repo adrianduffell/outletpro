@@ -103,10 +103,7 @@ export default function MarkdownLevels( {
 								icon={ tag }
 								disabled={ disabled }
 								aria-haspopup="dialog"
-								aria-expanded={
-									editing?.level === level &&
-									editing.anchor !== add.current
-								}
+								aria-expanded={ editing?.level === level }
 								onClick={ (
 									event: MouseEvent< HTMLButtonElement >
 								) => {
@@ -152,9 +149,7 @@ export default function MarkdownLevels( {
 						variant="primary"
 						disabled={ disabled }
 						aria-haspopup="dialog"
-						aria-expanded={
-							editing !== null && editing.anchor === add.current
-						}
+						aria-expanded={ editing?.level === 'add' }
 						onClick={ (
 							event: MouseEvent< HTMLButtonElement >
 						) => {
