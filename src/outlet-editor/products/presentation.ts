@@ -25,7 +25,6 @@ export function getProductRow(
 		canEdit && product.status !== 'trash' && product.type !== 'variation';
 	return {
 		...product,
-		outlet: product.outletpro.is_outlet,
 		canEdit: editable,
 		image:
 			product.images[ 0 ]?.thumbnail || product.images[ 0 ]?.src || null,

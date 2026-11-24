@@ -14,7 +14,11 @@ import useProducts from '../../data/products/useProducts';
 import './style.css';
 import { getProductRow } from './presentation';
 
-export default function Products() {
+export default function Products( {
+	disabled = false,
+}: {
+	disabled?: boolean;
+} ) {
 	const [ outletOnly, setOutletOnly ] = useState( false );
 	const [ view, setView ] = useState< View >( {
 		type: 'table',
@@ -113,7 +117,10 @@ export default function Products() {
 								) }
 							</p>
 
-							<div className="outletpro-editor-product-browser">
+							<fieldset
+								className="outletpro-editor-product-browser"
+								disabled={ disabled }
+							>
 								<DataViews
 									data={ ( records ?? [] ).map( ( record ) =>
 										getProductRow(
@@ -179,7 +186,7 @@ export default function Products() {
 									<DataViews.Layout />
 									<DataViews.Footer />
 								</DataViews>
-							</div>
+							</fieldset>
 						</div>
 					) }
 				</PanelBody>

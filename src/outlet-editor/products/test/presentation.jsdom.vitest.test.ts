@@ -21,7 +21,6 @@ test( 'derives presentation from native product fields and REST permissions', ()
 		image: '/hat-small.jpg',
 		price: '£10',
 		age_days: 2,
-		outlet: false,
 		canEdit: true,
 	} );
 } );
