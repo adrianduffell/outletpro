@@ -4,6 +4,7 @@
  */
 
 import { registerPlugin } from '@wordpress/plugins';
+import { registerProductEntity } from './data/products';
 
 // #ifdef LICENSE
 import './welcome-page';
@@ -22,6 +23,8 @@ import './blocks/outlet-link';
 import './blocks/outlet-tile';
 import './blocks/outlet-tiles';
 import './blocks/outlet-menu';
+
+registerProductEntity();
 
 registerPlugin( 'outletpro-editor-preview', {
 	render: EditorPreview,
