@@ -66,6 +66,10 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-welcome-page' );
 	wp_dequeue_script( 'outletpro-editor' );
 	wp_deregister_script( 'outletpro-editor' );
+	wp_dequeue_style( 'outletpro-outlet-editor-components' );
+	wp_deregister_style( 'outletpro-outlet-editor-components' );
+	wp_dequeue_style( 'outletpro-outlet-editor' );
+	wp_deregister_style( 'outletpro-outlet-editor' );
 	wp_dequeue_style( 'outletpro-editor' );
 	wp_deregister_style( 'outletpro-editor' );
 	wp_dequeue_style( 'outletpro-badge-block' );
