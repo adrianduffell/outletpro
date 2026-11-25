@@ -791,6 +791,14 @@ test( 'edits and saves global badge settings from the Badge tab', async ( {
 test( 'updates the outlet message', async ( { page, requestUtils } ) => {
 	// Arrange.
 	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	const settingsToggle = page.getByRole( 'button', {
+		name: 'Page settings',
+	} );
+	if (
+		( await settingsToggle.getAttribute( 'aria-expanded' ) ) === 'false'
+	) {
+		await settingsToggle.click();
+	}
 	const save = page
 		.getByRole( 'toolbar', { name: 'Page actions' } )
 		.getByRole( 'button', { name: 'Save', exact: true } );
@@ -799,7 +807,7 @@ test( 'updates the outlet message', async ( { page, requestUtils } ) => {
 	} );
 	const message = page.getByRole( 'textbox', { name: 'Message' } );
 	// Act.
-	await page.getByRole( 'tab', { name: 'Badge' } ).press( 'ArrowRight' );
+	await page.getByRole( 'tab', { name: 'Message' } ).click();
 	await message.fill( 'Limited stock. All sales final.' );
 	await page.getByRole( 'tab', { name: 'Page' } ).click();
 	await page.getByRole( 'tab', { name: 'Message' } ).click();
