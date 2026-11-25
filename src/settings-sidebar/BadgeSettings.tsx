@@ -18,6 +18,7 @@ import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import type { Settings } from '../use-settings';
 import BadgePresets from './BadgePresets';
+import BadgePreview from './BadgePreview';
 
 type FontWeightOption = {
 	name: string;
@@ -100,6 +101,7 @@ export default function BadgeSettings( { settings }: { settings: Settings } ) {
 						'outletpro'
 					) }
 				</p>
+				<BadgePreview settings={ settings } />
 				<BadgePresets settings={ settings } />
 			</PanelBody>
 

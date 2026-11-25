@@ -4,6 +4,22 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
+.outletpro-badge-preview {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 16px;
+	padding: 24px 16px;
+	background: #fafafa;
+	background-image: repeating-conic-gradient(#fafafa 0 25%, #fff 0 50%);
+	background-size: 16px 16px;
+	overflow-wrap: anywhere;
+}
+
+.outletpro-badge-preview .outletpro-badge {
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
 .outlet-badge-preset {
 	display: block;
 	width: fit-content;
