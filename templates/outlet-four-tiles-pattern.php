@@ -192,8 +192,8 @@ $menu_attrs = array(
 		'spacing'    => array(
 			'blockGap' => '1em',
 			'margin'   => array(
-				'top'    => '2.5rem',
-				'bottom' => '2.5rem',
+				'top'    => 'var:preset|spacing|50',
+				'bottom' => 'var:preset|spacing|50',
 			),
 			'padding'  => array(
 				'top'    => '0',
