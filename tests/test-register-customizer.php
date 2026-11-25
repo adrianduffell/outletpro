@@ -7,6 +7,7 @@
  * @license GNU General Public License v2.0 or later
  */
 
+use function OutletPro\init_customizer;
 use function OutletPro\register_customizer_hook;
 use const OutletPro\OUTLET_BADGE_BG_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_BG_COLOUR_DEFAULT;
@@ -15,6 +16,7 @@ use const OutletPro\OUTLET_BADGE_SCALE_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOR_OPTION;
 use const OutletPro\OUTLET_BADGE_TEXT_COLOUR_DEFAULT;
 use const OutletPro\OUTLET_MESSAGE_OPTION;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD;
 
 class Test_Register_Customizer extends WP_UnitTestCase {
 
@@ -49,6 +51,54 @@ class Test_Register_Customizer extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertNotNull( $wp_customize->get_setting( OUTLET_MESSAGE_OPTION ) );
+	}
+
+	public function test_message_link_setting_is_a_theme_mod_enabled_by_default(): void {
+		// Arrange.
+		$wp_customize = new WP_Customize_Manager();
+		init_customizer();
+
+		// Act.
+		do_action( 'customize_register', $wp_customize );
+
+		// Assert.
+		$setting = $wp_customize->get_setting( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
+		$this->assertNotNull( $setting );
+		$this->assertSame( 'theme_mod', $setting->type );
+		$this->assertTrue( $setting->default );
+	}
+
+	public function test_registers_message_link_checkbox_in_the_outlet_section(): void {
+		// Arrange.
+		$wp_customize = new WP_Customize_Manager();
+		init_customizer();
+
+		// Act.
+		do_action( 'customize_register', $wp_customize );
+
+		// Assert.
+		$control = $wp_customize->get_control( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
+		$this->assertNotNull( $control );
+		$this->assertSame( 'checkbox', $control->type );
+		$this->assertSame( 'outletpro', $control->section );
+		$this->assertSame( 'Show link to outlet page', $control->label );
+		$this->assertSame( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, $control->settings['default']->id );
+	}
+
+	public function test_sanitizes_the_message_link_setting_as_a_boolean(): void {
+		// Arrange.
+		$wp_customize = new WP_Customize_Manager();
+		init_customizer();
+		do_action( 'customize_register', $wp_customize );
+		$setting = $wp_customize->get_setting( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
+
+		// Act.
+		$enabled  = $setting->sanitize( '1' );
+		$disabled = $setting->sanitize( '0' );
+
+		// Assert.
+		$this->assertTrue( $enabled );
+		$this->assertFalse( $disabled );
 	}
 
 	public function test_message_setting_type_is_option(): void {

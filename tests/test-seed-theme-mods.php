@@ -15,6 +15,7 @@ use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_Seed_Theme_Mods extends WP_UnitTestCase {
@@ -191,6 +192,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
 		remove_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD );
 
 		// Act.
@@ -203,6 +205,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce_single_product_summary', 1 ), get_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce_single_product_summary', 11 ), get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce_archive_description', 5 ), get_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD ) );
 	}
 
@@ -239,6 +242,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		switch_theme( 'storefront' );
 		set_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD, array() );
 		set_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD, array( 'woocommerce_after_add_to_cart_form', 17 ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, false );
 		set_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD, array() );
 
 		// Act.
@@ -247,6 +251,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		// Assert.
 		$this->assertSame( array(), get_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce_after_add_to_cart_form', 17 ), get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD ) );
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
 		$this->assertSame( array(), get_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD ) );
 	}
 }
