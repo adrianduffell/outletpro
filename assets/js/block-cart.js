@@ -6,25 +6,6 @@
 ( function () {
 	'use strict';
 
-	const { registerCheckoutFilters } = window.wc.blocksCheckout;
-
-	// Add .outletpro-cart-item class name to outlet products.
-	const modifyCartItemClass = ( defaultValue, extensions ) => {
-		if ( extensions?.outletpro?.is_outlet !== true ) {
-			return defaultValue;
-		}
-
-		if ( '' === defaultValue ) {
-			return 'outletpro-cart-item';
-		}
-
-		return defaultValue + ' outletpro-cart-item';
-	};
-
-	registerCheckoutFilters( 'outletpro', {
-		cartItemClass: modifyCartItemClass,
-	} );
-
 	const rowSelector = '.outletpro-cart-item';
 	const badgeSelector = '.outletpro-badge';
 	const label = window.__experimentalOutletProBlockCart.badgeLabel;

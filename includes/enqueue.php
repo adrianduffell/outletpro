@@ -26,6 +26,7 @@ function enqueue_init(): void {
 	add_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_styles_hook' );
 	add_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' );
 	add_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' );
+	add_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_admin_checkout_filters_hook' );
 
 	register_block_styles();
 }
@@ -46,6 +47,7 @@ function deinit_enqueue(): void {
 	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_product_scripts_hook' );
 	remove_action( 'admin_enqueue_scripts', 'OutletPro\enqueue_admin_welcome_page_scripts_hook' );
 	remove_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_build_assets_hook' );
+	remove_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_admin_checkout_filters_hook' );
 	wp_deregister_style( 'outletpro-classic-badge' );
 	wp_deregister_style( 'outletpro-classic-message' );
 	wp_dequeue_style( 'outletpro-block-cart' );
@@ -54,6 +56,8 @@ function deinit_enqueue(): void {
 	wp_deregister_script( 'outletpro-block-cart' );
 	wp_dequeue_script( 'outletpro-block-cart-editor' );
 	wp_deregister_script( 'outletpro-block-cart-editor' );
+	wp_dequeue_script( 'outletpro-checkout-filters' );
+	wp_deregister_script( 'outletpro-checkout-filters' );
 	wp_dequeue_style( 'outletpro-admin' );
 	wp_deregister_style( 'outletpro-admin' );
 	wp_dequeue_style( 'outletpro-admin-editor' );
@@ -135,7 +139,7 @@ function enqueue_admin_editor_styles_hook(): void {
 	wp_enqueue_script(
 		'outletpro-block-cart-editor',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/admin-block-cart.js',
-		array( 'wc-blocks-checkout' ),
+		array(),
 		VERSION,
 		true
 	);
@@ -165,6 +169,34 @@ function enqueue_admin_editor_styles_hook(): void {
 	wp_add_inline_style(
 		'outletpro-admin-editor',
 		':root { ' . implode( '; ', $declarations ) . '; }'
+	);
+}
+
+/**
+ * Enqueue checkout filters in the editor window.
+ *
+ * Fired by `enqueue_block_editor_assets`.
+ *
+ * @internal WordPress action hook
+ */
+function enqueue_admin_checkout_filters_hook(): void {
+	// Checkout dependencies access document.body and cannot run in the canvas head.
+	register_checkout_filters_script();
+	wp_enqueue_script( 'outletpro-checkout-filters' );
+}
+
+/**
+ * Register shared checkout filters for the storefront and editor.
+ *
+ * @internal
+ */
+function register_checkout_filters_script(): void {
+	wp_register_script(
+		'outletpro-checkout-filters',
+		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/checkout-filters.js',
+		array( 'wc-blocks-checkout' ),
+		VERSION,
+		true
 	);
 }
 
@@ -240,6 +272,8 @@ function register_block_cart_scripts_hook(): void {
 		$label = '';
 	}
 
+	register_checkout_filters_script();
+
 	/**
 	 * Front-end block cart badge script.
 	 *
@@ -248,7 +282,7 @@ function register_block_cart_scripts_hook(): void {
 	wp_register_script(
 		'outletpro-block-cart',
 		plugin_dir_url( PLUGIN_FILE ) . 'assets/js/block-cart.js',
-		array( 'wc-blocks-checkout' ),
+		array( 'outletpro-checkout-filters' ),
 		VERSION,
 		true
 	);

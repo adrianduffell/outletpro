@@ -187,6 +187,29 @@ class Test_Deinit_Enqueue extends WP_UnitTestCase {
 		$this->assertFalse( wp_script_is( 'outletpro-block-cart', 'registered' ) );
 	}
 
+	public function test_deregisters_admin_checkout_filters_script(): void {
+		// Arrange.
+		wp_enqueue_script( 'outletpro-checkout-filters', false, array(), 'test', true );
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( wp_script_is( 'outletpro-checkout-filters', 'enqueued' ) );
+		$this->assertFalse( wp_script_is( 'outletpro-checkout-filters', 'registered' ) );
+	}
+
+	public function test_removes_enqueue_admin_checkout_filters_hook(): void {
+		// Arrange.
+		enqueue_init();
+
+		// Act.
+		deinit_enqueue();
+
+		// Assert.
+		$this->assertFalse( has_action( 'enqueue_block_editor_assets', 'OutletPro\enqueue_admin_checkout_filters_hook' ) );
+	}
+
 	public function test_deregisters_admin_styles(): void {
 		// Arrange.
 		wp_register_style( 'outletpro-admin', false, array(), 'test' );
