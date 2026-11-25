@@ -221,6 +221,9 @@ test.each( [ 'draft', 'publish' ] )(
 				view.getByRole( 'dialog', { name: 'Are you ready to save?' } )
 			).getByRole( 'button', { name: 'Cancel' } )
 		);
+		fireEvent.click(
+			view.getByRole( 'button', { name: 'Markdown Levels' } )
+		);
 		// Assert.
 		expect(
 			registry
