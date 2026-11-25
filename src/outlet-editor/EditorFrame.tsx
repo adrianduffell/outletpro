@@ -85,9 +85,9 @@ export default function EditorFrame( {
 			}
 			workspace={ workspace }
 			notices={ notices }
+			review={ review }
 			sidebar={
-				review ??
-				( settingsOpen && (
+				settingsOpen && (
 					<div
 						ref={ settingsPanel }
 						className="outletpro-editor-settings"
@@ -118,7 +118,7 @@ export default function EditorFrame( {
 							size="compact"
 						/>
 					</div>
-				) )
+				)
 			}
 		/>
 	);

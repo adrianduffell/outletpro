@@ -257,8 +257,41 @@ test( 'cancels saving without losing changes', async ( { page } ) => {
 	} );
 	const slug = `editor-${ new URL( page.url() ).searchParams.get( 'post' ) }`;
 	// Act.
-	await save.click();
-	await review.getByRole( 'button', { name: 'Cancel' } ).click();
+	for ( const width of [ 1280, 390 ] ) {
+		await page.setViewportSize( { width, height: 900 } );
+		await save.click();
+		// Assert.
+		await expect( review ).toBeVisible();
+		for ( const name of [ 'Save', 'Publish' ] ) {
+			const action = page
+				.getByRole( 'toolbar', { name: 'Page actions' } )
+				.getByRole( 'button', { name, exact: true } );
+			await expect
+				.poll( () =>
+					action.evaluate( ( button ) => {
+						const {
+							x,
+							y,
+							width: w,
+							height,
+						} = button.getBoundingClientRect();
+						return document
+							.elementFromPoint( x + w / 2, y + height / 2 )
+							?.closest( '#outletpro-editor-sidebar' )
+							?.getAttribute( 'aria-label' );
+					} )
+				)
+				.toBe( 'Review changes' );
+		}
+		await page.screenshot( {
+			path: test.info().outputPath( `review-${ width }.png` ),
+		} );
+		// Act.
+		await review.getByRole( 'button', { name: 'Cancel' } ).click();
+		// Assert.
+		await expect( save ).toBeFocused();
+	}
+	await page.setViewportSize( { width: 1280, height: 900 } );
 	// Assert.
 	await expect( save ).toBeFocused();
 	await expect(
