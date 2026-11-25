@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Outlet Pro
  * Description: WooCommerce extension to add a modern outlet page.
- * Version: 1.2.0-dev
+ * Version: 1.2.0
  * Author: Adrian Duffell
  * Author URI: https://adrianduffell.com
  * Text Domain: outletpro
@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @internal
  */
-const VERSION = '1.2.0-dev';
+const VERSION = '1.2.0';
 
 /**
  * Database version.
