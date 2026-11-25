@@ -1,5 +1,20 @@
 *** Outlet Pro Changelog ***
 
+2026-11-25 - version 1.2.0
+
+* New - The outlet page now uses the product catalog template in block and classic themes.
+* New - A dedicated outlet editor for managing content on the outlet page.
+* New - Adds Clearance, Final sale, and Outlet badge designs.
+* Added - The outletpro.is_outlet field is now available in the products REST API.
+* Added - An outlet link block links to the outlet page.
+* Update - The outlet message now appears below the price and includes a link to the outlet page.
+* Added - Fine, Bold, and Banner styles are now available for the outlet message.
+* Added - The outlet message can now use a strong tag for emphasis.
+* Update - The default font size is removed from the outlet message.
+* Update - The outlet message is rendered with a paragraph tag in classic themes.
+* Added - Padding can now be added to the message block in the editor.
+* Update - Navigation pattern spacing is standardized at preset 50.
+
 2026-11-07 - version 1.1.1
 
 * Fixed - The "uncategorized" category could appear in outlet navigation patterns.
