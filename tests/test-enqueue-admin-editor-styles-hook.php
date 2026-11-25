@@ -37,4 +37,21 @@ class Test_Enqueue_Admin_Editor_Styles_Hook extends WP_UnitTestCase {
 		// Assert.
 		$this->assertFalse( wp_style_is( 'outletpro-admin-editor', 'enqueued' ) );
 	}
+
+	public function test_canvas_preview_does_not_load_woocommerce_checkout_scripts(): void {
+		// Arrange.
+		deinit_enqueue();
+		enqueue_init();
+		set_current_screen( 'site-editor' );
+		get_current_screen()->is_block_editor( true );
+
+		// Act.
+		$assets = _wp_get_iframed_editor_assets();
+
+		// Assert.
+		$this->assertStringContainsString( 'outletpro-block-cart-editor-js', $assets['scripts'] );
+		$this->assertStringNotContainsString( 'outletpro-checkout-filters-js', $assets['scripts'] );
+		$this->assertStringNotContainsString( 'wc-blocks-checkout-js', $assets['scripts'] );
+		$this->assertStringNotContainsString( 'wc-blocks-data-store-js', $assets['scripts'] );
+	}
 }

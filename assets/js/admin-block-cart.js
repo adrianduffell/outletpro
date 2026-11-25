@@ -4,24 +4,6 @@
  */
 
 ( () => {
-	const { registerCheckoutFilters } = window.wc.blocksCheckout;
-
-	const modifyCartItemClassEditor = ( defaultValue, extensions, args ) => {
-		if ( extensions?.outletpro !== undefined ) {
-			return defaultValue;
-		}
-
-		if ( args.cartItem.key !== args.cart.cartItems[ 0 ].key ) {
-			return defaultValue;
-		}
-
-		return ( defaultValue + ' outletpro-cart-item' ).trim();
-	};
-
-	registerCheckoutFilters( 'outletpro-editor', {
-		cartItemClass: modifyCartItemClassEditor,
-	} );
-
 	const insertPreviewBadges = () => {
 		const label =
 			document.querySelector( '#outletpro-preview-vars' )?.dataset
