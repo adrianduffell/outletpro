@@ -19,7 +19,7 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while supplies last', $result );
+		$this->assertSame( 'Only while supplies last.', $result );
 	}
 
 	public function test_returns_supplies_last_for_us_with_state(): void {
@@ -30,7 +30,7 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while supplies last', $result );
+		$this->assertSame( 'Only while supplies last.', $result );
 	}
 
 	public function test_returns_supplies_last_for_canada(): void {
@@ -41,7 +41,7 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while supplies last', $result );
+		$this->assertSame( 'Only while supplies last.', $result );
 	}
 
 	public function test_returns_supplies_last_for_canada_with_province(): void {
@@ -52,7 +52,7 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while supplies last', $result );
+		$this->assertSame( 'Only while supplies last.', $result );
 	}
 
 	public function test_returns_stocks_last_for_uk(): void {
@@ -63,7 +63,7 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while stocks last', $result );
+		$this->assertSame( 'Only while stocks last.', $result );
 	}
 
 	public function test_returns_stocks_last_for_australia(): void {
@@ -74,7 +74,7 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while stocks last', $result );
+		$this->assertSame( 'Only while stocks last.', $result );
 	}
 
 	public function test_returns_stocks_last_when_country_not_set(): void {
@@ -85,6 +85,6 @@ class Test_Get_Default_Outlet_Message extends WP_UnitTestCase {
 		$result = get_default_outlet_message();
 
 		// Assert.
-		$this->assertSame( 'Only while stocks last', $result );
+		$this->assertSame( 'Only while stocks last.', $result );
 	}
 }
