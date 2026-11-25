@@ -23,7 +23,7 @@ Other changes:
 - Added an outlet link block that links to the outlet page.
 - The outlet message is moved under the price.
 - The outlet message displays a link to the outlet page.
-- New styles for the outlet message: Fine, Bold, and Banner.
+- New styles for the outlet message: Fine, Bold, and Notice.
 - An option is added to the outlet message to use a strong tag.
 - The default font size is removed from the outlet message.
 - The message is rendered with a p tag on classic themes.
