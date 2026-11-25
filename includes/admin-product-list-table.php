@@ -76,7 +76,7 @@ function product_onboarding_notice_hook(): void {
 
 	if ( $is_empty ) {
 		$edit_url = null;
-		if ( null !== $page_id && 'trash' !== get_post_status( $page_id ) ) {
+		if ( null !== $page_id && 'page' === get_post_type( $page_id ) && 'trash' !== get_post_status( $page_id ) ) {
 			$edit_url = get_edit_post_link( $page_id );
 		}
 		$edit_link = $edit_url ? ' <a class="outletpro-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit outlet page', 'outletpro' ) . '</a>' : '';

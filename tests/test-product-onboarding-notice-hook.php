@@ -221,6 +221,24 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		do_action( 'admin_notices' );
 	}
 
+	public function test_empty_state_notice_omits_edit_link_when_outlet_page_id_references_a_product(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$product_id = self::factory()->post->create( array( 'post_type' => 'product' ) );
+		update_option( OUTLET_PAGE_OPTION, $product_id );
+
+		// Expect.
+		$this->expectOutputRegex( '/Get started by editing the outlet page\.<\/p>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
 	public function test_empty_state_notice_omits_edit_link_when_outlet_page_is_trashed(): void {
 		// Arrange.
 		init_admin_product_list_table();
