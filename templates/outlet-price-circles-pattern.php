@@ -90,8 +90,8 @@ $grid_attrs = array(
 		'spacing'    => array(
 			'blockGap' => 'var:preset|spacing|70',
 			'margin'   => array(
-				'top'    => 'var:preset|spacing|40',
-				'bottom' => 'var:preset|spacing|60',
+				'top'    => 'var:preset|spacing|50',
+				'bottom' => 'var:preset|spacing|50',
 			),
 		),
 		'typography' => array(
@@ -164,8 +164,8 @@ $menu_attrs = array(
 		'spacing'    => array(
 			'blockGap' => '1em',
 			'margin'   => array(
-				'top'    => '2.5rem',
-				'bottom' => '2.5rem',
+				'top'    => 'var:preset|spacing|50',
+				'bottom' => 'var:preset|spacing|50',
 			),
 			'padding'  => array(
 				'top'    => '0',
