@@ -4,9 +4,9 @@
  */
 
 import type { MouseEvent, ReactNode } from 'react';
-import { Button, Notice } from '@wordpress/components';
+import { Button, Notice, Spinner } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
-import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	EntitiesSavedStates,
 	UnsavedChangesWarning,
@@ -20,6 +20,7 @@ import PageDetails from './PageDetails';
 import { MarkdownLevels, PriceLevels } from './level-panels';
 import useOutletPage from './useOutletPage';
 import useSettings from '../use-settings';
+import BadgeSettings from '../settings-sidebar/BadgeSettings';
 import { getErrorMessage } from './error-message';
 import type { EditorConfig } from './types';
 
@@ -36,15 +37,16 @@ export default function OutletEditor( {
 	settingsPanels?: ( state: EditorState ) => ReactNode;
 } ) {
 	const details = useOutletPage( config.pageId );
+	const outletSettings = useSettings();
 	const { markdownLevels, setMarkdownLevels, priceLevels, setPriceLevels } =
-		useSettings();
+		outletSettings;
 	const { editEntityRecord } = useDispatch( coreStore );
-	const registry = useRegistry();
 	const { isDirty } = useEntitiesSavedStatesIsDirty();
-	const { busy, settingsFailure } = useSelect(
+	const { busy, hasSettings, settingsFailure } = useSelect(
 		( select ) => {
 			const core = select( coreStore );
 			return {
+				hasSettings: !! core.getEntityRecord( 'root', 'site' ),
 				busy:
 					core.isSavingEntityRecord( 'root', 'site' ) ||
 					core.isSavingEntityRecord(
@@ -95,23 +97,8 @@ export default function OutletEditor( {
 			if ( ! config.canPublish ) {
 				throw new Error( 'Outlet page publishing is not permitted.' );
 			}
-			if ( details.page === null ) {
-				throw new Error( 'Outlet page details are unavailable.' );
-			}
-			const edits = registry
-				.select( coreStore )
-				.getEntityRecordEdits( 'postType', 'page', config.pageId );
-			pendingStatus.current = {
-				status: edits?.status,
-				date: edits?.date,
-			};
-			editEntityRecord( 'postType', 'page', config.pageId, {
-				status: nextStatus,
-				...( nextStatus === 'publish'
-					? { date: new Date().toISOString() }
-					: {} ),
-			} );
 		}
+		pendingStatus.current = details.prepareSave( nextStatus );
 		setReviewing( true );
 	}
 	function closeReview( savedEntities?: ReviewedEntity[] ) {
@@ -163,10 +150,8 @@ export default function OutletEditor( {
 						disabled={ busy }
 						onTitleChange={ details.setTitle }
 						onSlugChange={ details.setSlug }
-						onUnpublish={
-							config.canPublish
-								? () => review( 'draft' )
-								: undefined
+						onStatusChange={
+							config.canPublish ? details.setStatus : undefined
 						}
 					/>
 					<MarkdownLevels
@@ -204,6 +189,31 @@ export default function OutletEditor( {
 					{ settingsPanels?.( state ) }
 				</>
 			}
+			badgeSettings={
+				<>
+					{ settingsFailure && (
+						<Notice status="error" isDismissible={ false }>
+							{ getErrorMessage(
+								settingsFailure,
+								__(
+									'Badge settings could not be loaded.',
+									'outletpro'
+								)
+							) }
+						</Notice>
+					) }
+					{ ! settingsFailure && ! hasSettings && <Spinner /> }
+					{ ! settingsFailure && hasSettings && (
+						<fieldset
+							className="outletpro-editor-badge-settings"
+							aria-label={ __( 'Badge settings', 'outletpro' ) }
+							disabled={ busy }
+						>
+							<BadgeSettings settings={ outletSettings } />
+						</fieldset>
+					) }
+				</>
+			}
 			actions={
 				<>
 					<Button
@@ -218,7 +228,7 @@ export default function OutletEditor( {
 						{ __( 'Save', 'outletpro' ) }
 					</Button>
 					{ details.page !== null &&
-						details.page.status !== 'publish' &&
+						details.status !== 'publish' &&
 						config.canPublish && (
 							<Button
 								variant="secondary"

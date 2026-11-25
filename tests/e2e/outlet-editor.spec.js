@@ -77,6 +77,11 @@ const test = base.extend( {
 				path: '/wc/v3/products/batch',
 				data: { delete: products.map( ( product ) => product.id ) },
 			} );
+			await requestUtils.rest( {
+				method: 'DELETE',
+				path: `/wp/v2/pages/${ outlet.id }`,
+				params: { force: true },
+			} );
 		},
 		{ scope: 'worker' },
 	],
@@ -218,7 +223,9 @@ test( 'renames the outlet page', async ( { page } ) => {
 	await page
 		.getByRole( 'textbox', { name: 'Name', exact: true } )
 		.fill( 'Renamed outlet' );
-	await page.getByRole( 'button', { name: 'Done', exact: true } ).click();
+	await page
+		.getByRole( 'textbox', { name: 'Name', exact: true } )
+		.press( 'Enter' );
 	// Assert.
 	await expect(
 		sidebar.getByRole( 'heading', { name: 'Renamed outlet' } )
@@ -229,7 +236,9 @@ test( 'changes the outlet slug', async ( { page } ) => {
 	// Arrange.
 	const slug = `editor-${ new URL( page.url() ).searchParams.get( 'post' ) }`;
 	// Act.
+	await page.getByRole( 'button', { name: 'Not set', exact: true } ).click();
 	await page.getByRole( 'textbox', { name: 'Slug' } ).fill( slug );
+	await page.getByRole( 'textbox', { name: 'Slug' } ).press( 'Enter' );
 	// Assert.
 	await expect(
 		page
@@ -285,9 +294,9 @@ test( 'cancels saving without losing changes', async ( { page } ) => {
 	await page.setViewportSize( { width: 1280, height: 900 } );
 	// Assert.
 	await expect( save ).toBeFocused();
-	await expect( page.getByRole( 'textbox', { name: 'Slug' } ) ).toHaveValue(
-		slug
-	);
+	await expect(
+		page.getByRole( 'button', { name: slug, exact: true } )
+	).toHaveText( slug );
 	await expect(
 		page.getByRole( 'checkbox', {
 			name: 'Include Outlet editor product 01 in outlet',
@@ -330,9 +339,9 @@ test( 'saves selected changes', async ( { page } ) => {
 	await expect(
 		page.getByText( 'No products found', { exact: true } )
 	).toBeVisible();
-	await expect( page.getByRole( 'textbox', { name: 'Slug' } ) ).toHaveValue(
-		slug
-	);
+	await expect(
+		page.getByRole( 'button', { name: slug, exact: true } )
+	).toHaveText( slug );
 	await expect( save ).toBeEnabled();
 } );
 
@@ -422,6 +431,9 @@ test( 'sorts products by name', async ( { page } ) => {
 
 test( 'publishes the outlet page', async ( { page } ) => {
 	// Arrange.
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
 	const review = page.getByRole( 'dialog', {
 		name: 'Are you ready to save?',
 	} );
@@ -432,6 +444,8 @@ test( 'publishes the outlet page', async ( { page } ) => {
 		.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
 	// Assert.
+	await expect( save ).not.toHaveClass( /is-busy/ );
+	await expect( save ).toBeDisabled();
 	await expect(
 		page
 			.getByRole( 'complementary', { name: 'Page settings' } )
@@ -447,12 +461,24 @@ test( 'unpublishes the outlet page', async ( { page } ) => {
 	const review = page.getByRole( 'dialog', {
 		name: 'Are you ready to save?',
 	} );
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
 	// Act.
 	await sidebar
-		.getByRole( 'button', { name: 'Unpublish', exact: true } )
+		.getByRole( 'button', { name: 'Published', exact: true } )
 		.click();
+	const draft = page
+		.getByRole( 'dialog', { name: 'Status', exact: true } )
+		.getByRole( 'radio', { name: 'Draft', exact: true } );
+	await draft.check();
+	await expect( review ).toHaveCount( 0 );
+	await draft.press( 'Escape' );
+	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
 	// Assert.
+	await expect( save ).not.toHaveClass( /is-busy/ );
+	await expect( save ).toBeDisabled();
 	await expect( sidebar.getByText( 'Draft', { exact: true } ) ).toBeVisible();
 } );
 
@@ -669,6 +695,97 @@ test( 'removes a price level', async ( { page, requestUtils } ) => {
 	expect(
 		settings.outletpro_markdown_levels.map( ( level ) => `${ level }% off` )
 	).toEqual( markdownLevels );
+} );
+
+test( 'edits and saves global badge settings from the Badge tab', async ( {
+	page,
+	requestUtils,
+} ) => {
+	// Arrange.
+	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
+	const review = page.getByRole( 'dialog', {
+		name: 'Are you ready to save?',
+	} );
+	try {
+		// Act.
+		await page.getByRole( 'tab', { name: 'Page' } ).press( 'ArrowRight' );
+		const badge = page.getByRole( 'tabpanel', { name: 'Badge' } );
+		await badge.getByRole( 'button', { name: /Change design:/ } ).click();
+
+		// Assert.
+		const presets = page.getByRole( 'group', { name: 'Presets' } );
+		await expect( presets ).toHaveCSS( 'display', 'grid' );
+		await expect(
+			page.locator(
+				'.outletpro-badge-presets-popover .components-popover__content'
+			)
+		).toHaveCSS( 'width', '400px' );
+		await page.screenshot( {
+			path: test.info().outputPath( 'badge-design-desktop.png' ),
+		} );
+
+		// Act.
+		await page
+			.getByRole( 'button', { name: 'Clearance', exact: true } )
+			.click();
+		await badge
+			.getByRole( 'textbox', { name: 'Label' } )
+			.fill( 'Clearance specials' );
+		await page.getByRole( 'tab', { name: 'Page' } ).click();
+		await expect(
+			page.getByRole( 'button', { name: 'Add markdown level' } )
+		).toBeVisible();
+		await page.getByRole( 'tab', { name: 'Badge' } ).click();
+		await save.click();
+		await review
+			.getByRole( 'button', { name: 'Save', exact: true } )
+			.click();
+		await expect( review ).toHaveCount( 0 );
+		await expect( save ).toBeDisabled();
+		await page.reload();
+		await page.getByRole( 'tab', { name: 'Badge' } ).click();
+
+		// Assert.
+		await expect(
+			badge.getByRole( 'textbox', { name: 'Label' } )
+		).toHaveValue( 'Clearance specials' );
+		await expect(
+			badge.getByText( /Changes apply to the whole site/ )
+		).toBeVisible();
+		const savedSettings = await requestUtils.rest( {
+			path: '/wp/v2/settings',
+		} );
+		expect( savedSettings.outletpro_badge_label ).toBe(
+			'Clearance specials'
+		);
+		expect( savedSettings.outletpro_badge_text_color ).toBe( '#222' );
+		expect( savedSettings.outletpro_badge_bg_color ).toBe( '#FFEE85' );
+		await page.setViewportSize( { width: 390, height: 844 } );
+		await expect(
+			badge.getByRole( 'textbox', { name: 'Label' } )
+		).toBeInViewport();
+		await badge.getByRole( 'button', { name: /Change design:/ } ).click();
+		await expect( presets ).toHaveCSS( 'display', 'grid' );
+		await page.screenshot( {
+			path: test.info().outputPath( 'badge-design-mobile.png' ),
+		} );
+	} finally {
+		await requestUtils.rest( {
+			method: 'POST',
+			path: '/wp/v2/settings',
+			data: {
+				outletpro_badge_label: settings.outletpro_badge_label,
+				outletpro_badge_text_color: settings.outletpro_badge_text_color,
+				outletpro_badge_bg_color: settings.outletpro_badge_bg_color,
+			},
+		} );
+		await page.setViewportSize( { width: 1280, height: 900 } );
+		await page.reload();
+		await expect( page.getByRole( 'row' ).nth( 1 ) ).toBeVisible();
+	}
 } );
 
 test( 'shows a product loading error', async ( { page } ) => {

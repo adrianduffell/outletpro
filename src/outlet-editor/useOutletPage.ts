@@ -8,10 +8,10 @@ import {
 	useEntityProp,
 	useEntityRecord,
 } from '@wordpress/core-data';
-import { useDispatch, useSelect } from '@wordpress/data';
+import { useDispatch, useRegistry, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { getErrorMessage } from './error-message';
-import type { PageRecord } from './types';
+import type { EditablePageStatus, PageRecord } from './types';
 
 export default function useOutletPage( pageId: number ) {
 	const {
@@ -31,7 +31,14 @@ export default function useOutletPage( pageId: number ) {
 		'slug',
 		pageId
 	);
+	const [ status = '' ] = useEntityProp(
+		'postType',
+		'page',
+		'status',
+		pageId
+	);
 	const { editEntityRecord } = useDispatch( coreStore );
+	const registry = useRegistry();
 	const failure = useSelect(
 		( select ) =>
 			select( coreStore ).getResolutionError( 'getEntityRecord', [
@@ -53,19 +60,49 @@ export default function useOutletPage( pageId: number ) {
 	function setSlug( value: string ) {
 		updateSlug( value );
 	}
-	async function save( status?: 'publish' | 'draft' ) {
+	function setStatus( value: EditablePageStatus ) {
+		// Discard a publication date prepared for an earlier failed save.
+		editEntityRecord( 'postType', 'page', pageId, {
+			status: value,
+			date: undefined,
+		} );
+	}
+	function prepareSave( nextStatus?: EditablePageStatus ) {
 		if ( page === null ) {
 			throw new Error( 'Outlet page details are unavailable.' );
 		}
-		if ( status !== undefined ) {
+		const edits = registry
+			.select( coreStore )
+			.getEntityRecordEdits( 'postType', 'page', pageId );
+		const previous = { status: edits?.status, date: edits?.date };
+		if ( nextStatus !== undefined ) {
+			setStatus( nextStatus );
+		}
+		if (
+			( nextStatus ?? edits?.status ?? page.status ) === 'publish' &&
+			page.status !== 'publish'
+		) {
 			editEntityRecord( 'postType', 'page', pageId, {
-				status,
-				...( status === 'publish'
-					? { date: new Date().toISOString() }
-					: {} ),
+				date: new Date().toISOString(),
 			} );
 		}
+		return previous;
+	}
+	async function save( nextStatus?: EditablePageStatus ) {
+		prepareSave( nextStatus );
 		await saveEdits();
 	}
-	return { page, error, title, slug, setTitle, setSlug, dirty, save };
+	return {
+		page,
+		error,
+		title,
+		slug,
+		status,
+		setTitle,
+		setSlug,
+		setStatus,
+		prepareSave,
+		dirty,
+		save,
+	};
 }

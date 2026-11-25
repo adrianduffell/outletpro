@@ -1,0 +1,247 @@
+/**
+ * Copyright 2026 Adrian Duffell
+ * Licensed under the GNU General Public License v2.0 or later.
+ */
+
+import {
+	BaseControl,
+	BorderControl,
+	CustomSelectControl,
+	PanelBody,
+	RangeControl,
+	TextControl,
+	// eslint-disable-next-line @wordpress/no-unsafe-wp-apis
+	__experimentalUnitControl as UnitControl,
+} from '@wordpress/components';
+import { PanelColorSettings } from '@wordpress/block-editor';
+import { useMemo } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
+import type { Settings } from '../use-settings';
+import BadgePresets from './BadgePresets';
+
+type FontWeightOption = {
+	name: string;
+	key: string;
+	style?: {
+		fontWeight: string;
+	};
+};
+
+const FONT_WEIGHTS: FontWeightOption[] = [
+	{ name: __( 'Default', 'outletpro' ), key: '' },
+	{ name: __( 'Regular', 'outletpro' ), key: '400' },
+	{ name: __( 'Medium', 'outletpro' ), key: '500' },
+	{ name: __( 'Semi Bold', 'outletpro' ), key: '600' },
+	{ name: __( 'Bold', 'outletpro' ), key: '700' },
+	{ name: __( 'Extra Bold', 'outletpro' ), key: '800' },
+	{ name: __( 'Black', 'outletpro' ), key: '900' },
+];
+
+const bordersEnabled = ( () => {
+	try {
+		return (
+			window.localStorage.getItem( 'outletpro_borders_enabled' ) === '1'
+		);
+	} catch {
+		return false;
+	}
+} )();
+
+export default function BadgeSettings( { settings }: { settings: Settings } ) {
+	const {
+		label,
+		setLabel,
+		textColor,
+		setTextColor,
+		bgColor,
+		setBgColor,
+		fontWeight,
+		setFontWeight,
+		borderColor,
+		setBorderColor,
+		borderStyle,
+		setBorderStyle,
+		borderWidth,
+		setBorderWidth,
+		borderRadius,
+		setBorderRadius,
+		scale,
+		setScale,
+		density,
+		setDensity,
+	} = settings;
+
+	const border = {
+		color: borderColor || undefined,
+		style: borderStyle || undefined,
+		width: borderWidth || undefined,
+	};
+
+	const fontWeightOptions = useMemo(
+		() =>
+			FONT_WEIGHTS.map( ( option ) => ( {
+				...option,
+				style: option.key ? { fontWeight: option.key } : undefined,
+			} ) ),
+		[]
+	);
+
+	const selectedFontWeight =
+		fontWeightOptions.find(
+			( option ) => option.key === ( fontWeight || '' )
+		) || fontWeightOptions[ 0 ];
+
+	return (
+		<>
+			<PanelBody>
+				<p style={ { marginBottom: 16 } }>
+					{ __(
+						'Customize the appearance of the outlet badge. Changes apply to the whole site.',
+						'outletpro'
+					) }
+				</p>
+				<BadgePresets settings={ settings } />
+			</PanelBody>
+
+			<PanelBody title={ __( 'Label', 'outletpro' ) } initialOpen>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<TextControl
+						label={ __( 'Label', 'outletpro' ) }
+						value={ label ?? '' }
+						onChange={ ( value ) => setLabel( value ) }
+						hideLabelFromVision={ true }
+						__next40pxDefaultSize
+						__nextHasNoMarginBottom={ true }
+					/>
+				</BaseControl>
+			</PanelBody>
+
+			<PanelColorSettings
+				title={ __( 'Color', 'outletpro' ) }
+				initialOpen={ false }
+				disableCustomColors={ false }
+				colorSettings={ [
+					{
+						value: textColor,
+						label: __( 'Text', 'outletpro' ),
+						onChange: ( color: string | undefined ) =>
+							setTextColor( color || undefined ),
+					},
+					{
+						value: bgColor,
+						label: __( 'Background', 'outletpro' ),
+						onChange: ( backgroundColor: string | undefined ) =>
+							setBgColor( backgroundColor || undefined ),
+					},
+				] }
+			/>
+
+			<PanelBody title={ __( 'Typography', 'outletpro' ) }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<div style={ { marginBottom: '16px' } }>
+						<RangeControl
+							label={ __( 'Font size', 'outletpro' ) }
+							value={ density }
+							onChange={ ( value ) => {
+								if ( typeof value !== 'number' ) {
+									return;
+								}
+								setDensity( value );
+							} }
+							min={ 0 }
+							max={ 100 }
+							step={ 1 }
+							renderTooltipContent={ ( value ) => `${ value }%` }
+							allowReset={ true }
+							resetFallbackValue={ 50 }
+							withInputField={ false }
+							__next40pxDefaultSize
+						/>
+					</div>
+				</BaseControl>
+
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<CustomSelectControl
+						label={ __( 'Font weight', 'outletpro' ) }
+						options={ fontWeightOptions }
+						value={ selectedFontWeight }
+						onChange={ ( { selectedItem } ) => {
+							setFontWeight( selectedItem?.key || '' );
+						} }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+			</PanelBody>
+
+			<PanelBody title={ __( 'Dimensions', 'outletpro' ) }>
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<RangeControl
+						label={ __( 'Scale', 'outletpro' ) }
+						value={ scale }
+						renderTooltipContent={ ( value ) =>
+							typeof value === 'number'
+								? `${ ( value / 100 ).toFixed( 2 ) }x`
+								: ''
+						}
+						onChange={ ( value ) => {
+							if ( typeof value !== 'number' ) {
+								return;
+							}
+							setScale( value );
+						} }
+						min={ 100 }
+						max={ 200 }
+						step={ 1 }
+						allowReset={ true }
+						resetFallbackValue={ 166 }
+						withInputField={ false }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+			</PanelBody>
+
+			<PanelBody title={ __( 'Border', 'outletpro' ) }>
+				{ bordersEnabled && (
+					<div style={ { marginBottom: 16 } }>
+						<BorderControl
+							label={ __( 'Border', 'outletpro' ) }
+							hideLabelFromVision={ true }
+							value={ border }
+							onChange={ ( value ) => {
+								const nextWidth =
+									value?.width !== undefined
+										? String( value.width )
+										: undefined;
+								const nextStyle = value?.style || undefined;
+
+								// Auto-apply 'solid' when width > 0 and the user
+								// hasn't explicitly set a style yet.
+								const effectiveStyle =
+									parseFloat( nextWidth || '0' ) > 0 &&
+									borderStyle === ''
+										? 'solid'
+										: nextStyle;
+
+								setBorderColor( value?.color || undefined );
+								setBorderStyle( effectiveStyle );
+								setBorderWidth( nextWidth );
+							} }
+						/>
+					</div>
+				) }
+
+				<BaseControl __nextHasNoMarginBottom={ true }>
+					<UnitControl
+						label={ __( 'Radius', 'outletpro' ) }
+						value={ borderRadius || undefined }
+						onChange={ ( value: string | undefined ) =>
+							setBorderRadius( value || undefined )
+						}
+						min={ 0 }
+						__next40pxDefaultSize
+					/>
+				</BaseControl>
+			</PanelBody>
+		</>
+	);
+}
