@@ -27,7 +27,7 @@ function init_blocks(): void {
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10, 4 );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10, 4 );
-	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
+	add_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\populate_outlet_message_style_hook' );
 	add_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_hero_hook', 10, 4 );
 	add_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_hero_hook', 10, 5 );
 	add_filter( 'pre_render_block', 'OutletPro\conditionally_render_outlet_conditional_hook', 10, 2 );
@@ -47,7 +47,7 @@ function deinit_blocks(): void {
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_badge_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-badge', 'OutletPro\set_outlet_badge_spacing_hook', 10 );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_message_hook', 10 );
-	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' );
+	remove_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\populate_outlet_message_style_hook' );
 	remove_filter( 'hooked_block_types', 'OutletPro\auto_insert_outlet_hero_hook', 10 );
 	remove_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_hero_hook' );
 	remove_filter( 'render_block_data', 'OutletPro\set_outlet_product_collection_orderby_hook', 11 );
@@ -464,23 +464,33 @@ function auto_insert_outlet_message_hook( $hooked_blocks, $relative_position, $a
 }
 
 /**
- * Applies the theme mod style to auto-inserted outlet messages.
+ * Populate auto-inserted outlet message blocks.
  *
  * Fired by `hooked_block_outletpro/outlet-message`.
  *
  * @internal WordPress filter hook
  * @param array<string, mixed>|null $parsed_hooked_block Parsed outlet message block, or null when suppressed.
  * @return array<string, mixed>|null Filtered outlet message block, or null when suppressed.
- * @throws \UnexpectedValueException When the message block style is not a string.
  */
-function set_outlet_message_style_hook( ?array $parsed_hooked_block ): ?array {
+function populate_outlet_message_style_hook( ?array $parsed_hooked_block ): ?array {
 	if ( null === $parsed_hooked_block ) {
 		return null;
 	}
 
+	$strong    = true === get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, false );
+	$show_link = true === get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, false );
+
+	$parsed_hooked_block['attrs']['strong'] ??= $strong;
+	if ( $show_link ) {
+		if ( ! in_array( 'outletpro/outlet-link', array_column( $parsed_hooked_block['innerBlocks'], 'blockName' ), true ) ) {
+			$parsed_hooked_block['innerBlocks'][]  = parse_blocks( '<!-- wp:outletpro/outlet-link /-->' )[0];
+			$parsed_hooked_block['innerContent'][] = null;
+		}
+	}
+
 	$style = get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, '' );
 	if ( ! is_string( $style ) ) {
-		throw new \UnexpectedValueException( 'Outlet message block style must be a string.' );
+		return $parsed_hooked_block;
 	}
 
 	if ( '' === $style ) {
