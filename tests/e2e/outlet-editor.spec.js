@@ -443,6 +443,13 @@ test( 'views markdown levels', async ( { page } ) => {
 
 test( 'adds a markdown level', async ( { page } ) => {
 	// Arrange.
+	const panel = page.getByRole( 'button', { name: 'Markdown Levels' } );
+	if ( ( await panel.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panel.click();
+	}
+	await expect(
+		page.getByRole( 'button', { name: 'Add markdown level' } )
+	).toBeEnabled();
 	const levels = page.getByRole( 'button', { name: /^\d+% off$/ } );
 	const initialLevels = await levels.allTextContents();
 	const save = page
@@ -457,7 +464,9 @@ test( 'adds a markdown level', async ( { page } ) => {
 	await page.getByRole( 'button', { name: 'Add', exact: true } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
-	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
+	// The save review remounts the sidebar with collapsed panels.
+	await expect( panel ).toHaveAttribute( 'aria-expanded', 'false' );
+	await panel.click();
 	// Assert.
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
@@ -476,6 +485,13 @@ test( 'adds a markdown level', async ( { page } ) => {
 
 test( 'edits a markdown level', async ( { page } ) => {
 	// Arrange.
+	const panel = page.getByRole( 'button', { name: 'Markdown Levels' } );
+	if ( ( await panel.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panel.click();
+	}
+	await expect(
+		page.getByRole( 'button', { name: 'Add markdown level' } )
+	).toBeEnabled();
 	const levels = page.getByRole( 'button', { name: /^\d+% off$/ } );
 	const initialLevels = await levels.allTextContents();
 	const save = page
@@ -497,7 +513,8 @@ test( 'edits a markdown level', async ( { page } ) => {
 	).toBeFocused();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
-	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
+	await expect( panel ).toHaveAttribute( 'aria-expanded', 'false' );
+	await panel.click();
 	// Assert.
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
@@ -521,6 +538,13 @@ test( 'edits a markdown level', async ( { page } ) => {
 
 test( 'deletes a markdown level', async ( { page } ) => {
 	// Arrange.
+	const panel = page.getByRole( 'button', { name: 'Markdown Levels' } );
+	if ( ( await panel.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panel.click();
+	}
+	await expect(
+		page.getByRole( 'button', { name: 'Add markdown level' } )
+	).toBeEnabled();
 	const levels = page.getByRole( 'button', { name: /^\d+% off$/ } );
 	const initialLevels = await levels.allTextContents();
 	const save = page
@@ -539,7 +563,8 @@ test( 'deletes a markdown level', async ( { page } ) => {
 	await page.getByRole( 'menuitem', { name: 'Remove 70% off' } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
-	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
+	await expect( panel ).toHaveAttribute( 'aria-expanded', 'false' );
+	await panel.click();
 	// Assert.
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
@@ -563,7 +588,10 @@ test( 'deletes a markdown level', async ( { page } ) => {
 
 test( 'adds a price level', async ( { page, requestUtils } ) => {
 	// Arrange.
-	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
+	const panel = page.getByRole( 'button', { name: 'Price Levels' } );
+	if ( ( await panel.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panel.click();
+	}
 	const prices = page.getByRole( 'region', { name: 'Price Levels' } );
 	const levels = prices.getByRole( 'button', { name: /^Under / } );
 	const save = page
@@ -578,7 +606,8 @@ test( 'adds a price level', async ( { page, requestUtils } ) => {
 	await page.getByRole( 'button', { name: 'Add', exact: true } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
-	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
+	await expect( panel ).toHaveAttribute( 'aria-expanded', 'false' );
+	await panel.click();
 	// Assert.
 	await expect( review ).toHaveCount( 0 );
 	await expect( levels ).toHaveCount( 4 );
@@ -589,6 +618,10 @@ test( 'adds a price level', async ( { page, requestUtils } ) => {
 
 test( 'edits a price level', async ( { page, requestUtils } ) => {
 	// Arrange.
+	const panel = page.getByRole( 'button', { name: 'Price Levels' } );
+	if ( ( await panel.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panel.click();
+	}
 	const levels = page
 		.getByRole( 'region', { name: 'Price Levels' } )
 		.getByRole( 'button', { name: /^Under / } );
@@ -608,7 +641,8 @@ test( 'edits a price level', async ( { page, requestUtils } ) => {
 	await expect( levels.last() ).toBeFocused();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
-	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
+	await expect( panel ).toHaveAttribute( 'aria-expanded', 'false' );
+	await panel.click();
 	// Assert.
 	await expect( review ).toHaveCount( 0 );
 	await expect( levels ).toHaveCount( 4 );
@@ -619,12 +653,14 @@ test( 'edits a price level', async ( { page, requestUtils } ) => {
 
 test( 'removes a price level', async ( { page, requestUtils } ) => {
 	// Arrange.
-	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
+	const panel = page.getByRole( 'button', { name: 'Price Levels' } );
+	if ( ( await panel.getAttribute( 'aria-expanded' ) ) === 'false' ) {
+		await panel.click();
+	}
 	const prices = page.getByRole( 'region', { name: 'Price Levels' } );
 	const levels = prices.getByRole( 'button', { name: /^Under / } );
-	const markdownLevels = await page
-		.getByRole( 'button', { name: /^\d+% off$/ } )
-		.allTextContents();
+	const { outletpro_markdown_levels: markdownLevels } =
+		await requestUtils.rest( { path: '/wp/v2/settings' } );
 	const save = page
 		.getByRole( 'toolbar', { name: 'Page actions' } )
 		.getByRole( 'button', { name: 'Save', exact: true } );
@@ -640,7 +676,8 @@ test( 'removes a price level', async ( { page, requestUtils } ) => {
 	await page.getByRole( 'menuitem', { name: /^Remove Under / } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
-	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
+	await expect( panel ).toHaveAttribute( 'aria-expanded', 'false' );
+	await panel.click();
 	// Assert.
 	await expect( review ).toHaveCount( 0 );
 	await expect( levels ).toHaveCount( 3 );
@@ -649,9 +686,7 @@ test( 'removes a price level', async ( { page, requestUtils } ) => {
 	).toBeEnabled();
 	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
 	expect( settings.outletpro_price_levels ).toEqual( [ 10, 25, 50 ] );
-	expect(
-		settings.outletpro_markdown_levels.map( ( level ) => `${ level }% off` )
-	).toEqual( markdownLevels );
+	expect( settings.outletpro_markdown_levels ).toEqual( markdownLevels );
 } );
 
 test( 'edits and saves global badge settings from the Badge tab', async ( {
@@ -693,7 +728,7 @@ test( 'edits and saves global badge settings from the Badge tab', async ( {
 			.fill( 'Clearance specials' );
 		await page.getByRole( 'tab', { name: 'Page' } ).click();
 		await expect(
-			page.getByRole( 'button', { name: 'Add markdown level' } )
+			page.getByRole( 'button', { name: 'Markdown Levels' } )
 		).toBeVisible();
 		await page.getByRole( 'tab', { name: 'Badge' } ).click();
 		await save.click();
