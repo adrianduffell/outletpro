@@ -89,7 +89,7 @@ export default function LevelsPanel( {
 	return (
 		<PanelBody
 			title={ labels.title }
-			initialOpen
+			initialOpen={ false }
 			className="outletpro-markdown-levels"
 		>
 			{ error && (

@@ -28,6 +28,7 @@ test.each( [ '0', '30', '1250' ] )( 'validates price input %s', ( value ) => {
 		/>
 	);
 	// Act.
+	fireEvent.click( view.getByRole( 'button', { name: 'Price Levels' } ) );
 	fireEvent.click( view.getByRole( 'button', { name: 'Add price level' } ) );
 	const input = view.getByRole( 'spinbutton', { name: 'Price' } );
 	fireEvent.change( input, { target: { value } } );
@@ -63,7 +64,9 @@ function renderPanel( initialLevels: number[] ) {
 			removeListener: vi.fn(),
 		} ) )
 	);
-	return render( <TestPanel initialLevels={ initialLevels } /> );
+	const view = render( <TestPanel initialLevels={ initialLevels } /> );
+	fireEvent.click( view.getByRole( 'button', { name: 'Markdown Levels' } ) );
+	return view;
 }
 
 test( 'shows a load error without editable defaults', () => {
@@ -78,6 +81,7 @@ test( 'shows a load error without editable defaults', () => {
 			disabled={ false }
 		/>
 	);
+	fireEvent.click( view.getByRole( 'button', { name: 'Markdown Levels' } ) );
 	// Assert.
 	expect(
 		within( view.container ).getByText( 'Settings access denied.' )
@@ -225,6 +229,7 @@ test( 'displays saved levels in numeric order without changing the supplied list
 			disabled={ false }
 		/>
 	);
+	fireEvent.click( view.getByRole( 'button', { name: 'Markdown Levels' } ) );
 	// Assert.
 	expect(
 		view

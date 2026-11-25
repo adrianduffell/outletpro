@@ -424,6 +424,14 @@ test( 'unpublishes the outlet page', async ( { page } ) => {
 } );
 
 test( 'views markdown levels', async ( { page } ) => {
+	// Arrange.
+	const markdown = page.getByRole( 'button', { name: 'Markdown Levels' } );
+	await expect( markdown ).toHaveAttribute( 'aria-expanded', 'false' );
+	await expect(
+		page.getByRole( 'button', { name: 'Price Levels' } )
+	).toHaveAttribute( 'aria-expanded', 'false' );
+	// Act.
+	await markdown.click();
 	// Assert.
 	await expect(
 		page.getByRole( 'button', { name: 'Add markdown level' } )
@@ -449,6 +457,7 @@ test( 'adds a markdown level', async ( { page } ) => {
 	await page.getByRole( 'button', { name: 'Add', exact: true } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
 	// Assert.
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
@@ -488,6 +497,7 @@ test( 'edits a markdown level', async ( { page } ) => {
 	).toBeFocused();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
 	// Assert.
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
@@ -529,6 +539,7 @@ test( 'deletes a markdown level', async ( { page } ) => {
 	await page.getByRole( 'menuitem', { name: 'Remove 70% off' } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
 	// Assert.
 	await expect(
 		page.getByText( 'Site updated.', { exact: true } )
@@ -552,6 +563,7 @@ test( 'deletes a markdown level', async ( { page } ) => {
 
 test( 'adds a price level', async ( { page, requestUtils } ) => {
 	// Arrange.
+	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
 	const prices = page.getByRole( 'region', { name: 'Price Levels' } );
 	const levels = prices.getByRole( 'button', { name: /^Under / } );
 	const save = page
@@ -566,6 +578,7 @@ test( 'adds a price level', async ( { page, requestUtils } ) => {
 	await page.getByRole( 'button', { name: 'Add', exact: true } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
 	// Assert.
 	await expect( review ).toHaveCount( 0 );
 	await expect( levels ).toHaveCount( 4 );
@@ -595,6 +608,7 @@ test( 'edits a price level', async ( { page, requestUtils } ) => {
 	await expect( levels.last() ).toBeFocused();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
 	// Assert.
 	await expect( review ).toHaveCount( 0 );
 	await expect( levels ).toHaveCount( 4 );
@@ -605,6 +619,7 @@ test( 'edits a price level', async ( { page, requestUtils } ) => {
 
 test( 'removes a price level', async ( { page, requestUtils } ) => {
 	// Arrange.
+	await page.getByRole( 'button', { name: 'Markdown Levels' } ).click();
 	const prices = page.getByRole( 'region', { name: 'Price Levels' } );
 	const levels = prices.getByRole( 'button', { name: /^Under / } );
 	const markdownLevels = await page
@@ -625,6 +640,7 @@ test( 'removes a price level', async ( { page, requestUtils } ) => {
 	await page.getByRole( 'menuitem', { name: /^Remove Under / } ).click();
 	await save.click();
 	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await page.getByRole( 'button', { name: 'Price Levels' } ).click();
 	// Assert.
 	await expect( review ).toHaveCount( 0 );
 	await expect( levels ).toHaveCount( 3 );
