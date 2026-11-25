@@ -823,6 +823,8 @@ function render_outlet_message_callback( array $attributes, string $content, \WP
 	$wrapper_attributes = get_block_wrapper_attributes(
 		array(
 			'class' => implode( ' ', $classes ),
+			// Core layout styles read saved attributes, which omit the default block gap.
+			'style' => isset( $block->parsed_block['attrs']['style']['spacing']['blockGap'] ) ? '' : 'gap:0.75em;',
 		)
 	);
 
