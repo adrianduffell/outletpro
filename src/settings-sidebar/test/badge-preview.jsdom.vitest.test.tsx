@@ -83,6 +83,19 @@ test( 'previews the current badge between the description and design picker', ()
 	} );
 } );
 
+test( 'decodes HTML entities in badge preview labels', () => {
+	// Arrange.
+	const view = renderSettings( {
+		outletpro_badge_label: 'Last &amp; final chance',
+	} );
+
+	// Act.
+	const preview = view.getByRole( 'group', { name: 'Badge preview' } );
+
+	// Assert.
+	expect( preview ).toHaveTextContent( 'Last & final chance' );
+} );
+
 test( 'updates the preview immediately when choosing a design or editing its label', () => {
 	// Arrange.
 	const view = renderSettings();

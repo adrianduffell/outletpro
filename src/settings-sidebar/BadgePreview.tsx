@@ -4,6 +4,7 @@
  */
 
 import type { CSSProperties } from 'react';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 import type { Settings } from '../use-settings';
 import '../blocks/outlet-badge/style.css';
@@ -35,7 +36,7 @@ export default function BadgePreview( {
 			aria-label={ __( 'Badge preview', 'outletpro' ) }
 		>
 			<span className="outletpro-badge" style={ style }>
-				{ settings.label ?? '' }
+				{ decodeEntities( settings.label ?? '' ) }
 			</span>
 		</div>
 	);
