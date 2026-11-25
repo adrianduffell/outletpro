@@ -2,6 +2,34 @@
 
 © 2026 Adrian Duffell
 
+## 1.2.0 (2026-11-25)
+
+Migrates the outlet page to the product catalog template for block and
+classic themes. Introduces a new Outlet Hero area on the product
+catalog to insert outlet content into the template on outlet pages.
+This can be customized from a template part on block themes and a widget
+on classic themes.
+
+A new outlet editor is added for the outlet page, accessed from the edit
+page link. Provides panel for outlet product management, and markdown and 
+price levels. Additionally the badge and message can be customized from
+the outlet editor.
+
+New badge designs can now be selected: Clearance, Final sale, and Outlet.
+
+Other changes:
+
+- An outletpro.is_outlet field is added to the products REST API.
+- Added an outlet link block that links to the outlet page.
+- The outlet message is moved under the price.
+- The outlet message displays a link to the outlet page.
+- New styles for the outlet message: Fine, Bold, and Notice.
+- An option is added to the outlet message to use a strong tag.
+- The default font size is removed from the outlet message.
+- The message is rendered with a p tag on classic themes.
+- Padding support is added to the message block.
+- Spacing on navigation patterns is standardized at preset 50.
+
 ## 1.1.1 (2026-11-07)
 
 Maintenance release fixing the issues:
