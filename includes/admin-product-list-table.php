@@ -75,9 +75,15 @@ function product_onboarding_notice_hook(): void {
 	$new_badge = '<span class="outletpro-new">' . esc_html__( 'New', 'outletpro' ) . '</span> ';
 
 	if ( $is_empty ) {
-		$content = '<p>' . $new_badge .
+		$edit_url = null;
+		if ( null !== $page_id && 'trash' !== get_post_status( $page_id ) ) {
+			$edit_url = get_edit_post_link( $page_id );
+		}
+		$edit_link = $edit_url ? ' <a class="outletpro-button-link" href="' . esc_url( $edit_url ) . '">' . esc_html__( 'Edit outlet page', 'outletpro' ) . '</a>' : '';
+		$content   = '<p>' . $new_badge .
 			'<strong>' . esc_html__( 'There are no outlet products.', 'outletpro' ) . '</strong> ' .
-			esc_html__( 'Get started by including a product using the checkbox in the product’s inventory panel.', 'outletpro' ) . '</p>';
+			esc_html__( 'Get started by editing the outlet page.', 'outletpro' ) .
+			$edit_link . '</p>';
 	} elseif ( null === $page_id || 'trash' === get_post_status( $page_id ) ) {
 		$count   = count_outlet();
 		$content = '<p>' . $new_badge .

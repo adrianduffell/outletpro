@@ -45,9 +45,12 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		wp_set_current_user( $user_id );
 		init_taxonomies();
 		seed_outlet_status_taxonomy();
+		delete_option( OUTLET_PAGE_OPTION );
+		create_outlet_page();
 
 		// Expect.
-		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
+		$expected_url = esc_attr( get_edit_post_link( get_option( OUTLET_PAGE_OPTION ), 'raw' ) );
+		$this->expectOutputRegex( '/Get started by editing the outlet page\. <a class="outletpro-button-link" href="' . preg_quote( $expected_url, '/' ) . '">Edit outlet page<\/a>/' );
 
 		// Act.
 		do_action( 'admin_notices' );
@@ -192,7 +195,65 @@ class Test_Product_Onboarding_Notice_Hook extends WP_UnitTestCase {
 		create_outlet_page();
 
 		// Expect.
-		$this->expectOutputRegex( '/outletpro-onboarding-notice/' );
+		$expected_url = esc_attr( get_edit_post_link( get_option( OUTLET_PAGE_OPTION ), 'raw' ) );
+		$this->expectOutputRegex( '/<strong>There are no outlet products\.<\/strong> Get started by editing the outlet page\. <a class="outletpro-button-link" href="' . preg_quote( $expected_url, '/' ) . '">Edit outlet page<\/a>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_empty_state_notice_omits_edit_link_when_outlet_page_is_not_registered(): void {
+		// Arrange.
+		global $post;
+		init_admin_product_list_table();
+		set_current_screen( 'product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$post = self::factory()->post->create_and_get( array( 'post_type' => 'product' ) );
+		delete_option( OUTLET_PAGE_OPTION );
+
+		// Expect.
+		$this->expectOutputRegex( '/Get started by editing the outlet page\.<\/p>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_empty_state_notice_omits_edit_link_when_outlet_page_is_trashed(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+		wp_trash_post( $page_id );
+
+		// Expect.
+		$this->expectOutputRegex( '/Get started by editing the outlet page\.<\/p>/' );
+
+		// Act.
+		do_action( 'admin_notices' );
+	}
+
+	public function test_empty_state_notice_omits_edit_link_when_user_cannot_edit_outlet_page(): void {
+		// Arrange.
+		init_admin_product_list_table();
+		set_current_screen( 'edit-product' );
+		$user_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
+		wp_set_current_user( $user_id );
+		wp_get_current_user()->add_cap( 'edit_products' );
+		init_taxonomies();
+		seed_outlet_status_taxonomy();
+		$page_id = self::factory()->post->create( array( 'post_type' => 'page' ) );
+		update_option( OUTLET_PAGE_OPTION, $page_id );
+
+		// Expect.
+		$this->expectOutputRegex( '/Get started by editing the outlet page\.<\/p>/' );
 
 		// Act.
 		do_action( 'admin_notices' );
