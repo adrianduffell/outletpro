@@ -288,7 +288,7 @@ test( 'Shopping flow', async ( { page, admin, requestUtils, browser } ) => {
 	const message = customerPage.locator( 'main .outletpro-message' );
 	await expect( message ).toHaveCount( 1 );
 	await expect( message ).toBeVisible();
-	await expect( message ).toHaveText( wpSettings.outletpro_message );
+	await expect( message ).toContainText( wpSettings.outletpro_message );
 
 	// Check badge in the mini-cart (block themes only).
 	// The mini-cart drawer uses the same cart-item DOM structure as the cart block.

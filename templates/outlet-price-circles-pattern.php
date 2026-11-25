@@ -92,8 +92,6 @@ $grid_attrs = array(
 			'margin'   => array(
 				'top'    => 'var:preset|spacing|50',
 				'bottom' => 'var:preset|spacing|50',
-				'left'   => 'var:preset|spacing|40',
-				'right'  => 'var:preset|spacing|40',
 			),
 		),
 		'typography' => array(
@@ -107,19 +105,11 @@ $grid_attrs = array(
 		'@tablet'    => array(
 			'spacing' => array(
 				'blockGap' => 'var:preset|spacing|30',
-				'margin'   => array(
-					'left'  => '0',
-					'right' => '0',
-				),
 			),
 		),
 		'@mobile'    => array(
 			'spacing' => array(
 				'blockGap' => 'var:preset|spacing|30',
-				'margin'   => array(
-					'left'  => '0',
-					'right' => '0',
-				),
 			),
 		),
 	),
