@@ -37,6 +37,8 @@ if ( version_compare( get_option( 'outletpro_db_version', '1' ), '2', '<' ) ) {
 }
 
 if ( version_compare( get_option( 'outletpro_db_version', '1' ), '3', '<' ) ) {
+	set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, false );
+	set_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, true );
 	set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'fine' );
 	add_option( LEGACY_OUTLET_PAGE_TEMPLATE_OPTION, 'yes' );
 	( static function () use ( $wpdb ): void {
