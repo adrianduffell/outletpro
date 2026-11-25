@@ -124,7 +124,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 'Only while stocks last', get_option( OUTLET_MESSAGE_OPTION ) );
+		$this->assertSame( 'Only while stocks last.', get_option( OUTLET_MESSAGE_OPTION ) );
 	}
 
 	public function test_sets_supplies_last_message_for_us_store(): void {
@@ -136,7 +136,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 'Only while supplies last', get_option( OUTLET_MESSAGE_OPTION ) );
+		$this->assertSame( 'Only while supplies last.', get_option( OUTLET_MESSAGE_OPTION ) );
 	}
 
 	public function test_sets_supplies_last_message_for_canadian_store(): void {
@@ -148,7 +148,7 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 		seed_settings();
 
 		// Assert.
-		$this->assertSame( 'Only while supplies last', get_option( OUTLET_MESSAGE_OPTION ) );
+		$this->assertSame( 'Only while supplies last.', get_option( OUTLET_MESSAGE_OPTION ) );
 	}
 
 	public function test_does_not_overwrite_existing_message_option(): void {
@@ -160,6 +160,18 @@ class Test_Seed_Settings extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'Custom message.', get_option( OUTLET_MESSAGE_OPTION ) );
+	}
+
+	public function test_preserves_an_existing_message_without_a_period(): void {
+		// Arrange.
+		update_option( 'woocommerce_default_country', 'US' );
+		update_option( OUTLET_MESSAGE_OPTION, 'Only while supplies last' );
+
+		// Act.
+		seed_settings();
+
+		// Assert.
+		$this->assertSame( 'Only while supplies last', get_option( OUTLET_MESSAGE_OPTION ) );
 	}
 
 	public function test_sets_badge_text_color_default_when_option_does_not_exist(): void {

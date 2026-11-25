@@ -293,8 +293,8 @@ function deinit_settings(): void {
 /**
  * Get the default outlet message based on the store's country.
  *
- * Returns "Only while supplies last" for US and Canada, and
- * "Only while stocks last" for all other countries.
+ * Returns "Only while supplies last." for US and Canada, and
+ * "Only while stocks last." for all other countries.
  *
  * @since 1.0.0
  */
@@ -303,10 +303,10 @@ function get_default_outlet_message(): string {
 	$country       = explode( ':', $base_location )[0];
 
 	if ( in_array( $country, array( 'US', 'CA' ), true ) ) {
-		return __( 'Only while supplies last', 'outletpro' );
+		return __( 'Only while supplies last.', 'outletpro' );
 	}
 
-	return __( 'Only while stocks last', 'outletpro' );
+	return __( 'Only while stocks last.', 'outletpro' );
 }
 
 /**
