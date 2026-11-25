@@ -3,12 +3,7 @@
  * Licensed under the GNU General Public License v2.0 or later.
  */
 
-import {
-	BaseControl,
-	PanelBody,
-	TabPanel,
-	TextareaControl,
-} from '@wordpress/components';
+import { TabPanel } from '@wordpress/components';
 import { store as coreStore } from '@wordpress/core-data';
 import { useDispatch, useSelect } from '@wordpress/data';
 import { useEffect } from '@wordpress/element';
@@ -18,6 +13,7 @@ import { registerPlugin } from '@wordpress/plugins';
 import { settings } from '@wordpress/icons';
 import useSettings from '../use-settings';
 import BadgeSettings from './BadgeSettings';
+import MessageSettings from './MessageSettings';
 import { COMPLEMENTARY_AREA, SIDEBAR_NAME, QUERY_PARAM } from './constants';
 
 const withSiteRecord = ( Component: React.ComponentType ) => () => {
@@ -42,40 +38,6 @@ const SettingsSidebar = () => {
 	}, [ enableComplementaryArea ] );
 
 	const outletSettings = useSettings();
-	const { message, setMessage } = outletSettings;
-
-	const renderMessageSettings = () => (
-		<>
-			<PanelBody>
-				<p
-					data-testid="outletpro-message-tab-description"
-					style={ { marginBottom: 0 } }
-				>
-					{ __(
-						'Customize the outlet message. Changes apply to the whole site.',
-						'outletpro'
-					) }
-				</p>
-			</PanelBody>
-
-			<PanelBody title={ __( 'Message', 'outletpro' ) } initialOpen>
-				<BaseControl __nextHasNoMarginBottom={ true }>
-					<TextareaControl
-						label={ __( 'Message', 'outletpro' ) }
-						hideLabelFromVision={ true }
-						value={ message ?? '' }
-						onChange={ ( value ) => setMessage( value ) }
-						rows={ 2 }
-						__nextHasNoMarginBottom={ true }
-						help={ __(
-							'Displayed for outlet products.',
-							'outletpro'
-						) }
-					/>
-				</BaseControl>
-			</PanelBody>
-		</>
-	);
 
 	return (
 		<>
@@ -110,7 +72,9 @@ const SettingsSidebar = () => {
 				>
 					{ ( tab ) => {
 						if ( tab.name === 'message' ) {
-							return renderMessageSettings();
+							return (
+								<MessageSettings settings={ outletSettings } />
+							);
 						}
 						return <BadgeSettings settings={ outletSettings } />;
 					} }

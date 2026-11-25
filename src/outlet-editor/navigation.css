@@ -112,7 +112,8 @@
 	right: 8px;
 }
 
-.outletpro-editor-badge-settings {
+.outletpro-editor-badge-settings,
+.outletpro-editor-message-settings {
 	min-width: 0;
 	margin: 0;
 	padding: 0;

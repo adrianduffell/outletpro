@@ -17,6 +17,7 @@ export default function EditorFrame( {
 	workspace,
 	settings,
 	badgeSettings,
+	messageSettings,
 	actions,
 	notices,
 	disabled = false,
@@ -28,6 +29,7 @@ export default function EditorFrame( {
 	workspace?: ReactNode;
 	settings?: ReactNode;
 	badgeSettings?: ReactNode;
+	messageSettings?: ReactNode;
 	actions?: ReactNode;
 	notices?: ReactNode;
 	disabled?: boolean;
@@ -104,11 +106,21 @@ export default function EditorFrame( {
 									name: 'badge',
 									title: __( 'Badge', 'outletpro' ),
 								},
+								{
+									name: 'message',
+									title: __( 'Message', 'outletpro' ),
+								},
 							] }
 						>
-							{ ( tab ) =>
-								tab.name === 'badge' ? badgeSettings : settings
-							}
+							{ ( tab ) => {
+								if ( tab.name === 'badge' ) {
+									return badgeSettings;
+								}
+								if ( tab.name === 'message' ) {
+									return messageSettings;
+								}
+								return settings;
+							} }
 						</TabPanel>
 						<Button
 							className="outletpro-editor-close-settings"

@@ -21,6 +21,7 @@ import { MarkdownLevels, PriceLevels } from './level-panels';
 import useOutletPage from './useOutletPage';
 import useSettings from '../use-settings';
 import BadgeSettings from '../settings-sidebar/BadgeSettings';
+import MessageSettings from '../settings-sidebar/MessageSettings';
 import { getErrorMessage } from './error-message';
 import type { EditorConfig } from './types';
 
@@ -210,6 +211,31 @@ export default function OutletEditor( {
 							disabled={ busy }
 						>
 							<BadgeSettings settings={ outletSettings } />
+						</fieldset>
+					) }
+				</>
+			}
+			messageSettings={
+				<>
+					{ settingsFailure && (
+						<Notice status="error" isDismissible={ false }>
+							{ getErrorMessage(
+								settingsFailure,
+								__(
+									'Message settings could not be loaded.',
+									'outletpro'
+								)
+							) }
+						</Notice>
+					) }
+					{ ! settingsFailure && ! hasSettings && <Spinner /> }
+					{ ! settingsFailure && hasSettings && (
+						<fieldset
+							className="outletpro-editor-message-settings"
+							aria-label={ __( 'Message settings', 'outletpro' ) }
+							disabled={ busy }
+						>
+							<MessageSettings settings={ outletSettings } />
 						</fieldset>
 					) }
 				</>

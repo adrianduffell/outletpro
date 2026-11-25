@@ -788,6 +788,68 @@ test( 'edits and saves global badge settings from the Badge tab', async ( {
 	}
 } );
 
+test( 'updates the outlet message', async ( { page, requestUtils } ) => {
+	// Arrange.
+	const settings = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	const save = page
+		.getByRole( 'toolbar', { name: 'Page actions' } )
+		.getByRole( 'button', { name: 'Save', exact: true } );
+	const review = page.getByRole( 'dialog', {
+		name: 'Are you ready to save?',
+	} );
+	const message = page.getByRole( 'textbox', { name: 'Message' } );
+	// Act.
+	await page.getByRole( 'tab', { name: 'Badge' } ).press( 'ArrowRight' );
+	await message.fill( 'Limited stock. All sales final.' );
+	await page.getByRole( 'tab', { name: 'Page' } ).click();
+	await page.getByRole( 'tab', { name: 'Message' } ).click();
+	await save.click();
+	await review.getByRole( 'button', { name: 'Cancel' } ).click();
+
+	// Assert.
+	await expect( message ).toHaveValue( 'Limited stock. All sales final.' );
+	await expect(
+		page.getByRole( 'tabpanel', { name: 'Message' } )
+	).toContainText( 'Changes apply to the whole site.' );
+
+	// Act.
+	await save.click();
+	await review.getByRole( 'button', { name: 'Save', exact: true } ).click();
+	await expect( review ).toHaveCount( 0 );
+	await expect( save ).toBeDisabled();
+	await page.reload();
+	await page.getByRole( 'tab', { name: 'Message' } ).click();
+
+	// Assert.
+	await expect( message ).toHaveValue( 'Limited stock. All sales final.' );
+	const saved = await requestUtils.rest( { path: '/wp/v2/settings' } );
+	expect( saved.outletpro_message ).toBe( 'Limited stock. All sales final.' );
+	await page.screenshot( {
+		path: test.info().outputPath( 'message-desktop.png' ),
+	} );
+	await page.setViewportSize( { width: 390, height: 844 } );
+	await expect(
+		page.getByRole( 'tab', { name: 'Message' } )
+	).toBeInViewport();
+	await expect( message ).toBeInViewport();
+	await expect(
+		page.getByRole( 'button', { name: 'Close settings' } )
+	).toBeInViewport();
+	await page.screenshot( {
+		path: test.info().outputPath( 'message-mobile.png' ),
+	} );
+
+	// Cleanup.
+	await requestUtils.rest( {
+		method: 'POST',
+		path: '/wp/v2/settings',
+		data: { outletpro_message: settings.outletpro_message },
+	} );
+	await page.setViewportSize( { width: 1280, height: 900 } );
+	await page.reload();
+	await expect( page.getByRole( 'row' ).nth( 1 ) ).toBeVisible();
+} );
+
 test( 'shows a product loading error', async ( { page } ) => {
 	// Arrange.
 	await page.route( '**/*', async ( route ) => {
