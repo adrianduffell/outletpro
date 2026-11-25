@@ -13,6 +13,9 @@ use const OutletPro\OUTLET_HERO_PATTERN_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
 class Test_After_Switch_Theme_Hook extends WP_UnitTestCase {
@@ -43,6 +46,9 @@ class Test_After_Switch_Theme_Hook extends WP_UnitTestCase {
 		$this->assertSame( 'outletpro/outlet-navigation-price-tiers', get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
 		$this->assertSame( array( 'core/post-title', 'before' ), get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce/product-details', 'after' ), get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
+		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD ) );
 	}
@@ -53,6 +59,10 @@ class Test_After_Switch_Theme_Hook extends WP_UnitTestCase {
 		init_theme_mods();
 		switch_theme( 'twentytwentyfive' );
 		set_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD, 'outletpro/outlet-navigation-6' );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-price', 'after' ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, false );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, false );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'bold' );
 		switch_theme( 'storefront' );
 		self::factory()->term->create_many( 4, array( 'taxonomy' => 'product_cat' ) );
 		$regeneration_url = add_query_arg( 'action', 'wp_' . get_current_blog_id() . '_wc_regenerate_images', admin_url( 'admin-ajax.php' ) );
@@ -71,5 +81,8 @@ class Test_After_Switch_Theme_Hook extends WP_UnitTestCase {
 
 		// Assert.
 		$this->assertSame( 'outletpro/outlet-navigation-6', get_theme_mod( OUTLET_HERO_PATTERN_THEME_MOD ) );
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
+		$this->assertSame( 'bold', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 }

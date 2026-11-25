@@ -33,6 +33,13 @@ const SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD = 'outletpro_single_product_me
 const SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD = 'outletpro_single_product_message_block_style';
 
 /**
+ * WordPress theme mod key used to control strong text on outlet messages.
+ *
+ * @internal
+ */
+const SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD = 'outletpro_single_product_message_bold';
+
+/**
  * WordPress theme mod key used to store the block hook for the single product badge block.
  *
  * @internal
@@ -47,7 +54,7 @@ const SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD = 'outletpro_single_product_badg
 const SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD = 'outletpro_single_product_message_template_hook';
 
 /**
- * WordPress theme mod key used to show the outlet page link after the classic message.
+ * WordPress theme mod key used to control the outlet page link on outlet messages.
  *
  * @internal
  */
@@ -137,12 +144,14 @@ function seed_theme_mods(): void {
 					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-price', 'after' ) );
 				}
 			}
+			if ( ! array_key_exists( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, $mods ) ) {
+				set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, true );
+			}
+			if ( ! array_key_exists( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, $mods ) ) {
+				set_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, true );
+			}
 			if ( ! array_key_exists( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, $mods ) ) {
-				if ( 'purple' === get_template() ) {
-					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'notice' );
-				} else {
-					set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'bold' );
-				}
+				set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'fine' );
 			}
 			break;
 		case false:

@@ -15,6 +15,7 @@ use const OutletPro\SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD;
+use const OutletPro\SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD;
 use const OutletPro\SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD;
 
@@ -128,6 +129,9 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		remove_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD );
 		remove_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD );
@@ -139,6 +143,9 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		$this->assertSame( array( 'core/term-description', 'after' ), get_theme_mod( PRODUCT_CATALOG_CONDITIONAL_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'core/post-title', 'before' ), get_theme_mod( SINGLE_PRODUCT_BADGE_BLOCK_HOOK_THEME_MOD ) );
 		$this->assertSame( array( 'woocommerce/product-price', 'after' ), get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
+		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_BADGE_TEMPLATE_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_TEMPLATE_HOOK_THEME_MOD ) );
 		$this->assertFalse( get_theme_mod( OUTLET_HERO_TEMPLATE_HOOK_THEME_MOD ) );
@@ -154,7 +161,7 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		seed_theme_mods();
 
 		// Assert.
-		$this->assertSame( 'bold', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 
 	public function test_does_not_seed_single_product_message_block_style_when_already_defined(): void {
@@ -170,16 +177,74 @@ class Test_Seed_Theme_Mods extends WP_UnitTestCase {
 		$this->assertSame( 'notice', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 
-	public function test_seeds_single_product_message_block_style_with_notice_on_purple_theme(): void {
+	public function test_seeds_fine_message_text_and_a_link_on_purple(): void {
 		// Arrange.
 		switch_theme( 'purple' );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD );
 		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
 
 		// Act.
 		seed_theme_mods();
 
 		// Assert.
+		$this->assertSame( 'fine', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
+	}
+
+	public function test_preserves_disabled_message_defaults_for_a_new_theme(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, false );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, false );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'notice' );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
+		$this->assertSame( 'notice', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+	}
+
+	public function test_seeds_missing_message_flags_for_an_existing_hook(): void {
+		// Arrange.
+		switch_theme( 'purple' );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD, array( 'woocommerce/product-details', 'after' ) );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'notice' );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertTrue( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
+		$this->assertSame( 'notice', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
+	}
+
+	public function test_repeated_seeding_preserves_changed_message_defaults(): void {
+		// Arrange.
+		switch_theme( 'twentytwentyfive' );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_HOOK_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD );
+		remove_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD );
+		seed_theme_mods();
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD, false );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD, false );
+		set_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD, 'notice' );
+
+		// Act.
+		seed_theme_mods();
+
+		// Assert.
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_BOLD_THEME_MOD ) );
+		$this->assertFalse( get_theme_mod( SINGLE_PRODUCT_MESSAGE_SHOW_LINK_THEME_MOD ) );
 		$this->assertSame( 'notice', get_theme_mod( SINGLE_PRODUCT_MESSAGE_BLOCK_STYLE_THEME_MOD ) );
 	}
 

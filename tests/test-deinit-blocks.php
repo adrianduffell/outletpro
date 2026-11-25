@@ -28,16 +28,17 @@ class Test_Deinit_Blocks extends WP_UnitTestCase {
 		$this->assertFalse( has_filter( 'hooked_block_outletpro/outlet-conditional', 'OutletPro\populate_outlet_hero_hook' ) );
 	}
 
-	public function test_unregisters_message_style_hook(): void {
+	public function test_unregisters_message_population_hook(): void {
 		// Arrange.
 		deinit_blocks();
 		init_blocks();
+		$this->assertSame( 10, has_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\populate_outlet_message_style_hook' ) );
 
 		// Act.
 		deinit_blocks();
 
 		// Assert.
-		$this->assertFalse( has_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\set_outlet_message_style_hook' ) );
+		$this->assertFalse( has_filter( 'hooked_block_outletpro/outlet-message', 'OutletPro\populate_outlet_message_style_hook' ) );
 	}
 
 	public function test_unregisters_message_styles(): void {
