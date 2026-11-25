@@ -20,6 +20,7 @@ vi.mock( '@wordpress/api-fetch', () => ( { default: vi.fn() } ) );
 const cases = [
 	{
 		kind: 'markdown',
+		panel: 'Markdown Levels',
 		option: 'outletpro_markdown_levels',
 		before: '30% off',
 		after: '40% off',
@@ -27,6 +28,7 @@ const cases = [
 	},
 	{
 		kind: 'price',
+		panel: 'Price Levels',
 		option: 'outletpro_price_levels',
 		before: 'Under £30',
 		after: 'Under £40',
@@ -68,6 +70,7 @@ test( 'shows settings load failures in the sidebar', async () => {
 		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
 		{ wrapper }
 	);
+	fireEvent.click( view.getByRole( 'button', { name: 'Markdown Levels' } ) );
 	// Assert.
 	expect(
 		( await within( view.container ).findAllByText( failure.message ) )[ 0 ]
@@ -97,6 +100,7 @@ test.each( cases )( 'retains $kind edits', async ( level ) => {
 		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
 		{ wrapper }
 	);
+	fireEvent.click( view.getByRole( 'button', { name: level.panel } ) );
 	await view.findByRole( 'button', { name: level.before } );
 	await view.findByRole( 'button', { name: 'outlet' } );
 	// Act.
@@ -106,6 +110,7 @@ test.each( cases )( 'retains $kind edits', async ( level ) => {
 	} );
 	fireEvent.click( view.getByRole( 'button', { name: 'Close settings' } ) );
 	fireEvent.click( view.getByRole( 'button', { name: 'Page settings' } ) );
+	fireEvent.click( view.getByRole( 'button', { name: level.panel } ) );
 	// Assert.
 	expect(
 		await view.findByRole( 'button', { name: level.after } )
@@ -149,6 +154,7 @@ test.each( cases )( 'saves $kind edits', async ( level ) => {
 		<OutletEditor config={ { pageId: 39, canPublish: true } } />,
 		{ wrapper }
 	);
+	fireEvent.click( view.getByRole( 'button', { name: level.panel } ) );
 	await view.findByRole( 'button', { name: `Add ${ level.kind } level` } );
 	// Act.
 	fireEvent.click(
@@ -168,6 +174,7 @@ test.each( cases )( 'saves $kind edits', async ( level ) => {
 			view.getByRole( 'dialog', { name: 'Are you ready to save?' } )
 		).getByRole( 'button', { name: 'Save' } )
 	);
+	fireEvent.click( await view.findByRole( 'button', { name: level.panel } ) );
 	// Assert.
 	await waitFor( () =>
 		expect(
