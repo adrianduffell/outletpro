@@ -1,8 +1,8 @@
 Quick start
 ===========
 
-Outlet Pro adds an outlet page to WooCommerce. Help shoppers find your best deals on overstocked
-products and more.
+Outlet Pro adds an outlet page to WooCommerce. Help shoppers find your best
+deals on overstocked products and more.
 
 Name your outlet
 ----------------
