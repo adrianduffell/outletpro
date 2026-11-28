@@ -1,11 +1,8 @@
 Quick start
 ===========
 
-Outlet Pro allows your WooCommerce store to have a dedicated outlet page for
-listing overstocked and discontinued products.
-
-To set up your store with Outlet Pro, first **tag your outlet products** and then
-**publish the outlet page**.
+Outlet Pro adds an outlet page to WooCommerce. Help shoppers find your best deals on overstocked
+products and more.
 
 Name your outlet
 ----------------
